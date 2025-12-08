@@ -23,10 +23,10 @@
             AllowFocusOnInteraction="False"
             DoubleTapped="VideoViewButton_OnDoubleTapped"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
-            ManipulationDelta="VideoViewButton_OnManipulationDelta"
-            ManipulationMode="TranslateX,TranslateY"
-            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
+            PointerCanceled="VideoViewButton_OnPointerCanceled"
+            PointerMoved="VideoViewButton_OnPointerMoved"
+            PointerPressed="VideoViewButton_OnPointerPressed"
+            PointerReleased="VideoViewButton_OnPointerReleased"
             PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Tapped="VideoViewButton_OnTapped">
             <Border Background="Transparent" />

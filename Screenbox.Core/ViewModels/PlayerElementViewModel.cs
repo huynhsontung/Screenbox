@@ -29,9 +29,13 @@ namespace Screenbox.Core.ViewModels
         IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
+        [ObservableProperty] private bool _isHolding;
+
         public event EventHandler<EventArgs>? ClearViewRequested;
 
         public MediaPlayer? VlcPlayer { get; private set; }
+
+        private double CurrentPlaybackSpeed => _mediaPlayer?.PlaybackRate ?? 1.0;
 
         private readonly LibVlcService _libVlcService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
@@ -50,6 +54,9 @@ namespace Screenbox.Core.ViewModels
         private MediaCommandType _playerSwipeDownGesture;
         private MediaCommandType _playerSwipeLeftGesture;
         private MediaCommandType _playerSwipeRightGesture;
+        private bool _playerTapAndHoldGesture;
+        private double _playbackSpeed;
+        private bool _suppressTap;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -145,6 +152,12 @@ namespace Screenbox.Core.ViewModels
         public void OnClick()
         {
             if (_mediaPlayer?.PlaybackItem == null) return;
+            if (_suppressTap)
+            {
+                _suppressTap = false;
+                return;
+            }
+
             ProcessSwipeGesture(_playerTapGesture, 10.0, 0.0);
         }
 
@@ -154,13 +167,6 @@ namespace Screenbox.Core.ViewModels
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
-        }
-
-        public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            if (_manipulationLock == ManipulationLock.None) return;
-            Messenger.Send(new OverrideControlsHideDelayMessage(100));
-            Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
         public void ProcessTranslationManipulation(
@@ -206,6 +212,32 @@ namespace Screenbox.Core.ViewModels
                     ProcessSwipeGesture(_playerSwipeLeftGesture, -horizontalDelta, -horizontalCumulative);
                     return;
                 }
+            }
+        }
+
+        public void ProcessHoldingGesture(HoldingState holdingState)
+        {
+            if (!_playerTapAndHoldGesture || _mediaPlayer == null) return;
+
+            switch (holdingState)
+            {
+                case HoldingState.Started:
+                    _playbackSpeed = CurrentPlaybackSpeed;
+                    _suppressTap = true;
+                    _mediaPlayer.PlaybackRate = 2.0;
+                    Messenger.Send(new UpdateStatusMessage($"2×"));
+                    IsHolding = true;
+                    break;
+                case HoldingState.Completed:
+                case HoldingState.Canceled:
+                    if (IsHolding)
+                    {
+                        _mediaPlayer.PlaybackRate = _playbackSpeed;
+                        _playbackSpeed = CurrentPlaybackSpeed;
+                        Messenger.Send(new UpdateStatusMessage($"{_playbackSpeed}×"));
+                        IsHolding = false;
+                    }
+                    break;
             }
         }
 
@@ -265,9 +297,16 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new UpdateStatusMessage(status));
         }
 
-        public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        public void ManipulationStarted()
         {
             _manipulationLock = ManipulationLock.None;
+        }
+
+        public void ManipulationCompleted()
+        {
+            if (_manipulationLock == ManipulationLock.None) return;
+            Messenger.Send(new OverrideControlsHideDelayMessage(100));
+            Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)
@@ -361,6 +400,7 @@ namespace Screenbox.Core.ViewModels
             _playerSwipeDownGesture = _settingsService.PlayerSwipeDownGesture;
             _playerSwipeLeftGesture = _settingsService.PlayerSwipeLeftGesture;
             _playerSwipeRightGesture = _settingsService.PlayerSwipeRightGesture;
+            _playerTapAndHoldGesture = _settingsService.PlayerTapAndHoldGesture;
         }
 
         private void DisposeMediaPlayer()

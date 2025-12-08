@@ -49,5 +49,10 @@ namespace Screenbox.Core.Services
         /// Gets or sets the media command invoked by a right swipe gesture.
         /// </summary>
         MediaCommandType PlayerSwipeRightGesture { get; set; }
+
+        /// <summary>
+        /// Gets or sets the media command invoked by a tap and hold gesture.
+        /// </summary>
+        bool PlayerTapAndHoldGesture { get; set; }
     }
 }

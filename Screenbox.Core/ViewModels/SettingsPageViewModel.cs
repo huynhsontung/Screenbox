@@ -29,6 +29,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private MediaCommandType _playerGestureSwipeDown;
         [ObservableProperty] private MediaCommandType _playerGestureSwipeLeft;
         [ObservableProperty] private MediaCommandType _playerGestureSwipeRight;
+        [ObservableProperty] private bool _playerGestureTapAndHold;
         [ObservableProperty] private bool _playerShowControls;
         [ObservableProperty] private bool _playerShowChapters;
         [ObservableProperty] private int _playerControlsHideDelay;
@@ -108,6 +109,7 @@ namespace Screenbox.Core.ViewModels
             _playerGestureSwipeDown = _settingsService.PlayerSwipeDownGesture;
             _playerGestureSwipeLeft = _settingsService.PlayerSwipeLeftGesture;
             _playerGestureSwipeRight = _settingsService.PlayerSwipeRightGesture;
+            _playerGestureTapAndHold = _settingsService.PlayerTapAndHoldGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
             _playerShowChapters = _settingsService.PlayerShowChapters;
             _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
@@ -197,6 +199,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.PlayerSwipeRightGesture = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeRight), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerGestureTapAndHoldChanged(bool value)
+        {
+            _settingsService.PlayerTapAndHoldGesture = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTapAndHold), typeof(SettingsPageViewModel)));
         }
 
         partial void OnPlayerShowControlsChanged(bool value)

@@ -481,6 +481,9 @@
                                 PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}" />
                         </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="Tap and hold to boost playback speed to 2×">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureTapAndHold, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 

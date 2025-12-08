@@ -39,6 +39,7 @@ namespace Screenbox.Core.Services
         private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
         private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
         private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
+        private const string PlayerGestureTapAndHoldKey = "Player/Gesture/TapAndHold";
 
         public bool UseIndexer
         {
@@ -184,6 +185,12 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerGestureSwipeRightKey, (int)value);
         }
 
+        public bool PlayerTapAndHoldGesture
+        {
+            get => GetValue<bool>(PlayerGestureTapAndHoldKey);
+            set => SetValue(PlayerGestureTapAndHoldKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
@@ -205,6 +212,7 @@ namespace Screenbox.Core.Services
             SetDefault(PlayerGestureSwipeDownKey, (int)MediaCommandType.DecreaseVolume);
             SetDefault(PlayerGestureSwipeLeftKey, (int)MediaCommandType.Rewind);
             SetDefault(PlayerGestureSwipeRightKey, (int)MediaCommandType.FastForward);
+            SetDefault(PlayerGestureTapAndHoldKey, false);
 
             // Device family specific overrides
             if (SystemInformation.IsXbox)
@@ -215,6 +223,7 @@ namespace Screenbox.Core.Services
                 SetValue(PlayerGestureSwipeDownKey, (int)MediaCommandType.None);
                 SetValue(PlayerGestureSwipeLeftKey, (int)MediaCommandType.None);
                 SetValue(PlayerGestureSwipeRightKey, (int)MediaCommandType.None);
+                SetValue(PlayerGestureTapAndHoldKey, false);
                 SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             }
         }
