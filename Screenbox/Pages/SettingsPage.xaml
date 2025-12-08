@@ -10,6 +10,7 @@
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enums="using:Screenbox.Core.Enums"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -91,6 +92,10 @@
 
         <DataTemplate x:Key="RemovableStorageFolderTemplate" x:DataType="storage:StorageFolder">
             <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="GestureMediaCommandTemplate" x:DataType="enums:MediaCommandType">
+            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:MediaCommandType))}" />
         </DataTemplate>
     </Page.Resources>
 
@@ -436,14 +441,45 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureSeek}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.Tap}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureVolume}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeUp}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureTap}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeDown}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeLeft}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeRight}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>

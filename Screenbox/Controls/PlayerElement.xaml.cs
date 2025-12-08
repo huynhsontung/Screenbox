@@ -54,6 +54,14 @@ namespace Screenbox.Controls
             Click?.Invoke(sender, e);
         }
 
+        private void VideoViewButton_OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            ViewModel.ProcessTranslationManipulation(e.Delta.Translation.X,
+                e.Delta.Translation.Y,
+                e.Cumulative.Translation.X,
+                e.Cumulative.Translation.Y);
+        }
+
         // private void PlayerElement_OnLoaded(object sender, RoutedEventArgs e)
         // {
         //     ViewModel.ClearViewRequested += ViewModelOnClearViewRequested;

@@ -24,9 +24,11 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private int _playerAutoResize;
-        [ObservableProperty] private bool _playerVolumeGesture;
-        [ObservableProperty] private bool _playerSeekGesture;
-        [ObservableProperty] private bool _playerTapGesture;
+        [ObservableProperty] private MediaCommandType _playerGestureTap;
+        [ObservableProperty] private MediaCommandType _playerGestureSwipeUp;
+        [ObservableProperty] private MediaCommandType _playerGestureSwipeDown;
+        [ObservableProperty] private MediaCommandType _playerGestureSwipeLeft;
+        [ObservableProperty] private MediaCommandType _playerGestureSwipeRight;
         [ObservableProperty] private bool _playerShowControls;
         [ObservableProperty] private bool _playerShowChapters;
         [ObservableProperty] private int _playerControlsHideDelay;
@@ -53,6 +55,8 @@ namespace Screenbox.Core.ViewModels
         public List<Models.Language> AvailableLanguages { get; }
 
         public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
+
+        public IReadOnlyList<MediaCommandType> GestureOptions { get; }
 
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
@@ -87,6 +91,8 @@ namespace Screenbox.Core.ViewModels
                 .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
                 .ToList();
 
+            GestureOptions = Enum.GetValues(typeof(MediaCommandType)).Cast<MediaCommandType>().ToList();
+
             if (SystemInformation.IsXbox)
             {
                 _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
@@ -97,9 +103,11 @@ namespace Screenbox.Core.ViewModels
 
             // Load values
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
-            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
-            _playerSeekGesture = _settingsService.PlayerSeekGesture;
-            _playerTapGesture = _settingsService.PlayerTapGesture;
+            _playerGestureTap = _settingsService.PlayerTapGesture;
+            _playerGestureSwipeUp = _settingsService.PlayerSwipeUpGesture;
+            _playerGestureSwipeDown = _settingsService.PlayerSwipeDownGesture;
+            _playerGestureSwipeLeft = _settingsService.PlayerSwipeLeftGesture;
+            _playerGestureSwipeRight = _settingsService.PlayerSwipeRightGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
             _playerShowChapters = _settingsService.PlayerShowChapters;
             _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
@@ -161,22 +169,34 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
         }
 
-        partial void OnPlayerVolumeGestureChanged(bool value)
-        {
-            _settingsService.PlayerVolumeGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerVolumeGesture), typeof(SettingsPageViewModel)));
-        }
-
-        partial void OnPlayerSeekGestureChanged(bool value)
-        {
-            _settingsService.PlayerSeekGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture), typeof(SettingsPageViewModel)));
-        }
-
-        partial void OnPlayerTapGestureChanged(bool value)
+        partial void OnPlayerGestureTapChanged(MediaCommandType value)
         {
             _settingsService.PlayerTapGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture), typeof(SettingsPageViewModel)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTap), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerGestureSwipeUpChanged(MediaCommandType value)
+        {
+            _settingsService.PlayerSwipeUpGesture = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeUp), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerGestureSwipeDownChanged(MediaCommandType value)
+        {
+            _settingsService.PlayerSwipeDownGesture = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeDown), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerGestureSwipeLeftChanged(MediaCommandType value)
+        {
+            _settingsService.PlayerSwipeLeftGesture = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeLeft), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerGestureSwipeRightChanged(MediaCommandType value)
+        {
+            _settingsService.PlayerSwipeRightGesture = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeRight), typeof(SettingsPageViewModel)));
         }
 
         partial void OnPlayerShowControlsChanged(bool value)
