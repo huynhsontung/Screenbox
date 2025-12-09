@@ -1,8 +1,9 @@
-﻿using ProtoBuf;
-using System;
+﻿using System;
+using ProtoBuf;
 using Windows.Storage.FileProperties;
 
 namespace Screenbox.Core.Models;
+
 [ProtoContract]
 public sealed class VideoInfo : IMediaProperties
 {
