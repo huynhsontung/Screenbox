@@ -2,6 +2,7 @@
 
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
+using Screenbox.Core.Models;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -19,23 +20,24 @@ namespace Screenbox.Core.Services
 
         public WindowViewMode ViewMode
         {
-            get => _viewMode;
+            get => State.ViewMode;
             private set
             {
-                WindowViewMode oldValue = _viewMode;
+                WindowViewMode oldValue = State.ViewMode;
                 if (oldValue != value)
                 {
-                    _viewMode = value;
+                    State.ViewMode = value;
                     ViewModeChanged?.Invoke(this, new ViewModeChangedEventArgs(value, oldValue));
                 }
             }
         }
 
-        private CoreCursor? _cursor;
-        private WindowViewMode _viewMode;
+        private readonly SessionContext _sessionContext;
+        private WindowState State => _sessionContext.Window;
 
-        public WindowService()
+        public WindowService(SessionContext sessionContext)
         {
+            _sessionContext = sessionContext;
             Window.Current.SizeChanged += OnWindowSizeChanged;
         }
 
@@ -156,7 +158,7 @@ namespace Screenbox.Core.Services
             CoreWindow? coreWindow = Window.Current.CoreWindow;
             if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
             {
-                _cursor = coreWindow.PointerCursor;
+                State.Cursor = coreWindow.PointerCursor;
                 coreWindow.PointerCursor = null;
             }
         }
@@ -164,7 +166,7 @@ namespace Screenbox.Core.Services
         public void ShowCursor()
         {
             CoreWindow? coreWindow = Window.Current.CoreWindow;
-            coreWindow.PointerCursor ??= _cursor;
+            coreWindow.PointerCursor ??= State.Cursor;
         }
     }
 }

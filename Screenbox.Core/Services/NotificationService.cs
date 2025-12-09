@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
+using Screenbox.Core.Models;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.Services
@@ -16,13 +17,14 @@ namespace Screenbox.Core.Services
 
         public event EventHandler<ProgressUpdatedEventArgs>? ProgressUpdated;
 
-        private string? _progressTitle;
-
         private readonly Func<IVlcLoginDialog> _vlcLoginDialogFactory;
+        private readonly SessionContext _sessionContext;
+        private NotificationState State => _sessionContext.Notifications;
 
-        public NotificationService(Func<IVlcLoginDialog> vlcLoginDialogFactory)
+        public NotificationService(Func<IVlcLoginDialog> vlcLoginDialogFactory, SessionContext sessionContext)
         {
             _vlcLoginDialogFactory = vlcLoginDialogFactory;
+            _sessionContext = sessionContext;
         }
 
         public void RaiseNotification(NotificationLevel level, string title, string message)
@@ -57,14 +59,14 @@ namespace Screenbox.Core.Services
             return Task.Run(() =>
             {
                 if (token.IsCancellationRequested) return;
-                _progressTitle = title;
+                State.ProgressTitle = title;
                 var eventArgs = new ProgressUpdatedEventArgs(title, text, indeterminate, position);
                 ProgressUpdated?.Invoke(this, eventArgs);
             }, token);
         }
 
         private Task UpdateProgress(Dialog dialog, float position, string? text) =>
-            DisplayProgress(dialog, _progressTitle, text, false, position, null, CancellationToken.None);
+            DisplayProgress(dialog, State.ProgressTitle, text, false, position, null, CancellationToken.None);
 
         private async Task DisplayLoginDialog(Dialog dialog, string? title, string? text, string? defaultUsername, bool askStore, CancellationToken token)
         {

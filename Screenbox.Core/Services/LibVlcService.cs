@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
@@ -11,42 +12,48 @@ using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services
 {
-    public sealed class LibVlcService : IDisposable
+public sealed class LibVlcService : IDisposable
+{
+    public VlcMediaPlayer? MediaPlayer => _sessionContext.LibVlc.MediaPlayer;
+
+    public LibVLC? LibVlc => _sessionContext.LibVlc.LibVlc;
+
+    private readonly NotificationService _notificationService;
+    private readonly SessionContext _sessionContext;
+    private bool UseFutureAccessList
     {
-        public VlcMediaPlayer? MediaPlayer { get; private set; }
+        get => _sessionContext.LibVlc.UseFutureAccessList;
+        set => _sessionContext.LibVlc.UseFutureAccessList = value;
+    }
 
-        public LibVLC? LibVlc { get; private set; }
+    public LibVlcService(INotificationService notificationService, SessionContext sessionContext)
+    {
+        _notificationService = (NotificationService)notificationService;
+        _sessionContext = sessionContext;
 
-        private readonly NotificationService _notificationService;
-        private readonly bool _useFal;
+        // FutureAccessList is preferred because it can handle network StorageFiles
+        // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
+        UseFutureAccessList = true;
 
-        public LibVlcService(INotificationService notificationService)
+        try
         {
-            _notificationService = (NotificationService)notificationService;
-
-            // FutureAccessList is preferred because it can handle network StorageFiles
-            // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
-            _useFal = true;
-
-            try
-            {
-                // Clear FA periodically because of 1000 items limit
-                StorageApplicationPermissions.FutureAccessList.Clear();
-            }
-            catch (Exception)   // FileNotFoundException
-            {
-                // FutureAccessList is not available
-                _useFal = false;
-            }
+            // Clear FA periodically because of 1000 items limit
+            StorageApplicationPermissions.FutureAccessList.Clear();
         }
-
-        public VlcMediaPlayer Initialize(string[] swapChainOptions)
+        catch (Exception)   // FileNotFoundException
         {
-            LibVLC lib = InitializeLibVlc(swapChainOptions);
-            LibVlc = lib;
-            MediaPlayer = new VlcMediaPlayer(lib);
-            return MediaPlayer;
+            // FutureAccessList is not available
+            UseFutureAccessList = false;
         }
+    }
+
+    public VlcMediaPlayer Initialize(string[] swapChainOptions)
+    {
+        LibVLC lib = InitializeLibVlc(swapChainOptions);
+        _sessionContext.LibVlc.LibVlc = lib;
+        _sessionContext.LibVlc.MediaPlayer = new VlcMediaPlayer(lib);
+        return _sessionContext.LibVlc.MediaPlayer;
+    }
 
         public Media CreateMedia(object source, params string[] options)
         {
@@ -75,17 +82,17 @@ namespace Screenbox.Core.Services
         {
             Guard.IsNotNull(LibVlc, nameof(LibVlc));
             LibVLC libVlc = LibVlc;
-            if (file is StorageFile storageFile &&
-                storageFile.Provider.Id.Equals("network", StringComparison.OrdinalIgnoreCase) &&
-                !string.IsNullOrEmpty(storageFile.Path))
+        if (file is StorageFile storageFile &&
+            storageFile.Provider.Id.Equals("network", StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrEmpty(storageFile.Path))
             {
                 // Optimization for network files. Avoid having to deal with WinRT quirks.
                 return CreateMedia(new Uri(storageFile.Path, UriKind.Absolute), options);
             }
 
-            string token = _useFal
-                ? StorageApplicationPermissions.FutureAccessList.Add(file, "media")
-                : SharedStorageAccessManager.AddFile(file);
+        string token = UseFutureAccessList
+            ? StorageApplicationPermissions.FutureAccessList.Add(file, "media")
+            : SharedStorageAccessManager.AddFile(file);
             string mrl = "winrt://" + token;
             return new Media(libVlc, mrl, FromType.FromLocation, options);
         }
@@ -105,10 +112,10 @@ namespace Screenbox.Core.Services
                 string token = mrl.Substring(8);
                 try
                 {
-                    if (_useFal)
-                    {
-                        StorageApplicationPermissions.FutureAccessList.Remove(token);
-                    }
+            if (UseFutureAccessList)
+            {
+                StorageApplicationPermissions.FutureAccessList.Remove(token);
+            }
                     else
                     {
                         SharedStorageAccessManager.RemoveFile(token);
@@ -147,10 +154,12 @@ namespace Screenbox.Core.Services
             return libVlc;
         }
 
-        public void Dispose()
-        {
-            MediaPlayer?.Close();
-            LibVlc?.Dispose();
-        }
+    public void Dispose()
+    {
+        MediaPlayer?.Close();
+        LibVlc?.Dispose();
+        _sessionContext.LibVlc.MediaPlayer = null;
+        _sessionContext.LibVlc.LibVlc = null;
     }
+}
 }

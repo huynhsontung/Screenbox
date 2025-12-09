@@ -4,6 +4,7 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.System;
@@ -18,16 +19,32 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
-        private IMediaPlayer? _mediaPlayer;
+        private VolumeState VolumeState => _sessionContext.Volume;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
+        private readonly SessionContext _sessionContext;
 
-        public VolumeViewModel(ISettingsService settingsService)
+        public VolumeViewModel(ISettingsService settingsService, SessionContext sessionContext)
         {
+            _sessionContext = sessionContext;
             _settingsService = settingsService;
-            _volume = settingsService.PersistentVolume;
-            _maxVolume = settingsService.MaxVolume;
-            _isMute = _volume == 0;
+            if (VolumeState.IsInitialized)
+            {
+                _volume = VolumeState.Volume;
+                _maxVolume = VolumeState.MaxVolume;
+                _isMute = VolumeState.IsMute;
+            }
+            else
+            {
+                _volume = settingsService.PersistentVolume;
+                _maxVolume = settingsService.MaxVolume;
+                _isMute = _volume == 0;
+                VolumeState.IsInitialized = true;
+            }
+
+            VolumeState.Volume = _volume;
+            VolumeState.MaxVolume = _maxVolume;
+            VolumeState.IsMute = _isMute;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // View model doesn't receive any messages
@@ -36,9 +53,20 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(MediaPlayerChangedMessage message)
         {
-            _mediaPlayer = message.Value;
-            _mediaPlayer.VolumeChanged += OnVolumeChanged;
-            _mediaPlayer.IsMutedChanged += OnIsMutedChanged;
+            if (VolumeState.MediaPlayer != null)
+            {
+                VolumeState.MediaPlayer.VolumeChanged -= OnVolumeChanged;
+                VolumeState.MediaPlayer.IsMutedChanged -= OnIsMutedChanged;
+            }
+
+            VolumeState.MediaPlayer = message.Value;
+            if (VolumeState.MediaPlayer == null)
+            {
+                return;
+            }
+
+            VolumeState.MediaPlayer.VolumeChanged += OnVolumeChanged;
+            VolumeState.MediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }
 
         public void Receive(SettingsChangedMessage message)
@@ -55,18 +83,19 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnVolumeChanged(int value)
         {
-            if (_mediaPlayer == null) return;
+            VolumeState.Volume = value;
+            if (VolumeState.MediaPlayer == null) return;
             double newValue = value / 100d;
-            // bool stayMute = IsMute && newValue - _mediaPlayer.Volume < 0.005;
-            _mediaPlayer.Volume = newValue;
+            VolumeState.MediaPlayer.Volume = newValue;
             if (value > 0) IsMute = false;
             _settingsService.PersistentVolume = value;
         }
 
         partial void OnIsMuteChanged(bool value)
         {
-            if (_mediaPlayer == null) return;
-            _mediaPlayer.IsMuted = value;
+            VolumeState.IsMute = value;
+            if (VolumeState.MediaPlayer == null) return;
+            VolumeState.MediaPlayer.IsMuted = value;
         }
 
         private void OnVolumeChanged(IMediaPlayer sender, object? args)
@@ -95,6 +124,11 @@ namespace Screenbox.Core.ViewModels
         public void SetVolume(int value, bool isOffset = false)
         {
             Volume = Math.Clamp(isOffset ? Volume + value : value, 0, MaxVolume);
+        }
+
+        partial void OnMaxVolumeChanged(int value)
+        {
+            VolumeState.MaxVolume = value;
         }
     }
 }

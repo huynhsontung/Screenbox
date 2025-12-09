@@ -1,8 +1,9 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Helpers;
 using System;
 using System.Threading.Tasks;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -15,10 +16,12 @@ namespace Screenbox.Core.Services
     {
         public SystemMediaTransportControls TransportControls { get; }
 
-        private DateTime _lastUpdated;
+        private readonly SessionContext _sessionContext;
+        private TransportControlsState State => _sessionContext.TransportControls;
 
-        public SystemMediaTransportControlsService()
+        public SystemMediaTransportControlsService(SessionContext sessionContext)
         {
+            _sessionContext = sessionContext;
             TransportControls = SystemMediaTransportControls.GetForCurrentView();
             TransportControls.IsEnabled = true;
             TransportControls.IsPlayEnabled = true;
@@ -27,8 +30,7 @@ namespace Screenbox.Core.Services
             TransportControls.AutoRepeatMode = MediaPlaybackAutoRepeatMode.None;
             TransportControls.PlaybackStatus = MediaPlaybackStatus.Closed;
             TransportControls.DisplayUpdater.ClearAll();
-
-            _lastUpdated = DateTime.MinValue;
+            State.LastUpdated = DateTime.MinValue;
         }
 
         public async Task UpdateTransportControlsDisplayAsync(MediaViewModel? item)
@@ -81,8 +83,8 @@ namespace Screenbox.Core.Services
 
         public void UpdatePlaybackPosition(TimeSpan position, TimeSpan startTime, TimeSpan endTime)
         {
-            if (DateTime.Now - _lastUpdated < TimeSpan.FromSeconds(5)) return;
-            _lastUpdated = DateTime.Now;
+            if (DateTime.Now - State.LastUpdated < TimeSpan.FromSeconds(5)) return;
+            State.LastUpdated = DateTime.Now;
             SystemMediaTransportControlsTimelineProperties timelineProps = new()
             {
                 StartTime = startTime,

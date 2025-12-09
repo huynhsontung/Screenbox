@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -9,6 +10,8 @@ public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
     {
+        services.AddSingleton<SessionContext>();
+
         // View models
         services.AddTransient<PlayerElementViewModel>();
         services.AddTransient<PropertyViewModel>();
@@ -38,9 +41,9 @@ public static class ServiceHelpers
         services.AddTransient<LivelyWallpaperPlayerViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
-        services.AddSingleton<CommonViewModel>();   // Shared between many pages
-        services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
-        services.AddSingleton<MediaListViewModel>(); // Global playlist
+        services.AddTransient<CommonViewModel>();   // Shared between many pages
+        services.AddTransient<VolumeViewModel>();   // Avoid thread lock
+        services.AddTransient<MediaListViewModel>(); // Global playlist
 
         // Misc
         services.AddTransient<LastPositionTracker>();

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -22,7 +23,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
     {
-        public Dictionary<Type, string> NavigationStates { get; }
+        public Dictionary<Type, string> NavigationStates => NavigationState.NavigationStates;
 
         public bool IsAdvancedModeEnabled => _settingsService.AdvancedMode;
 
@@ -31,24 +32,31 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
         [ObservableProperty] private double _footerBottomPaddingHeight;
 
+        private readonly NavigationState NavigationState => _sessionContext.Navigation;
         private readonly INavigationService _navigationService;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
-        private readonly Dictionary<string, object> _pageStates;
+        private readonly SessionContext _sessionContext;
 
         public CommonViewModel(INavigationService navigationService,
             IFilesService filesService,
             IResourceService resourceService,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            SessionContext sessionContext)
         {
+            _sessionContext = sessionContext;
             _navigationService = navigationService;
             _filesService = filesService;
             _resourceService = resourceService;
             _settingsService = settingsService;
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
-            NavigationStates = new Dictionary<Type, string>();
-            _pageStates = new Dictionary<string, object>();
+            _navigationViewDisplayMode = NavigationState.NavigationViewDisplayMode == default
+                ? Messenger.Send<NavigationViewDisplayModeRequestMessage>()
+                : NavigationState.NavigationViewDisplayMode;
+            NavigationState.NavigationViewDisplayMode = _navigationViewDisplayMode;
+            _scrollBarMargin = NavigationState.ScrollBarMargin;
+            _footerBottomPaddingMargin = NavigationState.FooterBottomPaddingMargin;
+            _footerBottomPaddingHeight = NavigationState.FooterBottomPaddingHeight;
 
             // Activate the view model's messenger
             IsActive = true;
@@ -85,12 +93,12 @@ namespace Screenbox.Core.ViewModels
 
         public void SavePageState(object state, string pageTypeName, int backStackDepth)
         {
-            _pageStates[pageTypeName + backStackDepth] = state;
+            NavigationState.PageStates[pageTypeName + backStackDepth] = state;
         }
 
         public bool TryGetPageState(string pageTypeName, int backStackDepth, out object state)
         {
-            return _pageStates.TryGetValue(pageTypeName + backStackDepth, out state);
+            return NavigationState.PageStates.TryGetValue(pageTypeName + backStackDepth, out state);
         }
 
         [RelayCommand]
@@ -135,6 +143,26 @@ namespace Screenbox.Core.ViewModels
                 Messenger.Send(new ErrorMessage(
                     _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
             }
+        }
+
+        partial void OnNavigationViewDisplayModeChanged(NavigationViewDisplayMode value)
+        {
+            NavigationState.NavigationViewDisplayMode = value;
+        }
+
+        partial void OnScrollBarMarginChanged(Thickness value)
+        {
+            NavigationState.ScrollBarMargin = value;
+        }
+
+        partial void OnFooterBottomPaddingMarginChanged(Thickness value)
+        {
+            NavigationState.FooterBottomPaddingMargin = value;
+        }
+
+        partial void OnFooterBottomPaddingHeightChanged(double value)
+        {
+            NavigationState.FooterBottomPaddingHeight = value;
         }
     }
 }

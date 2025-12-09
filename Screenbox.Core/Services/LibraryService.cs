@@ -27,10 +27,29 @@ namespace Screenbox.Core.Services
         public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged;
         public event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
 
-        public StorageLibrary? MusicLibrary { get; private set; }
-        public StorageLibrary? VideosLibrary { get; private set; }
-        public bool IsLoadingVideos { get; private set; }
-        public bool IsLoadingMusic { get; private set; }
+        public StorageLibrary? MusicLibrary
+        {
+            get => State.MusicLibrary;
+            private set => State.MusicLibrary = value;
+        }
+
+        public StorageLibrary? VideosLibrary
+        {
+            get => State.VideosLibrary;
+            private set => State.VideosLibrary = value;
+        }
+
+        public bool IsLoadingVideos
+        {
+            get => State.IsLoadingVideos;
+            private set => State.IsLoadingVideos = value;
+        }
+
+        public bool IsLoadingMusic
+        {
+            get => State.IsLoadingMusic;
+            private set => State.IsLoadingMusic = value;
+        }
         private bool UseIndexer => _settingsService.UseIndexer;
         private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
 
@@ -40,45 +59,80 @@ namespace Screenbox.Core.Services
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
+        private readonly SessionContext _sessionContext;
+        private LibraryState State => _sessionContext.Library;
         private readonly DispatcherQueueTimer _musicRefreshTimer;
         private readonly DispatcherQueueTimer _videosRefreshTimer;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
+        private StorageFileQueryResult? MusicLibraryQueryResult
+        {
+            get => State.MusicLibraryQueryResult;
+            set => State.MusicLibraryQueryResult = value;
+        }
 
-        private StorageFileQueryResult? _musicLibraryQueryResult;
-        private StorageFileQueryResult? _videosLibraryQueryResult;
-        private List<MediaViewModel> _songs;
-        private List<MediaViewModel> _videos;
-        private CancellationTokenSource? _musicFetchCts;
-        private CancellationTokenSource? _videosFetchCts;
-        private bool _musicChangeTrackerAvailable;
-        private bool _videosChangeTrackerAvailable;
+        private StorageFileQueryResult? VideosLibraryQueryResult
+        {
+            get => State.VideosLibraryQueryResult;
+            set => State.VideosLibraryQueryResult = value;
+        }
+
+        private CancellationTokenSource? MusicFetchCancellation
+        {
+            get => State.MusicFetchCancellation;
+            set => State.MusicFetchCancellation = value;
+        }
+
+        private CancellationTokenSource? VideosFetchCancellation
+        {
+            get => State.VideosFetchCancellation;
+            set => State.VideosFetchCancellation = value;
+        }
+
+        private bool MusicChangeTrackerAvailable
+        {
+            get => State.MusicChangeTrackerAvailable;
+            set => State.MusicChangeTrackerAvailable = value;
+        }
+
+        private bool VideosChangeTrackerAvailable
+        {
+            get => State.VideosChangeTrackerAvailable;
+            set => State.VideosChangeTrackerAvailable = value;
+        }
 
         private const string SongsCacheFileName = "songs.bin";
         private const string VideoCacheFileName = "videos.bin";
 
-        public LibraryService(ISettingsService settingsService, IFilesService filesService,
-            MediaViewModelFactory mediaFactory, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
-        {
-            _settingsService = settingsService;
-            _filesService = filesService;
-            _mediaFactory = mediaFactory;
-            _albumFactory = albumFactory;
-            _artistFactory = artistFactory;
-            DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _musicRefreshTimer = dispatcherQueue.CreateTimer();
-            _videosRefreshTimer = dispatcherQueue.CreateTimer();
-            _storageDeviceRefreshTimer = dispatcherQueue.CreateTimer();
-            _songs = new List<MediaViewModel>();
-            _videos = new List<MediaViewModel>();
+    public LibraryService(ISettingsService settingsService, IFilesService filesService,
+        MediaViewModelFactory mediaFactory, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory,
+        SessionContext sessionContext)
+    {
+        _settingsService = settingsService;
+        _filesService = filesService;
+        _mediaFactory = mediaFactory;
+        _albumFactory = albumFactory;
+        _artistFactory = artistFactory;
+        _sessionContext = sessionContext;
+        DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _musicRefreshTimer = State.MusicRefreshTimer ??= dispatcherQueue.CreateTimer();
+        _videosRefreshTimer = State.VideosRefreshTimer ??= dispatcherQueue.CreateTimer();
+        _storageDeviceRefreshTimer = State.StorageDeviceRefreshTimer ??= dispatcherQueue.CreateTimer();
 
-            if (SystemInformation.IsXbox)
+        if (SystemInformation.IsXbox)
+        {
+            if (State.PortableStorageDeviceWatcher != null)
             {
-                _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
-                _portableStorageDeviceWatcher.Removed += OnPortableStorageDeviceChanged;
-                _portableStorageDeviceWatcher.Updated += OnPortableStorageDeviceChanged;
+                State.PortableStorageDeviceWatcher.Removed -= OnPortableStorageDeviceChanged;
+                State.PortableStorageDeviceWatcher.Updated -= OnPortableStorageDeviceChanged;
             }
+
+            _portableStorageDeviceWatcher = State.PortableStorageDeviceWatcher ?? DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
+            State.PortableStorageDeviceWatcher = _portableStorageDeviceWatcher;
+            _portableStorageDeviceWatcher.Removed += OnPortableStorageDeviceChanged;
+            _portableStorageDeviceWatcher.Updated += OnPortableStorageDeviceChanged;
         }
+    }
 
         public async Task<StorageLibrary> InitializeMusicLibraryAsync()
         {
@@ -87,7 +141,7 @@ namespace Screenbox.Core.Services
             try
             {
                 MusicLibrary.ChangeTracker.Enable();
-                _musicChangeTrackerAvailable = true;
+                MusicChangeTrackerAvailable = true;
             }
             catch (Exception)
             {
@@ -104,7 +158,7 @@ namespace Screenbox.Core.Services
             try
             {
                 VideosLibrary.ChangeTracker.Enable();
-                _videosChangeTrackerAvailable = true;
+                VideosChangeTrackerAvailable = true;
             }
             catch (Exception)
             {
@@ -114,22 +168,22 @@ namespace Screenbox.Core.Services
             return VideosLibrary;
         }
 
-        public MusicLibraryFetchResult GetMusicFetchResult()
-        {
-            return new MusicLibraryFetchResult(_songs.AsReadOnly(), _albumFactory.AllAlbums.ToList(), _artistFactory.AllArtists.ToList(),
-                _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
-        }
+    public MusicLibraryFetchResult GetMusicFetchResult()
+    {
+        return new MusicLibraryFetchResult(State.Songs.AsReadOnly(), _albumFactory.AllAlbums.ToList(), _artistFactory.AllArtists.ToList(),
+            _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
+    }
 
-        public IReadOnlyList<MediaViewModel> GetVideosFetchResult()
-        {
-            return _videos.AsReadOnly();
-        }
+    public IReadOnlyList<MediaViewModel> GetVideosFetchResult()
+    {
+        return State.Videos.AsReadOnly();
+    }
 
         public async Task FetchMusicAsync(bool useCache = true)
         {
-            _musicFetchCts?.Cancel();
+            MusicFetchCancellation?.Cancel();
             using CancellationTokenSource cts = new();
-            _musicFetchCts = cts;
+            MusicFetchCancellation = cts;
             try
             {
                 await InitializeMusicLibraryAsync();
@@ -142,15 +196,15 @@ namespace Screenbox.Core.Services
             }
             finally
             {
-                _musicFetchCts = null;
+                MusicFetchCancellation = null;
             }
         }
 
         public async Task FetchVideosAsync(bool useCache = true)
         {
-            _videosFetchCts?.Cancel();
+            VideosFetchCancellation?.Cancel();
             using CancellationTokenSource cts = new();
-            _videosFetchCts = cts;
+            VideosFetchCancellation = cts;
             try
             {
                 await InitializeVideosLibraryAsync();
@@ -163,7 +217,7 @@ namespace Screenbox.Core.Services
             }
             finally
             {
-                _videosFetchCts = null;
+                VideosFetchCancellation = null;
             }
         }
 
@@ -181,18 +235,18 @@ namespace Screenbox.Core.Services
             }
 
             media.Artists = Array.Empty<ArtistViewModel>();
-            _songs.Remove(media);
-            _videos.Remove(media);
+            State.Songs.Remove(media);
+            State.Videos.Remove(media);
         }
 
-        private async Task CacheSongsAsync(CancellationToken cancellationToken)
+    private async Task CacheSongsAsync(CancellationToken cancellationToken)
+    {
+        var folderPaths = MusicLibrary!.Folders.Select(f => f.Path).ToList();
+        var records = State.Songs.Select(song =>
+            new PersistentMediaRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
+        var libraryCache = new PersistentStorageLibrary
         {
-            var folderPaths = MusicLibrary!.Folders.Select(f => f.Path).ToList();
-            var records = _songs.Select(song =>
-                new PersistentMediaRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
-            var libraryCache = new PersistentStorageLibrary
-            {
-                FolderPaths = folderPaths,
+            FolderPaths = folderPaths,
                 Records = records
             };
             cancellationToken.ThrowIfCancellationRequested();
@@ -206,14 +260,14 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private async Task CacheVideosAsync(CancellationToken cancellationToken)
+    private async Task CacheVideosAsync(CancellationToken cancellationToken)
+    {
+        var folderPaths = VideosLibrary!.Folders.Select(f => f.Path).ToList();
+        List<PersistentMediaRecord> records = State.Videos.Select(video =>
+                       new PersistentMediaRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
+        var libraryCache = new PersistentStorageLibrary()
         {
-            var folderPaths = VideosLibrary!.Folders.Select(f => f.Path).ToList();
-            List<PersistentMediaRecord> records = _videos.Select(video =>
-                           new PersistentMediaRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
-            var libraryCache = new PersistentStorageLibrary()
-            {
-                FolderPaths = folderPaths,
+            FolderPaths = folderPaths,
                 Records = records
             };
             cancellationToken.ThrowIfCancellationRequested();
@@ -276,6 +330,7 @@ namespace Screenbox.Core.Services
                 await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
                 var libraryQuery = GetMusicLibraryQuery();
                 List<MediaViewModel> songs = new();
+                List<MediaViewModel> previousSongs = State.Songs.ToList();
                 if (useCache)
                 {
                     var libraryCache = await LoadStorageLibraryCacheAsync(SongsCacheFileName);
@@ -285,7 +340,7 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, MusicLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        if (hasCache && _musicChangeTrackerAvailable)
+                        if (hasCache && MusicChangeTrackerAvailable)
                         {
                             try
                             {
@@ -305,7 +360,6 @@ namespace Screenbox.Core.Services
                 // Recrawl the library if there is no cache or cache is invalidated
                 if (!hasCache)
                 {
-                    _songs = songs;
                     songs.Clear();
                     _albumFactory.Clear();
                     _artistFactory.Clear();
@@ -324,14 +378,14 @@ namespace Screenbox.Core.Services
                     }
                 }
 
-                if (songs != _songs)
+                if (!songs.SequenceEqual(previousSongs))
                 {
                     // Ensure only songs not in the library has IsFromLibrary = false
-                    _songs.ForEach(song => song.IsFromLibrary = false);
+                    previousSongs.ForEach(song => song.IsFromLibrary = false);
                 }
 
                 songs.ForEach(song => song.IsFromLibrary = true);
-                CleanOutdatedSongs();
+                CleanOutdatedSongs(previousSongs.Except(songs));
 
                 // Populate Album and Artists for each song
                 foreach (MediaViewModel song in songs)
@@ -351,11 +405,11 @@ namespace Screenbox.Core.Services
                     }
                 }
 
-                _songs = songs;
+                State.Songs = songs;
 
                 MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
                 await CacheSongsAsync(cancellationToken);
-                if (hasCache && _musicChangeTrackerAvailable && changeReader != null)
+                if (hasCache && MusicChangeTrackerAvailable && changeReader != null)
                 {
                     await changeReader.AcceptChangesAsync();
                 }
@@ -396,7 +450,7 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, VideosLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        if (hasCache && _videosChangeTrackerAvailable)
+                        if (hasCache && VideosChangeTrackerAvailable)
                         {
                             try
                             {
@@ -416,7 +470,7 @@ namespace Screenbox.Core.Services
                 // Recrawl the library if there is no cache or cache is invalidated
                 if (!hasCache)
                 {
-                    _videos = videos;
+                    State.Videos = videos;
                     videos.Clear();
                     await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
 
@@ -443,11 +497,13 @@ namespace Screenbox.Core.Services
                     }
                 }
 
-                _videos = videos;
+                var stateVideos = State.Videos;
+                stateVideos.Clear();
+                stateVideos.AddRange(videos);
 
                 VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
                 await CacheVideosAsync(cancellationToken);
-                if (hasCache && _videosChangeTrackerAvailable && changeReader != null)
+                if (hasCache && VideosChangeTrackerAvailable && changeReader != null)
                 {
                     await changeReader.AcceptChangesAsync();
                 }
@@ -480,9 +536,8 @@ namespace Screenbox.Core.Services
         /// <summary>
         /// Clean up songs that are no longer from the library
         /// </summary>
-        private void CleanOutdatedSongs()
+        private void CleanOutdatedSongs(IEnumerable<MediaViewModel> outdatedSongs)
         {
-            List<MediaViewModel> outdatedSongs = _songs.Where(song => !song.IsFromLibrary).ToList();
             foreach (MediaViewModel song in outdatedSongs)
             {
                 if (song.Album != null)
@@ -506,7 +561,7 @@ namespace Screenbox.Core.Services
 
         private StorageFileQueryResult GetMusicLibraryQuery()
         {
-            StorageFileQueryResult? libraryQuery = _musicLibraryQueryResult;
+            StorageFileQueryResult? libraryQuery = MusicLibraryQueryResult;
 
             if (libraryQuery != null && ShouldUpdateQuery(libraryQuery, UseIndexer))
             {
@@ -520,13 +575,13 @@ namespace Screenbox.Core.Services
                 libraryQuery.ContentsChanged += OnMusicLibraryContentChanged;
             }
 
-            _musicLibraryQueryResult = libraryQuery;
+            MusicLibraryQueryResult = libraryQuery;
             return libraryQuery;
         }
 
         private StorageFileQueryResult GetVideosLibraryQuery()
         {
-            StorageFileQueryResult? libraryQuery = _videosLibraryQueryResult;
+            StorageFileQueryResult? libraryQuery = VideosLibraryQueryResult;
 
             if (libraryQuery != null && ShouldUpdateQuery(libraryQuery, UseIndexer))
             {
@@ -540,7 +595,7 @@ namespace Screenbox.Core.Services
                 libraryQuery.ContentsChanged += OnVideosLibraryContentChanged;
             }
 
-            _videosLibraryQueryResult = libraryQuery;
+            VideosLibraryQueryResult = libraryQuery;
             return libraryQuery;
         }
 

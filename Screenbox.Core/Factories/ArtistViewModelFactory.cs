@@ -1,6 +1,7 @@
-﻿#nullable enable
+#nullable enable
 
 using Screenbox.Core.Enums;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System;
@@ -13,19 +14,17 @@ namespace Screenbox.Core.Factories
 {
     public sealed class ArtistViewModelFactory
     {
-        public ArtistViewModel UnknownArtist { get; }
-
-        public IReadOnlyCollection<ArtistViewModel> AllArtists { get; }
-
-        private readonly Dictionary<string, ArtistViewModel> _allArtists;
+        public ArtistViewModel UnknownArtist => State.UnknownArtist!;
+        public IReadOnlyCollection<ArtistViewModel> AllArtists => State.Artists.Values;
 
         private static readonly string[] ArtistNameSeparators = { ",", ", ", "; " };
+        private readonly SessionContext _sessionContext;
+        private ArtistFactoryState State => _sessionContext.Artists;
 
-        public ArtistViewModelFactory(IResourceService resourceService)
+        public ArtistViewModelFactory(IResourceService resourceService, SessionContext sessionContext)
         {
-            _allArtists = new Dictionary<string, ArtistViewModel>();
-            AllArtists = _allArtists.Values;
-            UnknownArtist = new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
+            _sessionContext = sessionContext;
+            State.UnknownArtist ??= new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
         }
 
         public ArtistViewModel[] ParseArtists(string artist)
@@ -72,7 +71,7 @@ namespace Screenbox.Core.Factories
                 return UnknownArtist;
 
             string key = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            return _allArtists.GetValueOrDefault(key, UnknownArtist);
+            return State.Artists.GetValueOrDefault(key, UnknownArtist);
         }
 
         public ArtistViewModel AddSongToArtist(MediaViewModel song, string artistName)
@@ -93,7 +92,7 @@ namespace Screenbox.Core.Factories
             string key = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
             artist = new ArtistViewModel(artistName);
             artist.RelatedSongs.Add(song);
-            return _allArtists[key] = artist;
+            return State.Artists[key] = artist;
         }
 
         public void Remove(MediaViewModel song)
@@ -104,7 +103,7 @@ namespace Screenbox.Core.Factories
                 if (artist.RelatedSongs.Count == 0)
                 {
                     string artistKey = artist.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
-                    _allArtists.Remove(artistKey);
+                    State.Artists.Remove(artistKey);
                 }
             }
 
@@ -114,11 +113,11 @@ namespace Screenbox.Core.Factories
         public void Compact()
         {
             List<string> albumKeysToRemove =
-                _allArtists.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
+                State.Artists.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
 
             foreach (string albumKey in albumKeysToRemove)
             {
-                _allArtists.Remove(albumKey);
+                State.Artists.Remove(albumKey);
             }
         }
 
@@ -131,7 +130,7 @@ namespace Screenbox.Core.Factories
 
             UnknownArtist.RelatedSongs.Clear();
 
-            foreach ((string _, ArtistViewModel artist) in _allArtists)
+            foreach ((string _, ArtistViewModel artist) in State.Artists)
             {
                 foreach (MediaViewModel media in artist.RelatedSongs)
                 {
@@ -139,7 +138,7 @@ namespace Screenbox.Core.Factories
                 }
             }
 
-            _allArtists.Clear();
+            State.Artists.Clear();
         }
     }
 }
