@@ -1,7 +1,7 @@
 #nullable enable
 
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System.Collections.Generic;
@@ -17,13 +17,12 @@ namespace Screenbox.Core.Factories
 
         public IReadOnlyCollection<AlbumViewModel> AllAlbums => State.Albums.Values;
         private readonly IResourceService _resourceService;
-        private readonly SessionContext _sessionContext;
-        private AlbumFactoryState State => _sessionContext.Albums;
+        private readonly AlbumFactoryState State;
 
-        public AlbumViewModelFactory(IResourceService resourceService, SessionContext sessionContext)
+        public AlbumViewModelFactory(IResourceService resourceService, AlbumFactoryState state)
         {
             _resourceService = resourceService;
-            _sessionContext = sessionContext;
+            State = state;
             State.UnknownAlbum ??= new AlbumViewModel(resourceService.GetString(ResourceName.UnknownAlbum), resourceService.GetString(ResourceName.UnknownArtist));
         }
 

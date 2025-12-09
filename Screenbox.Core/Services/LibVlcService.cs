@@ -2,7 +2,7 @@
 
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
-using Screenbox.Core.Models;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
@@ -14,22 +14,22 @@ namespace Screenbox.Core.Services
 {
 public sealed class LibVlcService : IDisposable
 {
-    public VlcMediaPlayer? MediaPlayer => _sessionContext.LibVlc.MediaPlayer;
+    public VlcMediaPlayer? MediaPlayer => _libVlcState.MediaPlayer;
 
-    public LibVLC? LibVlc => _sessionContext.LibVlc.LibVlc;
+    public LibVLC? LibVlc => _libVlcState.LibVlc;
 
     private readonly NotificationService _notificationService;
-    private readonly SessionContext _sessionContext;
+    private readonly LibVlcState _libVlcState;
     private bool UseFutureAccessList
     {
-        get => _sessionContext.LibVlc.UseFutureAccessList;
-        set => _sessionContext.LibVlc.UseFutureAccessList = value;
+        get => _libVlcState.UseFutureAccessList;
+        set => _libVlcState.UseFutureAccessList = value;
     }
 
-    public LibVlcService(INotificationService notificationService, SessionContext sessionContext)
+    public LibVlcService(INotificationService notificationService, LibVlcState libVlcState)
     {
         _notificationService = (NotificationService)notificationService;
-        _sessionContext = sessionContext;
+        _libVlcState = libVlcState;
 
         // FutureAccessList is preferred because it can handle network StorageFiles
         // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
@@ -50,9 +50,9 @@ public sealed class LibVlcService : IDisposable
     public VlcMediaPlayer Initialize(string[] swapChainOptions)
     {
         LibVLC lib = InitializeLibVlc(swapChainOptions);
-        _sessionContext.LibVlc.LibVlc = lib;
-        _sessionContext.LibVlc.MediaPlayer = new VlcMediaPlayer(lib);
-        return _sessionContext.LibVlc.MediaPlayer;
+        _libVlcState.LibVlc = lib;
+        _libVlcState.MediaPlayer = new VlcMediaPlayer(lib);
+        return _libVlcState.MediaPlayer;
     }
 
         public Media CreateMedia(object source, params string[] options)
@@ -158,8 +158,8 @@ public sealed class LibVlcService : IDisposable
     {
         MediaPlayer?.Close();
         LibVlc?.Dispose();
-        _sessionContext.LibVlc.MediaPlayer = null;
-        _sessionContext.LibVlc.LibVlc = null;
+        _libVlcState.MediaPlayer = null;
+        _libVlcState.LibVlc = null;
     }
 }
 }

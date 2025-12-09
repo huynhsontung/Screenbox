@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
-using Screenbox.Core.Models;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -32,12 +32,11 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private readonly SessionContext _sessionContext;
-        private WindowState State => _sessionContext.Window;
+        private readonly WindowState State;
 
-        public WindowService(SessionContext sessionContext)
+        public WindowService(WindowState state)
         {
-            _sessionContext = sessionContext;
+            State = state;
             Window.Current.SizeChanged += OnWindowSizeChanged;
         }
 

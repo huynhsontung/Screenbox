@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Sentry;
@@ -61,8 +61,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
-    private readonly SessionContext _sessionContext;
-    private MediaListState State => _sessionContext.MediaList;
+    private readonly MediaListState State;
 
     // ViewModel state
     private Playlist Playlist
@@ -116,9 +115,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         ISettingsService settingsService,
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
-        SessionContext sessionContext)
+        MediaListState state)
     {
-        _sessionContext = sessionContext;
         _playlistService = playlistService;
         _playbackControlService = playbackControlService;
         _mediaListFactory = mediaListFactory;
@@ -126,6 +124,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
+        State = state;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         // Initialize UI collections

@@ -4,9 +4,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
-using Screenbox.Core.Models;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.Services
@@ -18,13 +18,12 @@ namespace Screenbox.Core.Services
         public event EventHandler<ProgressUpdatedEventArgs>? ProgressUpdated;
 
         private readonly Func<IVlcLoginDialog> _vlcLoginDialogFactory;
-        private readonly SessionContext _sessionContext;
-        private NotificationState State => _sessionContext.Notifications;
+        private readonly NotificationState State;
 
-        public NotificationService(Func<IVlcLoginDialog> vlcLoginDialogFactory, SessionContext sessionContext)
+        public NotificationService(Func<IVlcLoginDialog> vlcLoginDialogFactory, NotificationState state)
         {
             _vlcLoginDialogFactory = vlcLoginDialogFactory;
-            _sessionContext = sessionContext;
+            State = state;
         }
 
         public void RaiseNotification(NotificationLevel level, string title, string message)

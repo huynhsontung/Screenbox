@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
-using Screenbox.Core.Models;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -15,13 +15,12 @@ namespace Screenbox.Core.Factories;
 public sealed class MediaViewModelFactory
 {
     private readonly LibVlcService _libVlcService;
-    private readonly SessionContext _sessionContext;
-    private MediaViewModelFactoryState State => _sessionContext.MediaFactory;
+    private readonly MediaViewModelFactoryState State;
 
-    public MediaViewModelFactory(LibVlcService libVlcService, SessionContext sessionContext)
+    public MediaViewModelFactory(LibVlcService libVlcService, MediaViewModelFactoryState state)
     {
         _libVlcService = libVlcService;
-        _sessionContext = sessionContext;
+        State = state;
     }
 
     public MediaViewModel GetTransient(StorageFile file)

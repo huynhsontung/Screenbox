@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -59,8 +60,7 @@ namespace Screenbox.Core.Services
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
-        private readonly SessionContext _sessionContext;
-        private LibraryState State => _sessionContext.Library;
+        private readonly LibraryState State;
         private readonly DispatcherQueueTimer _musicRefreshTimer;
         private readonly DispatcherQueueTimer _videosRefreshTimer;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
@@ -106,14 +106,14 @@ namespace Screenbox.Core.Services
 
     public LibraryService(ISettingsService settingsService, IFilesService filesService,
         MediaViewModelFactory mediaFactory, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory,
-        SessionContext sessionContext)
+        LibraryState state)
     {
         _settingsService = settingsService;
         _filesService = filesService;
         _mediaFactory = mediaFactory;
         _albumFactory = albumFactory;
         _artistFactory = artistFactory;
-        _sessionContext = sessionContext;
+        State = state;
         DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _musicRefreshTimer = State.MusicRefreshTimer ??= dispatcherQueue.CreateTimer();
         _videosRefreshTimer = State.VideosRefreshTimer ??= dispatcherQueue.CreateTimer();

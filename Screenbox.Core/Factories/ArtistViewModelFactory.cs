@@ -1,7 +1,7 @@
 #nullable enable
 
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System;
@@ -18,12 +18,11 @@ namespace Screenbox.Core.Factories
         public IReadOnlyCollection<ArtistViewModel> AllArtists => State.Artists.Values;
 
         private static readonly string[] ArtistNameSeparators = { ",", ", ", "; " };
-        private readonly SessionContext _sessionContext;
-        private ArtistFactoryState State => _sessionContext.Artists;
+        private readonly ArtistFactoryState State;
 
-        public ArtistViewModelFactory(IResourceService resourceService, SessionContext sessionContext)
+        public ArtistViewModelFactory(IResourceService resourceService, ArtistFactoryState state)
         {
-            _sessionContext = sessionContext;
+            State = state;
             State.UnknownArtist ??= new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
         }
 

@@ -2,8 +2,8 @@
 
 using System;
 using System.Threading.Tasks;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -16,12 +16,11 @@ namespace Screenbox.Core.Services
     {
         public SystemMediaTransportControls TransportControls { get; }
 
-        private readonly SessionContext _sessionContext;
-        private TransportControlsState State => _sessionContext.TransportControls;
+        private readonly TransportControlsState State;
 
-        public SystemMediaTransportControlsService(SessionContext sessionContext)
+        public SystemMediaTransportControlsService(TransportControlsState state)
         {
-            _sessionContext = sessionContext;
+            State = state;
             TransportControls = SystemMediaTransportControls.GetForCurrentView();
             TransportControls.IsEnabled = true;
             TransportControls.IsPlayEnabled = true;

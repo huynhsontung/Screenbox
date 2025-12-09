@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -29,13 +30,12 @@ namespace Screenbox.Core.Helpers
         }
 
         private readonly IFilesService _filesService;
-        private readonly SessionContext _sessionContext;
-        private LastPositionState State => _sessionContext.LastPositions;
+        private readonly LastPositionState State;
 
-        public LastPositionTracker(IFilesService filesService, SessionContext sessionContext)
+        public LastPositionTracker(IFilesService filesService, LastPositionState state)
         {
             _filesService = filesService;
-            _sessionContext = sessionContext;
+            State = state;
 
             IsActive = true;
         }

@@ -7,10 +7,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -32,24 +32,23 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
         [ObservableProperty] private double _footerBottomPaddingHeight;
 
-        private readonly NavigationState NavigationState => _sessionContext.Navigation;
+        private readonly NavigationState NavigationState;
         private readonly INavigationService _navigationService;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
-        private readonly SessionContext _sessionContext;
 
         public CommonViewModel(INavigationService navigationService,
             IFilesService filesService,
             IResourceService resourceService,
             ISettingsService settingsService,
-            SessionContext sessionContext)
+            NavigationState navigationState)
         {
-            _sessionContext = sessionContext;
             _navigationService = navigationService;
             _filesService = filesService;
             _resourceService = resourceService;
             _settingsService = settingsService;
+            NavigationState = navigationState;
             _navigationViewDisplayMode = NavigationState.NavigationViewDisplayMode == default
                 ? Messenger.Send<NavigationViewDisplayModeRequestMessage>()
                 : NavigationState.NavigationViewDisplayMode;

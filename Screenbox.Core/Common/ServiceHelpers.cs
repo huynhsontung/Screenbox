@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -10,7 +10,19 @@ public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
     {
-        services.AddSingleton<SessionContext>();
+        services.AddSingleton<NavigationState>();
+        services.AddSingleton<VolumeState>();
+        services.AddSingleton<MediaListState>();
+        services.AddSingleton<MediaViewModelFactoryState>();
+        services.AddSingleton<AlbumFactoryState>();
+        services.AddSingleton<ArtistFactoryState>();
+        services.AddSingleton<LibVlcState>();
+        services.AddSingleton<TransportControlsState>();
+        services.AddSingleton<NotificationState>();
+        services.AddSingleton<CastState>();
+        services.AddSingleton<WindowState>();
+        services.AddSingleton<LibraryState>();
+        services.AddSingleton<LastPositionState>();
 
         // View models
         services.AddTransient<PlayerElementViewModel>();

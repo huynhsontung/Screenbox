@@ -3,8 +3,8 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.System;
@@ -19,15 +19,14 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
-        private VolumeState VolumeState => _sessionContext.Volume;
+        private readonly VolumeState VolumeState;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
-        private readonly SessionContext _sessionContext;
 
-        public VolumeViewModel(ISettingsService settingsService, SessionContext sessionContext)
+        public VolumeViewModel(ISettingsService settingsService, VolumeState volumeState)
         {
-            _sessionContext = sessionContext;
             _settingsService = settingsService;
+            VolumeState = volumeState;
             if (VolumeState.IsInitialized)
             {
                 _volume = VolumeState.Volume;

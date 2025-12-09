@@ -2,8 +2,8 @@
 
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Events;
-using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 
@@ -15,13 +15,12 @@ namespace Screenbox.Core.Services
         public event EventHandler<RendererLostEventArgs>? RendererLost;
 
         private readonly LibVlcService _libVlcService;
-        private readonly SessionContext _sessionContext;
-        private CastState State => _sessionContext.Cast;
+        private readonly CastState State;
 
-        public CastService(LibVlcService libVlcService, SessionContext sessionContext)
+        public CastService(LibVlcService libVlcService, CastState state)
         {
             _libVlcService = libVlcService;
-            _sessionContext = sessionContext;
+            State = state;
         }
 
         public bool SetActiveRenderer(Renderer? renderer)
