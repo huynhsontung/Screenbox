@@ -10,7 +10,7 @@ using Windows.Storage.Search;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class LibraryState
+internal sealed class LibraryContext
 {
     internal StorageLibrary? MusicLibrary { get; set; }
     internal StorageLibrary? VideosLibrary { get; set; }

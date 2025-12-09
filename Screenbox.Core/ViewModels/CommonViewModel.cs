@@ -32,7 +32,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
         [ObservableProperty] private double _footerBottomPaddingHeight;
 
-        private readonly NavigationState NavigationState;
+        private readonly NavigationContext NavigationState;
         private readonly INavigationService _navigationService;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
@@ -42,7 +42,7 @@ namespace Screenbox.Core.ViewModels
             IFilesService filesService,
             IResourceService resourceService,
             ISettingsService settingsService,
-            NavigationState navigationState)
+            NavigationContext navigationState)
         {
             _navigationService = navigationService;
             _filesService = filesService;

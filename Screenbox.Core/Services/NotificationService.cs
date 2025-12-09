@@ -18,9 +18,9 @@ namespace Screenbox.Core.Services
         public event EventHandler<ProgressUpdatedEventArgs>? ProgressUpdated;
 
         private readonly Func<IVlcLoginDialog> _vlcLoginDialogFactory;
-        private readonly NotificationState State;
+        private readonly NotificationContext State;
 
-        public NotificationService(Func<IVlcLoginDialog> vlcLoginDialogFactory, NotificationState state)
+        public NotificationService(Func<IVlcLoginDialog> vlcLoginDialogFactory, NotificationContext state)
         {
             _vlcLoginDialogFactory = vlcLoginDialogFactory;
             State = state;

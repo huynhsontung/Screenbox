@@ -10,19 +10,19 @@ public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
     {
-        services.AddSingleton<NavigationState>();
-        services.AddSingleton<VolumeState>();
-        services.AddSingleton<MediaListState>();
-        services.AddSingleton<MediaViewModelFactoryState>();
-        services.AddSingleton<AlbumFactoryState>();
-        services.AddSingleton<ArtistFactoryState>();
-        services.AddSingleton<LibVlcState>();
-        services.AddSingleton<TransportControlsState>();
-        services.AddSingleton<NotificationState>();
-        services.AddSingleton<CastState>();
-        services.AddSingleton<WindowState>();
-        services.AddSingleton<LibraryState>();
-        services.AddSingleton<LastPositionState>();
+        services.AddSingleton<NavigationContext>();
+        services.AddSingleton<VolumeContext>();
+        services.AddSingleton<MediaListContext>();
+        services.AddSingleton<MediaViewModelFactoryContext>();
+        services.AddSingleton<AlbumFactoryContext>();
+        services.AddSingleton<ArtistFactoryContext>();
+        services.AddSingleton<LibVlcContext>();
+        services.AddSingleton<TransportControlsContext>();
+        services.AddSingleton<NotificationContext>();
+        services.AddSingleton<CastContext>();
+        services.AddSingleton<WindowContext>();
+        services.AddSingleton<LibraryContext>();
+        services.AddSingleton<LastPositionContext>();
 
         // View models
         services.AddTransient<PlayerElementViewModel>();

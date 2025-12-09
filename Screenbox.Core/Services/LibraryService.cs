@@ -4,7 +4,6 @@ using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -60,7 +59,7 @@ namespace Screenbox.Core.Services
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
-        private readonly LibraryState State;
+        private readonly LibraryContext State;
         private readonly DispatcherQueueTimer _musicRefreshTimer;
         private readonly DispatcherQueueTimer _videosRefreshTimer;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
@@ -106,7 +105,7 @@ namespace Screenbox.Core.Services
 
     public LibraryService(ISettingsService settingsService, IFilesService filesService,
         MediaViewModelFactory mediaFactory, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory,
-        LibraryState state)
+        LibraryContext state)
     {
         _settingsService = settingsService;
         _filesService = filesService;

@@ -10,7 +10,7 @@ using Windows.Storage.Search;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class MediaListState
+internal sealed class MediaListContext
 {
     internal Playlist Playlist { get; set; } = new();
     internal List<MediaViewModel> MediaBuffer { get; set; } = new();

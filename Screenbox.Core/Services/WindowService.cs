@@ -32,9 +32,9 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private readonly WindowState State;
+        private readonly WindowContext State;
 
-        public WindowService(WindowState state)
+        public WindowService(WindowContext state)
         {
             State = state;
             Window.Current.SizeChanged += OnWindowSizeChanged;

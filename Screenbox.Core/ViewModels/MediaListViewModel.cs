@@ -61,7 +61,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
-    private readonly MediaListState State;
+    private readonly MediaListContext State;
 
     // ViewModel state
     private Playlist Playlist
@@ -115,7 +115,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         ISettingsService settingsService,
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
-        MediaListState state)
+        MediaListContext state)
     {
         _playlistService = playlistService;
         _playbackControlService = playbackControlService;

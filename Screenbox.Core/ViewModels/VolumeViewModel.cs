@@ -19,11 +19,11 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
-        private readonly VolumeState VolumeState;
+        private readonly VolumeContext VolumeState;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
 
-        public VolumeViewModel(ISettingsService settingsService, VolumeState volumeState)
+        public VolumeViewModel(ISettingsService settingsService, VolumeContext volumeState)
         {
             _settingsService = settingsService;
             VolumeState = volumeState;

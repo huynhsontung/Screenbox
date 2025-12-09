@@ -15,9 +15,9 @@ namespace Screenbox.Core.Services
         public event EventHandler<RendererLostEventArgs>? RendererLost;
 
         private readonly LibVlcService _libVlcService;
-        private readonly CastState State;
+        private readonly CastContext State;
 
-        public CastService(LibVlcService libVlcService, CastState state)
+        public CastService(LibVlcService libVlcService, CastContext state)
         {
             _libVlcService = libVlcService;
             State = state;

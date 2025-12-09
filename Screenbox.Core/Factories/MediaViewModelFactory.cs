@@ -15,9 +15,9 @@ namespace Screenbox.Core.Factories;
 public sealed class MediaViewModelFactory
 {
     private readonly LibVlcService _libVlcService;
-    private readonly MediaViewModelFactoryState State;
+    private readonly MediaViewModelFactoryContext State;
 
-    public MediaViewModelFactory(LibVlcService libVlcService, MediaViewModelFactoryState state)
+    public MediaViewModelFactory(LibVlcService libVlcService, MediaViewModelFactoryContext state)
     {
         _libVlcService = libVlcService;
         State = state;

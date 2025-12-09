@@ -16,9 +16,9 @@ namespace Screenbox.Core.Services
     {
         public SystemMediaTransportControls TransportControls { get; }
 
-        private readonly TransportControlsState State;
+        private readonly TransportControlsContext State;
 
-        public SystemMediaTransportControlsService(TransportControlsState state)
+        public SystemMediaTransportControlsService(TransportControlsContext state)
         {
             State = state;
             TransportControls = SystemMediaTransportControls.GetForCurrentView();

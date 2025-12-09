@@ -18,9 +18,9 @@ namespace Screenbox.Core.Factories
         public IReadOnlyCollection<ArtistViewModel> AllArtists => State.Artists.Values;
 
         private static readonly string[] ArtistNameSeparators = { ",", ", ", "; " };
-        private readonly ArtistFactoryState State;
+        private readonly ArtistFactoryContext State;
 
-        public ArtistViewModelFactory(IResourceService resourceService, ArtistFactoryState state)
+        public ArtistViewModelFactory(IResourceService resourceService, ArtistFactoryContext state)
         {
             State = state;
             State.UnknownArtist ??= new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));

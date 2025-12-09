@@ -17,9 +17,9 @@ namespace Screenbox.Core.Factories
 
         public IReadOnlyCollection<AlbumViewModel> AllAlbums => State.Albums.Values;
         private readonly IResourceService _resourceService;
-        private readonly AlbumFactoryState State;
+        private readonly AlbumFactoryContext State;
 
-        public AlbumViewModelFactory(IResourceService resourceService, AlbumFactoryState state)
+        public AlbumViewModelFactory(IResourceService resourceService, AlbumFactoryContext state)
         {
             _resourceService = resourceService;
             State = state;

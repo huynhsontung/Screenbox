@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class NavigationState
+internal sealed class NavigationContext
 {
     internal Dictionary<Type, string> NavigationStates { get; } = new();
     internal Dictionary<string, object> PageStates { get; } = new();

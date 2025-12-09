@@ -19,14 +19,14 @@ public sealed class LibVlcService : IDisposable
     public LibVLC? LibVlc => _libVlcState.LibVlc;
 
     private readonly NotificationService _notificationService;
-    private readonly LibVlcState _libVlcState;
+    private readonly LibVlcContext _libVlcState;
     private bool UseFutureAccessList
     {
         get => _libVlcState.UseFutureAccessList;
         set => _libVlcState.UseFutureAccessList = value;
     }
 
-    public LibVlcService(INotificationService notificationService, LibVlcState libVlcState)
+    public LibVlcService(INotificationService notificationService, LibVlcContext libVlcState)
     {
         _notificationService = (NotificationService)notificationService;
         _libVlcState = libVlcState;

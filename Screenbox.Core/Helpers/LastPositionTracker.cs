@@ -30,9 +30,9 @@ namespace Screenbox.Core.Helpers
         }
 
         private readonly IFilesService _filesService;
-        private readonly LastPositionState State;
+        private readonly LastPositionContext State;
 
-        public LastPositionTracker(IFilesService filesService, LastPositionState state)
+        public LastPositionTracker(IFilesService filesService, LastPositionContext state)
         {
             _filesService = filesService;
             State = state;

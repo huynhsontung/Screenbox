@@ -4,7 +4,7 @@ using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class LibVlcState
+internal sealed class LibVlcContext
 {
     internal VlcMediaPlayer? MediaPlayer { get; set; }
     internal LibVLC? LibVlc { get; set; }

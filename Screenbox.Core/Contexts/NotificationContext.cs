@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class NotificationState
+internal sealed class NotificationContext
 {
     internal string? ProgressTitle { get; set; }
 }
