@@ -19,7 +19,6 @@ using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.ViewModels
@@ -159,12 +158,24 @@ namespace Screenbox.Core.ViewModels
             ProcessMediaGesture(_playerTapGesture, 10.0, 0.0);
         }
 
-        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        public void HandlePointerWheelInput(int delta, bool isHorizontal)
         {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
-            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume));
+            if (!isHorizontal)
+            {
+                int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 5 : -5, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume));
+            }
+            else
+            {
+                if (_mediaPlayer?.CanSeek == true)
+                {
+                    _timeBeforeManipulation = _mediaPlayer.Position;
+                    Messenger.Send(new TimeChangeOverrideMessage(true));
+                    var timeChange = TimeSpan.FromSeconds(-delta);
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                    UpdateTimeStatusMessage(newTime);
+                }
+            }
         }
 
         public void HandleManipulationGesture(

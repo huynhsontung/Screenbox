@@ -102,6 +102,17 @@ namespace Screenbox.Controls
             e.Handled = true;
         }
 
+        private void VideoViewButton_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            if (!IsEnabled) return;
+
+            var pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
+            ViewModel.HandlePointerWheelInput(
+                pointer.Properties.MouseWheelDelta,
+                pointer.Properties.IsHorizontalMouseWheel);
+            e.Handled = true;
+        }
+
         private void GestureRecognizer_OnManipulationStarted(GestureRecognizer sender, ManipulationStartedEventArgs args)
         {
             ViewModel.ManipulationStarted();

@@ -27,7 +27,7 @@
             PointerMoved="VideoViewButton_OnPointerMoved"
             PointerPressed="VideoViewButton_OnPointerPressed"
             PointerReleased="VideoViewButton_OnPointerReleased"
-            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
+            PointerWheelChanged="VideoViewButton_OnPointerWheelChanged"
             Tapped="VideoViewButton_OnTapped">
             <Border Background="Transparent" />
         </UserControl>
