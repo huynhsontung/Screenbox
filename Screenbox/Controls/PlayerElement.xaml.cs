@@ -109,7 +109,7 @@ namespace Screenbox.Controls
 
         private void GestureRecognizer_OnManipulationUpdated(GestureRecognizer sender, ManipulationUpdatedEventArgs args)
         {
-            ViewModel.ProcessTranslationManipulation(
+            ViewModel.HandleManipulationGesture(
                 args.Delta.Translation.X,
                 args.Delta.Translation.Y,
                 args.Cumulative.Translation.X,
@@ -123,7 +123,7 @@ namespace Screenbox.Controls
 
         private void GestureRecognizer_OnHolding(GestureRecognizer sender, HoldingEventArgs args)
         {
-            ViewModel.ProcessHoldingGesture(args.HoldingState);
+            ViewModel.HandleHoldingGesture(args.HoldingState);
         }
 
         // private void PlayerElement_OnLoaded(object sender, RoutedEventArgs e)

@@ -35,8 +35,6 @@ namespace Screenbox.Core.ViewModels
 
         public MediaPlayer? VlcPlayer { get; private set; }
 
-        private double CurrentPlaybackSpeed => _mediaPlayer?.PlaybackRate ?? 1.0;
-
         private readonly LibVlcService _libVlcService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
@@ -55,7 +53,7 @@ namespace Screenbox.Core.ViewModels
         private MediaCommandType _playerSwipeLeftGesture;
         private MediaCommandType _playerSwipeRightGesture;
         private bool _playerTapAndHoldGesture;
-        private double _playbackSpeed;
+        private double _playbackRateBeforeHolding;
         private bool _suppressTap;
 
         public PlayerElementViewModel(
@@ -158,7 +156,7 @@ namespace Screenbox.Core.ViewModels
                 return;
             }
 
-            ProcessSwipeGesture(_playerTapGesture, 10.0, 0.0);
+            ProcessMediaGesture(_playerTapGesture, 10.0, 0.0);
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -169,7 +167,7 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
 
-        public void ProcessTranslationManipulation(
+        public void HandleManipulationGesture(
             double horizontalDelta,
             double verticalDelta,
             double horizontalCumulative,
@@ -186,13 +184,13 @@ namespace Screenbox.Core.ViewModels
                 if (verticalDelta > 0)
                 {
                     _manipulationLock = ManipulationLock.Vertical;
-                    ProcessSwipeGesture(_playerSwipeDownGesture, verticalDelta, verticalCumulative);
+                    ProcessMediaGesture(_playerSwipeDownGesture, verticalDelta, verticalCumulative);
                     return;
                 }
                 else
                 {
                     _manipulationLock = ManipulationLock.Vertical;
-                    ProcessSwipeGesture(_playerSwipeUpGesture, -verticalDelta, -verticalCumulative);
+                    ProcessMediaGesture(_playerSwipeUpGesture, -verticalDelta, -verticalCumulative);
                     return;
                 }
             }
@@ -203,45 +201,42 @@ namespace Screenbox.Core.ViewModels
                 if (horizontalDelta > 0)
                 {
                     _manipulationLock = ManipulationLock.Horizontal;
-                    ProcessSwipeGesture(_playerSwipeRightGesture, horizontalDelta, horizontalCumulative);
+                    ProcessMediaGesture(_playerSwipeRightGesture, horizontalDelta, horizontalCumulative);
                     return;
                 }
                 else
                 {
                     _manipulationLock = ManipulationLock.Horizontal;
-                    ProcessSwipeGesture(_playerSwipeLeftGesture, -horizontalDelta, -horizontalCumulative);
+                    ProcessMediaGesture(_playerSwipeLeftGesture, -horizontalDelta, -horizontalCumulative);
                     return;
                 }
             }
         }
 
-        public void ProcessHoldingGesture(HoldingState holdingState)
+        public void HandleHoldingGesture(HoldingState holdingState)
         {
             if (!_playerTapAndHoldGesture || _mediaPlayer == null) return;
 
             switch (holdingState)
             {
                 case HoldingState.Started:
-                    _playbackSpeed = CurrentPlaybackSpeed;
+                    _playbackRateBeforeHolding = _mediaPlayer.PlaybackRate;
                     _suppressTap = true;
-                    _mediaPlayer.PlaybackRate = 2.0;
-                    Messenger.Send(new UpdateStatusMessage($"2×"));
+                    SetPlaybackSpeed(2.0);
                     IsHolding = true;
                     break;
                 case HoldingState.Completed:
                 case HoldingState.Canceled:
                     if (IsHolding)
                     {
-                        _mediaPlayer.PlaybackRate = _playbackSpeed;
-                        _playbackSpeed = CurrentPlaybackSpeed;
-                        Messenger.Send(new UpdateStatusMessage($"{_playbackSpeed}×"));
+                        SetPlaybackSpeed(_playbackRateBeforeHolding);
                         IsHolding = false;
                     }
                     break;
             }
         }
 
-        private void ProcessSwipeGesture(MediaCommandType gestureKind, double change, double cumulative)
+        private void ProcessMediaGesture(MediaCommandType gestureKind, double change, double cumulative)
         {
             const double ChangePerPixel = 200;
 
@@ -263,7 +258,7 @@ namespace Screenbox.Core.ViewModels
                         Messenger.Send(new TimeChangeOverrideMessage(true));
                         var timeChange = TimeSpan.FromMilliseconds(-change * ChangePerPixel);
                         var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
-                        SendStatusUpdate(newTime);
+                        UpdateTimeStatusMessage(newTime);
                     }
                     break;
                 case MediaCommandType.FastForward:
@@ -272,7 +267,7 @@ namespace Screenbox.Core.ViewModels
                         Messenger.Send(new TimeChangeOverrideMessage(true));
                         var timeChange = TimeSpan.FromMilliseconds(change * ChangePerPixel);
                         var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
-                        SendStatusUpdate(newTime);
+                        UpdateTimeStatusMessage(newTime);
                     }
                     break;
                 case MediaCommandType.DecreaseVolume:
@@ -284,17 +279,6 @@ namespace Screenbox.Core.ViewModels
                     Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
                     break;
             }
-        }
-
-        private void SendStatusUpdate(TimeSpan newTime)
-        {
-            var changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
-            if (changeText[0] != '-')
-            {
-                changeText = "+" + changeText;
-            }
-            var status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
-            Messenger.Send(new UpdateStatusMessage(status));
         }
 
         public void ManipulationStarted()
@@ -424,6 +408,26 @@ namespace Screenbox.Core.ViewModels
             else if (!shouldActive && tracker.IsActive)
             {
                 tracker.RequestRelease();
+            }
+        }
+
+        private void UpdateTimeStatusMessage(TimeSpan newTime)
+        {
+            var changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
+            if (changeText[0] != '-')
+            {
+                changeText = "+" + changeText;
+            }
+            var status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
+            Messenger.Send(new UpdateStatusMessage(status));
+        }
+
+        private void SetPlaybackSpeed(double value)
+        {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.PlaybackRate = value;
+                Messenger.Send(new UpdateStatusMessage($"{value}×"));
             }
         }
     }
