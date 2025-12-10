@@ -57,7 +57,7 @@ namespace Screenbox.Core.ViewModels
 
         public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
 
-        public IReadOnlyList<MediaCommandType> GestureOptions { get; }
+        public Array GestureOptions { get; }
 
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
@@ -92,7 +92,7 @@ namespace Screenbox.Core.ViewModels
                 .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
                 .ToList();
 
-            GestureOptions = Enum.GetValues(typeof(MediaCommandType)).Cast<MediaCommandType>().ToList();
+            GestureOptions = Enum.GetValues(typeof(MediaCommandType));
 
             if (SystemInformation.IsXbox)
             {
