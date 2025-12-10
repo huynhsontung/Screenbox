@@ -138,6 +138,7 @@
     <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
     <Compile Include="Behaviors\AutoFocusBehavior.cs" />
     <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />
+    <Compile Include="Behaviors\ComboBoxWidthFromPopupBehavior.cs" />
     <Compile Include="Behaviors\FocusOnItemClickBehavior.cs" />
     <Compile Include="Behaviors\GamepadXYNavigationBehavior.cs" />
     <Compile Include="Behaviors\GroupingOverviewBehavior.cs" />
