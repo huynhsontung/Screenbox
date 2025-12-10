@@ -1,5 +1,6 @@
-﻿#nullable enable
+#nullable enable
 
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
@@ -12,19 +13,17 @@ namespace Screenbox.Core.Factories
 {
     public sealed class AlbumViewModelFactory
     {
-        public AlbumViewModel UnknownAlbum { get; }
+        public AlbumViewModel UnknownAlbum => State.UnknownAlbum!;
 
-        public IReadOnlyCollection<AlbumViewModel> AllAlbums { get; }
-
-        private readonly Dictionary<string, AlbumViewModel> _allAlbums;
+        public IReadOnlyCollection<AlbumViewModel> AllAlbums => State.Albums.Values;
         private readonly IResourceService _resourceService;
+        private readonly AlbumFactoryContext State;
 
-        public AlbumViewModelFactory(IResourceService resourceService)
+        public AlbumViewModelFactory(IResourceService resourceService, AlbumFactoryContext state)
         {
             _resourceService = resourceService;
-            UnknownAlbum = new AlbumViewModel(resourceService.GetString(ResourceName.UnknownAlbum), resourceService.GetString(ResourceName.UnknownArtist));
-            _allAlbums = new Dictionary<string, AlbumViewModel>();
-            AllAlbums = _allAlbums.Values;
+            State = state;
+            State.UnknownAlbum ??= new AlbumViewModel(resourceService.GetString(ResourceName.UnknownAlbum), resourceService.GetString(ResourceName.UnknownArtist));
         }
 
         public AlbumViewModel GetAlbumFromName(string albumName, string artistName)
@@ -37,7 +36,7 @@ namespace Screenbox.Core.Factories
             string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
             string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
             string key = GetAlbumKey(albumKey, artistKey);
-            return _allAlbums.GetValueOrDefault(key, UnknownAlbum);
+            return State.Albums.GetValueOrDefault(key, UnknownAlbum);
         }
 
         public AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)
@@ -68,7 +67,7 @@ namespace Screenbox.Core.Factories
 
             album.RelatedSongs.Add(song);
             UpdateAlbumDateAdded(album, song);
-            return _allAlbums[key] = album;
+            return State.Albums[key] = album;
         }
 
         public void Remove(MediaViewModel song)
@@ -81,18 +80,18 @@ namespace Screenbox.Core.Factories
             {
                 string albumKey = album.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
                 string artistKey = album.ArtistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-                _allAlbums.Remove(GetAlbumKey(albumKey, artistKey));
+                State.Albums.Remove(GetAlbumKey(albumKey, artistKey));
             }
         }
 
         public void Compact()
         {
             List<string> albumKeysToRemove =
-                _allAlbums.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
+                State.Albums.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
 
             foreach (string albumKey in albumKeysToRemove)
             {
-                _allAlbums.Remove(albumKey);
+                State.Albums.Remove(albumKey);
             }
         }
 
@@ -106,7 +105,7 @@ namespace Screenbox.Core.Factories
             UnknownAlbum.RelatedSongs.Clear();
             UnknownAlbum.DateAdded = default;
 
-            foreach ((string _, AlbumViewModel album) in _allAlbums)
+            foreach ((string _, AlbumViewModel album) in State.Albums)
             {
                 foreach (MediaViewModel media in album.RelatedSongs)
                 {
@@ -114,7 +113,7 @@ namespace Screenbox.Core.Factories
                 }
             }
 
-            _allAlbums.Clear();
+            State.Albums.Clear();
         }
 
         private static void UpdateAlbumDateAdded(AlbumViewModel album, MediaViewModel song)

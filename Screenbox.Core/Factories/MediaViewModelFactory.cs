@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -14,12 +15,12 @@ namespace Screenbox.Core.Factories;
 public sealed class MediaViewModelFactory
 {
     private readonly LibVlcService _libVlcService;
-    private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
-    private int _referencesCleanUpThreshold = 1000;
+    private readonly MediaViewModelFactoryContext State;
 
-    public MediaViewModelFactory(LibVlcService libVlcService)
+    public MediaViewModelFactory(LibVlcService libVlcService, MediaViewModelFactoryContext state)
     {
         _libVlcService = libVlcService;
+        State = state;
     }
 
     public MediaViewModel GetTransient(StorageFile file)
@@ -52,7 +53,7 @@ public sealed class MediaViewModelFactory
     public MediaViewModel GetSingleton(StorageFile file)
     {
         string id = file.Path;
-        if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
+        if (State.References.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
             reference.TryGetTarget(out MediaViewModel instance))
         {
             // Prefer storage file source
@@ -69,7 +70,7 @@ public sealed class MediaViewModelFactory
         instance = new MediaViewModel(_libVlcService, file);
         if (!string.IsNullOrEmpty(id))
         {
-            _references[id] = new WeakReference<MediaViewModel>(instance);
+            State.References[id] = new WeakReference<MediaViewModel>(instance);
             CleanUpStaleReferences();
         }
 
@@ -79,14 +80,14 @@ public sealed class MediaViewModelFactory
     public MediaViewModel GetSingleton(Uri uri)
     {
         string id = uri.OriginalString;
-        if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
+        if (State.References.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
             reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
         // No existing reference, create new instance
         instance = new MediaViewModel(_libVlcService, uri);
         if (!string.IsNullOrEmpty(id))
         {
-            _references[id] = new WeakReference<MediaViewModel>(instance);
+            State.References[id] = new WeakReference<MediaViewModel>(instance);
             CleanUpStaleReferences();
         }
 
@@ -95,15 +96,15 @@ public sealed class MediaViewModelFactory
 
     private void CleanUpStaleReferences()
     {
-        if (_references.Count < _referencesCleanUpThreshold) return;
-        string[] keysToRemove = _references
+        if (State.References.Count < State.ReferencesCleanUpThreshold) return;
+        string[] keysToRemove = State.References
             .Where(pair => !pair.Value.TryGetTarget(out MediaViewModel _))
             .Select(pair => pair.Key).ToArray();
         foreach (string key in keysToRemove)
         {
-            _references.Remove(key);
+            State.References.Remove(key);
         }
 
-        _referencesCleanUpThreshold = Math.Max(_references.Count * 2, _referencesCleanUpThreshold);
+        State.ReferencesCleanUpThreshold = Math.Max(State.References.Count * 2, State.ReferencesCleanUpThreshold);
     }
 }

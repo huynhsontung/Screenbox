@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -61,15 +62,50 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
+    private readonly MediaListContext State;
 
     // ViewModel state
-    private Playlist _playlist;
-    private List<MediaViewModel> _mediaBuffer = new();
-    private IMediaPlayer? _mediaPlayer;
-    private object? _delayPlay;
-    private bool _deferCollectionChanged;   // Optimization to avoid excessive updates on collection changed events
-    private StorageFileQueryResult? _neighboringFilesQuery;
-    private CancellationTokenSource? _playFilesCts;
+    private Playlist Playlist
+    {
+        get => State.Playlist;
+        set => State.Playlist = value;
+    }
+
+    private List<MediaViewModel> MediaBuffer
+    {
+        get => State.MediaBuffer;
+        set => State.MediaBuffer = value;
+    }
+
+    private IMediaPlayer? MediaPlayer
+    {
+        get => State.MediaPlayer;
+        set => State.MediaPlayer = value;
+    }
+
+    private object? DelayPlay
+    {
+        get => State.DelayPlay;
+        set => State.DelayPlay = value;
+    }
+
+    private bool DeferCollectionChanged
+    {
+        get => State.DeferCollectionChanged;
+        set => State.DeferCollectionChanged = value;
+    }
+
+    private StorageFileQueryResult? NeighboringFilesQuery
+    {
+        get => State.NeighboringFilesQuery;
+        set => State.NeighboringFilesQuery = value;
+    }
+
+    private CancellationTokenSource? PlayFilesCts
+    {
+        get => State.PlayFilesCancellation;
+        set => State.PlayFilesCancellation = value;
+    }
     private readonly DispatcherQueue _dispatcherQueue;
 
     public MediaListViewModel(
@@ -79,7 +115,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         IFilesService filesService,
         ISettingsService settingsService,
         ISystemMediaTransportControlsService transportControlsService,
-        MediaViewModelFactory mediaFactory)
+        MediaViewModelFactory mediaFactory,
+        MediaListContext state)
     {
         _playlistService = playlistService;
         _playbackControlService = playbackControlService;
@@ -88,16 +125,23 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
+        State = state;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         // Initialize UI collections
-        Items = new ObservableCollection<MediaViewModel>();
+        Playlist = State.Playlist ??= new Playlist();
+        Items = new ObservableCollection<MediaViewModel>(Playlist.Items);
         Items.CollectionChanged += OnCollectionChanged;
 
         // Initialize state
-        _playlist = new Playlist();
-        _repeatMode = settingsService.PersistentRepeatMode;
-        _currentIndex = -1;
+        _repeatMode = State.RepeatMode == default ? settingsService.PersistentRepeatMode : State.RepeatMode;
+        _shuffleMode = State.ShuffleMode;
+        _currentItem = State.CurrentItem;
+        _currentIndex = State.CurrentIndex >= 0 ? State.CurrentIndex : -1;
+        State.RepeatMode = _repeatMode;
+        State.ShuffleMode = _shuffleMode;
+        State.CurrentItem = _currentItem;
+        State.CurrentIndex = _currentIndex;
 
         // Setup transport controls
         _transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
@@ -114,19 +158,19 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     {
         var files = message.Value;
         await ParseAndPlayAsync(files);
-        _neighboringFilesQuery = message.NeighboringFilesQuery;
+        NeighboringFilesQuery = message.NeighboringFilesQuery;
 
         // Enqueue neighboring files if needed
-        if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
+        if (Playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
         {
-            if (_neighboringFilesQuery == null && files[0] is StorageFile file)
+            if (NeighboringFilesQuery == null && files[0] is StorageFile file)
             {
-                _neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+                NeighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
             }
 
-            if (_neighboringFilesQuery != null)
+            if (NeighboringFilesQuery != null)
             {
-                var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist, _neighboringFilesQuery);
+                var updatedPlaylist = await EnqueueNeighboringFilesAsync(Playlist, NeighboringFilesQuery);
                 LoadFromPlaylist(updatedPlaylist);
             }
         }
@@ -140,7 +184,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     public void Receive(QueuePlaylistMessage message)
     {
         // Perform some clean ups as we assume new playlist
-        _neighboringFilesQuery = null;
+        NeighboringFilesQuery = null;
         ShuffleMode = false;
 
         // Load and play the new playlist
@@ -156,14 +200,14 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public void Receive(PlaylistRequestMessage message)
     {
-        message.Reply(new Playlist(_playlist));
+        message.Reply(new Playlist(Playlist));
     }
 
     public async void Receive(PlayMediaMessage message)
     {
-        if (_mediaPlayer == null)
+        if (MediaPlayer == null)
         {
-            _delayPlay = message.Value;
+            DelayPlay = message.Value;
             return;
         }
 
@@ -180,25 +224,32 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public void Receive(MediaPlayerChangedMessage message)
     {
-        _mediaPlayer = message.Value;
-        _mediaPlayer.MediaFailed += OnMediaFailed;
-        _mediaPlayer.MediaEnded += OnEndReached;
-        _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+        if (MediaPlayer != null)
+        {
+            MediaPlayer.MediaFailed -= OnMediaFailed;
+            MediaPlayer.MediaEnded -= OnEndReached;
+            MediaPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+        }
 
-        if (_delayPlay != null)
+        MediaPlayer = message.Value;
+        MediaPlayer.MediaFailed += OnMediaFailed;
+        MediaPlayer.MediaEnded += OnEndReached;
+        MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+
+        if (DelayPlay != null)
         {
             async void SetPlayQueue()
             {
-                if (_delayPlay is MediaViewModel media && Items.Contains(media))
+                if (DelayPlay is MediaViewModel media && Items.Contains(media))
                 {
                     PlaySingle(media);
                 }
                 else
                 {
                     ClearPlaylist();
-                    await ParseAndPlayAsync(_delayPlay);
+                    await ParseAndPlayAsync(DelayPlay);
                 }
-                _delayPlay = null;
+                DelayPlay = null;
             }
 
             _dispatcherQueue.TryEnqueue(SetPlayQueue);
@@ -211,9 +262,9 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     partial void OnCurrentItemChanging(MediaViewModel? value)
     {
-        if (_mediaPlayer != null)
+        if (MediaPlayer != null)
         {
-            _mediaPlayer.PlaybackItem = value?.Item.Value;
+            MediaPlayer.PlaybackItem = value?.Item.Value;
         }
 
         if (CurrentItem != null)
@@ -226,13 +277,16 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         {
             value.IsMediaActive = true;
             CurrentIndex = Items.IndexOf(value);
-            _playlist.CurrentIndex = CurrentIndex;
+            Playlist.CurrentIndex = CurrentIndex;
         }
         else
         {
             CurrentIndex = -1;
-            _playlist.CurrentIndex = -1;
+            Playlist.CurrentIndex = -1;
         }
+
+        State.CurrentIndex = CurrentIndex;
+        State.CurrentItem = value;
     }
 
     async partial void OnCurrentItemChanged(MediaViewModel? value)
@@ -254,10 +308,12 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             _transportControlsService.UpdateTransportControlsDisplayAsync(value),
             UpdateMediaBufferAsync()
         );
+        State.CurrentItem = value;
     }
 
     partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
     {
+        State.RepeatMode = value;
         Messenger.Send(new RepeatModeChangedMessage(value));
         _transportControlsService.TransportControls.AutoRepeatMode = value;
         _settingsService.PersistentRepeatMode = value;
@@ -265,21 +321,22 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     partial void OnShuffleModeChanged(bool value)
     {
+        State.ShuffleMode = value;
         Playlist playlist;
         if (value)
         {
-            playlist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+            playlist = _playlistService.ShufflePlaylist(Playlist, CurrentIndex);
         }
         else
         {
-            if (_playlist.ShuffleBackup != null)
+            if (Playlist.ShuffleBackup != null)
             {
-                playlist = _playlistService.RestoreFromShuffle(_playlist);
+                playlist = _playlistService.RestoreFromShuffle(Playlist);
             }
             else
             {
                 // No backup - just reshuffle
-                playlist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+                playlist = _playlistService.ShufflePlaylist(Playlist, CurrentIndex);
                 playlist.ShuffleMode = false;
                 playlist.ShuffleBackup = null;
             }
@@ -295,15 +352,15 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     [RelayCommand]
     private void PlaySingle(MediaViewModel vm)
     {
-        if (_mediaPlayer == null)
+        if (MediaPlayer == null)
         {
-            _delayPlay = vm;
+            DelayPlay = vm;
             return;
         }
 
         CurrentItem = vm;
-        _mediaPlayer.PlaybackItem = vm.Item.Value;
-        _mediaPlayer.Play();
+        MediaPlayer.PlaybackItem = vm.Item.Value;
+        MediaPlayer.Play();
     }
 
     [RelayCommand]
@@ -316,15 +373,15 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private bool CanNext()
     {
-        return _playbackControlService.CanNext(_playlist, RepeatMode, hasNeighbor: _neighboringFilesQuery != null);
+        return _playbackControlService.CanNext(Playlist, RepeatMode, hasNeighbor: NeighboringFilesQuery != null);
     }
 
     [RelayCommand(CanExecute = nameof(CanNext))]
     private async Task NextAsync()
     {
-        var playlist = _playlist;
-        var result = playlist.Items.Count == 1 && _neighboringFilesQuery != null
-            ? await _playbackControlService.GetNeighboringNextAsync(playlist, _neighboringFilesQuery)
+        var playlist = Playlist;
+        var result = playlist.Items.Count == 1 && NeighboringFilesQuery != null
+            ? await _playbackControlService.GetNeighboringNextAsync(playlist, NeighboringFilesQuery)
             : _playbackControlService.GetNext(playlist, RepeatMode);
 
         if (result != null)
@@ -341,29 +398,29 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private bool CanPrevious()
     {
-        return _playbackControlService.CanPrevious(_playlist, RepeatMode, hasNeighbor: _neighboringFilesQuery != null);
+        return _playbackControlService.CanPrevious(Playlist, RepeatMode, hasNeighbor: NeighboringFilesQuery != null);
     }
 
     [RelayCommand(CanExecute = nameof(CanPrevious))]
     private async Task PreviousAsync()
     {
-        if (_mediaPlayer == null) return;
+        if (MediaPlayer == null) return;
         void SetPositionToStart()
         {
-            _mediaPlayer.Position = TimeSpan.Zero;
+            MediaPlayer.Position = TimeSpan.Zero;
         }
 
         // If playing and position > 5 seconds, restart current track
-        if (_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
-            _mediaPlayer.Position > TimeSpan.FromSeconds(5))
+        if (MediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
+            MediaPlayer.Position > TimeSpan.FromSeconds(5))
         {
             _dispatcherQueue.TryEnqueue(SetPositionToStart);
             return;
         }
 
-        var playlist = _playlist;
-        var result = playlist.Items.Count == 1 && _neighboringFilesQuery != null
-            ? await _playbackControlService.GetNeighboringPreviousAsync(playlist, _neighboringFilesQuery)
+        var playlist = Playlist;
+        var result = playlist.Items.Count == 1 && NeighboringFilesQuery != null
+            ? await _playbackControlService.GetNeighboringPreviousAsync(playlist, NeighboringFilesQuery)
             : _playbackControlService.GetPrevious(playlist, RepeatMode);
 
         if (result != null)
@@ -434,11 +491,11 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
-        _playFilesCts?.Cancel();
+        PlayFilesCts?.Cancel();
         using var cts = new CancellationTokenSource();
         try
         {
-            _playFilesCts = cts;
+            PlayFilesCts = cts;
             var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(playlist, neighboringFilesQuery, cts.Token);
             return updatedPlaylist;
         }
@@ -452,7 +509,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         }
         finally
         {
-            _playFilesCts = null;
+            PlayFilesCts = null;
         }
 
         return playlist;
@@ -462,8 +519,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     {
         try
         {
-            _deferCollectionChanged = true;
-            _playlist = playlist;
+            DeferCollectionChanged = true;
+            Playlist = playlist;
 
             // Sync ObservableCollection with mediaList
             // Only use sync if both lists are small enough to avoid UI freezing
@@ -483,12 +540,13 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             // Update current item
             CurrentItem = playlist.CurrentItem;
             CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
+            State.CurrentIndex = CurrentIndex;
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
         }
         finally
         {
-            _deferCollectionChanged = false;
+            DeferCollectionChanged = false;
         }
     }
 
@@ -501,32 +559,32 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         try
         {
-            _deferCollectionChanged = true;
+            DeferCollectionChanged = true;
             Items.Clear();
-            _playlist = new Playlist();
-            _neighboringFilesQuery = null;
+            Playlist = new Playlist();
+            NeighboringFilesQuery = null;
             ShuffleMode = false;
         }
         finally
         {
-            _deferCollectionChanged = false;
+            DeferCollectionChanged = false;
         }
     }
 
     private async Task UpdateMediaBufferAsync()
     {
-        var bufferIndices = _playlistService.GetMediaBufferIndices(_playlist.CurrentIndex, _playlist.Items.Count, RepeatMode);
-        var newBuffer = bufferIndices.Select(i => _playlist.Items[i]).ToList();
+        var bufferIndices = _playlistService.GetMediaBufferIndices(Playlist.CurrentIndex, Playlist.Items.Count, RepeatMode);
+        var newBuffer = bufferIndices.Select(i => Playlist.Items[i]).ToList();
 
-        var toLoad = newBuffer.Except(_mediaBuffer);
-        var toClean = _mediaBuffer.Except(newBuffer);
+        var toLoad = newBuffer.Except(MediaBuffer);
+        var toClean = MediaBuffer.Except(newBuffer);
 
         foreach (var media in toClean)
         {
             media.Clean();
         }
 
-        _mediaBuffer = newBuffer;
+        MediaBuffer = newBuffer;
         await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
     }
 
@@ -618,7 +676,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     {
         _dispatcherQueue.TryEnqueue(() =>
         {
-            var playlist = _playlist;
+            var playlist = Playlist;
             var result = _playbackControlService.HandleMediaEnded(playlist, RepeatMode);
             if (result != null)
             {
@@ -663,20 +721,21 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_deferCollectionChanged) return;
+        if (DeferCollectionChanged) return;
         CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
-        _playlist = new Playlist(CurrentIndex, Items, _playlist);
+        State.CurrentIndex = CurrentIndex;
+        Playlist = new Playlist(CurrentIndex, Items, Playlist);
         NextCommand.NotifyCanExecuteChanged();
         PreviousCommand.NotifyCanExecuteChanged();
 
         if (Items.Count <= 1)
         {
-            _playlist.ShuffleBackup = null;
+            Playlist.ShuffleBackup = null;
             return;
         }
 
         // Update shuffle backup if shuffling is enabled
-        ShuffleBackup? backup = _playlist.ShuffleBackup;
+        ShuffleBackup? backup = Playlist.ShuffleBackup;
         if (ShuffleMode && backup != null)
         {
             switch (e.Action)
@@ -704,14 +763,14 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
                     {
                         if (!backup.Removals.Remove((MediaViewModel)item))
                         {
-                            _playlist.ShuffleBackup = null;
+                            Playlist.ShuffleBackup = null;
                             break;
                         }
                     }
                     break;
 
                 case NotifyCollectionChangedAction.Reset:
-                    _playlist.ShuffleBackup = null;
+                    Playlist.ShuffleBackup = null;
                     break;
             }
 

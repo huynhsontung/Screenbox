@@ -1,14 +1,31 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core;
+
 public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
     {
+        // Contexts
+        services.AddSingleton<NavigationContext>();
+        services.AddSingleton<VolumeContext>();
+        services.AddSingleton<MediaListContext>();
+        services.AddSingleton<MediaViewModelFactoryContext>();
+        services.AddSingleton<AlbumFactoryContext>();
+        services.AddSingleton<ArtistFactoryContext>();
+        services.AddSingleton<LibVlcContext>();
+        services.AddSingleton<TransportControlsContext>();
+        services.AddSingleton<NotificationContext>();
+        services.AddSingleton<CastContext>();
+        services.AddSingleton<WindowContext>();
+        services.AddSingleton<LibraryContext>();
+        services.AddSingleton<LastPositionContext>();
+
         // View models
         services.AddTransient<PlayerElementViewModel>();
         services.AddTransient<PropertyViewModel>();
@@ -38,9 +55,9 @@ public static class ServiceHelpers
         services.AddTransient<LivelyWallpaperPlayerViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
-        services.AddSingleton<CommonViewModel>();   // Shared between many pages
-        services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
-        services.AddSingleton<MediaListViewModel>(); // Global playlist
+        services.AddTransient<CommonViewModel>();
+        services.AddTransient<VolumeViewModel>();
+        services.AddTransient<MediaListViewModel>();
 
         // Misc
         services.AddTransient<LastPositionTracker>();
