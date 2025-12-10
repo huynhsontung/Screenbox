@@ -233,7 +233,7 @@
     <value>Kijelölés törlése</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Kijelölés megszüntetése </value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Kijelölés megszüntetése </value>
