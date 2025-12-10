@@ -5,8 +5,8 @@ using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class AlbumFactoryContext
+public sealed class AlbumFactoryContext
 {
-    internal Dictionary<string, AlbumViewModel> Albums { get; } = new();
-    internal AlbumViewModel? UnknownAlbum { get; set; }
+    public Dictionary<string, AlbumViewModel> Albums { get; } = new();
+    public AlbumViewModel? UnknownAlbum { get; set; }
 }

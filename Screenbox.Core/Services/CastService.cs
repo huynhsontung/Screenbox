@@ -1,11 +1,11 @@
 ﻿#nullable enable
 
+using System;
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Events;
-using System;
-using System.Collections.Generic;
+using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Services
 {

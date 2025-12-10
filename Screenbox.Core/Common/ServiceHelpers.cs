@@ -6,10 +6,12 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core;
+
 public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
     {
+        // Contexts
         services.AddSingleton<NavigationContext>();
         services.AddSingleton<VolumeContext>();
         services.AddSingleton<MediaListContext>();
@@ -53,9 +55,9 @@ public static class ServiceHelpers
         services.AddTransient<LivelyWallpaperPlayerViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
-        services.AddTransient<CommonViewModel>();   // Shared between many pages
-        services.AddTransient<VolumeViewModel>();   // Avoid thread lock
-        services.AddTransient<MediaListViewModel>(); // Global playlist
+        services.AddTransient<CommonViewModel>();
+        services.AddTransient<VolumeViewModel>();
+        services.AddTransient<MediaListViewModel>();
 
         // Misc
         services.AddTransient<LastPositionTracker>();

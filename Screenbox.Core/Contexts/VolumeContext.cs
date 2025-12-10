@@ -4,11 +4,11 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class VolumeContext
+public sealed class VolumeContext
 {
-    internal int MaxVolume { get; set; }
-    internal int Volume { get; set; }
-    internal bool IsMute { get; set; }
-    internal IMediaPlayer? MediaPlayer { get; set; }
-    internal bool IsInitialized { get; set; }
+    public int MaxVolume { get; set; }
+    public int Volume { get; set; }
+    public bool IsMute { get; set; }
+    public IMediaPlayer? MediaPlayer { get; set; }
+    public bool IsInitialized { get; set; }
 }

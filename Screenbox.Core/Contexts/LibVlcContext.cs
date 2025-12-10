@@ -1,12 +1,13 @@
 #nullable enable
 
 using LibVLCSharp.Shared;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class LibVlcContext
+public sealed class LibVlcContext
 {
-    internal VlcMediaPlayer? MediaPlayer { get; set; }
-    internal LibVLC? LibVlc { get; set; }
-    internal bool UseFutureAccessList { get; set; } = true;
+    public VlcMediaPlayer? MediaPlayer { get; set; }
+    public LibVLC? LibVlc { get; set; }
+    public bool UseFutureAccessList { get; set; } = true;
 }

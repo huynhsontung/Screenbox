@@ -1,12 +1,13 @@
-#nullable enable
+﻿#nullable enable
 
 using System.Collections.Generic;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class CastContext
+public sealed class CastContext
 {
-    internal List<Renderer> Renderers { get; } = new();
-    internal RendererDiscoverer? Discoverer { get; set; }
+    public List<Renderer> Renderers { get; } = new();
+    public RendererDiscoverer? Discoverer { get; set; }
 }

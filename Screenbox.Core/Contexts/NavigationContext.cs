@@ -1,18 +1,18 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Collections.Generic;
-using Screenbox.Core.Enums;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class NavigationContext
+public sealed class NavigationContext
 {
-    internal Dictionary<Type, string> NavigationStates { get; } = new();
-    internal Dictionary<string, object> PageStates { get; } = new();
-    internal NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
-    internal Thickness ScrollBarMargin { get; set; }
-    internal Thickness FooterBottomPaddingMargin { get; set; }
-    internal double FooterBottomPaddingHeight { get; set; }
+    public Dictionary<Type, string> NavigationStates { get; } = new();
+    public Dictionary<string, object> PageStates { get; } = new();
+    public NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
+    public Thickness ScrollBarMargin { get; set; }
+    public Thickness FooterBottomPaddingMargin { get; set; }
+    public double FooterBottomPaddingHeight { get; set; }
 }

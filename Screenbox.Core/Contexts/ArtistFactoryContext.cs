@@ -5,8 +5,8 @@ using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class ArtistFactoryContext
+public sealed class ArtistFactoryContext
 {
-    internal Dictionary<string, ArtistViewModel> Artists { get; } = new();
-    internal ArtistViewModel? UnknownArtist { get; set; }
+    public Dictionary<string, ArtistViewModel> Artists { get; } = new();
+    public ArtistViewModel? UnknownArtist { get; set; }
 }

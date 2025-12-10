@@ -1,31 +1,31 @@
-#nullable enable
+﻿#nullable enable
 
 using System.Collections.Generic;
 using System.Threading;
-using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.System;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class LibraryContext
+public sealed class LibraryContext
 {
-    internal StorageLibrary? MusicLibrary { get; set; }
-    internal StorageLibrary? VideosLibrary { get; set; }
-    internal bool IsLoadingVideos { get; set; }
-    internal bool IsLoadingMusic { get; set; }
-    internal StorageFileQueryResult? MusicLibraryQueryResult { get; set; }
-    internal StorageFileQueryResult? VideosLibraryQueryResult { get; set; }
-    internal List<MediaViewModel> Songs { get; set; } = new();
-    internal List<MediaViewModel> Videos { get; } = new();
-    internal CancellationTokenSource? MusicFetchCancellation { get; set; }
-    internal CancellationTokenSource? VideosFetchCancellation { get; set; }
-    internal bool MusicChangeTrackerAvailable { get; set; }
-    internal bool VideosChangeTrackerAvailable { get; set; }
-    internal DispatcherQueueTimer? MusicRefreshTimer { get; set; }
-    internal DispatcherQueueTimer? VideosRefreshTimer { get; set; }
-    internal DispatcherQueueTimer? StorageDeviceRefreshTimer { get; set; }
-    internal DeviceWatcher? PortableStorageDeviceWatcher { get; set; }
+    public StorageLibrary? MusicLibrary { get; set; }
+    public StorageLibrary? VideosLibrary { get; set; }
+    public bool IsLoadingVideos { get; set; }
+    public bool IsLoadingMusic { get; set; }
+    public StorageFileQueryResult? MusicLibraryQueryResult { get; set; }
+    public StorageFileQueryResult? VideosLibraryQueryResult { get; set; }
+    public List<MediaViewModel> Songs { get; set; } = new();
+    public List<MediaViewModel> Videos { get; set; } = new();
+    public CancellationTokenSource? MusicFetchCancellation { get; set; }
+    public CancellationTokenSource? VideosFetchCancellation { get; set; }
+    public bool MusicChangeTrackerAvailable { get; set; }
+    public bool VideosChangeTrackerAvailable { get; set; }
+    public DispatcherQueueTimer? MusicRefreshTimer { get; set; }
+    public DispatcherQueueTimer? VideosRefreshTimer { get; set; }
+    public DispatcherQueueTimer? StorageDeviceRefreshTimer { get; set; }
+    public DeviceWatcher? PortableStorageDeviceWatcher { get; set; }
 }

@@ -6,10 +6,10 @@ using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Contexts;
 
-internal sealed class LastPositionContext
+public sealed class LastPositionContext
 {
-    internal DateTimeOffset LastUpdated { get; set; }
-    internal List<MediaLastPosition> LastPositions { get; set; } = new(65);
-    internal MediaLastPosition? UpdateCache { get; set; }
-    internal string? RemoveCache { get; set; }
+    public DateTimeOffset LastUpdated { get; set; }
+    public List<MediaLastPosition> LastPositions { get; set; } = new(65);
+    public MediaLastPosition? UpdateCache { get; set; }
+    public string? RemoveCache { get; set; }
 }
