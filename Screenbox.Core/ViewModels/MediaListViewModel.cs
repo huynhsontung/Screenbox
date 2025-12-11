@@ -112,6 +112,17 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public async void Receive(PlayFilesMessage message)
     {
+        if (_mediaPlayer == null)
+        {
+            _delayPlay = message;
+            return;
+        }
+
+        await ProcessPlayFilesAsync(message);
+    }
+
+    private async Task ProcessPlayFilesAsync(PlayFilesMessage message)
+    {
         var files = message.Value;
         await ParseAndPlayAsync(files);
         _neighboringFilesQuery = message.NeighboringFilesQuery;
@@ -189,7 +200,11 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         {
             async void SetPlayQueue()
             {
-                if (_delayPlay is MediaViewModel media && Items.Contains(media))
+                if (_delayPlay is PlayFilesMessage playFilesMessage)
+                {
+                    await ProcessPlayFilesAsync(playFilesMessage);
+                }
+                else if (_delayPlay is MediaViewModel media && Items.Contains(media))
                 {
                     PlaySingle(media);
                 }
