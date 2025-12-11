@@ -53,6 +53,11 @@ namespace Screenbox.Controls
             ViewModel.Initialize(e.SwapChainOptions);
         }
 
+        private void VlcVideoView_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ViewModel.UpdatePlayerViewSize(e.NewSize);
+        }
+
         private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (!IsEnabled) return;

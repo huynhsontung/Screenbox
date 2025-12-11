@@ -18,7 +18,6 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Input;
-using Windows.UI.Xaml;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.ViewModels
@@ -323,6 +322,12 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
+        public void UpdatePlayerViewSize(Size size)
+        {
+            _viewSize = size;
+            SetCropGeometry(_aspectRatio);
+        }
+
         private void OnMediaFailed(IMediaPlayer sender, object? args)
         {
             _transportControlsService.ClosePlayback();
@@ -331,12 +336,6 @@ namespace Screenbox.Core.ViewModels
         private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
             _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
-        }
-
-        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            _viewSize = args.NewSize;
-            SetCropGeometry(_aspectRatio);
         }
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)

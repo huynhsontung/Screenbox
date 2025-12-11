@@ -43,6 +43,6 @@
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-            SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />
+            SizeChanged="VlcVideoView_OnSizeChanged" />
     </Grid>
 </UserControl>
