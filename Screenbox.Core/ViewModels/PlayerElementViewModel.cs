@@ -208,23 +208,36 @@ namespace Screenbox.Core.ViewModels
 
         public void HandleHoldingGesture(HoldingState holdingState)
         {
+            const double holdingSpeed = 2.0;
+
             if (!_playerTapAndHoldGesture || _mediaPlayer == null) return;
 
             switch (holdingState)
             {
                 case HoldingState.Started:
-                    _playbackRateBeforeHolding = _mediaPlayer.PlaybackRate;
-                    _suppressTap = true;
-                    SetPlaybackSpeed(2.0);
-                    IsHolding = true;
+                    if (!IsHolding)
+                    {
+                        _playbackRateBeforeHolding = _mediaPlayer.PlaybackRate;
+                        _suppressTap = true;
+                        if (_mediaPlayer.PlaybackRate != holdingSpeed)
+                        {
+                            SetPlaybackSpeed(holdingSpeed);
+                        }
+                        IsHolding = true;
+                    }
                     break;
                 case HoldingState.Completed:
                 case HoldingState.Canceled:
                     if (IsHolding)
                     {
-                        SetPlaybackSpeed(_playbackRateBeforeHolding);
+                        if (_mediaPlayer.PlaybackRate != _playbackRateBeforeHolding)
+                        {
+                            SetPlaybackSpeed(_playbackRateBeforeHolding);
+                        }
                         IsHolding = false;
                     }
+                    break;
+                default:
                     break;
             }
         }
