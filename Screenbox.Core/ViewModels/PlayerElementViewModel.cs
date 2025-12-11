@@ -192,35 +192,17 @@ namespace Screenbox.Core.ViewModels
             // Vertical gestures
             if (_manipulationLock != ManipulationLock.Horizontal && Math.Abs(verticalCumulative) >= 2)
             {
-                if (verticalDelta > 0)
-                {
-                    _manipulationLock = ManipulationLock.Vertical;
-                    ProcessMediaGesture(_playerSwipeDownGesture, verticalDelta, verticalCumulative);
-                    return;
-                }
-                else
-                {
-                    _manipulationLock = ManipulationLock.Vertical;
-                    ProcessMediaGesture(_playerSwipeUpGesture, -verticalDelta, -verticalCumulative);
-                    return;
-                }
+                _manipulationLock = ManipulationLock.Vertical;
+                ProcessVerticalGesture(verticalDelta, verticalCumulative);
+                return;
             }
 
             // Horizontal gestures
             if (_manipulationLock != ManipulationLock.Vertical && Math.Abs(horizontalCumulative) >= 2)
             {
-                if (horizontalDelta > 0)
-                {
-                    _manipulationLock = ManipulationLock.Horizontal;
-                    ProcessMediaGesture(_playerSwipeRightGesture, horizontalDelta, horizontalCumulative);
-                    return;
-                }
-                else
-                {
-                    _manipulationLock = ManipulationLock.Horizontal;
-                    ProcessMediaGesture(_playerSwipeLeftGesture, -horizontalDelta, -horizontalCumulative);
-                    return;
-                }
+                _manipulationLock = ManipulationLock.Horizontal;
+                ProcessHorizontalGesture(horizontalDelta, horizontalCumulative);
+                return;
             }
         }
 
@@ -289,6 +271,30 @@ namespace Screenbox.Core.ViewModels
                     var volumeUp = Messenger.Send(new ChangeVolumeRequestMessage((int)change, true));
                     Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
                     break;
+            }
+        }
+
+        private void ProcessVerticalGesture(double delta, double cumulative)
+        {
+            if (delta > 0)
+            {
+                ProcessMediaGesture(_playerSwipeDownGesture, delta, cumulative);
+            }
+            else
+            {
+                ProcessMediaGesture(_playerSwipeUpGesture, -delta, -cumulative);
+            }
+        }
+
+        private void ProcessHorizontalGesture(double delta, double cumulative)
+        {
+            if (delta > 0)
+            {
+                ProcessMediaGesture(_playerSwipeRightGesture, delta, cumulative);
+            }
+            else
+            {
+                ProcessMediaGesture(_playerSwipeLeftGesture, -delta, -cumulative);
             }
         }
 
