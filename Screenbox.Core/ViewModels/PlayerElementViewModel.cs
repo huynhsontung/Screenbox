@@ -161,7 +161,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (!isHorizontal)
             {
-                int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 5 : -5, true));
+                int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta, true));
                 Messenger.Send(new UpdateVolumeStatusMessage(volume));
             }
             else
