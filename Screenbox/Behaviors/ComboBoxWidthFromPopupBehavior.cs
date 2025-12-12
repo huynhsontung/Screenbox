@@ -21,8 +21,8 @@ namespace Screenbox.Behaviors;
 [TypeConstraint(typeof(ComboBox))]
 public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
 {
+    private double? _cachedWidth;
     private Popup? _popup;
-    private double? _cachedPopupWidth;
 
     /// <inheritdoc/>
     public DependencyObject? AssociatedObject { get; private set; }
@@ -48,8 +48,8 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
             comboBox.DropDownClosed -= OnDropDownClosed;
         }
 
+        _cachedWidth = null;
         _popup = null;
-        _cachedPopupWidth = null;
         AssociatedObject = null;
     }
 
@@ -57,27 +57,20 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
     {
         if (sender is ComboBox comboBox)
         {
-            if (_popup is null)
+            if (comboBox.ReadLocalValue(FrameworkElement.WidthProperty) != DependencyProperty.UnsetValue)
             {
-                _popup = FindPopup();
+                _cachedWidth = comboBox.Width;
             }
 
-            if (_popup?.Child is FrameworkElement popupChild)
+            _popup ??= FindPopup(comboBox);
+            if (_popup?.Child is Canvas popupChild)
             {
-                if (_cachedPopupWidth.HasValue)
-                {
-                    comboBox.Width = _cachedPopupWidth.Value;
-                }
-                else
-                {
-                    popupChild.UpdateLayout();
-                    double popupWidth = popupChild.ActualWidth;
+                popupChild.UpdateLayout();
+                double popupWidth = popupChild.ActualWidth;
 
-                    if (popupWidth > comboBox.ActualWidth)
-                    {
-                        _cachedPopupWidth = Math.Ceiling(popupWidth);
-                        comboBox.Width = _cachedPopupWidth.Value;
-                    }
+                if (popupWidth > comboBox.ActualWidth)
+                {
+                    comboBox.Width = Math.Ceiling(popupWidth);
                 }
             }
         }
@@ -87,18 +80,27 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
     {
         if (sender is ComboBox comboBox)
         {
-            comboBox.Width = double.NaN;
+            if (_cachedWidth.HasValue)
+            {
+                comboBox.Width = _cachedWidth.Value;
+            }
+            else
+            {
+                comboBox.ClearValue(FrameworkElement.WidthProperty);
+            }
         }
     }
 
-    private static Popup? FindPopup()
+    private static Popup? FindPopup(ComboBox comboBox)
     {
-        if (Window.Current is null)
+        if (VisualTreeHelper.GetChild(comboBox, 0) is Grid layoutRootGrid)
         {
-            return null;
+            if (layoutRootGrid.FindName("Popup") is Popup popup)
+            {
+                return popup;
+            }
         }
 
-        var openPopups = VisualTreeHelper.GetOpenPopups(Window.Current);
-        return openPopups.Count == 0 ? null : openPopups[0];
+        return null;
     }
 }
