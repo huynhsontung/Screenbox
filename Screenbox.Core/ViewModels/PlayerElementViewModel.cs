@@ -140,9 +140,10 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
+        public void UpdatePlayerViewSize(Size size)
         {
-            if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
+            _viewSize = size;
+            SetCropGeometry(_aspectRatio);
         }
 
         public void OnClick()
@@ -160,6 +161,18 @@ namespace Screenbox.Core.ViewModels
                 return;
             }
             _clickTimer.Debounce(() => ProcessMediaGesture(_playerTapGesture, 10.0, 0.0), TimeSpan.FromMilliseconds(200));
+        }
+
+        public void ManipulationStarted()
+        {
+            _manipulationLock = ManipulationLock.None;
+        }
+
+        public void ManipulationCompleted()
+        {
+            if (_manipulationLock == ManipulationLock.None) return;
+            Messenger.Send(new OverrideControlsHideDelayMessage(100));
+            Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
         public void HandlePointerWheelInput(int delta, bool isHorizontal)
@@ -310,23 +323,6 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void ManipulationStarted()
-        {
-            _manipulationLock = ManipulationLock.None;
-        }
-
-        public void ManipulationCompleted()
-        {
-            if (_manipulationLock == ManipulationLock.None) return;
-            Messenger.Send(new OverrideControlsHideDelayMessage(100));
-            Messenger.Send(new TimeChangeOverrideMessage(false));
-        }
-
-        public void UpdatePlayerViewSize(Size size)
-        {
-            _viewSize = size;
-            SetCropGeometry(_aspectRatio);
-        }
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)
         {
@@ -336,6 +332,11 @@ namespace Screenbox.Core.ViewModels
         private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
             _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
+        }
+
+        private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
+        {
+            if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
