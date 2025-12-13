@@ -18,8 +18,6 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.ViewModels
@@ -29,6 +27,8 @@ namespace Screenbox.Core.ViewModels
         IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
+        [ObservableProperty] private bool _isHolding;
+
         public event EventHandler<EventArgs>? ClearViewRequested;
 
         public MediaPlayer? VlcPlayer { get; private set; }
@@ -45,8 +45,14 @@ namespace Screenbox.Core.ViewModels
         private VlcMediaPlayer? _mediaPlayer;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
-        private bool _playerSeekGesture;
-        private bool _playerVolumeGesture;
+        private MediaCommandType _playerTapGesture;
+        private MediaCommandType _playerSwipeUpGesture;
+        private MediaCommandType _playerSwipeDownGesture;
+        private MediaCommandType _playerSwipeLeftGesture;
+        private MediaCommandType _playerSwipeRightGesture;
+        private bool _playerTapAndHoldGesture;
+        private double _playbackRateBeforeHolding;
+        private bool _suppressTap;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -134,80 +140,189 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
+        public void UpdatePlayerViewSize(Size size)
         {
-            if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
+            _viewSize = size;
+            SetCropGeometry(_aspectRatio);
         }
 
         public void OnClick()
         {
-            if (!_settingsService.PlayerTapGesture || _mediaPlayer?.PlaybackItem == null) return;
+            if (_mediaPlayer?.PlaybackItem == null) return;
+            if (_suppressTap)
+            {
+                _suppressTap = false;
+                return;
+            }
+
             if (_clickTimer.IsRunning)
             {
                 _clickTimer.Stop();
                 return;
             }
-
-            _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
+            _clickTimer.Debounce(() => ProcessMediaGesture(_playerTapGesture, 10.0, 0.0), TimeSpan.FromMilliseconds(200));
         }
 
-        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        public void ManipulationStarted()
         {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
-            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume));
+            _manipulationLock = ManipulationLock.None;
         }
 
-        public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        public void ManipulationCompleted()
         {
             if (_manipulationLock == ManipulationLock.None) return;
             Messenger.Send(new OverrideControlsHideDelayMessage(100));
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
-        public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        public void HandlePointerWheelInput(int delta, bool isHorizontal)
         {
-            const double horizontalChangePerPixel = 200;
-            double horizontalChange = e.Delta.Translation.X;
-            double verticalChange = e.Delta.Translation.Y;
-            double horizontalCumulative = e.Cumulative.Translation.X;
-            double verticalCumulative = e.Cumulative.Translation.Y;
+            if (!isHorizontal)
+            {
+                int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume));
+            }
+            else
+            {
+                if (_mediaPlayer?.CanSeek == true)
+                {
+                    _timeBeforeManipulation = _mediaPlayer.Position;
+                    Messenger.Send(new TimeChangeOverrideMessage(true));
+                    var timeChange = TimeSpan.FromSeconds(-delta);
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                    UpdateTimeStatusMessage(newTime);
+                }
+            }
+        }
 
+        public void HandleManipulationGesture(
+            double horizontalDelta,
+            double verticalDelta,
+            double horizontalCumulative,
+            double verticalCumulative)
+        {
             if (_mediaPlayer != null && _manipulationLock == ManipulationLock.None)
+            {
                 _timeBeforeManipulation = _mediaPlayer.Position;
+            }
 
-            if ((_manipulationLock == ManipulationLock.Vertical ||
-                _manipulationLock == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50) &&
-                _playerVolumeGesture)
+            // Vertical gestures
+            if (_manipulationLock != ManipulationLock.Horizontal && Math.Abs(verticalCumulative) >= 2)
             {
                 _manipulationLock = ManipulationLock.Vertical;
-                int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-verticalChange, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volume));
+                ProcessVerticalGesture(verticalDelta, verticalCumulative);
                 return;
             }
 
-            if ((_manipulationLock == ManipulationLock.Horizontal ||
-                 _manipulationLock == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
-                (_mediaPlayer?.CanSeek ?? false) &&
-                _playerSeekGesture)
+            // Horizontal gestures
+            if (_manipulationLock != ManipulationLock.Vertical && Math.Abs(horizontalCumulative) >= 2)
             {
                 _manipulationLock = ManipulationLock.Horizontal;
-                Messenger.Send(new TimeChangeOverrideMessage(true));
-                TimeSpan timeChange = TimeSpan.FromMilliseconds(horizontalChange * horizontalChangePerPixel);
-                TimeSpan newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
-
-                string changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
-                if (changeText[0] != '-') changeText = '+' + changeText;
-                string status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
-                Messenger.Send(new UpdateStatusMessage(status));
+                ProcessHorizontalGesture(horizontalDelta, horizontalCumulative);
+                return;
             }
         }
 
-        public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        public void HandleHoldingGesture(HoldingState holdingState)
         {
-            _manipulationLock = ManipulationLock.None;
+            const double holdingSpeed = 2.0;
+
+            if (!_playerTapAndHoldGesture || _mediaPlayer == null) return;
+
+            switch (holdingState)
+            {
+                case HoldingState.Started:
+                    if (!IsHolding)
+                    {
+                        _playbackRateBeforeHolding = _mediaPlayer.PlaybackRate;
+                        _suppressTap = true;
+                        if (_mediaPlayer.PlaybackRate != holdingSpeed)
+                        {
+                            SetPlaybackSpeed(holdingSpeed);
+                        }
+                        IsHolding = true;
+                    }
+                    break;
+                case HoldingState.Completed:
+                case HoldingState.Canceled:
+                    if (IsHolding)
+                    {
+                        if (_mediaPlayer.PlaybackRate != _playbackRateBeforeHolding)
+                        {
+                            SetPlaybackSpeed(_playbackRateBeforeHolding);
+                        }
+                        IsHolding = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
+
+        private void ProcessMediaGesture(MediaCommandType gestureKind, double change, double cumulative)
+        {
+            const double ChangePerPixel = 200;
+
+            switch (gestureKind)
+            {
+                case MediaCommandType.None:
+                    return;
+                case MediaCommandType.PlayPause:
+                    Messenger.Send(new TogglePlayPauseMessage(true));
+                    break;
+                case MediaCommandType.Rewind:
+                    if (_mediaPlayer?.CanSeek == true)
+                    {
+                        Messenger.Send(new TimeChangeOverrideMessage(true));
+                        var timeChange = TimeSpan.FromMilliseconds(-change * ChangePerPixel);
+                        var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                        UpdateTimeStatusMessage(newTime);
+                    }
+                    break;
+                case MediaCommandType.FastForward:
+                    if (_mediaPlayer?.CanSeek == true)
+                    {
+                        Messenger.Send(new TimeChangeOverrideMessage(true));
+                        var timeChange = TimeSpan.FromMilliseconds(change * ChangePerPixel);
+                        var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                        UpdateTimeStatusMessage(newTime);
+                    }
+                    break;
+                case MediaCommandType.DecreaseVolume:
+                    var volumeDown = Messenger.Send(new ChangeVolumeRequestMessage((int)-change, true));
+                    Messenger.Send(new UpdateVolumeStatusMessage(volumeDown));
+                    break;
+                case MediaCommandType.IncreaseVolume:
+                    var volumeUp = Messenger.Send(new ChangeVolumeRequestMessage((int)change, true));
+                    Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
+                    break;
+            }
+        }
+
+        private void ProcessVerticalGesture(double delta, double cumulative)
+        {
+            if (delta > 0)
+            {
+                ProcessMediaGesture(_playerSwipeDownGesture, delta, cumulative);
+            }
+            else
+            {
+                ProcessMediaGesture(_playerSwipeUpGesture, -delta, -cumulative);
+            }
+        }
+
+        private void ProcessHorizontalGesture(double delta, double cumulative)
+        {
+            if (delta > 0)
+            {
+                ProcessMediaGesture(_playerSwipeRightGesture, delta, cumulative);
+            }
+            else
+            {
+                ProcessMediaGesture(_playerSwipeLeftGesture, -delta, -cumulative);
+            }
+        }
+
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)
         {
@@ -219,10 +334,9 @@ namespace Screenbox.Core.ViewModels
             _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
         }
 
-        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
+        private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
         {
-            _viewSize = args.NewSize;
-            SetCropGeometry(_aspectRatio);
+            if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
@@ -295,8 +409,12 @@ namespace Screenbox.Core.ViewModels
 
         private void LoadSettings()
         {
-            _playerSeekGesture = _settingsService.PlayerSeekGesture;
-            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            _playerTapGesture = _settingsService.PlayerTapGesture;
+            _playerSwipeUpGesture = _settingsService.PlayerSwipeUpGesture;
+            _playerSwipeDownGesture = _settingsService.PlayerSwipeDownGesture;
+            _playerSwipeLeftGesture = _settingsService.PlayerSwipeLeftGesture;
+            _playerSwipeRightGesture = _settingsService.PlayerSwipeRightGesture;
+            _playerTapAndHoldGesture = _settingsService.PlayerTapAndHoldGesture;
         }
 
         private void DisposeMediaPlayer()
@@ -320,6 +438,26 @@ namespace Screenbox.Core.ViewModels
             else if (!shouldActive && tracker.IsActive)
             {
                 tracker.RequestRelease();
+            }
+        }
+
+        private void UpdateTimeStatusMessage(TimeSpan newTime)
+        {
+            var changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
+            if (changeText[0] != '-')
+            {
+                changeText = "+" + changeText;
+            }
+            var status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
+            Messenger.Send(new UpdateStatusMessage(status));
+        }
+
+        private void SetPlaybackSpeed(double value)
+        {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.PlaybackRate = value;
+                Messenger.Send(new UpdateStatusMessage($"{value}×"));
             }
         }
     }

@@ -128,6 +128,7 @@
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
     <Compile Include="Enums\LivelyWallpaperType.cs" />
+    <Compile Include="Enums\MediaCommandType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
