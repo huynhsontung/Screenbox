@@ -128,7 +128,12 @@ namespace Screenbox.Core.ViewModels
                         _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
                 }
 
-                _mediaPlayer = (VlcMediaPlayer)player;
+                if (player is not VlcMediaPlayer vlcMediaPlayer)
+                {
+                    throw new InvalidOperationException("PlayerService must return a VlcMediaPlayer instance.");
+                }
+
+                _mediaPlayer = vlcMediaPlayer;
                 VlcPlayer = _mediaPlayer.VlcPlayer;
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
                 player.PositionChanged += OnPositionChanged;
