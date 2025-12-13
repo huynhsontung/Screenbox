@@ -53,7 +53,6 @@ namespace Screenbox.Core.ViewModels
         private bool _playerTapAndHoldGesture;
         private double _playbackRateBeforeHolding;
         private bool _suppressTap;
-        private MediaCommandType? _pendingCommandGesture;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -251,7 +250,12 @@ namespace Screenbox.Core.ViewModels
                 case MediaCommandType.None:
                     return;
                 case MediaCommandType.PlayPause:
-                    _pendingCommandGesture = MediaCommandType.PlayPause;
+                    if (_clickTimer.IsRunning)
+                    {
+                        _clickTimer.Stop();
+                        return;
+                    }
+                    _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
                     break;
                 case MediaCommandType.Rewind:
                     if (_mediaPlayer?.CanSeek == true)
@@ -314,26 +318,6 @@ namespace Screenbox.Core.ViewModels
         public void ManipulationCompleted()
         {
             if (_manipulationLock == ManipulationLock.None) return;
-
-            if (_pendingCommandGesture.HasValue)
-            {
-                switch (_pendingCommandGesture.Value)
-                {
-                    case MediaCommandType.PlayPause:
-                        if (_clickTimer.IsRunning)
-                        {
-                            _clickTimer.Stop();
-                            return;
-                        }
-                        _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
-                        break;
-                    default:
-                        break;
-                }
-
-                _pendingCommandGesture = null;
-            }
-
             Messenger.Send(new OverrideControlsHideDelayMessage(100));
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }
