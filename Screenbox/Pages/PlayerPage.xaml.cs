@@ -34,13 +34,6 @@ namespace Screenbox.Pages
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
-        private const VirtualKey PlusKey = (VirtualKey)0xBB;
-        private const VirtualKey MinusKey = (VirtualKey)0xBD;
-        private const VirtualKey AddKey = (VirtualKey)0x6B;
-        private const VirtualKey SubtractKey = (VirtualKey)0x6D;
-        private const VirtualKey PeriodKey = (VirtualKey)190;
-        private const VirtualKey CommaKey = (VirtualKey)188;
-
         private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
         private CancellationTokenSource? _animationCancellationTokenSource;
         private bool _startup;
@@ -65,6 +58,8 @@ namespace Screenbox.Pages
 
             INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
             navigationService.Navigated += NavigationServiceOnNavigated;
+
+            AccessKeyManager.IsDisplayModeEnabledChanged += AccessKeyManager_OnIsDisplayModeEnabledChanged;
         }
 
         private void NavigationServiceOnNavigated(object sender, EventArgs e)
@@ -94,26 +89,32 @@ namespace Screenbox.Pages
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
-            base.OnKeyDown(e);
-            if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
+            if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible)
+            {
+                base.OnKeyDown(e);
+                return;
+            }
+
             bool handled = true;
             bool shouldHideControls = ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default };
+
             switch (e.Key)
             {
                 case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
                     ViewModel.ControlsHidden = false;
-                    PlayQueueFlyout.ShowAt(TitleBarArea,
-                        new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
+                    PlayQueueFlyout.ShowAt(PlayQueueButton,
+                        new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.BottomEdgeAlignedRight : FlyoutPlacementMode.BottomEdgeAlignedLeft });
                     break;
                 case VirtualKey.GamepadMenu:
-                    VideoView.ContextFlyout.ShowAt(VideoView,
-                        new FlyoutShowOptions { Placement = FlyoutPlacementMode.Auto });
+                    VideoView.ContextFlyout.ShowAt(PlayerControls,
+                        new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
                     break;
                 case VirtualKey.Escape when shouldHideControls:
                 case VirtualKey.GamepadB when shouldHideControls:
                     handled = ViewModel.TryHideControls();
                     break;
                 default:
+                    base.OnKeyDown(e);
                     return;
             }
 
@@ -162,6 +163,11 @@ namespace Screenbox.Pages
             // Left padding should only be set if we pin flow direction on the title bar.
             // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
+        }
+
+        private void AccessKeyManager_OnIsDisplayModeEnabledChanged(object sender, object args)
+        {
+            ViewModel.KeyTipsVisible = AccessKeyManager.IsDisplayModeEnabled;
         }
 
         private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -413,15 +419,15 @@ namespace Screenbox.Pages
 
         private void PlayQueueFlyout_OnOpening(object sender, object e)
         {
-            // Delay load PlaylistView until flyout is opening
+            // Delay load PlayQueueControl until flyout is opening
             // Save loading time when launching from file
-            FindName(nameof(PlaylistView));
+            FindName(nameof(PlayQueue));
         }
 
         private async void PlayQueueFlyout_OnOpened(object sender, object e)
         {
-            if (PlaylistView == null) return;
-            await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
+            if (PlayQueue == null) return;
+            await PlayQueue.SmoothScrollActiveItemIntoViewAsync();
         }
 
         private void OnActualThemeChanged(FrameworkElement sender, object args)

@@ -1,0 +1,18 @@
+name: Winget Release
+
+# Automatically submits a new package version to winget-pkgs when a release is published.
+# Requires WINGET_TOKEN secret: A GitHub PAT with public_repo scope to create PRs in microsoft/winget-pkgs.
+on:
+  release:
+    types: [released]
+
+jobs:
+  winget-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit to Winget
+        uses: vedantmgoyal9/winget-releaser@v2
+        with:
+          identifier: Starpine.Screenbox
+          installers-regex: '\.msixbundle$'  # Match msixbundle files in release assets
+          token: ${{ secrets.WINGET_TOKEN }}

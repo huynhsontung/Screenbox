@@ -454,6 +454,9 @@
   <data name="Artists" xml:space="preserve">
     <value>Artiști</value>
   </data>
+  <data name="Song" xml:space="preserve">
+    <value>Song</value>
+  </data>
   <data name="Songs" xml:space="preserve">
     <value>Melodii</value>
   </data>
@@ -648,6 +651,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Permite volumului maxim să depășească 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Comenzi pe ecran</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Alegeți care elemente pot apărea în comenzi și reglați comportamentul de auto-ascundere</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesturi</value>
   </data>
@@ -824,6 +833,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Sortare după</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sortare după opțiunea {0} selectată</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
   </data>
@@ -921,30 +934,48 @@
     <value>Continuă redarea de unde ai oprit ultima dată la deschiderea unui fișier</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Metodă de creștere a rezoluției video</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Biliniară</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Punct</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super rezoluție</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Afișare nume capitole atunci când sunt disponibile</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Ascundeți controalele după această perioadă de timp</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} secundă</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} secunde</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Limba aplicației</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Schimbați limba de afișare a aplicației</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Utilizați limba sistemului</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>No results for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
   </data>
 </root>

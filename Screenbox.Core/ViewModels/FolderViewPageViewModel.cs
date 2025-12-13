@@ -150,6 +150,13 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
+        private void AddToQueue(StorageItemViewModel item)
+        {
+            if (item.Media == null) return;
+            Messenger.SendAddToQueue(item.Media);
+        }
+
+        [RelayCommand]
         private void Click(StorageItemViewModel item)
         {
             if (item.Media != null)

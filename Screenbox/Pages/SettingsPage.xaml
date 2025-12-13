@@ -2,16 +2,15 @@
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Helpers"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Screenbox.Core.Models"
@@ -31,7 +30,6 @@
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-        <converters:LanguageLayoutDirectionToFlowDirectionConverter x:Key="LanguageLayoutDirectionToFlowDirectionConverter" />
 
         <!--  Section header text style  -->
         <Style
@@ -97,7 +95,7 @@
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
-        <interactions:AutoFocusBehavior />
+        <behaviors:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
@@ -133,7 +131,7 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                    <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </interactivity:Interaction.Behaviors>
 
                 <!--  Libraries section  -->
@@ -151,7 +149,7 @@
                     ItemsSource="{x:Bind ViewModel.RemovableStorageFolders}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsXbox}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior />
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch
                         x:Name="SearchRemovableStorageToggle"
@@ -173,7 +171,7 @@
                             Glyph="{StaticResource MusicLibraryGlyph}" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior />
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="AddMusicFolderButton"
@@ -206,7 +204,7 @@
                             Glyph="{StaticResource MoviesLibraryGlyph}" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior />
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="AddVideoFolderButton"
@@ -231,7 +229,7 @@
                     HeaderIcon="{ui:SymbolIcon Symbol=Repair}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior />
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="RefreshLibrariesButton"
@@ -258,9 +256,9 @@
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
                             IsClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Click">
+                                <interactivity:EventTriggerBehavior EventName="Click">
                                     <ctBehaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
-                                </core:EventTriggerBehavior>
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -275,7 +273,10 @@
                     Header="{strings:Resources Key=SettingsThemeSelectionHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FiltersGlyph}}">
-                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
+                    <ComboBox
+                        MinWidth="150"
+                        PlaceholderText="{x:Bind strings:Resources.ThemeAuto}"
+                        SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
@@ -301,7 +302,7 @@
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="models:Language">
-                                <TextBlock FlowDirection="{x:Bind LayoutDirection, Converter={StaticResource LanguageLayoutDirectionToFlowDirectionConverter}}" Text="{x:Bind NativeName}" />
+                                <TextBlock FlowDirection="{x:Bind converters:LanguageLayoutDirectionToFlowDirectionConverter.ToFlowDirection(LayoutDirection)}" Text="{x:Bind NativeName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
@@ -317,11 +318,11 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:GlyphConvert.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior />
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch
                         x:Name="ShowRecentToggleSwitch"
@@ -410,19 +411,33 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
-                <ctc:SettingsCard
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
-                </ctc:SettingsCard>
-
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowChaptersHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowChaptersToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
-                </ctc:SettingsCard>
+                    Description="{x:Bind strings:Resources.SettingsOnScreenControlsDescription}"
+                    Header="{x:Bind strings:Resources.SettingsOnScreenControlsHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE75A;}">
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowControlsHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowChaptersHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}"
+                                ItemsSource="{x:Bind ViewModel.PlayerControlsHideDelayOptions, Mode=OneWay}"
+                                SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="x:Int32">
+                                        <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
@@ -537,7 +552,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xE756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior />
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch
                         x:Name="AdvancedModeToggleSwitch"

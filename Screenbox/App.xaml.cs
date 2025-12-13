@@ -188,15 +188,12 @@ namespace Screenbox
 
             Window.Current.Activate();
             
-            // Auto enter full screen if setting is enabled and we're not already in a special mode
+            // Auto enter full screen if setting is enabled
             var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
             if (settings.PlayerAutoFullScreen)
             {
-                var view = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
-                if (!view.IsFullScreenMode && view.ViewMode == Windows.UI.ViewManagement.ApplicationViewMode.Default)
-                {
-                    view.TryEnterFullScreenMode();
-                }
+                var windowService = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IWindowService>();
+                windowService.TryEnterFullScreenForFileActivation();
             }
             
             WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));

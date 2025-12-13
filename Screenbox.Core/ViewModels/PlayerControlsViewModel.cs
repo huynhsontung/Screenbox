@@ -32,44 +32,13 @@ namespace Screenbox.Core.ViewModels
 
         public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
-        public double SubtitleTimingOffset
-        {
-            // Special access. Consider promote to proper IMediaPlayer property
-            get => _subtitleTimingOffset = (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay / 1000 ?? 0;
-            set
-            {
-                if (_mediaPlayer is VlcMediaPlayer player)
-                {
-                    // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetSpuDelay((long)(value * 1000));
-                    SetProperty(ref _subtitleTimingOffset, value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// This 64-bit signed integer changes the current audio delay.
-        /// </summary>
-        public double AudioTimingOffset
-        {
-            // Special access. Consider promote to proper IMediaPlayer property
-            get => _audioTimingOffset = (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay / 1000 ?? 0;
-            set
-            {
-                if (_mediaPlayer is VlcMediaPlayer player)
-                {
-                    // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetAudioDelay((long)(value * 1000));
-                    SetProperty(ref _audioTimingOffset, value);
-                }
-            }
-        }
-
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private double _playbackSpeed;
+        [ObservableProperty] private double _audioTimingOffset;
+        [ObservableProperty] private double _subtitleTimingOffset;
         [ObservableProperty] private bool _isAdvancedModeActive;
         [ObservableProperty] private bool _isMinimal;
         [ObservableProperty] private bool _playerShowChapters;
@@ -93,8 +62,6 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
         private Size _aspectRatio;
-        private double _subtitleTimingOffset;
-        private double _audioTimingOffset;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
@@ -108,6 +75,8 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
+            _audioTimingOffset = 0.0;
+            _subtitleTimingOffset = 0.0;
             _isAdvancedModeActive = settingsService.AdvancedMode;
             _isMinimal = true;
             _playerShowChapters = settingsService.PlayerShowChapters;
@@ -229,6 +198,26 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.PlaybackRate = value;
         }
 
+        partial void OnAudioTimingOffsetChanged(double value)
+        {
+            if (_mediaPlayer == null) return;
+
+            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.AudioDelay = value;
+            }
+        }
+
+        partial void OnSubtitleTimingOffsetChanged(double value)
+        {
+            if (_mediaPlayer == null) return;
+
+            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.SubtitleDelay = value;
+            }
+        }
+
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -251,7 +240,7 @@ namespace Screenbox.Core.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                IsPlaying = sender.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
             });
         }
 
@@ -415,7 +404,7 @@ namespace Screenbox.Core.ViewModels
                 StorageFolder destFolder =
                     await defaultSaveFolder.CreateFolderAsync("Screenbox",
                         CreationCollisionOption.OpenIfExists);
-                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
+                return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
                     NameCollisionOption.GenerateUniqueName);
             }
             finally

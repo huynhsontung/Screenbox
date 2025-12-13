@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,235 +17,253 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
-namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+public sealed partial class MainPageViewModel : ObservableRecipient,
+    IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
+    IRecipient<NavigationViewDisplayModeRequestMessage>,
+    IRecipient<CriticalErrorMessage>
 {
-    public sealed partial class MainPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
-        IRecipient<NavigationViewDisplayModeRequestMessage>,
-        IRecipient<CriticalErrorMessage>
+    private const int MaxSuggestionsPerCategory = 6;
+    private const int MaxTotalSuggestions = 10;
+    private const double IndexWeightFactor = 0.1;
+
+    [ObservableProperty] private bool _playerVisible;
+    [ObservableProperty] private bool _shouldUseMargin;
+    [ObservableProperty] private bool _isPaneOpen;
+    [ObservableProperty] private string _searchQuery;
+    [ObservableProperty] private string _criticalErrorMessage;
+    [ObservableProperty] private bool _hasCriticalError;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedRecipients]
+    private NavigationViewDisplayMode _navigationViewDisplayMode;
+
+    private readonly ISearchService _searchService;
+    private readonly INavigationService _navigationService;
+    private readonly ILibraryService _libraryService;
+
+    public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
+
+    public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
+        ILibraryService libraryService)
     {
-        [ObservableProperty] private bool _playerVisible;
-        [ObservableProperty] private bool _shouldUseMargin;
-        [ObservableProperty] private bool _isPaneOpen;
-        [ObservableProperty] private string _searchQuery;
-        [ObservableProperty] private string _criticalErrorMessage;
-        [ObservableProperty] private bool _hasCriticalError;
+        _searchService = searchService;
+        _navigationService = navigationService;
+        _libraryService = libraryService;
+        _searchQuery = string.Empty;
+        _criticalErrorMessage = string.Empty;
+        IsActive = true;
+    }
 
-        [ObservableProperty]
-        [NotifyPropertyChangedRecipients]
-        private NavigationViewDisplayMode _navigationViewDisplayMode;
+    public void Receive(CriticalErrorMessage message)
+    {
+        HasCriticalError = true;
+        CriticalErrorMessage = message.Message;
+    }
 
-        private readonly ISearchService _searchService;
-        private readonly INavigationService _navigationService;
-        private readonly ILibraryService _libraryService;
+    public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
+    {
+        PlayerVisible = message.NewValue == PlayerVisibilityState.Visible;
+        ShouldUseMargin = message.NewValue != PlayerVisibilityState.Hidden;
+    }
 
-        public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-            ILibraryService libraryService)
+    public void Receive(NavigationViewDisplayModeRequestMessage message)
+    {
+        message.Reply(NavigationViewDisplayMode);
+    }
+
+    public bool TryGetPageTypeFromParameter(object? parameter, out Type pageType)
+    {
+        pageType = typeof(object);
+        return parameter is NavigationMetadata metadata &&
+               _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
+    }
+
+    public bool ProcessGamepadKeyDown(VirtualKey key)
+    {
+        // All Gamepad keys are in the range of [195, 218]
+        if ((int)key < 195 || (int)key > 218) return false;
+        Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
+        if (playlist.IsEmpty) return false;
+
+        int? volumeChange = null;
+        switch (key)
         {
-            _searchService = searchService;
-            _navigationService = navigationService;
-            _libraryService = libraryService;
-            _searchQuery = string.Empty;
-            _criticalErrorMessage = string.Empty;
-            IsActive = true;
+            case VirtualKey.GamepadRightThumbstickLeft:
+            case VirtualKey.GamepadLeftShoulder:
+                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-5000));
+                break;
+            case VirtualKey.GamepadRightThumbstickRight:
+            case VirtualKey.GamepadRightShoulder:
+                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(5000));
+                break;
+            case VirtualKey.GamepadLeftTrigger when PlayerVisible:
+                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-30_000));
+                break;
+            case VirtualKey.GamepadRightTrigger when PlayerVisible:
+                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(30_000));
+                break;
+            case VirtualKey.GamepadRightThumbstickUp:
+                volumeChange = 2;
+                break;
+            case VirtualKey.GamepadRightThumbstickDown:
+                volumeChange = -2;
+                break;
+            case VirtualKey.GamepadX:
+                Messenger.Send(new TogglePlayPauseMessage(true));
+                break;
+            case VirtualKey.GamepadView when (PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded):
+                Messenger.Send(new TogglePlayerVisibilityMessage());
+                break;
+            default:
+                return false;
         }
 
-        public void Receive(CriticalErrorMessage message)
+        if (volumeChange.HasValue)
         {
-            HasCriticalError = true;
-            CriticalErrorMessage = message.Message;
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange.Value, true));
+            Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
 
-        public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
-        {
-            PlayerVisible = message.NewValue == PlayerVisibilityState.Visible;
-            ShouldUseMargin = message.NewValue != PlayerVisibilityState.Hidden;
-        }
+        return true;
+    }
 
-        public void Receive(NavigationViewDisplayModeRequestMessage message)
-        {
-            message.Reply(NavigationViewDisplayMode);
-        }
+    public void OnDrop(DataPackageView data)
+    {
+        Messenger.Send(new DragDropMessage(data));
+    }
 
-        public bool TryGetPageTypeFromParameter(object? parameter, out Type pageType)
+    public void UpdateSearchSuggestions(string queryText)
+    {
+        string searchQuery = queryText.Trim();
+        SearchSuggestions.Clear();
+        if (searchQuery.Length > 0)
         {
-            pageType = typeof(object);
-            return parameter is NavigationMetadata metadata &&
-                   _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
-        }
+            var result = _searchService.SearchLocalLibrary(searchQuery);
+            var suggestions = GetSuggestItems(result, searchQuery);
 
-        public void ProcessGamepadKeyDown(KeyRoutedEventArgs args)
-        {
-            // All Gamepad keys are in the range of [195, 218]
-            if ((int)args.Key < 195 || (int)args.Key > 218) return;
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.ActiveItem == null) return;
-            int volumeChange = 0;
-            switch (args.Key)
+            if (suggestions.Count != 0)
             {
-                case VirtualKey.GamepadRightThumbstickLeft:
-                case VirtualKey.GamepadLeftShoulder:
-                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-5000));
-                    break;
-                case VirtualKey.GamepadRightThumbstickRight:
-                case VirtualKey.GamepadRightShoulder:
-                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(5000));
-                    break;
-                case VirtualKey.GamepadLeftTrigger when PlayerVisible:
-                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-30_000));
-                    break;
-                case VirtualKey.GamepadRightTrigger when PlayerVisible:
-                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(30_000));
-                    break;
-                case VirtualKey.GamepadRightThumbstickUp:
-                    volumeChange = 2;
-                    break;
-                case VirtualKey.GamepadRightThumbstickDown:
-                    volumeChange = -2;
-                    break;
-                case VirtualKey.GamepadX:
-                    Messenger.Send(new TogglePlayPauseMessage(true));
-                    break;
-                case VirtualKey.GamepadView when !PlayerVisible:
-                    Messenger.Send(new TogglePlayerVisibilityMessage());
-                    break;
-                default:
-                    return;
-            }
-
-            if (volumeChange != 0)
-            {
-                int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volume));
-            }
-
-            args.Handled = true;
-        }
-
-        public void OnDrop(DataPackageView data)
-        {
-            Messenger.Send(new DragDropMessage(data));
-        }
-
-        public void AutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            string searchQuery = sender.Text.Trim();
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                if (searchQuery.Length > 0)
+                foreach (var suggestion in suggestions)
                 {
-                    SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
-                    sender.ItemsSource = GetSuggestItems(result, searchQuery);
+                    SearchSuggestions.Add(suggestion);
                 }
-                else
-                {
-                    sender.ItemsSource = Array.Empty<object>();
-                }
-            }
-        }
-
-        public void AutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            string searchQuery = args.QueryText.Trim();
-            if (args.ChosenSuggestion == null && searchQuery.Length > 0)
-            {
-                SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
-                _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
             }
             else
             {
-                switch (args.ChosenSuggestion)
-                {
-                    case MediaViewModel media:
-                        Messenger.Send(new PlayMediaMessage(media));
-                        break;
-                    case AlbumViewModel album:
-                        _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
-                        break;
-                    case ArtistViewModel artist:
-                        _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
-                        break;
-                    default:
-                        return;
-                }
-            }
-
-            SearchQuery = string.Empty;
-            if (this.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
-            {
-                IsPaneOpen = false;
+                SearchSuggestions.Add(new SearchSuggestionItem(searchQuery, null, SearchSuggestionKind.None));
             }
         }
+    }
 
-        private IReadOnlyList<object> GetSuggestItems(SearchResult result, string searchQuery)
+    public void SubmitSearch(string queryText)
+    {
+        string searchQuery = queryText.Trim();
+        if (searchQuery.Length > 0)
         {
-            if (!result.HasItems) return Array.Empty<object>();
-            IEnumerable<Tuple<string, object>> songs = result.Songs.Take(6).Select(s => new Tuple<string, object>(s.Name, s));
-            IEnumerable<Tuple<string, object>> videos = result.Videos.Take(6).Select(v => new Tuple<string, object>(v.Name, v));
-            IEnumerable<Tuple<string, object>> artists = result.Artists.Take(6).Select(a => new Tuple<string, object>(a.Name, a));
-            IEnumerable<Tuple<string, object>> albums = result.Albums.Take(6).Select(a => new Tuple<string, object>(a.Name, a));
-            IEnumerable<(double, object)> searchResults = songs.Concat(videos).Concat(artists).Concat(albums)
-                .Select(t => (GetRanking(t.Item1, searchQuery), t.Item2))
-                .OrderBy(t => t.Item1).Take(10);
-            return searchResults.Select(t => t.Item2).ToArray();
+            SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
+            _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
+        }
+    }
+
+    public void SelectSuggestion(SearchSuggestionItem? chosenSuggestion)
+    {
+        if (chosenSuggestion?.Data == null) return;
+
+        switch (chosenSuggestion.Data)
+        {
+            case MediaViewModel media:
+                Messenger.Send(new PlayMediaMessage(media));
+                break;
+            case AlbumViewModel album:
+                _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
+                break;
+            case ArtistViewModel artist:
+                _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+                break;
+        }
+    }
+
+    private IReadOnlyList<SearchSuggestionItem> GetSuggestItems(SearchResult result, string searchQuery)
+    {
+        if (!result.HasItems) return Array.Empty<SearchSuggestionItem>();
+
+        IEnumerable<SearchSuggestionItem> songs = result.Songs
+            .Take(MaxSuggestionsPerCategory)
+            .Select(s => new SearchSuggestionItem(s.Name, s, SearchSuggestionKind.Song));
+        IEnumerable<SearchSuggestionItem> videos = result.Videos
+            .Take(MaxSuggestionsPerCategory)
+            .Select(v => new SearchSuggestionItem(v.Name, v, SearchSuggestionKind.Video));
+        IEnumerable<SearchSuggestionItem> artists = result.Artists
+            .Take(MaxSuggestionsPerCategory)
+            .Select(a => new SearchSuggestionItem(a.Name, a, SearchSuggestionKind.Artist));
+        IEnumerable<SearchSuggestionItem> albums = result.Albums
+            .Take(MaxSuggestionsPerCategory)
+            .Select(a => new SearchSuggestionItem(a.Name, a, SearchSuggestionKind.Album));
+        IEnumerable<(double, SearchSuggestionItem)> searchResults = songs
+            .Concat(videos).Concat(artists).Concat(albums)
+            .Select(item => (GetRanking(item.Name, searchQuery), item))
+            .OrderBy(t => t.Item1)
+            .Take(MaxTotalSuggestions);
+
+        return searchResults.Select(t => t.Item2).ToArray();
+    }
+
+    private static double GetRanking(string text, string query)
+    {
+        int index = text.IndexOf(query, StringComparison.CurrentCultureIgnoreCase);
+        if (query.Contains(' '))
+        {
+            return index;
         }
 
-        private static double GetRanking(string text, string query)
-        {
-            int index = text.IndexOf(query, StringComparison.CurrentCultureIgnoreCase);
-            if (query.Contains(' '))
-            {
-                return index;
-            }
+        string[] words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        double wordRank = words
+            .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
+            .Where(i => i >= 0)
+            .Average();
+        return index * IndexWeightFactor + wordRank;
+    }
 
-            string[] words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            double wordRank = words
-                .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
-                .Where(i => i >= 0)
-                .Average();
-            return index * 0.1 + wordRank;
+    public Task FetchLibraries()
+    {
+        List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
+        return Task.WhenAll(tasks);
+    }
+
+    private async Task FetchMusicLibraryAsync()
+    {
+        try
+        {
+            await _libraryService.FetchMusicAsync();
         }
-
-        public Task FetchLibraries()
+        catch (UnauthorizedAccessException)
         {
-            List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
-            return Task.WhenAll(tasks);
+            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
         }
-
-        private async Task FetchMusicLibraryAsync()
+        catch (Exception e)
         {
-            try
-            {
-                await _libraryService.FetchMusicAsync();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new ErrorMessage(null, e.Message));
-                LogService.Log(e);
-            }
+            Messenger.Send(new ErrorMessage(null, e.Message));
+            LogService.Log(e);
         }
+    }
 
-        private async Task FetchVideosLibraryAsync()
+    private async Task FetchVideosLibraryAsync()
+    {
+        try
         {
-            try
-            {
-                await _libraryService.FetchVideosAsync();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new ErrorMessage(null, e.Message));
-                LogService.Log(e);
-            }
+            await _libraryService.FetchVideosAsync();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new ErrorMessage(null, e.Message));
+            LogService.Log(e);
         }
     }
 }

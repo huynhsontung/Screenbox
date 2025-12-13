@@ -2,9 +2,8 @@
     x:Class="Screenbox.Pages.ArtistSearchResultPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -37,7 +36,7 @@
             Style="{StaticResource TitleMediumTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultArtistHeader(ViewModel.SearchQuery), FallbackValue={}}">
             <interactivity:Interaction.Behaviors>
-                <interactions:OverflowTextToolTipBehavior />
+                <behaviors:OverflowTextToolTipBehavior />
             </interactivity:Interaction.Behaviors>
         </TextBlock>
 

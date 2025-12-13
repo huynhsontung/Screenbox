@@ -251,7 +251,7 @@
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
-    <value>RealMedia Variable Bit Rate File</value>
+    <value>קובץ קצב סיביות משתנה של RealMedia</value>
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">

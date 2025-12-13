@@ -1,5 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -11,13 +18,6 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -212,8 +212,8 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     private void LoadMedia()
     {
-        PlaylistInfo reply = Messenger.Send(new PlaylistRequestMessage());
-        Media = reply.ActiveItem;
+        Playlist reply = Messenger.Send(new PlaylistRequestMessage());
+        Media = reply.CurrentItem;
     }
 
     private static async Task<string> ReadToBase64Async(IRandomAccessStream source)

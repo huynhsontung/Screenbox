@@ -4,23 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
+using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Sentry;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using muxc = Microsoft.UI.Xaml.Controls;
+
+using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
+using NavigationViewBackRequestedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewBackRequestedEventArgs;
+using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
+using NavigationViewDisplayModeChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewDisplayModeChangedEventArgs;
+using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
+using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
 
 namespace Screenbox.Pages
 {
@@ -51,11 +55,6 @@ namespace Screenbox.Pages
             // For example, when the app moves to a screen with a different DPI.
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-            // Register a handler for when the window changes focus
-            Window.Current.CoreWindow.Activated += CoreWindow_Activated;
-
-            NotificationView.Translation = new Vector3(0, 0, 16);
-
             _pages = new Dictionary<string, Type>
             {
                 { "home", typeof(HomePage) },
@@ -81,21 +80,6 @@ namespace Screenbox.Pages
             RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
         }
 
-        /// <summary>
-        /// Change the <see cref="VisualState"/> depending on whether the app is active or inactive.
-        /// </summary>
-        private void CoreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
-        {
-            if (args.WindowActivationState == CoreWindowActivationState.Deactivated)
-            {
-                VisualStateManager.GoToState(this, "Deactivated", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "Activated", true);
-            }
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             PlayerFrame.Navigate(typeof(PlayerPage), e.Parameter);
@@ -110,14 +94,8 @@ namespace Screenbox.Pages
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
+            e.Handled = ViewModel.ProcessGamepadKeyDown(e.Key);
             base.OnKeyDown(e);
-            ViewModel.ProcessGamepadKeyDown(e);
-
-            if (e.Key == VirtualKey.GamepadY)
-            {
-                NavViewSearchBox.Focus(FocusState.Programmatic);
-                e.Handled = true;
-            }
         }
 
         public void GoBack()
@@ -141,7 +119,7 @@ namespace Screenbox.Pages
             Window.Current.Dispatcher.AcceleratorKeyActivated += CoreDispatcher_AcceleratorKeyActivated;
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-            ViewModel.NavigationViewDisplayMode = (NavigationViewDisplayMode)NavView.DisplayMode;
+            ViewModel.NavigationViewDisplayMode = (Windows.UI.Xaml.Controls.NavigationViewDisplayMode)NavView.DisplayMode;
             if (!ViewModel.PlayerVisible)
             {
                 SetTitleBar();
@@ -182,7 +160,7 @@ namespace Screenbox.Pages
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName, e.Exception);
         }
 
-        private void NavView_SelectionChanged(muxc.NavigationView sender, muxc.NavigationViewSelectionChangedEventArgs args)
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.IsSettingsSelected)
             {
@@ -231,7 +209,7 @@ namespace Screenbox.Pages
             }
         }
 
-        private void NavView_BackRequested(muxc.NavigationView sender, muxc.NavigationViewBackRequestedEventArgs args)
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             TryGoBack();
         }
@@ -249,7 +227,7 @@ namespace Screenbox.Pages
         {
             // Don't go back if the nav pane is overlayed.
             if (NavView.IsPaneOpen &&
-                NavView.DisplayMode is muxc.NavigationViewDisplayMode.Compact or muxc.NavigationViewDisplayMode.Minimal)
+                NavView.DisplayMode is NavigationViewDisplayMode.Compact or NavigationViewDisplayMode.Minimal)
                 NavView.IsPaneOpen = false;
 
             if (ViewModel.PlayerVisible && PlayerFrame.Content is PlayerPage { ViewModel: { } vm })
@@ -278,11 +256,11 @@ namespace Screenbox.Pages
             if (ContentFrame.SourcePageType == typeof(SettingsPage))
             {
                 // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
-                NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
+                NavView.SelectedItem = (NavigationViewItem)NavView.SettingsItem;
             }
             else if (ContentFrame.SourcePageType != null)
             {
-                muxc.NavigationViewItem? selectedItem = GetNavigationItemForPageType(e.SourcePageType);
+                NavigationViewItem? selectedItem = GetNavigationItemForPageType(e.SourcePageType);
 
                 if (selectedItem == null && ViewModel.TryGetPageTypeFromParameter(e.Parameter, out Type pageType))
                 {
@@ -293,24 +271,24 @@ namespace Screenbox.Pages
             }
         }
 
-        private muxc.NavigationViewItem? GetNavigationItemForPageType(Type pageType)
+        private NavigationViewItem? GetNavigationItemForPageType(Type pageType)
         {
             KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == pageType);
 
-            muxc.NavigationViewItem? selectedItem = NavView.MenuItems
-                .OfType<muxc.NavigationViewItem>()
+            NavigationViewItem? selectedItem = NavView.MenuItems
+                .OfType<NavigationViewItem>()
                 .FirstOrDefault(n => n.Tag.Equals(item.Key));
 
             return selectedItem;
         }
 
-        private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
+        private void NavView_OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
             UpdateNavigationViewState(args.DisplayMode, NavView.IsPaneOpen);
-            ViewModel.NavigationViewDisplayMode = (NavigationViewDisplayMode)args.DisplayMode;
+            ViewModel.NavigationViewDisplayMode = (Windows.UI.Xaml.Controls.NavigationViewDisplayMode)args.DisplayMode;
         }
 
-        private void UpdateNavigationViewState(muxc.NavigationViewDisplayMode displayMode, bool paneOpen)
+        private void UpdateNavigationViewState(NavigationViewDisplayMode displayMode, bool paneOpen)
         {
             if (ViewModel.PlayerVisible)
             {
@@ -320,46 +298,65 @@ namespace Screenbox.Pages
 
             switch (displayMode)
             {
-                case muxc.NavigationViewDisplayMode.Minimal:
+                case NavigationViewDisplayMode.Minimal:
                     VisualStateManager.GoToState(this, "Minimal", true);
                     break;
-                case muxc.NavigationViewDisplayMode.Expanded when paneOpen:
+                case NavigationViewDisplayMode.Expanded when paneOpen:
                     VisualStateManager.GoToState(this, "Expanded", true);
                     break;
-                case muxc.NavigationViewDisplayMode.Expanded:
-                case muxc.NavigationViewDisplayMode.Compact:
+                case NavigationViewDisplayMode.Expanded:
+                case NavigationViewDisplayMode.Compact:
                     VisualStateManager.GoToState(this, "Compact", true);
                     break;
             }
         }
 
-        private void NavView_OnPaneOpening(muxc.NavigationView sender, object args)
+        private void NavView_OnPaneOpening(NavigationView sender, object args)
         {
             UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
         }
 
-        private void NavView_OnPaneClosing(muxc.NavigationView sender, object args)
+        private void NavView_OnPaneClosing(NavigationView sender, object args)
         {
             UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
         }
 
-        private Thickness ToLeftOnlyMargin(double value)
+        private void NavViewSearchBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            return new Thickness(value, 0, 0, 0);
-        }
-
-        private Thickness GetBackgroundMargin(muxc.NavigationViewDisplayMode mode, bool isPaneOpen)
-        {
-            return mode switch
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                muxc.NavigationViewDisplayMode.Minimal => new Thickness(0),
-                muxc.NavigationViewDisplayMode.Expanded when !isPaneOpen => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
-                muxc.NavigationViewDisplayMode.Expanded =>
-                    // Right margin to account for Expanded to Compact state transition
-                    new Thickness(NavView.OpenPaneLength, 0, -NavView.OpenPaneLength, 0),
-                muxc.NavigationViewDisplayMode.Compact => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
-                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
-            };
+                ViewModel.UpdateSearchSuggestions(sender.Text);
+            }
+        }
+
+        private void NavViewSearchBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            // Update the text box when navigating through the suggestion list using the keyboard.
+            if (args.SelectedItem is SearchSuggestionItem suggestion)
+            {
+                // We set sender.Text directly instead of ViewModel.SearchQuery
+                // to avoid triggering TextChanged event.
+                sender.Text = suggestion.Name;
+            }
+        }
+
+        private void NavViewSearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion is SearchSuggestionItem suggestion)
+            {
+                ViewModel.SelectSuggestion(suggestion);
+            }
+            else
+            {
+                ViewModel.SubmitSearch(args.QueryText);
+            }
+
+            ViewModel.SearchQuery = string.Empty;
+            ViewModel.SearchSuggestions.Clear();
+            if (NavView.IsPaneOpen && NavView.DisplayMode != NavigationViewDisplayMode.Expanded)
+            {
+                ViewModel.IsPaneOpen = false;
+            }
         }
 
         /// <summary>

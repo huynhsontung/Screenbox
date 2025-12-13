@@ -2,13 +2,12 @@
     x:Class="Screenbox.Pages.PlayQueuePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -22,7 +21,7 @@
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
                 AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
-                Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
+                Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderOpenGlyph}}"
                 Text="{strings:Resources Key=AddFiles}" />
@@ -48,8 +47,8 @@
     <Grid
         AllowDrop="True"
         Background="Transparent"
-        DragOver="{x:Bind PlaylistView.PlaylistListView_OnDragOver}"
-        Drop="{x:Bind PlaylistView.PlaylistListView_OnDrop}">
+        DragOver="{x:Bind PlayQueue.PlaylistListView_OnDragOver}"
+        Drop="{x:Bind PlayQueue.PlaylistListView_OnDrop}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -75,7 +74,7 @@
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderAddButtonText.Text}"
-                Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
+                Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
@@ -88,19 +87,19 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:SplitButtonXYNavigationBehavior />
-                    <interactions:AutoFocusBehavior />
+                    <behaviors:SplitButtonXYNavigationBehavior />
+                    <behaviors:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>
 
-        <controls:PlaylistView
-            x:Name="PlaylistView"
+        <controls:PlayQueueControl
+            x:Name="PlayQueue"
             Grid.Row="1"
             Padding="{StaticResource ContentPagePadding}" />
 
         <interactivity:Interaction.Behaviors>
-            <interactions:GamepadXYNavigationBehavior />
+            <behaviors:GamepadXYNavigationBehavior />
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
@@ -118,7 +117,7 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="PlaylistView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="PlayQueue.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

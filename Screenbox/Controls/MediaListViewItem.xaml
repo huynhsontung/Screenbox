@@ -3,11 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="using:Screenbox.Controls.Animations"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -94,7 +93,7 @@
             Text="{Binding Name}"
             TextWrapping="NoWrap">
             <interactivity:Interaction.Behaviors>
-                <interactions:OverflowTextToolTipBehavior />
+                <behaviors:OverflowTextToolTipBehavior />
             </interactivity:Interaction.Behaviors>
         </TextBlock>
 
@@ -103,6 +102,7 @@
             Grid.Column="3"
             Margin="2,0"
             Padding="{StaticResource HyperlinkButtonUniformPadding}"
+            contract14Present:AutomationProperties.AutomationControlType="Button"
             Command="{x:Bind Common.OpenArtistCommand}"
             CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
@@ -113,7 +113,7 @@
                 Text="{Binding MainArtist.Name, FallbackValue=''}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
-                    <interactions:OverflowTextToolTipBehavior />
+                    <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
         </HyperlinkButton>
@@ -123,6 +123,7 @@
             Grid.Column="4"
             Margin="2,0"
             Padding="{StaticResource HyperlinkButtonUniformPadding}"
+            contract14Present:AutomationProperties.AutomationControlType="Button"
             Command="{x:Bind Common.OpenAlbumCommand}"
             CommandParameter="{Binding Album}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
@@ -133,7 +134,7 @@
                 Text="{Binding Album.Name, FallbackValue=''}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
-                    <interactions:OverflowTextToolTipBehavior />
+                    <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
         </HyperlinkButton>
@@ -149,7 +150,7 @@
             TextWrapping="NoWrap"
             Visibility="Collapsed">
             <interactivity:Interaction.Behaviors>
-                <interactions:OverflowTextToolTipBehavior />
+                <behaviors:OverflowTextToolTipBehavior />
             </interactivity:Interaction.Behaviors>
         </TextBlock>
 
@@ -314,19 +315,19 @@
     </Grid>
 
     <interactivity:Interaction.Behaviors>
-        <interactions:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="390,580,740" />
-        <interactions:MediaListViewItemBehavior />
-        <core:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="True">
-            <core:GoToStateAction
+        <behaviors:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="390,580,740" />
+        <behaviors:MediaListViewItemBehavior />
+        <interactivity:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="True">
+            <interactivity:GoToStateAction
                 StateName="Playing"
                 TargetObject="{x:Bind}"
                 UseTransitions="True" />
-        </core:DataTriggerBehavior>
-        <core:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="False">
-            <core:GoToStateAction
+        </interactivity:DataTriggerBehavior>
+        <interactivity:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="False">
+            <interactivity:GoToStateAction
                 StateName="NotPlaying"
                 TargetObject="{x:Bind}"
                 UseTransitions="True" />
-        </core:DataTriggerBehavior>
+        </interactivity:DataTriggerBehavior>
     </interactivity:Interaction.Behaviors>
 </UserControl>

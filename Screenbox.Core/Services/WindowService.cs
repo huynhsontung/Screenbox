@@ -66,6 +66,22 @@ namespace Screenbox.Core.Services
                 ViewMode = WindowViewMode.Default;
         }
 
+        public bool TryEnterFullScreenForFileActivation()
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            // Only enter fullscreen if we're not already in a special mode
+            if (!view.IsFullScreenMode && view.ViewMode == ApplicationViewMode.Default)
+            {
+                if (view.TryEnterFullScreenMode())
+                {
+                    ViewMode = WindowViewMode.FullScreen;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public async Task<bool> TryExitCompactLayoutAsync()
         {
             ApplicationView? view = ApplicationView.GetForCurrentView();

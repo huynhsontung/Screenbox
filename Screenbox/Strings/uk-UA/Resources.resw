@@ -454,6 +454,9 @@
   <data name="Artists" xml:space="preserve">
     <value>Виконавці</value>
   </data>
+  <data name="Song" xml:space="preserve">
+    <value>Song</value>
+  </data>
   <data name="Songs" xml:space="preserve">
     <value>Пісні</value>
   </data>
@@ -648,6 +651,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Дозволити максимальній гучності бути більшою за 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Керування на екрані</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Виберіть, які елементи можуть показуватися в елементах керування, та налаштуйте поведінку автоприховування</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Жести</value>
   </data>
@@ -824,6 +833,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Сортувати за</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Сортувати за {0}</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Виконавець</value>
   </data>
@@ -936,15 +949,33 @@
     <value>Суперроздільність</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Показувати назву розділу, якщо він доступний</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Сховати елементи керування через заданий час</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} секунда</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} секунд</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Мова застосунку</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Змінити мову в застосунку</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Використовувати мову системи</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>No results for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
   </data>
 </root>

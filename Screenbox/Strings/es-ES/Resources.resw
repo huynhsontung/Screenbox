@@ -454,6 +454,9 @@
   <data name="Artists" xml:space="preserve">
     <value>Artistas</value>
   </data>
+  <data name="Song" xml:space="preserve">
+    <value>Song</value>
+  </data>
   <data name="Songs" xml:space="preserve">
     <value>Canciones</value>
   </data>
@@ -648,6 +651,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Permitir que el volumen máximo supere el 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>On-screen controls</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
   </data>
@@ -824,6 +833,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Ordenar por</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sort by {0} option selected</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Artista</value>
   </data>
@@ -936,15 +949,33 @@
     <value>Superresolución</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Mostrar nombre del capítulo cuando esté disponible</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dismiss controls after this amount of time</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Idioma de la aplicación</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Cambiar el idioma de la aplicación</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Usar idioma del sistema</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>No results for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
   </data>
 </root>

@@ -1,7 +1,6 @@
-﻿using Screenbox.Core.Enums;
+﻿using System.IO.Compression;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
-using System.IO.Compression;
-using System.Threading.Tasks;
 
 namespace Screenbox.Core.Helpers;
 
@@ -11,7 +10,7 @@ namespace Screenbox.Core.Helpers;
 // Source: https://github.com/rocksdanister/lively
 public static class LivelyWallpaperUtil
 {
-    public static async Task<bool> IsWallpaperFile(ZipArchive wallpaperFile)
+    public static bool IsWallpaperFile(ZipArchive wallpaperFile)
     {
         try
         {

@@ -39,9 +39,23 @@ public enum ThicknessFilterKinds
     /// </summary>
     Bottom = 8,
 
-    //Horizontal = Left | Right,
+    /// <summary>
+    /// Filters Left and Right values, sets Top and Bottom to 0.
+    /// </summary>
+    /// <remarks>This value combines the <see cref="Left"/> and <see cref="Right"/> flags.</remarks>
+    Horizontal = Left | Right,
 
-    //Vertical = Top | Bottom,
+    /// <summary>
+    /// Filters Top and Bottom values, sets Left and Right to 0.
+    /// </summary>
+    /// <remarks>This value combines the <see cref="Top"/> and <see cref="Bottom"/> flags.</remarks>
+    Vertical = Top | Bottom,
+
+    /// <summary>
+    /// Filters Left, Top, Right, and Bottom values.
+    /// </summary>
+    /// <remarks>This value combines the <see cref="Left"/>, <see cref="Top"/>, <see cref="Right"/>, and <see cref="Bottom"/> flags.</remarks>
+    All = Left | Top | Right | Bottom
 }
 
 /// <summary>
@@ -87,16 +101,16 @@ public enum ThicknessFilterKinds
 /// var thicknessFilter = ThicknessFilterKinds.Top | ThicknessFilterKinds.Bottom;
 ///
 /// // Attach the converter to the target. For example:
-/// myBorder.BorderThickness = thicknessConverter.Convert(exampleThickness, thicknessFilter);
+/// myBorder.BorderThickness = thicknessConverter.Extract(exampleThickness, thicknessFilter);
 /// </code>
 /// </example>
-public sealed partial class ThicknessFiltersConverter : DependencyObject, IValueConverter
+public sealed class ThicknessFiltersConverter : DependencyObject, IValueConverter
 {
     /// <summary>
     /// Identifies the <see cref="Filters"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty FiltersProperty = DependencyProperty.Register(
-        nameof(Filters), typeof(ThicknessFilterKinds), typeof(ThicknessFiltersConverter), new PropertyMetadata(null));
+        nameof(Filters), typeof(ThicknessFilterKinds), typeof(ThicknessFiltersConverter), new PropertyMetadata(ThicknessFilterKinds.None));
 
     /// <summary>
     /// Gets or sets the type of the filter applied to the <see cref="ThicknessFiltersConverter"/>.
@@ -108,25 +122,23 @@ public sealed partial class ThicknessFiltersConverter : DependencyObject, IValue
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Thickness"/> based on the provided <see cref="ThicknessFilterKinds"/> filter type.
+    /// Extracts the specified <see cref="Thickness"/> fields based on the provided <see cref="ThicknessFilterKinds"/> combination.
     /// </summary>
-    /// <param name="thickness">The source <see cref="Thickness"/> to convert.</param>
-    /// <param name="filterKinds">An enumeration that specifies the filter type.</param>
-    /// <returns>A new <see cref="Thickness"/> with only the fields specified by the <paramref name="filterKinds"/>, while the rest are set to 0.</returns>
-    public Thickness Convert(Thickness thickness, ThicknessFilterKinds filterKinds)
+    /// <param name="thickness">The source <see cref="Thickness"/> instance to extract values from.</param>
+    /// <param name="filterKinds">A combination of <see cref="ThicknessFilterKinds"/> values specifying the extraction behavior.</param>
+    /// <returns>A <see cref="Thickness"/> containing only the specified fields from <paramref name="thickness"/>, the others are set to 0.</returns>
+    public static Thickness Extract(Thickness thickness, ThicknessFilterKinds filterKinds)
     {
-        var result = thickness;
-
-        if (filterKinds is not ThicknessFilterKinds.None)
+        if (filterKinds != ThicknessFilterKinds.None)
         {
             return new Thickness(
-                filterKinds.HasFlag(ThicknessFilterKinds.Left) ? result.Left : 0,
-                filterKinds.HasFlag(ThicknessFilterKinds.Top) ? result.Top : 0,
-                filterKinds.HasFlag(ThicknessFilterKinds.Right) ? result.Right : 0,
-                filterKinds.HasFlag(ThicknessFilterKinds.Bottom) ? result.Bottom : 0);
+                filterKinds.HasFlag(ThicknessFilterKinds.Left) ? thickness.Left : 0,
+                filterKinds.HasFlag(ThicknessFilterKinds.Top) ? thickness.Top : 0,
+                filterKinds.HasFlag(ThicknessFilterKinds.Right) ? thickness.Right : 0,
+                filterKinds.HasFlag(ThicknessFilterKinds.Bottom) ? thickness.Bottom : 0);
         }
 
-        return result;
+        return new Thickness();
     }
 
     /// <summary>
@@ -142,11 +154,10 @@ public sealed partial class ThicknessFiltersConverter : DependencyObject, IValue
     {
         if (value is Thickness thickness)
         {
-            var filtersType = Filters;
-            return Convert(thickness, filtersType);
+            return Extract(thickness, Filters);
         }
 
-        return null;
+        return DependencyProperty.UnsetValue;
     }
 
     /// <summary>

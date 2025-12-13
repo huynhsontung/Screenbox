@@ -3,7 +3,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Controls.Interactions;
+using Screenbox.Behaviors;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -61,6 +61,13 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.OnNavigatedFrom();
+        }
+
+        private static string GetAutomationName(bool isFile, string name, string fileInfo, uint itemsCount)
+        {
+            return isFile
+                ? $"{Strings.Resources.File}; {name}, {fileInfo}"
+                : $"{Strings.Resources.Folder}, {name}; {Strings.Resources.ItemsCount(itemsCount)}";
         }
 
         private static string GetCaptionText(bool isFile, string fileInfo, uint itemCount) =>
