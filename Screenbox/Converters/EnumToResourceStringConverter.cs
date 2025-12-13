@@ -16,7 +16,7 @@ public sealed class EnumToResourceStringConverter : IValueConverter
     /// <param name="enumValue">The enum member to localize.</param>
     /// <returns>
     /// The resource string using the key format "{EnumType}{EnumMember}",
-    /// and if not found, "EnumMember"; otherwise, an empty string.
+    /// and if not found, "EnumMember"; otherwise, the string representation.
     /// </returns>
     public static string GetResourceString(Enum? enumValue)
     {
@@ -29,10 +29,19 @@ public sealed class EnumToResourceStringConverter : IValueConverter
         string memberName = enumValue.ToString("G");
         string fullName = typeName + memberName;
         string result = _resourceLoader.GetString(fullName);
+        string fallback = _resourceLoader.GetString(memberName);
 
-        return !string.IsNullOrEmpty(result) && result != fullName
-            ? result
-            : _resourceLoader.GetString(memberName);
+        if (!string.IsNullOrEmpty(result) && result != fullName)
+        {
+            return result;
+        }
+
+        if (!string.IsNullOrEmpty(fallback) && fallback != memberName)
+        {
+            return fallback;
+        }
+
+        return memberName;
     }
 
     /// <inheritdoc/>
