@@ -441,47 +441,42 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.Tap}">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureTapHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeUp}">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeUpHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeDown}">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeDownHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeLeft}">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeLeftHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SwipeRight}">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeRightHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                PlaceholderText="{x:Bind strings:Resources.DecreaseVolume}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="Tap and hold to boost playback speed to 2×">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureTapAndHoldHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureTapAndHold, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>

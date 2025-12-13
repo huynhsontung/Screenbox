@@ -978,23 +978,23 @@
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
-  <data name="Tap" xml:space="preserve">
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
     <value>Tap</value>
   </data>
-  <data name="TapAndHold" xml:space="preserve">
-    <value>Tap and hold</value>
-  </data>
-  <data name="SwipeUp" xml:space="preserve">
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
     <value>Swipe up</value>
   </data>
-  <data name="SwipeDown" xml:space="preserve">
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
     <value>Swipe down</value>
   </data>
-  <data name="SwipeLeft" xml:space="preserve">
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
     <value>Swipe left</value>
   </data>
-  <data name="SwipeRight" xml:space="preserve">
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
     <value>Swipe right</value>
+  </data>
+  <data name="SettingsGestureTapAndHoldHeader" xml:space="preserve">
+    <value>Tap and hold boosts playback speed to 2×</value>
   </data>
   <data name="MediaCommandTypeNone" xml:space="preserve">
     <value>Nothing</value>
