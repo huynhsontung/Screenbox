@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using Screenbox.Core.Playback;
 
@@ -8,8 +8,10 @@ namespace Screenbox.Core.Services
     {
         IMediaPlayer Initialize(string[] swapChainOptions);
 
-        PlaybackItem CreatePlaybackItem(object source, params string[] options);
+        PlaybackItem CreatePlaybackItem(IMediaPlayer player, object source, params string[] options);
 
         void DisposePlaybackItem(PlaybackItem item);
+
+        void DisposePlayer(IMediaPlayer player);
     }
 }

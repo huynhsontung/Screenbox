@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -14,31 +15,33 @@ namespace Screenbox.Core.Factories;
 public sealed class MediaViewModelFactory
 {
     private readonly IPlayerService _playerService;
+    private readonly PlayerContext _playerContext;
     private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
     private int _referencesCleanUpThreshold = 1000;
 
-    public MediaViewModelFactory(IPlayerService playerService)
+    public MediaViewModelFactory(IPlayerService playerService, PlayerContext playerContext)
     {
         _playerService = playerService;
+        _playerContext = playerContext;
     }
 
     public MediaViewModel GetTransient(StorageFile file)
     {
-        return new MediaViewModel(_playerService, file);
+        return new MediaViewModel(_playerContext, _playerService, file);
     }
 
     public MediaViewModel GetTransient(Uri uri)
     {
-        return new MediaViewModel(_playerService, uri);
+        return new MediaViewModel(_playerContext, _playerService, uri);
     }
 
     public MediaViewModel GetTransient(Media media)
     {
         if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
-            return new MediaViewModel(_playerService, media);
+            return new MediaViewModel(_playerContext, _playerService, media);
 
         // Prefer URI source for easier clean up
-        MediaViewModel vm = new(_playerService, uri)
+        MediaViewModel vm = new(_playerContext, _playerService, uri)
         {
             Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media))
         };
@@ -66,7 +69,7 @@ public sealed class MediaViewModelFactory
 
 
         // No existing reference, create new instance
-        instance = new MediaViewModel(_playerService, file);
+        instance = new MediaViewModel(_playerContext, _playerService, file);
         if (!string.IsNullOrEmpty(id))
         {
             _references[id] = new WeakReference<MediaViewModel>(instance);
@@ -83,7 +86,7 @@ public sealed class MediaViewModelFactory
             reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
         // No existing reference, create new instance
-        instance = new MediaViewModel(_playerService, uri);
+        instance = new MediaViewModel(_playerContext, _playerService, uri);
         if (!string.IsNullOrEmpty(id))
         {
             _references[id] = new WeakReference<MediaViewModel>(instance);

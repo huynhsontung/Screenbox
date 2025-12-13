@@ -1,12 +1,13 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
-using System;
-using System.Collections.Generic;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Services
 {
@@ -29,17 +30,17 @@ namespace Screenbox.Core.Services
         public bool SetActiveRenderer(Renderer? renderer)
         {
             if (_playerContext.MediaPlayer is not VlcMediaPlayer vlcMediaPlayer) return false;
-            return vlcMediaPlayer.VlcPlayer.SetRenderer(renderer?.Target) ?? false;
+            return vlcMediaPlayer.VlcPlayer.SetRenderer(renderer?.Target);
         }
 
         public bool Start()
         {
             Stop();
-            
+
             // Get LibVLC from the current media player
             if (_playerContext.MediaPlayer is not VlcMediaPlayer vlcMediaPlayer)
                 return false;
-            
+
             _libVlc = vlcMediaPlayer.LibVlc;
             Guard.IsNotNull(_libVlc, nameof(_libVlc));
             _discoverer = new RendererDiscoverer(_libVlc);

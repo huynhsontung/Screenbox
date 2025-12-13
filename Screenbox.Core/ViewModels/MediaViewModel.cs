@@ -11,6 +11,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -69,6 +70,7 @@ public partial class MediaViewModel : ObservableRecipient
     }
 
     private readonly IPlayerService _playerService;
+    private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
     [ObservableProperty] private string _name;
@@ -95,6 +97,7 @@ public partial class MediaViewModel : ObservableRecipient
     public MediaViewModel(MediaViewModel source)
     {
         _playerService = source._playerService;
+        _playerContext = source._playerContext;
         _name = source._name;
         _thumbnailRef = source._thumbnailRef;
         _mediaInfo = source._mediaInfo;
@@ -111,9 +114,10 @@ public partial class MediaViewModel : ObservableRecipient
         IsFromLibrary = source.IsFromLibrary;
     }
 
-    private MediaViewModel(object source, MediaInfo mediaInfo, IPlayerService playerService)
+    private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
     {
         _playerService = playerService;
+        _playerContext = playerContext;
         Source = source;
         Location = string.Empty;
         DateAdded = DateTimeOffset.Now;
@@ -125,24 +129,24 @@ public partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
     }
 
-    public MediaViewModel(IPlayerService playerService, StorageFile file)
-        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, StorageFile file)
+        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
     {
         Location = file.Path;
         _name = file.DisplayName;
         _altCaption = file.Name;
     }
 
-    public MediaViewModel(IPlayerService playerService, Uri uri)
-        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Uri uri)
+        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
     {
         Guard.IsTrue(uri.IsAbsoluteUri);
         Location = uri.OriginalString;
         _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
     }
 
-    public MediaViewModel(IPlayerService playerService, Media media)
-        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Media media)
+        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
     {
         Location = media.Mrl;
 
@@ -157,6 +161,12 @@ public partial class MediaViewModel : ObservableRecipient
 
     private PlaybackItem? CreatePlaybackItem()
     {
+        if (_playerContext.MediaPlayer == null)
+        {
+            Messenger.Send(new MediaLoadFailedNotificationMessage("Media player is not initialized", Location));
+            return null;
+        }
+
         PlaybackItem? item = null;
         try
         {
@@ -166,7 +176,7 @@ public partial class MediaViewModel : ObservableRecipient
             }
             else
             {
-                item = _playerService.CreatePlaybackItem(Source, _options.ToArray());
+                item = _playerService.CreatePlaybackItem(_playerContext.MediaPlayer, Source, _options.ToArray());
             }
         }
         catch (ArgumentOutOfRangeException)
