@@ -23,7 +23,7 @@ internal class OpenWithCommand : IRelayCommand<MediaViewModel>
 
     public bool CanExecute(object? parameter)
     {
-        return parameter != null && _asyncCommand.CanExecute(parameter);
+        return parameter is MediaViewModel media && media.Source is StorageFile && _asyncCommand.CanExecute(parameter);
     }
 
     public void Execute(object? parameter)
@@ -39,7 +39,7 @@ internal class OpenWithCommand : IRelayCommand<MediaViewModel>
 
     public bool CanExecute(MediaViewModel? parameter)
     {
-        return parameter != null && _asyncCommand.CanExecute(parameter);
+        return parameter?.Source is StorageFile && _asyncCommand.CanExecute(parameter);
     }
 
     public void Execute(MediaViewModel? parameter)
