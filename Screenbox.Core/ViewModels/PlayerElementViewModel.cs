@@ -154,7 +154,12 @@ namespace Screenbox.Core.ViewModels
                 return;
             }
 
-            ProcessMediaGesture(_playerTapGesture, 10.0, 0.0);
+            if (_clickTimer.IsRunning)
+            {
+                _clickTimer.Stop();
+                return;
+            }
+            _clickTimer.Debounce(() => ProcessMediaGesture(_playerTapGesture, 10.0, 0.0), TimeSpan.FromMilliseconds(200));
         }
 
         public void HandlePointerWheelInput(int delta, bool isHorizontal)
@@ -250,12 +255,7 @@ namespace Screenbox.Core.ViewModels
                 case MediaCommandType.None:
                     return;
                 case MediaCommandType.PlayPause:
-                    if (_clickTimer.IsRunning)
-                    {
-                        _clickTimer.Stop();
-                        return;
-                    }
-                    _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
+                    Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
                 case MediaCommandType.Rewind:
                     if (_mediaPlayer?.CanSeek == true)
