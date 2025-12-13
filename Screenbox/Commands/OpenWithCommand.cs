@@ -52,7 +52,7 @@ internal class OpenWithCommand : IRelayCommand<MediaViewModel>
     {
         if (parameter?.Source is not StorageFile file)
         {
-            LogService.Log("Cannot open with: media source is not a StorageFile");
+            // This should not happen if CanExecute is working correctly
             return;
         }
 
@@ -66,7 +66,7 @@ internal class OpenWithCommand : IRelayCommand<MediaViewModel>
             bool success = await Launcher.LaunchFileAsync(file, options);
             if (!success)
             {
-                LogService.Log($"Failed to launch file: {file.Path}");
+                LogService.Log($"Failed to launch file with external application. File: {file.Path}. This could mean no application is available for this file type or the user cancelled the operation.");
             }
         }
         catch (Exception ex)
