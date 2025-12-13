@@ -1,6 +1,7 @@
 #nullable enable
 
 using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -50,13 +51,27 @@ internal class OpenWithCommand : IRelayCommand<MediaViewModel>
     private async Task OpenWithAsync(MediaViewModel? parameter)
     {
         if (parameter?.Source is not StorageFile file)
-            return;
-
-        LauncherOptions options = new()
         {
-            DisplayApplicationPicker = true
-        };
+            LogService.Log("Cannot open with: media source is not a StorageFile");
+            return;
+        }
 
-        await Launcher.LaunchFileAsync(file, options);
+        try
+        {
+            LauncherOptions options = new()
+            {
+                DisplayApplicationPicker = true
+            };
+
+            bool success = await Launcher.LaunchFileAsync(file, options);
+            if (!success)
+            {
+                LogService.Log($"Failed to launch file: {file.Path}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LogService.Log(ex);
+        }
     }
 }
