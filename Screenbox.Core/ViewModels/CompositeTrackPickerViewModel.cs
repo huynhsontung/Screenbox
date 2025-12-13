@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -81,7 +82,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         var playbackSubtitleTrackList = media.Item.Value?.SubtitleTracks;
         if (playbackSubtitleTrackList == null) return;
         if (playbackSubtitleTrackList.Count > 0) subtitleInitialized = true;
-        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
+        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file, message.NeighboringFilesQuery);
         foreach (StorageFile subtitleFile in subtitles)
         {
             // Preload subtitle but don't select it
@@ -139,18 +140,74 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         }
     }
 
-    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
+    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile, StorageFileQueryResult? neighboringFilesQuery = null)
     {
         IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
-        QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-        {
-            ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
-        };
+        string rawName = Path.GetFileNameWithoutExtension(sourceFile.Name);
 
-        var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
-        if (query != null)
+        // 1. Define your separators
+        char[] separators = [' ', '.', '_', '-', '[', ']', '(', ')', '{', '}', ',', ';', '"', '\''];
+
+        // 2. Break the name into tokens, removing empty entries to avoid double wildcards (**)
+        string[] tokens = rawName.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+        if (tokens.Length == 0) return subtitles;
+
+        // If we have a neighboring files query from the playlist, use it and filter for subtitles
+        if (neighboringFilesQuery != null)
         {
-            subtitles = await query.GetFilesAsync(0, 50);
+            try
+            {
+                var escapedTokens = tokens.Select(token => Regex.Escape(token)).ToList();
+
+                // STRATEGY A: Strict "Skeleton" Match
+                var strictRegexPattern = "^" + string.Join(".*", escapedTokens) + ".*$";
+                IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(0, 50);
+                subtitles = files.Where(f =>
+                       f.IsSupportedSubtitle() && Regex.IsMatch(f.Name, strictRegexPattern, RegexOptions.IgnoreCase))
+                    .ToArray();
+                if (subtitles.Count == 0 && tokens.Length > 1)
+                {
+                    // STRATEGY B: Fallback (Partial Tokens Match)
+                    var fallbackPattern = "^" + string.Join(".*", escapedTokens.Take(Math.Min(escapedTokens.Count - 1, 3))) + ".*$";
+                    subtitles = files.Where(f =>
+                            f.IsSupportedSubtitle() && Regex.IsMatch(f.Name, fallbackPattern, RegexOptions.IgnoreCase))
+                        .ToArray();
+                }
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+            }
+        }
+        else
+        {
+            // Fallback to creating a new query with subtitle filter
+
+            // STRATEGY A: Strict "Skeleton" Match
+            // "Iron.Man.2008" -> "Iron*Man*2008*"
+            string strictPattern = string.Join("*", tokens) + "*";
+
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+            {
+                ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
+            };
+
+            var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
+            if (query != null)
+            {
+                subtitles = await query.GetFilesAsync(0, 50);
+
+                // STRATEGY B: Fallback (Partial Tokens Match)
+                // If "Iron*Man*2008*" fails, try "Iron*Man*"
+                if (subtitles.Count == 0 && tokens.Length > 1)
+                {
+                    string fallbackPattern = string.Join("*", tokens.Take(Math.Min(tokens.Length - 1, 3))) + "*";
+                    options.ApplicationSearchFilter = $"System.FileName:~\"{fallbackPattern}\"";
+                    query.ApplyNewQueryOptions(options);
+                    subtitles = await query.GetFilesAsync(0, 50);
+                }
+            }
         }
 
         return subtitles;
