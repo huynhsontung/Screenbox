@@ -50,6 +50,12 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Clear}"
                     Text="{strings:Resources Key=Remove}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE8A7;}"
+                    Text="{strings:Resources Key=OpenWith}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
