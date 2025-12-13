@@ -129,6 +129,12 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
+                    Icon="{ui:FontIcon Glyph=&#xE8A7;}"
+                    IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
+                <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemPropertiesKey}"
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"

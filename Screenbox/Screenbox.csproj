@@ -150,6 +150,7 @@
     <Compile Include="Behaviors\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Commands\BindableCommand.cs" />
     <Compile Include="Commands\OpenUrlCommand.cs" />
+    <Compile Include="Commands\OpenWithCommand.cs" />
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
