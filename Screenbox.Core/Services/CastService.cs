@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
 using System;
@@ -14,27 +15,34 @@ namespace Screenbox.Core.Services
         public event EventHandler<RendererFoundEventArgs>? RendererFound;
         public event EventHandler<RendererLostEventArgs>? RendererLost;
 
-        private readonly LibVlcService _libVlcService;
+        private readonly PlayerContext _playerContext;
         private readonly List<Renderer> _renderers;
         private RendererDiscoverer? _discoverer;
+        private LibVLC? _libVlc;
 
-        public CastService(LibVlcService libVlcService)
+        public CastService(PlayerContext playerContext)
         {
-            _libVlcService = libVlcService;
+            _playerContext = playerContext;
             _renderers = new List<Renderer>();
         }
 
         public bool SetActiveRenderer(Renderer? renderer)
         {
-            return _libVlcService.MediaPlayer?.VlcPlayer.SetRenderer(renderer?.Target) ?? false;
+            if (_playerContext.MediaPlayer is not VlcMediaPlayer vlcMediaPlayer) return false;
+            return vlcMediaPlayer.VlcPlayer.SetRenderer(renderer?.Target) ?? false;
         }
 
         public bool Start()
         {
             Stop();
-            LibVLC? libVlc = _libVlcService.LibVlc;
-            Guard.IsNotNull(libVlc, nameof(libVlc));
-            _discoverer = new RendererDiscoverer(libVlc);
+            
+            // Get LibVLC from the current media player
+            if (_playerContext.MediaPlayer is not VlcMediaPlayer vlcMediaPlayer)
+                return false;
+            
+            _libVlc = vlcMediaPlayer.LibVlc;
+            Guard.IsNotNull(_libVlc, nameof(_libVlc));
+            _discoverer = new RendererDiscoverer(_libVlc);
             _discoverer.ItemAdded += DiscovererOnItemAdded;
             _discoverer.ItemDeleted += DiscovererOnItemDeleted;
             return _discoverer.Start();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -52,8 +53,11 @@ public static class ServiceHelpers
         services.AddSingleton<AlbumViewModelFactory>();
         services.AddSingleton<IMediaListFactory, MediaListFactory>();
 
+        // Context
+        services.AddSingleton<PlayerContext>();
+
         // Services
-        services.AddSingleton<LibVlcService>();
+        services.AddSingleton<IPlayerService, PlayerService>();
         services.AddSingleton<IFilesService, FilesService>();
         services.AddSingleton<ILibraryService, LibraryService>();
         services.AddSingleton<ISearchService, SearchService>();

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -33,7 +34,8 @@ namespace Screenbox.Core.ViewModels
 
         public MediaPlayer? VlcPlayer { get; private set; }
 
-        private readonly LibVlcService _libVlcService;
+        private readonly PlayerContext _playerContext;
+        private readonly IPlayerService _playerService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
@@ -49,12 +51,14 @@ namespace Screenbox.Core.ViewModels
         private bool _playerVolumeGesture;
 
         public PlayerElementViewModel(
-            LibVlcService libVlcService,
+            PlayerContext playerContext,
+            IPlayerService playerService,
             ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService,
             IResourceService resourceService)
         {
-            _libVlcService = libVlcService;
+            _playerContext = playerContext;
+            _playerService = playerService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _resourceService = resourceService;
@@ -112,20 +116,20 @@ namespace Screenbox.Core.ViewModels
                 }
 
                 args.AddRange(swapChainOptions);
-                VlcMediaPlayer player;
+                IMediaPlayer player;
                 try
                 {
-                    player = _libVlcService.Initialize(args.ToArray());
+                    player = _playerService.Initialize(args.ToArray());
                 }
                 catch (VLCException e)
                 {
-                    player = _libVlcService.Initialize(swapChainOptions);
+                    player = _playerService.Initialize(swapChainOptions);
                     Messenger.Send(new ErrorMessage(
                         _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
                 }
 
-                _mediaPlayer = player;
-                VlcPlayer = player.VlcPlayer;
+                _mediaPlayer = (VlcMediaPlayer)player;
+                VlcPlayer = _mediaPlayer.VlcPlayer;
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
                 player.PositionChanged += OnPositionChanged;
                 player.MediaFailed += OnMediaFailed;

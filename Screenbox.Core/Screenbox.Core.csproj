@@ -228,6 +228,7 @@
     <Compile Include="Playback\VlcMediaPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CastService.cs" />
+    <Compile Include="Contexts\PlayerContext.cs" />
     <Compile Include="Services\FilesService.cs" />
     <Compile Include="Services\ICastService.cs" />
     <Compile Include="Services\IFilesService.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
+    <Compile Include="Services\IPlayerService.cs" />
     <Compile Include="Services\IPlaylistService.cs" />
     <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
@@ -251,6 +253,7 @@
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaybackControlService.cs" />
+    <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SettingsService.cs" />
