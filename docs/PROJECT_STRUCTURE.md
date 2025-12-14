@@ -196,7 +196,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 - **`ISearchService`**: Content search and filtering functionality
 
 **Playback and Streaming Services**
-- **`LibVlcService.cs`**: VLC media player integration and management
+- **`IPlayerService`**: Media player initialization and playback item management
 - **`ICastService`**: Chromecast and network streaming capabilities
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
 
@@ -204,6 +204,12 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 - **`ISettingsService`**: Application configuration persistence
 - **`INotificationService`**: User notification management
 - **`IWindowService`**: Window management and display operations
+
+#### Application Contexts
+
+Contexts provide observable state management that can be shared across services and components:
+
+- **`PlayerContext`**: Holds the current media player instance, allowing components to observe player state changes
 
 #### UI-Specific Services (Screenbox Project)
 - **`ResourceService.cs`**: Localization and resource string management

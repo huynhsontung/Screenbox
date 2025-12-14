@@ -1,26 +1,21 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Diagnostics;
-using LibVLCSharp.Shared;
-using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
+using LibVLCSharp.Shared;
+using Screenbox.Core.Playback;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services
 {
-    public sealed class LibVlcService : IDisposable
+    public sealed class PlayerService : IPlayerService
     {
-        public VlcMediaPlayer? MediaPlayer { get; private set; }
-
-        public LibVLC? LibVlc { get; private set; }
-
         private readonly NotificationService _notificationService;
         private readonly bool _useFal;
 
-        public LibVlcService(INotificationService notificationService)
+        public PlayerService(INotificationService notificationService)
         {
             _notificationService = (NotificationService)notificationService;
 
@@ -40,64 +35,79 @@ namespace Screenbox.Core.Services
             }
         }
 
-        public VlcMediaPlayer Initialize(string[] swapChainOptions)
+        public IMediaPlayer Initialize(string[] swapChainOptions)
         {
             LibVLC lib = InitializeLibVlc(swapChainOptions);
-            LibVlc = lib;
-            MediaPlayer = new VlcMediaPlayer(lib);
-            return MediaPlayer;
+            VlcMediaPlayer mediaPlayer = new(lib);
+            return mediaPlayer;
         }
 
-        public Media CreateMedia(object source, params string[] options)
+        public PlaybackItem CreatePlaybackItem(IMediaPlayer player, object source, params string[] options)
+        {
+            if (player is not VlcMediaPlayer vlcMediaPlayer)
+                throw new NotSupportedException("Only VlcMediaPlayer is supported");
+            Media media = CreateMedia(vlcMediaPlayer, source, options);
+            return new PlaybackItem(source, media);
+        }
+
+        public void DisposePlaybackItem(PlaybackItem item)
+        {
+            DisposeMedia(item.Media);
+        }
+
+        public void DisposePlayer(IMediaPlayer player)
+        {
+            if (player is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.VlcPlayer.Dispose();
+                vlcMediaPlayer.LibVlc.Dispose();
+            }
+        }
+
+        private Media CreateMedia(VlcMediaPlayer player, object source, params string[] options)
         {
             return source switch
             {
-                IStorageFile file => CreateMedia(file, options),
-                string str => CreateMedia(str, options),
-                Uri uri => CreateMedia(uri, options),
+                IStorageFile file => CreateMedia(player, file, options),
+                string str => CreateMedia(player, str, options),
+                Uri uri => CreateMedia(player, uri, options),
                 _ => throw new ArgumentOutOfRangeException(nameof(source))
             };
         }
 
-        private Media CreateMedia(string str, params string[] options)
+        private Media CreateMedia(VlcMediaPlayer player, string str, params string[] options)
         {
             if (Uri.TryCreate(str, UriKind.Absolute, out Uri uri))
             {
-                return CreateMedia(uri, options);
+                return CreateMedia(player, uri, options);
             }
 
-            Guard.IsNotNull(LibVlc, nameof(LibVlc));
-            LibVLC libVlc = LibVlc;
-            return new Media(libVlc, str, FromType.FromPath, options);
+            return new Media(player.LibVlc, str, FromType.FromPath, options);
         }
 
-        private Media CreateMedia(IStorageFile file, params string[] options)
+        private Media CreateMedia(VlcMediaPlayer player, IStorageFile file, params string[] options)
         {
-            Guard.IsNotNull(LibVlc, nameof(LibVlc));
-            LibVLC libVlc = LibVlc;
             if (file is StorageFile storageFile &&
                 storageFile.Provider.Id.Equals("network", StringComparison.OrdinalIgnoreCase) &&
                 !string.IsNullOrEmpty(storageFile.Path))
             {
                 // Optimization for network files. Avoid having to deal with WinRT quirks.
-                return CreateMedia(new Uri(storageFile.Path, UriKind.Absolute), options);
+                return CreateMedia(player, new Uri(storageFile.Path, UriKind.Absolute), options);
             }
 
             string token = _useFal
                 ? StorageApplicationPermissions.FutureAccessList.Add(file, "media")
                 : SharedStorageAccessManager.AddFile(file);
             string mrl = "winrt://" + token;
-            return new Media(libVlc, mrl, FromType.FromLocation, options);
+            return new Media(player.LibVlc, mrl, FromType.FromLocation, options);
         }
 
-        private Media CreateMedia(Uri uri, params string[] options)
+        private Media CreateMedia(VlcMediaPlayer player, Uri uri, params string[] options)
         {
-            Guard.IsNotNull(LibVlc, nameof(LibVlc));
-            LibVLC libVlc = LibVlc;
-            return new Media(libVlc, uri, options);
+            return new Media(player.LibVlc, uri, options);
         }
 
-        public void DisposeMedia(Media media)
+        private void DisposeMedia(Media media)
         {
             string mrl = media.Mrl;
             if (mrl.StartsWith("winrt://"))
@@ -145,12 +155,6 @@ namespace Screenbox.Core.Services
             LogService.RegisterLibVlcLogging(libVlc);
             _notificationService.SetVlcDialogHandlers(libVlc);
             return libVlc;
-        }
-
-        public void Dispose()
-        {
-            MediaPlayer?.Close();
-            LibVlc?.Dispose();
         }
     }
 }

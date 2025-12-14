@@ -168,8 +168,6 @@
     <Compile Include="Messages\DragDropMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
-    <Compile Include="Messages\MediaPlayerChangedMessage.cs" />
-    <Compile Include="Messages\MediaPlayerRequestMessage.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
@@ -228,6 +226,7 @@
     <Compile Include="Playback\VlcMediaPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CastService.cs" />
+    <Compile Include="Contexts\PlayerContext.cs" />
     <Compile Include="Services\FilesService.cs" />
     <Compile Include="Services\ICastService.cs" />
     <Compile Include="Services\IFilesService.cs" />
@@ -237,6 +236,7 @@
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
+    <Compile Include="Services\IPlayerService.cs" />
     <Compile Include="Services\IPlaylistService.cs" />
     <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
@@ -244,13 +244,13 @@
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\IWindowService.cs" />
     <Compile Include="Services\LibraryService.cs" />
-    <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Factories\MediaListFactory.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaybackControlService.cs" />
+    <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SettingsService.cs" />

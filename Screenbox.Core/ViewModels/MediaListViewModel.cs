@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -34,7 +36,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     IRecipient<QueuePlaylistMessage>,
     IRecipient<ClearPlaylistMessage>,
     IRecipient<PlaylistRequestMessage>,
-    IRecipient<MediaPlayerChangedMessage>
+    IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
     // UI-bindable properties
     public ObservableCollection<MediaViewModel> Items { get; }
@@ -53,6 +55,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     [ObservableProperty] private int _currentIndex;
 
+    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
+
     // Services (stateless)
     private readonly IPlaylistService _playlistService;
     private readonly IPlaybackControlService _playbackControlService;
@@ -61,11 +65,11 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
+    private readonly PlayerContext _playerContext;
 
     // ViewModel state
     private Playlist _playlist;
     private List<MediaViewModel> _mediaBuffer = new();
-    private IMediaPlayer? _mediaPlayer;
     private object? _delayPlay;
     private bool _deferCollectionChanged;   // Optimization to avoid excessive updates on collection changed events
     private StorageFileQueryResult? _neighboringFilesQuery;
@@ -79,7 +83,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         IFilesService filesService,
         ISettingsService settingsService,
         ISystemMediaTransportControlsService transportControlsService,
-        MediaViewModelFactory mediaFactory)
+        MediaViewModelFactory mediaFactory,
+        PlayerContext playerContext)
     {
         _playlistService = playlistService;
         _playbackControlService = playbackControlService;
@@ -88,6 +93,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
+        _playerContext = playerContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         // Initialize UI collections
@@ -105,6 +111,13 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         NextCommand.CanExecuteChanged += (_, _) => _transportControlsService.TransportControls.IsNextEnabled = CanNext();
         PreviousCommand.CanExecuteChanged += (_, _) => _transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
 
+        if (MediaPlayer != null)
+        {
+            MediaPlayer.MediaFailed += OnMediaFailed;
+            MediaPlayer.MediaEnded += OnEndReached;
+            MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+        }
+
         IsActive = true;
     }
 
@@ -112,7 +125,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public async void Receive(PlayFilesMessage message)
     {
-        if (_mediaPlayer == null)
+        if (MediaPlayer == null)
         {
             _delayPlay = message;
             return;
@@ -172,7 +185,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public async void Receive(PlayMediaMessage message)
     {
-        if (_mediaPlayer == null)
+        if (MediaPlayer == null)
         {
             _delayPlay = message.Value;
             return;
@@ -189,34 +202,44 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         }
     }
 
-    public void Receive(MediaPlayerChangedMessage message)
+    public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
     {
-        _mediaPlayer = message.Value;
-        _mediaPlayer.MediaFailed += OnMediaFailed;
-        _mediaPlayer.MediaEnded += OnEndReached;
-        _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-
-        if (_delayPlay != null)
+        if (message.Sender is not PlayerContext) return;
+        if (message.OldValue is { } oldPlayer)
         {
-            async void SetPlayQueue()
-            {
-                if (_delayPlay is PlayFilesMessage playFilesMessage)
-                {
-                    await ProcessPlayFilesAsync(playFilesMessage);
-                }
-                else if (_delayPlay is MediaViewModel media && Items.Contains(media))
-                {
-                    PlaySingle(media);
-                }
-                else
-                {
-                    ClearPlaylist();
-                    await ParseAndPlayAsync(_delayPlay);
-                }
-                _delayPlay = null;
-            }
+            oldPlayer.MediaFailed -= OnMediaFailed;
+            oldPlayer.MediaEnded -= OnEndReached;
+            oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+        }
 
-            _dispatcherQueue.TryEnqueue(SetPlayQueue);
+        if (MediaPlayer != null)
+        {
+            MediaPlayer.MediaFailed += OnMediaFailed;
+            MediaPlayer.MediaEnded += OnEndReached;
+            MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+
+            if (_delayPlay != null)
+            {
+                async void SetPlayQueue()
+                {
+                    if (_delayPlay is PlayFilesMessage playFilesMessage)
+                    {
+                        await ProcessPlayFilesAsync(playFilesMessage);
+                    }
+                    else if (_delayPlay is MediaViewModel media && Items.Contains(media))
+                    {
+                        PlaySingle(media);
+                    }
+                    else
+                    {
+                        ClearPlaylist();
+                        await ParseAndPlayAsync(_delayPlay);
+                    }
+                    _delayPlay = null;
+                }
+
+                _dispatcherQueue.TryEnqueue(SetPlayQueue);
+            }
         }
     }
 
@@ -226,9 +249,9 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     partial void OnCurrentItemChanging(MediaViewModel? value)
     {
-        if (_mediaPlayer != null)
+        if (MediaPlayer != null)
         {
-            _mediaPlayer.PlaybackItem = value?.Item.Value;
+            MediaPlayer.PlaybackItem = value?.Item.Value;
         }
 
         if (CurrentItem != null)
@@ -310,15 +333,15 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     [RelayCommand]
     private void PlaySingle(MediaViewModel vm)
     {
-        if (_mediaPlayer == null)
+        if (MediaPlayer == null)
         {
             _delayPlay = vm;
             return;
         }
 
         CurrentItem = vm;
-        _mediaPlayer.PlaybackItem = vm.Item.Value;
-        _mediaPlayer.Play();
+        MediaPlayer.PlaybackItem = vm.Item.Value;
+        MediaPlayer.Play();
     }
 
     [RelayCommand]
@@ -362,15 +385,15 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     [RelayCommand(CanExecute = nameof(CanPrevious))]
     private async Task PreviousAsync()
     {
-        if (_mediaPlayer == null) return;
+        if (MediaPlayer == null) return;
         void SetPositionToStart()
         {
-            _mediaPlayer.Position = TimeSpan.Zero;
+            MediaPlayer.Position = TimeSpan.Zero;
         }
 
         // If playing and position > 5 seconds, restart current track
-        if (_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
-            _mediaPlayer.Position > TimeSpan.FromSeconds(5))
+        if (MediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
+            MediaPlayer.Position > TimeSpan.FromSeconds(5))
         {
             _dispatcherQueue.TryEnqueue(SetPositionToStart);
             return;

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -25,8 +26,7 @@ using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
-    IRecipient<PlaylistCurrentItemChangedMessage>,
-    IRecipient<MediaPlayerChangedMessage>
+    IRecipient<PlaylistCurrentItemChangedMessage>
 {
     public ObservableCollection<string> SubtitleTracks { get; }
 
@@ -34,11 +34,13 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
     public ObservableCollection<string> VideoTracks { get; }
 
-    private PlaybackSubtitleTrackList? ItemSubtitleTrackList => _mediaPlayer?.PlaybackItem?.SubtitleTracks;
+    private PlaybackSubtitleTrackList? ItemSubtitleTrackList => MediaPlayer?.PlaybackItem?.SubtitleTracks;
 
-    private PlaybackAudioTrackList? ItemAudioTrackList => _mediaPlayer?.PlaybackItem?.AudioTracks;
+    private PlaybackAudioTrackList? ItemAudioTrackList => MediaPlayer?.PlaybackItem?.AudioTracks;
 
-    private PlaybackVideoTrackList? ItemVideoTrackList => _mediaPlayer?.PlaybackItem?.VideoTracks;
+    private PlaybackVideoTrackList? ItemVideoTrackList => MediaPlayer?.PlaybackItem?.VideoTracks;
+
+    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     [ObservableProperty] private int _subtitleTrackIndex;
     [ObservableProperty] private int _audioTrackIndex;
@@ -46,26 +48,22 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     private readonly IFilesService _filesService;
     private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
-    private IMediaPlayer? _mediaPlayer;
+    private readonly PlayerContext _playerContext;
     private bool _flyoutOpened;
     private CancellationTokenSource? _cts;
 
-    public CompositeTrackPickerViewModel(IFilesService filesService, IResourceService resourceService, ISettingsService settingsService)
+    public CompositeTrackPickerViewModel(PlayerContext playerContext, IFilesService filesService,
+        IResourceService resourceService, ISettingsService settingsService)
     {
         _filesService = filesService;
         _resourceService = resourceService;
         _settingsService = settingsService;
+        _playerContext = playerContext;
         SubtitleTracks = new ObservableCollection<string>();
         AudioTracks = new ObservableCollection<string>();
         VideoTracks = new ObservableCollection<string>();
-        _mediaPlayer = Messenger.Send(new MediaPlayerRequestMessage()).Response;
 
         IsActive = true;
-    }
-
-    public void Receive(MediaPlayerChangedMessage message)
-    {
-        _mediaPlayer = message.Value;
     }
 
     /// <summary>
@@ -74,7 +72,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     public async void Receive(PlaylistCurrentItemChangedMessage message)
     {
         _cts?.Cancel();
-        if (_mediaPlayer is not VlcMediaPlayer player) return;
+        if (MediaPlayer is not VlcMediaPlayer player) return;
         if (message.Value is not { Source: StorageFile file, MediaType: MediaPlaybackType.Video } media)
             return;
 
@@ -251,7 +249,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     [RelayCommand]
     private async Task AddSubtitle()
     {
-        if (ItemSubtitleTrackList == null || _mediaPlayer is not VlcMediaPlayer player) return;
+        if (ItemSubtitleTrackList == null || MediaPlayer is not VlcMediaPlayer player) return;
         try
         {
             StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
@@ -272,7 +270,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         UpdateSubtitleTrackList();
         UpdateAudioTrackList();
         UpdateVideoTrackList();
-        SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? 0;
+        SubtitleTrackIndex = (ItemSubtitleTrackList?.SelectedIndex + 1) ?? 0;
         AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
         VideoTrackIndex = ItemVideoTrackList?.SelectedIndex ?? -1;
 
