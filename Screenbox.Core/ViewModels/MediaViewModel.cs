@@ -69,6 +69,8 @@ public partial class MediaViewModel : ObservableRecipient
         }
     }
 
+    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
+
     private readonly IPlayerService _playerService;
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
@@ -161,7 +163,7 @@ public partial class MediaViewModel : ObservableRecipient
 
     private PlaybackItem? CreatePlaybackItem()
     {
-        if (_playerContext.MediaPlayer == null)
+        if (MediaPlayer == null)
         {
             Messenger.Send(new MediaLoadFailedNotificationMessage("Media player is not initialized", Location));
             return null;
@@ -176,7 +178,7 @@ public partial class MediaViewModel : ObservableRecipient
             }
             else
             {
-                item = _playerService.CreatePlaybackItem(_playerContext.MediaPlayer, Source, _options.ToArray());
+                item = _playerService.CreatePlaybackItem(MediaPlayer, Source, _options.ToArray());
             }
         }
         catch (ArgumentOutOfRangeException)

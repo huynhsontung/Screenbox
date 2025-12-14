@@ -27,8 +27,7 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerElementViewModel : ObservableRecipient,
         IRecipient<ChangeAspectRatioMessage>,
-        IRecipient<SettingsChangedMessage>,
-        IRecipient<MediaPlayerRequestMessage>
+        IRecipient<SettingsChangedMessage>
     {
         public event EventHandler<EventArgs>? ClearViewRequested;
 
@@ -90,11 +89,6 @@ namespace Screenbox.Core.ViewModels
             SetCropGeometry(message.Value);
         }
 
-        public void Receive(MediaPlayerRequestMessage message)
-        {
-            message.Reply(VlcMediaPlayer);
-        }
-
         public void Initialize(string[] swapChainOptions)
         {
             if (VlcMediaPlayer != null)
@@ -144,7 +138,6 @@ namespace Screenbox.Core.ViewModels
                 player.PositionChanged += OnPositionChanged;
                 player.MediaFailed += OnMediaFailed;
                 player.PlaybackItemChanged += OnPlaybackItemChanged;
-                Messenger.Send(new MediaPlayerChangedMessage(player));
             });
         }
 

@@ -6,6 +6,7 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core;
+
 public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
@@ -53,7 +54,7 @@ public static class ServiceHelpers
         services.AddSingleton<AlbumViewModelFactory>();
         services.AddSingleton<IMediaListFactory, MediaListFactory>();
 
-        // Context
+        // Contexts
         services.AddSingleton<PlayerContext>();
 
         // Services
