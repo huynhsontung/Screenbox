@@ -2,10 +2,10 @@
     x:Class="Screenbox.Pages.SearchResultPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -34,6 +34,12 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
@@ -82,7 +88,7 @@
             Style="{StaticResource TitleMediumTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultHeader(ViewModel.SearchQuery)}">
             <interactivity:Interaction.Behaviors>
-                <interactions:OverflowTextToolTipBehavior />
+                <behaviors:OverflowTextToolTipBehavior />
             </interactivity:Interaction.Behaviors>
         </TextBlock>
 
@@ -155,7 +161,7 @@
                         ItemsSource="{x:Bind ViewModel.Albums}"
                         SelectionMode="None">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:ThumbnailGridViewBehavior />
+                            <behaviors:ThumbnailGridViewBehavior />
                         </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>
@@ -193,11 +199,11 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
-                            <interactions:AlternatingListViewBehavior
+                            <behaviors:AlternatingListViewBehavior
                                 AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                 AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                 AlternateBorderThickness="1" />
-                            <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                            <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                         </interactivity:Interaction.Behaviors>
                     </ListView>
                 </StackPanel>
@@ -231,7 +237,7 @@
                             <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
                         </GridView.Resources>
                         <interactivity:Interaction.Behaviors>
-                            <interactions:ThumbnailGridViewBehavior />
+                            <behaviors:ThumbnailGridViewBehavior />
                         </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>

@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -24,8 +26,7 @@ using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
-    IRecipient<PlaylistCurrentItemChangedMessage>,
-    IRecipient<MediaPlayerChangedMessage>
+    IRecipient<PlaylistCurrentItemChangedMessage>
 {
     public ObservableCollection<string> SubtitleTracks { get; }
 
@@ -33,11 +34,13 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
     public ObservableCollection<string> VideoTracks { get; }
 
-    private PlaybackSubtitleTrackList? ItemSubtitleTrackList => _mediaPlayer?.PlaybackItem?.SubtitleTracks;
+    private PlaybackSubtitleTrackList? ItemSubtitleTrackList => MediaPlayer?.PlaybackItem?.SubtitleTracks;
 
-    private PlaybackAudioTrackList? ItemAudioTrackList => _mediaPlayer?.PlaybackItem?.AudioTracks;
+    private PlaybackAudioTrackList? ItemAudioTrackList => MediaPlayer?.PlaybackItem?.AudioTracks;
 
-    private PlaybackVideoTrackList? ItemVideoTrackList => _mediaPlayer?.PlaybackItem?.VideoTracks;
+    private PlaybackVideoTrackList? ItemVideoTrackList => MediaPlayer?.PlaybackItem?.VideoTracks;
+
+    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     [ObservableProperty] private int _subtitleTrackIndex;
     [ObservableProperty] private int _audioTrackIndex;
@@ -45,26 +48,22 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     private readonly IFilesService _filesService;
     private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
-    private IMediaPlayer? _mediaPlayer;
+    private readonly PlayerContext _playerContext;
     private bool _flyoutOpened;
     private CancellationTokenSource? _cts;
 
-    public CompositeTrackPickerViewModel(IFilesService filesService, IResourceService resourceService, ISettingsService settingsService)
+    public CompositeTrackPickerViewModel(PlayerContext playerContext, IFilesService filesService,
+        IResourceService resourceService, ISettingsService settingsService)
     {
         _filesService = filesService;
         _resourceService = resourceService;
         _settingsService = settingsService;
+        _playerContext = playerContext;
         SubtitleTracks = new ObservableCollection<string>();
         AudioTracks = new ObservableCollection<string>();
         VideoTracks = new ObservableCollection<string>();
-        _mediaPlayer = Messenger.Send(new MediaPlayerRequestMessage()).Response;
 
         IsActive = true;
-    }
-
-    public void Receive(MediaPlayerChangedMessage message)
-    {
-        _mediaPlayer = message.Value;
     }
 
     /// <summary>
@@ -73,7 +72,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     public async void Receive(PlaylistCurrentItemChangedMessage message)
     {
         _cts?.Cancel();
-        if (_mediaPlayer is not VlcMediaPlayer player) return;
+        if (MediaPlayer is not VlcMediaPlayer player) return;
         if (message.Value is not { Source: StorageFile file, MediaType: MediaPlaybackType.Video } media)
             return;
 
@@ -81,7 +80,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         var playbackSubtitleTrackList = media.Item.Value?.SubtitleTracks;
         if (playbackSubtitleTrackList == null) return;
         if (playbackSubtitleTrackList.Count > 0) subtitleInitialized = true;
-        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
+        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file, message.NeighboringFilesQuery);
         foreach (StorageFile subtitleFile in subtitles)
         {
             // Preload subtitle but don't select it
@@ -139,18 +138,74 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         }
     }
 
-    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
+    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile, StorageFileQueryResult? neighboringFilesQuery = null)
     {
         IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
-        QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-        {
-            ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
-        };
+        string rawName = Path.GetFileNameWithoutExtension(sourceFile.Name);
 
-        var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
-        if (query != null)
+        // 1. Define your separators
+        char[] separators = [' ', '.', '_', '-', '[', ']', '(', ')', '{', '}', ',', ';', '"', '\''];
+
+        // 2. Break the name into tokens, removing empty entries to avoid double wildcards (**)
+        string[] tokens = rawName.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+        if (tokens.Length == 0) return subtitles;
+
+        // If we have a neighboring files query from the playlist, use it and filter for subtitles
+        if (neighboringFilesQuery != null)
         {
-            subtitles = await query.GetFilesAsync(0, 50);
+            try
+            {
+                var escapedTokens = tokens.Select(token => Regex.Escape(token)).ToList();
+
+                // STRATEGY A: Strict "Skeleton" Match
+                var strictRegexPattern = "^" + string.Join(".*", escapedTokens) + ".*$";
+                IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(0, 50);
+                subtitles = files.Where(f =>
+                       f.IsSupportedSubtitle() && Regex.IsMatch(f.Name, strictRegexPattern, RegexOptions.IgnoreCase))
+                    .ToArray();
+                if (subtitles.Count == 0 && tokens.Length > 1)
+                {
+                    // STRATEGY B: Fallback (Partial Tokens Match)
+                    var fallbackPattern = "^" + string.Join(".*", escapedTokens.Take(Math.Min(escapedTokens.Count - 1, 3))) + ".*$";
+                    subtitles = files.Where(f =>
+                            f.IsSupportedSubtitle() && Regex.IsMatch(f.Name, fallbackPattern, RegexOptions.IgnoreCase))
+                        .ToArray();
+                }
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+            }
+        }
+        else
+        {
+            // Fallback to creating a new query with subtitle filter
+
+            // STRATEGY A: Strict "Skeleton" Match
+            // "Iron.Man.2008" -> "Iron*Man*2008*"
+            string strictPattern = string.Join("*", tokens) + "*";
+
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+            {
+                ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
+            };
+
+            var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
+            if (query != null)
+            {
+                subtitles = await query.GetFilesAsync(0, 50);
+
+                // STRATEGY B: Fallback (Partial Tokens Match)
+                // If "Iron*Man*2008*" fails, try "Iron*Man*"
+                if (subtitles.Count == 0 && tokens.Length > 1)
+                {
+                    string fallbackPattern = string.Join("*", tokens.Take(Math.Min(tokens.Length - 1, 3))) + "*";
+                    options.ApplicationSearchFilter = $"System.FileName:~\"{fallbackPattern}\"";
+                    query.ApplyNewQueryOptions(options);
+                    subtitles = await query.GetFilesAsync(0, 50);
+                }
+            }
         }
 
         return subtitles;
@@ -194,7 +249,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     [RelayCommand]
     private async Task AddSubtitle()
     {
-        if (ItemSubtitleTrackList == null || _mediaPlayer is not VlcMediaPlayer player) return;
+        if (ItemSubtitleTrackList == null || MediaPlayer is not VlcMediaPlayer player) return;
         try
         {
             StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
@@ -215,7 +270,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         UpdateSubtitleTrackList();
         UpdateAudioTrackList();
         UpdateVideoTrackList();
-        SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? 0;
+        SubtitleTrackIndex = (ItemSubtitleTrackList?.SelectedIndex + 1) ?? 0;
         AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
         VideoTrackIndex = ItemVideoTrackList?.SelectedIndex ?? -1;
 

@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
-namespace Screenbox.Controls.Interactions
+namespace Screenbox.Behaviors
 {
     internal class ListViewContextTriggerBehavior : Trigger<ListViewBase>
     {

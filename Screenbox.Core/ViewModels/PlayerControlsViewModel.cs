@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -22,7 +23,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerControlsViewModel : ObservableRecipient,
-        IRecipient<MediaPlayerChangedMessage>,
+        IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
         IRecipient<SettingsChangedMessage>,
         IRecipient<TogglePlayPauseMessage>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
@@ -54,24 +55,27 @@ namespace Screenbox.Core.ViewModels
         [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
         private bool _hasActiveItem;
 
+        private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
-        private IMediaPlayer? _mediaPlayer;
+        private readonly PlayerContext _playerContext;
         private Size _aspectRatio;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
             ISettingsService settingsService,
             IWindowService windowService,
-            IResourceService resourceService)
+            IResourceService resourceService,
+            PlayerContext playerContext)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _windowService = windowService;
             _resourceService = resourceService;
             _settingsService = settingsService;
+            _playerContext = playerContext;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
             _audioTimingOffset = 0.0;
@@ -81,6 +85,13 @@ namespace Screenbox.Core.ViewModels
             _playerShowChapters = settingsService.PlayerShowChapters;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
+
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                MediaPlayer.ChapterChanged += OnChapterChanged;
+                MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+            }
 
             IsActive = true;
         }
@@ -98,17 +109,27 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void Receive(MediaPlayerChangedMessage message)
+        public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
         {
-            _mediaPlayer = message.Value;
-            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            _mediaPlayer.ChapterChanged += OnChapterChanged;
-            _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+            if (message.Sender is not PlayerContext) return;
+            if (message.OldValue is { } oldPlayer)
+            {
+                oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+                oldPlayer.ChapterChanged -= OnChapterChanged;
+                oldPlayer.NaturalVideoSizeChanged -= OnNaturalVideoSizeChanged;
+            }
+
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                MediaPlayer.ChapterChanged += OnChapterChanged;
+                MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+            }
         }
 
         public void Receive(TogglePlayPauseMessage message)
         {
-            if (!HasActiveItem || _mediaPlayer == null) return;
+            if (!HasActiveItem || MediaPlayer == null) return;
             if (message.ShowBadge)
             {
                 PlayPauseWithBadge();
@@ -150,12 +171,12 @@ namespace Screenbox.Core.ViewModels
         /// <returns><see langword="true"/> if the toggle operation was successful; otherwise, <see langword="false"/>.</returns>
         public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
         {
-            if (_mediaPlayer?.PlaybackItem is null)
+            if (MediaPlayer?.PlaybackItem is null)
             {
                 return false;
             }
 
-            var subtitleTracks = _mediaPlayer.PlaybackItem.SubtitleTracks;
+            PlaybackSubtitleTrackList subtitleTracks = MediaPlayer.PlaybackItem.SubtitleTracks;
             if (subtitleTracks.Count == 0)
             {
                 return false;
@@ -210,15 +231,15 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnPlaybackSpeedChanged(double value)
         {
-            if (_mediaPlayer == null) return;
-            _mediaPlayer.PlaybackRate = value;
+            if (MediaPlayer == null) return;
+            MediaPlayer.PlaybackRate = value;
         }
 
         partial void OnAudioTimingOffsetChanged(double value)
         {
-            if (_mediaPlayer == null) return;
+            if (MediaPlayer == null) return;
 
-            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
             {
                 vlcMediaPlayer.AudioDelay = value;
             }
@@ -226,9 +247,9 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnSubtitleTimingOffsetChanged(double value)
         {
-            if (_mediaPlayer == null) return;
+            if (MediaPlayer == null) return;
 
-            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
             {
                 vlcMediaPlayer.SubtitleDelay = value;
             }
@@ -248,7 +269,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(() => HasVideo = _mediaPlayer?.NaturalVideoHeight > 0);
+            _dispatcherQueue.TryEnqueue(() => HasVideo = MediaPlayer?.NaturalVideoHeight > 0);
             SaveSnapshotCommand.NotifyCanExecuteChanged();
         }
 
@@ -289,15 +310,15 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void ResetMediaPlayback()
         {
-            if (_mediaPlayer == null) return;
-            TimeSpan pos = _mediaPlayer.Position;
+            if (MediaPlayer == null) return;
+            TimeSpan pos = MediaPlayer.Position;
             MediaViewModel? item = Playlist.CurrentItem;
             Playlist.CurrentItem = null;
             Playlist.CurrentItem = item;
             _dispatcherQueue.TryEnqueue(() =>
             {
-                _mediaPlayer.Play();
-                _mediaPlayer.Position = pos;
+                MediaPlayer.Play();
+                MediaPlayer.Position = pos;
             });
         }
 
@@ -337,9 +358,9 @@ namespace Screenbox.Core.ViewModels
             {
                 await _windowService.TryExitCompactLayoutAsync();
             }
-            else if (_mediaPlayer?.NaturalVideoHeight > 0)
+            else if (MediaPlayer?.NaturalVideoHeight > 0)
             {
-                double aspectRatio = _mediaPlayer.NaturalVideoWidth / (double)_mediaPlayer.NaturalVideoHeight;
+                double aspectRatio = MediaPlayer.NaturalVideoWidth / (double)MediaPlayer.NaturalVideoHeight;
                 await _windowService.TryEnterCompactLayoutAsync(new Size(240 * aspectRatio, 240));
             }
             else
@@ -367,22 +388,22 @@ namespace Screenbox.Core.ViewModels
         {
             if (IsPlaying)
             {
-                _mediaPlayer?.Pause();
+                MediaPlayer?.Pause();
             }
             else
             {
-                _mediaPlayer?.Play();
+                MediaPlayer?.Play();
             }
         }
 
         [RelayCommand(CanExecute = nameof(HasVideo))]
         private async Task SaveSnapshotAsync()
         {
-            if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
+            if (MediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
             {
                 try
                 {
-                    StorageFile file = await SaveSnapshotInternalAsync(_mediaPlayer);
+                    StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
                     Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
                 }
                 catch (UnauthorizedAccessException)

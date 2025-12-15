@@ -2,11 +2,11 @@
     x:Class="Screenbox.Pages.ArtistDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -73,7 +73,7 @@
                                 Style="{StaticResource BodyStrongTextBlockStyle}"
                                 Text="{Binding Key.Name}">
                                 <interactivity:Interaction.Behaviors>
-                                    <interactions:OverflowTextToolTipBehavior />
+                                    <behaviors:OverflowTextToolTipBehavior />
                                 </interactivity:Interaction.Behaviors>
                             </TextBlock>
                             <TextBlock
@@ -124,6 +124,12 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
@@ -217,7 +223,7 @@
                         Text="{x:Bind ViewModel.Source.Name, FallbackValue={x:Null}}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
@@ -229,7 +235,7 @@
                         Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
@@ -241,7 +247,7 @@
                         Text="{strings:Resources Key=Artist}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
@@ -274,7 +280,7 @@
                                 Label="{strings:Resources Key=Play}"
                                 Style="{StaticResource AccentButtonAppBarButtonStyle}">
                                 <interactivity:Interaction.Behaviors>
-                                    <interactions:AutoFocusBehavior />
+                                    <behaviors:AutoFocusBehavior />
                                 </interactivity:Interaction.Behaviors>
                             </AppBarButton>
 
@@ -354,18 +360,18 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
             <interactivity:Interaction.Behaviors>
-                <interactions:AlternatingListViewBehavior
+                <behaviors:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
-                <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                <interactions:FocusOnItemClickBehavior />
+                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
         </ListView>
 
         <interactivity:Interaction.Behaviors>
-            <interactions:GamepadXYNavigationBehavior />
+            <behaviors:GamepadXYNavigationBehavior />
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
