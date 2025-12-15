@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -24,16 +25,22 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerElementViewModel : ObservableRecipient,
         IRecipient<ChangeAspectRatioMessage>,
-        IRecipient<SettingsChangedMessage>,
-        IRecipient<MediaPlayerRequestMessage>
+        IRecipient<SettingsChangedMessage>
     {
         [ObservableProperty] private bool _isHolding;
 
         public event EventHandler<EventArgs>? ClearViewRequested;
 
-        public MediaPlayer? VlcPlayer { get; private set; }
+        public MediaPlayer? VlcPlayer => VlcMediaPlayer?.VlcPlayer;
 
-        private readonly LibVlcService _libVlcService;
+        private VlcMediaPlayer? VlcMediaPlayer
+        {
+            get => _playerContext.MediaPlayer as VlcMediaPlayer;
+            set => _playerContext.MediaPlayer = value;
+        }
+
+        private readonly PlayerContext _playerContext;
+        private readonly IPlayerService _playerService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
@@ -42,7 +49,6 @@ namespace Screenbox.Core.ViewModels
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private Size _aspectRatio;
-        private VlcMediaPlayer? _mediaPlayer;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
         private MediaCommandType _playerTapGesture;
@@ -55,12 +61,14 @@ namespace Screenbox.Core.ViewModels
         private bool _suppressTap;
 
         public PlayerElementViewModel(
-            LibVlcService libVlcService,
+            PlayerContext playerContext,
+            IPlayerService playerService,
             ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService,
             IResourceService resourceService)
         {
-            _libVlcService = libVlcService;
+            _playerContext = playerContext;
+            _playerService = playerService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _resourceService = resourceService;
@@ -87,21 +95,17 @@ namespace Screenbox.Core.ViewModels
             SetCropGeometry(message.Value);
         }
 
-        public void Receive(MediaPlayerRequestMessage message)
-        {
-            message.Reply(_mediaPlayer);
-        }
-
         public void Initialize(string[] swapChainOptions)
         {
-            if (_mediaPlayer != null)
+            if (VlcMediaPlayer != null)
             {
-                var player = _mediaPlayer;
+                var player = VlcMediaPlayer;
                 player.PlaybackStateChanged -= OnPlaybackStateChanged;
                 player.PositionChanged -= OnPositionChanged;
                 player.MediaFailed -= OnMediaFailed;
                 player.PlaybackItemChanged -= OnPlaybackItemChanged;
-                DisposeMediaPlayer();
+                _playerService.DisposePlayer(player);
+                VlcMediaPlayer = null;
             }
 
             Task.Run(() =>
@@ -118,25 +122,28 @@ namespace Screenbox.Core.ViewModels
                 }
 
                 args.AddRange(swapChainOptions);
-                VlcMediaPlayer player;
+                IMediaPlayer player;
                 try
                 {
-                    player = _libVlcService.Initialize(args.ToArray());
+                    player = _playerService.Initialize(args.ToArray());
                 }
                 catch (VLCException e)
                 {
-                    player = _libVlcService.Initialize(swapChainOptions);
+                    player = _playerService.Initialize(swapChainOptions);
                     Messenger.Send(new ErrorMessage(
                         _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
                 }
 
-                _mediaPlayer = player;
-                VlcPlayer = player.VlcPlayer;
+                if (player is not VlcMediaPlayer vlcMediaPlayer)
+                {
+                    throw new InvalidOperationException("PlayerService must return a VlcMediaPlayer instance.");
+                }
+
+                VlcMediaPlayer = vlcMediaPlayer;
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
                 player.PositionChanged += OnPositionChanged;
                 player.MediaFailed += OnMediaFailed;
                 player.PlaybackItemChanged += OnPlaybackItemChanged;
-                Messenger.Send(new MediaPlayerChangedMessage(player));
             });
         }
 
@@ -148,7 +155,7 @@ namespace Screenbox.Core.ViewModels
 
         public void OnClick()
         {
-            if (_mediaPlayer?.PlaybackItem == null) return;
+            if (VlcMediaPlayer?.PlaybackItem == null) return;
             if (_suppressTap)
             {
                 _suppressTap = false;
@@ -184,9 +191,9 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                if (_mediaPlayer?.CanSeek == true)
+                if (VlcMediaPlayer?.CanSeek == true)
                 {
-                    _timeBeforeManipulation = _mediaPlayer.Position;
+                    _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
                     var timeChange = TimeSpan.FromSeconds(-delta);
                     var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
@@ -201,9 +208,9 @@ namespace Screenbox.Core.ViewModels
             double horizontalCumulative,
             double verticalCumulative)
         {
-            if (_mediaPlayer != null && _manipulationLock == ManipulationLock.None)
+            if (VlcMediaPlayer != null && _manipulationLock == ManipulationLock.None)
             {
-                _timeBeforeManipulation = _mediaPlayer.Position;
+                _timeBeforeManipulation = VlcMediaPlayer.Position;
             }
 
             // Vertical gestures
@@ -227,16 +234,16 @@ namespace Screenbox.Core.ViewModels
         {
             const double holdingSpeed = 2.0;
 
-            if (!_playerTapAndHoldGesture || _mediaPlayer == null) return;
+            if (!_playerTapAndHoldGesture || VlcMediaPlayer == null) return;
 
             switch (holdingState)
             {
                 case HoldingState.Started:
                     if (!IsHolding)
                     {
-                        _playbackRateBeforeHolding = _mediaPlayer.PlaybackRate;
+                        _playbackRateBeforeHolding = VlcMediaPlayer.PlaybackRate;
                         _suppressTap = true;
-                        if (_mediaPlayer.PlaybackRate != holdingSpeed)
+                        if (VlcMediaPlayer.PlaybackRate != holdingSpeed)
                         {
                             SetPlaybackSpeed(holdingSpeed);
                         }
@@ -247,7 +254,7 @@ namespace Screenbox.Core.ViewModels
                 case HoldingState.Canceled:
                     if (IsHolding)
                     {
-                        if (_mediaPlayer.PlaybackRate != _playbackRateBeforeHolding)
+                        if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHolding)
                         {
                             SetPlaybackSpeed(_playbackRateBeforeHolding);
                         }
@@ -271,7 +278,7 @@ namespace Screenbox.Core.ViewModels
                     Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
                 case MediaCommandType.Rewind:
-                    if (_mediaPlayer?.CanSeek == true)
+                    if (VlcMediaPlayer?.CanSeek == true)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
                         var timeChange = TimeSpan.FromMilliseconds(-change * ChangePerPixel);
@@ -280,7 +287,7 @@ namespace Screenbox.Core.ViewModels
                     }
                     break;
                 case MediaCommandType.FastForward:
-                    if (_mediaPlayer?.CanSeek == true)
+                    if (VlcMediaPlayer?.CanSeek == true)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
                         var timeChange = TimeSpan.FromMilliseconds(change * ChangePerPixel);
@@ -341,29 +348,29 @@ namespace Screenbox.Core.ViewModels
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
         {
-            if (_mediaPlayer == null) return;
-            _mediaPlayer.Position = args.RequestedPlaybackPosition;
+            if (VlcMediaPlayer == null) return;
+            VlcMediaPlayer.Position = args.RequestedPlaybackPosition;
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            if (_mediaPlayer == null) return;
+            if (VlcMediaPlayer == null) return;
             switch (args.Button)
             {
                 case SystemMediaTransportControlsButton.Pause:
-                    _mediaPlayer.Pause();
+                    VlcMediaPlayer.Pause();
                     break;
                 case SystemMediaTransportControlsButton.Play:
-                    _mediaPlayer.Play();
+                    VlcMediaPlayer.Play();
                     break;
                 case SystemMediaTransportControlsButton.Stop:
-                    _mediaPlayer.PlaybackItem = null;
+                    VlcMediaPlayer.PlaybackItem = null;
                     break;
                 case SystemMediaTransportControlsButton.FastForward:
-                    _mediaPlayer.Position += TimeSpan.FromSeconds(10);
+                    VlcMediaPlayer.Position += TimeSpan.FromSeconds(10);
                     break;
                 case SystemMediaTransportControlsButton.Rewind:
-                    _mediaPlayer.Position -= TimeSpan.FromSeconds(10);
+                    VlcMediaPlayer.Position -= TimeSpan.FromSeconds(10);
                     break;
             }
         }
@@ -380,12 +387,12 @@ namespace Screenbox.Core.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (_mediaPlayer == null || size.Width < 0 || size.Height < 0) return;
+            if (VlcMediaPlayer == null || size.Width < 0 || size.Height < 0) return;
             Rect defaultSize = new(0, 0, 1, 1);
             if (size is { Width: 0, Height: 0 })
             {
-                if (_mediaPlayer.NormalizedSourceRect == defaultSize) return;
-                _mediaPlayer.NormalizedSourceRect = defaultSize;
+                if (VlcMediaPlayer.NormalizedSourceRect == defaultSize) return;
+                VlcMediaPlayer.NormalizedSourceRect = defaultSize;
             }
             else
             {
@@ -395,15 +402,15 @@ namespace Screenbox.Core.ViewModels
                 }
 
                 double leftOffset = 0.5, topOffset = 0.5;
-                double widthRatio = size.Width / _mediaPlayer.NaturalVideoWidth;
-                double heightRatio = size.Height / _mediaPlayer.NaturalVideoHeight;
+                double widthRatio = size.Width / VlcMediaPlayer.NaturalVideoWidth;
+                double heightRatio = size.Height / VlcMediaPlayer.NaturalVideoHeight;
                 double ratio = Math.Max(widthRatio, heightRatio);
-                double width = size.Width / ratio / _mediaPlayer.NaturalVideoWidth;
-                double height = size.Height / ratio / _mediaPlayer.NaturalVideoHeight;
+                double width = size.Width / ratio / VlcMediaPlayer.NaturalVideoWidth;
+                double height = size.Height / ratio / VlcMediaPlayer.NaturalVideoHeight;
                 leftOffset -= width / 2;
                 topOffset -= height / 2;
 
-                _mediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
+                VlcMediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
             }
         }
 
@@ -415,14 +422,6 @@ namespace Screenbox.Core.ViewModels
             _playerSwipeLeftGesture = _settingsService.PlayerSwipeLeftGesture;
             _playerSwipeRightGesture = _settingsService.PlayerSwipeRightGesture;
             _playerTapAndHoldGesture = _settingsService.PlayerTapAndHoldGesture;
-        }
-
-        private void DisposeMediaPlayer()
-        {
-            _mediaPlayer?.Close();
-            _mediaPlayer?.LibVlc.Dispose();
-            _mediaPlayer = null;
-            VlcPlayer = null;
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)
@@ -454,9 +453,9 @@ namespace Screenbox.Core.ViewModels
 
         private void SetPlaybackSpeed(double value)
         {
-            if (_mediaPlayer != null)
+            if (VlcMediaPlayer != null)
             {
-                _mediaPlayer.PlaybackRate = value;
+                VlcMediaPlayer.PlaybackRate = value;
                 Messenger.Send(new UpdateStatusMessage($"{value}×"));
             }
         }

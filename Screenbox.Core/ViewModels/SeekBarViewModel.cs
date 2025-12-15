@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -29,7 +30,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlayerControlsVisibilityChangedMessage>,
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
-        IRecipient<MediaPlayerChangedMessage>
+        IRecipient<PropertyChangedMessage<IMediaPlayer?>>
     {
         [ObservableProperty] private double _length;
 
@@ -55,9 +56,10 @@ namespace Screenbox.Core.ViewModels
             set => Time = value.TotalMilliseconds;
         }
 
-        private IMediaPlayer? _mediaPlayer;
+        private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
         private readonly ISettingsService _settingsService;
+        private readonly PlayerContext _playerContext;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _seekTimer;
@@ -68,10 +70,12 @@ namespace Screenbox.Core.ViewModels
         private bool _timeChangeOverride;
         private MediaViewModel? _currentItem;
 
-        public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker)
+        public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker,
+            PlayerContext playerContext)
         {
             _settingsService = settingsService;
             _lastPositionTracker = lastPositionTracker;
+            _playerContext = playerContext;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
             _seekTimer = _dispatcherQueue.CreateTimer();
@@ -80,6 +84,18 @@ namespace Screenbox.Core.ViewModels
             _shouldShowPreview = true;
             _shouldHandleKeyDown = true;
             Chapters = new ObservableCollection<ChapterCue>();
+
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                MediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
+                MediaPlayer.PositionChanged += OnPositionChanged;
+                MediaPlayer.MediaEnded += OnEndReached;
+                MediaPlayer.BufferingStarted += OnBufferingStarted;
+                MediaPlayer.BufferingEnded += OnBufferingEnded;
+                MediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
+                MediaPlayer.CanSeekChanged += OnCanSeekChanged;
+            }
 
             // Activate the view model's messenger
             IsActive = true;
@@ -108,36 +124,40 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public async void Receive(MediaPlayerChangedMessage message)
+        public async void Receive(PropertyChangedMessage<IMediaPlayer?> message)
         {
-            if (_mediaPlayer != null)
+            if (message.Sender is not PlayerContext) return;
+
+            if (message.OldValue is { } oldPlayer)
             {
-                _mediaPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
-                _mediaPlayer.NaturalDurationChanged -= OnNaturalDurationChanged;
-                _mediaPlayer.PositionChanged -= OnPositionChanged;
-                _mediaPlayer.MediaEnded -= OnEndReached;
-                _mediaPlayer.BufferingStarted -= OnBufferingStarted;
-                _mediaPlayer.BufferingEnded -= OnBufferingEnded;
-                _mediaPlayer.PlaybackItemChanged -= OnPlaybackItemChanged;
-                _mediaPlayer.CanSeekChanged -= OnCanSeekChanged;
+                oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+                oldPlayer.NaturalDurationChanged -= OnNaturalDurationChanged;
+                oldPlayer.PositionChanged -= OnPositionChanged;
+                oldPlayer.MediaEnded -= OnEndReached;
+                oldPlayer.BufferingStarted -= OnBufferingStarted;
+                oldPlayer.BufferingEnded -= OnBufferingEnded;
+                oldPlayer.PlaybackItemChanged -= OnPlaybackItemChanged;
+                oldPlayer.CanSeekChanged -= OnCanSeekChanged;
             }
 
-            _mediaPlayer = message.Value;
-            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            _mediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
-            _mediaPlayer.PositionChanged += OnPositionChanged;
-            _mediaPlayer.MediaEnded += OnEndReached;
-            _mediaPlayer.BufferingStarted += OnBufferingStarted;
-            _mediaPlayer.BufferingEnded += OnBufferingEnded;
-            _mediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
-            _mediaPlayer.CanSeekChanged += OnCanSeekChanged;
-
-            if (!_lastPositionTracker.IsLoaded)
+            if (MediaPlayer != null)
             {
-                await _lastPositionTracker.LoadFromDiskAsync();
-                if (_currentItem != null)
+                MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                MediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
+                MediaPlayer.PositionChanged += OnPositionChanged;
+                MediaPlayer.MediaEnded += OnEndReached;
+                MediaPlayer.BufferingStarted += OnBufferingStarted;
+                MediaPlayer.BufferingEnded += OnBufferingEnded;
+                MediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
+                MediaPlayer.CanSeekChanged += OnCanSeekChanged;
+
+                if (!_lastPositionTracker.IsLoaded)
                 {
-                    RestoreLastPosition(_currentItem);
+                    await _lastPositionTracker.LoadFromDiskAsync();
+                    if (_currentItem != null)
+                    {
+                        RestoreLastPosition(_currentItem);
+                    }
                 }
             }
         }
@@ -166,7 +186,7 @@ namespace Screenbox.Core.ViewModels
 
         public void OnSeekBarPointerWheelChanged(double pointerWheelDelta)
         {
-            if (!IsSeekable || _mediaPlayer == null) return;
+            if (!IsSeekable || MediaPlayer == null) return;
             var controlPressed = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down;
             var shiftPressed = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
             var delta = 5000;
@@ -186,14 +206,14 @@ namespace Screenbox.Core.ViewModels
             // this handler, Time = args.NewValue. The only exception is when the change is
             // coming from user.
             // We can detect user interaction by checking if Time != args.NewValue
-            if (IsSeekable && _mediaPlayer != null && Math.Abs(Time - args.NewValue) > 50)
+            if (IsSeekable && MediaPlayer != null && Math.Abs(Time - args.NewValue) > 50)
             {
                 Time = args.NewValue;
-                double currentMs = _mediaPlayer.Position.TotalMilliseconds;
+                double currentMs = MediaPlayer.Position.TotalMilliseconds;
                 double newDiffMs = Math.Abs(args.NewValue - currentMs);
                 bool shouldUpdate = newDiffMs > 400;
                 bool shouldOverride = _timeChangeOverride && newDiffMs > 100;
-                bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
+                bool paused = MediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
                 if (shouldUpdate || paused || shouldOverride)
                 {
                     SetPlayerPosition(newPosition, true);
@@ -245,15 +265,15 @@ namespace Screenbox.Core.ViewModels
 
         private void SetPlayerPosition(TimeSpan position, bool debounce)
         {
-            if (!IsSeekable || _mediaPlayer == null) return;
+            if (!IsSeekable || MediaPlayer == null) return;
             if (debounce)
             {
-                _seekTimer.Debounce(() => _mediaPlayer.Position = position, TimeSpan.FromMilliseconds(50));
+                _seekTimer.Debounce(() => MediaPlayer.Position = position, TimeSpan.FromMilliseconds(50));
             }
             else
             {
                 _seekTimer.Stop();
-                _mediaPlayer.Position = position;
+                MediaPlayer.Position = position;
             }
         }
 
@@ -357,9 +377,9 @@ namespace Screenbox.Core.ViewModels
         {
             Chapters.Clear();
             if (chapterList == null) return;
-            if (_mediaPlayer != null)
+            if (MediaPlayer != null)
             {
-                chapterList.Load(_mediaPlayer);
+                chapterList.Load(MediaPlayer);
             }
 
             foreach (ChapterCue chapterCue in chapterList)
