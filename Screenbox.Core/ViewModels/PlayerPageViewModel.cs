@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -31,7 +32,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<UpdateStatusMessage>,
     IRecipient<UpdateVolumeStatusMessage>,
     IRecipient<TogglePlayerVisibilityMessage>,
-    IRecipient<MediaPlayerChangedMessage>,
+    IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<PlaylistCurrentItemChangedMessage>,
     IRecipient<ShowPlayPauseBadgeMessage>,
     IRecipient<OverrideControlsHideDelayMessage>,
@@ -62,6 +63,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool SeekBarPointerInteracting { get; set; }
 
+    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
+
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _openingTimer;
     private readonly DispatcherQueueTimer _controlsVisibilityTimer;
@@ -71,17 +74,19 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly IResourceService _resourceService;
     private readonly IFilesService _filesService;
-    private IMediaPlayer? _mediaPlayer;
+    private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
     private bool _resizeNext;
     private DateTimeOffset _lastUpdated;
 
-    public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService, IFilesService filesService)
+    public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService,
+        ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext)
     {
         _windowService = windowService;
         _resourceService = resourceService;
         _settingsService = settingsService;
         _filesService = filesService;
+        _playerContext = playerContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _openingTimer = _dispatcherQueue.CreateTimer();
         _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -93,6 +98,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         FocusManager.GotFocus += FocusManagerOnFocusChanged;
         _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
+
+        if (MediaPlayer != null)
+        {
+            MediaPlayer.PlaybackStateChanged += OnStateChanged;
+            MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+        }
 
         // Activate the view model's messenger
         IsActive = true;
@@ -135,11 +146,21 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         });
     }
 
-    public void Receive(MediaPlayerChangedMessage message)
+    public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
     {
-        _mediaPlayer = message.Value;
-        _mediaPlayer.PlaybackStateChanged += OnStateChanged;
-        _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+        if (message.Sender is not PlayerContext) return;
+
+        if (message.OldValue is { } oldPlayer)
+        {
+            oldPlayer.PlaybackStateChanged -= OnStateChanged;
+            oldPlayer.NaturalVideoSizeChanged -= OnNaturalVideoSizeChanged;
+        }
+
+        if (MediaPlayer != null)
+        {
+            MediaPlayer.PlaybackStateChanged += OnStateChanged;
+            MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+        }
     }
 
     public void Receive(UpdateVolumeStatusMessage message)
@@ -201,7 +222,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 if (items.Count > 0)
                 {
                     if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
-                        _mediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
+                        MediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
                     {
                         Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
                         Messenger.Send(new SubtitleAddedNotificationMessage(file));
@@ -269,7 +290,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a volume change was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessChangeVolumeKeyDown(VirtualKey key)
     {
-        if (_mediaPlayer == null) return false;
+        if (MediaPlayer == null) return false;
         bool playerVisible = PlayerVisibility == PlayerVisibilityState.Visible;
         int volumeChange;
 
@@ -315,7 +336,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a seek operation was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessSeekKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (_mediaPlayer == null) return false;
+        if (MediaPlayer == null) return false;
         bool playerVisible = PlayerVisibility == PlayerVisibilityState.Visible;
         long seekAmount = 0;
         int direction;
@@ -371,7 +392,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a seek to percentage was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessPercentJumpKeyDown(VirtualKey key)
     {
-        if (_mediaPlayer == null || PlayerVisibility != PlayerVisibilityState.Visible)
+        if (MediaPlayer == null || PlayerVisibility != PlayerVisibilityState.Visible)
         {
             return false;
         }
@@ -384,7 +405,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 result = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.Zero));
                 break;
             case VirtualKey.End:
-                result = Messenger.Send(new ChangeTimeRequestMessage(_mediaPlayer.NaturalDuration));
+                result = Messenger.Send(new ChangeTimeRequestMessage(MediaPlayer.NaturalDuration));
                 break;
             case VirtualKey.NumberPad0:
             case VirtualKey.NumberPad1:
@@ -397,7 +418,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             case VirtualKey.NumberPad8:
             case VirtualKey.NumberPad9:
                 int percent = (key - VirtualKey.NumberPad0) * 10;
-                TimeSpan newPosition = _mediaPlayer.NaturalDuration * (0.01 * percent);
+                TimeSpan newPosition = MediaPlayer.NaturalDuration * (0.01 * percent);
                 result = Messenger.Send(new ChangeTimeRequestMessage(newPosition));
                 extra = $"{percent}%";
                 break;
@@ -425,7 +446,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a playback rate change was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessTogglePlaybackRateKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (_mediaPlayer == null ||
+        if (MediaPlayer == null ||
             modifiers != VirtualKeyModifiers.Shift ||
             PlayerVisibility != PlayerVisibilityState.Visible)
         {
@@ -460,8 +481,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     public bool ProcessFrameSteppingKeyDown(VirtualKey key)
     {
         if (PlayerVisibility != PlayerVisibilityState.Visible ||
-            (!(_mediaPlayer?.CanSeek ?? false)) ||
-            _mediaPlayer.PlaybackState != MediaPlaybackState.Paused)
+            (!(MediaPlayer?.CanSeek ?? false)) ||
+            MediaPlayer.PlaybackState != MediaPlaybackState.Paused)
         {
             return false;
         }
@@ -469,10 +490,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         switch (key)
         {
             case (VirtualKey)190:   // Period (".")
-                _mediaPlayer.StepForwardOneFrame();
+                MediaPlayer.StepForwardOneFrame();
                 return true;
             case (VirtualKey)188:   // Comma (",")
-                _mediaPlayer.StepBackwardOneFrame();
+                MediaPlayer.StepBackwardOneFrame();
                 return true;
             default:
                 return false;
@@ -498,9 +519,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a window resize was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessResizeKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (_mediaPlayer == null) return false;
+        if (MediaPlayer == null) return false;
 
-        Size videoSize = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
+        Size videoSize = new(MediaPlayer.NaturalVideoWidth, MediaPlayer.NaturalVideoHeight);
         var view = ApplicationView.GetForCurrentView();
         // Visible bounds always have 1 pixel less than actual window height?
         var currentSize = new Size(view.VisibleBounds.Width, view.VisibleBounds.Height + 1);
@@ -542,15 +563,15 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     private void TogglePlaybackRate(bool speedUp)
     {
-        if (_mediaPlayer == null) return;
+        if (MediaPlayer == null) return;
         Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 };
         double lastPositiveStep = steps[0];
         foreach (double step in steps)
         {
-            double diff = step - _mediaPlayer.PlaybackRate;
+            double diff = step - MediaPlayer.PlaybackRate;
             if (speedUp && diff > 0)
             {
-                _mediaPlayer.PlaybackRate = step;
+                MediaPlayer.PlaybackRate = step;
                 Messenger.Send(new UpdateStatusMessage($"{step}×"));
                 return;
             }
@@ -563,7 +584,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 }
                 else
                 {
-                    _mediaPlayer.PlaybackRate = lastPositiveStep;
+                    MediaPlayer.PlaybackRate = lastPositiveStep;
                     Messenger.Send(new UpdateStatusMessage($"{lastPositiveStep}×"));
                     return;
                 }

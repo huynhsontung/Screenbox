@@ -8,6 +8,7 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -31,10 +32,10 @@ namespace Screenbox.Controls;
 /// while allowing the navigation pane and main content visibility to be changed independently of the overlay.
 /// <para>Key features include:</para>
 /// <list type="bullet">
-/// <item><description><strong>Overlay:</strong> Display custom content above the main content without obscuring the pane. The layer order can be changed.</description></item>
-/// <item><description><strong>Styling:</strong> Apply custom styles to built-in buttons.</description></item>
-/// <item><description><strong>Accessibility:</strong> Configure built-in buttons access keys and keyboard accelerators.</description></item>
-/// <item><description><strong>Motion:</strong> Fluid animations for content when visibility changes.</description></item>
+/// <item><description><b>Overlay:</b> Display custom content above the main content without obscuring the pane. The layer order can be changed.</description></item>
+/// <item><description><b>Styling:</b> Apply custom styles to built-in buttons.</description></item>
+/// <item><description><b>Accessibility:</b> Configure built-in buttons access keys and keyboard accelerators.</description></item>
+/// <item><description><b>Motion:</b> Fluid animations for content when visibility changes.</description></item>
 /// </list>
 /// </remarks>
 /// <example>
@@ -105,6 +106,7 @@ public sealed partial class NavigationViewEx : NavigationView
         DisplayModeChanged += OnDisplayModeChanged;
         PaneOpening += OnPaneOpening;
         PaneClosing += OnPaneClosing;
+        PaneClosed += OnPaneClosed;
     }
 
     protected override void OnApplyTemplate()
@@ -227,7 +229,7 @@ public sealed partial class NavigationViewEx : NavigationView
             _contentGrid = contentGrid;
 
             // Set implicit animations to play when ContentVisibility changes.
-            UpdateContentAnimations();
+            UpdateContentGridAnimations();
         }
 
         if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
@@ -299,6 +301,7 @@ public sealed partial class NavigationViewEx : NavigationView
         DisplayModeChanged -= OnDisplayModeChanged;
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
+        PaneClosed -= OnPaneClosed;
 
         if (_overlayChildRectangle != null)
         {
@@ -319,6 +322,11 @@ public sealed partial class NavigationViewEx : NavigationView
     private void OnPaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
     {
         UpdateOverlayLayout();
+    }
+
+    private void OnPaneClosed(NavigationView sender, object args)
+    {
+        UpdateOverlayLightDismissLayerVisibility();
     }
 
     private void OverlayLightDismissLayer_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -452,9 +460,12 @@ public sealed partial class NavigationViewEx : NavigationView
     {
         if (_overlayChildRectangle != null)
         {
-            bool isLayerVisible = DisplayMode != NavigationViewDisplayMode.Expanded && IsPaneOpen;
+            bool showLightDismissLayer =
+                (DisplayMode != NavigationViewDisplayMode.Expanded) &&
+                IsPaneOpen &&
+                (ContentVisibility == Visibility.Visible);
 
-            _overlayChildRectangle.Visibility = isLayerVisible ? Visibility.Visible : Visibility.Collapsed;
+            _overlayChildRectangle.Visibility = showLightDismissLayer ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 
@@ -502,19 +513,19 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
-    private string GetTranslationTo(TransitionDirection direction, bool entrance)
+    private string GetContentAnimationTranslationTo(AnimationDirection? direction, bool isEntrance)
     {
         return direction switch
         {
-            TransitionDirection.Top => entrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
-            TransitionDirection.Bottom => entrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
-            TransitionDirection.Left => entrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
-            TransitionDirection.Right => entrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
+            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
+            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
+            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
+            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
             _ => "0,0,0"
         };
     }
 
-    private void UpdateContentAnimations()
+    private void UpdateContentGridAnimations()
     {
         var showAnimationSet = new ImplicitAnimationSet
         {
@@ -525,17 +536,17 @@ public sealed partial class NavigationViewEx : NavigationView
             new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear }
         };
 
-        if (ContentVisibilityTransition != TransitionDirection.None)
+        if (ContentAnimationDirection != null)
         {
             showAnimationSet.Add(new TranslationAnimation
             {
-                To = GetTranslationTo(ContentVisibilityTransition, true),
+                To = GetContentAnimationTranslationTo(ContentAnimationDirection, true),
                 Duration = TimeSpan.FromMilliseconds(400),
                 EasingMode = EasingMode.EaseOut
             });
             hideAnimationSet.Add(new TranslationAnimation
             {
-                To = GetTranslationTo(ContentVisibilityTransition, false),
+                To = GetContentAnimationTranslationTo(ContentAnimationDirection, false),
                 Duration = TimeSpan.FromMilliseconds(250),
                 EasingMode = EasingMode.EaseIn
             });

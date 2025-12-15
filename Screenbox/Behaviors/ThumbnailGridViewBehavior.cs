@@ -2,7 +2,7 @@
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls.Interactions
+namespace Screenbox.Behaviors
 {
     internal class ThumbnailGridViewBehavior : Behavior<GridView>
     {

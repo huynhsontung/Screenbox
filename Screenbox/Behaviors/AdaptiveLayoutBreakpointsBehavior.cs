@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 
-namespace Screenbox.Controls.Interactions
+namespace Screenbox.Behaviors
 {
     internal class AdaptiveLayoutBreakpointsBehavior : Behavior<Control>
     {

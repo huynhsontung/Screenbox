@@ -7,7 +7,7 @@ using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 using NavigationViewPaneDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode;
 
-namespace Screenbox.Controls.Interactions;
+namespace Screenbox.Behaviors;
 
 /// <summary>
 /// Behavior that modifies the default focus finding for a better gamepad navigation experience
