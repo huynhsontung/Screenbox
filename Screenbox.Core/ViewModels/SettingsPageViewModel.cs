@@ -57,6 +57,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     private readonly ISettingsService _settingsService;
     private readonly ILibraryService _libraryService;
+    private readonly IWindowService _windowService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
@@ -72,10 +73,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         public int Language { get; } = Language;
     }
 
-    public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
+    public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService, IWindowService windowService)
     {
         _settingsService = settingsService;
         _libraryService = libraryService;
+        _windowService = windowService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
         MusicLocations = new ObservableCollection<StorageFolder>();
@@ -196,6 +198,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     partial void OnPlayerAutoFullScreenChanged(bool value)
     {
         _settingsService.PlayerAutoFullScreen = value;
+        _windowService.SetPreferredLaunchWindowingMode(value);
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoFullScreen), typeof(SettingsPageViewModel)));
     }
 
