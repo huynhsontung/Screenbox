@@ -1,7 +1,7 @@
-﻿using Screenbox.Core.Enums;
+﻿using System;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
-using System;
 using Windows.Storage;
 using Windows.UI.Xaml.Data;
 
@@ -35,7 +35,7 @@ namespace Screenbox.Converters
                 MediaPlaybackType.Music => "\ue8d6",
                 MediaPlaybackType.Video => "\ue8b2",
                 MediaPlaybackType.Image => "\ue91b",
-                _ => "\ue8a5"
+                _ => "\uea69"
             };
         }
 
@@ -43,6 +43,7 @@ namespace Screenbox.Converters
         {
             return value switch
             {
+                null => "\uea69",
                 IStorageItem item => Convert(item),
                 MediaViewModel { Source: StorageFile file } => Convert(file),
                 MediaViewModel { IsFromLibrary: true, MediaType: var mediaType } => Convert(mediaType),

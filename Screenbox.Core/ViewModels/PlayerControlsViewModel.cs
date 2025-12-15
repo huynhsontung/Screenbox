@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -23,7 +24,7 @@ using Windows.UI.Xaml.Input;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerControlsViewModel : ObservableRecipient,
-        IRecipient<MediaPlayerChangedMessage>,
+        IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
         IRecipient<SettingsChangedMessage>,
         IRecipient<TogglePlayPauseMessage>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
@@ -32,44 +33,13 @@ namespace Screenbox.Core.ViewModels
 
         public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
-        public double SubtitleTimingOffset
-        {
-            // Special access. Consider promote to proper IMediaPlayer property
-            get => _subtitleTimingOffset = (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay / 1000 ?? 0;
-            set
-            {
-                if (_mediaPlayer is VlcMediaPlayer player)
-                {
-                    // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetSpuDelay((long)(value * 1000));
-                    SetProperty(ref _subtitleTimingOffset, value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// This 64-bit signed integer changes the current audio delay.
-        /// </summary>
-        public double AudioTimingOffset
-        {
-            // Special access. Consider promote to proper IMediaPlayer property
-            get => _audioTimingOffset = (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay / 1000 ?? 0;
-            set
-            {
-                if (_mediaPlayer is VlcMediaPlayer player)
-                {
-                    // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetAudioDelay((long)(value * 1000));
-                    SetProperty(ref _audioTimingOffset, value);
-                }
-            }
-        }
-
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private double _playbackSpeed;
+        [ObservableProperty] private double _audioTimingOffset;
+        [ObservableProperty] private double _subtitleTimingOffset;
         [ObservableProperty] private bool _isAdvancedModeActive;
         [ObservableProperty] private bool _isMinimal;
         [ObservableProperty] private bool _playerShowChapters;
@@ -86,33 +56,43 @@ namespace Screenbox.Core.ViewModels
         [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
         private bool _hasActiveItem;
 
+        private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
-        private IMediaPlayer? _mediaPlayer;
+        private readonly PlayerContext _playerContext;
         private Size _aspectRatio;
-        private double _subtitleTimingOffset;
-        private double _audioTimingOffset;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
             ISettingsService settingsService,
             IWindowService windowService,
-            IResourceService resourceService)
+            IResourceService resourceService,
+            PlayerContext playerContext)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _windowService = windowService;
             _resourceService = resourceService;
             _settingsService = settingsService;
+            _playerContext = playerContext;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
+            _audioTimingOffset = 0.0;
+            _subtitleTimingOffset = 0.0;
             _isAdvancedModeActive = settingsService.AdvancedMode;
             _isMinimal = true;
             _playerShowChapters = settingsService.PlayerShowChapters;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
+
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                MediaPlayer.ChapterChanged += OnChapterChanged;
+                MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+            }
 
             IsActive = true;
         }
@@ -130,17 +110,27 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void Receive(MediaPlayerChangedMessage message)
+        public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
         {
-            _mediaPlayer = message.Value;
-            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            _mediaPlayer.ChapterChanged += OnChapterChanged;
-            _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+            if (message.Sender is not PlayerContext) return;
+            if (message.OldValue is { } oldPlayer)
+            {
+                oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+                oldPlayer.ChapterChanged -= OnChapterChanged;
+                oldPlayer.NaturalVideoSizeChanged -= OnNaturalVideoSizeChanged;
+            }
+
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                MediaPlayer.ChapterChanged += OnChapterChanged;
+                MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+            }
         }
 
         public void Receive(TogglePlayPauseMessage message)
         {
-            if (!HasActiveItem || _mediaPlayer == null) return;
+            if (!HasActiveItem || MediaPlayer == null) return;
             if (message.ShowBadge)
             {
                 PlayPauseWithBadge();
@@ -168,8 +158,8 @@ namespace Screenbox.Core.ViewModels
 
         public void ToggleSubtitle(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (_mediaPlayer?.PlaybackItem == null) return;
-            PlaybackSubtitleTrackList subtitleTracks = _mediaPlayer.PlaybackItem.SubtitleTracks;
+            if (MediaPlayer?.PlaybackItem == null) return;
+            PlaybackSubtitleTrackList subtitleTracks = MediaPlayer.PlaybackItem.SubtitleTracks;
             if (subtitleTracks.Count == 0) return;
             args.Handled = true;
             switch (args.KeyboardAccelerator.Modifiers)
@@ -225,8 +215,28 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnPlaybackSpeedChanged(double value)
         {
-            if (_mediaPlayer == null) return;
-            _mediaPlayer.PlaybackRate = value;
+            if (MediaPlayer == null) return;
+            MediaPlayer.PlaybackRate = value;
+        }
+
+        partial void OnAudioTimingOffsetChanged(double value)
+        {
+            if (MediaPlayer == null) return;
+
+            if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.AudioDelay = value;
+            }
+        }
+
+        partial void OnSubtitleTimingOffsetChanged(double value)
+        {
+            if (MediaPlayer == null) return;
+
+            if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.SubtitleDelay = value;
+            }
         }
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -243,7 +253,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(() => HasVideo = _mediaPlayer?.NaturalVideoHeight > 0);
+            _dispatcherQueue.TryEnqueue(() => HasVideo = MediaPlayer?.NaturalVideoHeight > 0);
             SaveSnapshotCommand.NotifyCanExecuteChanged();
         }
 
@@ -251,7 +261,7 @@ namespace Screenbox.Core.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                IsPlaying = sender.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
             });
         }
 
@@ -284,15 +294,15 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void ResetMediaPlayback()
         {
-            if (_mediaPlayer == null) return;
-            TimeSpan pos = _mediaPlayer.Position;
+            if (MediaPlayer == null) return;
+            TimeSpan pos = MediaPlayer.Position;
             MediaViewModel? item = Playlist.CurrentItem;
             Playlist.CurrentItem = null;
             Playlist.CurrentItem = item;
             _dispatcherQueue.TryEnqueue(() =>
             {
-                _mediaPlayer.Play();
-                _mediaPlayer.Position = pos;
+                MediaPlayer.Play();
+                MediaPlayer.Position = pos;
             });
         }
 
@@ -332,9 +342,9 @@ namespace Screenbox.Core.ViewModels
             {
                 await _windowService.TryExitCompactLayoutAsync();
             }
-            else if (_mediaPlayer?.NaturalVideoHeight > 0)
+            else if (MediaPlayer?.NaturalVideoHeight > 0)
             {
-                double aspectRatio = _mediaPlayer.NaturalVideoWidth / (double)_mediaPlayer.NaturalVideoHeight;
+                double aspectRatio = MediaPlayer.NaturalVideoWidth / (double)MediaPlayer.NaturalVideoHeight;
                 await _windowService.TryEnterCompactLayoutAsync(new Size(240 * aspectRatio, 240));
             }
             else
@@ -362,22 +372,22 @@ namespace Screenbox.Core.ViewModels
         {
             if (IsPlaying)
             {
-                _mediaPlayer?.Pause();
+                MediaPlayer?.Pause();
             }
             else
             {
-                _mediaPlayer?.Play();
+                MediaPlayer?.Play();
             }
         }
 
         [RelayCommand(CanExecute = nameof(HasVideo))]
         private async Task SaveSnapshotAsync()
         {
-            if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
+            if (MediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
             {
                 try
                 {
-                    StorageFile file = await SaveSnapshotInternalAsync(_mediaPlayer);
+                    StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
                     Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
                 }
                 catch (UnauthorizedAccessException)
@@ -415,7 +425,7 @@ namespace Screenbox.Core.ViewModels
                 StorageFolder destFolder =
                     await defaultSaveFolder.CreateFolderAsync("Screenbox",
                         CreationCollisionOption.OpenIfExists);
-                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
+                return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
                     NameCollisionOption.GenerateUniqueName);
             }
             finally

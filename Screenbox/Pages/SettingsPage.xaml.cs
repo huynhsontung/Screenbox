@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Numerics;
+﻿using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -28,11 +26,10 @@ namespace Screenbox.Pages
             DataContext = Ioc.Default.GetRequiredService<SettingsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
 
-            VlcCommandLineHelpTextParts = new string[2];
-            string[] parts = Strings.Resources.VlcCommandLineHelpText
-                .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim()).ToArray();
-            Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
+            var helpText = Strings.Resources.VlcCommandLineHelpText;
+            VlcCommandLineHelpTextParts = helpText.Contains("{0}")
+                ? helpText.Split("{0}").Select(s => s.Trim()).Take(2).ToArray()
+                : new[] { helpText, string.Empty };
 
             // Set the "System default" language option string
             var systemLanguageOption = ViewModel.AvailableLanguages[0];

@@ -1,6 +1,8 @@
-﻿using LibVLCSharp.Shared;
+﻿#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
+using LibVLCSharp.Shared;
 using Windows.Media.Core;
 using Windows.Storage;
 
@@ -75,7 +77,7 @@ namespace Screenbox.Core.Playback
             }
         }
 
-        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object args)
+        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
         {
             if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
                 _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack &&

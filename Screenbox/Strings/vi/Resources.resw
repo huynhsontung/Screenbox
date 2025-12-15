@@ -118,29 +118,29 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Đã lưu khung</value>
+    <value>Đã lưu khung hình</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Ảnh trong ảnh</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Lưu khung hiện tại</value>
+    <value>Lưu khung hình hiện tại</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Lặp</value>
+    <value>Lặp lại</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Tốc độ phát lại</value>
+    <value>Tốc độ phát</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
     <value>Âm lượng {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Không lưu được khung</value>
+    <value>Không lưu được khung hình</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Thời gian trôi qua</value>
+    <value>Thời gian đã phát</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
     <value>Thời gian còn lại</value>
@@ -255,7 +255,7 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Video</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>Thư mục này trống</value>
@@ -356,7 +356,7 @@
     <value>Album</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Nghệ sĩ</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
     <value>Tốc độ bit</value>
@@ -449,10 +449,13 @@
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Danh sách phát</value>
   </data>
   <data name="Artists" xml:space="preserve">
     <value>Nghệ sĩ</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Song</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Bài hát</value>
@@ -503,7 +506,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
@@ -594,7 +597,7 @@
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>Kênh {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
@@ -647,6 +650,12 @@
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Cho phép âm lượng tối đa vượt quá 100%</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Điều khiển trên màn hình</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Chọn thành phần nào có thể xuất hiện trong điều khiển và điều chỉnh hành vi tự động ẩn</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Cử chỉ</value>
@@ -774,7 +783,7 @@
     <value>Tùy chọn</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Bù thời gian</value>
+    <value>Thời gian trễ</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
     <value>Nhà soạn nhạc</value>
@@ -824,6 +833,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Xếp theo</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sắp xếp theo tùy chọn {0} đã chọn</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Nghệ sĩ</value>
   </data>
@@ -831,19 +844,19 @@
     <value>Năm phát hành</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Minh họa âm thanh</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Lấy Từ Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Tải minh họa trên GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Tùy chọn minh họa âm thanh</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Minh họa</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Duyệt tập tin</value>
@@ -858,7 +871,7 @@
     <value>Được cung cấp bởi Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Nhập minh họa</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Nhận thêm ảnh qua ứng dụng Lively Wallpaper hoặc tải xuống từ GitHub</value>
@@ -879,16 +892,16 @@
     <value>Nhạc</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Video</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Hiển thị album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
     <value>Hiển thị nghệ sĩ</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Không tải được minh họa</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
     <value>Khi mở một tệp, tự động thêm tất cả các tệp khác trong thư mục vào hàng đợi phát.</value>
@@ -921,30 +934,48 @@
     <value>Tiếp tục phát từ nơi bạn dừng cuối cùng khi mở tệp</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Cách tăng độ phân giải video</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Song tuyến tính</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Điểm</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Siêu phân giải</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Hiển thị tên chương khi có sẵn</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Loại bỏ các điều khiển sau khoảng thời gian này</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} giây</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} giây</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Ngôn ngữ ứng dụng</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Thay đổi ngôn ngữ hiển thị của ứng dụng</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Dùng ngôn ngữ hệ thống</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>No results for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
   </data>
 </root>

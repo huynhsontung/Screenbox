@@ -27,7 +27,7 @@ namespace Screenbox.Controls
 
         public string? Username
         {
-            get => (string)GetValue(UsernameProperty);
+            get => (string?)GetValue(UsernameProperty);
             set => SetValue(UsernameProperty, value);
         }
 

@@ -4,130 +4,42 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:appModel="using:Windows.ApplicationModel"
-    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:triggers="using:Screenbox.Triggers"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <!--  Add acrylic to the minimal/overlay pane and compact/expanded pane (Windows 10 only)  -->
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/NavigationView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-            <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
-            <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
-            <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
             <Thickness x:Key="AppTitleMarginExpanded">48,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginCompact">76,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
-
-            <!--  NavigationView compact pane search button with an animated icon, padding, common state brushes, and no pointer animations to match other pane buttons  -->
-            <Style x:Key="NavigationViewPaneSearchButtonStyle" TargetType="Button">
-                <Setter Property="Background" Value="{ThemeResource NavigationViewItemBackground}" />
-                <Setter Property="Foreground" Value="{ThemeResource NavigationViewItemForeground}" />
-                <Setter Property="BorderThickness" Value="{ThemeResource NavigationViewToggleBorderThickness}" />
-                <Setter Property="Height" Value="36" />
-                <Setter Property="Padding" Value="{ThemeResource NavigationViewItemButtonMargin}" />
-                <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="Content" Value="&#xE721;" />
-                <Setter Property="FocusVisualMargin" Value="-4,0" />
-                <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <!--  To ensure the animated icon faces the same direction as the find symbol, lock the flow direction and mirror the icon  -->
-                            <Grid
-                                x:Name="RootGrid"
-                                Width="{TemplateBinding Width}"
-                                Height="{TemplateBinding Height}"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                FlowDirection="RightToLeft">
-                                <!--  Increase the icon size slightly because the find animated visual has more padding than the symbol  -->
-                                <muxc:AnimatedIcon
-                                    x:Name="Icon"
-                                    Width="20"
-                                    Height="20"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    muxc:AnimatedIcon.State="Normal"
-                                    AutomationProperties.AccessibilityView="Raw"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    MirroredWhenRightToLeft="True">
-                                    <animatedVisuals:AnimatedFindVisualSource />
-                                    <muxc:AnimatedIcon.FallbackIconSource>
-                                        <muxc:FontIconSource FontSize="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FontSize}" Glyph="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}" />
-                                    </muxc:AnimatedIcon.FallbackIconSource>
-                                </muxc:AnimatedIcon>
-
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="Normal" />
-
-                                        <VisualState x:Name="PointerOver">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPointerOver}" />
-                                                <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPointerOver}" />
-                                                <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PointerOver" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-
-                                        <VisualState x:Name="Pressed">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPressed}" />
-                                                <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPressed}" />
-                                                <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="Pressed" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-
-                                        <VisualState x:Name="Disabled">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundDisabled}" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
-                    <TextBlock Margin="8,0,0,0" Text="{Binding Name}" />
+            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
+                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Name, Type)}" Orientation="Horizontal">
+                    <FontIcon
+                        Margin="0,0,8,0"
+                        FontSize="{StaticResource StandardIconFontSize}"
+                        Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
+                        Visibility="{x:Bind converters:SearchSuggestionConverter.GetGlyphVisibility(Type)}" />
+                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Name, Type)}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -183,12 +95,14 @@
             </StackPanel>
         </Grid>
 
-        <controls:CustomNavigationView
+        <controls:NavigationViewEx
             x:Name="NavView"
             AllowDrop="True"
+            BackButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
             BackRequested="NavView_BackRequested"
-            Canvas.ZIndex="0"
+            CloseButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationCloseButtonKey}"
             CompactModeThresholdWidth="701"
+            ContentAnimationDirection="Top"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             DragOver="NavView_DragOver"
             Drop="NavView_Drop"
@@ -198,10 +112,19 @@
             IsTitleBarAutoPaddingEnabled="False"
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
+            PaneSearchButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationPaneAutoSuggestButtonKey}"
+            PaneSearchButtonStyle="{StaticResource AnimatedNavigationViewPaneSearchButtonStyle}"
+            PaneToggleButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationTogglePaneButtonKey}"
             SelectionChanged="NavView_SelectionChanged">
+            <controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+                <KeyboardAccelerator Key="E" Modifiers="Control" />
+            </controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+            <controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
+                <KeyboardAccelerator Key="F" Modifiers="Control" />
+            </controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemHomeKey}"
                     Icon="Home"
                     KeyTipPlacementMode="Right"
@@ -212,7 +135,7 @@
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
                     Icon="Audio"
                     KeyTipPlacementMode="Right"
@@ -223,7 +146,7 @@
                     <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind VideosNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind VideosNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemVideosKey}"
                     KeyTipPlacementMode="Right"
                     Tag="videos">
@@ -236,7 +159,7 @@
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=VideoLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemNetworkKey}"
                     Icon="MapDrive"
                     KeyTipPlacementMode="Right"
@@ -248,7 +171,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind PlayQueueNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind PlayQueueNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemQueueKey}"
                     KeyTipPlacementMode="Right"
                     Tag="queue">
@@ -267,7 +190,7 @@
             <muxc:NavigationView.FooterMenuItems>
                 <!--  Reimplement settings nav item to allow transition  -->
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind SettingsNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind SettingsNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemSettingsKey}"
                     KeyTipPlacementMode="Right"
                     Tag="settings">
@@ -285,20 +208,23 @@
                     <TextBlock x:Name="SettingsNavItemText" Text="{strings:Resources Key=Settings}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
+
             <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="NavViewSearchBox"
-                    controls:AcceleratorService.ToolTip="{x:Bind NavViewSearchBox.(AutomationProperties.Name)}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind NavViewSearchBox.(AutomationProperties.Name)}"
                     AccessKey="{strings:KeyboardResources Key=NavigationPaneAutoSuggestButtonKey}"
                     AccessKeyInvoked="NavViewSearchBox_OnAccessKeyInvoked"
                     AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
+                    ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=OneWay}"
                     KeyTipPlacementMode="Right"
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
-                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
+                    QuerySubmitted="NavViewSearchBox_OnQuerySubmitted"
+                    SuggestionChosen="NavViewSearchBox_OnSuggestionChosen"
                     Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
-                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}"
+                    TextChanged="NavViewSearchBox_OnTextChanged"
                     UpdateTextOnSelect="False">
                     <AutoSuggestBox.KeyboardAccelerators>
                         <KeyboardAccelerator
@@ -308,11 +234,10 @@
                     </AutoSuggestBox.KeyboardAccelerators>
                 </AutoSuggestBox>
             </muxc:NavigationView.AutoSuggestBox>
-            <controls:CustomNavigationView.OverlayContent>
-                <Grid x:Name="OverlayGrid">
-                    <Frame x:Name="PlayerFrame" />
-                </Grid>
-            </controls:CustomNavigationView.OverlayContent>
+
+            <controls:NavigationViewEx.Overlay>
+                <Frame x:Name="PlayerFrame" />
+            </controls:NavigationViewEx.Overlay>
 
             <Grid x:Name="ContentGrid" Padding="0,48,0,0">
                 <Frame
@@ -327,93 +252,32 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom" />
             </Grid>
-
-            <interactivity:Interaction.Behaviors>
-                <interactions:NavigationViewKeyboardBehavior />
-            </interactivity:Interaction.Behaviors>
-        </controls:CustomNavigationView>
+        </controls:NavigationViewEx>
 
         <!--  Critical error  -->
-        <Grid
-            x:Name="CriticalErrorGrid"
+        <controls:ErrorInfo
+            x:Name="CriticalErrorInfo"
             Margin="0,32,0,0"
+            Padding="{StaticResource ContentPagePadding}"
+            Description="{x:Bind strings:Resources.CriticalError}"
+            Emoticon="Sad"
+            Message="{x:Bind ViewModel.CriticalErrorMessage, Mode=OneWay}"
+            NavigateUri="https://github.com/huynhsontung/Screenbox"
             Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <TextBlock
-                Padding="{StaticResource ContentPagePadding}"
-                FontSize="{StaticResource NoContentPanelIconFontSize}"
-                FontWeight="SemiLight"
-                Text=":(" />
-
-            <ScrollViewer
-                Grid.Row="1"
-                Margin="{StaticResource TopLargeMargin}"
-                Padding="{StaticResource ContentPagePadding}"
-                HorizontalScrollMode="Disabled">
-                <StackPanel>
-                    <TextBlock
-                        MaxWidth="768"
-                        HorizontalAlignment="Left"
-                        d:Text="{strings:Resources Key=CriticalErrorDirect3D11NotAvailable}"
-                        AutomationProperties.AccessibilityView="Content"
-                        AutomationProperties.LiveSetting="Assertive"
-                        FontWeight="Light"
-                        Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.CriticalErrorMessage, Mode=OneWay}" />
-
-                    <Grid Margin="0,48,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border
-                            Width="148"
-                            Height="148"
-                            Margin="0,0,16,0"
-                            VerticalAlignment="Top"
-                            Background="{ThemeResource SystemControlForegroundChromeWhiteBrush}">
-                            <Path
-                                Data="M16,18 H44 M48,18 H56 M60,18 H68 M80,18 H100 M104,18 H132 M16,22 H20 M40,22 H44 M48,22 H56 M80,22 H84 M88,22 H92 M104,22 H108 M128,22 H132 M16,26 H20 M24,26 H36 M40,26 H44 M52,26 H76 M92,26 H96 M104,26 H108 M112,26 H124 M128,26 H132 M16,30 H20 M24,30 H36 M40,30 H44 M48,30 H52 M68,30 H80 M84,30 H88 M92,30 H100 M104,30 H108 M112,30 H124 M128,30 H132 M16,34 H20 M24,34 H36 M40,34 H44 M56,34 H60 M68,34 H84 M92,34 H96 M104,34 H108 M112,34 H124 M128,34 H132 M16,38 H20 M40,38 H44 M52,38 H56 M64,38 H68 M72,38 H76 M80,38 H84 M92,38 H100 M104,38 H108 M128,38 H132 M16,42 H44 M48,42 H52 M56,42 H60 M64,42 H68 M72,42 H76 M80,42 H84 M88,42 H92 M96,42 H100 M104,42 H132 M48,46 H52 M60,46 H64 M72,46 H80 M84,46 H88 M16,50 H20 M24,50 H32 M36,50 H48 M60,50 H68 M72,50 H76 M84,50 H100 M104,50 H108 M116,50 H120 M124,50 H132 M16,54 H20 M28,54 H36 M48,54 H56 M80,54 H84 M92,54 H100 M104,54 H116 M128,54 H132 M20,58 H24 M32,58 H44 M48,58 H56 M64,58 H76 M80,58 H84 M96,58 H104 M108,58 H112 M120,58 H128 M16,62 H20 M24,62 H40 M56,62 H72 M76,62 H84 M88,62 H96 M100,62 H108 M112,62 H116 M128,62 H132 M36,66 H44 M48,66 H64 M68,66 H80 M84,66 H88 M92,66 H96 M116,66 H124 M20,70 H24 M28,70 H40 M44,70 H48 M52,70 H64 M68,70 H84 M92,70 H96 M104,70 H108 M120,70 H132 M16,74 H24 M32,74 H36 M40,74 H44 M52,74 H56 M60,74 H68 M72,74 H76 M84,74 H100 M104,74 H108 M120,74 H132 M28,78 H32 M36,78 H40 M44,78 H68 M72,78 H76 M92,78 H116 M124,78 H128 M28,82 H44 M48,82 H52 M68,82 H72 M80,82 H84 M88,82 H100 M112,82 H120 M124,82 H128 M20,86 H24 M28,86 H32 M48,86 H56 M72,86 H76 M84,86 H88 M108,86 H112 M116,86 H128 M16,90 H20 M28,90 H32 M40,90 H48 M52,90 H56 M76,90 H88 M96,90 H100 M104,90 H116 M120,90 H124 M36,94 H40 M44,94 H48 M60,94 H68 M72,94 H88 M104,94 H116 M120,94 H124 M20,98 H52 M64,98 H72 M76,98 H92 M96,98 H124 M48,102 H56 M60,102 H64 M68,102 H72 M96,102 H100 M112,102 H132 M16,106 H44 M48,106 H56 M64,106 H72 M80,106 H100 M104,106 H108 M112,106 H120 M124,106 H128 M16,110 H20 M40,110 H44 M48,110 H52 M56,110 H64 M76,110 H80 M96,110 H100 M112,110 H120 M124,110 H132 M16,114 H20 M24,114 H36 M40,114 H44 M52,114 H68 M72,114 H80 M84,114 H88 M96,114 H116 M120,114 H132 M16,118 H20 M24,118 H36 M40,118 H44 M48,118 H52 M64,118 H96 M100,118 H104 M108,118 H120 M128,118 H132 M16,122 H20 M24,122 H36 M40,122 H44 M48,122 H72 M80,122 H84 M88,122 H92 M96,122 H100 M108,122 H112 M120,122 H124 M128,122 H132 M16,126 H20 M40,126 H44 M60,126 H64 M68,126 H76 M80,126 H84 M96,126 H104 M108,126 H112 M116,126 H120 M124,126 H128 M16,130 H44 M48,130 H56 M72,130 H80 M88,130 H108 M124,130 H128"
-                                Stroke="#0078D7"
-                                StrokeThickness="4" />
-                        </Border>
-
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock
-                                AutomationProperties.AccessibilityView="Content"
-                                FontWeight="SemiLight"
-                                Style="{StaticResource SubtitleTextBlockStyle}">
-                                <Run Text="{strings:Resources Key=CriticalErrorMoreInformation}" /><LineBreak />
-                                <Hyperlink NavigateUri="https://github.com/huynhsontung/Screenbox">https://github.com/huynhsontung/Screenbox</Hyperlink>
-                            </TextBlock>
-
-                            <TextBlock
-                                Grid.Row="1"
-                                Margin="{StaticResource TopMediumMargin}"
-                                VerticalAlignment="Bottom"
-                                Style="{StaticResource BodyTextBlockStyle}"
-                                Text="{strings:Resources Key=CriticalError}" />
-                        </Grid>
-                    </Grid>
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
+            <Border Background="{ThemeResource SystemControlForegroundChromeWhiteBrush}">
+                <Path
+                    Data="M16,18 H44 M48,18 H56 M60,18 H68 M80,18 H100 M104,18 H132 M16,22 H20 M40,22 H44 M48,22 H56 M80,22 H84 M88,22 H92 M104,22 H108 M128,22 H132 M16,26 H20 M24,26 H36 M40,26 H44 M52,26 H76 M92,26 H96 M104,26 H108 M112,26 H124 M128,26 H132 M16,30 H20 M24,30 H36 M40,30 H44 M48,30 H52 M68,30 H80 M84,30 H88 M92,30 H100 M104,30 H108 M112,30 H124 M128,30 H132 M16,34 H20 M24,34 H36 M40,34 H44 M56,34 H60 M68,34 H84 M92,34 H96 M104,34 H108 M112,34 H124 M128,34 H132 M16,38 H20 M40,38 H44 M52,38 H56 M64,38 H68 M72,38 H76 M80,38 H84 M92,38 H100 M104,38 H108 M128,38 H132 M16,42 H44 M48,42 H52 M56,42 H60 M64,42 H68 M72,42 H76 M80,42 H84 M88,42 H92 M96,42 H100 M104,42 H132 M48,46 H52 M60,46 H64 M72,46 H80 M84,46 H88 M16,50 H20 M24,50 H32 M36,50 H48 M60,50 H68 M72,50 H76 M84,50 H100 M104,50 H108 M116,50 H120 M124,50 H132 M16,54 H20 M28,54 H36 M48,54 H56 M80,54 H84 M92,54 H100 M104,54 H116 M128,54 H132 M20,58 H24 M32,58 H44 M48,58 H56 M64,58 H76 M80,58 H84 M96,58 H104 M108,58 H112 M120,58 H128 M16,62 H20 M24,62 H40 M56,62 H72 M76,62 H84 M88,62 H96 M100,62 H108 M112,62 H116 M128,62 H132 M36,66 H44 M48,66 H64 M68,66 H80 M84,66 H88 M92,66 H96 M116,66 H124 M20,70 H24 M28,70 H40 M44,70 H48 M52,70 H64 M68,70 H84 M92,70 H96 M104,70 H108 M120,70 H132 M16,74 H24 M32,74 H36 M40,74 H44 M52,74 H56 M60,74 H68 M72,74 H76 M84,74 H100 M104,74 H108 M120,74 H132 M28,78 H32 M36,78 H40 M44,78 H68 M72,78 H76 M92,78 H116 M124,78 H128 M28,82 H44 M48,82 H52 M68,82 H72 M80,82 H84 M88,82 H100 M112,82 H120 M124,82 H128 M20,86 H24 M28,86 H32 M48,86 H56 M72,86 H76 M84,86 H88 M108,86 H112 M116,86 H128 M16,90 H20 M28,90 H32 M40,90 H48 M52,90 H56 M76,90 H88 M96,90 H100 M104,90 H116 M120,90 H124 M36,94 H40 M44,94 H48 M60,94 H68 M72,94 H88 M104,94 H116 M120,94 H124 M20,98 H52 M64,98 H72 M76,98 H92 M96,98 H124 M48,102 H56 M60,102 H64 M68,102 H72 M96,102 H100 M112,102 H132 M16,106 H44 M48,106 H56 M64,106 H72 M80,106 H100 M104,106 H108 M112,106 H120 M124,106 H128 M16,110 H20 M40,110 H44 M48,110 H52 M56,110 H64 M76,110 H80 M96,110 H100 M112,110 H120 M124,110 H132 M16,114 H20 M24,114 H36 M40,114 H44 M52,114 H68 M72,114 H80 M84,114 H88 M96,114 H116 M120,114 H132 M16,118 H20 M24,118 H36 M40,118 H44 M48,118 H52 M64,118 H96 M100,118 H104 M108,118 H120 M128,118 H132 M16,122 H20 M24,122 H36 M40,122 H44 M48,122 H72 M80,122 H84 M88,122 H92 M96,122 H100 M108,122 H112 M120,122 H124 M128,122 H132 M16,126 H20 M40,126 H44 M60,126 H64 M68,126 H76 M80,126 H84 M96,126 H104 M108,126 H112 M116,126 H120 M124,126 H128 M16,130 H44 M48,130 H56 M72,130 H80 M88,130 H108 M124,130 H128"
+                    Stroke="{ThemeResource SystemControlBackgroundAccentBrush}"
+                    StrokeThickness="4" />
+            </Border>
+        </controls:ErrorInfo>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="WindowActivationStates">
-                <VisualState x:Name="Activated" />
-
                 <VisualState x:Name="Deactivated">
+                    <VisualState.StateTriggers>
+                        <triggers:WindowActivationModeTrigger ActivationMode="Deactivated" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AppTitleText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
                         <Setter Target="NavView.IsBackEnabled" Value="False" />
@@ -432,28 +296,22 @@
                         <Setter Target="AppTitle.Margin" Value="16,0,0,0" />
                         <Setter Target="AppTitleText.Margin" Value="16,0,0,2" />
                         <Setter Target="NavView.Visibility" Value="Collapsed" />
-                        <Setter Target="CriticalErrorGrid.Visibility" Value="Visible" />
+                        <Setter Target="CriticalErrorInfo.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="NavigationViewStates">
-                <VisualState x:Name="Expanded">
-                    <VisualState.Setters>
-                        <Setter Target="OverlayGrid.Margin" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
-                    </VisualState.Setters>
-                </VisualState>
+                <VisualState x:Name="Expanded" />
                 <VisualState x:Name="Compact">
                     <VisualState.Setters>
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginCompact}" />
-                        <Setter Target="OverlayGrid.Margin" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimal">
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
-                        <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">
@@ -461,17 +319,14 @@
                         <Setter Target="AppTitleBar.Visibility" Value="Collapsed" />
                         <Setter Target="NavView.ContentVisibility" Value="Collapsed" />
                         <Setter Target="NavView.OverlayZIndex" Value="2" />
-                        <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Compact" To="Expanded">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="OverlayGrid" />
+                            <!--  -272 offset is derived from subtracting CompactPaneLength from OpenPaneLength (48 - 320)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="16" TargetName="AppTitle" />
                             <DoubleAnimation
                                 Storyboard.TargetName="HomeNavItemText"
@@ -514,37 +369,33 @@
 
                     <VisualTransition From="Expanded" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="OverlayGrid" />
+                            <!--  272 offset is derived from subtracting OpenPaneLength from CompactPaneLength (320 - 48)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="-16" TargetName="AppTitle" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="Compact" To="Minimal">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginMinimal}" />
                             </ObjectAnimationUsingKeyFrames>
+                            <!--  48 offset is derived from adding CompactPaneLength (48)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="48" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="-24" TargetName="AppTitle" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="Minimal" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>
+                            <!--  -48 offset is derived from subtracting CompactPaneLength (48)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-48" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="24" TargetName="AppTitle" />
                         </Storyboard>
                     </VisualTransition>

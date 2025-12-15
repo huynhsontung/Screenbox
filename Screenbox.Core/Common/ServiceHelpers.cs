@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core;
+
 public static class ServiceHelpers
 {
     public static void PopulateCoreServices(ServiceCollection services)
@@ -25,7 +27,7 @@ public static class ServiceHelpers
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<PlayQueuePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
-        services.AddTransient<PlaylistViewModel>();
+        services.AddTransient<PlayQueueViewModel>();
         services.AddTransient<AlbumDetailsPageViewModel>();
         services.AddTransient<ArtistDetailsPageViewModel>();
         services.AddTransient<SongsPageViewModel>();
@@ -50,9 +52,13 @@ public static class ServiceHelpers
         services.AddSingleton<StorageItemViewModelFactory>();
         services.AddSingleton<ArtistViewModelFactory>();
         services.AddSingleton<AlbumViewModelFactory>();
+        services.AddSingleton<IMediaListFactory, MediaListFactory>();
+
+        // Contexts
+        services.AddSingleton<PlayerContext>();
 
         // Services
-        services.AddSingleton<LibVlcService>();
+        services.AddSingleton<IPlayerService, PlayerService>();
         services.AddSingleton<IFilesService, FilesService>();
         services.AddSingleton<ILibraryService, LibraryService>();
         services.AddSingleton<ISearchService, SearchService>();
@@ -62,5 +68,7 @@ public static class ServiceHelpers
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<ILivelyWallpaperService, LivelyWallpaperService>();
+        services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
+        services.AddSingleton<IPlaylistService, PlaylistService>();
     }
 }

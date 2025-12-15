@@ -103,6 +103,12 @@ namespace Screenbox.Pages
             return (item as MenuFlyoutItem)?.Text ?? string.Empty;
         }
 
+        private string GetSortByButtonAutomationName(string value)
+        {
+            var optionText = GetSortByText(value);
+            return Strings.Resources.SortByAutomationName(optionText);
+        }
+
         private void UpdateSortByFlyout()
         {
             if ((SortByFlyout.Items?.FirstOrDefault(x => x.Tag as string == ViewModel.SortBy) ??

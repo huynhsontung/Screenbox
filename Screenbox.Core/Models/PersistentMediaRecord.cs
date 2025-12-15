@@ -1,10 +1,12 @@
-﻿using ProtoBuf;
+﻿#nullable enable
+
 using System;
+using ProtoBuf;
 
 namespace Screenbox.Core.Models;
 
 [ProtoContract]
-internal class PersistentMediaRecord
+public class PersistentMediaRecord
 {
     [ProtoMember(1)]
     public string Title { get; set; }
@@ -16,9 +18,14 @@ internal class PersistentMediaRecord
     public IMediaProperties Properties { get; set; }
 
     [ProtoMember(4)]
-    public DateTime DateAdded { get; set; } // Must be UTC datetime
+    public DateTime DateAdded { get; set; } // Must be UTC
 
-    public PersistentMediaRecord() { }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public PersistentMediaRecord()
+    {
+        // Required for ProtoBuf deserialization
+        // Properties must be uninitialized or there will be a stack overflow exception
+    }
 
     public PersistentMediaRecord(string title, string path, IMediaProperties properties, DateTimeOffset dateAdded)
     {
