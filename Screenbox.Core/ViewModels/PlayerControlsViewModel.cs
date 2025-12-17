@@ -19,7 +19,6 @@ using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -147,22 +146,43 @@ namespace Screenbox.Core.ViewModels
             IsMinimal = message.NewValue != PlayerVisibilityState.Visible;
         }
 
-        public void PlayPauseKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        /// <summary>
+        /// Toggles the playback state of the active item and displays a badge indicating the new state.
+        /// </summary>
+        public void PlayPauseWithBadge()
         {
-            if (args.KeyboardAccelerator.Key == VirtualKey.Space && IsMinimal) return;
-
-            // Override default keyboard accelerator to show badge
-            args.Handled = true;
-            PlayPauseWithBadge();
+            if (!HasActiveItem) return;
+            Messenger.Send(new ShowPlayPauseBadgeMessage(!IsPlaying));
+            PlayPause();
         }
 
-        public void ToggleSubtitle(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        /// <summary>
+        /// Handles toggling the subtitle track during media playback based on keyboard input.
+        /// </summary>
+        /// <remarks>
+        /// The following modifiers determine the toggle action:
+        /// <list type="bullet">
+        /// <item><description><see cref="VirtualKeyModifiers.None"/> toggles the only subtitle track on or off.</description></item>
+        /// <item><description><see cref="VirtualKeyModifiers.Control"/> cycles forward through the available subtitle tracks.</description></item>
+        /// <item><description><see cref="VirtualKeyModifiers.Control"/> + <see cref="VirtualKeyModifiers.Shift"/> cycles backward through the available subtitle tracks.</description></item>
+        /// </list>
+        /// </remarks>
+        /// <param name="modifiers">The modifier keys held during the key press.</param>
+        /// <returns><see langword="true"/> if the toggle operation was successful; otherwise, <see langword="false"/>.</returns>
+        public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
         {
-            if (MediaPlayer?.PlaybackItem == null) return;
+            if (MediaPlayer?.PlaybackItem is null)
+            {
+                return false;
+            }
+
             PlaybackSubtitleTrackList subtitleTracks = MediaPlayer.PlaybackItem.SubtitleTracks;
-            if (subtitleTracks.Count == 0) return;
-            args.Handled = true;
-            switch (args.KeyboardAccelerator.Modifiers)
+            if (subtitleTracks.Count == 0)
+            {
+                return false;
+            }
+
+            switch (modifiers)
             {
                 case VirtualKeyModifiers.None when subtitleTracks.Count == 1:
                     if (subtitleTracks.SelectedIndex >= 0)
@@ -175,7 +195,6 @@ namespace Screenbox.Core.ViewModels
                     }
 
                     break;
-
                 case VirtualKeyModifiers.Control:
                     if (subtitleTracks.SelectedIndex == subtitleTracks.Count - 1)
                     {
@@ -187,7 +206,6 @@ namespace Screenbox.Core.ViewModels
                     }
 
                     break;
-
                 case VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift:
                     if (subtitleTracks.SelectedIndex == -1)
                     {
@@ -199,18 +217,16 @@ namespace Screenbox.Core.ViewModels
                     }
 
                     break;
-
                 default:
-                    args.Handled = false;
-                    return;
+                    return false;
             }
 
             string status = subtitleTracks.SelectedIndex == -1
                 ? _resourceService.GetString(ResourceName.SubtitleStatus, _resourceService.GetString(ResourceName.None))
-                : _resourceService.GetString(ResourceName.SubtitleStatus,
-                    subtitleTracks[subtitleTracks.SelectedIndex].Label);
+                : _resourceService.GetString(ResourceName.SubtitleStatus, subtitleTracks[subtitleTracks.SelectedIndex].Label);
 
             Messenger.Send(new UpdateStatusMessage(status));
+            return true;
         }
 
         partial void OnPlaybackSpeedChanged(double value)
@@ -432,13 +448,6 @@ namespace Screenbox.Core.ViewModels
             {
                 await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
-        }
-
-        private void PlayPauseWithBadge()
-        {
-            if (!HasActiveItem) return;
-            Messenger.Send(new ShowPlayPauseBadgeMessage(!IsPlaying));
-            PlayPause();
         }
     }
 }
