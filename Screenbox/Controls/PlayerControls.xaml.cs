@@ -6,11 +6,11 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
-using Screenbox.Helpers;
-using Windows.Media;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -139,6 +139,21 @@ namespace Screenbox.Controls
                 CustomAspectRatioMenuItem.IsChecked = true;
                 ViewModel.SetAspectRatioCommand.Execute(aspectRatio);
             }
+        }
+
+        private void PlayPauseKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            // Ignore the play/pause shortcut when the spacebar is pressed in mini-player visual state.
+            if (args.KeyboardAccelerator.Key == VirtualKey.Space && ViewModel.IsMinimal) return;
+
+            // Override default keyboard accelerator to show badge.
+            args.Handled = true;
+            ViewModel.PlayPauseWithBadge();
+        }
+
+        private void ToggleSubtitleKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessToggleSubtitleKeyDown(args.KeyboardAccelerator.Modifiers);
         }
     }
 }

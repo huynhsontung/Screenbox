@@ -1,76 +1,78 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
-using System;
-using System.Collections.Generic;
+using Screenbox.Core.Playback;
 
-namespace Screenbox.Core.Services
+namespace Screenbox.Core.Services;
+
+public sealed class CastService : ICastService
 {
-    public sealed class CastService : ICastService
+    public event EventHandler<RendererFoundEventArgs>? RendererFound;
+    public event EventHandler<RendererLostEventArgs>? RendererLost;
+
+    private readonly List<Renderer> _renderers;
+    private RendererDiscoverer? _discoverer;
+
+    public CastService()
     {
-        public event EventHandler<RendererFoundEventArgs>? RendererFound;
-        public event EventHandler<RendererLostEventArgs>? RendererLost;
+        _renderers = new List<Renderer>();
+    }
 
-        private readonly LibVlcService _libVlcService;
-        private readonly List<Renderer> _renderers;
-        private RendererDiscoverer? _discoverer;
+    public bool SetActiveRenderer(IMediaPlayer player, Renderer? renderer)
+    {
+        if (player is not VlcMediaPlayer vlcMediaPlayer) return false;
+        return vlcMediaPlayer.VlcPlayer.SetRenderer(renderer?.Target);
+    }
 
-        public CastService(LibVlcService libVlcService)
+    public bool Start(IMediaPlayer player)
+    {
+        Stop();
+
+        // Get LibVLC from the current media player
+        if (player is not VlcMediaPlayer vlcMediaPlayer)
+            return false;
+
+        _discoverer = new RendererDiscoverer(vlcMediaPlayer.LibVlc);
+        _discoverer.ItemAdded += DiscovererOnItemAdded;
+        _discoverer.ItemDeleted += DiscovererOnItemDeleted;
+        return _discoverer.Start();
+    }
+
+    public void Stop()
+    {
+        if (_discoverer == null) return;
+        _discoverer.Stop();
+        _discoverer.ItemAdded -= DiscovererOnItemAdded;
+        _discoverer.ItemDeleted -= DiscovererOnItemDeleted;
+        _discoverer.Dispose();
+        _discoverer = null;
+        foreach (Renderer renderer in _renderers)
         {
-            _libVlcService = libVlcService;
-            _renderers = new List<Renderer>();
+            renderer.Dispose();
         }
 
-        public bool SetActiveRenderer(Renderer? renderer)
-        {
-            return _libVlcService.MediaPlayer?.VlcPlayer.SetRenderer(renderer?.Target) ?? false;
-        }
+        _renderers.Clear();
+    }
 
-        public bool Start()
-        {
-            Stop();
-            LibVLC? libVlc = _libVlcService.LibVlc;
-            Guard.IsNotNull(libVlc, nameof(libVlc));
-            _discoverer = new RendererDiscoverer(libVlc);
-            _discoverer.ItemAdded += DiscovererOnItemAdded;
-            _discoverer.ItemDeleted += DiscovererOnItemDeleted;
-            return _discoverer.Start();
-        }
+    private void DiscovererOnItemAdded(object sender, RendererDiscovererItemAddedEventArgs e)
+    {
+        Guard.IsNotNull(_discoverer, nameof(_discoverer));
+        Renderer renderer = new(e.RendererItem);
+        _renderers.Add(renderer);
+        RendererFound?.Invoke(this, new RendererFoundEventArgs(renderer));
+    }
 
-        public void Stop()
+    private void DiscovererOnItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e)
+    {
+        Renderer? item = _renderers.Find(r => r.Target == e.RendererItem);
+        if (item != null)
         {
-            if (_discoverer == null) return;
-            _discoverer.Stop();
-            _discoverer.ItemAdded -= DiscovererOnItemAdded;
-            _discoverer.ItemDeleted -= DiscovererOnItemDeleted;
-            _discoverer.Dispose();
-            _discoverer = null;
-            foreach (Renderer renderer in _renderers)
-            {
-                renderer.Dispose();
-            }
-
-            _renderers.Clear();
-        }
-
-        private void DiscovererOnItemAdded(object sender, RendererDiscovererItemAddedEventArgs e)
-        {
-            Guard.IsNotNull(_discoverer, nameof(_discoverer));
-            Renderer renderer = new(e.RendererItem);
-            _renderers.Add(renderer);
-            RendererFound?.Invoke(this, new RendererFoundEventArgs(renderer));
-        }
-
-        private void DiscovererOnItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e)
-        {
-            Renderer? item = _renderers.Find(r => r.Target == e.RendererItem);
-            if (item != null)
-            {
-                RendererLost?.Invoke(this, new RendererLostEventArgs(item));
-            }
+            RendererLost?.Invoke(this, new RendererLostEventArgs(item));
         }
     }
 }
