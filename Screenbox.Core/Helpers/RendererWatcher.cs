@@ -6,6 +6,7 @@ using System.Linq;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Helpers;
 
@@ -16,13 +17,13 @@ public sealed class RendererWatcher : IDisposable
 
     public bool IsStarted { get; private set; }
 
-    private readonly LibVLC _libVlc;
+    private readonly VlcMediaPlayer _vlcMediaPlayer;
     private readonly List<Renderer> _renderers;
     private RendererDiscoverer? _discoverer;
 
-    public RendererWatcher(LibVLC libVlc)
+    internal RendererWatcher(VlcMediaPlayer vlcMediaPlayer)
     {
-        _libVlc = libVlc;
+        _vlcMediaPlayer = vlcMediaPlayer;
         _renderers = new List<Renderer>();
     }
 
@@ -35,7 +36,7 @@ public sealed class RendererWatcher : IDisposable
     {
         if (IsStarted) return true;
 
-        _discoverer = new RendererDiscoverer(_libVlc);
+        _discoverer = new RendererDiscoverer(_vlcMediaPlayer.LibVlc);
         _discoverer.ItemAdded += OnItemAdded;
         _discoverer.ItemDeleted += OnItemDeleted;
         bool started = _discoverer.Start();

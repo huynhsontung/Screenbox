@@ -197,6 +197,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 **Playback and Streaming Services**
 - **`IPlayerService`**: Media player initialization and playback item management
+- **`ICastService`**: Stateless casting operations for renderer creation and configuration
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
 
 **System Integration Services**
@@ -209,7 +210,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 Contexts provide observable state management that can be shared across services and components:
 
 - **`PlayerContext`**: Holds the current media player instance, allowing components to observe player state changes
-- **`CastContext`**: Manages network streaming and casting state, including renderer discovery and active renderer selection
+- **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
 
 #### Helper Classes
 

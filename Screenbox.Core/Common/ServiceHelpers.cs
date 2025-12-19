@@ -65,6 +65,7 @@ public static class ServiceHelpers
         services.AddSingleton<ISearchService, SearchService>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IWindowService, WindowService>();
+        services.AddSingleton<ICastService, CastService>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<ILivelyWallpaperService, LivelyWallpaperService>();

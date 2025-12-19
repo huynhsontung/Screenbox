@@ -8,6 +8,7 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using Sentry;
 using Windows.System;
 
@@ -28,12 +29,14 @@ namespace Screenbox.Core.ViewModels
 
         private readonly PlayerContext _playerContext;
         private readonly CastContext _castContext;
+        private readonly ICastService _castService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public CastControlViewModel(PlayerContext playerContext, CastContext castContext)
+        public CastControlViewModel(PlayerContext playerContext, CastContext castContext, ICastService castService)
         {
             _playerContext = playerContext;
             _castContext = castContext;
+            _castService = castService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             Renderers = new ObservableCollection<Renderer>();
         }
@@ -42,13 +45,13 @@ namespace Screenbox.Core.ViewModels
         {
             if (IsCasting || MediaPlayer == null) return;
             
-            if (_castContext.StartDiscovering(MediaPlayer))
+            var watcher = _castService.CreateRendererWatcher(MediaPlayer);
+            if (watcher != null)
             {
-                if (_castContext.RendererWatcher != null)
-                {
-                    _castContext.RendererWatcher.RendererFound += RendererWatcherOnRendererFound;
-                    _castContext.RendererWatcher.RendererLost += RendererWatcherOnRendererLost;
-                }
+                _castContext.RendererWatcher = watcher;
+                watcher.RendererFound += RendererWatcherOnRendererFound;
+                watcher.RendererLost += RendererWatcherOnRendererLost;
+                watcher.Start();
             }
         }
 
@@ -58,9 +61,11 @@ namespace Screenbox.Core.ViewModels
             {
                 _castContext.RendererWatcher.RendererFound -= RendererWatcherOnRendererFound;
                 _castContext.RendererWatcher.RendererLost -= RendererWatcherOnRendererLost;
+                _castContext.RendererWatcher.Stop();
+                _castContext.RendererWatcher.Dispose();
+                _castContext.RendererWatcher = null;
             }
             
-            _castContext.StopDiscovering();
             SelectedRenderer = null;
             Renderers.Clear();
         }
@@ -76,9 +81,12 @@ namespace Screenbox.Core.ViewModels
                 {"canRenderAudio", SelectedRenderer.CanRenderAudio.ToString()},
                 {"canRenderVideo", SelectedRenderer.CanRenderVideo.ToString()},
             });
-            _castContext.SetActiveRenderer(MediaPlayer, SelectedRenderer);
-            CastingDevice = SelectedRenderer;
-            IsCasting = true;
+            if (_castService.SetActiveRenderer(MediaPlayer, SelectedRenderer))
+            {
+                _castContext.ActiveRenderer = SelectedRenderer;
+                CastingDevice = SelectedRenderer;
+                IsCasting = true;
+            }
         }
 
         private bool CanCast() => SelectedRenderer is { IsAvailable: true };
@@ -88,7 +96,8 @@ namespace Screenbox.Core.ViewModels
         {
             if (MediaPlayer == null) return;
             SentrySdk.AddBreadcrumb("Stop casting", category: "command", type: "user");
-            _castContext.SetActiveRenderer(MediaPlayer, null);
+            _castService.SetActiveRenderer(MediaPlayer, null);
+            _castContext.ActiveRenderer = null;
             IsCasting = false;
             StartDiscovering();
         }
