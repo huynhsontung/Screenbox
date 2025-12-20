@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -116,7 +117,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));
                 break;
-            case VirtualKey.GamepadView when (PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded):
+            case VirtualKey.GamepadView when PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded:
                 Messenger.Send(new TogglePlayerVisibilityMessage());
                 break;
             default:
@@ -143,7 +144,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         SearchSuggestions.Clear();
         if (searchQuery.Length > 0)
         {
-            var result = _searchService.SearchLocalLibrary(searchQuery);
+            var result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
             var suggestions = GetSuggestItems(result, searchQuery);
 
             if (suggestions.Count != 0)
@@ -165,7 +166,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         string searchQuery = queryText.Trim();
         if (searchQuery.Length > 0)
         {
-            SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
+            SearchResult result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
             _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
         }
     }
@@ -226,7 +227,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
             .Where(i => i >= 0)
             .Average();
-        return index * IndexWeightFactor + wordRank;
+        return (index * IndexWeightFactor) + wordRank;
     }
 
     public Task FetchLibraries()

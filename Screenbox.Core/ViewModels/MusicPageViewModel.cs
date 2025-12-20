@@ -1,64 +1,59 @@
 ﻿#nullable enable
 
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using System;
-using System.Threading.Tasks;
 using Windows.System;
 
-namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+public sealed partial class MusicPageViewModel : ObservableRecipient
 {
-    public sealed partial class MusicPageViewModel : ObservableRecipient
+    [ObservableProperty] private bool _hasContent;
+
+    private bool LibraryLoaded => _libraryContext.MusicLibrary != null;
+
+    private readonly LibraryContext _libraryContext;
+    private readonly IResourceService _resourceService;
+    private readonly DispatcherQueue _dispatcherQueue;
+
+    public MusicPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
     {
-        [ObservableProperty] private bool _hasContent;
+        _libraryContext = libraryContext;
+        _resourceService = resourceService;
+        _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _hasContent = true;
+    }
 
-        private bool LibraryLoaded => _libraryContext.MusicLibrary != null;
+    public void UpdateSongs()
+    {
+        HasContent = _libraryContext.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
+        AddFolderCommand.NotifyCanExecuteChanged();
+    }
 
-        private readonly LibraryContext _libraryContext;
-        private readonly ILibraryService _libraryService;
-        private readonly IResourceService _resourceService;
-        private readonly DispatcherQueue _dispatcherQueue;
+    private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
+    {
+        _dispatcherQueue.TryEnqueue(UpdateSongs);
+    }
 
-        public MusicPageViewModel(LibraryContext libraryContext, ILibraryService libraryService, IResourceService resourceService)
+    [RelayCommand(CanExecute = nameof(LibraryLoaded))]
+    private async Task AddFolder()
+    {
+        try
         {
-            _libraryContext = libraryContext;
-            _libraryService = libraryService;
-            _resourceService = resourceService;
-            _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _hasContent = true;
+            await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
         }
-
-        public void UpdateSongs()
+        catch (Exception e)
         {
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult(_libraryContext);
-            HasContent = musicLibrary.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
-            AddFolderCommand.NotifyCanExecuteChanged();
-        }
-
-        private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
-        {
-            _dispatcherQueue.TryEnqueue(UpdateSongs);
-        }
-
-        [RelayCommand(CanExecute = nameof(LibraryLoaded))]
-        private async Task AddFolder()
-        {
-            try
-            {
-                await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new ErrorMessage(
-                    _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
-            }
+            Messenger.Send(new ErrorMessage(
+                _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
         }
     }
 }

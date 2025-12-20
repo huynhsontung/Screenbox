@@ -1,93 +1,82 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
 
-namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+public sealed partial class ArtistViewModel : ObservableRecipient
 {
-    public sealed partial class ArtistViewModel : ObservableRecipient
+    public ObservableCollection<MediaViewModel> RelatedSongs { get; }
+
+    public string Name { get; }
+
+    [ObservableProperty] private bool _isPlaying;
+
+    public ArtistViewModel()
     {
-        public ObservableCollection<MediaViewModel> RelatedSongs { get; }
+        Name = string.Empty;
+        RelatedSongs = new ObservableCollection<MediaViewModel>();
+        RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
+    }
 
-        public string Name { get; }
+    public ArtistViewModel(string artist) : this()
+    {
+        Name = artist;
+    }
 
-        [ObservableProperty] private bool _isPlaying;
+    public override string ToString()
+    {
+        return Name;
+    }
 
-        public ArtistViewModel(string artist)
+    private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
         {
-            Name = artist;
-            RelatedSongs = new ObservableCollection<MediaViewModel>();
-            RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
+            foreach (MediaViewModel media in e.OldItems.OfType<MediaViewModel>())
             {
-                foreach (MediaViewModel media in e.OldItems.OfType<MediaViewModel>())
-                {
-                    media.PropertyChanged -= MediaOnPropertyChanged;
-                }
-            }
-
-            if (e.NewItems != null)
-            {
-                foreach (MediaViewModel media in e.NewItems.OfType<MediaViewModel>())
-                {
-                    media.PropertyChanged += MediaOnPropertyChanged;
-                }
+                media.PropertyChanged -= MediaOnPropertyChanged;
             }
         }
 
-        private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        if (e.NewItems != null)
         {
-            if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
+            foreach (MediaViewModel media in e.NewItems.OfType<MediaViewModel>())
             {
-                IsPlaying = media.IsPlaying ?? false;
+                media.PropertyChanged += MediaOnPropertyChanged;
             }
         }
+    }
 
-        [RelayCommand]
-        private void PlayArtist()
+    private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
         {
-            if (RelatedSongs.Count == 0) return;
-            MediaViewModel? inQueue = RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
-            if (inQueue != null)
-            {
-                Messenger.Send(new TogglePlayPauseMessage(false));
-            }
-            else
-            {
-                List<MediaViewModel> songs = RelatedSongs
-                    .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-                    .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-                    .GroupBy(m => m.Album)
-                    .OrderByDescending(g => g.Key?.Year ?? 0)
-                    .SelectMany(g => g)
-                    .ToList();
-
-                Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
-            }
+            IsPlaying = media.IsPlaying ?? false;
         }
+    }
 
-        [RelayCommand]
-        private void PlayArtistNext()
+    [RelayCommand]
+    private void PlayArtist()
+    {
+        if (RelatedSongs.Count == 0) return;
+        MediaViewModel? inQueue = RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
+        if (inQueue != null)
         {
-            if (RelatedSongs.Count == 0) return;
+            Messenger.Send(new TogglePlayPauseMessage(false));
+        }
+        else
+        {
             List<MediaViewModel> songs = RelatedSongs
                 .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
                 .ThenBy(m => m.Name, StringComparer.CurrentCulture)
@@ -96,22 +85,37 @@ namespace Screenbox.Core.ViewModels
                 .SelectMany(g => g)
                 .ToList();
 
-            Messenger.SendPlayNext(songs);
+            Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
         }
+    }
 
-        [RelayCommand]
-        private void AddArtistToQueue()
-        {
-            if (RelatedSongs.Count == 0) return;
-            List<MediaViewModel> songs = RelatedSongs
-                .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-                .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-                .GroupBy(m => m.Album)
-                .OrderByDescending(g => g.Key?.Year ?? 0)
-                .SelectMany(g => g)
-                .ToList();
+    [RelayCommand]
+    private void PlayArtistNext()
+    {
+        if (RelatedSongs.Count == 0) return;
+        List<MediaViewModel> songs = RelatedSongs
+            .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
+            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+            .GroupBy(m => m.Album)
+            .OrderByDescending(g => g.Key?.Year ?? 0)
+            .SelectMany(g => g)
+            .ToList();
 
-            Messenger.SendAddToQueue(songs);
-        }
+        Messenger.SendPlayNext(songs);
+    }
+
+    [RelayCommand]
+    private void AddArtistToQueue()
+    {
+        if (RelatedSongs.Count == 0) return;
+        List<MediaViewModel> songs = RelatedSongs
+            .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
+            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+            .GroupBy(m => m.Album)
+            .OrderByDescending(g => g.Key?.Year ?? 0)
+            .SelectMany(g => g)
+            .ToList();
+
+        Messenger.SendAddToQueue(songs);
     }
 }

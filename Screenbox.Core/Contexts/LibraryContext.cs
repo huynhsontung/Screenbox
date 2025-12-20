@@ -1,11 +1,10 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.Models;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Screenbox.Core.ViewModels;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -17,6 +16,9 @@ namespace Screenbox.Core.Contexts;
 /// </summary>
 public sealed partial class LibraryContext : ObservableObject
 {
+    public event TypedEventHandler<LibraryContext, object>? MusicLibraryContentChanged;
+    public event TypedEventHandler<LibraryContext, object>? VideosLibraryContentChanged;
+
     [ObservableProperty]
     private StorageLibrary? _musicLibrary;
 
@@ -29,8 +31,23 @@ public sealed partial class LibraryContext : ObservableObject
     [ObservableProperty]
     private bool _isLoadingMusic;
 
-    public event TypedEventHandler<LibraryContext, object>? MusicLibraryContentChanged;
-    public event TypedEventHandler<LibraryContext, object>? VideosLibraryContentChanged;
+    [ObservableProperty]
+    private Dictionary<string, AlbumViewModel> _albums = new();
+
+    [ObservableProperty]
+    private Dictionary<string, ArtistViewModel> _artists = new();
+
+    [ObservableProperty]
+    private AlbumViewModel _unknownAlbum = new();
+
+    [ObservableProperty]
+    private ArtistViewModel _unknownArtist = new();
+
+    [ObservableProperty]
+    private List<MediaViewModel> _songs = new();
+
+    [ObservableProperty]
+    private List<MediaViewModel> _videos = new();
 
     public StorageFileQueryResult? MusicLibraryQueryResult { get; set; }
     public StorageFileQueryResult? VideosLibraryQueryResult { get; set; }
@@ -38,22 +55,6 @@ public sealed partial class LibraryContext : ObservableObject
     public CancellationTokenSource? VideosFetchCts { get; set; }
     public bool MusicChangeTrackerAvailable { get; set; }
     public bool VideosChangeTrackerAvailable { get; set; }
-
-    private List<MediaViewModel> _songs = new();
-    private List<MediaViewModel> _videos = new();
-
-    public IReadOnlyList<MediaViewModel> Songs => _songs.AsReadOnly();
-    public IReadOnlyList<MediaViewModel> Videos => _videos.AsReadOnly();
-
-    public void SetSongs(List<MediaViewModel> songs)
-    {
-        _songs = songs;
-    }
-
-    public void SetVideos(List<MediaViewModel> videos)
-    {
-        _videos = videos;
-    }
 
     public void RaiseMusicLibraryContentChanged()
     {
