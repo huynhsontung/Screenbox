@@ -51,8 +51,21 @@ namespace Screenbox.Core.Services
         MediaCommandType PlayerSwipeRightGesture { get; set; }
 
         /// <summary>
-        /// Gets or sets the media command invoked by a tap and hold gesture.
+        /// Gets or sets a value that indicates whether the tap and hold gesture
+        /// is enabled in the player.
         /// </summary>
         bool PlayerTapAndHoldGesture { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the horizontal slide gesture
+        /// is enabled in the player.
+        /// </summary>
+        bool PlayerSlideHorizontalGesture { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the vertical slide gesture
+        /// is enabled in the player.
+        /// </summary>
+        bool PlayerSlideVerticalGesture { get; set; }
     }
 }

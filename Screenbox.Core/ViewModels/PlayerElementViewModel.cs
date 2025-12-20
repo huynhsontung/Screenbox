@@ -57,6 +57,8 @@ namespace Screenbox.Core.ViewModels
         private MediaCommandType _playerSwipeLeftGesture;
         private MediaCommandType _playerSwipeRightGesture;
         private bool _playerTapAndHoldGesture;
+        private bool _playerSlideVerticalGesture;
+        private bool _playerSlideHorizontalGesture;
         private double _playbackRateBeforeHolding;
         private bool _suppressTap;
 
@@ -167,7 +169,7 @@ namespace Screenbox.Core.ViewModels
                 _clickTimer.Stop();
                 return;
             }
-            _clickTimer.Debounce(() => ProcessMediaGesture(_playerTapGesture, 10.0, 0.0), TimeSpan.FromMilliseconds(200));
+            _clickTimer.Debounce(() => ProcessMediaGesture(_playerTapGesture, 5.0, 1000.0), TimeSpan.FromMilliseconds(200));
         }
 
         public void ManipulationStarted()
@@ -202,31 +204,91 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void HandleManipulationGesture(
-            double horizontalDelta,
-            double verticalDelta,
-            double horizontalCumulative,
-            double verticalCumulative)
+        public void HandleSwipeGesture(double cumulativeX, double cumulativeY, double threshold)
         {
+            double change = 5.0;
+            double timeMultiplier = 1000.0;
+
             if (VlcMediaPlayer != null && _manipulationLock == ManipulationLock.None)
             {
                 _timeBeforeManipulation = VlcMediaPlayer.Position;
             }
 
             // Vertical gestures
-            if (_manipulationLock != ManipulationLock.Horizontal && Math.Abs(verticalCumulative) >= 2)
+            if (_manipulationLock != ManipulationLock.Horizontal && Math.Abs(cumulativeY) >= threshold)
             {
                 _manipulationLock = ManipulationLock.Vertical;
-                ProcessVerticalGesture(verticalDelta, verticalCumulative);
-                return;
+                if (cumulativeY > 0)
+                {
+                    ProcessMediaGesture(_playerSwipeDownGesture, change, timeMultiplier);
+                    return;
+                }
+                else
+                {
+                    ProcessMediaGesture(_playerSwipeUpGesture, change, timeMultiplier);
+                    return;
+                }
             }
-
             // Horizontal gestures
-            if (_manipulationLock != ManipulationLock.Vertical && Math.Abs(horizontalCumulative) >= 2)
+            else if (_manipulationLock != ManipulationLock.Vertical && Math.Abs(cumulativeX) >= threshold)
             {
                 _manipulationLock = ManipulationLock.Horizontal;
-                ProcessHorizontalGesture(horizontalDelta, horizontalCumulative);
-                return;
+                if (cumulativeX > 0)
+                {
+                    ProcessMediaGesture(_playerSwipeRightGesture, change, timeMultiplier);
+                    return;
+                }
+                else
+                {
+                    ProcessMediaGesture(_playerSwipeLeftGesture, change, timeMultiplier);
+                    return;
+                }
+            }
+        }
+
+        public void HandleSlideGesture(double deltaX, double deltaY, double cumulativeX, double cumulativeY)
+        {
+            double threshold = 16.0;
+            double timeMultiplier = 200.0;
+
+            if (VlcMediaPlayer != null && _manipulationLock == ManipulationLock.None)
+            {
+                _timeBeforeManipulation = VlcMediaPlayer.Position;
+            }
+
+            // Vertical gestures
+            if (_manipulationLock is not ManipulationLock.Horizontal &&
+                (Math.Abs(cumulativeY) >= threshold) &&
+                _playerSlideVerticalGesture)
+            {
+                _manipulationLock = ManipulationLock.Vertical;
+                if (deltaY > 0)
+                {
+                    ProcessMediaGesture(MediaCommandType.DecreaseVolume, deltaY, timeMultiplier);
+                    return;
+                }
+                else
+                {
+                    ProcessMediaGesture(MediaCommandType.IncreaseVolume, -deltaY, timeMultiplier);
+                    return;
+                }
+            }
+            // Horizontal gestures
+            else if (_manipulationLock is not ManipulationLock.Vertical &&
+                     (Math.Abs(cumulativeX) >= threshold) &&
+                     _playerSlideHorizontalGesture)
+            {
+                _manipulationLock = ManipulationLock.Horizontal;
+                if (deltaX > 0)
+                {
+                    ProcessMediaGesture(MediaCommandType.FastForward, deltaX, timeMultiplier);
+                    return;
+                }
+                else
+                {
+                    ProcessMediaGesture(MediaCommandType.Rewind, -deltaX, timeMultiplier);
+                    return;
+                }
             }
         }
 
@@ -266,10 +328,8 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void ProcessMediaGesture(MediaCommandType gestureKind, double change, double cumulative)
+        private void ProcessMediaGesture(MediaCommandType gestureKind, double change, double timeChangeMultiplier)
         {
-            const double ChangePerPixel = 200;
-
             switch (gestureKind)
             {
                 case MediaCommandType.None:
@@ -281,7 +341,7 @@ namespace Screenbox.Core.ViewModels
                     if (VlcMediaPlayer?.CanSeek == true)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
-                        var timeChange = TimeSpan.FromMilliseconds(-change * ChangePerPixel);
+                        var timeChange = TimeSpan.FromMilliseconds(-change * timeChangeMultiplier);
                         var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
                         UpdateTimeStatusMessage(newTime);
                     }
@@ -290,7 +350,7 @@ namespace Screenbox.Core.ViewModels
                     if (VlcMediaPlayer?.CanSeek == true)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
-                        var timeChange = TimeSpan.FromMilliseconds(change * ChangePerPixel);
+                        var timeChange = TimeSpan.FromMilliseconds(change * timeChangeMultiplier);
                         var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
                         UpdateTimeStatusMessage(newTime);
                     }
@@ -305,31 +365,6 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
         }
-
-        private void ProcessVerticalGesture(double delta, double cumulative)
-        {
-            if (delta > 0)
-            {
-                ProcessMediaGesture(_playerSwipeDownGesture, delta, cumulative);
-            }
-            else
-            {
-                ProcessMediaGesture(_playerSwipeUpGesture, -delta, -cumulative);
-            }
-        }
-
-        private void ProcessHorizontalGesture(double delta, double cumulative)
-        {
-            if (delta > 0)
-            {
-                ProcessMediaGesture(_playerSwipeRightGesture, delta, cumulative);
-            }
-            else
-            {
-                ProcessMediaGesture(_playerSwipeLeftGesture, -delta, -cumulative);
-            }
-        }
-
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)
         {
@@ -422,6 +457,8 @@ namespace Screenbox.Core.ViewModels
             _playerSwipeLeftGesture = _settingsService.PlayerSwipeLeftGesture;
             _playerSwipeRightGesture = _settingsService.PlayerSwipeRightGesture;
             _playerTapAndHoldGesture = _settingsService.PlayerTapAndHoldGesture;
+            _playerSlideVerticalGesture = _settingsService.PlayerSlideVerticalGesture;
+            _playerSlideHorizontalGesture = _settingsService.PlayerSlideHorizontalGesture;
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)
