@@ -186,6 +186,15 @@ namespace Screenbox
                 rootFrame.Navigate(typeof(MainPage), true);
             }
 
+            // Set preferred launch windowing mode to fullscreen if the setting is enabled
+            // This must be done before Window.Current.Activate()
+            var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
+            if (settings.PlayerAutoFullScreen)
+            {
+                var windowService = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IWindowService>();
+                windowService.SetPreferredLaunchWindowingModeForFileActivation();
+            }
+
             Window.Current.Activate();
             WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
         }
