@@ -23,7 +23,7 @@ public sealed class ResourceNameToResourceStringConverter : IValueConverter
     /// from the application resources.
     /// </summary>
     /// <param name="stringValue">The resource name whose value is to be retrieved.</param>
-    /// <returns>The string value of the specified resoure name; otherwise; an empty string.</returns>
+    /// <returns>The string value of the specified resource name; otherwise, an empty string.</returns>
     public static string GetResourceString(string? stringValue)
     {
         if (stringValue is null)
