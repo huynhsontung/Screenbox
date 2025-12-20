@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels;
@@ -11,26 +12,16 @@ namespace Screenbox.Core.ViewModels;
 public partial class PlaylistsPageViewModel : ObservableObject
 {
     private readonly IPlaylistService _playlistService;
+    private readonly PlaylistsContext _playlistsContext;
 
-    public ObservableCollection<PlaylistViewModel> Playlists { get; } = new();
+    public ObservableCollection<PlaylistViewModel> Playlists => _playlistsContext.Playlists;
 
     [ObservableProperty] private PlaylistViewModel? _selectedPlaylist;
 
-    public PlaylistsPageViewModel(IPlaylistService playlistService)
+    public PlaylistsPageViewModel(IPlaylistService playlistService, PlaylistsContext playlistsContext)
     {
         _playlistService = playlistService;
-    }
-
-    public async Task LoadPlaylistsAsync()
-    {
-        var loaded = await _playlistService.ListPlaylistsAsync();
-        Playlists.Clear();
-        foreach (var p in loaded)
-        {
-            var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
-            playlist.Load(p);
-            Playlists.Add(playlist);
-        }
+        _playlistsContext = playlistsContext;
     }
 
     public async Task CreatePlaylistAsync(string displayName)
