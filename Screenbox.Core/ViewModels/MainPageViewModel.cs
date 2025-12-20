@@ -6,8 +6,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -43,15 +45,19 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
     private readonly ILibraryService _libraryService;
+    private readonly PlaylistsContext _playlistsContext;
+    private readonly IPlaylistService _playlistService;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        ILibraryService libraryService)
+        ILibraryService libraryService, PlaylistsContext playlistsContext, IPlaylistService playlistService)
     {
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryService = libraryService;
+        _playlistsContext = playlistsContext;
+        _playlistService = playlistService;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
         IsActive = true;
@@ -114,7 +120,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));
                 break;
-            case VirtualKey.GamepadView when (PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded):
+            case VirtualKey.GamepadView when PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded:
                 Messenger.Send(new TogglePlayerVisibilityMessage());
                 break;
             default:
@@ -224,12 +230,12 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
             .Where(i => i >= 0)
             .Average();
-        return index * IndexWeightFactor + wordRank;
+        return (index * IndexWeightFactor) + wordRank;
     }
 
     public Task FetchLibraries()
     {
-        List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
+        List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync(), FetchPlaylistsAsync() };
         return Task.WhenAll(tasks);
     }
 
@@ -259,6 +265,29 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         catch (UnauthorizedAccessException)
         {
             Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new ErrorMessage(null, e.Message));
+            LogService.Log(e);
+        }
+    }
+
+    /// <summary>
+    /// Fetches playlists from storage and populates the PlaylistsContext.
+    /// </summary>
+    private async Task FetchPlaylistsAsync()
+    {
+        try
+        {
+            var loaded = await _playlistService.ListPlaylistsAsync();
+            _playlistsContext.Playlists.Clear();
+            foreach (var p in loaded)
+            {
+                var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+                playlist.Load(p);
+                _playlistsContext.Playlists.Add(playlist);
+            }
         }
         catch (Exception e)
         {
