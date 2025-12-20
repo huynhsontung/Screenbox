@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Helpers;

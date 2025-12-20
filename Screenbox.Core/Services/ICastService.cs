@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;

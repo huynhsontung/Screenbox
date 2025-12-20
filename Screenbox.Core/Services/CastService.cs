@@ -1,5 +1,6 @@
-#nullable enable
+﻿#nullable enable
 
+using System;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -11,7 +12,7 @@ public sealed class CastService : ICastService
     public RendererWatcher? CreateRendererWatcher(IMediaPlayer player)
     {
         if (player is not VlcMediaPlayer vlcMediaPlayer)
-            return null;
+            throw new NotSupportedException("RendererWatcher only supports VlcMediaPlayer.");
 
         return new RendererWatcher(vlcMediaPlayer);
     }
