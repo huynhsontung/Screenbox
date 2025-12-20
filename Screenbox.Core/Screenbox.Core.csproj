@@ -127,6 +127,7 @@
     <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
+    <Compile Include="Contexts\CastContext.cs" />
     <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaCommandType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
+    <Compile Include="Helpers\RendererWatcher.cs" />
     <Compile Include="Helpers\StreamAbstraction.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
