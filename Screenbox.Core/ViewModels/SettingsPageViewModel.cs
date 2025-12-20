@@ -55,6 +55,7 @@ namespace Screenbox.Core.ViewModels
         public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
 
         private readonly ISettingsService _settingsService;
+        private readonly LibraryContext _libraryContext;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
@@ -71,9 +72,10 @@ namespace Screenbox.Core.ViewModels
             public int Language { get; } = Language;
         }
 
-        public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
+        public SettingsPageViewModel(ISettingsService settingsService, LibraryContext libraryContext, ILibraryService libraryService)
         {
             _settingsService = settingsService;
+            _libraryContext = libraryContext;
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
@@ -342,11 +344,11 @@ namespace Screenbox.Core.ViewModels
         {
             if (_videosLibrary == null)
             {
-                if (_libraryService.VideosLibrary == null)
+                if (_libraryContext.VideosLibrary == null)
                 {
                     try
                     {
-                        await _libraryService.InitializeVideosLibraryAsync();
+                        await _libraryService.InitializeVideosLibraryAsync(_libraryContext);
                     }
                     catch (Exception)
                     {
@@ -354,7 +356,7 @@ namespace Screenbox.Core.ViewModels
                     }
                 }
 
-                _videosLibrary = _libraryService.VideosLibrary;
+                _videosLibrary = _libraryContext.VideosLibrary;
                 if (_videosLibrary != null)
                 {
                     _videosLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
@@ -363,11 +365,11 @@ namespace Screenbox.Core.ViewModels
 
             if (_musicLibrary == null)
             {
-                if (_libraryService.MusicLibrary == null)
+                if (_libraryContext.MusicLibrary == null)
                 {
                     try
                     {
-                        await _libraryService.InitializeMusicLibraryAsync();
+                        await _libraryService.InitializeMusicLibraryAsync(_libraryContext);
                     }
                     catch (Exception)
                     {
@@ -375,7 +377,7 @@ namespace Screenbox.Core.ViewModels
                     }
                 }
 
-                _musicLibrary = _libraryService.MusicLibrary;
+                _musicLibrary = _libraryContext.MusicLibrary;
                 if (_musicLibrary != null)
                 {
                     _musicLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
@@ -439,7 +441,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchMusicAsync(false);
+                await _libraryService.FetchMusicAsync(_libraryContext, false);
             }
             catch (UnauthorizedAccessException)
             {
@@ -456,7 +458,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchVideosAsync(false);
+                await _libraryService.FetchVideosAsync(_libraryContext, false);
             }
             catch (UnauthorizedAccessException)
             {

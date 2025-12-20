@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -24,17 +25,19 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty] private bool _hasVideos;
 
-        private bool HasLibrary => _libraryService.VideosLibrary != null;
+        private bool HasLibrary => _libraryContext.VideosLibrary != null;
 
+        private readonly LibraryContext _libraryContext;
         private readonly ILibraryService _libraryService;
         private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public VideosPageViewModel(ILibraryService libraryService, IResourceService resourceService)
+        public VideosPageViewModel(LibraryContext libraryContext, ILibraryService libraryService, IResourceService resourceService)
         {
+            _libraryContext = libraryContext;
             _libraryService = libraryService;
             _resourceService = resourceService;
-            _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
+            _libraryContext.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             _hasVideos = true;
             Breadcrumbs = new ObservableCollection<StorageFolder>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -44,7 +47,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
                 Breadcrumbs.Add(firstFolder);
-            HasVideos = _libraryService.GetVideosFetchResult().Count > 0;
+            HasVideos = _libraryService.GetVideosFetchResult(_libraryContext).Count > 0;
             AddFolderCommand.NotifyCanExecuteChanged();
         }
 
@@ -87,7 +90,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void OnVideosLibraryContentChanged(ILibraryService sender, object args)
+        private void OnVideosLibraryContentChanged(LibraryContext sender, object args)
         {
             _dispatcherQueue.TryEnqueue(UpdateVideos);
         }
@@ -97,7 +100,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.VideosLibrary?.RequestAddFolderAsync();
+                await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
             }
             catch (Exception e)
             {

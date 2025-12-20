@@ -42,15 +42,17 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
+    private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        ILibraryService libraryService)
+        LibraryContext libraryContext, ILibraryService libraryService)
     {
         _searchService = searchService;
         _navigationService = navigationService;
+        _libraryContext = libraryContext;
         _libraryService = libraryService;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
@@ -237,7 +239,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryService.FetchMusicAsync();
+            await _libraryService.FetchMusicAsync(_libraryContext);
         }
         catch (UnauthorizedAccessException)
         {
@@ -254,7 +256,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryService.FetchVideosAsync();
+            await _libraryService.FetchVideosAsync(_libraryContext);
         }
         catch (UnauthorizedAccessException)
         {

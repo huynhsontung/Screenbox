@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -17,29 +18,31 @@ namespace Screenbox.Core.ViewModels
     {
         [ObservableProperty] private bool _hasContent;
 
-        private bool LibraryLoaded => _libraryService.MusicLibrary != null;
+        private bool LibraryLoaded => _libraryContext.MusicLibrary != null;
 
+        private readonly LibraryContext _libraryContext;
         private readonly ILibraryService _libraryService;
         private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public MusicPageViewModel(ILibraryService libraryService, IResourceService resourceService)
+        public MusicPageViewModel(LibraryContext libraryContext, ILibraryService libraryService, IResourceService resourceService)
         {
+            _libraryContext = libraryContext;
             _libraryService = libraryService;
             _resourceService = resourceService;
-            _libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+            _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _hasContent = true;
         }
 
         public void UpdateSongs()
         {
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
-            HasContent = musicLibrary.Songs.Count > 0 || _libraryService.IsLoadingMusic;
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult(_libraryContext);
+            HasContent = musicLibrary.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
             AddFolderCommand.NotifyCanExecuteChanged();
         }
 
-        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
+        private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
         {
             _dispatcherQueue.TryEnqueue(UpdateSongs);
         }
@@ -49,7 +52,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.MusicLibrary?.RequestAddFolderAsync();
+                await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
             }
             catch (Exception e)
             {

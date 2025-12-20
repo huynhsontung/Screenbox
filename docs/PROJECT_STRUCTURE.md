@@ -192,7 +192,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 **Media Management Services**
 - **`IFilesService`**: File system operations and media discovery
-- **`ILibraryService`**: Media library indexing and organization  
+- **`ILibraryService`**: Stateless library operations for fetching and managing media libraries
 - **`ISearchService`**: Content search and filtering functionality
 
 **Playback and Streaming Services**
@@ -211,6 +211,7 @@ Contexts provide observable state management that can be shared across services 
 
 - **`PlayerContext`**: Holds the current media player instance, allowing components to observe player state changes
 - **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
+- **`LibraryContext`**: Holds library state including music/videos libraries, loading flags, and media collections
 
 #### Helper Classes
 

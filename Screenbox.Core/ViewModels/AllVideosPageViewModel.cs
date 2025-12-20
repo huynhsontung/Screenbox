@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using System;
@@ -16,23 +17,25 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<MediaViewModel> Videos { get; }
 
+        private readonly LibraryContext _libraryContext;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
 
-        public AllVideosPageViewModel(ILibraryService libraryService)
+        public AllVideosPageViewModel(LibraryContext libraryContext, ILibraryService libraryService)
         {
+            _libraryContext = libraryContext;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
             _libraryService = libraryService;
-            _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
+            _libraryContext.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             Videos = new ObservableCollection<MediaViewModel>();
         }
 
         public void UpdateVideos()
         {
-            IsLoading = _libraryService.IsLoadingVideos;
-            IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosFetchResult();
+            IsLoading = _libraryContext.IsLoadingVideos;
+            IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosFetchResult(_libraryContext);
             if (videos.Count < 5000)
             {
                 // Only sync when the number of items is low enough
@@ -59,7 +62,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void OnVideosLibraryContentChanged(ILibraryService sender, object args)
+        private void OnVideosLibraryContentChanged(LibraryContext sender, object args)
         {
             _dispatcherQueue.TryEnqueue(UpdateVideos);
         }

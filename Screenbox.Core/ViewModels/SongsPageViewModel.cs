@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -23,32 +24,34 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         private string _sortBy = string.Empty;
 
+        private readonly LibraryContext _libraryContext;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _refreshTimer;
 
-        public SongsPageViewModel(ILibraryService libraryService)
+        public SongsPageViewModel(LibraryContext libraryContext, ILibraryService libraryService)
         {
+            _libraryContext = libraryContext;
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
 
-            libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+            _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
             PropertyChanged += OnPropertyChanged;
         }
 
         public void OnNavigatedFrom()
         {
-            _libraryService.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
+            _libraryContext.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
             _refreshTimer.Stop();
         }
 
         public void FetchSongs()
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
-            IsLoading = _libraryService.IsLoadingMusic;
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult(_libraryContext);
+            IsLoading = _libraryContext.IsLoadingMusic;
             Songs = musicLibrary.Songs;
 
             // Populate song groups with fetched result
@@ -69,7 +72,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             // Progressively update when it's still loading
-            if (_libraryService.IsLoadingMusic)
+            if (_libraryContext.IsLoadingMusic)
             {
                 _refreshTimer.Debounce(FetchSongs, TimeSpan.FromSeconds(5));
             }
@@ -171,7 +174,7 @@ namespace Screenbox.Core.ViewModels
             };
         }
 
-        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
+        private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
         {
             _dispatcherQueue.TryEnqueue(FetchSongs);
         }
@@ -180,7 +183,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (e.PropertyName == nameof(SortBy))
             {
-                var groups = GetCurrentGrouping(_libraryService.GetMusicFetchResult());
+                var groups = GetCurrentGrouping(_libraryService.GetMusicFetchResult(_libraryContext));
                 GroupedSongs.Clear();
                 foreach (IGrouping<string, MediaViewModel> group in groups)
                 {
