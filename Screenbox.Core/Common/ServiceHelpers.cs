@@ -56,6 +56,7 @@ public static class ServiceHelpers
 
         // Contexts
         services.AddSingleton<PlayerContext>();
+        services.AddSingleton<CastContext>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();
