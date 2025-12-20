@@ -205,4 +205,30 @@ public sealed class PlaylistService : IPlaylistService
         byte[] hashBytes = sha256.ComputeHash(bytes);
         return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
     }
+
+    public async Task AddToPlaylistAsync(string playlistId, IReadOnlyList<MediaViewModel> items)
+    {
+        if (string.IsNullOrWhiteSpace(playlistId)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(playlistId));
+        if (items is null) throw new ArgumentNullException(nameof(items));
+        if (items.Count == 0) return;
+
+        PersistentPlaylist? playlist = await LoadPlaylistAsync(playlistId);
+        if (playlist is null)
+        {
+            throw new InvalidOperationException($"Playlist '{playlistId}' was not found.");
+        }
+
+        foreach (MediaViewModel m in items)
+        {
+            if (m is null) continue;
+            IMediaProperties properties = m.MediaType == Screenbox.Core.Enums.MediaPlaybackType.Music
+                ? m.MediaInfo.MusicProperties
+                : m.MediaInfo.VideoProperties;
+
+            playlist.Items.Add(new PersistentMediaRecord(m.Name, m.Location, properties, m.DateAdded));
+        }
+
+        playlist.LastUpdated = DateTimeOffset.Now;
+        await SavePlaylistAsync(playlist);
+    }
 }

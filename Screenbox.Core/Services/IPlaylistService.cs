@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
+using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -64,4 +65,9 @@ public interface IPlaylistService
     /// Get a thumbnail file for a media item
     /// </summary>
     Task<StorageFile?> GetThumbnailFileAsync(string mediaLocation);
+
+    /// <summary>
+    /// Appends media items to an existing persistent playlist and persists the updated playlist.
+    /// </summary>
+    Task AddToPlaylistAsync(string playlistId, IReadOnlyList<MediaViewModel> items);
 }

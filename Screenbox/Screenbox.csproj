@@ -135,6 +135,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Behaviors\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Behaviors\AddToPlaylistFlyoutSubmenuBehavior.cs" />
     <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
     <Compile Include="Behaviors\AutoFocusBehavior.cs" />
     <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />

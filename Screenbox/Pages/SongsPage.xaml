@@ -29,6 +29,10 @@
             </DataTemplate>
 
             <MenuFlyout x:Name="ItemFlyout">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                </interactivity:Interaction.Behaviors>
+
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
@@ -47,6 +51,13 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
                     Text="{strings:Resources Key=AddToQueue}" />
+
+                <MenuFlyoutSubItem
+                    x:Name="AddToPlaylistSubMenu"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToPlaylist}" />
+
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
