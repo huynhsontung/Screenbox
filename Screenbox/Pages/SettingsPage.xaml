@@ -458,28 +458,44 @@
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}" />
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeUpHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}" />
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeDownHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}" />
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeLeftHeader}">
                             <ComboBox
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}" />
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeRightHeader}">
                             <ComboBox
