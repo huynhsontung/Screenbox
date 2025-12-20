@@ -46,13 +46,10 @@ public sealed partial class CastControlViewModel : ObservableObject
         if (IsCasting || MediaPlayer == null) return;
 
         var watcher = _castService.CreateRendererWatcher(MediaPlayer);
-        if (watcher != null)
-        {
-            _castContext.RendererWatcher = watcher;
-            watcher.RendererFound += RendererWatcherOnRendererFound;
-            watcher.RendererLost += RendererWatcherOnRendererLost;
-            watcher.Start();
-        }
+        _castContext.RendererWatcher = watcher;
+        watcher.RendererFound += RendererWatcherOnRendererFound;
+        watcher.RendererLost += RendererWatcherOnRendererLost;
+        watcher.Start();
     }
 
     public void StopDiscovering()

@@ -9,7 +9,7 @@ namespace Screenbox.Core.Services;
 
 public sealed class CastService : ICastService
 {
-    public RendererWatcher? CreateRendererWatcher(IMediaPlayer player)
+    public RendererWatcher CreateRendererWatcher(IMediaPlayer player)
     {
         if (player is not VlcMediaPlayer vlcMediaPlayer)
             throw new NotSupportedException("RendererWatcher only supports VlcMediaPlayer.");
