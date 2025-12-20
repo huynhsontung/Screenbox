@@ -68,16 +68,14 @@ namespace Screenbox.Core.Services
 
         public void SetPreferredLaunchWindowingMode(bool autoFullScreen)
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            view.PreferredLaunchWindowingMode = autoFullScreen 
+            ApplicationView.PreferredLaunchWindowingMode = autoFullScreen 
                 ? ApplicationViewWindowingMode.FullScreen 
                 : ApplicationViewWindowingMode.Auto;
         }
 
         public void SetPreferredLaunchWindowingModeForFileActivation()
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            view.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
         }
 
         public async Task<bool> TryExitCompactLayoutAsync()
