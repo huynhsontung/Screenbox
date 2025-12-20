@@ -78,43 +78,38 @@ namespace Screenbox.Controls
 
             _gestureRecognizer.CompleteGesture();
             VideoViewButton.ReleasePointerCapture(e.Pointer);
-            e.Handled = true;
         }
 
         private void VideoViewButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (ViewModel.IsHolding || !IsEnabled) return;
 
-            _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(VideoViewButton));
-            e.Handled = true;
+            _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(this));
         }
 
         private void VideoViewButton_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (!IsEnabled) return;
 
-            _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(VideoViewButton));
+            _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
             VideoViewButton.CapturePointer(e.Pointer);
-            e.Handled = true;
         }
 
         private void VideoViewButton_OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (!IsEnabled) return;
 
-            _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(VideoViewButton));
+            _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
             VideoViewButton.ReleasePointerCapture(e.Pointer);
-            e.Handled = true;
         }
 
         private void VideoViewButton_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             if (!IsEnabled) return;
 
-            var pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
-            ViewModel.HandlePointerWheelInput(
-                pointer.Properties.MouseWheelDelta,
-                pointer.Properties.IsHorizontalMouseWheel);
+            var pointer = e.GetCurrentPoint(VideoViewButton);
+            var properties = pointer.Properties;
+            ViewModel.HandlePointerWheelInput(properties.MouseWheelDelta, properties.IsHorizontalMouseWheel);
             e.Handled = true;
         }
 
