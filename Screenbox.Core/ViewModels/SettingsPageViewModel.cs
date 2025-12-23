@@ -365,7 +365,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             {
                 try
                 {
-                    await _libraryService.InitializeVideosLibraryAsync(_libraryContext);
+                    _libraryContext.VideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
                 }
                 catch (Exception)
                 {
@@ -386,7 +386,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             {
                 try
                 {
-                    await _libraryService.InitializeMusicLibraryAsync(_libraryContext);
+                    _libraryContext.MusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
                 }
                 catch (Exception)
                 {

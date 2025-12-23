@@ -16,12 +16,12 @@ public interface ILibraryService
     /// <summary>
     /// Initialize the music library
     /// </summary>
-    Task<StorageLibrary> InitializeMusicLibraryAsync(LibraryContext context);
+    Task<StorageLibrary> InitializeMusicLibraryAsync();
 
     /// <summary>
     /// Initialize the videos library
     /// </summary>
-    Task<StorageLibrary> InitializeVideosLibraryAsync(LibraryContext context);
+    Task<StorageLibrary> InitializeVideosLibraryAsync();
 
     /// <summary>
     /// Fetch music from the library

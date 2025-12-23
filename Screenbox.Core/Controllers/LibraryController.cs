@@ -115,7 +115,7 @@ public sealed class LibraryController : IDisposable
     {
         if (_context.MusicLibrary is null)
         {
-            await _libraryService.InitializeMusicLibraryAsync(_context);
+            _context.MusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
         }
 
         if (_musicQuery is not null && ShouldUpdateQuery(_musicQuery, UseIndexer))
@@ -125,7 +125,7 @@ public sealed class LibraryController : IDisposable
         }
 
         var result = await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
-        if (_musicQuery is null && result == KnownFoldersAccessStatus.Allowed)
+        if (_musicQuery is null && result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
         {
             _musicQuery = _libraryService.CreateMusicLibraryQuery(UseIndexer);
             _musicQuery.ContentsChanged += OnMusicQueryContentsChanged;
@@ -138,7 +138,7 @@ public sealed class LibraryController : IDisposable
     {
         if (_context.VideosLibrary is null)
         {
-            await _libraryService.InitializeVideosLibraryAsync(_context);
+            _context.VideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
         }
 
         if (_videosQuery is not null && ShouldUpdateQuery(_videosQuery, UseIndexer))
@@ -148,7 +148,7 @@ public sealed class LibraryController : IDisposable
         }
 
         var result = await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
-        if (_videosQuery is null && result == KnownFoldersAccessStatus.Allowed)
+        if (_videosQuery is null && result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
         {
             _videosQuery = _libraryService.CreateVideosLibraryQuery(UseIndexer);
             _videosQuery.ContentsChanged += OnVideosQueryContentsChanged;

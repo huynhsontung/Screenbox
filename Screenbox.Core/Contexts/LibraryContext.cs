@@ -53,8 +53,6 @@ public sealed partial class LibraryContext : ObservableObject
     public StorageFileQueryResult? VideosLibraryQueryResult { get; set; }
     public CancellationTokenSource? MusicFetchCts { get; set; }
     public CancellationTokenSource? VideosFetchCts { get; set; }
-    public bool MusicChangeTrackerAvailable { get; set; }
-    public bool VideosChangeTrackerAvailable { get; set; }
 
     public void RaiseMusicLibraryContentChanged()
     {

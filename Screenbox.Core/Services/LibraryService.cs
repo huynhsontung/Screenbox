@@ -69,38 +69,36 @@ public sealed class LibraryService : ILibraryService
         return KnownFolders.VideosLibrary.CreateFileQueryWithOptions(queryOptions);
     }
 
-    public async Task<StorageLibrary> InitializeMusicLibraryAsync(LibraryContext context)
+    public async Task<StorageLibrary> InitializeMusicLibraryAsync()
     {
         // No need to add handler for StorageLibrary.DefinitionChanged
-        context.MusicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+        var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
         try
         {
-            context.MusicLibrary.ChangeTracker.Enable();
-            context.MusicChangeTrackerAvailable = true;
+            library.ChangeTracker.Enable();
         }
         catch (Exception)
         {
             // pass
         }
 
-        return context.MusicLibrary;
+        return library;
     }
 
-    public async Task<StorageLibrary> InitializeVideosLibraryAsync(LibraryContext context)
+    public async Task<StorageLibrary> InitializeVideosLibraryAsync()
     {
         // No need to add handler for StorageLibrary.DefinitionChanged
-        context.VideosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+        var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
         try
         {
-            context.VideosLibrary.ChangeTracker.Enable();
-            context.VideosChangeTrackerAvailable = true;
+            library.ChangeTracker.Enable();
         }
         catch (Exception)
         {
             // pass
         }
 
-        return context.VideosLibrary;
+        return library;
     }
 
     public async Task FetchMusicAsync(LibraryContext context, bool useCache = true)
@@ -110,8 +108,6 @@ public sealed class LibraryService : ILibraryService
         context.MusicFetchCts = cts;
         try
         {
-            await InitializeMusicLibraryAsync(context);
-            cts.Token.ThrowIfCancellationRequested();
             await FetchMusicCancelableAsync(context, useCache, cts.Token);
         }
         catch (OperationCanceledException)
@@ -131,8 +127,6 @@ public sealed class LibraryService : ILibraryService
         context.VideosFetchCts = cts;
         try
         {
-            await InitializeVideosLibraryAsync(context);
-            cts.Token.ThrowIfCancellationRequested();
             await FetchVideosCancelableAsync(context, useCache, cts.Token);
         }
         catch (OperationCanceledException)
@@ -267,7 +261,7 @@ public sealed class LibraryService : ILibraryService
                     hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, context.MusicLibrary);
 
                     // Update cache with changes from library tracker. Invalidate cache if needed.
-                    if (hasCache && context.MusicChangeTrackerAvailable)
+                    if (hasCache)
                     {
                         try
                         {
@@ -339,7 +333,7 @@ public sealed class LibraryService : ILibraryService
 
             UpdateMusicLibraryContext(context, songs, albumFactory, artistFactory);
             await CacheSongsAsync(context, cancellationToken);
-            if (hasCache && context.MusicChangeTrackerAvailable && changeReader != null)
+            if (hasCache && changeReader != null)
             {
                 await changeReader.AcceptChangesAsync();
             }
@@ -401,7 +395,7 @@ public sealed class LibraryService : ILibraryService
                     hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, context.VideosLibrary);
 
                     // Update cache with changes from library tracker. Invalidate cache if needed.
-                    if (hasCache && context.VideosChangeTrackerAvailable)
+                    if (hasCache)
                     {
                         try
                         {
@@ -450,7 +444,7 @@ public sealed class LibraryService : ILibraryService
             context.Videos = videos;
             context.RaiseVideosLibraryContentChanged();
             await CacheVideosAsync(context, cancellationToken);
-            if (hasCache && context.VideosChangeTrackerAvailable && changeReader != null)
+            if (hasCache && changeReader != null)
             {
                 await changeReader.AcceptChangesAsync();
             }
