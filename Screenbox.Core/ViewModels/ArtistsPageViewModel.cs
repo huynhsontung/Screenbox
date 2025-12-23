@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed class ArtistsPageViewModel : BaseMusicContentViewModel
+public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
+    IRecipient<LibraryContentChangedMessage>
 {
     public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
@@ -25,12 +29,17 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel
         GroupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
         PopulateGroups();
 
-        _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+        IsActive = true;
+    }
+
+    public void Receive(LibraryContentChangedMessage message)
+    {
+        if (message.LibraryId != KnownLibraryId.Music) return;
+        _dispatcherQueue.TryEnqueue(FetchArtists);
     }
 
     public void OnNavigatedFrom()
     {
-        _libraryContext.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
         _refreshTimer.Stop();
     }
 
@@ -85,10 +94,5 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel
         {
             GroupedArtists.AddGroup(key);
         }
-    }
-
-    private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
-    {
-        _dispatcherQueue.TryEnqueue(FetchArtists);
     }
 }

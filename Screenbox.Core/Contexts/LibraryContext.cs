@@ -1,11 +1,11 @@
 ﻿#nullable enable
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 using Screenbox.Core.ViewModels;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Search;
 
@@ -14,11 +14,8 @@ namespace Screenbox.Core.Contexts;
 /// <summary>
 /// Holds the state for library management operations
 /// </summary>
-public sealed partial class LibraryContext : ObservableObject
+public sealed partial class LibraryContext : ObservableRecipient
 {
-    public event TypedEventHandler<LibraryContext, object>? MusicLibraryContentChanged;
-    public event TypedEventHandler<LibraryContext, object>? VideosLibraryContentChanged;
-
     [ObservableProperty]
     private StorageLibrary? _musicLibrary;
 
@@ -56,11 +53,11 @@ public sealed partial class LibraryContext : ObservableObject
 
     public void RaiseMusicLibraryContentChanged()
     {
-        MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+        Messenger.Send(new LibraryContentChangedMessage(KnownLibraryId.Music));
     }
 
     public void RaiseVideosLibraryContentChanged()
     {
-        VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+        Messenger.Send(new LibraryContentChangedMessage(KnownLibraryId.Videos));
     }
 }

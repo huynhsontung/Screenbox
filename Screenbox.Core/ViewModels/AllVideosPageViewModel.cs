@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class AllVideosPageViewModel : ObservableRecipient
+public sealed partial class AllVideosPageViewModel : ObservableRecipient,
+    IRecipient<LibraryContentChangedMessage>
 {
     [ObservableProperty] private bool _isLoading;
 
@@ -25,8 +29,15 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient
         _libraryContext = libraryContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _timer = _dispatcherQueue.CreateTimer();
-        _libraryContext.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
         Videos = new ObservableCollection<MediaViewModel>();
+
+        IsActive = true;
+    }
+
+    public void Receive(LibraryContentChangedMessage message)
+    {
+        if (message.LibraryId != KnownLibraryId.Videos) return;
+        _dispatcherQueue.TryEnqueue(UpdateVideos);
     }
 
     public void UpdateVideos()
@@ -57,11 +68,6 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient
         {
             _timer.Stop();
         }
-    }
-
-    private void OnVideosLibraryContentChanged(LibraryContext sender, object args)
-    {
-        _dispatcherQueue.TryEnqueue(UpdateVideos);
     }
 
     [RelayCommand]

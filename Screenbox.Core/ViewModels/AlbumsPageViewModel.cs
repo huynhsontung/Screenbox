@@ -2,21 +2,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel
+public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
+    IRecipient<LibraryContentChangedMessage>
 {
     public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
 
@@ -34,13 +37,17 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel
         _refreshTimer = _dispatcherQueue.CreateTimer();
         GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
 
-        _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
-        PropertyChanged += OnPropertyChanged;
+        IsActive = true;
+    }
+
+    public void Receive(LibraryContentChangedMessage message)
+    {
+        if (message.LibraryId != KnownLibraryId.Music) return;
+        _dispatcherQueue.TryEnqueue(FetchAlbums);
     }
 
     public void OnNavigatedFrom()
     {
-        _libraryContext.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
         _refreshTimer.Stop();
     }
 
@@ -50,7 +57,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel
         IsLoading = _libraryContext.IsLoadingMusic;
         Songs = _libraryContext.Songs;
 
-        var groups = GetCurrentGrouping(_libraryContext);
+        var groups = GetCurrentGrouping(_libraryContext, SortBy);
         if (Songs.Count < 5000)
         {
             // Only sync when the number of items is low enough
@@ -143,9 +150,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(LibraryContext context, string sortBy)
     {
-        return SortBy switch
+        return sortBy switch
         {
             "artist" => GetArtistGrouping(context),
             "year" => GetYearGrouping(context),
@@ -163,22 +170,14 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel
         }
     }
 
-    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    partial void OnSortByChanged(string value)
     {
-        if (e.PropertyName == nameof(SortBy))
+        var groups = GetCurrentGrouping(_libraryContext, value);
+        GroupedAlbums.Clear();
+        foreach (IGrouping<string, AlbumViewModel> group in groups)
         {
-            var groups = GetCurrentGrouping(_libraryContext);
-            GroupedAlbums.Clear();
-            foreach (IGrouping<string, AlbumViewModel> group in groups)
-            {
-                GroupedAlbums.AddGroup(group);
-            }
+            GroupedAlbums.AddGroup(group);
         }
-    }
-
-    private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
-    {
-        _dispatcherQueue.TryEnqueue(FetchAlbums);
     }
 
     [RelayCommand]

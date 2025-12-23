@@ -9,11 +9,13 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class MusicPageViewModel : ObservableRecipient
+public sealed partial class MusicPageViewModel : ObservableRecipient,
+    IRecipient<LibraryContentChangedMessage>
 {
     [ObservableProperty] private bool _hasContent;
 
@@ -27,9 +29,16 @@ public sealed partial class MusicPageViewModel : ObservableRecipient
     {
         _libraryContext = libraryContext;
         _resourceService = resourceService;
-        _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _hasContent = true;
+
+        IsActive = true;
+    }
+
+    public void Receive(LibraryContentChangedMessage message)
+    {
+        if (message.LibraryId != KnownLibraryId.Music) return;
+        _dispatcherQueue.TryEnqueue(UpdateSongs);
     }
 
     public void UpdateSongs()
@@ -38,10 +47,6 @@ public sealed partial class MusicPageViewModel : ObservableRecipient
         AddFolderCommand.NotifyCanExecuteChanged();
     }
 
-    private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
-    {
-        _dispatcherQueue.TryEnqueue(UpdateSongs);
-    }
 
     [RelayCommand(CanExecute = nameof(LibraryLoaded))]
     private async Task AddFolder()

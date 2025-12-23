@@ -2,21 +2,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Services;
+using Screenbox.Core.Messages;
+using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
+public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
+    IRecipient<LibraryContentChangedMessage>
 {
     public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
 
@@ -24,25 +26,27 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
     private string _sortBy = string.Empty;
 
     private readonly LibraryContext _libraryContext;
-    private readonly ILibraryService _libraryService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _refreshTimer;
 
-    public SongsPageViewModel(LibraryContext libraryContext, ILibraryService libraryService)
+    public SongsPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _libraryService = libraryService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
         GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
 
-        _libraryContext.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
-        PropertyChanged += OnPropertyChanged;
+        IsActive = true;
+    }
+
+    public void Receive(LibraryContentChangedMessage message)
+    {
+        if (message.LibraryId != KnownLibraryId.Music) return;
+        _dispatcherQueue.TryEnqueue(FetchSongs);
     }
 
     public void OnNavigatedFrom()
     {
-        _libraryContext.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
         _refreshTimer.Stop();
     }
 
@@ -53,7 +57,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
         Songs = _libraryContext.Songs;
 
         // Populate song groups with fetched result
-        var groups = GetCurrentGrouping(_libraryContext);
+        var groups = GetCurrentGrouping(_libraryContext, SortBy);
         if (Songs.Count < 5000)
         {
             // Only sync when the number of items is low enough
@@ -160,9 +164,9 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
         return sortedGroup;
     }
 
-    private List<IGrouping<string, MediaViewModel>> GetCurrentGrouping(LibraryContext context)
+    private List<IGrouping<string, MediaViewModel>> GetCurrentGrouping(LibraryContext context, string sortBy)
     {
-        return SortBy switch
+        return sortBy switch
         {
             "album" => GetAlbumGrouping(context),
             "artist" => GetArtistGrouping(context),
@@ -172,21 +176,13 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
         };
     }
 
-    private void OnMusicLibraryContentChanged(LibraryContext sender, object args)
+    partial void OnSortByChanged(string value)
     {
-        _dispatcherQueue.TryEnqueue(FetchSongs);
-    }
-
-    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(SortBy))
+        var groups = GetCurrentGrouping(_libraryContext, value);
+        GroupedSongs.Clear();
+        foreach (IGrouping<string, MediaViewModel> group in groups)
         {
-            var groups = GetCurrentGrouping(_libraryContext);
-            GroupedSongs.Clear();
-            foreach (IGrouping<string, MediaViewModel> group in groups)
-            {
-                GroupedSongs.AddGroup(group);
-            }
+            GroupedSongs.AddGroup(group);
         }
     }
 

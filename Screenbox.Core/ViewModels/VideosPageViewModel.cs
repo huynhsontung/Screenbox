@@ -19,7 +19,8 @@ using IResourceService = Screenbox.Core.Services.IResourceService;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class VideosPageViewModel : ObservableRecipient
+public sealed partial class VideosPageViewModel : ObservableRecipient,
+    IRecipient<LibraryContentChangedMessage>
 {
     public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
@@ -28,19 +29,24 @@ public sealed partial class VideosPageViewModel : ObservableRecipient
     private bool HasLibrary => _libraryContext.VideosLibrary != null;
 
     private readonly LibraryContext _libraryContext;
-    private readonly ILibraryService _libraryService;
     private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public VideosPageViewModel(LibraryContext libraryContext, ILibraryService libraryService, IResourceService resourceService)
+    public VideosPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
     {
         _libraryContext = libraryContext;
-        _libraryService = libraryService;
         _resourceService = resourceService;
-        _libraryContext.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
         _hasVideos = true;
         Breadcrumbs = new ObservableCollection<StorageFolder>();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+        IsActive = true;
+    }
+
+    public void Receive(LibraryContentChangedMessage message)
+    {
+        if (message.LibraryId != KnownLibraryId.Videos) return;
+        _dispatcherQueue.TryEnqueue(UpdateVideos);
     }
 
     public void UpdateVideos()
@@ -88,11 +94,6 @@ public sealed partial class VideosPageViewModel : ObservableRecipient
                 Breadcrumbs.Add(storageFolder);
             }
         }
-    }
-
-    private void OnVideosLibraryContentChanged(LibraryContext sender, object args)
-    {
-        _dispatcherQueue.TryEnqueue(UpdateVideos);
     }
 
     [RelayCommand(CanExecute = nameof(HasLibrary))]
