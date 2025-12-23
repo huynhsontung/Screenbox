@@ -13,7 +13,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -385,34 +384,6 @@ public partial class MediaViewModel : ObservableRecipient
         }
 
         return null;
-    }
-
-    public void UpdateAlbum(AlbumViewModelFactory factory)
-    {
-        if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
-        MusicInfo musicProperties = MediaInfo.MusicProperties;
-        if (Album != null)
-        {
-            if (factory.GetAlbumFromName(musicProperties.Album, musicProperties.AlbumArtist) == Album)
-                return;
-
-            factory.Remove(this);
-        }
-
-        Album = factory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
-    }
-
-    public void UpdateArtists(ArtistViewModelFactory factory)
-    {
-        if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
-        if (Artists.Length > 0)
-        {
-            ArtistViewModel[] artists = factory.ParseArtists(MediaInfo.MusicProperties.Artist);
-            if (artists.SequenceEqual(Artists)) return;
-            factory.Remove(this);
-        }
-
-        Artists = factory.ParseAddArtists(MediaInfo.MusicProperties.Artist, this);
     }
 
     private void UpdateCaptions()
