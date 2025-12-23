@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Controllers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -45,16 +46,18 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly INavigationService _navigationService;
     private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
+    private readonly LibraryController _libraryController;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        LibraryContext libraryContext, ILibraryService libraryService)
+        LibraryContext libraryContext, ILibraryService libraryService, LibraryController libraryController)
     {
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryContext = libraryContext;
         _libraryService = libraryService;
+        _libraryController = libraryController;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
         IsActive = true;
@@ -230,10 +233,19 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         return (index * IndexWeightFactor) + wordRank;
     }
 
-    public Task FetchLibraries()
+    public async Task FetchLibraries()
     {
+        try
+        {
+            await _libraryController.EnsureWatchingAsync();
+        }
+        catch (Exception)
+        {
+            // pass
+        }
+
         List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
-        return Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
     }
 
     private async Task FetchMusicLibraryAsync()

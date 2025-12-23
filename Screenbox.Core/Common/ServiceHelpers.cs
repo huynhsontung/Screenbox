@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Controllers;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -58,6 +59,9 @@ public static class ServiceHelpers
         services.AddSingleton<PlayerContext>();
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
+
+        // Controllers
+        services.AddSingleton<LibraryController>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();

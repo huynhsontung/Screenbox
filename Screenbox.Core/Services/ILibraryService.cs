@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using Screenbox.Core.Contexts;
 using Windows.Storage;
+using Windows.Storage.Search;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services;
@@ -36,4 +37,14 @@ public interface ILibraryService
     /// Remove media from the library
     /// </summary>
     void RemoveMedia(LibraryContext context, MediaViewModel media);
+
+    /// <summary>
+    /// Creates a query for the user's music library.
+    /// </summary>
+    StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer);
+
+    /// <summary>
+    /// Creates a query for the user's videos library.
+    /// </summary>
+    StorageFileQueryResult CreateVideosLibraryQuery(bool useIndexer);
 }

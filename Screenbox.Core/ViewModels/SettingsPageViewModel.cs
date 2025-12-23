@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Controllers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -58,6 +59,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
+    private readonly LibraryController _libraryController;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
@@ -73,11 +75,16 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         public int Language { get; } = Language;
     }
 
-    public SettingsPageViewModel(ISettingsService settingsService, LibraryContext libraryContext, ILibraryService libraryService)
+    public SettingsPageViewModel(
+        ISettingsService settingsService,
+        LibraryContext libraryContext,
+        ILibraryService libraryService,
+        LibraryController libraryController)
     {
         _settingsService = settingsService;
         _libraryContext = libraryContext;
         _libraryService = libraryService;
+        _libraryController = libraryController;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
         MusicLocations = new ObservableCollection<StorageFolder>();
@@ -204,6 +211,15 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         _settingsService.UseIndexer = value;
         Messenger.Send(new SettingsChangedMessage(nameof(UseIndexer), typeof(SettingsPageViewModel)));
+
+        try
+        {
+            _ = _libraryController.RefreshWatchersAsync();
+        }
+        catch (Exception)
+        {
+            // pass
+        }
     }
 
     partial void OnShowRecentChanged(bool value)
