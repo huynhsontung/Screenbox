@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Screenbox</value>
+    <value>جعبهٔ نمایش</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
     <value>Screenbox</value>
@@ -127,27 +127,27 @@
     <value>یک پخش‌کننده ویدئوی مدرن با تمرکز بر عملکرد و سهولت استفاده در طیف گسترده‌ای از دستگاه‌های ویندوز.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>فایل چندرسانه‌ای 3GPP</value>
     <comment>Display name for the file type ".3gp" and ".3gpp" (3rd Generation Partnership Project)</comment>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>فایل چندرسانه‌ای 3GPP</value>
     <comment>Display name for the file type ".3g2" and ".3gp2" (3rd Generation Partnership Project 2)</comment>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>فایل صوتی AAC</value>
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>فایل صوتی Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>صدای AIFF</value>
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>فایل صوتی AIFF فشرده</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
