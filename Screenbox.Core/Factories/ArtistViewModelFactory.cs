@@ -13,16 +13,11 @@ public sealed class ArtistViewModelFactory
 {
     public ArtistViewModel UnknownArtist { get; } = new();
 
-    public Dictionary<string, ArtistViewModel> Artists { get; }
+    public Dictionary<string, ArtistViewModel> Artists { get; } = new();
 
     public Dictionary<MediaViewModel, List<ArtistViewModel>> SongsToArtists { get; } = new();
 
     private static readonly string[] ArtistNameSeparators = { ",", ", ", "; " };
-
-    public ArtistViewModelFactory()
-    {
-        Artists = new Dictionary<string, ArtistViewModel>() { { string.Empty, UnknownArtist } };
-    }
 
     public void AddSong(MediaViewModel song)
     {
@@ -64,7 +59,7 @@ public sealed class ArtistViewModelFactory
             .ToArray();
     }
 
-    public ArtistViewModel GetArtistFromName(string artistName)
+    private ArtistViewModel GetArtistFromName(string artistName)
     {
         var key = GetArtistKey(artistName);
         return Artists.GetValueOrDefault(key, UnknownArtist);
@@ -72,23 +67,19 @@ public sealed class ArtistViewModelFactory
 
     public ArtistViewModel AddSongToArtist(MediaViewModel song, string artistName)
     {
-        if (string.IsNullOrEmpty(artistName))
+        var key = GetArtistKey(artistName);
+        if (string.IsNullOrEmpty(key))
         {
             UnknownArtist.RelatedSongs.Add(song);
             SongsToArtists[song] = [UnknownArtist];
-            return UnknownArtist;
+            return Artists[key] = UnknownArtist;
         }
 
-        ArtistViewModel artist = GetArtistFromName(artistName);
-        if (artist != UnknownArtist)
+        if (!Artists.TryGetValue(key, out var artist))
         {
-            artist.RelatedSongs.Add(song);
-            UpdateSongsToArtistMapping(song, artist);
-            return artist;
+            artist = new ArtistViewModel(artistName);
         }
 
-        string key = GetArtistKey(artistName);
-        artist = new ArtistViewModel(artistName);
         artist.RelatedSongs.Add(song);
         UpdateSongsToArtistMapping(song, artist);
         return Artists[key] = artist;

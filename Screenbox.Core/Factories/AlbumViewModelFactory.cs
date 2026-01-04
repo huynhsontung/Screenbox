@@ -13,20 +13,9 @@ public sealed class AlbumViewModelFactory
 {
     public AlbumViewModel UnknownAlbum { get; } = new();
 
-    public Dictionary<string, AlbumViewModel> Albums { get; }
+    public Dictionary<string, AlbumViewModel> Albums { get; } = new();
 
     public Dictionary<MediaViewModel, AlbumViewModel> SongsToAlbums { get; } = new();
-
-    public AlbumViewModelFactory()
-    {
-        Albums = new Dictionary<string, AlbumViewModel>() { { string.Empty, UnknownAlbum } };
-    }
-
-    public AlbumViewModel GetAlbumFromName(string albumName, string artistName)
-    {
-        string key = GetAlbumKey(albumName, artistName);
-        return Albums.GetValueOrDefault(key, UnknownAlbum);
-    }
 
     public void AddSong(MediaViewModel song)
     {
@@ -37,29 +26,26 @@ public sealed class AlbumViewModelFactory
 
     private AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)
     {
-        if (string.IsNullOrEmpty(albumName))
+        string key = GetAlbumKey(albumName, artistName);
+        if (string.IsNullOrEmpty(key))
         {
             UnknownAlbum.RelatedSongs.Add(song);
             SongsToAlbums[song] = UnknownAlbum;
             UpdateAlbumDateAdded(UnknownAlbum, song);
-            return UnknownAlbum;
+            return Albums[key] = UnknownAlbum;
         }
 
-        AlbumViewModel album = GetAlbumFromName(albumName, artistName);
-        if (album != UnknownAlbum)
+        if (Albums.TryGetValue(key, out var album))
         {
             album.Year ??= year;
-            album.RelatedSongs.Add(song);
-            SongsToAlbums[song] = album;
-            UpdateAlbumDateAdded(album, song);
-            return album;
         }
-
-        string key = GetAlbumKey(albumName, artistName);
-        album = new AlbumViewModel(albumName, artistName)
+        else
         {
-            Year = year
-        };
+            album = new AlbumViewModel(albumName, artistName)
+            {
+                Year = year
+            };
+        }
 
         album.RelatedSongs.Add(song);
         SongsToAlbums[song] = album;
