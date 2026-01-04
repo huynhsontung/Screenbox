@@ -1,131 +1,80 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Enums;
-using Screenbox.Core.Services;
-using Screenbox.Core.ViewModels;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Models;
+using Screenbox.Core.ViewModels;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
-namespace Screenbox.Core.Factories
+namespace Screenbox.Core.Factories;
+
+public sealed class AlbumViewModelFactory
 {
-    public sealed class AlbumViewModelFactory
+    public AlbumViewModel UnknownAlbum { get; } = new();
+
+    public Dictionary<string, AlbumViewModel> Albums { get; } = new();
+
+    public Dictionary<MediaViewModel, AlbumViewModel> SongsToAlbums { get; } = new();
+
+    public void AddSong(MediaViewModel song)
     {
-        public AlbumViewModel UnknownAlbum { get; }
+        if (song.MediaType != MediaPlaybackType.Music || SongsToAlbums.ContainsKey(song)) return;
+        MusicInfo musicProperties = song.MediaInfo.MusicProperties;
+        AddSongToAlbum(song, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
+    }
 
-        public IReadOnlyCollection<AlbumViewModel> AllAlbums { get; }
-
-        private readonly Dictionary<string, AlbumViewModel> _allAlbums;
-        private readonly IResourceService _resourceService;
-
-        public AlbumViewModelFactory(IResourceService resourceService)
+    private AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)
+    {
+        string key = GetAlbumKey(albumName, artistName);
+        if (string.IsNullOrEmpty(key))
         {
-            _resourceService = resourceService;
-            UnknownAlbum = new AlbumViewModel(resourceService.GetString(ResourceName.UnknownAlbum), resourceService.GetString(ResourceName.UnknownArtist));
-            _allAlbums = new Dictionary<string, AlbumViewModel>();
-            AllAlbums = _allAlbums.Values;
+            UnknownAlbum.RelatedSongs.Add(song);
+            SongsToAlbums[song] = UnknownAlbum;
+            UpdateAlbumDateAdded(UnknownAlbum, song);
+            return Albums[key] = UnknownAlbum;
         }
 
-        public AlbumViewModel GetAlbumFromName(string albumName, string artistName)
+        if (Albums.TryGetValue(key, out var album))
         {
-            if (string.IsNullOrEmpty(albumName) || albumName == _resourceService.GetString(ResourceName.UnknownAlbum))
-            {
-                return UnknownAlbum;
-            }
-
-            string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            string key = GetAlbumKey(albumKey, artistKey);
-            return _allAlbums.GetValueOrDefault(key, UnknownAlbum);
+            album.Year ??= year;
         }
-
-        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)
+        else
         {
-            if (string.IsNullOrEmpty(albumName))
-            {
-                UnknownAlbum.RelatedSongs.Add(song);
-                UpdateAlbumDateAdded(UnknownAlbum, song);
-                return UnknownAlbum;
-            }
-
-            AlbumViewModel album = GetAlbumFromName(albumName, artistName);
-            if (album != UnknownAlbum)
-            {
-                album.Year ??= year;
-                album.RelatedSongs.Add(song);
-                UpdateAlbumDateAdded(album, song);
-                return album;
-            }
-
-            string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            string key = GetAlbumKey(albumKey, artistKey);
             album = new AlbumViewModel(albumName, artistName)
             {
                 Year = year
             };
-
-            album.RelatedSongs.Add(song);
-            UpdateAlbumDateAdded(album, song);
-            return _allAlbums[key] = album;
         }
 
-        public void Remove(MediaViewModel song)
+        album.RelatedSongs.Add(song);
+        SongsToAlbums[song] = album;
+        UpdateAlbumDateAdded(album, song);
+        return Albums[key] = album;
+    }
+
+    public void Remove(MediaViewModel song, AlbumViewModel album)
+    {
+        album.RelatedSongs.Remove(song);
+        if (album.RelatedSongs.Count == 0)
         {
-            AlbumViewModel? album = song.Album;
-            if (album == null) return;
-            song.Album = null;
-            album.RelatedSongs.Remove(song);
-            if (album.RelatedSongs.Count == 0)
-            {
-                string albumKey = album.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
-                string artistKey = album.ArtistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-                _allAlbums.Remove(GetAlbumKey(albumKey, artistKey));
-            }
+            var key = GetAlbumKey(album.Name, album.ArtistName);
+            Albums.Remove(key);
         }
 
-        public void Compact()
-        {
-            List<string> albumKeysToRemove =
-                _allAlbums.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
+        SongsToAlbums.Remove(song);
+    }
 
-            foreach (string albumKey in albumKeysToRemove)
-            {
-                _allAlbums.Remove(albumKey);
-            }
-        }
+    private static void UpdateAlbumDateAdded(AlbumViewModel album, MediaViewModel song)
+    {
+        if (song.DateAdded == default) return;
+        if (album.DateAdded > song.DateAdded || album.DateAdded == default) album.DateAdded = song.DateAdded;
+    }
 
-        public void Clear()
-        {
-            foreach (MediaViewModel media in UnknownAlbum.RelatedSongs)
-            {
-                media.Album = null;
-            }
-
-            UnknownAlbum.RelatedSongs.Clear();
-            UnknownAlbum.DateAdded = default;
-
-            foreach ((string _, AlbumViewModel album) in _allAlbums)
-            {
-                foreach (MediaViewModel media in album.RelatedSongs)
-                {
-                    media.Album = null;
-                }
-            }
-
-            _allAlbums.Clear();
-        }
-
-        private static void UpdateAlbumDateAdded(AlbumViewModel album, MediaViewModel song)
-        {
-            if (song.DateAdded == default) return;
-            if (album.DateAdded > song.DateAdded || album.DateAdded == default) album.DateAdded = song.DateAdded;
-        }
-
-        private static string GetAlbumKey(string albumName, string artistName)
-        {
-            return $"{albumName};{artistName}";
-        }
+    public static string GetAlbumKey(string albumName, string artistName)
+    {
+        string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+        string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
+        return string.IsNullOrEmpty(albumKey) ? string.Empty : $"{albumKey};{artistKey}";
     }
 }

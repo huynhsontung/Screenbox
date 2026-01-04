@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
+using Screenbox.Core.Controllers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -42,16 +44,20 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
+    private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
+    private readonly LibraryController _libraryController;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        ILibraryService libraryService)
+        LibraryContext libraryContext, ILibraryService libraryService, LibraryController libraryController)
     {
         _searchService = searchService;
         _navigationService = navigationService;
+        _libraryContext = libraryContext;
         _libraryService = libraryService;
+        _libraryController = libraryController;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
         IsActive = true;
@@ -114,7 +120,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));
                 break;
-            case VirtualKey.GamepadView when (PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded):
+            case VirtualKey.GamepadView when PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded:
                 Messenger.Send(new TogglePlayerVisibilityMessage());
                 break;
             default:
@@ -141,7 +147,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         SearchSuggestions.Clear();
         if (searchQuery.Length > 0)
         {
-            var result = _searchService.SearchLocalLibrary(searchQuery);
+            var result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
             var suggestions = GetSuggestItems(result, searchQuery);
 
             if (suggestions.Count != 0)
@@ -163,7 +169,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         string searchQuery = queryText.Trim();
         if (searchQuery.Length > 0)
         {
-            SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
+            SearchResult result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
             _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
         }
     }
@@ -224,20 +230,29 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
             .Where(i => i >= 0)
             .Average();
-        return index * IndexWeightFactor + wordRank;
+        return (index * IndexWeightFactor) + wordRank;
     }
 
-    public Task FetchLibraries()
+    public async Task FetchLibraries()
     {
+        try
+        {
+            await _libraryController.EnsureWatchingAsync();
+        }
+        catch (Exception)
+        {
+            // pass
+        }
+
         List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
-        return Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
     }
 
     private async Task FetchMusicLibraryAsync()
     {
         try
         {
-            await _libraryService.FetchMusicAsync();
+            await _libraryService.FetchMusicAsync(_libraryContext);
         }
         catch (UnauthorizedAccessException)
         {
@@ -254,7 +269,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryService.FetchVideosAsync();
+            await _libraryService.FetchVideosAsync(_libraryContext);
         }
         catch (UnauthorizedAccessException)
         {

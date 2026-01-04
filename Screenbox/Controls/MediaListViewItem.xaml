@@ -19,8 +19,6 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
-
         <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
 
@@ -110,7 +108,7 @@
             <TextBlock
                 x:Name="ArtistText"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding MainArtist.Name, FallbackValue=''}"
+                Text="{Binding MainArtist.Name, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:Resources Key=UnknownArtist}}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -131,7 +129,7 @@
             <TextBlock
                 x:Name="AlbumText"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Album.Name, FallbackValue=''}"
+                Text="{Binding Album.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -146,7 +144,7 @@
             VerticalAlignment="Center"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}}"
+            Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}, FallbackValue={strings:Resources Key=UnknownGenre}}"
             TextWrapping="NoWrap"
             Visibility="Collapsed">
             <interactivity:Interaction.Behaviors>
