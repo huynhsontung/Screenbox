@@ -230,19 +230,19 @@
     <value>이 보기의 모든 항목 선택</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>모두 선택 해제</value>
+    <value>모두 해제</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>선택 항목 지우기</value>
+    <value>선택한 항목을 해제합니다</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>선택 해제</value>
+    <value>선택 취소</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>제거</value>
+    <value>삭제</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>다음 곡</value>
+    <value>다음 재생</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>위로 이동</value>
@@ -383,7 +383,7 @@
     <value>재생 시간</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>프로듀서</value>
+    <value>제작</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
     <value>해상도</value>
@@ -401,7 +401,7 @@
     <value>트랙</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>작성자</value>
+    <value>각본</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
     <value>연도</value>
@@ -756,7 +756,7 @@
     <value>폴더 삭제</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>보류 중인 변경사항</value>
+    <value>보류 중인 변경 사항</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
     <value>변경 사항을 적용하려면 앱을 다시 실행합니다</value>
@@ -768,10 +768,10 @@
     <value>관련 링크</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>개인정보 보호정책</value>
+    <value>개인정보 처리방침</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>라이센스</value>
+    <value>라이선스</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
     <value>제3자 소프트웨어 고지</value>
