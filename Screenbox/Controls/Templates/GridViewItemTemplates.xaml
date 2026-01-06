@@ -1,12 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Screenbox.Controls">
+    xmlns:controls="using:Screenbox.Controls"
+    xmlns:strings="using:Screenbox.Strings">
 
     <DataTemplate x:Key="AlbumGridViewItemTemplate">
         <controls:CommonGridViewItem
+            Title="{Binding Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}"
             Width="{StaticResource CommonGridViewItemWidth}"
-            Caption="{Binding ArtistName}"
+            Caption="{Binding ArtistName, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}"
             IsPlaying="{Binding IsPlaying}"
             PlayCommand="{Binding PlayAlbumCommand}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
@@ -19,6 +21,7 @@
 
     <DataTemplate x:Key="ArtistGridViewItemTemplate">
         <controls:CommonGridViewItem
+            Title="{Binding Name, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:Resources Key=UnknownArtist}}"
             Width="{StaticResource CommonGridViewItemWidth}"
             CornerRadius="{StaticResource CircularCornerRadius}"
             HorizontalTextAlignment="Center"
@@ -33,6 +36,7 @@
 
     <DataTemplate x:Key="MediaGridViewItemTemplate">
         <controls:CommonGridViewItem
+            Title="{Binding Name}"
             Width="{StaticResource CommonGridViewItemWidth}"
             Caption="{Binding Caption}"
             IsPlaying="{Binding IsPlaying}"
@@ -46,6 +50,7 @@
 
     <DataTemplate x:Key="WideMediaGridViewItemTemplate">
         <controls:CommonGridViewItem
+            Title="{Binding Name}"
             Width="{StaticResource WideGridViewItemWidth}"
             Caption="{Binding Caption}"
             IsPlaying="{Binding IsPlaying}"

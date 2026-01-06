@@ -139,7 +139,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name, FallbackValue={x:Null}}"
+                        Text="{x:Bind ViewModel.Source.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
@@ -151,7 +151,7 @@
                         Margin="0,8,0,0"
                         FontWeight="Normal"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.ArtistName, FallbackValue={x:Null}}"
+                        Text="{x:Bind ViewModel.Source.ArtistName, Converter={StaticResource ArtistTextConverter}, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />

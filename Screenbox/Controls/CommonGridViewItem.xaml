@@ -105,7 +105,7 @@
                 LineHeight="20"
                 MaxLines="2"
                 Style="{StaticResource BodyStrongTextBlockStyle}"
-                Text="{Binding Name}">
+                Text="{x:Bind Title, Mode=OneWay}">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
