@@ -422,7 +422,7 @@
     <value>최근</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>비디오 설정</value>
+    <value>동영상 설정</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>열기</value>
