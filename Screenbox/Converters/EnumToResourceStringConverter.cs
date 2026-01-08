@@ -26,19 +26,19 @@ public sealed class EnumToResourceStringConverter : IValueConverter
         }
 
         string typeName = enumValue.GetType().Name;
-        string memberName = enumValue.ToString("G");
-        string fullName = typeName + memberName;
-        string result = _resourceLoader.GetString(fullName);
-        string fallback = _resourceLoader.GetString(memberName);
+        string memberName = System.Convert.ToString(enumValue);
+        string fullKey = $"{typeName}{memberName}";
 
-        if (!string.IsNullOrEmpty(result) && result != fullName)
+        string result = _resourceLoader.GetString(fullKey);
+        if (!string.IsNullOrWhiteSpace(result))
         {
             return result;
         }
 
-        if (!string.IsNullOrEmpty(fallback) && fallback != memberName)
+        result = _resourceLoader.GetString(memberName);
+        if (!string.IsNullOrWhiteSpace(result))
         {
-            return fallback;
+            return result;
         }
 
         return memberName;
