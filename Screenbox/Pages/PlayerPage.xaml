@@ -87,7 +87,7 @@
         x:Name="LayoutRoot"
         KeyboardAcceleratorPlacementMode="Hidden"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
-        PreviewKeyDown="{x:Bind ViewModel.OnPreviewSpaceKeyDown}"
+        PreviewKeyDown="LayoutRoot_OnPreviewKeyDown"
         Translation="0,0,32">
         <Grid.Transitions>
             <TransitionCollection>
@@ -105,67 +105,74 @@
         </Grid.ColumnDefinitions>
 
         <Grid.KeyboardAccelerators>
-            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Plus}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Add" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Minus}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Subtract" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Left" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <!--  Volume  -->
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Plus}" Invoked="ChangeVolumeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Add" Invoked="ChangeVolumeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Minus}" Invoked="ChangeVolumeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Subtract" Invoked="ChangeVolumeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Up" Invoked="ChangeVolumeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Down" Invoked="ChangeVolumeKeyboardAccelerator_OnInvoked" />
+            <!--  Seek  -->
+            <KeyboardAccelerator Key="Left" Invoked="SeekKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator
                 Key="Left"
-                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Invoked="SeekKeyboardAccelerator_OnInvoked"
                 Modifiers="Control" />
             <KeyboardAccelerator
                 Key="Left"
-                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Invoked="SeekKeyboardAccelerator_OnInvoked"
                 Modifiers="Shift" />
-            <KeyboardAccelerator Key="Right" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Right" Invoked="SeekKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator
                 Key="Right"
-                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Invoked="SeekKeyboardAccelerator_OnInvoked"
                 Modifiers="Control" />
             <KeyboardAccelerator
                 Key="Right"
-                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Invoked="SeekKeyboardAccelerator_OnInvoked"
                 Modifiers="Shift" />
-            <KeyboardAccelerator Key="Up" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Down" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="J" Invoked="SeekKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="L" Invoked="SeekKeyboardAccelerator_OnInvoked" />
+            <!--  Frame stepping  -->
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Period}" Invoked="FrameSteppingKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Comma}" Invoked="FrameSteppingKeyboardAccelerator_OnInvoked" />
+            <!--  Playback speed  -->
             <KeyboardAccelerator
                 Key="{x:Bind helpers:KeyboardAcceleratorHelper.Period}"
-                Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
+                Invoked="PlaybackRateKeyboardAccelerator_OnInvoked"
                 Modifiers="Shift" />
             <KeyboardAccelerator
                 Key="{x:Bind helpers:KeyboardAcceleratorHelper.Comma}"
-                Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
+                Invoked="PlaybackRateKeyboardAccelerator_OnInvoked"
                 Modifiers="Shift" />
-            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Period}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Comma}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <!--  Window resize  -->
             <KeyboardAccelerator
                 Key="{x:Bind helpers:KeyboardAcceleratorHelper.Plus}"
-                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Invoked="WindowResizeKeyboardAccelerator_OnInvoked"
                 Modifiers="Control" />
             <KeyboardAccelerator
                 Key="{x:Bind helpers:KeyboardAcceleratorHelper.Minus}"
-                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Invoked="WindowResizeKeyboardAccelerator_OnInvoked"
                 Modifiers="Control" />
-            <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Home" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="End" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
-            <!-- <KeyboardAccelerator Key="Escape" Invoked="{x:Bind ViewModel.OnManualHideControlsKeyboardAcceleratorInvoked}" /> -->
+            <KeyboardAccelerator Key="Number1" Invoked="WindowResizeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Number2" Invoked="WindowResizeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Number3" Invoked="WindowResizeKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Number4" Invoked="WindowResizeKeyboardAccelerator_OnInvoked" />
+            <!--  Seek to percentage  -->
+            <KeyboardAccelerator Key="NumberPad0" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad1" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad2" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad3" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad4" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad5" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad6" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad7" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad8" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="NumberPad9" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Home" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="End" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <!--  Hide controls  -->
+            <KeyboardAccelerator Key="Escape" Invoked="HideControlsKeyboardAccelerator_OnInvoked" />
         </Grid.KeyboardAccelerators>
 
         <Border
