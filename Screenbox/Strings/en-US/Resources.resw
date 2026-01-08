@@ -996,7 +996,7 @@
   <data name="SettingsGestureTapAndHoldHeader" xml:space="preserve">
     <value>Tap and hold boosts playback speed to 2×</value>
   </data>
-  <data name="MediaCommandTypeNone" xml:space="preserve">
+  <data name="PlayerGestureOptionNone" xml:space="preserve">
     <value>Nothing</value>
   </data>
   <data name="PlayPause" xml:space="preserve">

@@ -28,27 +28,27 @@ namespace Screenbox.Core.Services
         /// <summary>
         /// Gets or sets the media command invoked by a tap gesture.
         /// </summary>
-        MediaCommandType PlayerTapGesture { get; set; }
+        PlayerGestureOption PlayerTapGesture { get; set; }
 
         /// <summary>
         /// Gets or sets the media command invoked by an upward swipe gesture.
         /// </summary>
-        MediaCommandType PlayerSwipeUpGesture { get; set; }
+        PlayerGestureOption PlayerSwipeUpGesture { get; set; }
 
         /// <summary>
         /// Gets or sets the media command invoked by a downward swipe gesture.
         /// </summary>
-        MediaCommandType PlayerSwipeDownGesture { get; set; }
+        PlayerGestureOption PlayerSwipeDownGesture { get; set; }
 
         /// <summary>
         /// Gets or sets the media command invoked by a left swipe gesture.
         /// </summary>
-        MediaCommandType PlayerSwipeLeftGesture { get; set; }
+        PlayerGestureOption PlayerSwipeLeftGesture { get; set; }
 
         /// <summary>
         /// Gets or sets the media command invoked by a right swipe gesture.
         /// </summary>
-        MediaCommandType PlayerSwipeRightGesture { get; set; }
+        PlayerGestureOption PlayerSwipeRightGesture { get; set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the tap and hold gesture

@@ -97,9 +97,9 @@
         <DataTemplate x:Key="ResourceNameToResourceStringTemplate" x:DataType="x:String">
             <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.GetResourceString((x:String))}" />
         </DataTemplate>
-   
-        <DataTemplate x:Key="GestureMediaCommandTemplate" x:DataType="enums:MediaCommandType">
-            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:MediaCommandType))}" />
+
+        <DataTemplate x:Key="GestureMediaCommandTemplate" x:DataType="enums:PlayerGestureOption">
+            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:PlayerGestureOption))}" />
         </DataTemplate>
     </Page.Resources>
 

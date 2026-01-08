@@ -157,33 +157,33 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerShowChaptersKey, value);
         }
 
-        public MediaCommandType PlayerTapGesture
+        public PlayerGestureOption PlayerTapGesture
         {
-            get => (MediaCommandType)GetValue<int>(PlayerGestureTapKey);
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureTapKey);
             set => SetValue(PlayerGestureTapKey, (int)value);
         }
 
-        public MediaCommandType PlayerSwipeUpGesture
+        public PlayerGestureOption PlayerSwipeUpGesture
         {
-            get => (MediaCommandType)GetValue<int>(PlayerGestureSwipeUpKey);
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeUpKey);
             set => SetValue(PlayerGestureSwipeUpKey, (int)value);
         }
 
-        public MediaCommandType PlayerSwipeDownGesture
+        public PlayerGestureOption PlayerSwipeDownGesture
         {
-            get => (MediaCommandType)GetValue<int>(PlayerGestureSwipeDownKey);
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeDownKey);
             set => SetValue(PlayerGestureSwipeDownKey, (int)value);
         }
 
-        public MediaCommandType PlayerSwipeLeftGesture
+        public PlayerGestureOption PlayerSwipeLeftGesture
         {
-            get => (MediaCommandType)GetValue<int>(PlayerGestureSwipeLeftKey);
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeLeftKey);
             set => SetValue(PlayerGestureSwipeLeftKey, (int)value);
         }
 
-        public MediaCommandType PlayerSwipeRightGesture
+        public PlayerGestureOption PlayerSwipeRightGesture
         {
-            get => (MediaCommandType)GetValue<int>(PlayerGestureSwipeRightKey);
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeRightKey);
             set => SetValue(PlayerGestureSwipeRightKey, (int)value);
         }
 
@@ -221,11 +221,11 @@ namespace Screenbox.Core.Services
             SetDefault(AdvancedMultipleInstancesKey, false);
             SetDefault(GlobalArgumentsKey, string.Empty);
             SetDefault(PlayerShowChaptersKey, true);
-            SetDefault(PlayerGestureTapKey, (int)MediaCommandType.PlayPause);
-            SetDefault(PlayerGestureSwipeUpKey, (int)MediaCommandType.IncreaseVolume);
-            SetDefault(PlayerGestureSwipeDownKey, (int)MediaCommandType.DecreaseVolume);
-            SetDefault(PlayerGestureSwipeLeftKey, (int)MediaCommandType.Rewind);
-            SetDefault(PlayerGestureSwipeRightKey, (int)MediaCommandType.FastForward);
+            SetDefault(PlayerGestureTapKey, (int)PlayerGestureOption.PlayPause);
+            SetDefault(PlayerGestureSwipeUpKey, (int)PlayerGestureOption.IncreaseVolume);
+            SetDefault(PlayerGestureSwipeDownKey, (int)PlayerGestureOption.DecreaseVolume);
+            SetDefault(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.Rewind);
+            SetDefault(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.FastForward);
             SetDefault(PlayerGestureTapAndHoldKey, true);
             SetDefault(PlayerGestureSlideVerticalKey, true);
             SetDefault(PlayerGestureSlideHorizontalKey, true);
@@ -234,11 +234,11 @@ namespace Screenbox.Core.Services
             if (SystemInformation.IsXbox)
             {
                 SetValue(PlayerShowControlsKey, true);
-                SetValue(PlayerGestureTapKey, (int)MediaCommandType.None);
-                SetValue(PlayerGestureSwipeUpKey, (int)MediaCommandType.None);
-                SetValue(PlayerGestureSwipeDownKey, (int)MediaCommandType.None);
-                SetValue(PlayerGestureSwipeLeftKey, (int)MediaCommandType.None);
-                SetValue(PlayerGestureSwipeRightKey, (int)MediaCommandType.None);
+                SetValue(PlayerGestureTapKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeUpKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeDownKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.None);
                 SetValue(PlayerGestureTapAndHoldKey, false);
                 SetValue(PlayerGestureSlideVerticalKey, false);
                 SetValue(PlayerGestureSlideHorizontalKey, false);

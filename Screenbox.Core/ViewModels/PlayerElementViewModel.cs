@@ -51,11 +51,11 @@ namespace Screenbox.Core.ViewModels
         private Size _aspectRatio;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
-        private MediaCommandType _playerTapGesture;
-        private MediaCommandType _playerSwipeUpGesture;
-        private MediaCommandType _playerSwipeDownGesture;
-        private MediaCommandType _playerSwipeLeftGesture;
-        private MediaCommandType _playerSwipeRightGesture;
+        private PlayerGestureOption _playerTapGesture;
+        private PlayerGestureOption _playerSwipeUpGesture;
+        private PlayerGestureOption _playerSwipeDownGesture;
+        private PlayerGestureOption _playerSwipeLeftGesture;
+        private PlayerGestureOption _playerSwipeRightGesture;
         private bool _playerTapAndHoldGesture;
         private bool _playerSlideVerticalGesture;
         private bool _playerSlideHorizontalGesture;
@@ -169,7 +169,7 @@ namespace Screenbox.Core.ViewModels
                 _clickTimer.Stop();
                 return;
             }
-            _clickTimer.Debounce(() => ProcessMediaGesture(_playerTapGesture, 5.0, 1000.0), TimeSpan.FromMilliseconds(200));
+            _clickTimer.Debounce(() => ProcessPlayerGesture(_playerTapGesture, 5.0, 1000.0), TimeSpan.FromMilliseconds(200));
         }
 
         public void ManipulationStarted()
@@ -220,12 +220,12 @@ namespace Screenbox.Core.ViewModels
                 _manipulationLock = ManipulationLock.Vertical;
                 if (cumulativeY > 0)
                 {
-                    ProcessMediaGesture(_playerSwipeDownGesture, change, timeMultiplier);
+                    ProcessPlayerGesture(_playerSwipeDownGesture, change, timeMultiplier);
                     return;
                 }
                 else
                 {
-                    ProcessMediaGesture(_playerSwipeUpGesture, change, timeMultiplier);
+                    ProcessPlayerGesture(_playerSwipeUpGesture, change, timeMultiplier);
                     return;
                 }
             }
@@ -235,12 +235,12 @@ namespace Screenbox.Core.ViewModels
                 _manipulationLock = ManipulationLock.Horizontal;
                 if (cumulativeX > 0)
                 {
-                    ProcessMediaGesture(_playerSwipeRightGesture, change, timeMultiplier);
+                    ProcessPlayerGesture(_playerSwipeRightGesture, change, timeMultiplier);
                     return;
                 }
                 else
                 {
-                    ProcessMediaGesture(_playerSwipeLeftGesture, change, timeMultiplier);
+                    ProcessPlayerGesture(_playerSwipeLeftGesture, change, timeMultiplier);
                     return;
                 }
             }
@@ -264,12 +264,12 @@ namespace Screenbox.Core.ViewModels
                 _manipulationLock = ManipulationLock.Vertical;
                 if (deltaY > 0)
                 {
-                    ProcessMediaGesture(MediaCommandType.DecreaseVolume, deltaY, timeMultiplier);
+                    ProcessPlayerGesture(PlayerGestureOption.DecreaseVolume, deltaY, timeMultiplier);
                     return;
                 }
                 else
                 {
-                    ProcessMediaGesture(MediaCommandType.IncreaseVolume, -deltaY, timeMultiplier);
+                    ProcessPlayerGesture(PlayerGestureOption.IncreaseVolume, -deltaY, timeMultiplier);
                     return;
                 }
             }
@@ -281,12 +281,12 @@ namespace Screenbox.Core.ViewModels
                 _manipulationLock = ManipulationLock.Horizontal;
                 if (deltaX > 0)
                 {
-                    ProcessMediaGesture(MediaCommandType.FastForward, deltaX, timeMultiplier);
+                    ProcessPlayerGesture(PlayerGestureOption.FastForward, deltaX, timeMultiplier);
                     return;
                 }
                 else
                 {
-                    ProcessMediaGesture(MediaCommandType.Rewind, -deltaX, timeMultiplier);
+                    ProcessPlayerGesture(PlayerGestureOption.Rewind, -deltaX, timeMultiplier);
                     return;
                 }
             }
@@ -328,16 +328,16 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void ProcessMediaGesture(MediaCommandType gestureKind, double change, double timeChangeMultiplier)
+        private void ProcessPlayerGesture(PlayerGestureOption gestureOption, double change, double timeChangeMultiplier)
         {
-            switch (gestureKind)
+            switch (gestureOption)
             {
-                case MediaCommandType.None:
+                case PlayerGestureOption.None:
                     return;
-                case MediaCommandType.PlayPause:
+                case PlayerGestureOption.PlayPause:
                     Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
-                case MediaCommandType.Rewind:
+                case PlayerGestureOption.Rewind:
                     if (VlcMediaPlayer?.CanSeek == true)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
@@ -346,7 +346,7 @@ namespace Screenbox.Core.ViewModels
                         UpdateTimeStatusMessage(newTime);
                     }
                     break;
-                case MediaCommandType.FastForward:
+                case PlayerGestureOption.FastForward:
                     if (VlcMediaPlayer?.CanSeek == true)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
@@ -355,11 +355,11 @@ namespace Screenbox.Core.ViewModels
                         UpdateTimeStatusMessage(newTime);
                     }
                     break;
-                case MediaCommandType.DecreaseVolume:
+                case PlayerGestureOption.DecreaseVolume:
                     var volumeDown = Messenger.Send(new ChangeVolumeRequestMessage((int)-change, true));
                     Messenger.Send(new UpdateVolumeStatusMessage(volumeDown));
                     break;
-                case MediaCommandType.IncreaseVolume:
+                case PlayerGestureOption.IncreaseVolume:
                     var volumeUp = Messenger.Send(new ChangeVolumeRequestMessage((int)change, true));
                     Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
                     break;

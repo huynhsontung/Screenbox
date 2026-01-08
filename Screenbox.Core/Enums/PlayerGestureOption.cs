@@ -1,6 +1,6 @@
 ﻿namespace Screenbox.Core.Enums;
 
-public enum MediaCommandType
+public enum PlayerGestureOption
 {
     None,
     PlayPause,
