@@ -2,7 +2,7 @@
 <!-- Feel free to adapt or modify key points if necessary. -->
 ## Screenbox 미디어 플레이어
 
-**Screenbox는 모든 기기를 위한 최신 미디어 플레이어로, 다양한 파일 형식을 지원합니다.**
+**Screenbox는 모든 기기에서 다양한 파일 형식을 지원하는 현대적인 미디어 플레이어입니다.**
 
 ### 상세 정보
 
