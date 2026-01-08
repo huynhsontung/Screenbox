@@ -255,7 +255,7 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>비디오</value>
+    <value>동영상</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>폴더가 비어있음</value>
@@ -332,7 +332,7 @@
     <value>검색</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>비디오, 곡, 앨범 등 검색</value>
+    <value>동영상, 곡, 앨범 등 검색</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>설정</value>
@@ -482,7 +482,7 @@
     <value>URL에서 미디어 추가</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>비디오 라이브러리에 폴더 추가</value>
+    <value>동영상 라이브러리에 폴더 추가</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>폴더 열기</value>
@@ -514,10 +514,10 @@
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
-    <value>모든 비디오</value>
+    <value>모든 동영상</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>비디오 폴더</value>
+    <value>동영상 폴더</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
     <value>"{0}" 검색 결과</value>
@@ -556,13 +556,13 @@
     <value>사진 라이브러리에 접근할 수 없습니다</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>비디오 라이브러리에 접근할 수 없습니다</value>
+    <value>동영상 라이브러리에 접근할 수 없습니다</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
     <value>동영상을 찾을 수 없습니다</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>비디오 라이브러리에 비디오 콘텐츠가 없습니다.</value>
+    <value>동영상 라이브러리에 동영상 콘텐츠가 없습니다.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>개인정보 설정 열기</value>
@@ -628,7 +628,7 @@
     <value>일시 중지 시 컨트롤 표시</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>비디오 라이브러리 위치</value>
+    <value>동영상 라이브러리 위치</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>자막</value>
@@ -883,7 +883,7 @@
     <value>미디어</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>비디오</value>
+    <value>동영상</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>파일</value>
@@ -892,7 +892,7 @@
     <value>음악</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>비디오</value>
+    <value>동영상</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
     <value>앨범 보기</value>
@@ -934,7 +934,7 @@
     <value>파일을 열 때 마지막으로 멈춘 곳에서 계속 재생합니다</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>비디오 업스케일링 방법</value>
+    <value>동영상 업스케일링 방법</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution 업스케일링은 호환되는 하드웨어 및 드라이버 지원이 필요합니다</value>
