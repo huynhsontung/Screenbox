@@ -30,10 +30,31 @@ namespace Screenbox.Core.ViewModels
         private const double GestureStepAmount = 5.0;
 
         [ObservableProperty] private bool _isHolding;
+        [ObservableProperty] private bool _isPanning;
 
         public event EventHandler<EventArgs>? ClearViewRequested;
 
         public MediaPlayer? VlcPlayer => VlcMediaPlayer?.VlcPlayer;
+
+        public bool Is360Video
+        {
+            get
+            {
+                var tracks = VlcMediaPlayer?.PlaybackItem?.Media?.Tracks;
+                if (tracks is not null)
+                {
+                    foreach (var track in tracks)
+                    {
+                        if (track.TrackType == TrackType.Video)
+                        {
+                            return track.Data.Video.Projection == VideoProjection.Equirectangular;
+                        }
+                    }
+                }
+
+                return false;
+            }
+        }
 
         private VlcMediaPlayer? VlcMediaPlayer
         {
@@ -60,6 +81,10 @@ namespace Screenbox.Core.ViewModels
         private bool _playerTapAndHoldGesture;
         private double _playbackRateBeforeHold;
         private bool _suppressTap;
+        private float _yaw;
+        private float _pitch;
+        private float _rotation;
+        private float _fov = 80f;
 
         public PlayerElementViewModel(
             PlayerContext playerContext,
@@ -173,10 +198,12 @@ namespace Screenbox.Core.ViewModels
 
         public void OnManipulationStarted()
         {
+            IsPanning = false;
         }
 
         public void OnManipulationCompleted()
         {
+            IsPanning = false;
             Messenger.Send(new OverrideControlsHideDelayMessage(100));
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }
@@ -266,6 +293,23 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
+        public void HandleSphericalPanGesture(double deltaX, double deltaY)
+        {
+            if (VlcMediaPlayer != null)
+            {
+                if (_viewSize.Width > 0 && _viewSize.Height > 0)
+                {
+                    float deltaYaw = (float)(_fov * -deltaX / _viewSize.Width);
+                    float deltaPitch = (float)(_fov * -deltaY / _viewSize.Height);
+                    _yaw = NormalizeYaw(_yaw + deltaYaw);
+                    _pitch += deltaPitch;
+
+                    VlcMediaPlayer.VlcPlayer.UpdateViewpoint(_yaw, _pitch, _rotation, _fov);
+                    IsPanning = true;
+                }
+            }
+        }
+
         private void ProcessPlayerGesture(PlayerGestureOption gestureOption, double change)
         {
             switch (gestureOption)
@@ -315,6 +359,11 @@ namespace Screenbox.Core.ViewModels
         private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
         {
             if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
+
+            _yaw = default;
+            _pitch = default;
+            _rotation = default;
+            _fov = 80f;
         }
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
@@ -429,6 +478,21 @@ namespace Screenbox.Core.ViewModels
                 VlcMediaPlayer.PlaybackRate = value;
                 Messenger.Send(new UpdateStatusMessage($"{value}×"));
             }
+        }
+
+        private static float NormalizeYaw(float yaw)
+        {
+            float result = yaw % 360f;
+            if (result <= -180f)
+            {
+                result += 360f;
+            }
+            else if (result > 180f)
+            {
+                result -= 360f;
+            }
+
+            return result;
         }
     }
 }

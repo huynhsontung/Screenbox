@@ -40,7 +40,7 @@ namespace Screenbox.Controls
             _gestureRecognizer = new GestureRecognizer
             {
                 GestureSettings = GestureSettings.Hold | GestureSettings.HoldWithMouse |
-                    GestureSettings.ManipulationTranslateX | GestureSettings.ManipulationTranslateY,
+                    GestureSettings.ManipulationTranslateX | GestureSettings.ManipulationTranslateY | GestureSettings.ManipulationTranslateInertia,
             };
             _gestureRecognizer.ManipulationStarted += GestureRecognizer_OnManipulationStarted;
             _gestureRecognizer.ManipulationUpdated += GestureRecognizer_OnManipulationUpdated;
@@ -123,11 +123,15 @@ namespace Screenbox.Controls
 
         private void GestureRecognizer_OnManipulationUpdated(GestureRecognizer sender, ManipulationUpdatedEventArgs args)
         {
+            if (ViewModel.Is360Video && (args.CurrentContactCount == 2 || args.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse))
+            {
+                ViewModel.HandleSphericalPanGesture(args.Delta.Translation.X, args.Delta.Translation.Y);
+            }
         }
 
         private void GestureRecognizer_OnManipulationCompleted(GestureRecognizer sender, ManipulationCompletedEventArgs args)
         {
-            if (args.ContactCount == 1)
+            if (!ViewModel.IsPanning && args.ContactCount == 1)
             {
                 ViewModel.HandleSwipeGesture(args.Cumulative.Translation.X, args.Cumulative.Translation.Y);
             }
