@@ -27,6 +27,8 @@ namespace Screenbox.Core.ViewModels
         IRecipient<ChangeAspectRatioMessage>,
         IRecipient<SettingsChangedMessage>
     {
+        private const double GestureStepAmount = 5.0;
+
         [ObservableProperty] private bool _isHolding;
 
         public event EventHandler<EventArgs>? ClearViewRequested;
@@ -49,7 +51,6 @@ namespace Screenbox.Core.ViewModels
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private Size _aspectRatio;
-        private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
         private PlayerGestureOption _playerTapGesture;
         private PlayerGestureOption _playerSwipeUpGesture;
@@ -57,7 +58,7 @@ namespace Screenbox.Core.ViewModels
         private PlayerGestureOption _playerSwipeLeftGesture;
         private PlayerGestureOption _playerSwipeRightGesture;
         private bool _playerTapAndHoldGesture;
-        private double _playbackRateBeforeHolding;
+        private double _playbackRateBeforeHold;
         private bool _suppressTap;
 
         public PlayerElementViewModel(
@@ -167,17 +168,15 @@ namespace Screenbox.Core.ViewModels
                 _clickTimer.Stop();
                 return;
             }
-            _clickTimer.Debounce(() => ProcessPlayerGesture(_playerTapGesture, 5.0, 1000.0), TimeSpan.FromMilliseconds(200));
+            _clickTimer.Debounce(() => ProcessPlayerGesture(_playerTapGesture, GestureStepAmount), TimeSpan.FromMilliseconds(200));
         }
 
-        public void ManipulationStarted()
+        public void OnManipulationStarted()
         {
-            _manipulationLock = ManipulationLock.None;
         }
 
-        public void ManipulationCompleted()
+        public void OnManipulationCompleted()
         {
-            if (_manipulationLock == ManipulationLock.None) return;
             Messenger.Send(new OverrideControlsHideDelayMessage(100));
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }
@@ -191,62 +190,49 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                if (VlcMediaPlayer?.CanSeek == true)
+                if (VlcMediaPlayer?.CanSeek ?? false)
                 {
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
-                    var timeChange = TimeSpan.FromSeconds(-delta);
-                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-delta / 2), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
                 }
             }
         }
 
-        public void HandleSwipeGesture(double cumulativeX, double cumulativeY, double threshold)
+        public void HandleSwipeGesture(double cumulativeX, double cumulativeY)
         {
-            double change = 5.0;
-            double timeMultiplier = 1000.0;
+            const double SwipeThreshold = 100.0;
 
-            if (VlcMediaPlayer != null && _manipulationLock == ManipulationLock.None)
+            if (VlcMediaPlayer != null)
             {
                 _timeBeforeManipulation = VlcMediaPlayer.Position;
             }
 
-            // Vertical gestures
-            if (_manipulationLock != ManipulationLock.Horizontal && Math.Abs(cumulativeY) >= threshold)
+            double absoluteCumulativeX = Math.Abs(cumulativeX);
+            double absoluteCumulativeY = Math.Abs(cumulativeY);
+
+            if (absoluteCumulativeX > absoluteCumulativeY)
             {
-                _manipulationLock = ManipulationLock.Vertical;
-                if (cumulativeY > 0)
+                if (absoluteCumulativeX >= SwipeThreshold)
                 {
-                    ProcessPlayerGesture(_playerSwipeDownGesture, change, timeMultiplier);
-                    return;
-                }
-                else
-                {
-                    ProcessPlayerGesture(_playerSwipeUpGesture, change, timeMultiplier);
-                    return;
+                    var horizontalGesture = cumulativeX > 0 ? _playerSwipeRightGesture : _playerSwipeLeftGesture;
+                    ProcessPlayerGesture(horizontalGesture, GestureStepAmount);
                 }
             }
-            // Horizontal gestures
-            else if (_manipulationLock != ManipulationLock.Vertical && Math.Abs(cumulativeX) >= threshold)
+            else
             {
-                _manipulationLock = ManipulationLock.Horizontal;
-                if (cumulativeX > 0)
+                if (absoluteCumulativeY >= SwipeThreshold)
                 {
-                    ProcessPlayerGesture(_playerSwipeRightGesture, change, timeMultiplier);
-                    return;
-                }
-                else
-                {
-                    ProcessPlayerGesture(_playerSwipeLeftGesture, change, timeMultiplier);
-                    return;
+                    var verticalGesture = cumulativeY > 0 ? _playerSwipeDownGesture : _playerSwipeUpGesture;
+                    ProcessPlayerGesture(verticalGesture, GestureStepAmount);
                 }
             }
         }
 
         public void HandleHoldingGesture(HoldingState holdingState)
         {
-            const double holdingSpeed = 2.0;
+            const double HoldingSpeed = 2.0;
 
             if (!_playerTapAndHoldGesture || VlcMediaPlayer == null) return;
 
@@ -255,11 +241,11 @@ namespace Screenbox.Core.ViewModels
                 case HoldingState.Started:
                     if (!IsHolding)
                     {
-                        _playbackRateBeforeHolding = VlcMediaPlayer.PlaybackRate;
+                        _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
                         _suppressTap = true;
-                        if (VlcMediaPlayer.PlaybackRate != holdingSpeed)
+                        if (VlcMediaPlayer.PlaybackRate != HoldingSpeed)
                         {
-                            SetPlaybackSpeed(holdingSpeed);
+                            SetPlaybackSpeed(HoldingSpeed);
                         }
                         IsHolding = true;
                     }
@@ -268,9 +254,9 @@ namespace Screenbox.Core.ViewModels
                 case HoldingState.Canceled:
                     if (IsHolding)
                     {
-                        if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHolding)
+                        if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold)
                         {
-                            SetPlaybackSpeed(_playbackRateBeforeHolding);
+                            SetPlaybackSpeed(_playbackRateBeforeHold);
                         }
                         IsHolding = false;
                     }
@@ -280,7 +266,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void ProcessPlayerGesture(PlayerGestureOption gestureOption, double change, double timeChangeMultiplier)
+        private void ProcessPlayerGesture(PlayerGestureOption gestureOption, double change)
         {
             switch (gestureOption)
             {
@@ -290,20 +276,18 @@ namespace Screenbox.Core.ViewModels
                     Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
                 case PlayerGestureOption.Rewind:
-                    if (VlcMediaPlayer?.CanSeek == true)
+                    if (VlcMediaPlayer?.CanSeek ?? false)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
-                        var timeChange = TimeSpan.FromMilliseconds(-change * timeChangeMultiplier);
-                        var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                        var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-change), true)).Response.NewPosition;
                         UpdateTimeStatusMessage(newTime);
                     }
                     break;
                 case PlayerGestureOption.FastForward:
-                    if (VlcMediaPlayer?.CanSeek == true)
+                    if (VlcMediaPlayer?.CanSeek ?? false)
                     {
                         Messenger.Send(new TimeChangeOverrideMessage(true));
-                        var timeChange = TimeSpan.FromMilliseconds(change * timeChangeMultiplier);
-                        var newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+                        var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(change), true)).Response.NewPosition;
                         UpdateTimeStatusMessage(newTime);
                     }
                     break;

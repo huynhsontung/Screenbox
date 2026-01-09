@@ -28,9 +28,9 @@ namespace Screenbox.Controls
 
         public event RoutedEventHandler? Click;
 
-        internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
-
         private GestureRecognizer _gestureRecognizer;
+
+        internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
 
         public PlayerElement()
         {
@@ -78,6 +78,7 @@ namespace Screenbox.Controls
 
             _gestureRecognizer.CompleteGesture();
             VideoViewButton.ReleasePointerCapture(e.Pointer);
+            e.Handled = true;
         }
 
         private void VideoViewButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
@@ -93,6 +94,7 @@ namespace Screenbox.Controls
 
             _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
             VideoViewButton.CapturePointer(e.Pointer);
+            e.Handled = true;
         }
 
         private void VideoViewButton_OnPointerReleased(object sender, PointerRoutedEventArgs e)
@@ -101,6 +103,7 @@ namespace Screenbox.Controls
 
             _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
             VideoViewButton.ReleasePointerCapture(e.Pointer);
+            e.Handled = true;
         }
 
         private void VideoViewButton_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -115,7 +118,7 @@ namespace Screenbox.Controls
 
         private void GestureRecognizer_OnManipulationStarted(GestureRecognizer sender, ManipulationStartedEventArgs args)
         {
-            ViewModel.ManipulationStarted();
+            ViewModel.OnManipulationStarted();
         }
 
         private void GestureRecognizer_OnManipulationUpdated(GestureRecognizer sender, ManipulationUpdatedEventArgs args)
@@ -126,10 +129,10 @@ namespace Screenbox.Controls
         {
             if (args.ContactCount == 1)
             {
-                ViewModel.HandleSwipeGesture(args.Cumulative.Translation.X, args.Cumulative.Translation.Y, 200.0);
+                ViewModel.HandleSwipeGesture(args.Cumulative.Translation.X, args.Cumulative.Translation.Y);
             }
 
-            ViewModel.ManipulationCompleted();
+            ViewModel.OnManipulationCompleted();
         }
 
         private void GestureRecognizer_OnHolding(GestureRecognizer sender, HoldingEventArgs args)
