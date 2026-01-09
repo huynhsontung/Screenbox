@@ -645,6 +645,12 @@
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
     <value>Resize the app window to best match a video's native resolution on playback</value>
   </data>
+  <data name="SettingsAutoFullScreenHeader" xml:space="preserve">
+    <value>Auto full screen</value>
+  </data>
+  <data name="SettingsAutoFullScreenDescription" xml:space="preserve">
+    <value>Automatically enter full screen mode when opening a media file</value>
+  </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Volume boost</value>
   </data>
