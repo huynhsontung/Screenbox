@@ -24,8 +24,6 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private int _playerAutoResize;
-        [ObservableProperty] private bool _playerGestureSlideVertical;
-        [ObservableProperty] private bool _playerGestureSlideHorizontal;
         [ObservableProperty] private PlayerGestureOption _playerGestureTap;
         [ObservableProperty] private PlayerGestureOption _playerGestureSwipeUp;
         [ObservableProperty] private PlayerGestureOption _playerGestureSwipeDown;
@@ -106,8 +104,6 @@ namespace Screenbox.Core.ViewModels
 
             // Load values
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
-            _playerGestureSlideVertical = _settingsService.PlayerSlideVerticalGesture;
-            _playerGestureSlideHorizontal = _settingsService.PlayerSlideHorizontalGesture;
             _playerGestureTap = _settingsService.PlayerTapGesture;
             _playerGestureSwipeUp = _settingsService.PlayerSwipeUpGesture;
             _playerGestureSwipeDown = _settingsService.PlayerSwipeDownGesture;
@@ -173,18 +169,6 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.PlayerAutoResize = (PlayerAutoResizeOption)value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
-        }
-
-        partial void OnPlayerGestureSlideVerticalChanged(bool value)
-        {
-            _settingsService.PlayerSlideVerticalGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSlideVertical), typeof(SettingsPageViewModel)));
-        }
-
-        partial void OnPlayerGestureSlideHorizontalChanged(bool value)
-        {
-            _settingsService.PlayerSlideHorizontalGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSlideHorizontal), typeof(SettingsPageViewModel)));
         }
 
         partial void OnPlayerGestureTapChanged(PlayerGestureOption value)

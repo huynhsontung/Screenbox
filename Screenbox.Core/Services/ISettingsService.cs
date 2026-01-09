@@ -55,17 +55,5 @@ namespace Screenbox.Core.Services
         /// is enabled in the player.
         /// </summary>
         bool PlayerTapAndHoldGesture { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the horizontal slide gesture
-        /// is enabled in the player.
-        /// </summary>
-        bool PlayerSlideHorizontalGesture { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the vertical slide gesture
-        /// is enabled in the player.
-        /// </summary>
-        bool PlayerSlideVerticalGesture { get; set; }
     }
 }

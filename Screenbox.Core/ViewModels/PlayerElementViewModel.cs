@@ -57,8 +57,6 @@ namespace Screenbox.Core.ViewModels
         private PlayerGestureOption _playerSwipeLeftGesture;
         private PlayerGestureOption _playerSwipeRightGesture;
         private bool _playerTapAndHoldGesture;
-        private bool _playerSlideVerticalGesture;
-        private bool _playerSlideHorizontalGesture;
         private double _playbackRateBeforeHolding;
         private bool _suppressTap;
 
@@ -246,52 +244,6 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void HandleSlideGesture(double deltaX, double deltaY, double cumulativeX, double cumulativeY)
-        {
-            double threshold = 16.0;
-            double timeMultiplier = 200.0;
-
-            if (VlcMediaPlayer != null && _manipulationLock == ManipulationLock.None)
-            {
-                _timeBeforeManipulation = VlcMediaPlayer.Position;
-            }
-
-            // Vertical gestures
-            if (_manipulationLock is not ManipulationLock.Horizontal &&
-                (Math.Abs(cumulativeY) >= threshold) &&
-                _playerSlideVerticalGesture)
-            {
-                _manipulationLock = ManipulationLock.Vertical;
-                if (deltaY > 0)
-                {
-                    ProcessPlayerGesture(PlayerGestureOption.DecreaseVolume, deltaY, timeMultiplier);
-                    return;
-                }
-                else
-                {
-                    ProcessPlayerGesture(PlayerGestureOption.IncreaseVolume, -deltaY, timeMultiplier);
-                    return;
-                }
-            }
-            // Horizontal gestures
-            else if (_manipulationLock is not ManipulationLock.Vertical &&
-                     (Math.Abs(cumulativeX) >= threshold) &&
-                     _playerSlideHorizontalGesture)
-            {
-                _manipulationLock = ManipulationLock.Horizontal;
-                if (deltaX > 0)
-                {
-                    ProcessPlayerGesture(PlayerGestureOption.FastForward, deltaX, timeMultiplier);
-                    return;
-                }
-                else
-                {
-                    ProcessPlayerGesture(PlayerGestureOption.Rewind, -deltaX, timeMultiplier);
-                    return;
-                }
-            }
-        }
-
         public void HandleHoldingGesture(HoldingState holdingState)
         {
             const double holdingSpeed = 2.0;
@@ -457,8 +409,6 @@ namespace Screenbox.Core.ViewModels
             _playerSwipeLeftGesture = _settingsService.PlayerSwipeLeftGesture;
             _playerSwipeRightGesture = _settingsService.PlayerSwipeRightGesture;
             _playerTapAndHoldGesture = _settingsService.PlayerTapAndHoldGesture;
-            _playerSlideVerticalGesture = _settingsService.PlayerSlideVerticalGesture;
-            _playerSlideHorizontalGesture = _settingsService.PlayerSlideHorizontalGesture;
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)

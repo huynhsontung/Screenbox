@@ -120,14 +120,6 @@ namespace Screenbox.Controls
 
         private void GestureRecognizer_OnManipulationUpdated(GestureRecognizer sender, ManipulationUpdatedEventArgs args)
         {
-            if (args.CurrentContactCount == 2)
-            {
-                ViewModel.HandleSlideGesture(
-                    args.Delta.Translation.X,
-                    args.Delta.Translation.Y,
-                    args.Cumulative.Translation.X,
-                    args.Cumulative.Translation.Y);
-            }
         }
 
         private void GestureRecognizer_OnManipulationCompleted(GestureRecognizer sender, ManipulationCompletedEventArgs args)

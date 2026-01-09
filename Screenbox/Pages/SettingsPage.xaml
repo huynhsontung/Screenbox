@@ -505,26 +505,6 @@
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Header="Two-finger gestures"
-                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
-                    <ctc:SettingsExpander.HeaderIcon>
-                        <PathIcon
-                            Width="16"
-                            Height="16"
-                            Data="F1 M1.67 9.96C1.44 9.74 1.45 9.38 1.67 9.16 1.89 8.95 2.24 8.95 2.46 9.17L3.55 10.27C4.08 10.8 5 10.43 5 9.68L5 9V7.83C5 7.73 5 7.64 4.97 7.54L4 2.58C3.95 2.35 4.08 2.11 4.3 2.03 4.59 1.92 4.9 2.09 4.96 2.39L6 7.6C6.06 7.85 6.29 8.02 6.55 8 6.81 7.97 7 7.76 7 7.5V1.5C7 1.22 7.22 1 7.5 1 7.78 1 8 1.22 8 1.5V7.5C8 7.76 8.19 7.97 8.45 8 8.71 8.02 8.94 7.85 9 7.6L9.25 6.31C9.31 6.02 9.61 5.84 9.89 5.93 10.14 6 10.29 6.26 10.24 6.51L10 7.65C9.96 7.9 10.1 8.14 10.33 8.22 10.57 8.3 10.83 8.2 10.94 7.98L11.29 7.33C11.42 7.08 11.76 7 12 7.15 12.22 7.29 12.29 7.57 12.19 7.79 12.06 8.05 12 8.33 12 8.62V11.5C12 13.43 10.43 15 8.5 15 7.35 15 6.25 14.54 5.44 13.73L1.67 9.96ZM3.17 8.46C2.57 7.86 1.6 7.85.98 8.44.35 9.04.34 10.05.96 10.67L4.73 14.44C5.73 15.44 7.09 16 8.5 16 11 16 13 14 13 11.5V8.62C13 8.48 13.03 8.35 13.09 8.22 13.41 7.55 13.18 6.73 12.56 6.32 12.15 6.05 11.66 6 11.23 6.16 11.13 5.61 10.74 5.14 10.19 4.97 9.77 4.85 9.35 4.91 9 5.11V1.5C9 .67 8.33 0 7.5 0 6.67 0 6 .67 6 1.5V2.48L5.94 2.19C5.76 1.29 4.81.76 3.94 1.09 3.27 1.35 2.87 2.06 3 2.77L4 7.74C4 7.77 4 7.8 4 7.83V8.81L4 9.29 3.17 8.46Z" />
-                    </ctc:SettingsExpander.HeaderIcon>
-                    <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureVolume}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureSlideVertical, Mode=TwoWay}" />
-                        </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSeek}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureSlideHorizontal, Mode=TwoWay}" />
-                        </ctc:SettingsCard>
-                    </ctc:SettingsExpander.Items>
-                </ctc:SettingsExpander>
-
-                <ctc:SettingsExpander
                     x:Name="SettingsAudioVisualExpander"
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAudioVisualDescription}"

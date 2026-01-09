@@ -40,8 +40,6 @@ namespace Screenbox.Core.Services
         private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
         private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
         private const string PlayerGestureTapAndHoldKey = "Player/Gesture/TapAndHold";
-        private const string PlayerGestureSlideVerticalKey = "Player/Gesture/SlideVertical";
-        private const string PlayerGestureSlideHorizontalKey = "Player/Gesture/SlideHorizontal";
 
         public bool UseIndexer
         {
@@ -193,18 +191,6 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerGestureTapAndHoldKey, value);
         }
 
-        public bool PlayerSlideVerticalGesture
-        {
-            get => GetValue<bool>(PlayerGestureSlideVerticalKey);
-            set => SetValue(PlayerGestureSlideVerticalKey, value);
-        }
-
-        public bool PlayerSlideHorizontalGesture
-        {
-            get => GetValue<bool>(PlayerGestureSlideHorizontalKey);
-            set => SetValue(PlayerGestureSlideHorizontalKey, value);
-        }
-
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
@@ -227,8 +213,6 @@ namespace Screenbox.Core.Services
             SetDefault(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.Rewind);
             SetDefault(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.FastForward);
             SetDefault(PlayerGestureTapAndHoldKey, true);
-            SetDefault(PlayerGestureSlideVerticalKey, true);
-            SetDefault(PlayerGestureSlideHorizontalKey, true);
 
             // Device family specific overrides
             if (SystemInformation.IsXbox)
@@ -240,8 +224,6 @@ namespace Screenbox.Core.Services
                 SetValue(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.None);
                 SetValue(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.None);
                 SetValue(PlayerGestureTapAndHoldKey, false);
-                SetValue(PlayerGestureSlideVerticalKey, false);
-                SetValue(PlayerGestureSlideHorizontalKey, false);
                 SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             }
         }
