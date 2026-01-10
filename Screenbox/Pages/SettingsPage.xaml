@@ -496,7 +496,11 @@
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}" />
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureTapAndHoldHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureTapAndHold, Mode=TwoWay}" />
