@@ -130,6 +130,7 @@
     <Compile Include="Contexts\CastContext.cs" />
     <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
+    <Compile Include="Enums\PlayerGestureOption.cs" />
     <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />

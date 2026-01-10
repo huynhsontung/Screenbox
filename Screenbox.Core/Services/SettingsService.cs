@@ -16,9 +16,6 @@ namespace Screenbox.Core.Services
 
         private const string GeneralThemeKey = "General/Theme";
         private const string PlayerAutoResizeKey = "Player/AutoResize";
-        private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
-        private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
-        private const string PlayerTapGestureKey = "Player/Gesture/Tap";
         private const string PlayerShowControlsKey = "Player/ShowControls";
         private const string PlayerControlsHideDelayKey = "Player/ControlsHideDelay";
         private const string PlayerLivelyPathKey = "Player/Lively/Path";
@@ -37,6 +34,13 @@ namespace Screenbox.Core.Services
         private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
         private const string PlayerShowChaptersKey = "Player/ShowChapters";
 
+        private const string PlayerGestureTapKey = "Player/Gesture/Tap";
+        private const string PlayerGestureSwipeUpKey = "Player/Gesture/SwipeUp";
+        private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
+        private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
+        private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
+        private const string PlayerGestureTapAndHoldKey = "Player/Gesture/TapAndHold";
+
         public bool UseIndexer
         {
             get => GetValue<bool>(LibrariesUseIndexerKey);
@@ -53,24 +57,6 @@ namespace Screenbox.Core.Services
         {
             get => (PlayerAutoResizeOption)GetValue<int>(PlayerAutoResizeKey);
             set => SetValue(PlayerAutoResizeKey, (int)value);
-        }
-
-        public bool PlayerVolumeGesture
-        {
-            get => GetValue<bool>(PlayerVolumeGestureKey);
-            set => SetValue(PlayerVolumeGestureKey, value);
-        }
-
-        public bool PlayerSeekGesture
-        {
-            get => GetValue<bool>(PlayerSeekGestureKey);
-            set => SetValue(PlayerSeekGestureKey, value);
-        }
-
-        public bool PlayerTapGesture
-        {
-            get => GetValue<bool>(PlayerTapGestureKey);
-            set => SetValue(PlayerTapGestureKey, value);
         }
 
         public int PersistentVolume
@@ -169,12 +155,45 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerShowChaptersKey, value);
         }
 
+        public PlayerGestureOption PlayerTapGesture
+        {
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureTapKey);
+            set => SetValue(PlayerGestureTapKey, (int)value);
+        }
+
+        public PlayerGestureOption PlayerSwipeUpGesture
+        {
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeUpKey);
+            set => SetValue(PlayerGestureSwipeUpKey, (int)value);
+        }
+
+        public PlayerGestureOption PlayerSwipeDownGesture
+        {
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeDownKey);
+            set => SetValue(PlayerGestureSwipeDownKey, (int)value);
+        }
+
+        public PlayerGestureOption PlayerSwipeLeftGesture
+        {
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeLeftKey);
+            set => SetValue(PlayerGestureSwipeLeftKey, (int)value);
+        }
+
+        public PlayerGestureOption PlayerSwipeRightGesture
+        {
+            get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeRightKey);
+            set => SetValue(PlayerGestureSwipeRightKey, (int)value);
+        }
+
+        public bool PlayerTapAndHoldGesture
+        {
+            get => GetValue<bool>(PlayerGestureTapAndHoldKey);
+            set => SetValue(PlayerGestureTapAndHoldKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
-            SetDefault(PlayerVolumeGestureKey, true);
-            SetDefault(PlayerSeekGestureKey, true);
-            SetDefault(PlayerTapGestureKey, true);
             SetDefault(PlayerShowControlsKey, true);
             SetDefault(PlayerControlsHideDelayKey, 3);
             SetDefault(PersistentVolumeKey, 100);
@@ -188,15 +207,24 @@ namespace Screenbox.Core.Services
             SetDefault(AdvancedMultipleInstancesKey, false);
             SetDefault(GlobalArgumentsKey, string.Empty);
             SetDefault(PlayerShowChaptersKey, true);
+            SetDefault(PlayerGestureTapKey, (int)PlayerGestureOption.PlayPause);
+            SetDefault(PlayerGestureSwipeUpKey, (int)PlayerGestureOption.IncreaseVolume);
+            SetDefault(PlayerGestureSwipeDownKey, (int)PlayerGestureOption.DecreaseVolume);
+            SetDefault(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.Rewind);
+            SetDefault(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.FastForward);
+            SetDefault(PlayerGestureTapAndHoldKey, true);
 
             // Device family specific overrides
             if (SystemInformation.IsXbox)
             {
-                SetValue(PlayerTapGestureKey, false);
-                SetValue(PlayerSeekGestureKey, false);
-                SetValue(PlayerVolumeGestureKey, false);
-                SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
                 SetValue(PlayerShowControlsKey, true);
+                SetValue(PlayerGestureTapKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeUpKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeDownKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.None);
+                SetValue(PlayerGestureTapAndHoldKey, false);
+                SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             }
         }
 
