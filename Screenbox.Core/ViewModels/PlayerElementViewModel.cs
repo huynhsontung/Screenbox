@@ -156,7 +156,11 @@ namespace Screenbox.Core.ViewModels
 
         public void OnClick()
         {
-            if (VlcMediaPlayer?.PlaybackItem == null) return;
+            if (_settingsService.PlayerTapGesture == PlayerGestureOption.None || VlcMediaPlayer?.PlaybackItem == null)
+            {
+                return;
+            }
+
             if (_suppressTap)
             {
                 _suppressTap = false;
@@ -217,6 +221,11 @@ namespace Screenbox.Core.ViewModels
                 if (absoluteCumulativeX >= SwipeThreshold)
                 {
                     var horizontalGesture = cumulativeX > 0 ? _playerSwipeRightGesture : _playerSwipeLeftGesture;
+                    if (horizontalGesture == PlayerGestureOption.None)
+                    {
+                        return;
+                    }
+
                     ProcessPlayerGesture(horizontalGesture, GestureStepAmount);
                 }
             }
@@ -225,6 +234,11 @@ namespace Screenbox.Core.ViewModels
                 if (absoluteCumulativeY >= SwipeThreshold)
                 {
                     var verticalGesture = cumulativeY > 0 ? _playerSwipeDownGesture : _playerSwipeUpGesture;
+                    if (verticalGesture == PlayerGestureOption.None)
+                    {
+                        return;
+                    }
+
                     ProcessPlayerGesture(verticalGesture, GestureStepAmount);
                 }
             }
