@@ -933,6 +933,15 @@
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
     <value>Continue playing from where you last stopped when opening a file</value>
   </data>
+  <data name="SettingsTrackLastPositionHeader" xml:space="preserve">
+    <value>Track last position</value>
+  </data>
+  <data name="SettingsTrackLastPositionDescription" xml:space="preserve">
+    <value>Remember where you stopped watching each video</value>
+  </data>
+  <data name="SettingsClearLastPositionHistoryHeader" xml:space="preserve">
+    <value>Clear tracked position history</value>
+  </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Video upscaling method</value>
   </data>

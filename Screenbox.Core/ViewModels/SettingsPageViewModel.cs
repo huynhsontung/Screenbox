@@ -36,6 +36,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _theme;
         [ObservableProperty] private bool _enqueueAllFilesInFolder;
         [ObservableProperty] private bool _restorePlaybackPosition;
+        [ObservableProperty] private bool _trackLastPosition;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private int _videoUpscaling;
@@ -56,6 +57,7 @@ namespace Screenbox.Core.ViewModels
 
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
+        private readonly LastPositionTracker _lastPositionTracker;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
@@ -71,10 +73,11 @@ namespace Screenbox.Core.ViewModels
             public int Language { get; } = Language;
         }
 
-        public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
+        public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService, LastPositionTracker lastPositionTracker)
         {
             _settingsService = settingsService;
             _libraryService = libraryService;
+            _lastPositionTracker = lastPositionTracker;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
             MusicLocations = new ObservableCollection<StorageFolder>();
@@ -108,6 +111,7 @@ namespace Screenbox.Core.ViewModels
             _theme = ((int)_settingsService.Theme + 2) % 3;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
+            _trackLastPosition = _settingsService.TrackLastPosition;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
@@ -221,6 +225,12 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(RestorePlaybackPosition), typeof(SettingsPageViewModel)));
         }
 
+        partial void OnTrackLastPositionChanged(bool value)
+        {
+            _settingsService.TrackLastPosition = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(TrackLastPosition), typeof(SettingsPageViewModel)));
+        }
+
         async partial void OnSearchRemovableStorageChanged(bool value)
         {
             _settingsService.SearchRemovableStorage = value;
@@ -330,6 +340,13 @@ namespace Screenbox.Core.ViewModels
         private void ClearRecentHistory()
         {
             StorageApplicationPermissions.MostRecentlyUsedList.Clear();
+        }
+
+        [RelayCommand]
+        private async Task ClearLastPositionHistoryAsync()
+        {
+            _lastPositionTracker.ClearAll();
+            await _lastPositionTracker.SaveToDiskAsync();
         }
 
         public void OnNavigatedFrom()

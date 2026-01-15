@@ -19,6 +19,7 @@ namespace Screenbox.Core.Services
         ThemeOption Theme { get; set; }
         bool EnqueueAllFilesInFolder { get; set; }
         bool RestorePlaybackPosition { get; set; }
+        bool TrackLastPosition { get; set; }
         bool SearchRemovableStorage { get; set; }
         int MaxVolume { get; set; }
         string GlobalArguments { get; set; }
