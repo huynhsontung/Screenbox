@@ -27,6 +27,7 @@ namespace Screenbox.Core.Services
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
         private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
+        private const string GeneralTrackLastPosition = "General/TrackLastPosition";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
@@ -109,6 +110,12 @@ namespace Screenbox.Core.Services
             set => SetValue(GeneralRestorePlaybackPosition, value);
         }
 
+        public bool TrackLastPosition
+        {
+            get => GetValue<bool>(GeneralTrackLastPosition);
+            set => SetValue(GeneralTrackLastPosition, value);
+        }
+
         public bool PlayerShowControls
         {
             get => GetValue<bool>(PlayerShowControlsKey);
@@ -182,6 +189,7 @@ namespace Screenbox.Core.Services
             SetDefault(LibrariesUseIndexerKey, true);
             SetDefault(LibrariesSearchRemovableStorageKey, true);
             SetDefault(GeneralShowRecent, true);
+            SetDefault(GeneralTrackLastPosition, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
             SetDefault(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);

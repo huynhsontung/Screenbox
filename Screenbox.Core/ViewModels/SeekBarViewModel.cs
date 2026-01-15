@@ -225,6 +225,8 @@ namespace Screenbox.Core.ViewModels
 
         private void RestoreLastPosition(MediaViewModel media)
         {
+            if (!_settingsService.TrackLastPosition) return;
+
             TimeSpan lastPosition = _lastPositionTracker.GetPosition(media.Location);
             if (lastPosition <= TimeSpan.Zero) return;
             if (_settingsService.RestorePlaybackPosition)
@@ -391,7 +393,7 @@ namespace Screenbox.Core.ViewModels
 
         private void UpdateLastPosition(TimeSpan position)
         {
-            if (_currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
+            if (!_settingsService.TrackLastPosition || _currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
                 DateTimeOffset.Now - _lastPositionTracker.LastUpdated <= TimeSpan.FromSeconds(3))
                 return;
 

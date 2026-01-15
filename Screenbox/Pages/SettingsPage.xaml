@@ -353,13 +353,27 @@
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
-                <ctc:SettingsCard
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
-                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}"
+                    Description="{strings:Resources Key=SettingsTrackLastPositionDescription}"
+                    Header="{strings:Resources Key=SettingsTrackLastPositionHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
-                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
-                </ctc:SettingsCard>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsTrackLastPositionDescription}" IsOn="{x:Bind ViewModel.TrackLastPosition, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}">
+                            <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard
+                            x:Name="SettingsClearLastPositionCard"
+                            AutomationProperties.Name="{x:Bind SettingsClearLastPositionCard.Header}"
+                            Header="{strings:Resources Key=SettingsClearLastPositionHistoryHeader}">
+                            <Button Command="{x:Bind ViewModel.ClearLastPositionHistoryCommand}" Content="{strings:Resources Key=Clear}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />

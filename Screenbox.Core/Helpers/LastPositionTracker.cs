@@ -94,6 +94,14 @@ namespace Screenbox.Core.Helpers
             _removeCache = location;
         }
 
+        public void ClearAll()
+        {
+            LastUpdated = DateTimeOffset.Now;
+            _lastPositions.Clear();
+            _updateCache = null;
+            _removeCache = null;
+        }
+
         public async Task SaveToDiskAsync()
         {
             try
