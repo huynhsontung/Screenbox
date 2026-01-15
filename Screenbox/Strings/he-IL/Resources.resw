@@ -245,7 +245,7 @@
     <value>נגן את השיר הבא</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>הזז מעלה</value>
+    <value>הזז למעלה</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
     <value>הזז למטה</value>
