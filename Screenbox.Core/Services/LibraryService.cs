@@ -292,16 +292,9 @@ public sealed class LibraryService : ILibraryService
                 }
 
                 songs = new List<MediaViewModel>();
-                var lastProgressReport = DateTimeOffset.Now;
                 foreach (var query in queries)
                 {
-                    await BatchFetchMediaAsync(query, songs, cancellationToken);
-                    if ((DateTimeOffset.Now - lastProgressReport).TotalSeconds > 5)
-                    {
-                        // Report progress if the operation takes long enough
-                        progress.Report(songs);
-                        lastProgressReport = DateTimeOffset.Now;
-                    }
+                    await BatchFetchMediaAsync(query, songs, progress, cancellationToken);
                 }
             }
 
@@ -432,16 +425,9 @@ public sealed class LibraryService : ILibraryService
                 }
 
                 videos = new List<MediaViewModel>();
-                var lastProgressReport = DateTimeOffset.Now;
                 foreach (var query in queries)
                 {
-                    await BatchFetchMediaAsync(query, videos, cancellationToken);
-                    if ((DateTimeOffset.Now - lastProgressReport).TotalSeconds > 5)
-                    {
-                        // Report progress if the operation takes long enough
-                        progress.Report(videos);
-                        lastProgressReport = DateTimeOffset.Now;
-                    }
+                    await BatchFetchMediaAsync(query, videos, progress, cancellationToken);
                 }
             }
 
@@ -475,15 +461,23 @@ public sealed class LibraryService : ILibraryService
         }
     }
 
-    private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target, CancellationToken cancellationToken)
+    private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target,
+        IProgress<List<MediaViewModel>> progress, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        var lastProgressReport = DateTimeOffset.Now;
         while (true)
         {
             List<MediaViewModel> batch = await FetchMediaFromStorage(queryResult, (uint)target.Count);
             if (batch.Count == 0) break;
             target.AddRange(batch);
             cancellationToken.ThrowIfCancellationRequested();
+            if ((DateTimeOffset.Now - lastProgressReport).TotalSeconds > 3)
+            {
+                // Report progress if the operation takes long enough
+                progress.Report([.. target]);
+                lastProgressReport = DateTimeOffset.Now;
+            }
         }
     }
 
