@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Media;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Screenbox.Controls;
+
 public sealed partial class CommonGridViewItem : UserControl
 {
     public static readonly DependencyProperty ThumbnailHeightProperty = DependencyProperty.Register(
@@ -16,6 +17,9 @@ public sealed partial class CommonGridViewItem : UserControl
 
     public static readonly DependencyProperty HorizontalTextAlignmentProperty = DependencyProperty.Register(
         nameof(HorizontalTextAlignment), typeof(TextAlignment), typeof(CommonGridViewItem), new PropertyMetadata(TextAlignment.Left));
+
+    public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+        nameof(Title), typeof(string), typeof(CommonGridViewItem), new PropertyMetadata(string.Empty));
 
     public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(
         nameof(Caption), typeof(string), typeof(CommonGridViewItem), new PropertyMetadata(string.Empty));
@@ -54,6 +58,12 @@ public sealed partial class CommonGridViewItem : UserControl
     {
         get => (IconSource?)GetValue(PlaceholderIconSourceProperty);
         set => SetValue(PlaceholderIconSourceProperty, value);
+    }
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     public string Caption
