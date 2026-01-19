@@ -563,33 +563,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     private void TogglePlaybackRate(bool speedUp)
     {
-        if (MediaPlayer == null) return;
-        Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 };
-        double lastPositiveStep = steps[0];
-        foreach (double step in steps)
-        {
-            double diff = step - MediaPlayer.PlaybackRate;
-            if (speedUp && diff > 0)
-            {
-                MediaPlayer.PlaybackRate = step;
-                Messenger.Send(new UpdateStatusMessage($"{step}×"));
-                return;
-            }
+        const double Step = 0.25;
 
-            if (!speedUp)
-            {
-                if (-diff > 0)
-                {
-                    lastPositiveStep = step;
-                }
-                else
-                {
-                    MediaPlayer.PlaybackRate = lastPositiveStep;
-                    Messenger.Send(new UpdateStatusMessage($"{lastPositiveStep}×"));
-                    return;
-                }
-            }
-        }
+        if (MediaPlayer == null) return;
+
+        double newRate = Messenger.Send(new ChangePlaybackRateRequestMessage(!speedUp ? -Step : Step, true));
+        Messenger.Send(new UpdateStatusMessage($"{newRate}×"));
     }
 
     partial void OnControlsHiddenChanged(bool value)
