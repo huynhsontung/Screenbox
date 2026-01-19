@@ -139,25 +139,16 @@ namespace Screenbox.Core.ViewModels
             {
                 PlayPause();
             }
-
         }
 
         public void Receive(ChangePlaybackRateRequestMessage message)
         {
-            const double Epsilon = 0.0001;
             const double MinRate = 0.05;
             const double MaxRate = 4.0;
 
             double newValue = Math.Clamp(message.Value, MinRate, MaxRate);
-
-            if (Math.Abs(PlaybackRate - newValue) < Epsilon)
-            {
-                message.Reply(PlaybackRate);
-                return;
-            }
-
             SetPlaybackRate(newValue);
-            message.Reply(newValue);
+            message.Reply(PlaybackRate);
         }
 
         public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
