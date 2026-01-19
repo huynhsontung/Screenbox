@@ -94,7 +94,7 @@ namespace Screenbox.Controls
 
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            ViewModel.PlaybackRate = e.NewValue;
+            ViewModel.SetPlaybackRateCommand.Execute(e.NewValue);
             SelectAlternatePlaybackSpeedItem(e.NewValue);
         }
 

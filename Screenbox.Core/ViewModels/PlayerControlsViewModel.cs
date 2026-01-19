@@ -146,12 +146,9 @@ namespace Screenbox.Core.ViewModels
         {
             const double Epsilon = 0.0001;
             const double MinSpeed = 0.05;
-            const double MinOffsetSpeed = 0.25;
             const double MaxSpeed = 4.0;
 
-            double newValue = message.IsOffset
-                ? Math.Clamp(PlaybackRate + message.Value, MinOffsetSpeed, MaxSpeed)
-                : Math.Clamp(message.Value, MinSpeed, MaxSpeed);
+            double newValue = Math.Clamp(message.Value, MinSpeed, MaxSpeed);
 
             if (Math.Abs(PlaybackRate - newValue) < Epsilon)
             {
