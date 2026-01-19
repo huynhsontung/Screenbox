@@ -145,10 +145,10 @@ namespace Screenbox.Core.ViewModels
         public void Receive(ChangePlaybackRateRequestMessage message)
         {
             const double Epsilon = 0.0001;
-            const double MinSpeed = 0.05;
-            const double MaxSpeed = 4.0;
+            const double MinRate = 0.05;
+            const double MaxRate = 4.0;
 
-            double newValue = Math.Clamp(message.Value, MinSpeed, MaxSpeed);
+            double newValue = Math.Clamp(message.Value, MinRate, MaxRate);
 
             if (Math.Abs(PlaybackRate - newValue) < Epsilon)
             {

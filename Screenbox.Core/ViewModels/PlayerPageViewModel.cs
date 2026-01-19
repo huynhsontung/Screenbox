@@ -452,7 +452,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     public bool ProcessTogglePlaybackRateKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
         const double PlaybackRateStep = 0.25;
-        const double MinOffsetSpeed = 0.25;
+        const double MinRate = 0.25;
 
         if (MediaPlayer == null ||
             modifiers != VirtualKeyModifiers.Shift ||
@@ -474,7 +474,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 return false;
         }
 
-        double newRate = Math.Max(MediaPlayer.PlaybackRate + rateDelta, MinOffsetSpeed);
+        double newRate = Math.Max(MediaPlayer.PlaybackRate + rateDelta, MinRate);
 
         double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Round(newRate, 2)));
         Messenger.Send(new UpdateStatusMessage($"{rate}×"));
