@@ -40,7 +40,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
 {
+    private const VirtualKey VK_OEM_PLUS = (VirtualKey)0xBB;
     private const VirtualKey VK_OEM_COMMA = (VirtualKey)0xBC;
+    private const VirtualKey VK_OEM_MINUS = (VirtualKey)0xBD;
     private const VirtualKey VK_OEM_PERIOD = (VirtualKey)0xBE;
 
     [ObservableProperty] private bool _controlsHidden;
@@ -299,12 +301,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         switch (key)
         {
-            case (VirtualKey)0xBB:  // Plus ("+")
+            case VK_OEM_PLUS:  // Plus ("+")
             case VirtualKey.Add:
             case VirtualKey.Up when playerVisible:
                 volumeChange = 5;
                 break;
-            case (VirtualKey)0xBD:  // Minus ("-")
+            case VK_OEM_MINUS:  // Minus ("-")
             case VirtualKey.Subtract:
             case VirtualKey.Down when playerVisible:
                 volumeChange = -5;
@@ -551,8 +553,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             VirtualKey.Number2 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 1),
             VirtualKey.Number3 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 1.5),
             VirtualKey.Number4 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 0),
-            (VirtualKey)0xBB when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
-            (VirtualKey)0xBD when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
+            VK_OEM_PLUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
+            VK_OEM_MINUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
             _ => false,
         };
     }
