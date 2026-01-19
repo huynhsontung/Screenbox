@@ -40,6 +40,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
 {
+    private const VirtualKey VK_OEM_COMMA = (VirtualKey)0xBC;
+    private const VirtualKey VK_OEM_PERIOD = (VirtualKey)0xBE;
+
     [ObservableProperty] private bool _controlsHidden;
     [ObservableProperty] private string? _statusMessage;
     [ObservableProperty] private bool _isPlaying;
@@ -446,6 +449,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a playback rate change was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessTogglePlaybackRateKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
+        const double PlaybackRateStep = 0.25;
+
         if (MediaPlayer == null ||
             modifiers != VirtualKeyModifiers.Shift ||
             PlayerVisibility != PlayerVisibilityState.Visible)
@@ -453,17 +458,22 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             return false;
         }
 
+        double rateDelta;
         switch (key)
         {
-            case (VirtualKey)190:   // Shift + . (">")
-                TogglePlaybackRate(true);
-                return true;
-            case (VirtualKey)188:   // Shift + , ("<")
-                TogglePlaybackRate(false);
-                return true;
+            case VK_OEM_PERIOD:  // Shift + . (">")
+                rateDelta = PlaybackRateStep;
+                break;
+            case VK_OEM_COMMA:   // Shift + , ("<")
+                rateDelta = -PlaybackRateStep;
+                break;
             default:
                 return false;
         }
+
+        double newRate = Messenger.Send(new ChangePlaybackRateRequestMessage(rateDelta, true));
+        Messenger.Send(new UpdateStatusMessage($"{newRate}×"));
+        return true;
     }
 
     /// <summary>
@@ -489,10 +499,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         switch (key)
         {
-            case (VirtualKey)190:   // Period (".")
+            case VK_OEM_PERIOD:
                 MediaPlayer.StepForwardOneFrame();
                 return true;
-            case (VirtualKey)188:   // Comma (",")
+            case VK_OEM_COMMA:
                 MediaPlayer.StepBackwardOneFrame();
                 return true;
             default:
@@ -559,16 +569,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             // On Desktop, user expect Space to pause without needing to see the controls
             Messenger.Send(new TogglePlayPauseMessage(true));
         }
-    }
-
-    private void TogglePlaybackRate(bool speedUp)
-    {
-        const double Step = 0.25;
-
-        if (MediaPlayer == null) return;
-
-        double newRate = Messenger.Send(new ChangePlaybackRateRequestMessage(!speedUp ? -Step : Step, true));
-        Messenger.Send(new UpdateStatusMessage($"{newRate}×"));
     }
 
     partial void OnControlsHiddenChanged(bool value)
