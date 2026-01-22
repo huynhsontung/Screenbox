@@ -117,6 +117,7 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:StorageItemViewModel">
                     <controls:CommonGridViewItem
+                        Title="{x:Bind Name, Mode=OneWay}"
                         Width="{StaticResource WideGridViewItemWidth}"
                         AutomationProperties.Name="{x:Bind pages:FolderViewPage.GetAutomationName(IsFile, Name, CaptionText, ItemCount), Mode=OneWay}"
                         CanPlay="{x:Bind IsFile}"

@@ -1,9 +1,9 @@
-﻿using Screenbox.Core.Models;
+﻿using Screenbox.Core.Contexts;
+using Screenbox.Core.Models;
 
-namespace Screenbox.Core.Services
+namespace Screenbox.Core.Services;
+
+public interface ISearchService
 {
-    public interface ISearchService
-    {
-        SearchResult SearchLocalLibrary(string query);
-    }
+    SearchResult SearchLocalLibrary(LibraryContext context, string query);
 }

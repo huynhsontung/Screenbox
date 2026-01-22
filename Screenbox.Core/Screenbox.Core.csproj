@@ -128,6 +128,7 @@
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
     <Compile Include="Contexts\CastContext.cs" />
+    <Compile Include="Contexts\LibraryContext.cs" />
     <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\PlayerGestureOption.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Messages\CriticalErrorMessage.cs" />
     <Compile Include="Messages\DragDropMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\LibraryContentChangedMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
@@ -201,7 +203,6 @@
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
-    <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\IWindowService.cs" />
+    <Compile Include="Controllers\LibraryController.cs" />
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
