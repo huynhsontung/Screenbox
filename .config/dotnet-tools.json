@@ -7,6 +7,12 @@
       "commands": [
         "xstyler"
       ]
+    },
+    "LottieGen": {
+      "version": "8.2.250604",
+      "commands": [
+        "LottieGen"
+      ]
     }
   }
 }
