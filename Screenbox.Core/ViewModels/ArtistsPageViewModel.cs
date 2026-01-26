@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
@@ -32,9 +32,9 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Music) return;
+        if (message.Sender is not LibraryContext) return;
         _dispatcherQueue.TryEnqueue(FetchArtists);
     }
 
@@ -46,9 +46,9 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
     public void FetchArtists()
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
-        Songs = _libraryContext.Songs;
+        Songs = _libraryContext.MusicLibrary.Songs;
 
-        var groupings = GetDefaultGrouping(_libraryContext);
+        var groupings = GetDefaultGrouping(_libraryContext.MusicLibrary);
         GroupedArtists.SyncObservableGroups(groupings);
 
         // Progressively update when it's still loading
@@ -62,11 +62,11 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
         }
     }
 
-    private List<IGrouping<string, ArtistViewModel>> GetDefaultGrouping(LibraryContext context)
+    private List<IGrouping<string, ArtistViewModel>> GetDefaultGrouping(MusicLibrary library)
     {
-        var groups = context.Artists.Values
+        var groups = library.Artists.Values
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-            .GroupBy(artist => artist == context.UnknownArtist
+            .GroupBy(artist => artist == library.UnknownArtist
                 ? MediaGroupingHelpers.OtherGroupSymbol
                 : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name))
             .ToList();

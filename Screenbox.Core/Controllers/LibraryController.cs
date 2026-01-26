@@ -113,9 +113,9 @@ public sealed class LibraryController : IDisposable
 
     private async Task EnsureWatchingMusicAsync()
     {
-        if (_context.MusicLibrary is null)
+        if (_context.StorageMusicLibrary is null)
         {
-            _context.MusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
+            _context.StorageMusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
         }
 
         if (_musicQuery is not null && ShouldUpdateQuery(_musicQuery, UseIndexer))
@@ -136,9 +136,9 @@ public sealed class LibraryController : IDisposable
 
     private async Task EnsureWatchingVideosAsync()
     {
-        if (_context.VideosLibrary is null)
+        if (_context.StorageVideosLibrary is null)
         {
-            _context.VideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
+            _context.StorageVideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
         }
 
         if (_videosQuery is not null && ShouldUpdateQuery(_videosQuery, UseIndexer))
