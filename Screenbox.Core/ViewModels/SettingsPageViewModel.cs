@@ -26,9 +26,12 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class SettingsPageViewModel : ObservableRecipient
 {
     [ObservableProperty] private int _playerAutoResize;
-    [ObservableProperty] private bool _playerVolumeGesture;
-    [ObservableProperty] private bool _playerSeekGesture;
-    [ObservableProperty] private bool _playerTapGesture;
+    [ObservableProperty] private PlayerGestureOption _playerGestureTap;
+    [ObservableProperty] private PlayerGestureOption _playerGestureSwipeUp;
+    [ObservableProperty] private PlayerGestureOption _playerGestureSwipeDown;
+    [ObservableProperty] private PlayerGestureOption _playerGestureSwipeLeft;
+    [ObservableProperty] private PlayerGestureOption _playerGestureSwipeRight;
+    [ObservableProperty] private bool _playerGestureTapAndHold;
     [ObservableProperty] private bool _playerShowControls;
     [ObservableProperty] private bool _playerShowChapters;
     [ObservableProperty] private int _playerControlsHideDelay;
@@ -55,6 +58,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public List<Models.Language> AvailableLanguages { get; }
 
     public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
+  
+    public Array GestureOptions { get; }
 
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
@@ -97,6 +102,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
             .ToList();
 
+        GestureOptions = Enum.GetValues(typeof(PlayerGestureOption));
+      
         if (SystemInformation.IsXbox)
         {
             _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
@@ -107,9 +114,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         // Load values
         _playerAutoResize = (int)_settingsService.PlayerAutoResize;
-        _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
-        _playerSeekGesture = _settingsService.PlayerSeekGesture;
-        _playerTapGesture = _settingsService.PlayerTapGesture;
+        _playerGestureTap = _settingsService.PlayerTapGesture;
+        _playerGestureSwipeUp = _settingsService.PlayerSwipeUpGesture;
+        _playerGestureSwipeDown = _settingsService.PlayerSwipeDownGesture;
+        _playerGestureSwipeLeft = _settingsService.PlayerSwipeLeftGesture;
+        _playerGestureSwipeRight = _settingsService.PlayerSwipeRightGesture;
+        _playerGestureTapAndHold = _settingsService.PlayerTapAndHoldGesture;
         _playerShowControls = _settingsService.PlayerShowControls;
         _playerShowChapters = _settingsService.PlayerShowChapters;
         _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
@@ -171,22 +181,40 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
     }
 
-    partial void OnPlayerVolumeGestureChanged(bool value)
-    {
-        _settingsService.PlayerVolumeGesture = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerVolumeGesture), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerSeekGestureChanged(bool value)
-    {
-        _settingsService.PlayerSeekGesture = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerTapGestureChanged(bool value)
+    partial void OnPlayerGestureTapChanged(PlayerGestureOption value)
     {
         _settingsService.PlayerTapGesture = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture), typeof(SettingsPageViewModel)));
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTap), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureSwipeUpChanged(PlayerGestureOption value)
+    {
+        _settingsService.PlayerSwipeUpGesture = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeUp), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureSwipeDownChanged(PlayerGestureOption value)
+    {
+        _settingsService.PlayerSwipeDownGesture = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeDown), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureSwipeLeftChanged(PlayerGestureOption value)
+    {
+        _settingsService.PlayerSwipeLeftGesture = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeLeft), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureSwipeRightChanged(PlayerGestureOption value)
+    {
+        _settingsService.PlayerSwipeRightGesture = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeRight), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureTapAndHoldChanged(bool value)
+    {
+        _settingsService.PlayerTapAndHoldGesture = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTapAndHold), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerShowControlsChanged(bool value)

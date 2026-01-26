@@ -23,11 +23,11 @@
             AllowFocusOnInteraction="False"
             DoubleTapped="VideoViewButton_OnDoubleTapped"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
-            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
-            ManipulationMode="TranslateX,TranslateY"
-            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
-            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
+            PointerCanceled="VideoViewButton_OnPointerCanceled"
+            PointerMoved="VideoViewButton_OnPointerMoved"
+            PointerPressed="VideoViewButton_OnPointerPressed"
+            PointerReleased="VideoViewButton_OnPointerReleased"
+            PointerWheelChanged="VideoViewButton_OnPointerWheelChanged"
             Tapped="VideoViewButton_OnTapped">
             <Border Background="Transparent" />
         </UserControl>
@@ -43,6 +43,6 @@
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-            SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />
+            SizeChanged="VlcVideoView_OnSizeChanged" />
     </Grid>
 </UserControl>
