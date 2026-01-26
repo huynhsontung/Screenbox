@@ -2,7 +2,6 @@
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Controllers;
 using Screenbox.Core.Factories;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -45,9 +44,6 @@ public static class ServiceHelpers
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist
 
-        // Misc
-        services.AddTransient<LastPositionTracker>();
-
         // Factories
         services.AddSingleton<MediaViewModelFactory>();
         services.AddSingleton<StorageItemViewModelFactory>();
@@ -62,6 +58,7 @@ public static class ServiceHelpers
 
         // Controllers
         services.AddSingleton<LibraryController>();
+        services.AddSingleton<LastPositionTracker>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();
