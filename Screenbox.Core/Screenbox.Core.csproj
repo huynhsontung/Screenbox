@@ -152,7 +152,7 @@
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
-    <Compile Include="Helpers\LastPositionTracker.cs" />
+    <Compile Include="Controllers\LastPositionTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
     <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
