@@ -36,7 +36,7 @@ public sealed class SettingsService : ISettingsService
     private const string PersistentRepeatModeKey = "Values/RepeatMode";
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
-    private const string PrivacySavePlaybackPosition = "Privacy/SavePlaybackPosition";
+    private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
     public bool UseIndexer
     {
@@ -170,10 +170,10 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PlayerShowChaptersKey, value);
     }
 
-    public bool SavePlaybackPosition
+    public bool PersistPlaybackPosition
     {
-        get => GetValue<bool>(PrivacySavePlaybackPosition);
-        set => SetValue(PrivacySavePlaybackPosition, value);
+        get => GetValue<bool>(PrivacyPersistPlaybackPosition);
+        set => SetValue(PrivacyPersistPlaybackPosition, value);
     }
 
     public SettingsService()
@@ -195,7 +195,7 @@ public sealed class SettingsService : ISettingsService
         SetDefault(AdvancedMultipleInstancesKey, false);
         SetDefault(GlobalArgumentsKey, string.Empty);
         SetDefault(PlayerShowChaptersKey, true);
-        SetDefault(PrivacySavePlaybackPosition, true);
+        SetDefault(PrivacyPersistPlaybackPosition, true);
 
         // Device family specific overrides
         if (SystemInformation.IsXbox)

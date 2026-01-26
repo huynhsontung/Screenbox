@@ -45,7 +45,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private string _globalArguments;
     [ObservableProperty] private bool _isRelaunchRequired;
     [ObservableProperty] private int _selectedLanguage;
-    [ObservableProperty] private bool _savePlaybackPosition;
+    [ObservableProperty] private bool _persistPlaybackPosition;
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -119,7 +119,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
         _useIndexer = _settingsService.UseIndexer;
         _showRecent = _settingsService.ShowRecent;
-        _savePlaybackPosition = _settingsService.SavePlaybackPosition;
+        _persistPlaybackPosition = _settingsService.PersistPlaybackPosition;
         _theme = ((int)_settingsService.Theme + 2) % 3;
         _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
         _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
@@ -300,10 +300,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         CheckForRelaunch();
     }
 
-    partial void OnSavePlaybackPositionChanged(bool value)
+    partial void OnPersistPlaybackPositionChanged(bool value)
     {
-        _settingsService.SavePlaybackPosition = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(SavePlaybackPosition), typeof(SettingsPageViewModel)));
+        _settingsService.PersistPlaybackPosition = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PersistPlaybackPosition), typeof(SettingsPageViewModel)));
     }
 
     [RelayCommand]
@@ -363,11 +363,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private async Task ClearPlaybackPositionsAsync()
+    private async Task ClearPlaybackPositionHistoryAsync()
     {
         try
         {
-            await _lastPositionTracker.DeleteFromDiskAsync();
+            _lastPositionTracker.ClearAll();
+            await _lastPositionTracker.SaveToDiskAsync();
         }
         catch (Exception)
         {

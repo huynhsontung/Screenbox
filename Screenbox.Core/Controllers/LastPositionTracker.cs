@@ -94,6 +94,14 @@ public sealed class LastPositionTracker : ObservableRecipient,
         _removeCache = location;
     }
 
+    public void ClearAll()
+    {
+        LastUpdated = DateTimeOffset.Now;
+        _lastPositions.Clear();
+        _updateCache = null;
+        _removeCache = null;
+    }
+
     public async Task SaveToDiskAsync()
     {
         try
@@ -115,33 +123,6 @@ public sealed class LastPositionTracker : ObservableRecipient,
             lastPositions.Capacity = Capacity;
             _lastPositions = lastPositions;
             LastUpdated = DateTimeOffset.UtcNow;
-        }
-        catch (FileNotFoundException)
-        {
-            // pass
-        }
-        catch (Exception)
-        {
-            // pass
-        }
-    }
-
-    public async Task DeleteFromDiskAsync()
-    {
-        try
-        {
-            _lastPositions.Clear();
-            _updateCache = null;
-            _removeCache = null;
-            LastUpdated = default;
-
-            //await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions);
-
-            var folder = ApplicationData.Current.TemporaryFolder;
-            if (await folder.TryGetItemAsync(SaveFileName) is StorageFile file)
-            {
-                await file.DeleteAsync();
-            }
         }
         catch (FileNotFoundException)
         {

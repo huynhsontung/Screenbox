@@ -226,6 +226,8 @@ public sealed partial class SeekBarViewModel :
 
     private void RestoreLastPosition(MediaViewModel media)
     {
+        if (!_settingsService.PersistPlaybackPosition) return;
+
         TimeSpan lastPosition = _lastPositionTracker.GetPosition(media.Location);
         if (lastPosition <= TimeSpan.Zero) return;
         if (_settingsService.RestorePlaybackPosition)
@@ -392,7 +394,7 @@ public sealed partial class SeekBarViewModel :
 
     private void UpdateLastPosition(TimeSpan position)
     {
-        if (!_settingsService.SavePlaybackPosition ||
+        if (!_settingsService.PersistPlaybackPosition ||
             _currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
             DateTimeOffset.Now - _lastPositionTracker.LastUpdated <= TimeSpan.FromSeconds(3))
             return;

@@ -27,5 +27,10 @@ public interface ISettingsService
     bool UseMultipleInstances { get; set; }
     string LivelyActivePath { get; set; }
     MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
-    bool SavePlaybackPosition { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether the playback position should be saved
+    /// and restored between sessions.
+    /// </summary>
+    bool PersistPlaybackPosition { get; set; }
 }
