@@ -1,5 +1,7 @@
 #!/usr/local/bin/fontforge
-Open($1)
-Generate($1:r + ".ttf","",0x10|0x80|0x8000|4)
-Open($2)
-Generate($2:r + ".ttf","",0x10|0x80|0x8000|4)
+i=1
+while ( i<$argc )
+  Open($argv[i])
+  Generate($argv[i]:r + ".ttf","",0x10|0x80|0x8000|4)
+  i = i+1
+endloop
