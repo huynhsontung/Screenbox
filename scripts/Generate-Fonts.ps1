@@ -24,9 +24,10 @@ param(
     $Publish
 )
 
+New-Variable -Name 'ScriptFileName' -Value 'fontforge-ufo-to-ttf.pe' -Option Constant
+
 $repositoryPath = Split-Path -Parent $PSScriptRoot
 $fontsPath = Join-Path -Path $repositoryPath -ChildPath "assets\fonts"
-$scriptPath = Join-Path -Path $repositoryPath -ChildPath "assets\fonts\fontforge-ufo-to-ttf.pe"
 $publishPath = Join-Path -Path $repositoryPath -ChildPath "Screenbox\Assets\Fonts"
 
 if (-not (Get-Command "fontforge" -ErrorAction SilentlyContinue)) {
@@ -40,7 +41,7 @@ if ($ufoDirs.Count -gt 0) {
     Write-Host "Found UFO packages:`n$($ufoDirs -join "`n")"
 
     # Build argument list: -script <scriptFile> <ufo#1> <ufo#2> ...
-    $cmdArgs = @('-script', $scriptPath) + $ufoDirs
+    $cmdArgs = @('-script', (Join-Path -Path $fontsPath -ChildPath $ScriptFileName)) + $ufoDirs
     & "fontforge" @cmdArgs
 
     if ($Publish) {
