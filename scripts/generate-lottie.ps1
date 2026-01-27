@@ -1,28 +1,25 @@
-$RepositoryRoot = Split-Path -Parent $PSScriptRoot
-$InputFolder = Join-Path $RepositoryRoot 'assets\animations'
-$OutputFolder = Join-Path $RepositoryRoot 'Screenbox\Assets\Animations'
-$Namespace = 'Screenbox.Animations'
+$repositoryRoot = Split-Path -Parent $PSScriptRoot
+$inputPath = Join-Path $RepositoryRoot 'assets\animations'
+$outputPath = Join-Path $RepositoryRoot 'Screenbox\Assets\Animations'
+$namespace = 'Screenbox.Animations'
 
-$files = Get-ChildItem -Path $InputFolder -Filter '*.json' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+$files = Get-ChildItem -Path $inputPath -Filter '*.json' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
 
-if ($files.count -gt 0)
-{
-  foreach ($file in $files)
-  {
+if ($files.count -gt 0) {
+  foreach ($file in $files) {
     dotnet tool run LottieGen `
       -GenerateColorBindings `
       -GenerateDependencyObject `
       -Language CSharp `
       -MinimumUapVersion 8 `
-      -Namespace $Namespace `
+      -Namespace $namespace `
       -Public `
       -WinUIVersion 2.8 `
       -InputFile $file `
-      -OutputFolder $OutputFolder
+      -OutputFolder $outputFolder
   }
 }
-else
-{
-  Write-Host "No JSON files were found in '$InputFolder'"
+else {
+  Write-Host "No .json files found in the folder '$inputPath'."
   exit 0
 }
