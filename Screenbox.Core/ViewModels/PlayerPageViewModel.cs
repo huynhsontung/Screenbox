@@ -40,6 +40,11 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
 {
+    private const VirtualKey VK_OEM_PLUS = (VirtualKey)0xBB;
+    private const VirtualKey VK_OEM_COMMA = (VirtualKey)0xBC;
+    private const VirtualKey VK_OEM_MINUS = (VirtualKey)0xBD;
+    private const VirtualKey VK_OEM_PERIOD = (VirtualKey)0xBE;
+
     [ObservableProperty] private bool _controlsHidden;
     [ObservableProperty] private string? _statusMessage;
     [ObservableProperty] private bool _isPlaying;
@@ -296,12 +301,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         switch (key)
         {
-            case (VirtualKey)0xBB:  // Plus ("+")
+            case VK_OEM_PLUS:  // Plus ("+")
             case VirtualKey.Add:
             case VirtualKey.Up when playerVisible:
                 volumeChange = 5;
                 break;
-            case (VirtualKey)0xBD:  // Minus ("-")
+            case VK_OEM_MINUS:  // Minus ("-")
             case VirtualKey.Subtract:
             case VirtualKey.Down when playerVisible:
                 volumeChange = -5;
@@ -446,6 +451,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a playback rate change was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessTogglePlaybackRateKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
+        const double PlaybackRateStep = 0.25;
+        const double MinRate = 0.25;
+
         if (MediaPlayer == null ||
             modifiers != VirtualKeyModifiers.Shift ||
             PlayerVisibility != PlayerVisibilityState.Visible)
@@ -453,17 +461,24 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             return false;
         }
 
+        double rateDelta;
         switch (key)
         {
-            case (VirtualKey)190:   // Shift + . (">")
-                TogglePlaybackRate(true);
-                return true;
-            case (VirtualKey)188:   // Shift + , ("<")
-                TogglePlaybackRate(false);
-                return true;
+            case VK_OEM_PERIOD:  // Shift + . (">")
+                rateDelta = PlaybackRateStep;
+                break;
+            case VK_OEM_COMMA:   // Shift + , ("<")
+                rateDelta = -PlaybackRateStep;
+                break;
             default:
                 return false;
         }
+
+        double newRate = Math.Max(MediaPlayer.PlaybackRate + rateDelta, MinRate);
+
+        double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Round(newRate, 2)));
+        Messenger.Send(new UpdateStatusMessage($"{rate}×"));
+        return true;
     }
 
     /// <summary>
@@ -489,10 +504,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         switch (key)
         {
-            case (VirtualKey)190:   // Period (".")
+            case VK_OEM_PERIOD:
                 MediaPlayer.StepForwardOneFrame();
                 return true;
-            case (VirtualKey)188:   // Comma (",")
+            case VK_OEM_COMMA:
                 MediaPlayer.StepBackwardOneFrame();
                 return true;
             default:
@@ -538,8 +553,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             VirtualKey.Number2 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 1),
             VirtualKey.Number3 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 1.5),
             VirtualKey.Number4 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 0),
-            (VirtualKey)0xBB when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
-            (VirtualKey)0xBD when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
+            VK_OEM_PLUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
+            VK_OEM_MINUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
             _ => false,
         };
     }
@@ -558,37 +573,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         {
             // On Desktop, user expect Space to pause without needing to see the controls
             Messenger.Send(new TogglePlayPauseMessage(true));
-        }
-    }
-
-    private void TogglePlaybackRate(bool speedUp)
-    {
-        if (MediaPlayer == null) return;
-        Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 };
-        double lastPositiveStep = steps[0];
-        foreach (double step in steps)
-        {
-            double diff = step - MediaPlayer.PlaybackRate;
-            if (speedUp && diff > 0)
-            {
-                MediaPlayer.PlaybackRate = step;
-                Messenger.Send(new UpdateStatusMessage($"{step}×"));
-                return;
-            }
-
-            if (!speedUp)
-            {
-                if (-diff > 0)
-                {
-                    lastPositiveStep = step;
-                }
-                else
-                {
-                    MediaPlayer.PlaybackRate = lastPositiveStep;
-                    Messenger.Send(new UpdateStatusMessage($"{lastPositiveStep}×"));
-                    return;
-                }
-            }
         }
     }
 

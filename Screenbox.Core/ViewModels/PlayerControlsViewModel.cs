@@ -26,6 +26,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
         IRecipient<SettingsChangedMessage>,
         IRecipient<TogglePlayPauseMessage>,
+        IRecipient<ChangePlaybackRateRequestMessage>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
     {
         public MediaListViewModel Playlist { get; }
@@ -36,7 +37,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
-        [ObservableProperty] private double _playbackSpeed;
+        [ObservableProperty] private double _playbackRate;
         [ObservableProperty] private double _audioTimingOffset;
         [ObservableProperty] private double _subtitleTimingOffset;
         [ObservableProperty] private bool _isAdvancedModeActive;
@@ -77,7 +78,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _playerContext = playerContext;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-            _playbackSpeed = 1.0;
+            _playbackRate = 1.0;
             _audioTimingOffset = 0.0;
             _subtitleTimingOffset = 0.0;
             _isAdvancedModeActive = settingsService.AdvancedMode;
@@ -138,7 +139,16 @@ namespace Screenbox.Core.ViewModels
             {
                 PlayPause();
             }
+        }
 
+        public void Receive(ChangePlaybackRateRequestMessage message)
+        {
+            const double MinRate = 0.05;
+            const double MaxRate = 4.0;
+
+            double newValue = Math.Clamp(message.Value, MinRate, MaxRate);
+            SetPlaybackRate(newValue);
+            message.Reply(PlaybackRate);
         }
 
         public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
@@ -229,7 +239,7 @@ namespace Screenbox.Core.ViewModels
             return true;
         }
 
-        partial void OnPlaybackSpeedChanged(double value)
+        partial void OnPlaybackRateChanged(double value)
         {
             if (MediaPlayer == null) return;
             MediaPlayer.PlaybackRate = value;
@@ -323,9 +333,9 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private void SetPlaybackSpeed(double speed)
+        private void SetPlaybackRate(double rate)
         {
-            PlaybackSpeed = speed;
+            PlaybackRate = rate;
         }
 
         [RelayCommand]

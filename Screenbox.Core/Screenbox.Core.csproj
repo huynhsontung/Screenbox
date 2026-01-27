@@ -163,6 +163,7 @@
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
     <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
+    <Compile Include="Messages\ChangePlaybackRateRequestMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
     <Compile Include="Messages\ClearPlaylistMessage.cs" />

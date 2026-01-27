@@ -76,13 +76,13 @@ namespace Screenbox.Controls
         {
             Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
             customSpeedFlyout.ShowAt(MoreButton);
-            if (SpeedSlider.Value != ViewModel.PlaybackSpeed)
+            if (SpeedSlider.Value != ViewModel.PlaybackRate)
             {
-                SpeedSlider.Value = ViewModel.PlaybackSpeed;
+                SpeedSlider.Value = ViewModel.PlaybackRate;
             }
             else
             {
-                SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackSpeed);
+                SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackRate);
             }
         }
 
@@ -94,7 +94,7 @@ namespace Screenbox.Controls
 
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            ViewModel.PlaybackSpeed = e.NewValue;
+            ViewModel.SetPlaybackRateCommand.Execute(e.NewValue);
             SelectAlternatePlaybackSpeedItem(e.NewValue);
         }
 
