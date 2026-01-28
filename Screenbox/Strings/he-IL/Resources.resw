@@ -937,7 +937,7 @@
     <value>שיטת שיפור קנה מידה לווידאו</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>שדרוג לרזולוציה משופרת דורש תמיכה בחומרה ובמנהלי התקנים תואמים</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>ביליניארי</value>
@@ -952,7 +952,7 @@
     <value>הצג שם פרק כאשר זמין</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>הסתר פקדים לאחר פרק זמן זה</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
     <value>{0} שניה</value>
