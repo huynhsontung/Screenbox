@@ -455,7 +455,7 @@
     <value>Artistes</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Titre</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Chansons</value>
@@ -652,10 +652,10 @@
     <value>Autoriser le volume maximum au-delà de 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Contrôles à l'écran</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Choisir les éléments qui peuvent apparaître dans les contrôles et ajuster le comportement de masquage automatique</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestes tactiles</value>
@@ -834,7 +834,7 @@
     <value>Trier par</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Option trier par {0} sélectionnée</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -934,48 +934,48 @@
     <value>Reprendre la lecture à l'endroit où elle s'est arrêtée lors de l'ouverture d'un fichier</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Méthode de mise à l'échelle vidéo</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Bilinéaire</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
     <value>Point</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super résolution</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Show chapter name when available</value>
+    <value>Afficher le nom du chapitre lorsque disponible</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Masquer les contrôles après ce temps</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} seconde</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} secondes</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Langue de l'application</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Changer la langue d'affichage de l'application</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Utiliser la langue du système</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Aucun résultat pour "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Dossier</value>
   </data>
 </root>

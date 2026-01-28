@@ -143,7 +143,7 @@
     <value>Waktu berlalu</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Waktu Tersisa</value>
+    <value>Waktu tersisa</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
     <value>Durasi total</value>
@@ -455,7 +455,7 @@
     <value>Artis</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Lagu</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Lagu</value>
@@ -972,7 +972,7 @@
     <value>Gunakan bahasa sistem</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Tidak ada hasil untuk "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
