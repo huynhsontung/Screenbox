@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Zapisano ramkę</value>
+    <value>Zapisano klatkę</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Obraz w obrazie</value>
@@ -130,7 +130,7 @@
     <value>Pętla</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Szybkość odtwarzania</value>
+    <value>Prędkość odtwarzania</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
     <value>Głośność {0:F0}%</value>
@@ -140,7 +140,7 @@
     <value>Nie udało się zapisać klatki</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Upłynęło czasu</value>
+    <value>Upłynęło</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
     <value>Pozostało czasu</value>
@@ -455,7 +455,7 @@
     <value>Wykonawcy</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Utwór</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Utwory</value>
@@ -652,7 +652,7 @@
     <value>Pozwól na osiągnięcie maksymalnej głośności powyżej 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Sterowanie ekranowe</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
     <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
@@ -952,14 +952,14 @@
     <value>Wyświetlaj nazwę rozdziału, jeśli jest dostępna</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Ukryj elementy sterujące po tym czasie</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} sekunda</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} sekund</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
@@ -972,7 +972,7 @@
     <value>Użyj języka systemu</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Brak wyników dla "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
