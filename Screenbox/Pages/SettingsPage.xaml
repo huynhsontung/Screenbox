@@ -92,6 +92,10 @@
         <DataTemplate x:Key="RemovableStorageFolderTemplate" x:DataType="storage:StorageFolder">
             <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}" />
         </DataTemplate>
+
+        <DataTemplate x:Key="ResourceNameToResourceStringTemplate" x:DataType="x:String">
+            <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.GetResourceString((x:String))}" />
+        </DataTemplate>
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
@@ -275,13 +279,11 @@
                                              Glyph={StaticResource FiltersGlyph}}">
                     <ComboBox
                         MinWidth="150"
-                        PlaceholderText="{x:Bind strings:Resources.ThemeAuto}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <!--  The app settings guidelines recommend theme options to follow this order.  -->
                         <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
                         <x:String>ThemeLight</x:String>
@@ -296,7 +298,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
                     <ComboBox
                         x:Name="LanguageComboBox"
-                        MinWidth="200"
+                        MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
                         ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
@@ -305,6 +307,9 @@
                                 <TextBlock FlowDirection="{x:Bind converters:LanguageLayoutDirectionToFlowDirectionConverter.ToFlowDirection(LayoutDirection)}" Text="{x:Bind NativeName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                     </ComboBox>
                 </ctc:SettingsCard>
 
@@ -368,12 +373,11 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsAutoResizeDescription}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <x:String>Always</x:String>
                         <x:String>OnLaunch</x:String>
                         <x:String>Never</x:String>
@@ -389,12 +393,11 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsVolumeBoostDescription}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <x:String>None</x:String>
                         <x:String>#125%</x:String>
                         <x:String>#150%</x:String>
@@ -425,6 +428,9 @@
                                         <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
                             </ComboBox>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -511,12 +517,11 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsVideoUpscalingHeader}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.VideoUpscaling, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <x:String>VideoUpscalingLinear</x:String>
                         <x:String>VideoUpscalingPoint</x:String>
                         <x:String>VideoUpscalingSuper</x:String>

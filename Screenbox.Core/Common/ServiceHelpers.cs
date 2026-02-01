@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Controllers;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -53,13 +54,18 @@ public static class ServiceHelpers
         // Factories
         services.AddSingleton<MediaViewModelFactory>();
         services.AddSingleton<StorageItemViewModelFactory>();
-        services.AddSingleton<ArtistViewModelFactory>();
-        services.AddSingleton<AlbumViewModelFactory>();
+        services.AddTransient<ArtistViewModelFactory>();
+        services.AddTransient<AlbumViewModelFactory>();
         services.AddSingleton<IMediaListFactory, MediaListFactory>();
 
         // Contexts
         services.AddSingleton<PlayerContext>();
         services.AddSingleton<PlaylistsContext>();
+        services.AddSingleton<CastContext>();
+        services.AddSingleton<LibraryContext>();
+
+        // Controllers
+        services.AddSingleton<LibraryController>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();

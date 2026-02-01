@@ -192,12 +192,12 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 **Media Management Services**
 - **`IFilesService`**: File system operations and media discovery
-- **`ILibraryService`**: Media library indexing and organization  
+- **`ILibraryService`**: Stateless operations for fetching and managing libraries
 - **`ISearchService`**: Content search and filtering functionality
 
 **Playback and Streaming Services**
 - **`IPlayerService`**: Media player initialization and playback item management
-- **`ICastService`**: Chromecast and network streaming capabilities
+- **`ICastService`**: Stateless casting operations for renderer creation and configuration
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
 
 **System Integration Services**
@@ -210,6 +210,27 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 Contexts provide observable state management that can be shared across services and components:
 
 - **`PlayerContext`**: Holds the current media player instance, allowing components to observe player state changes
+- **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
+- **`LibraryContext`**: Holds library state including the current libraries, loading flags, cancellation tokens, query results, and media collections
+
+#### Stateful Coordinators
+
+Some platform APIs (file system watchers, timers, device watchers) require stateful ownership to reliably subscribe/unsubscribe and to avoid duplicating watchers across views.
+
+- **`LibraryController`**: Stateful coordinator that owns library queries, `ContentsChanged` watchers, debounce timers, and Xbox removable-storage device watchers. It updates `LibraryContext` with owned query results and triggers `ILibraryService` fetch operations.
+
+#### Stateless vs stateful decision
+
+- **Stateless services** (example: `LibraryService`, `CastService`): execute operations and write results into a supplied context, but do not own long-lived observable state.
+- **Stateful coordinators** (example: `LibraryController`): own watchers/timers and manage subscriptions/lifetimes.
+
+#### Helper Classes
+
+Helper classes provide focused utilities and lightweight wrappers for specific functionality:
+
+- **`RendererWatcher`**: Lightweight wrapper around VLC's RendererDiscoverer for network renderer discovery, exposing events for renderer found/lost notifications and maintaining a list of available renderers
+- **`DisplayRequestTracker`**: Manages display sleep prevention during media playback
+- **`LastPositionTracker`**: Tracks and persists media playback positions for resume functionality
 
 #### UI-Specific Services (Screenbox Project)
 - **`ResourceService.cs`**: Localization and resource string management

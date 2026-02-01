@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
-using System;
-using Screenbox.Core.Events;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 
@@ -9,9 +8,13 @@ namespace Screenbox.Core.Services;
 
 public interface ICastService
 {
-    event EventHandler<RendererFoundEventArgs>? RendererFound;
-    event EventHandler<RendererLostEventArgs>? RendererLost;
+    /// <summary>
+    /// Create a new renderer watcher for the specified media player
+    /// </summary>
+    RendererWatcher CreateRendererWatcher(IMediaPlayer player);
+
+    /// <summary>
+    /// Set the active renderer for the media player
+    /// </summary>
     bool SetActiveRenderer(IMediaPlayer player, Renderer? renderer);
-    bool Start(IMediaPlayer player);
-    void Stop();
 }

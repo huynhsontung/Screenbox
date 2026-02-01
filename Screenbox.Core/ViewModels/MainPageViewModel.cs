@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Controllers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -44,18 +45,23 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
+    private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
+    private readonly LibraryController _libraryController;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        ILibraryService libraryService, PlaylistsContext playlistsContext, IPlaylistService playlistService)
+        LibraryContext libraryContext, ILibraryService libraryService, LibraryController libraryController,
+        PlaylistsContext playlistsContext, IPlaylistService playlistService)
     {
         _searchService = searchService;
         _navigationService = navigationService;
+        _libraryContext = libraryContext;
         _libraryService = libraryService;
+        _libraryController = libraryController;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
         _searchQuery = string.Empty;
@@ -147,7 +153,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         SearchSuggestions.Clear();
         if (searchQuery.Length > 0)
         {
-            var result = _searchService.SearchLocalLibrary(searchQuery);
+            var result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
             var suggestions = GetSuggestItems(result, searchQuery);
 
             if (suggestions.Count != 0)
@@ -169,7 +175,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         string searchQuery = queryText.Trim();
         if (searchQuery.Length > 0)
         {
-            SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
+            SearchResult result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
             _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
         }
     }
@@ -233,17 +239,26 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         return (index * IndexWeightFactor) + wordRank;
     }
 
-    public Task FetchLibraries()
+    public async Task FetchLibraries()
     {
+        try
+        {
+            await _libraryController.EnsureWatchingAsync();
+        }
+        catch (Exception)
+        {
+            // pass
+        }
+
         List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync(), FetchPlaylistsAsync() };
-        return Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
     }
 
     private async Task FetchMusicLibraryAsync()
     {
         try
         {
-            await _libraryService.FetchMusicAsync();
+            await _libraryService.FetchMusicAsync(_libraryContext);
         }
         catch (UnauthorizedAccessException)
         {
@@ -260,7 +275,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryService.FetchVideosAsync();
+            await _libraryService.FetchVideosAsync(_libraryContext);
         }
         catch (UnauthorizedAccessException)
         {
