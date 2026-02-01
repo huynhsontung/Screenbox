@@ -272,22 +272,22 @@
     <value>Pusto</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Przywróć widok wideo</value>
+    <value>Przywróć widok immersyjny</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimalizuj widok pełnoekranowy</value>
+    <value>Minimalizuj widok immersyjny</value>
   </data>
   <data name="Cast" xml:space="preserve">
-    <value>Udostępnij</value>
+    <value>Prześlij</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Zatrzymaj udostępnianie</value>
+    <value>Zatrzymaj przesyłanie</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Udostępnianie do</value>
+    <value>Przesyłanie do</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Udostępnij do urządzenia</value>
+    <value>Przesyłaj do urządzenia</value>
   </data>
   <data name="Disable" xml:space="preserve">
     <value>Wyłącz</value>
