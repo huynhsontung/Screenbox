@@ -655,7 +655,7 @@
     <value>Sterowanie ekranowe</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Wybierz, które elementy mogą pojawić się w kontrolach i dostosuj automatyczne ukrywanie</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesty</value>
@@ -834,7 +834,7 @@
     <value>Sortuj wg</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Sortuj według {0} wybranej opcji</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
