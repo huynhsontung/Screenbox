@@ -28,7 +28,7 @@ public partial class PlaylistsPageViewModel : ObservableObject
     {
         // Create view model and add to collection
         var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
-        playlist.Caption = displayName;
+        playlist.Name = displayName;
         await playlist.SaveAsync();
 
         // Assume sort by last updated
@@ -37,7 +37,7 @@ public partial class PlaylistsPageViewModel : ObservableObject
 
     public async Task RenamePlaylistAsync(PlaylistViewModel playlist, string newDisplayName)
     {
-        playlist.Caption = newDisplayName;
+        playlist.Name = newDisplayName;
         await playlist.SaveAsync();
     }
 

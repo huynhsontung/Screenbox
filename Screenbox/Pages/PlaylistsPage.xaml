@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -12,13 +12,10 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewmodels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <MenuFlyout x:Name="PlaylistContextMenu">
                 <MenuFlyoutItem
                     x:Name="RenamePlaylistMenuItem"
@@ -32,6 +29,19 @@
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="Delete" />
             </MenuFlyout>
+
+            <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
+                <controls:CommonGridViewItem
+                    Title="{x:Bind Name, Mode=OneWay}"
+                    Width="{StaticResource CommonGridViewItemWidth}"
+                    Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
+                    IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+                    ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+                    <controls:CommonGridViewItem.PlaceholderIconSource>
+                        <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="{x:Bind Converter={StaticResource MediaGlyphConverter}}" />
+                    </controls:CommonGridViewItem.PlaceholderIconSource>
+                </controls:CommonGridViewItem>
+            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
 

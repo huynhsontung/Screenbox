@@ -110,7 +110,7 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
         {
             targetSubItem.Items.Add(new MenuFlyoutItem
             {
-                Text = playlist.Caption,
+                Text = playlist.Name,
                 Command = Common.AddItemsToPlaylistCommand,
                 CommandParameter = (playlist, clickedItems)
             });

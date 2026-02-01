@@ -16,7 +16,9 @@ public partial class PlaylistViewModel : ObservableObject
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 
-    [ObservableProperty] private string _caption = string.Empty;
+    public double ItemsCount => Items.Count;    // For binding
+
+    [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private object? _thumbnail;
     [ObservableProperty] private DateTimeOffset _lastUpdated = DateTimeOffset.Now;
@@ -32,6 +34,13 @@ public partial class PlaylistViewModel : ObservableObject
     {
         _playlistService = playlistService;
         _mediaFactory = mediaFactory;
+
+        Items.CollectionChanged += Items_CollectionChanged;
+    }
+
+    private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(ItemsCount));
     }
 
     public Playlist GetPlaylist()
@@ -42,7 +51,7 @@ public partial class PlaylistViewModel : ObservableObject
     public void Load(PersistentPlaylist persistentPlaylist)
     {
         if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
-        Caption = persistentPlaylist.DisplayName;
+        Name = persistentPlaylist.DisplayName;
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
         foreach (var item in persistentPlaylist.Items)
@@ -60,7 +69,7 @@ public partial class PlaylistViewModel : ObservableObject
 
     public async Task RenameAsync(string newDisplayName)
     {
-        Caption = newDisplayName;
+        Name = newDisplayName;
         await SaveAsync();
     }
 
@@ -69,7 +78,7 @@ public partial class PlaylistViewModel : ObservableObject
         return new PersistentPlaylist
         {
             Id = _id.ToString(),
-            DisplayName = Caption,
+            DisplayName = Name,
             LastUpdated = LastUpdated,
             Items = Items.Select(m => new PersistentMediaRecord(
                 m.Name,

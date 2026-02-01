@@ -165,7 +165,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         if (string.IsNullOrWhiteSpace(playlistName) || items.Count == 0) return;
 
         var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
-        playlist.Caption = playlistName;
+        playlist.Name = playlistName;
 
         foreach (MediaViewModel media in items)
         {

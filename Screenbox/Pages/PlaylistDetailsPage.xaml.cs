@@ -202,9 +202,9 @@ public sealed partial class PlaylistDetailsPage : Page
     {
         if (ViewModel.Source == null) return;
 
-        Controls.RenamePlaylistDialog dialog = new(ViewModel.Source.Caption);
+        Controls.RenamePlaylistDialog dialog = new(ViewModel.Source.Name);
         string? newName = await dialog.GetPlaylistNameAsync();
-        if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Caption)
+        if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Name)
         {
             await ViewModel.Source.RenameAsync(newName!);
         }
@@ -217,7 +217,7 @@ public sealed partial class PlaylistDetailsPage : Page
         ContentDialog dialog = new()
         {
             Title = "Delete Playlist",
-            Content = $"Are you sure you want to delete '{ViewModel.Source.Caption}'?",
+            Content = $"Are you sure you want to delete '{ViewModel.Source.Name}'?",
             PrimaryButtonText = "Delete",
             CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Close
