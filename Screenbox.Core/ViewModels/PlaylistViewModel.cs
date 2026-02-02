@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
@@ -70,6 +72,18 @@ public partial class PlaylistViewModel : ObservableObject
     public async Task RenameAsync(string newDisplayName)
     {
         Name = newDisplayName;
+        await SaveAsync();
+    }
+
+    [RelayCommand]
+    private async Task AddItemsAsync(IReadOnlyList<MediaViewModel> items)
+    {
+        if (items.Count == 0) return;
+        foreach (var item in items)
+        {
+            Items.Add(item);
+        }
+
         await SaveAsync();
     }
 

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -151,49 +150,5 @@ public sealed partial class CommonViewModel : ObservableRecipient,
             Messenger.Send(new ErrorMessage(
                 _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
         }
-    }
-
-    /// <summary>
-    /// Creates a new playlist with the provided media items and adds it to the application playlists context.
-    /// </summary>
-    [RelayCommand]
-    private async Task CreatePlaylistWithItemsAsync((string PlaylistName, IReadOnlyList<MediaViewModel> Items)? parameter)
-    {
-        if (parameter is null) return;
-
-        (string playlistName, IReadOnlyList<MediaViewModel> items) = parameter.Value;
-        if (string.IsNullOrWhiteSpace(playlistName) || items.Count == 0) return;
-
-        var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
-        playlist.Name = playlistName;
-
-        foreach (MediaViewModel media in items)
-        {
-            playlist.Items.Add(media);
-        }
-
-        await playlist.SaveAsync();
-
-        // Assume sort by last updated
-        _playlistsContext.Playlists.Insert(0, playlist);
-    }
-
-    /// <summary>
-    /// Adds media items to an existing playlist and persists it.
-    /// </summary>
-    [RelayCommand]
-    private async Task AddItemsToPlaylistAsync((PlaylistViewModel Playlist, IReadOnlyList<MediaViewModel> Items)? parameter)
-    {
-        if (parameter is null) return;
-
-        (PlaylistViewModel playlist, IReadOnlyList<MediaViewModel> items) = parameter.Value;
-        if (items.Count == 0) return;
-
-        foreach (MediaViewModel media in items)
-        {
-            playlist.Items.Add(media);
-        }
-
-        await playlist.SaveAsync();
     }
 }

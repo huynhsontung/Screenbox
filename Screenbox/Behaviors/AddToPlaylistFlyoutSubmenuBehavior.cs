@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Xaml.Interactivity;
+using Screenbox.Commands;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
@@ -32,12 +33,10 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
         set => SetValue(TargetSubItemNameProperty, value);
     }
 
-    private CommonViewModel Common { get; }
     private PlaylistsContext PlaylistsContext { get; }
 
     public AddToPlaylistFlyoutSubmenuBehavior()
     {
-        Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         PlaylistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
     }
 
@@ -79,22 +78,15 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
             : Array.Empty<MediaViewModel>();
 
         targetSubItem.Items.Clear();
-
-        if (clicked is not null)
+        targetSubItem.Items.Add(new MenuFlyoutItem
         {
-            string defaultName = string.IsNullOrWhiteSpace(clicked.Name)
-                ? Strings.Resources.NewPlaylist
-                : clicked.Name;
+            Icon = new SymbolIcon(Symbol.Add),
+            Text = Strings.Resources.CreateNewPlaylist,
+            Command = new CreatePlaylistCommand(),
+            CommandParameter = clicked
+        });
 
-            targetSubItem.Items.Add(new MenuFlyoutItem
-            {
-                Text = Strings.Resources.CreateNewPlaylist,
-                Command = Common.CreatePlaylistWithItemsCommand,
-                CommandParameter = (defaultName, clickedItems)
-            });
-
-            targetSubItem.Items.Add(new MenuFlyoutSeparator());
-        }
+        targetSubItem.Items.Add(new MenuFlyoutSeparator());
 
         if (PlaylistsContext.Playlists.Count == 0)
         {
@@ -111,8 +103,8 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
             targetSubItem.Items.Add(new MenuFlyoutItem
             {
                 Text = playlist.Name,
-                Command = Common.AddItemsToPlaylistCommand,
-                CommandParameter = (playlist, clickedItems)
+                Command = playlist.AddItemsCommand,
+                CommandParameter = clickedItems
             });
         }
     }
