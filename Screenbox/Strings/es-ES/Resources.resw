@@ -455,7 +455,7 @@
     <value>Artistas</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Canción</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Canciones</value>
@@ -652,7 +652,7 @@
     <value>Permitir que el volumen máximo supere el 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Controles en pantalla</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
     <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
