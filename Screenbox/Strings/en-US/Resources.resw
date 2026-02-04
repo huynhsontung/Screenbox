@@ -622,7 +622,7 @@
     <value>Music library locations</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Remember recent media</value>
+    <value>Show recent media</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
     <value>Show controls when paused</value>
@@ -982,10 +982,10 @@
     <value>Folder</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Remember playback position</value>
+    <value>Playback position history</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where I left off</value>
+    <value>Store my playback position history on this device to resume where you left off</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
