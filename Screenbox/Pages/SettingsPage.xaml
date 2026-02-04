@@ -28,6 +28,7 @@
     <Page.Resources>
         <!--<x:Double x:Key="SettingsCardActionIconMaxSize">14</x:Double>-->
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
+        <x:Double x:Key="SettingsCardButtonMinWidth">120</x:Double>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
 
@@ -326,14 +327,6 @@
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
-                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
-                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
-                </ctc:SettingsCard>
-
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
 
@@ -576,7 +569,10 @@
                             x:Name="SettingsClearRecentCard"
                             AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
                             Header="{strings:Resources Key=SettingsClearRecentHeader}">
-                            <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
+                            <Button
+                                MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                                Command="{x:Bind ViewModel.ClearRecentHistoryCommand}"
+                                Content="{strings:Resources Key=Clear}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
@@ -585,14 +581,23 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}"
                     Header="{x:Bind strings:Resources.SettingsSavePlaybackPositionHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE81C;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
                     <interactivity:Interaction.Behaviors>
                         <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PersistPlaybackPosition, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
+                            Description="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}"
+                            Header="{x:Bind strings:Resources.SettingsRestorePlaybackPositionHeader}"
+                            IsEnabled="{x:Bind ViewModel.PersistPlaybackPosition, Mode=OneWay}">
+                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
                         <ctc:SettingsCard AutomationProperties.Name="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}" Header="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}">
-                            <Button Command="{x:Bind ViewModel.ClearPlaybackPositionHistoryCommand}" Content="{x:Bind strings:Resources.Clear}" />
+                            <Button
+                                MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                                Command="{x:Bind ViewModel.ClearPlaybackPositionHistoryCommand}"
+                                Content="{x:Bind strings:Resources.Clear}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>

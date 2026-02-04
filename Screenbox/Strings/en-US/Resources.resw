@@ -634,7 +634,7 @@
     <value>Subtitles</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Show recently played media on the home page</value>
+    <value>See recently played media on the home page</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Clear recent media history</value>
@@ -931,10 +931,10 @@
     <value>Personalization</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Resume previous session</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Automatically resume media playback from your last stopped position when opening a file</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Video upscaling method</value>
