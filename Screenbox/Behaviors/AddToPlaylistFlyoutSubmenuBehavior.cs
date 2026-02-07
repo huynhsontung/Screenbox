@@ -77,7 +77,12 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
             return;
         }
 
-        var clicked = targetSubItem.DataContext as MediaViewModel;
+        MediaViewModel? clicked = targetSubItem.DataContext switch
+        {
+            StorageItemViewModel svm => svm.Media,
+            MediaViewModel vm => vm,
+            _ => null,
+        };
         IReadOnlyList<MediaViewModel> clickedItems = clicked is not null
             ? [clicked]
             : Array.Empty<MediaViewModel>();
