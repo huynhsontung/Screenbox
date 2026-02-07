@@ -21,7 +21,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     [ObservableProperty]
     private PlaylistViewModel? _source;
 
-    private List<MediaViewModel>? _itemList;
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -47,8 +46,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private void Play(MediaViewModel item)
     {
         if (Source == null) return;
-        _itemList ??= Source.Items.ToList();
-        Messenger.SendQueueAndPlay(item, _itemList);
+        Messenger.SendQueueAndPlay(item, Source.Items);
     }
 
     [RelayCommand]
@@ -66,7 +64,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     {
         if (Source == null) return;
         Source.Items.Remove(item);
-        _itemList = null;
         await Source.SaveAsync();
     }
 
@@ -86,14 +83,11 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
             Source.Items.Add(item);
         }
 
-        // Invalidate cached item list
-        _itemList = null;
+        // Load media details in parallel
+        await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
 
         // Save the updated playlist to disk
         await Source.SaveAsync();
-
-        // Load media details in parallel
-        await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
     }
 
     public async Task<bool> DeletePlaylistAsync()
