@@ -3,9 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xaml.Interactivity;
-using Screenbox.Commands;
+using Screenbox.Controls;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
@@ -33,11 +35,14 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
         set => SetValue(TargetSubItemNameProperty, value);
     }
 
-    private PlaylistsContext PlaylistsContext { get; }
+    public IAsyncRelayCommand<MediaViewModel?> CreatePlaylistCommand { get; }
+
+    private readonly PlaylistsContext _playlistsContext;
 
     public AddToPlaylistFlyoutSubmenuBehavior()
     {
-        PlaylistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
+        _playlistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
+        CreatePlaylistCommand = new AsyncRelayCommand<MediaViewModel?>(CreatePlaylistAsync);
     }
 
     protected override void OnAttached()
@@ -82,13 +87,13 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
         {
             Icon = new SymbolIcon(Symbol.Add),
             Text = Strings.Resources.CreateNewPlaylist,
-            Command = new CreatePlaylistCommand(),
+            Command = CreatePlaylistCommand,
             CommandParameter = clicked
         });
 
         targetSubItem.Items.Add(new MenuFlyoutSeparator());
 
-        if (PlaylistsContext.Playlists.Count == 0)
+        if (_playlistsContext.Playlists.Count == 0)
         {
             targetSubItem.Items.Add(new MenuFlyoutItem
             {
@@ -98,7 +103,7 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
             return;
         }
 
-        foreach (var playlist in PlaylistsContext.Playlists.Where(p => p is not null))
+        foreach (var playlist in _playlistsContext.Playlists.Where(p => p is not null))
         {
             targetSubItem.Items.Add(new MenuFlyoutItem
             {
@@ -107,6 +112,25 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
                 CommandParameter = clickedItems
             });
         }
+    }
+
+    private async Task CreatePlaylistAsync(MediaViewModel? parameter)
+    {
+        var playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
+        if (string.IsNullOrWhiteSpace(playlistName))
+            return;
+
+        var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+        playlist.Name = playlistName!;
+        if (parameter != null)
+        {
+            playlist.Items.Add(parameter);
+        }
+
+        await playlist.SaveAsync();
+
+        // Assume sort by last updated
+        _playlistsContext.Playlists.Insert(0, playlist);
     }
 
     private static bool TryFindSubItem(IList<MenuFlyoutItemBase> items, string name, out MenuFlyoutSubItem subItem)
