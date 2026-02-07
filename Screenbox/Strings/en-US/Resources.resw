@@ -996,4 +996,16 @@
   <data name="NoPlaylists" xml:space="preserve">
     <value>No playlists</value>
   </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PlaylistName" xml:space="preserve">
+    <value>Playlist name</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a name for this playlist</value>
+  </data>
 </root>

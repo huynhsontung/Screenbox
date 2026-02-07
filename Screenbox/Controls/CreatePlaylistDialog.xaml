@@ -4,19 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Create Playlist"
-    CloseButtonText="Cancel"
+    xmlns:strings="using:Screenbox.Strings"
+    Title="{strings:Resources Key=CreateNewPlaylist}"
+    CloseButtonText="{strings:Resources Key=Cancel}"
     DefaultButton="Primary"
-    PrimaryButtonText="Create"
+    PrimaryButtonText="{strings:Resources Key=Create}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <StackPanel Spacing="8">
-        <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="Playlist name" />
+        <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{strings:Resources Key=PlaylistName}" />
         <TextBox
             x:Name="PlaylistNameTextBox"
             MaxLength="100"
-            PlaceholderText="Enter a name for this playlist"
+            PlaceholderText="{strings:Resources Key=CreatePlaylistPlaceholder}"
             TextChanged="PlaylistNameTextBox_OnTextChanged" />
     </StackPanel>
 </ContentDialog>
