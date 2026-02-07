@@ -58,7 +58,8 @@ public partial class PlaylistViewModel : ObservableObject
         Items.Clear();
         foreach (var item in persistentPlaylist.Items)
         {
-            Items.Add(ToMediaViewModel(item));
+            var vm = ToMediaViewModel(item);
+            Items.Add(Items.Contains(vm) ? new MediaViewModel(vm) : vm);
         }
     }
 
@@ -76,12 +77,12 @@ public partial class PlaylistViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task AddItemsAsync(IReadOnlyList<MediaViewModel> items)
+    public async Task AddItemsAsync(IReadOnlyList<MediaViewModel> items)
     {
         if (items.Count == 0) return;
         foreach (var item in items)
         {
-            Items.Add(item);
+            Items.Add(Items.Contains(item) ? new MediaViewModel(item) : item);
         }
 
         await SaveAsync();

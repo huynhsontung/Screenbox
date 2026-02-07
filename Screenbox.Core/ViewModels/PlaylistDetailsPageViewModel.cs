@@ -78,16 +78,8 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         var mediaList = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetSingleton).ToList();
         if (mediaList.Count == 0) return;
 
-        foreach (var item in mediaList)
-        {
-            Source.Items.Add(item);
-        }
-
-        // Load media details in parallel
         await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
-
-        // Save the updated playlist to disk
-        await Source.SaveAsync();
+        await Source.AddItemsAsync(mediaList);
     }
 
     public async Task<bool> DeletePlaylistAsync()
