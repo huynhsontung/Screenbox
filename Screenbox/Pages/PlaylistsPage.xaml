@@ -16,16 +16,15 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <MenuFlyout x:Name="PlaylistContextMenu">
+            <MenuFlyout x:Key="ItemFlyout">
                 <MenuFlyoutItem
-                    x:Name="RenamePlaylistMenuItem"
-                    Click="RenamePlaylistMenuItem_OnClick"
+                    Command="{x:Bind RenamePlaylistCommand}"
+                    CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Rename}"
                     Text="{strings:Resources Key=Rename}" />
-                <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    x:Name="DeletePlaylistMenuItem"
-                    Click="DeletePlaylistMenuItem_OnClick"
+                    Command="{x:Bind DeletePlaylistCommand}"
+                    CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{strings:Resources Key=Delete}" />
             </MenuFlyout>
@@ -89,7 +88,7 @@
             ItemsSource="{x:Bind ViewModel.Playlists}"
             SelectionMode="None">
             <interactivity:Interaction.Behaviors>
-                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind PlaylistContextMenu}" />
+                <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
             </interactivity:Interaction.Behaviors>
         </GridView>
 

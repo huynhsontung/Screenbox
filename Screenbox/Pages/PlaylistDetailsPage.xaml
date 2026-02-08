@@ -213,18 +213,18 @@
                             <AppBarButton
                                 Command="{x:Bind ViewModel.AddFilesCommand}"
                                 Icon="{ui:SymbolIcon Symbol=Add}"
-                                Label="Add files"
+                                Label="{strings:Resources Key=AddFiles}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
 
                             <CommandBar.SecondaryCommands>
                                 <AppBarButton
-                                    Click="RenamePlaylistButton_OnClick"
+                                    Command="{x:Bind RenamePlaylistCommand}"
                                     Icon="{ui:SymbolIcon Symbol=Rename}"
-                                    Label="Rename" />
+                                    Label="{strings:Resources Key=Rename}" />
                                 <AppBarButton
-                                    Click="DeletePlaylistButton_OnClick"
+                                    Command="{x:Bind DeletePlaylistCommand}"
                                     Icon="{ui:SymbolIcon Symbol=Delete}"
-                                    Label="Delete" />
+                                    Label="{strings:Resources Key=Delete}" />
                             </CommandBar.SecondaryCommands>
                         </CommandBar>
                     </Grid>

@@ -3,9 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
+using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Composition;
@@ -198,11 +201,11 @@ public sealed partial class PlaylistDetailsPage : Page
         return duration;
     }
 
-    private async void RenamePlaylistButton_OnClick(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private async Task RenamePlaylistAsync()
     {
         if (ViewModel.Source == null) return;
-
-        Controls.RenamePlaylistDialog dialog = new(ViewModel.Source.Name);
+        RenamePlaylistDialog dialog = new(ViewModel.Source.Name);
         string? newName = await dialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Name)
         {
@@ -210,22 +213,12 @@ public sealed partial class PlaylistDetailsPage : Page
         }
     }
 
-    private async void DeletePlaylistButton_OnClick(object sender, RoutedEventArgs e)
+    [RelayCommand]
+    private async Task DeletePlaylistAsync()
     {
         if (ViewModel.Source == null) return;
-
-        ContentDialog dialog = new()
-        {
-            Title = "Delete Playlist",
-            Content = $"Are you sure you want to delete '{ViewModel.Source.Name}'?",
-            PrimaryButtonText = "Delete",
-            CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Close
-        };
-        dialog.FlowDirection = Helpers.GlobalizationHelper.GetFlowDirection();
-        dialog.RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
-
-        ContentDialogResult result = await dialog.ShowAsync();
+        var deleteConfirmation = new DeletePlaylistDialog(ViewModel.Source.Name);
+        var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
             bool deleted = await ViewModel.DeletePlaylistAsync();

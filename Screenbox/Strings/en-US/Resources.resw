@@ -1023,4 +1023,11 @@
   <data name="RenamePlaylist" xml:space="preserve">
     <value>Rename playlist</value>
   </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
 </root>

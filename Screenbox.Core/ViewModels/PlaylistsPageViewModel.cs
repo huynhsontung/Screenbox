@@ -37,8 +37,7 @@ public partial class PlaylistsPageViewModel : ObservableObject
 
     public async Task RenamePlaylistAsync(PlaylistViewModel playlist, string newDisplayName)
     {
-        playlist.Name = newDisplayName;
-        await playlist.SaveAsync();
+        await playlist.RenameAsync(newDisplayName);
     }
 
     public async Task DeletePlaylistAsync(PlaylistViewModel playlist)
