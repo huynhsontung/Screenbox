@@ -21,13 +21,13 @@
                     x:Name="RenamePlaylistMenuItem"
                     Click="RenamePlaylistMenuItem_OnClick"
                     Icon="{ui:SymbolIcon Symbol=Rename}"
-                    Text="Rename" />
+                    Text="{strings:Resources Key=Rename}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     x:Name="DeletePlaylistMenuItem"
                     Click="DeletePlaylistMenuItem_OnClick"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
-                    Text="Delete" />
+                    Text="{strings:Resources Key=Delete}" />
             </MenuFlyout>
 
             <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
@@ -61,21 +61,18 @@
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="Playlists" />
+                Text="{strings:Resources Key=Playlists}" />
             <Button
                 x:Name="HeaderCreateButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Click="HeaderCreateButton_OnClick">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        Margin="{StaticResource IconButtonStandardIconMargin}"
-                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                        Glyph="{StaticResource FolderOpenGlyph}" />
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
                     <TextBlock
                         x:Name="HeaderCreateButtonText"
                         Margin="8,0,0,0"
-                        Text="Create playlist" />
+                        Text="{strings:Resources Key=NewPlaylist}" />
                 </StackPanel>
             </Button>
         </Grid>
