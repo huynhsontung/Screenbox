@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Avanzate</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Modalità avanzata</value>
   </data>
@@ -977,5 +980,14 @@
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>
