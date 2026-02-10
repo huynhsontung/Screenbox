@@ -634,7 +634,7 @@
     <value>Legendas</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Mostrar ficheiros multimédia reproduzidos recentemente na página inicial</value>
+    <value>Ver conteúdo de multimédia reproduzido recentemente na página inicial</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Limpar histórico de multimédia recente</value>
@@ -741,7 +741,7 @@
     <value>Avançado</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Privacidade</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Modo avançado</value>
@@ -931,10 +931,10 @@
     <value>Personalização</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Retomar sempre da última posição</value>
+    <value>Retomar a sessão anterior</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continuar a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
+    <value>Retomar automaticamente a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Melhorar vídeo</value>
@@ -982,12 +982,12 @@
     <value>Pasta</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Histórico de posição reproduzida</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Armazenar o meu histórico de posições reproduzidas neste dispositivo para retomar no ponto onde parou</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Limpar o histórico de posição reproduzida do dispositivo</value>
   </data>
 </root>
