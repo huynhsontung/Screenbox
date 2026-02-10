@@ -622,7 +622,7 @@
     <value>Music library locations</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Show recent media</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
     <value>Show controls when paused</value>
@@ -634,7 +634,7 @@
     <value>Subtitles</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>See recently played media on the home page</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Clear recent media history</value>
@@ -739,6 +739,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Advanced</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Advanced mode</value>
@@ -928,10 +931,10 @@
     <value>Personalization</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Resume previous session</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Automatically resume media playback from your last stopped position when opening a file</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Video upscaling method</value>
@@ -1029,5 +1032,14 @@
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
     <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
     <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

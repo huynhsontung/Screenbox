@@ -288,7 +288,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         // Async updates
         await Task.WhenAll(
-            AddToRecent(value?.Source),
+            _settingsService.ShowRecent ? AddToRecent(value?.Source) : Task.CompletedTask,
             _transportControlsService.UpdateTransportControlsDisplayAsync(value),
             UpdateMediaBufferAsync()
         );
