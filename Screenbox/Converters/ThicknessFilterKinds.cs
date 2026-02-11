@@ -13,27 +13,27 @@ public enum ThicknessFilterKinds
     /// <summary>
     /// No filter applied.
     /// </summary>
-    None = 0,
+    None = 0b_0000,
 
     /// <summary>
     /// Filters Left value, sets Top, Right and Bottom to 0.
     /// </summary>
-    Left = 1,
+    Left = 0b_0001,
 
     /// <summary>
     /// Filters Top value, sets Left, Right and Bottom to 0.
     /// </summary>
-    Top = 2,
+    Top = 0b_0010,
 
     /// <summary>
     /// Filters Right value, sets Left, Top and Bottom to 0.
     /// </summary>
-    Right = 4,
+    Right = 0b_0100,
 
     /// <summary>
     /// Filters Bottom value, sets Left, Top and Right to 0.
     /// </summary>
-    Bottom = 8,
+    Bottom = 0b_1000,
 
     /// <summary>
     /// Filters Left and Right values, sets Top and Bottom to 0.
