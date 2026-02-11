@@ -237,8 +237,9 @@ public sealed partial class NavigationViewEx : NavigationView
             shadowCaster.Translation = new Vector3(0, 0, 32);
         }
 
-        UpdateOverlay();
-        UpdateContentVisibility(ContentVisibility);
+        LoadOverlay();
+        UpdateOverlayLayout();
+        UpdateContentVisibility();
     }
 
     protected override void OnKeyDown(KeyRoutedEventArgs e)
@@ -273,7 +274,7 @@ public sealed partial class NavigationViewEx : NavigationView
             splitViewGrid.Children.Add(_overlayRoot);
         }
 
-        if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name == NavViewSettingsItem) is NavigationViewItem settingsItem)
+        if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name.Equals(NavViewSettingsItem, StringComparison.Ordinal)) is { } settingsItem)
         {
             _settingsItem = settingsItem;
 
@@ -326,6 +327,8 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnPaneClosed(NavigationView sender, object args)
     {
+        // This ensures closing the pane via the gamepad 'B' button correctly
+        // hides the overlay dismiss layer.
         UpdateOverlayLightDismissLayerVisibility();
     }
 
@@ -337,25 +340,61 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
-    private void UpdateContentVisibility(Visibility visibility)
+    private void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        var property = e.Property;
+
+        if (property == OverlayProperty)
+        {
+            LoadOverlay();
+        }
+        else if (property == OverlayZIndexProperty)
+        {
+            UpdateOverlayZIndex();
+        }
+        else if (property == ContentVisibilityProperty)
+        {
+            UpdateContentVisibility();
+            UpdateOverlayLayout();
+        }
+        else if (property == BackButtonStyleProperty)
+        {
+            UpdateBackButtonStyle();
+            UpdateCloseButtonStyle();
+        }
+        else if (property == PaneSearchButtonStyleProperty)
+        {
+            UpdatePaneSearchButtonStyle();
+        }
+        else if (property == SettingsItemStyleProperty)
+        {
+            UpdateSettingsItemStyle();
+        }
+        else if (property == ContentAnimationDirectionProperty)
+        {
+            UpdateContentGridAnimations();
+        }
+    }
+
+    private void UpdateContentVisibility()
     {
         if (_paneToggleButtonGrid != null)
         {
-            _paneToggleButtonGrid.Visibility = visibility;
+            _paneToggleButtonGrid.Visibility = ContentVisibility;
         }
 
         if (_contentGrid != null)
         {
-            _contentGrid.Visibility = visibility;
+            _contentGrid.Visibility = ContentVisibility;
         }
 
         if (_paneContentGrid != null)
         {
-            _paneContentGrid.Visibility = visibility;
+            _paneContentGrid.Visibility = ContentVisibility;
         }
     }
 
-    private void UpdateOverlay()
+    private void LoadOverlay()
     {
         if (Overlay == null) return;
 
@@ -388,71 +427,58 @@ public sealed partial class NavigationViewEx : NavigationView
         _overlayRoot.Children.Clear();
         _overlayRoot.Children.Add(_overlayChildBorder);
         _overlayRoot.Children.Add(_overlayChildRectangle);
-        UpdateOverlayLayout();
     }
 
-    private void UpdateOverlayZIndex(int index)
+    private void UpdateOverlayZIndex()
     {
         if (_overlayRoot != null)
         {
-            Canvas.SetZIndex(_overlayRoot, index);
+            Canvas.SetZIndex(_overlayRoot, OverlayZIndex);
         }
     }
 
     private void UpdateOverlayLayout()
     {
-        if (_overlayRoot == null) return;
-
-        // Aligns the overlay layout with the SplitView content area.
-        if (ContentVisibility == Visibility.Collapsed)
+        if (_overlayRoot != null)
         {
-            Grid.SetColumn(_overlayRoot, 0);
-            Grid.SetColumnSpan(_overlayRoot, 2);
-            UpdateOverlayLightDismissLayerVisibility();
-            return;
-        }
-
-        switch (DisplayMode)
-        {
-            case NavigationViewDisplayMode.Expanded:
-            case NavigationViewDisplayMode.Compact:
-                Grid.SetColumn(_overlayRoot, 1);
-                Grid.SetColumnSpan(_overlayRoot, 1);
-                break;
-            case NavigationViewDisplayMode.Minimal:
-            default:
+            // Mirror SplitView content area and light-dismiss visual behavior.
+            if (ContentVisibility == Visibility.Collapsed)
+            {
                 Grid.SetColumn(_overlayRoot, 0);
                 Grid.SetColumnSpan(_overlayRoot, 2);
-                break;
-        }
+                UpdateOverlayLightDismissLayerVisibility();
+                return;
+            }
 
-        UpdateOverlayLightDismissLayerFill();
-        UpdateOverlayLightDismissLayerVisibility();
+            switch (DisplayMode)
+            {
+                case NavigationViewDisplayMode.Expanded:
+                case NavigationViewDisplayMode.Compact:
+                    Grid.SetColumn(_overlayRoot, 1);
+                    Grid.SetColumnSpan(_overlayRoot, 1);
+                    break;
+                case NavigationViewDisplayMode.Minimal:
+                default:
+                    Grid.SetColumn(_overlayRoot, 0);
+                    Grid.SetColumnSpan(_overlayRoot, 2);
+                    break;
+            }
+
+            UpdateOverlayLightDismissLayerFill();
+            UpdateOverlayLightDismissLayerVisibility();
+        }
     }
 
     private void UpdateOverlayLightDismissLayerFill()
     {
-        if (_overlayChildRectangle == null) return;
-
-        if (_splitView != null)
+        if (_overlayChildRectangle != null && _splitView != null)
         {
             // We use the ContentGrid LightDismissLayer rectangle fill to avoid tracking
             // LightDismissOverlayMode, theme and high contrast changes ourselves.
-            if (_splitView?.FindDescendant<Rectangle>(r => r.Name == "LightDismissLayer") is Rectangle contentRootRect)
+            if (_splitView?.FindDescendant<Rectangle>(r => r.Name.Equals("LightDismissLayer", StringComparison.Ordinal)) is { } contentRootRect)
             {
                 _overlayChildRectangle.Fill = contentRootRect.Fill;
             }
-
-            //var dismissOverlayBrush = Application.Current.Resources["SplitViewLightDismissOverlayBackground"] as SolidColorBrush; // SystemControlPageBackgroundMediumAltMediumBrush
-
-            //_overlayChildRectangle.Fill = _splitView.LightDismissOverlayMode switch
-            //{
-            //    LightDismissOverlayMode.On => dismissOverlayBrush,
-            //    LightDismissOverlayMode.Auto => DeviceInfoHelper.IsXbox
-            //                        ? dismissOverlayBrush
-            //                        : new SolidColorBrush(Colors.Transparent),
-            //    _ => new SolidColorBrush(Colors.Transparent),
-            //};
         }
     }
 
@@ -471,45 +497,33 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateBackButtonStyle()
     {
-        if (_backButton != null)
+        if (_backButton != null && BackButtonStyle != null)
         {
-            if (BackButtonStyle != null)
-            {
-                _backButton.Style = BackButtonStyle;
-            }
+            _backButton.Style = BackButtonStyle;
         }
     }
 
     private void UpdateCloseButtonStyle()
     {
-        if (_closeButton != null)
+        if (_closeButton != null && BackButtonStyle != null)
         {
-            if (BackButtonStyle != null)
-            {
-                _closeButton.Style = BackButtonStyle;
-            }
+            _closeButton.Style = BackButtonStyle;
         }
     }
 
     private void UpdatePaneSearchButtonStyle()
     {
-        if (_paneSearchButton != null)
+        if (_paneSearchButton != null && PaneSearchButtonStyle != null)
         {
-            if (PaneSearchButtonStyle != null)
-            {
-                _paneSearchButton.Style = PaneSearchButtonStyle;
-            }
+            _paneSearchButton.Style = PaneSearchButtonStyle;
         }
     }
 
     private void UpdateSettingsItemStyle()
     {
-        if (_settingsItem != null)
+        if (_settingsItem != null && SettingsItemStyle != null)
         {
-            if (SettingsItemStyle != null)
-            {
-                _settingsItem.Style = SettingsItemStyle;
-            }
+            _settingsItem.Style = SettingsItemStyle;
         }
     }
 
