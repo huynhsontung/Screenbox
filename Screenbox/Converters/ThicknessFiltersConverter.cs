@@ -16,7 +16,7 @@ namespace Screenbox.Converters;
 /// </remarks>
 /// <example>
 /// The following example shows how to use the <see cref="ThicknessFiltersConverter"/> element.
-/// <code lang="xaml">
+/// <code lang="xml">
 /// &lt;ControlTemplate TargetType="Button"&gt;
 ///     &lt;Grid&gt;
 ///         &lt;Grid.Resources&gt;
