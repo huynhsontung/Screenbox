@@ -741,7 +741,7 @@
     <value>高级</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>隐私</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>高级模式</value>
@@ -982,12 +982,12 @@
     <value>文件夹</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>播放位置记录</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>在本设备上保存播放位置记录，以便从上次停止的位置继续播放</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>清除设备播放位置记录</value>
   </data>
 </root>
