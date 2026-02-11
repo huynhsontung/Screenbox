@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Globalization;
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
@@ -69,8 +70,6 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private const string ShadowCaster = "ShadowCaster";
 
-    private const string ContentGridFinalValue = "400";
-
     private static readonly ImplicitAnimationSet _slowFadeInAnimationSet = new()
     {
        new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear }
@@ -113,6 +112,7 @@ public sealed partial class NavigationViewEx : NavigationView
         base.OnApplyTemplate();
 
         _splitView = (SplitView?)GetTemplateChild(RootSplitViewName);
+        _contentGrid = (Grid)GetTemplateChild(ContentGridName);
 
         if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
         {
@@ -221,14 +221,6 @@ public sealed partial class NavigationViewEx : NavigationView
             // Set implicit animations to play when ContentVisibility changes.
             Implicit.SetShowAnimations(paneToggleButtonGrid, _slowFadeInAnimationSet);
             Implicit.SetHideAnimations(paneToggleButtonGrid, _slowFadeOutAnimationSet);
-        }
-
-        if (GetTemplateChild(ContentGridName) is Grid contentGrid)
-        {
-            _contentGrid = contentGrid;
-
-            // Set implicit animations to play when ContentVisibility changes.
-            UpdateContentGridAnimations();
         }
 
         if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
@@ -377,6 +369,7 @@ public sealed partial class NavigationViewEx : NavigationView
         if (_contentGrid != null)
         {
             _contentGrid.Visibility = ContentVisibility;
+            UpdateContentGridAnimations();
         }
 
         if (_paneContentGrid != null)
@@ -510,15 +503,23 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
-    private string GetContentAnimationTranslationTo(AnimationDirection? direction, bool isEntrance)
+    private string GetContentGridAnimationOffset(AnimationDirection? direction, bool isEntrance)
     {
+        if (_contentGrid == null)
+        {
+            return "0,0,0";
+        }
+
+        string height = _contentGrid.ActualHeight.ToString(CultureInfo.InvariantCulture);
+        string width = _contentGrid.ActualWidth.ToString(CultureInfo.InvariantCulture);
+
         return direction switch
         {
-            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
-            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
-            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
-            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
-            _ => "0,0,0"
+            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{width}, 0, 0",
+            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0, -{height}, 0",
+            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{width}, 0, 0",
+            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0, {height}, 0",
+            _ => "0,0,0",
         };
     }
 
@@ -537,13 +538,13 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             showAnimationSet.Add(new TranslationAnimation
             {
-                To = GetContentAnimationTranslationTo(ContentAnimationDirection, true),
+                To = GetContentGridAnimationOffset(ContentAnimationDirection, true),
                 Duration = TimeSpan.FromMilliseconds(400),
                 EasingMode = EasingMode.EaseOut
             });
             hideAnimationSet.Add(new TranslationAnimation
             {
-                To = GetContentAnimationTranslationTo(ContentAnimationDirection, false),
+                To = GetContentGridAnimationOffset(ContentAnimationDirection, false),
                 Duration = TimeSpan.FromMilliseconds(250),
                 EasingMode = EasingMode.EaseIn
             });
