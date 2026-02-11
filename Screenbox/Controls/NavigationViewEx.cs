@@ -112,7 +112,7 @@ public sealed partial class NavigationViewEx : NavigationView
         base.OnApplyTemplate();
 
         _splitView = (SplitView?)GetTemplateChild(RootSplitViewName);
-        _contentGrid = (Grid)GetTemplateChild(ContentGridName);
+        _contentGrid = (Grid?)GetTemplateChild(ContentGridName);
 
         if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
         {
@@ -455,14 +455,12 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateOverlayLightDismissLayerFill()
     {
-        if (_overlayChildRectangle != null && _splitView != null)
+        if (_overlayChildRectangle != null &&
+            _splitView?.FindDescendant<Rectangle>(r => r.Name.Equals("LightDismissLayer", StringComparison.Ordinal)) is { } contentRootRect)
         {
             // We use the ContentGrid LightDismissLayer rectangle fill to avoid tracking
             // LightDismissOverlayMode, theme and high contrast changes ourselves.
-            if (_splitView?.FindDescendant<Rectangle>(r => r.Name.Equals("LightDismissLayer", StringComparison.Ordinal)) is { } contentRootRect)
-            {
-                _overlayChildRectangle.Fill = contentRootRect.Fill;
-            }
+            _overlayChildRectangle.Fill = contentRootRect.Fill;
         }
     }
 
@@ -515,10 +513,10 @@ public sealed partial class NavigationViewEx : NavigationView
 
         return direction switch
         {
-            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{width}, 0, 0",
-            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0, -{height}, 0",
-            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{width}, 0, 0",
-            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0, {height}, 0",
+            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{width},0,0",
+            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0, -{height},0",
+            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{width},0,0",
+            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{height},0",
             _ => "0,0,0",
         };
     }
