@@ -241,21 +241,6 @@ public sealed partial class NavigationViewEx
     }
 
     /// <summary>
-    /// Identifies the <see cref="SettingsItemStyle"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty SettingsItemStyleProperty = DependencyProperty.Register(
-        nameof(SettingsItemStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
-
-    /// <summary>
-    /// Gets or sets the style that defines the look of the settings navigation view item.
-    /// </summary>
-    public Style? SettingsItemStyle
-    {
-        get => (Style?)GetValue(SettingsItemStyleProperty);
-        set => SetValue(SettingsItemStyleProperty, value);
-    }
-
-    /// <summary>
     /// Identifies the <see cref="ContentAnimationDirection"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContentAnimationDirectionProperty = DependencyProperty.Register(

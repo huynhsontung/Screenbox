@@ -97,7 +97,6 @@ public sealed partial class NavigationViewEx : NavigationView
     private Button? _paneSearchButton;
     private Button? _backButton;
     private Button? _closeButton;
-    private NavigationViewItem? _settingsItem;
 
     public NavigationViewEx()
     {
@@ -276,10 +275,6 @@ public sealed partial class NavigationViewEx : NavigationView
 
         if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name.Equals(NavViewSettingsItem, StringComparison.Ordinal)) is { } settingsItem)
         {
-            _settingsItem = settingsItem;
-
-            UpdateSettingsItemStyle();
-
             if (!string.IsNullOrEmpty(SettingsItemAccessKey))
             {
                 settingsItem.AccessKey = SettingsItemAccessKey;
@@ -365,10 +360,6 @@ public sealed partial class NavigationViewEx : NavigationView
         else if (property == PaneSearchButtonStyleProperty)
         {
             UpdatePaneSearchButtonStyle();
-        }
-        else if (property == SettingsItemStyleProperty)
-        {
-            UpdateSettingsItemStyle();
         }
         else if (property == ContentAnimationDirectionProperty)
         {
@@ -516,14 +507,6 @@ public sealed partial class NavigationViewEx : NavigationView
         if (_paneSearchButton != null && PaneSearchButtonStyle != null)
         {
             _paneSearchButton.Style = PaneSearchButtonStyle;
-        }
-    }
-
-    private void UpdateSettingsItemStyle()
-    {
-        if (_settingsItem != null && SettingsItemStyle != null)
-        {
-            _settingsItem.Style = SettingsItemStyle;
         }
     }
 
