@@ -741,7 +741,7 @@
     <value>Lanjutan</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Privasi</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Mod lanjutan</value>
@@ -982,12 +982,12 @@
     <value>Folder</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Sejarah posisi main balik</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Simpan sejarah posisi main balik saya pada peranti ini untuk menyambung semula di tempat anda berhenti</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Bersihkan sejarah posisi main balik peranti</value>
   </data>
 </root>
