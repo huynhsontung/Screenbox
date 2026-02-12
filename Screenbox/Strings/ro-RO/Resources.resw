@@ -741,7 +741,7 @@
     <value>Avansat</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Confidențialitate</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Mod avansat</value>
@@ -982,12 +982,12 @@
     <value>Folder</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Istoricul pozițiilor de redare</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Păstrați istoricul pozițiilor mele de redare pe acest dispozitiv pentru a relua de unde ați rămas</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Șterge istoricul pozițiilor de redare ale dispozitivului</value>
   </data>
 </root>
