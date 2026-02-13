@@ -276,7 +276,7 @@ public partial class MediaViewModel : ObservableRecipient
         // If so, use the full file name as title and hide the caption
         if (MediaType == MediaPlaybackType.Video && TitleAndCaptionDifferOnlyByExtension())
         {
-            Name = AltCaption ?? Name;
+            Name = AltCaption!;
             AltCaption = null;
         }
     }
