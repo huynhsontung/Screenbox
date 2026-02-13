@@ -513,7 +513,7 @@ public sealed partial class NavigationViewEx : NavigationView
         return direction switch
         {
             AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{width},0,0",
-            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0, -{height},0",
+            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0,-{height},0",
             AnimationDirection.Right => isEntrance ? "0,0,0" : $"{width},0,0",
             AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{height},0",
             _ => "0,0,0",
