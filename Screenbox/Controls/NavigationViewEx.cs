@@ -423,34 +423,33 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateOverlayLayout()
     {
-        if (_overlayRoot != null)
+        if (_overlayRoot == null) return;
+
+        // Mirror SplitView content area and light-dismiss visual behavior.
+        if (ContentVisibility == Visibility.Collapsed)
         {
-            // Mirror SplitView content area and light-dismiss visual behavior.
-            if (ContentVisibility == Visibility.Collapsed)
-            {
+            Grid.SetColumn(_overlayRoot, 0);
+            Grid.SetColumnSpan(_overlayRoot, 2);
+            UpdateOverlayLightDismissLayerVisibility();
+            return;
+        }
+
+        switch (DisplayMode)
+        {
+            case NavigationViewDisplayMode.Expanded:
+            case NavigationViewDisplayMode.Compact:
+                Grid.SetColumn(_overlayRoot, 1);
+                Grid.SetColumnSpan(_overlayRoot, 1);
+                break;
+            case NavigationViewDisplayMode.Minimal:
+            default:
                 Grid.SetColumn(_overlayRoot, 0);
                 Grid.SetColumnSpan(_overlayRoot, 2);
-                UpdateOverlayLightDismissLayerVisibility();
-                return;
-            }
-
-            switch (DisplayMode)
-            {
-                case NavigationViewDisplayMode.Expanded:
-                case NavigationViewDisplayMode.Compact:
-                    Grid.SetColumn(_overlayRoot, 1);
-                    Grid.SetColumnSpan(_overlayRoot, 1);
-                    break;
-                case NavigationViewDisplayMode.Minimal:
-                default:
-                    Grid.SetColumn(_overlayRoot, 0);
-                    Grid.SetColumnSpan(_overlayRoot, 2);
-                    break;
-            }
-
-            UpdateOverlayLightDismissLayerFill();
-            UpdateOverlayLightDismissLayerVisibility();
+                break;
         }
+
+        UpdateOverlayLightDismissLayerFill();
+        UpdateOverlayLightDismissLayerVisibility();
     }
 
     private void UpdateOverlayLightDismissLayerFill()
