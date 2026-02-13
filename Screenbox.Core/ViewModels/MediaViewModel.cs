@@ -271,6 +271,14 @@ public partial class MediaViewModel : ObservableRecipient
             videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
             videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
         }
+
+        // For videos, check if title and caption differ only by extension
+        // If so, use the full file name as title and hide the caption
+        if (MediaType == MediaPlaybackType.Video && TitleAndCaptionDifferOnlyByExtension())
+        {
+            Name = AltCaption ?? Name;
+            AltCaption = null;
+        }
     }
 
     public async Task LoadThumbnailAsync()
@@ -419,6 +427,26 @@ public partial class MediaViewModel : ObservableRecipient
                 AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
             }
         }
+    }
+
+    private bool TitleAndCaptionDifferOnlyByExtension()
+    {
+        if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(AltCaption))
+        {
+            return false;
+        }
+
+        // Check if AltCaption starts with Name
+        if (!AltCaption.StartsWith(Name, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        // Get the remaining part after Name
+        string remainder = AltCaption.Substring(Name.Length);
+
+        // Check if remainder is just a file extension (e.g., ".mp4", ".mkv")
+        return remainder.Length > 1 && remainder[0] == '.' && !remainder.Substring(1).Contains('.');
     }
 
     private static async Task<StorageFile?> TryGetStorageFileFromUri(Uri uri)
