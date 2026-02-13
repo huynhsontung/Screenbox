@@ -13,7 +13,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="Overlay"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty OverlayProperty = DependencyProperty.Register(
-        nameof(Overlay), typeof(UIElement), typeof(NavigationViewEx), new PropertyMetadata(null, OnOverlayPropertyChanged));
+        nameof(Overlay), typeof(UIElement), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the content to be displayed as an overlay. By default, the overlay appears
@@ -29,7 +29,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="OverlayZIndex"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty OverlayZIndexProperty = DependencyProperty.Register(
-        nameof(OverlayZIndex), typeof(int), typeof(NavigationViewEx), new PropertyMetadata(0, OnOverlayZIndexPropertyChanged));
+        nameof(OverlayZIndex), typeof(int), typeof(NavigationViewEx), new PropertyMetadata(0, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the Z-order of the overlay element.
@@ -49,7 +49,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="ContentVisibility"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContentVisibilityProperty = DependencyProperty.Register(
-        nameof(ContentVisibility), typeof(Visibility), typeof(NavigationViewEx), new PropertyMetadata(Visibility.Visible, OnContentVisibilityPropertyChanged));
+        nameof(ContentVisibility), typeof(Visibility), typeof(NavigationViewEx), new PropertyMetadata(Visibility.Visible, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the visibility of everything except the overlay element.
@@ -94,7 +94,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="BackButtonStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonStyleProperty = DependencyProperty.Register(
-        nameof(BackButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnBackButtonStylePropertyChanged));
+        nameof(BackButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the back button.
@@ -199,7 +199,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneSearchButtonStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonStyleProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPaneSearchButtonStylePropertyChanged));
+        nameof(PaneSearchButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the search button.
@@ -241,25 +241,10 @@ public sealed partial class NavigationViewEx
     }
 
     /// <summary>
-    /// Identifies the <see cref="SettingsItemStyle"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty SettingsItemStyleProperty = DependencyProperty.Register(
-        nameof(SettingsItemStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnSettingsItemStylePropertyChanged));
-
-    /// <summary>
-    /// Gets or sets the style that defines the look of the settings navigation view item.
-    /// </summary>
-    public Style? SettingsItemStyle
-    {
-        get => (Style?)GetValue(SettingsItemStyleProperty);
-        set => SetValue(SettingsItemStyleProperty, value);
-    }
-
-    /// <summary>
     /// Identifies the <see cref="ContentAnimationDirection"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContentAnimationDirectionProperty = DependencyProperty.Register(
-        nameof(ContentAnimationDirection), typeof(AnimationDirection?), typeof(NavigationViewEx), new PropertyMetadata(null, OnContentAnimationDirectionPropertyChanged));
+        nameof(ContentAnimationDirection), typeof(AnimationDirection?), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the direction used for the translation animation of the content grid.
@@ -270,96 +255,11 @@ public sealed partial class NavigationViewEx
         set => SetValue(ContentAnimationDirectionProperty, value);
     }
 
-    private static void OnOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is NavigationViewEx owner)
         {
-            owner.OnOverlayChanged((UIElement?)e.OldValue, (UIElement?)e.NewValue);
+            owner.OnPropertyChanged(e);
         }
-    }
-
-    private static void OnOverlayZIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is NavigationViewEx owner)
-        {
-            owner.OnOverlayZIndexChanged((int)e.OldValue, (int)e.NewValue);
-        }
-    }
-
-    private static void OnContentVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is NavigationViewEx owner)
-        {
-            owner.OnContentVisibilityChanged((Visibility)e.OldValue, (Visibility)e.NewValue);
-        }
-    }
-
-    private static void OnBackButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is NavigationViewEx owner)
-        {
-            owner.OnBackButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
-        }
-    }
-
-    private static void OnPaneSearchButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is NavigationViewEx owner)
-        {
-            owner.OnPaneSearchButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
-        }
-    }
-
-    private static void OnSettingsItemStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is NavigationViewEx owner)
-        {
-            owner.OnSettingsItemStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
-        }
-    }
-
-    private static void OnContentAnimationDirectionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is NavigationViewEx owner)
-        {
-            owner.OnContentAnimationDirectionChanged((AnimationDirection?)e.OldValue, (AnimationDirection?)e.NewValue);
-        }
-    }
-
-    private void OnOverlayChanged(UIElement? oldValue, UIElement? newValue)
-    {
-        UpdateOverlay();
-    }
-
-    private void OnOverlayZIndexChanged(int oldValue, int newValue)
-    {
-        UpdateOverlayZIndex(newValue);
-    }
-
-    private void OnContentVisibilityChanged(Visibility oldValue, Visibility newValue)
-    {
-        UpdateContentVisibility(newValue);
-        UpdateOverlayLayout();
-    }
-
-    private void OnBackButtonStyleChanged(Style? oldValue, Style? newValue)
-    {
-        UpdateBackButtonStyle();
-        UpdateCloseButtonStyle();
-    }
-
-    private void OnPaneSearchButtonStyleChanged(Style? oldValue, Style? newValue)
-    {
-        UpdatePaneSearchButtonStyle();
-    }
-
-    private void OnSettingsItemStyleChanged(Style? oldValue, Style? newValue)
-    {
-        UpdateSettingsItemStyle();
-    }
-
-    private void OnContentAnimationDirectionChanged(AnimationDirection? oldValue, AnimationDirection? newValue)
-    {
-        UpdateContentGridAnimations();
     }
 }
