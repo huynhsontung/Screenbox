@@ -242,6 +242,7 @@
                             <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
                         </GridView.Resources>
                         <interactivity:Interaction.Behaviors>
+                            <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                             <behaviors:ThumbnailGridViewBehavior />
                         </interactivity:Interaction.Behaviors>
                     </GridView>
