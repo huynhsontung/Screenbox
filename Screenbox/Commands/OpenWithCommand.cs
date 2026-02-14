@@ -1,16 +1,20 @@
-#nullable enable
+﻿#nullable enable
 
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
-using System;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Commands;
 
-internal class OpenWithCommand : IRelayCommand<MediaViewModel>
+/// <summary>
+/// Represents a command that opens a media file with an external application
+/// using the system Open With dialog.
+/// </summary>
+internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
 {
     public event EventHandler? CanExecuteChanged;
 
@@ -19,29 +23,37 @@ internal class OpenWithCommand : IRelayCommand<MediaViewModel>
     public OpenWithCommand()
     {
         _asyncCommand = new AsyncRelayCommand<MediaViewModel>(OpenWithAsync);
+        _asyncCommand.CanExecuteChanged += (_, _) => NotifyCanExecuteChanged();
     }
 
+    /// <inheritdoc/>
     public bool CanExecute(object? parameter)
     {
-        return parameter is MediaViewModel media && media.Source is StorageFile && _asyncCommand.CanExecute(parameter);
+        return parameter is MediaViewModel media && CanExecute(media);
     }
 
+    /// <inheritdoc/>
     public void Execute(object? parameter)
     {
         if (parameter is MediaViewModel media)
+        {
             Execute(media);
+        }
     }
 
+    /// <inheritdoc/>
     public void NotifyCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <inheritdoc/>
     public bool CanExecute(MediaViewModel? parameter)
     {
         return parameter?.Source is StorageFile && _asyncCommand.CanExecute(parameter);
     }
 
+    /// <inheritdoc/>
     public void Execute(MediaViewModel? parameter)
     {
         if (parameter == null) return;

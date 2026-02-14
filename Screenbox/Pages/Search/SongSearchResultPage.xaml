@@ -33,12 +33,12 @@
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource PlaylistMusicGlyph}}"
                 Text="{strings:Resources Key=AddToQueue}" />
-            <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 Command="{StaticResource OpenWithCommand}"
                 CommandParameter="{Binding}"
-                Icon="{ui:FontIcon Glyph=&#xE8A7;}"
-                Text="{strings:Resources Key=OpenWith}" />
+                Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                Text="{x:Bind strings:Resources.OpenWith}" />
+            <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 Command="{StaticResource ShowPropertiesCommand}"
                 CommandParameter="{Binding}"
