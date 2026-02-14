@@ -27,9 +27,22 @@ internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
     }
 
     /// <inheritdoc/>
+    public bool CanExecute(MediaViewModel? parameter)
+    {
+        return parameter?.Source is StorageFile && _asyncCommand.CanExecute(parameter);
+    }
+
+    /// <inheritdoc/>
     public bool CanExecute(object? parameter)
     {
         return parameter is MediaViewModel media && CanExecute(media);
+    }
+
+    /// <inheritdoc/>
+    public void Execute(MediaViewModel? parameter)
+    {
+        if (parameter is null) return;
+        _asyncCommand.Execute(parameter);
     }
 
     /// <inheritdoc/>
@@ -45,19 +58,6 @@ internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
     public void NotifyCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <inheritdoc/>
-    public bool CanExecute(MediaViewModel? parameter)
-    {
-        return parameter?.Source is StorageFile && _asyncCommand.CanExecute(parameter);
-    }
-
-    /// <inheritdoc/>
-    public void Execute(MediaViewModel? parameter)
-    {
-        if (parameter == null) return;
-        _asyncCommand.Execute(parameter);
     }
 
     private async Task OpenWithAsync(MediaViewModel? parameter)
@@ -78,7 +78,7 @@ internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
             bool success = await Launcher.LaunchFileAsync(file, options);
             if (!success)
             {
-                LogService.Log($"Failed to launch file with external application. File: {file.Path}. This could mean no application is available for this file type or the user cancelled the operation.");
+                LogService.Log("Failed to open file with external application. No application available or the operation was cancelled.");
             }
         }
         catch (Exception ex)
