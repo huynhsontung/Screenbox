@@ -109,7 +109,6 @@ namespace Screenbox.Pages
                     VideoView.ContextFlyout.ShowAt(PlayerControls,
                         new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
                     break;
-                case VirtualKey.Escape when shouldHideControls:
                 case VirtualKey.GamepadB when shouldHideControls:
                     handled = ViewModel.TryHideControls();
                     break;
@@ -495,6 +494,61 @@ namespace Screenbox.Pages
         {
             e.Handled = true;
             await ViewModel.OnDropAsync(e.DataView);
+        }
+
+        private void LayoutRoot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            var coreWindow = Window.Current.CoreWindow;
+            bool isControlKeyDown = coreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+            bool isShiftKeyDown = coreWindow.GetKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
+            if (e.OriginalKey == VirtualKey.Space && !isControlKeyDown && !isShiftKeyDown && !e.KeyStatus.IsMenuKeyDown)
+            {
+                e.Handled = true;
+                // Only trigger once when Space is held down
+                if (!e.KeyStatus.WasKeyDown)
+                {
+                    ViewModel.TogglePlayPause();
+                }
+            }
+        }
+
+        private void ChangeVolumeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessChangeVolumeKeyDown(args.KeyboardAccelerator.Key);
+        }
+
+        private void SeekKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessSeekKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        }
+
+        private void FrameSteppingKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessFrameSteppingKeyDown(args.KeyboardAccelerator.Key);
+        }
+
+        private void PlaybackRateKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessTogglePlaybackRateKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        }
+
+        private void WindowResizeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessResizeKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        }
+
+        private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
+        }
+
+        private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ViewMode == WindowViewMode.Default)
+            {
+                ViewModel.TryHideControls();
+                args.Handled = true;
+            }
         }
     }
 }

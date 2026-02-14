@@ -71,7 +71,7 @@
                                 x:Name="AlbumTitle"
                                 MaxLines="2"
                                 Style="{StaticResource BodyStrongTextBlockStyle}"
-                                Text="{Binding Key.Name}">
+                                Text="{Binding Key.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:OverflowTextToolTipBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -225,7 +225,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name, FallbackValue={x:Null}}"
+                        Text="{x:Bind ViewModel.Source.Name, Converter={StaticResource ArtistTextConverter}, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />

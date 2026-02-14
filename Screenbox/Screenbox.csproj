@@ -138,6 +138,7 @@
     <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
     <Compile Include="Behaviors\AutoFocusBehavior.cs" />
     <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />
+    <Compile Include="Behaviors\ComboBoxWidthFromPopupBehavior.cs" />
     <Compile Include="Behaviors\FocusOnItemClickBehavior.cs" />
     <Compile Include="Behaviors\GamepadXYNavigationBehavior.cs" />
     <Compile Include="Behaviors\GroupingOverviewBehavior.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
     <Compile Include="Converters\SearchSuggestionConverter.cs" />
+    <Compile Include="Converters\ThicknessFilterKinds.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Extensions\AcceleratorService.cs" />

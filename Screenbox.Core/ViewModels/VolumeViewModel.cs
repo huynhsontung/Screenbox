@@ -3,6 +3,8 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -13,32 +15,52 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class VolumeViewModel : ObservableRecipient,
         IRecipient<ChangeVolumeRequestMessage>,
         IRecipient<SettingsChangedMessage>,
-        IRecipient<MediaPlayerChangedMessage>
+        IRecipient<PropertyChangedMessage<IMediaPlayer?>>
     {
         [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
-        private IMediaPlayer? _mediaPlayer;
+
+        private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
+
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
+        private readonly PlayerContext _playerContext;
 
-        public VolumeViewModel(ISettingsService settingsService)
+        public VolumeViewModel(ISettingsService settingsService, PlayerContext playerContext)
         {
             _settingsService = settingsService;
+            _playerContext = playerContext;
             _volume = settingsService.PersistentVolume;
             _maxVolume = settingsService.MaxVolume;
             _isMute = _volume == 0;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.VolumeChanged += OnVolumeChanged;
+                MediaPlayer.IsMutedChanged += OnIsMutedChanged;
+            }
+
             // View model doesn't receive any messages
             IsActive = true;
         }
 
-        public void Receive(MediaPlayerChangedMessage message)
+        public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
         {
-            _mediaPlayer = message.Value;
-            _mediaPlayer.VolumeChanged += OnVolumeChanged;
-            _mediaPlayer.IsMutedChanged += OnIsMutedChanged;
+            if (message.Sender is not PlayerContext) return;
+
+            if (message.OldValue is { } oldPlayer)
+            {
+                oldPlayer.VolumeChanged -= OnVolumeChanged;
+                oldPlayer.IsMutedChanged -= OnIsMutedChanged;
+            }
+
+            if (MediaPlayer != null)
+            {
+                MediaPlayer.VolumeChanged += OnVolumeChanged;
+                MediaPlayer.IsMutedChanged += OnIsMutedChanged;
+            }
         }
 
         public void Receive(SettingsChangedMessage message)
@@ -55,18 +77,18 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnVolumeChanged(int value)
         {
-            if (_mediaPlayer == null) return;
+            if (MediaPlayer == null) return;
             double newValue = value / 100d;
-            // bool stayMute = IsMute && newValue - _mediaPlayer.Volume < 0.005;
-            _mediaPlayer.Volume = newValue;
+            // bool stayMute = IsMute && newValue - MediaPlayer.Volume < 0.005;
+            MediaPlayer.Volume = newValue;
             if (value > 0) IsMute = false;
             _settingsService.PersistentVolume = value;
         }
 
         partial void OnIsMuteChanged(bool value)
         {
-            if (_mediaPlayer == null) return;
-            _mediaPlayer.IsMuted = value;
+            if (MediaPlayer == null) return;
+            MediaPlayer.IsMuted = value;
         }
 
         private void OnVolumeChanged(IMediaPlayer sender, object? args)

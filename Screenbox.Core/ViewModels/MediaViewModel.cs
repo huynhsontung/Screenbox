@@ -11,8 +11,8 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -68,7 +68,10 @@ public partial class MediaViewModel : ObservableRecipient
         }
     }
 
-    private readonly LibVlcService _libVlcService;
+    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
+
+    private readonly IPlayerService _playerService;
+    private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
     [ObservableProperty] private string _name;
@@ -94,7 +97,8 @@ public partial class MediaViewModel : ObservableRecipient
 
     public MediaViewModel(MediaViewModel source)
     {
-        _libVlcService = source._libVlcService;
+        _playerService = source._playerService;
+        _playerContext = source._playerContext;
         _name = source._name;
         _thumbnailRef = source._thumbnailRef;
         _mediaInfo = source._mediaInfo;
@@ -111,9 +115,10 @@ public partial class MediaViewModel : ObservableRecipient
         IsFromLibrary = source.IsFromLibrary;
     }
 
-    private MediaViewModel(object source, MediaInfo mediaInfo, LibVlcService libVlcService)
+    private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
     {
-        _libVlcService = libVlcService;
+        _playerService = playerService;
+        _playerContext = playerContext;
         Source = source;
         Location = string.Empty;
         DateAdded = DateTimeOffset.Now;
@@ -125,24 +130,24 @@ public partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
     }
 
-    public MediaViewModel(LibVlcService libVlcService, StorageFile file)
-        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), libVlcService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, StorageFile file)
+        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
     {
         Location = file.Path;
         _name = file.DisplayName;
         _altCaption = file.Name;
     }
 
-    public MediaViewModel(LibVlcService libVlcService, Uri uri)
-        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), libVlcService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Uri uri)
+        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
     {
         Guard.IsTrue(uri.IsAbsoluteUri);
         Location = uri.OriginalString;
         _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
     }
 
-    public MediaViewModel(LibVlcService libVlcService, Media media)
-        : this(media, new MediaInfo(MediaPlaybackType.Unknown), libVlcService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Media media)
+        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
     {
         Location = media.Mrl;
 
@@ -157,6 +162,12 @@ public partial class MediaViewModel : ObservableRecipient
 
     private PlaybackItem? CreatePlaybackItem()
     {
+        if (MediaPlayer == null)
+        {
+            Messenger.Send(new MediaLoadFailedNotificationMessage("Media player is not initialized", Location));
+            return null;
+        }
+
         PlaybackItem? item = null;
         try
         {
@@ -166,8 +177,7 @@ public partial class MediaViewModel : ObservableRecipient
             }
             else
             {
-                Media media = _libVlcService.CreateMedia(Source, _options.ToArray());
-                item = new PlaybackItem(Source, media);
+                item = _playerService.CreatePlaybackItem(MediaPlayer, Source, _options.ToArray());
             }
         }
         catch (ArgumentOutOfRangeException)
@@ -209,7 +219,7 @@ public partial class MediaViewModel : ObservableRecipient
         PlaybackItem? item = Item.Value;
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         if (item == null) return;
-        _libVlcService.DisposeMedia(item.Media);
+        _playerService.DisposePlaybackItem(item);
     }
 
     public void UpdateSource(StorageFile file)
@@ -374,34 +384,6 @@ public partial class MediaViewModel : ObservableRecipient
         }
 
         return null;
-    }
-
-    public void UpdateAlbum(AlbumViewModelFactory factory)
-    {
-        if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
-        MusicInfo musicProperties = MediaInfo.MusicProperties;
-        if (Album != null)
-        {
-            if (factory.GetAlbumFromName(musicProperties.Album, musicProperties.AlbumArtist) == Album)
-                return;
-
-            factory.Remove(this);
-        }
-
-        Album = factory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
-    }
-
-    public void UpdateArtists(ArtistViewModelFactory factory)
-    {
-        if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
-        if (Artists.Length > 0)
-        {
-            ArtistViewModel[] artists = factory.ParseArtists(MediaInfo.MusicProperties.Artist);
-            if (artists.SequenceEqual(Artists)) return;
-            factory.Remove(this);
-        }
-
-        Artists = factory.ParseAddArtists(MediaInfo.MusicProperties.Artist, this);
     }
 
     private void UpdateCaptions()
