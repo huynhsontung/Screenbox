@@ -227,13 +227,19 @@ public sealed class LibraryService : ILibraryService
         {
             MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
             media.IsFromLibrary = true;
-            if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
-            media.MediaInfo = new MediaInfo(record.Properties);
+            if (!media.DetailsLoaded)
+            {
+                if (!string.IsNullOrEmpty(record.Title))
+                    media.Name = record.Title;
+                media.MediaInfo = new MediaInfo(record.Properties);
+            }
+
             if (record.DateAdded != default)
             {
                 DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
                 media.DateAdded = utcTime.ToLocalTime();
             }
+
             return media;
         }).ToList();
         return mediaList;

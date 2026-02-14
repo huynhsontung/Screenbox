@@ -34,6 +34,8 @@ public partial class MediaViewModel : ObservableRecipient
 
     public bool IsFromLibrary { get; set; }
 
+    public bool DetailsLoaded { get; private set; }
+
     public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
     public Lazy<PlaybackItem?> Item { get; internal set; }
@@ -134,7 +136,7 @@ public partial class MediaViewModel : ObservableRecipient
         : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
     {
         Location = file.Path;
-        _name = file.DisplayName;
+        _name = file.Name;
         _altCaption = file.Name;
     }
 
@@ -230,6 +232,7 @@ public partial class MediaViewModel : ObservableRecipient
 
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
+        DetailsLoaded = true;
         switch (Source)
         {
             case StorageFile file:
@@ -251,7 +254,8 @@ public partial class MediaViewModel : ObservableRecipient
             case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
                 Name = MediaInfo.MusicProperties.Title;
                 break;
-            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title):
+            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title)
+                && !DifferOnlyByExtension(MediaInfo.VideoProperties.Title, Name):
                 Name = MediaInfo.VideoProperties.Title;
                 break;
         }
@@ -272,13 +276,8 @@ public partial class MediaViewModel : ObservableRecipient
             videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
         }
 
-        // For videos, check if title and caption differ only by extension
-        // If so, use the full file name as title and hide the caption
-        if (MediaType == MediaPlaybackType.Video && TitleAndCaptionDifferOnlyByExtension())
-        {
-            Name = AltCaption;
+        if (Name == AltCaption)
             AltCaption = string.Empty;
-        }
     }
 
     public async Task LoadThumbnailAsync()
@@ -429,21 +428,21 @@ public partial class MediaViewModel : ObservableRecipient
         }
     }
 
-    private bool TitleAndCaptionDifferOnlyByExtension()
+    private static bool DifferOnlyByExtension(string name, string nameWithExtension)
     {
-        if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(AltCaption))
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(nameWithExtension))
         {
             return false;
         }
 
         // Check if AltCaption starts with Name
-        if (!AltCaption.StartsWith(Name, StringComparison.OrdinalIgnoreCase))
+        if (!nameWithExtension.StartsWith(name, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
         // Get the remaining part after Name
-        string remainder = AltCaption.Substring(Name.Length);
+        string remainder = nameWithExtension.Substring(name.Length);
 
         // Check if remainder is just a file extension (e.g., ".mp4", ".mkv")
         return remainder.Length > 1 && remainder[0] == '.' && !remainder.Substring(1).Contains('.');
