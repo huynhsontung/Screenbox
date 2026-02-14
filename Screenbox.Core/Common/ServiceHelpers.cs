@@ -47,8 +47,6 @@ public static class ServiceHelpers
         // Factories
         services.AddSingleton<MediaViewModelFactory>();
         services.AddSingleton<StorageItemViewModelFactory>();
-        services.AddTransient<ArtistViewModelFactory>();
-        services.AddTransient<AlbumViewModelFactory>();
         services.AddSingleton<IMediaListFactory, MediaListFactory>();
 
         // Contexts

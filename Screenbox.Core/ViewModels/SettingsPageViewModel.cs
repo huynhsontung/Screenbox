@@ -386,11 +386,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         if (_videosLibrary == null)
         {
-            if (_libraryContext.VideosLibrary == null)
+            if (_libraryContext.StorageVideosLibrary == null)
             {
                 try
                 {
-                    _libraryContext.VideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
+                    _libraryContext.StorageVideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
                 }
                 catch (Exception)
                 {
@@ -398,7 +398,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
                 }
             }
 
-            _videosLibrary = _libraryContext.VideosLibrary;
+            _videosLibrary = _libraryContext.StorageVideosLibrary;
             if (_videosLibrary != null)
             {
                 _videosLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
@@ -407,11 +407,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         if (_musicLibrary == null)
         {
-            if (_libraryContext.MusicLibrary == null)
+            if (_libraryContext.StorageMusicLibrary == null)
             {
                 try
                 {
-                    _libraryContext.MusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
+                    _libraryContext.StorageMusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
                 }
                 catch (Exception)
                 {
@@ -419,7 +419,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
                 }
             }
 
-            _musicLibrary = _libraryContext.MusicLibrary;
+            _musicLibrary = _libraryContext.StorageMusicLibrary;
             if (_musicLibrary != null)
             {
                 _musicLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
