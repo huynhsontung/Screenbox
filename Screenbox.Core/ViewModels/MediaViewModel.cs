@@ -254,8 +254,7 @@ public partial class MediaViewModel : ObservableRecipient
             case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
                 Name = MediaInfo.MusicProperties.Title;
                 break;
-            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title)
-                && !DifferOnlyByExtension(MediaInfo.VideoProperties.Title, Name):
+            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title):
                 Name = MediaInfo.VideoProperties.Title;
                 break;
         }
@@ -426,26 +425,6 @@ public partial class MediaViewModel : ObservableRecipient
                 AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
             }
         }
-    }
-
-    private static bool DifferOnlyByExtension(string name, string nameWithExtension)
-    {
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(nameWithExtension))
-        {
-            return false;
-        }
-
-        // Check if AltCaption starts with Name
-        if (!nameWithExtension.StartsWith(name, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        // Get the remaining part after Name
-        string remainder = nameWithExtension.Substring(name.Length);
-
-        // Check if remainder is just a file extension (e.g., ".mp4", ".mkv")
-        return remainder.Length > 1 && remainder[0] == '.' && !remainder.Substring(1).Contains('.');
     }
 
     private static async Task<StorageFile?> TryGetStorageFileFromUri(Uri uri)
