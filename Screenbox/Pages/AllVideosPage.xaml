@@ -19,7 +19,11 @@
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <MenuFlyout x:Name="ItemFlyout">
+            <MenuFlyout x:Key="ItemFlyout">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                </interactivity:Interaction.Behaviors>
+
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
@@ -39,6 +43,10 @@
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
                     Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
+                <MenuFlyoutSubItem
+                    x:Name="AddToPlaylistSubMenu"
+                    Icon="{ui:SymbolIcon Symbol=Add}"
+                    Text="{strings:Resources Key=AddToPlaylist}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
@@ -84,7 +92,7 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
-                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>

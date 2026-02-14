@@ -16,6 +16,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Screenbox.Triggers"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
@@ -185,6 +186,9 @@
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
                     </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="PlayQueueNavItemText" Text="{strings:Resources Key=PlayQueue}" />
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE728;}" Tag="playlists">
+                    <TextBlock x:Name="PlaylistsNavItemText" Text="{strings:Resources Key=Playlists}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.FooterMenuItems>

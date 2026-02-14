@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
@@ -47,17 +48,22 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
     private readonly LibraryController _libraryController;
+    private readonly PlaylistsContext _playlistsContext;
+    private readonly IPlaylistService _playlistService;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        LibraryContext libraryContext, ILibraryService libraryService, LibraryController libraryController)
+        LibraryContext libraryContext, ILibraryService libraryService, LibraryController libraryController,
+        PlaylistsContext playlistsContext, IPlaylistService playlistService)
     {
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryContext = libraryContext;
         _libraryService = libraryService;
         _libraryController = libraryController;
+        _playlistsContext = playlistsContext;
+        _playlistService = playlistService;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
         IsActive = true;
@@ -244,7 +250,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             // pass
         }
 
-        List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
+        List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync(), FetchPlaylistsAsync() };
         await Task.WhenAll(tasks);
     }
 
@@ -274,6 +280,29 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         catch (UnauthorizedAccessException)
         {
             Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new ErrorMessage(null, e.Message));
+            LogService.Log(e);
+        }
+    }
+
+    /// <summary>
+    /// Fetches playlists from storage and populates the PlaylistsContext.
+    /// </summary>
+    private async Task FetchPlaylistsAsync()
+    {
+        try
+        {
+            var loaded = await _playlistService.ListPlaylistsAsync();
+            _playlistsContext.Playlists.Clear();
+            foreach (var p in loaded)
+            {
+                var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+                playlist.Load(p);
+                _playlistsContext.Playlists.Add(playlist);
+            }
         }
         catch (Exception e)
         {

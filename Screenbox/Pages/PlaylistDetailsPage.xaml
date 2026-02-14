@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Screenbox.Pages.AlbumDetailsPage"
+    x:Class="Screenbox.Pages.PlaylistDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
@@ -14,7 +14,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    Loaded="AlbumDetailsPage_OnLoaded"
+    Loaded="PlaylistDetailsPage_OnLoaded"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -24,10 +24,6 @@
             </ResourceDictionary.MergedDictionaries>
 
             <MenuFlyout x:Key="ItemFlyout">
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
-                </interactivity:Interaction.Behaviors>
-
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
@@ -47,10 +43,12 @@
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
                     Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
-                <MenuFlyoutSubItem
-                    x:Name="AddToPlaylistSubMenu"
-                    Icon="{ui:SymbolIcon Symbol=Add}"
-                    Text="{strings:Resources Key=AddToPlaylist}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.RemoveCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Delete}"
+                    Text="{strings:Resources Key=Remove}" />
+                <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
@@ -95,7 +93,6 @@
             Margin="0,0,0,-80"
             Padding="{StaticResource ContentPagePadding}"
             Canvas.ZIndex="1">
-            <!--  To prevent the background border from appearing squashed after scaling, use a rectangle instead of a border to increase the Y radius.  -->
             <Rectangle
                 x:Name="BackgroundAcrylic"
                 Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
@@ -118,26 +115,20 @@
                     Width="192"
                     Height="192"
                     Margin="0,0,20,0"
+                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
                     FlowDirection="LeftToRight"
                     Shadow="{StaticResource ElevationThemeShadow}"
-                    SizeChanged="AlbumArt_OnSizeChanged"
+                    SizeChanged="CoverArt_OnSizeChanged"
                     Translation="0,0,16">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
-                    </Grid.Background>
-                    <Border
-                        Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
-                        CornerRadius="{x:Bind CoverArt.CornerRadius, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, FallbackValue=Visible}">
-                        <FontIcon
-                            x:Name="CoverArtIcon"
-                            FontSize="64"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Glyph="&#xE93C;" />
-                    </Border>
+                    <FontIcon
+                        x:Name="CoverArtIcon"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        FontSize="64"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Glyph="{StaticResource PlaylistMusicGlyph}" />
                 </Grid>
 
                 <StackPanel
@@ -147,7 +138,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue=''}"
+                        Text="{x:Bind ViewModel.Source.Name, Mode=OneWay, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
@@ -159,7 +150,7 @@
                         Margin="0,8,0,0"
                         FontWeight="Normal"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.ArtistName, Converter={StaticResource ArtistTextConverter}, FallbackValue=''}"
+                        Text="{x:Bind strings:Resources.ItemsCount(ViewModel.Source.ItemsCount), Mode=OneWay}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
@@ -171,14 +162,13 @@
                         Margin="0,12,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{x:Bind local:AlbumDetailsPage.GetSubtext(ViewModel.Year, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
+                        Text="{x:Bind local:PlaylistDetailsPage.GetSubtext(ViewModel.Source.Items), Mode=OneWay, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
-                    <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that opening the overflow popup does not reset the command bar position.  -->
                     <Grid x:Name="ButtonPanel">
                         <CommandBar
                             Margin="-8,8,0,0"
@@ -193,7 +183,6 @@
                                 <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
 
                                 <Thickness x:Key="AppBarEllipsisButtonInnerBorderMargin">4,8,4,8</Thickness>
-                                <!--  Adjust margin to match the size and layout of the default button  -->
                                 <Thickness x:Key="AppBarButtonContentViewboxMargin">16,16,0,16</Thickness>
                                 <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,14,16,15</Thickness>
                                 <Thickness x:Key="AppBarButtonInnerBorderMargin">4,8,4,8</Thickness>
@@ -202,7 +191,7 @@
                             <AppBarButton
                                 AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
-                                CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
+                                CommandParameter="{x:Bind ViewModel.Source.Items, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
                                 Label="{strings:Resources Key=Play}"
@@ -220,6 +209,23 @@
                                                    MirroredWhenRightToLeft=True}"
                                 Label="{strings:Resources Key=ShuffleAndPlay}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+
+                            <AppBarButton
+                                Command="{x:Bind ViewModel.AddFilesCommand}"
+                                Icon="{ui:SymbolIcon Symbol=Add}"
+                                Label="{strings:Resources Key=AddFiles}"
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+
+                            <CommandBar.SecondaryCommands>
+                                <AppBarButton
+                                    Command="{x:Bind RenamePlaylistCommand}"
+                                    Icon="{ui:SymbolIcon Symbol=Rename}"
+                                    Label="{strings:Resources Key=Rename}" />
+                                <AppBarButton
+                                    Command="{x:Bind DeletePlaylistCommand}"
+                                    Icon="{ui:SymbolIcon Symbol=Delete}"
+                                    Label="{strings:Resources Key=Delete}" />
+                            </CommandBar.SecondaryCommands>
                         </CommandBar>
                     </Grid>
                 </StackPanel>
@@ -233,14 +239,14 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemsSource="{x:Bind ViewModel.SortedItems}"
+            ItemsSource="{x:Bind ViewModel.Source.Items, Mode=OneWay}"
             SelectionMode="None"
             Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
-                        IsAlbumColumnVisible="False"
-                        IsTrackNumberVisible="True"
+                        IsAlbumColumnVisible="True"
+                        IsTrackNumberVisible="False"
                         PlayCommand="{Binding DataContext.PlayCommand, ElementName=ItemList}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -278,7 +284,6 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="BackgroundHost.Margin" Value="0,-136,0,0" />-->
                         <Setter Target="Header.Margin" Value="0,0,0,-48" />
                         <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="CoverArt.Width" Value="160" />
