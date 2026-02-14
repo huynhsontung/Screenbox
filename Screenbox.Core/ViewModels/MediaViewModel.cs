@@ -74,12 +74,12 @@ public partial class MediaViewModel : ObservableRecipient
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
-    [ObservableProperty] private string _name;
+    [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private bool _isMediaActive;
     [ObservableProperty] private bool _isAvailable = true;
     [ObservableProperty] private AlbumViewModel? _album;
-    [ObservableProperty] private string? _caption;  // For list item subtitle
-    [ObservableProperty] private string? _altCaption;   // For player page subtitle
+    [ObservableProperty] private string _caption = string.Empty;  // For list item subtitle
+    [ObservableProperty] private string _altCaption = string.Empty;   // For player page subtitle
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DurationText))]
@@ -276,8 +276,8 @@ public partial class MediaViewModel : ObservableRecipient
         // If so, use the full file name as title and hide the caption
         if (MediaType == MediaPlaybackType.Video && TitleAndCaptionDifferOnlyByExtension())
         {
-            Name = AltCaption!;
-            AltCaption = null;
+            Name = AltCaption;
+            AltCaption = string.Empty;
         }
     }
 
