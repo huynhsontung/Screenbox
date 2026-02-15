@@ -43,6 +43,11 @@
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayAddGlyph}}"
                         Text="{strings:Resources Key=PlayNext}" />
+                    <MenuFlyoutItem
+                        Command="{StaticResource OpenWithCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                        Text="{x:Bind strings:Resources.OpenWith}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.RemoveCommand}"
@@ -59,6 +64,7 @@
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon Glyph=&#xE74B;}"
                         Text="{strings:Resources Key=MoveDown}" />
+                    <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{StaticResource ShowPropertiesCommand}"
                         CommandParameter="{Binding}"
