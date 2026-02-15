@@ -115,6 +115,7 @@ public partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         DateAdded = source.DateAdded;
         IsFromLibrary = source.IsFromLibrary;
+        DetailsLoaded = source.DetailsLoaded;
     }
 
     private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
