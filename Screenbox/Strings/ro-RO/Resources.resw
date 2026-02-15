@@ -455,7 +455,7 @@
     <value>Artiști</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Melodie</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Melodii</value>
@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Avansat</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Confidențialitate</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Mod avansat</value>
   </data>
@@ -972,10 +975,19 @@
     <value>Utilizați limba sistemului</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Niciun rezultat pentru "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Istoricul pozițiilor de redare</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Păstrați istoricul pozițiilor mele de redare pe acest dispozitiv pentru a relua de unde ați rămas</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Șterge istoricul pozițiilor de redare ale dispozitivului</value>
   </data>
 </root>

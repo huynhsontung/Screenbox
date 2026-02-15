@@ -455,7 +455,7 @@
     <value>Виконавці</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Пісня</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Пісні</value>
@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Розширене</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Розширений режим</value>
   </data>
@@ -972,10 +975,19 @@
     <value>Використовувати мову системи</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Немає результатів для «{0}»</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Тека</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

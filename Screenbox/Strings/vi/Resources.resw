@@ -455,7 +455,7 @@
     <value>Nghệ sĩ</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Bài hát</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Bài hát</value>
@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Nâng cao</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Chế độ nâng cao</value>
   </data>
@@ -972,10 +975,19 @@
     <value>Dùng ngôn ngữ hệ thống</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Không có kết quả cho "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Thư mục</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

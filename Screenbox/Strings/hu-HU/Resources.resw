@@ -140,13 +140,13 @@
     <value>Nem sikerült menteni a képkockát</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Eltelt idő</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Hátralévő idő</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Teljes időtartam</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>{0}. fejezet</value>
@@ -177,7 +177,7 @@
     <value>Hangerő</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Hangeró állítása</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Tekerés</value>
@@ -224,16 +224,16 @@
     <value>Lejátszási sorhoz ad</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Az összes kijelölése</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Összes fájl kijelölése a nézetben</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Kijelölés törlése</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Kijelölés megszüntetése </value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Kijelölés megszüntetése </value>
@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Haladó</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Haladó mód</value>
   </data>
@@ -928,10 +931,10 @@
     <value>Personalization</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Resume previous session</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Automatically resume media playback from your last stopped position when opening a file</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Video upscaling method</value>
@@ -977,5 +980,14 @@
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

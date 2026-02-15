@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Screenbox</value>
+    <value>جعبهٔ نمایش</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
     <value>Screenbox</value>
@@ -127,47 +127,47 @@
     <value>یک پخش‌کننده ویدئوی مدرن با تمرکز بر عملکرد و سهولت استفاده در طیف گسترده‌ای از دستگاه‌های ویندوز.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>فایل چندرسانه‌ای 3GPP</value>
     <comment>Display name for the file type ".3gp" and ".3gpp" (3rd Generation Partnership Project)</comment>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>فایل چندرسانه‌ای 3GPP</value>
     <comment>Display name for the file type ".3g2" and ".3gp2" (3rd Generation Partnership Project 2)</comment>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>فایل صوتی AAC</value>
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>فایل صوتی Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>صدای AIFF</value>
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>فایل صوتی AIFF فشرده</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
-    <value>Monkey's Audio</value>
+    <value>صدای Monkey's Audio</value>
     <comment>Display name for the file type ".ape" (Monkey's Audio)</comment>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>AVI ویدئو</value>
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>صدای DTS</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>صدای FLAC</value>
     <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
   </data>
   <data name="FileDisplayNameFlashMP4" xml:space="preserve">
-    <value>Flash MP4 Video</value>
+    <value>فایل تصویری Flash MP4</value>
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
@@ -175,11 +175,11 @@
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
-    <value>Shockwave Flash Movie</value>
+    <value>Shockwave Flash فیلم</value>
     <comment>Display name for the file type ".swf" (Small Web Format)</comment>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>فایل صوتی Matroska</value>
     <comment>Display name for the file type ".mka"</comment>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
@@ -191,7 +191,7 @@
     <comment>Display name for the file type ".midi" and ".mid" (Musical Instrument Digital Interface)</comment>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG Video</value>
+    <value>ویدئوی MPEG</value>
     <comment>Display name for the file type ".mpg" and ".mpeg" (Moving Picture Experts Group 1/2)</comment>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">

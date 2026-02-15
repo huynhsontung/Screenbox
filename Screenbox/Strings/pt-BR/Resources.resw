@@ -655,7 +655,7 @@
     <value>Controles na tela</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Escolha quais controles podem aparecer na sobreposição e o comportamento de ocultar automaticamente</value>
+    <value>Escolha quais elementos podem aparecer nos controles e ajuste o comportamento de ocultação automática</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
@@ -739,6 +739,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Avançado</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Modo avançado</value>
@@ -865,7 +868,7 @@
     <value>Padrão</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Escolha um estilo de imagem a ser exibido na reprodução de áudio</value>
+    <value>Escolha um estilo de imagem exibido durante a reprodução de áudio</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Desenvolvido por Lively Wallpaper</value>
@@ -946,7 +949,7 @@
     <value>Ponto</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolução</value>
+    <value>Super-resolução</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>Exibir nome do capítulo quando disponível</value>
@@ -977,5 +980,14 @@
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Pasta</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

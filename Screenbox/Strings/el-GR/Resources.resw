@@ -455,7 +455,7 @@
     <value>Καλλιτέχνες</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Τραγούδι</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Τραγούδια</value>
@@ -652,10 +652,10 @@
     <value>Επιτρέψτε τη μέγιστη ένταση να υπερβαίνει το 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Στοιχεία ελέγχου οθόνης</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Επιλέξτε ποια στοιχεία μπορούν να εμφανιστούν στα χειριστήρια, και ρυθμίστε τη συμπεριφορά αυτόματης απόκρυψης</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Χειρονομίες</value>
@@ -704,7 +704,7 @@
     <value>Δεν υπάρχει συμβατό πρόγραμμα απεικόνισης διαθέσιμο. Βεβαιωθείτε ότι το Direct3D 11 είναι διαθέσιμο στη συσκευή σας.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Για περισσότερες πληροφορίες σχετικά με αυτό το θέμα και πιθανές διορθώσεις, επισκεφθείτε</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Αποτυχία ανοίγματος αρχείου(ων)</value>
@@ -739,6 +739,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Σύνθετα</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Σύνθετη λειτουργία</value>
@@ -834,7 +837,7 @@
     <value>Ταξινόμηση κατά</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Ταξινόμηση κατά {0} επιλογή επιλεγμένη</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -910,72 +913,81 @@
     <value>Προσθήκη όλων των αρχείων στο φάκελο στην ουρά</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Χρήση ρύθμισης συστήματος</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Σκοτεινό</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Φωτεινό</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Αλλαγή του συνολικού συνδυασμού χρωμάτων της εφαρμογής</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Θέμα εφαρμογής</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Εξατομίκευση</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Πάντα συνέχιση από την τελευταία θέση</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Συνεχίστε την αναπαραγωγή από όπου σταματήσατε την τελευταία φορά κατά το άνοιγμα ενός αρχείου</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Μέθοδος αναβάθμισης βίντεο</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Διγραμμικό</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Σημείο</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Σούπερ ανάλυση</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Show chapter name when available</value>
+    <value>Εμφάνιση ονόματος κεφαλαίου όταν είναι διαθέσιμο</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Παράβλεψη ελέγχων μετά από αυτό το χρονικό διάστημα</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} δευτερόλεπτο</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} δευτερόλεπτα</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Γλώσσα εφαρμογής</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Αλλαγή της γλώσσας εμφάνισης της εφαρμογής</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Χρήση γλώσσας συστήματος</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Κανένα αποτέλεσμα για "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Φάκελος</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

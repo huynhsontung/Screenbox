@@ -230,7 +230,7 @@
     <value>选择此视图中的所有项目</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>无选择</value>
+    <value>未选择</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>清除选择</value>
@@ -272,7 +272,7 @@
     <value>空</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>恢复视频视图</value>
+    <value>恢复沉浸视图</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
     <value>最小化沉浸视图</value>
@@ -455,7 +455,7 @@
     <value>艺术家</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>歌曲</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>歌曲</value>
@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>高级</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>隐私</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>高级模式</value>
   </data>
@@ -972,10 +975,19 @@
     <value>使用系统语言</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>没有 "{0}" 的搜索结果</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>文件夹</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>播放位置记录</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>在本设备上保存播放位置记录，以便从上次停止的位置继续播放</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>清除设备播放位置记录</value>
   </data>
 </root>

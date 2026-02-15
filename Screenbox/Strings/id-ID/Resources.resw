@@ -143,7 +143,7 @@
     <value>Waktu berlalu</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Waktu Tersisa</value>
+    <value>Waktu tersisa</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
     <value>Durasi total</value>
@@ -455,7 +455,7 @@
     <value>Artis</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Lagu</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Lagu</value>
@@ -740,6 +740,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Tingkat lanjut</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Mode lanjut</value>
   </data>
@@ -972,10 +975,19 @@
     <value>Gunakan bahasa sistem</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Tidak ada hasil untuk "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

@@ -171,7 +171,7 @@
     <value>音訊與字幕</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>退出全螢幕</value>
+    <value>離開全螢幕</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>音量</value>
@@ -455,7 +455,7 @@
     <value>演出者</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>歌曲</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>歌曲</value>
@@ -655,7 +655,7 @@
     <value>螢幕控制</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>選擇控制項中可顯示的元件</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>手勢</value>
@@ -739,6 +739,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>進階</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>進階模式</value>
@@ -834,7 +837,7 @@
     <value>排序方式</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>依選取的 {0} 選項排序</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -952,7 +955,7 @@
     <value>可用時顯示章節名稱</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>經過此時間後自動隱藏控制項</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
     <value>{0} 秒</value>
@@ -972,10 +975,19 @@
     <value>使用系統語言</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>找不到「{0}」的搜尋結果</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>資料夾</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>
