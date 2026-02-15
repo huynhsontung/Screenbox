@@ -741,7 +741,7 @@
     <value>고급</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>개인정보</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>고급 모드</value>
@@ -982,12 +982,12 @@
     <value>폴더</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>재생 위치 기록</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>중단한 부분부터 다시 시작하려면 이 기기에 내 재생 위치 기록을 저장하세요</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>재생 위치 기록 지우기</value>
   </data>
 </root>
