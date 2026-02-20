@@ -9,7 +9,6 @@ using Screenbox.Core;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Sentry;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
@@ -44,17 +43,6 @@ namespace Screenbox.Pages
         {
             InitializeComponent();
 
-            // Hide default title bar.
-            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
-
-            // Register a handler for when the size of the overlaid caption control changes.
-            // For example, when the app moves to a screen with a different DPI.
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-
             _pages = new Dictionary<string, Type>
             {
                 { "home", typeof(HomePage) },
@@ -68,16 +56,6 @@ namespace Screenbox.Pages
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ContentFrame.Navigating += ContentFrame_Navigating;
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            // Get the size of the caption controls and set padding.
-            // In RTL languages, Grid is flipped automatically.
-            // Left is always the side without the system controls.
-            // Left padding should only be set if we pin flow direction on the title bar.
-            // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -109,11 +87,6 @@ namespace Screenbox.Pages
             ContentFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
-        private void SetTitleBar()
-        {
-            Window.Current.SetTitleBar(TitleBarElement);
-        }
-
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             Window.Current.Dispatcher.AcceleratorKeyActivated += CoreDispatcher_AcceleratorKeyActivated;
@@ -122,7 +95,7 @@ namespace Screenbox.Pages
             ViewModel.NavigationViewDisplayMode = (Windows.UI.Xaml.Controls.NavigationViewDisplayMode)NavView.DisplayMode;
             if (!ViewModel.PlayerVisible)
             {
-                SetTitleBar();
+                AppTitleBar.SetDragRegion();
                 NavView.SelectedItem = NavView.MenuItems[0];
                 _ = ViewModel.FetchLibraries();
             }
@@ -134,7 +107,7 @@ namespace Screenbox.Pages
             {
                 if (!ViewModel.PlayerVisible)
                 {
-                    SetTitleBar();
+                    AppTitleBar.SetDragRegion();
                     if (ContentFrame.Content == null)
                     {
                         NavView.SelectedItem = NavView.MenuItems[0];
@@ -300,6 +273,9 @@ namespace Screenbox.Pages
             {
                 case NavigationViewDisplayMode.Minimal:
                     VisualStateManager.GoToState(this, "Minimal", true);
+                    break;
+                case NavigationViewDisplayMode.Compact when paneOpen:
+                    VisualStateManager.GoToState(this, "CompactPaneOverlay", true);
                     break;
                 case NavigationViewDisplayMode.Expanded when paneOpen:
                     VisualStateManager.GoToState(this, "Expanded", true);

@@ -26,9 +26,9 @@
                 <ResourceDictionary Source="ms-appx:///Styles/NavigationView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Thickness x:Key="AppTitleMarginExpanded">48,0,0,0</Thickness>
-            <Thickness x:Key="AppTitleMarginCompact">76,0,0,0</Thickness>
-            <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleBarExpandedMargin">32,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleBarCompactMargin">56,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleBarMinimalMargin">84,0,0,0</Thickness>
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
@@ -46,54 +46,18 @@
     </Page.Resources>
 
     <Grid>
-        <Grid
+        <controls:TitleBar
             x:Name="AppTitleBar"
-            Height="48"
-            VerticalAlignment="Top"
-            Canvas.ZIndex="1">
-            <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
-            <!--
-                Using padding columns instead of Margin ensures that the background
-                paints the area under the caption control buttons (for transparent buttons).
-            -->
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-            </Grid.ColumnDefinitions>
-
-            <Border
-                x:Name="TitleBarElement"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                Margin="48,0,0,0"
-                Background="Transparent" />
-
-            <StackPanel
-                x:Name="AppTitle"
-                Grid.Column="1"
-                Margin="{StaticResource AppTitleMarginExpanded}"
-                VerticalAlignment="Center"
-                ctAnimations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
-                ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
-                IsHitTestVisible="False"
-                Orientation="Horizontal">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Source="ms-appx:///Assets/Square44x44Logo.png" />
-                <TextBlock
-                    x:Name="AppTitleText"
-                    Margin="12,0,12,2"
-                    VerticalAlignment="Center"
-                    d:Text="Screenbox"
-                    OpticalMarginAlignment="TrimSideBearings"
-                    Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind appModel:Package.Current.DisplayName}" />
-            </StackPanel>
-        </Grid>
+            Title="{x:Bind appModel:Package.Current.DisplayName}"
+            Margin="{StaticResource AppTitleBarExpandedMargin}"
+            ctAnimations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
+            ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
+            Canvas.ZIndex="1"
+            HeightMode="Tall">
+            <controls:TitleBar.Icon>
+                <muxc:ImageIcon Source="ms-appx:///Assets/Square44x44Logo.png" />
+            </controls:TitleBar.Icon>
+        </controls:TitleBar>
 
         <controls:NavigationViewEx
             x:Name="NavView"
@@ -279,7 +243,6 @@
                         <triggers:WindowActivationModeTrigger ActivationMode="Deactivated" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AppTitleText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
                         <Setter Target="NavView.IsBackEnabled" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
@@ -291,10 +254,8 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.HasCriticalError, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AppTitleBar.Height" Value="32" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
-                        <Setter Target="AppTitle.Margin" Value="16,0,0,0" />
-                        <Setter Target="AppTitleText.Margin" Value="16,0,0,2" />
+                        <Setter Target="AppTitleBar.Margin" Value="0,0,0,0" />
+                        <Setter Target="AppTitleBar.DisplayMode" Value="Standard" />
                         <Setter Target="NavView.Visibility" Value="Collapsed" />
                         <Setter Target="CriticalErrorInfo.Visibility" Value="Visible" />
                     </VisualState.Setters>
@@ -305,13 +266,17 @@
                 <VisualState x:Name="Expanded" />
                 <VisualState x:Name="Compact">
                     <VisualState.Setters>
-                        <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginCompact}" />
+                        <Setter Target="AppTitleBar.Margin" Value="{StaticResource AppTitleBarCompactMargin}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CompactPaneOverlay">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleBar.Margin" Value="{StaticResource AppTitleBarExpandedMargin}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimal">
                     <VisualState.Setters>
-                        <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
-                        <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
+                        <Setter Target="AppTitleBar.Margin" Value="{StaticResource AppTitleBarMinimalMargin}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">
@@ -325,9 +290,10 @@
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Compact" To="Expanded">
                         <Storyboard>
-                            <!--  -272 offset is derived from subtracting CompactPaneLength from OpenPaneLength (48 - 320)  -->
+                            <!--  -272 offset is derived from subtracting OpenPaneLength from CompactPaneLength (48 - 320).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="PlayerFrame" />
-                            <RepositionThemeAnimation FromHorizontalOffset="16" TargetName="AppTitle" />
+                            <!--  24 offset is derived by subtracting AppTitleBarExpandedMargin from AppTitleBarCompactMargin (56 - 32).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="24" TargetName="AppTitleBar" />
                             <DoubleAnimation
                                 Storyboard.TargetName="HomeNavItemText"
                                 Storyboard.TargetProperty="Opacity"
@@ -369,34 +335,57 @@
 
                     <VisualTransition From="Expanded" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarCompactMargin}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--  272 offset is derived from subtracting OpenPaneLength from CompactPaneLength (320 - 48)  -->
+                            <!--  272 offset is derived from subtracting CompactPaneLength from OpenPaneLength (320 - 48).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="PlayerFrame" />
-                            <RepositionThemeAnimation FromHorizontalOffset="-16" TargetName="AppTitle" />
+                            <!--  -24 offset is derived by subtracting AppTitleBarCompactMargin from AppTitleBarExpandedMargin (32 - 56).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-24" TargetName="AppTitleBar" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="Compact" To="Minimal">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginMinimal}" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarMinimalMargin}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--  48 offset is derived from adding CompactPaneLength (48)  -->
+                            <!--  48 offset corresponds to CompactPaneLength (48).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="48" TargetName="PlayerFrame" />
-                            <RepositionThemeAnimation FromHorizontalOffset="-24" TargetName="AppTitle" />
+                            <!--  -28 offset is derived by subtracting AppTitleBarMinimalMargin from AppTitleBarCompactMargin (56 - 84).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-28" TargetName="AppTitleBar" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="Minimal" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarCompactMargin}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--  -48 offset is derived from subtracting CompactPaneLength (48)  -->
+                            <!--  -48 offset is derived from subtracting CompactPaneLength (48).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="-48" TargetName="PlayerFrame" />
-                            <RepositionThemeAnimation FromHorizontalOffset="24" TargetName="AppTitle" />
+                            <!--  28 offset is derived by subtracting AppTitleBarCompactMargin from AppTitleBarMinimalMargin (84 - 56).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="28" TargetName="AppTitleBar" />
+                        </Storyboard>
+                    </VisualTransition>
+
+                    <VisualTransition From="Compact" To="CompactPaneOverlay">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarExpandedMargin}" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <!--  24 offset is derived by subtracting AppTitleBarExpandedMargin from AppTitleBarCompactMargin (56 - 32).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="24" TargetName="AppTitleBar" />
+                        </Storyboard>
+                    </VisualTransition>
+
+                    <VisualTransition From="CompactPaneOverlay" To="Compact">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarCompactMargin}" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <!--  -24 offset is derived by subtracting AppTitleBarCompactMargin from AppTitleBarExpandedMargin (32 - 56).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-24" TargetName="AppTitleBar" />
                         </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
