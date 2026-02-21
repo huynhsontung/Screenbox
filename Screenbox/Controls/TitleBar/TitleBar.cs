@@ -30,7 +30,7 @@ namespace Screenbox.Controls;
 /// <example>
 /// XAML example that demonstrates header, content and footer in the title bar:
 /// <code lang="xml"><![CDATA[
-/// <Page
+/// <Page>
 ///     <Grid x:Name="RootGrid">
 ///         <local:TitleBar x:Name="AppTitleBar" Title="App title">
 ///             <local:TitleBar.Icon>

@@ -39,9 +39,6 @@
             <!--  TextFillColorTertiary over SolidBackgroundFillColorBase  -->
             <SolidColorBrush x:Key="TitleBarButtonInactiveForegroundBrush" Color="#9B9B9B" />
 
-            <StaticResource x:Key="TitleBarForeground" ResourceKey="TextFillColorPrimaryBrush" />
-            <StaticResource x:Key="TitleBarForegroundDeactivated" ResourceKey="TextFillColorTertiaryBrush" />
-
             <StaticResource x:Key="TitleBarCaptionButtonBackground" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="TitleBarCaptionButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
             <StaticResource x:Key="TitleBarCaptionButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
@@ -50,6 +47,9 @@
             <StaticResource x:Key="TitleBarCaptionButtonForegroundPointerOver" ResourceKey="TitleBarButtonHoverForegroundBrush" />
             <StaticResource x:Key="TitleBarCaptionButtonForegroundPressed" ResourceKey="TitleBarButtonPressedForegroundBrush" />
             <StaticResource x:Key="TitleBarCaptionButtonForegroundDisabled" ResourceKey="TitleBarButtonInactiveForegroundBrush" />
+
+            <StaticResource x:Key="TitleBarForeground" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TitleBarForegroundDeactivated" ResourceKey="TextFillColorTertiaryBrush" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <StaticResource x:Key="TitleBarCaptionButtonBackground" ResourceKey="SystemColorButtonFaceColorBrush" />
