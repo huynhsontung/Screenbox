@@ -255,7 +255,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AppTitleBar.Margin" Value="0,0,0,0" />
-                        <Setter Target="AppTitleBar.DisplayMode" Value="Standard" />
+                        <Setter Target="AppTitleBar.HeightMode" Value="Standard" />
                         <Setter Target="NavView.Visibility" Value="Collapsed" />
                         <Setter Target="CriticalErrorInfo.Visibility" Value="Visible" />
                     </VisualState.Setters>
