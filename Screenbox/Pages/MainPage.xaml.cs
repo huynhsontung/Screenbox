@@ -116,6 +116,7 @@ namespace Screenbox.Pages
                 }
 
                 UpdateNavigationViewState(NavView.DisplayMode, NavView.IsPaneOpen);
+                AppTitleBar.SetCaptionButtonColor(); // We invoke it as late as possible to ensure the title bar is visible.
             }
         }
 

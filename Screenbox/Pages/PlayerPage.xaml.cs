@@ -11,7 +11,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
@@ -46,11 +45,6 @@ namespace Screenbox.Pages
 
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
-
-            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             AlbumArtImage.RegisterPropertyChangedCallback(ImageBrush.ImageSourceProperty, AlbumArtImageOnSourceChanged);
@@ -120,11 +114,6 @@ namespace Screenbox.Pages
             e.Handled = handled;
         }
 
-        private void SetTitleBar()
-        {
-            Window.Current.SetTitleBar(TitleBarDragRegion);
-        }
-
         private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
         {
             PlayBackgroundArtChangeCrossFadeAnimation();
@@ -152,16 +141,6 @@ namespace Screenbox.Pages
                 // Controls are disabled by default until playback is ready
                 PlayerControls.FocusFirstButton();
             }
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            // Get the size of the caption controls and set padding.
-            // In RTL languages, Grid is flipped automatically.
-            // Left is always the side without the system controls.
-            // Left padding should only be set if we pin flow direction on the title bar.
-            // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
         }
 
         private void AccessKeyManager_OnIsDisplayModeEnabledChanged(object sender, object args)
@@ -237,7 +216,7 @@ namespace Screenbox.Pages
                         case WindowViewMode.Compact:
                             ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
                             VisualStateManager.GoToState(this, "CompactOverlay", true);
-                            SetTitleBar();
+                            PlayerTitleBar.SetDragRegion();
                             break;
                         case WindowViewMode.FullScreen:
                             ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
@@ -260,7 +239,7 @@ namespace Screenbox.Pages
                         case PlayerVisibilityState.Visible:
                             VisualStateManager.GoToState(this, "NoPreview", true);
                             VisualStateManager.GoToState(this, "Normal", true);
-                            SetTitleBar();
+                            PlayerTitleBar.SetDragRegion();
                             break;
                         case PlayerVisibilityState.Minimal:
                             VisualStateManager.GoToState(this, "MiniPlayer", true);
@@ -413,7 +392,6 @@ namespace Screenbox.Pages
             LayoutRoot.RequestedTheme = !ViewModel.AudioOnly && ViewModel.PlayerVisibility == PlayerVisibilityState.Visible
                 ? ElementTheme.Dark
                 : ElementTheme.Default;
-            TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
         }
 
         private void PlayQueueFlyout_OnOpening(object sender, object e)

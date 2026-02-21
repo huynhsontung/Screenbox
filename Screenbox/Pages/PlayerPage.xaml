@@ -175,176 +175,41 @@
             <KeyboardAccelerator Key="Escape" Invoked="HideControlsKeyboardAccelerator_OnInvoked" />
         </Grid.KeyboardAccelerators>
 
-        <Border
-            x:Name="HeaderBackground"
-            Grid.Row="0"
-            Grid.Column="0"
-            Height="80"
-            MinHeight="32"
-            VerticalAlignment="Top"
-            Background="{ThemeResource HeaderBackgroundBrush}"
-            Canvas.ZIndex="3" />
-
-        <Grid
-            x:Name="TitleBarArea"
-            Grid.Row="0"
-            Grid.Column="0"
-            VerticalAlignment="Top"
-            Canvas.ZIndex="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-            </Grid.ColumnDefinitions>
-
-            <Border
-                x:Name="TitleBarDragRegion"
-                Grid.ColumnSpan="6"
-                Background="Transparent" />
-
-            <Button
-                x:Name="BackButton"
-                Grid.Column="1"
-                Width="44"
-                Height="44"
-                Margin="4,6,4,2"
-                VerticalAlignment="Top"
-                AccessKey="{strings:KeyboardResources Key=NavigationBackButtonKey}"
-                AutomationProperties.Name="{x:Bind BackButton.(ToolTipService.ToolTip)}"
-                Command="{x:Bind ViewModel.GoBackCommand}"
-                Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=MinimizeImmersiveView}">
-                <muxc:AnimatedIcon>
-                    <muxc:AnimatedIcon.Source>
-                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
-                    </muxc:AnimatedIcon.Source>
-                    <muxc:AnimatedIcon.FallbackIconSource>
-                        <muxc:FontIconSource Glyph="&#xE70D;" />
-                    </muxc:AnimatedIcon.FallbackIconSource>
-                </muxc:AnimatedIcon>
-            </Button>
-
-            <Button
-                x:Name="PlayQueueButton"
-                Grid.Column="2"
-                Width="44"
-                Height="44"
-                Margin="0,6,0,2"
-                Padding="0"
-                VerticalAlignment="Top"
-                AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
-                AllowDrop="True"
-                AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
-                DragEnter="PlayQueueButton_OnDragEnter"
-                DragLeave="PlayQueueButton_OnDragLeave"
-                Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
-                <FontIcon
-                    x:Name="PlayQueueButtonIcon"
-                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                    FontSize="20"
-                    Glyph="{StaticResource PlaylistMusicGlyph}" />
-                <Button.Flyout>
-                    <Flyout
-                        x:Name="PlayQueueFlyout"
-                        Opened="PlayQueueFlyout_OnOpened"
-                        Opening="PlayQueueFlyout_OnOpening"
-                        Placement="BottomEdgeAlignedLeft">
-                        <Flyout.FlyoutPresenterStyle>
-                            <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
-                                <!--  Remove side and bottom padding, allowing the content to set these values  -->
-                                <Setter Property="Padding" Value="0,12,0,0" />
-                                <!--  Turn off vertical scroll to prevent a second scrollbar on smaller pages  -->
-                                <!--<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />-->
-                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
-                            </Style>
-                        </Flyout.FlyoutPresenterStyle>
-                        <controls:PlayQueueControl
-                            x:Name="PlayQueue"
-                            Width="432"
-                            MinHeight="200"
-                            MaxHeight="500"
-                            Padding="12,0"
-                            x:Load="False"
-                            IsAccessKeyScope="True"
-                            IsFlyout="True" />
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-
-            <StackPanel
-                x:Name="TitleTextStackPanel"
-                Grid.Column="3"
-                Margin="20,0,0,0"
-                VerticalAlignment="Center"
-                IsHitTestVisible="False"
-                Orientation="Vertical">
-                <StackPanel.Transitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition />
-                    </TransitionCollection>
-                </StackPanel.Transitions>
+        <Button
+            x:Name="MiniPlayerTitleButton"
+            Grid.Column="1"
+            Margin="16,0,10,0"
+            Padding="0"
+            AutomationProperties.Name="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
+            BorderThickness="0"
+            Command="{x:Bind ViewModel.RestorePlayerCommand}"
+            Visibility="Collapsed">
+            <Button.Resources>
+                <StaticResource x:Key="ButtonBackground" ResourceKey="SubtleFillColorTransparentBrush" />
+                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
+                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
+                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
+            </Button.Resources>
+            <StackPanel>
                 <TextBlock
                     x:Name="TitleText"
+                    HorizontalAlignment="Left"
                     d:Text="Lorem ipsum dolor sit amet"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextWrapping="NoWrap" />
 
                 <TextBlock
-                    x:Name="TitleTextSeparator"
-                    Margin="0,0,3,0"
-                    FontSize="12"
-                    Text=" –"
-                    Visibility="Collapsed" />
-
-                <TextBlock
                     x:Name="SubtitleText"
                     d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-                    Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     OpticalMarginAlignment="TrimSideBearings"
                     Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
                     TextWrapping="NoWrap"
                     Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
             </StackPanel>
-
-            <Button
-                x:Name="LivelyOptionsButton"
-                Grid.Column="4"
-                Width="44"
-                Height="44"
-                Margin="4,6,4,2"
-                Padding="0"
-                VerticalAlignment="Top"
-                AutomationProperties.Name="{x:Bind LivelyOptionsButton.(ToolTipService.ToolTip)}"
-                Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
-                <FontIcon
-                    x:Name="LivelyOptionsButtonIcon"
-                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                    FontSize="20"
-                    Glyph="{StaticResource MusicVisualizerGlyph}" />
-                <Button.Flyout>
-                    <Flyout>
-                        <Flyout.FlyoutPresenterStyle>
-                            <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
-                                <Setter Property="Background" Value="{ThemeResource AcrylicInAppFillColorBaseBrush}" />
-                                <Setter Property="BorderBrush" Value="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
-                                <Setter Property="Padding" Value="0,0,0,0" />
-                            </Style>
-                        </Flyout.FlyoutPresenterStyle>
-                        <controls:LivelyWallpaperSelector
-                            MaxWidth="288"
-                            Padding="16,4,16,17"
-                            HeaderVisibility="Visible" />
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
-        </Grid>
+        </Button>
 
         <Grid
             x:Name="BackgroundElement"
@@ -608,14 +473,173 @@
             Grid.Column="0"
             Padding="6,20,6,12" />
 
+        <controls:TitleBar
+            x:Name="PlayerTitleBar"
+            MinHeight="80"
+            Background="{ThemeResource HeaderBackgroundBrush}">
+            <controls:TitleBar.Resources>
+                <VerticalAlignment x:Key="TitleBarHeaderVerticalAlignment">Top</VerticalAlignment>
+                <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Left</HorizontalAlignment>
+                <VerticalAlignment x:Key="TitleBarFooterVerticalAlignment">Top</VerticalAlignment>
+            </controls:TitleBar.Resources>
+            <controls:TitleBar.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        x:Name="BackButton"
+                        Grid.Column="0"
+                        Width="44"
+                        Height="44"
+                        Margin="4,6,0,2"
+                        AccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
+                        AutomationProperties.Name="{x:Bind strings:Resources.MinimizeImmersiveView}"
+                        Command="{x:Bind ViewModel.GoBackCommand}"
+                        Style="{StaticResource SubtleButtonStyle}"
+                        ToolTipService.ToolTip="{x:Bind strings:Resources.MinimizeImmersiveView}">
+                        <muxc:AnimatedIcon>
+                            <muxc:AnimatedIcon.Source>
+                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                            </muxc:AnimatedIcon.Source>
+                            <muxc:AnimatedIcon.FallbackIconSource>
+                                <muxc:FontIconSource Glyph="&#xE70D;" />
+                            </muxc:AnimatedIcon.FallbackIconSource>
+                        </muxc:AnimatedIcon>
+                    </Button>
+
+                    <Button
+                        x:Name="PlayQueueButton"
+                        Grid.Column="1"
+                        Width="44"
+                        Height="44"
+                        Margin="4,6,0,2"
+                        Padding="0"
+                        AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
+                        AllowDrop="True"
+                        AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
+                        DragEnter="PlayQueueButton_OnDragEnter"
+                        DragLeave="PlayQueueButton_OnDragLeave"
+                        Style="{StaticResource SubtleButtonStyle}"
+                        ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
+                        <FontIcon
+                            x:Name="PlayQueueButtonIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            FontSize="20"
+                            Glyph="{StaticResource PlaylistMusicGlyph}" />
+                        <Button.Flyout>
+                            <Flyout
+                                x:Name="PlayQueueFlyout"
+                                Opened="PlayQueueFlyout_OnOpened"
+                                Opening="PlayQueueFlyout_OnOpening"
+                                Placement="BottomEdgeAlignedLeft">
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                        <!--  Remove side and bottom padding, allowing the content to set these values  -->
+                                        <Setter Property="Padding" Value="0,12,0,0" />
+                                        <!--  Turn off vertical scroll to prevent a second scrollbar on smaller pages  -->
+                                        <!--<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />-->
+                                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+                                <controls:PlayQueueControl
+                                    x:Name="PlayQueue"
+                                    Width="432"
+                                    MinHeight="200"
+                                    MaxHeight="500"
+                                    Padding="12,0"
+                                    x:Load="False"
+                                    IsAccessKeyScope="True"
+                                    IsFlyout="True" />
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </Grid>
+            </controls:TitleBar.Header>
+            <controls:TitleBar.Footer>
+                <Button
+                    x:Name="LivelyOptionsButton"
+                    Grid.Column="4"
+                    Width="44"
+                    Height="44"
+                    Margin="4,6,0,2"
+                    Padding="0"
+                    AutomationProperties.Name="{x:Bind strings:Resources.VisualizerOptionsToolTip}"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.VisualizerOptionsToolTip}">
+                    <FontIcon
+                        x:Name="LivelyOptionsButtonIcon"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        FontSize="20"
+                        Glyph="{StaticResource MusicVisualizerGlyph}" />
+                    <Button.Flyout>
+                        <Flyout>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                    <Setter Property="Background" Value="{ThemeResource AcrylicInAppFillColorBaseBrush}" />
+                                    <Setter Property="BorderBrush" Value="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
+                                    <Setter Property="Padding" Value="0,0,0,0" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <controls:LivelyWallpaperSelector
+                                MaxWidth="288"
+                                Padding="16,4,16,17"
+                                HeaderVisibility="Visible" />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </controls:TitleBar.Footer>
+
+            <Grid
+                x:Name="TitleBarContentGrid"
+                Padding="12,0,0,28"
+                ColumnSpacing="8"
+                IsHitTestVisible="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.Transitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition />
+                    </TransitionCollection>
+                </Grid.Transitions>
+                <TextBlock
+                    x:Name="TitleBarTitleTextBlock"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    d:Text="Lorem ipsum dolor sit amet"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
+                    TextWrapping="NoWrap" />
+
+                <TextBlock
+                    x:Name="TitleBarSubtitleTextBlock"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                    Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
+                    OpticalMarginAlignment="TrimSideBearings"
+                    Style="{StaticResource BodyTextBlockStyle}"
+                    Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
+                    TextWrapping="NoWrap"
+                    Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
+            </Grid>
+        </controls:TitleBar>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">
                 <VisualState x:Name="ControlsVisible" />
 
                 <VisualState x:Name="ControlsHidden">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Opacity" Value="0" />
-                        <Setter Target="TitleBarArea.Opacity" Value="0" />
+                        <Setter Target="PlayerTitleBar.Opacity" Value="0" />
                         <Setter Target="HiddenButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
@@ -639,7 +663,6 @@
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="VideoView.Opacity" Value="1" />
@@ -650,7 +673,7 @@
 
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Opacity" Value="0" />
+                        <Setter Target="PlayerTitleBar.Background" Value="Transparent" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
@@ -699,7 +722,6 @@
 
                 <VisualState x:Name="AudioWithVisualizer">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
                         <Setter Target="VideoView.Opacity" Value="0" />
@@ -793,10 +815,11 @@
 
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Height" Value="128" />
+                        <Setter Target="PlayerTitleBar.MinHeight" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Margin" Value="20,20,0,20" />
-                        <Setter Target="LivelyOptionsButton.Margin" Value="0,20,0,20" />
+                        <Setter Target="PlayQueueButton.Margin" Value="16,16,0,16" />
+                        <Setter Target="TitleBarContentGrid.Margin" Value="8,0,0,28" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="4,16,0,16" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
                         <Setter Target="PlayerStateBadge.Height" Value="80" />
@@ -811,14 +834,16 @@
 
                 <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Height" Value="NaN" />
+                        <Setter Target="PlayerTitleBar.MinHeight" Value="32" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleTextStackPanel.Margin" Value="12,8,0,8" />
-                        <Setter Target="TitleTextStackPanel.Orientation" Value="Horizontal" />
-                        <Setter Target="TitleText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
-                        <Setter Target="TitleTextSeparator.Visibility" Value="Visible" />
-                        <Setter Target="SubtitleText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
+                        <Setter Target="TitleBarContentGrid.Padding" Value="12,8,0,8" />
+                        <Setter Target="TitleBarTitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
+                        <Setter Target="TitleBarTitleTextBlock.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="TitleBarSubtitleTextBlock.(Grid.Row)" Value="0" />
+                        <Setter Target="TitleBarSubtitleTextBlock.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarSubtitleTextBlock.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="TitleBarSubtitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
@@ -850,16 +875,10 @@
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
-                        <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
-                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="TitleBarArea.VerticalAlignment" Value="Center" />
-                        <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerTitleBar.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="3" />
-                        <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
-                        <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
+                        <Setter Target="MiniPlayerTitleButton.Visibility" Value="Visible" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.CornerRadius" Value="{StaticResource ControlCornerRadius}" />
@@ -895,15 +914,10 @@
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
-                        <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
-                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="TitleBarArea.VerticalAlignment" Value="Center" />
-                        <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerTitleBar.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="3" />
-                        <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
+                        <Setter Target="MiniPlayerTitleButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />

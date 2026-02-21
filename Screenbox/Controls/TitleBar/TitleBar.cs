@@ -80,8 +80,8 @@ public sealed partial class TitleBar : ContentControl
     private const string DeactivatedStateName = "Deactivated";
     private const string StandardStateName = "Standard";
     private const string TallStateName = "Tall";
-    private const string TitleBarCollapsedStateName = "TitleBarCollapsed";
-    private const string TitleBarVisibleStateName = "TitleBarVisible";
+    //private const string TitleBarCollapsedStateName = "TitleBarCollapsed";
+    //private const string TitleBarVisibleStateName = "TitleBarVisible";
     private const string HeaderCollapsedStateName = "HeaderCollapsed";
     private const string HeaderVisibleStateName = "HeaderVisible";
     private const string IconCollapsedStateName = "IconCollapsed";
@@ -100,6 +100,7 @@ public sealed partial class TitleBar : ContentControl
 
     private ColumnDefinition? _leftPaddingColumn;
     private ColumnDefinition? _rightPaddingColumn;
+    private Grid? _dragRegion;
     private FrameworkElement? _headerArea;
     private FrameworkElement? _contentArea;
     private FrameworkElement? _footerArea;
@@ -125,10 +126,11 @@ public sealed partial class TitleBar : ContentControl
 
         _leftPaddingColumn = (ColumnDefinition?)GetTemplateChild(LeftPaddingColumnName);
         _rightPaddingColumn = (ColumnDefinition?)GetTemplateChild(RightPaddingColumnName);
+        _dragRegion = (Grid?)GetTemplateChild(DragRegionName);
 
         SetDragRegion();
         UpdateCaptionButtonColor();
-        UpdateVisibility();
+        //UpdateVisibility();
         UpdateHeight();
         UpdatePadding();
         UpdateHeader();
@@ -155,14 +157,19 @@ public sealed partial class TitleBar : ContentControl
     {
         if (_window is null) return;
 
-        if (GetTemplateChild(DragRegionName) is Grid dragRegion)
+        if (_dragRegion is not null)
         {
-            _window.SetTitleBar(dragRegion);
+            _window.SetTitleBar(_dragRegion);
         }
         else
         {
             _window.SetTitleBar(null);
         }
+    }
+
+    public void SetCaptionButtonColor()
+    {
+        UpdateCaptionButtonColor();
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -172,7 +179,7 @@ public sealed partial class TitleBar : ContentControl
             _coreTitleBar = coreApplicationView.TitleBar;
             _coreTitleBar.ExtendViewIntoTitleBar = true;
             _coreTitleBar.LayoutMetricsChanged += CoreTitleBar_OnLayoutMetricsChanged;
-            _coreTitleBar.IsVisibleChanged += CoreTitleBar_OnIsVisibleChanged;
+            //_coreTitleBar.IsVisibleChanged += CoreTitleBar_OnIsVisibleChanged;
         }
 
         _window = Window.Current;
@@ -189,7 +196,7 @@ public sealed partial class TitleBar : ContentControl
         if (_coreTitleBar is not null)
         {
             _coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_OnLayoutMetricsChanged;
-            _coreTitleBar.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
+            //_coreTitleBar.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
             _coreTitleBar = null;
         }
 
@@ -203,6 +210,7 @@ public sealed partial class TitleBar : ContentControl
 
         _leftPaddingColumn = null;
         _rightPaddingColumn = null;
+        _dragRegion = null;
         _headerArea = null;
         _contentArea = null;
         _footerArea = null;
@@ -222,10 +230,10 @@ public sealed partial class TitleBar : ContentControl
         UpdatePadding();
     }
 
-    private void CoreTitleBar_OnIsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-    {
-        UpdateVisibility();
-    }
+    //private void CoreTitleBar_OnIsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
+    //{
+    //    UpdateVisibility();
+    //}
 
     private void OnPropertyChanged(DependencyPropertyChangedEventArgs args)
     {
@@ -273,17 +281,17 @@ public sealed partial class TitleBar : ContentControl
         UpdatePadding();
     }
 
-    private void UpdateVisibility()
-    {
-        if (CoreApplication.GetCurrentView() is { } coreApplicationView)
-        {
-            string stateName = coreApplicationView.TitleBar.IsVisible
-                ? TitleBarVisibleStateName
-                : TitleBarCollapsedStateName;
+    //private void UpdateVisibility()
+    //{
+    //    if (CoreApplication.GetCurrentView() is { } coreApplicationView)
+    //    {
+    //        string stateName = coreApplicationView.TitleBar.IsVisible
+    //            ? TitleBarVisibleStateName
+    //            : TitleBarCollapsedStateName;
 
-            VisualStateManager.GoToState(this, stateName, false);
-        }
-    }
+    //        VisualStateManager.GoToState(this, stateName, false);
+    //    }
+    //}
 
     private void UpdateHeight()
     {
@@ -296,10 +304,7 @@ public sealed partial class TitleBar : ContentControl
 
     private void UpdatePadding()
     {
-        if (_coreTitleBar is null)
-        {
-            return;
-        }
+        if (_coreTitleBar is null) return;
 
         double leadingInset = _coreTitleBar.SystemOverlayLeftInset;
         double trailingInset = _coreTitleBar.SystemOverlayRightInset;
@@ -325,11 +330,11 @@ public sealed partial class TitleBar : ContentControl
         else
         {
             _headerArea ??= (FrameworkElement)GetTemplateChild(HeaderContentPresenterName);
-            HeightMode = TitleBarHeightMode.Tall;
+            //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, HeaderVisibleStateName, false);
         }
 
-        UpdateHeight();
+        //UpdateHeight();
     }
 
     private void UpdateIcon()
@@ -359,11 +364,11 @@ public sealed partial class TitleBar : ContentControl
         else
         {
             _contentArea ??= (FrameworkElement)GetTemplateChild(ContentPresenterName);
-            HeightMode = TitleBarHeightMode.Tall;
+            //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, ContentVisibleStateName, false);
         }
 
-        UpdateHeight();
+        //UpdateHeight();
     }
 
     private void UpdateFooter()
@@ -375,20 +380,19 @@ public sealed partial class TitleBar : ContentControl
         else
         {
             _footerArea ??= (FrameworkElement)GetTemplateChild(FooterContentPresenterName);
-            HeightMode = TitleBarHeightMode.Tall;
+            //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, FooterVisibleStateName, false);
         }
 
-        UpdateHeight();
+        //UpdateHeight();
     }
 
     private void UpdateCaptionButtonColor()
     {
+        // Avoid updating when not visible to prevent the Player page title bar colors
+        // from being overwritten by the Main page title bar colors.
         var titleBar = ApplicationView.GetForCurrentView()?.TitleBar;
-        if (titleBar is null)
-        {
-            return;
-        }
+        if (titleBar is null || Visibility is Visibility.Collapsed) return;
 
         titleBar.ButtonBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundBrush);
         titleBar.ButtonHoverBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundPointerOverBrush);

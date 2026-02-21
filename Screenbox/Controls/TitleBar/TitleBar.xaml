@@ -197,14 +197,14 @@
                                 </VisualState>
                             </VisualStateGroup>
 
-                            <VisualStateGroup x:Name="FullScreenGroup">
+                            <!--<VisualStateGroup x:Name="FullScreenGroup">
                                 <VisualState x:Name="TitleBarVisible" />
                                 <VisualState x:Name="TitleBarCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="LayoutRoot.Visibility" Value="Collapsed" />
                                     </VisualState.Setters>
                                 </VisualState>
-                            </VisualStateGroup>
+                            </VisualStateGroup>-->
 
                             <VisualStateGroup x:Name="HeaderVisibilityGroup">
                                 <VisualState x:Name="HeaderCollapsed" />
