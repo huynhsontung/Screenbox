@@ -329,7 +329,7 @@ public sealed partial class TitleBar : ContentControl
         }
         else
         {
-            _headerArea ??= (FrameworkElement)GetTemplateChild(HeaderContentPresenterName);
+            _headerArea ??= (FrameworkElement?)GetTemplateChild(HeaderContentPresenterName);
             //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, HeaderVisibleStateName, false);
         }
@@ -363,7 +363,7 @@ public sealed partial class TitleBar : ContentControl
         }
         else
         {
-            _contentArea ??= (FrameworkElement)GetTemplateChild(ContentPresenterName);
+            _contentArea ??= (FrameworkElement?)GetTemplateChild(ContentPresenterName);
             //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, ContentVisibleStateName, false);
         }
@@ -379,7 +379,7 @@ public sealed partial class TitleBar : ContentControl
         }
         else
         {
-            _footerArea ??= (FrameworkElement)GetTemplateChild(FooterContentPresenterName);
+            _footerArea ??= (FrameworkElement?)GetTemplateChild(FooterContentPresenterName);
             //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, FooterVisibleStateName, false);
         }
