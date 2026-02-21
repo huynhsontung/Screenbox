@@ -187,7 +187,17 @@
                     </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="PlayQueueNavItemText" Text="{strings:Resources Key=PlayQueue}" />
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE728;}" Tag="playlists">
+                <muxc:NavigationViewItem
+                    extensions:AcceleratorService.ToolTip="{x:Bind PlaylistsNavItemText.Text}"
+                    AccessKey="{x:Bind strings:KeyboardResources.NavigationItemPlaylistKey}"
+                    KeyTipPlacementMode="Right"
+                    Tag="playlists">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlaylistGlyph}" />
+                    </muxc:NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="P" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="PlaylistsNavItemText" Text="{strings:Resources Key=Playlists}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
@@ -358,6 +368,12 @@
                                 Duration="{StaticResource NavItemTextShowDuration}" />
                             <DoubleAnimation
                                 Storyboard.TargetName="PlayQueueNavItemText"
+                                Storyboard.TargetProperty="Opacity"
+                                From="0"
+                                To="1"
+                                Duration="{StaticResource NavItemTextShowDuration}" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="PlaylistsNavItemText"
                                 Storyboard.TargetProperty="Opacity"
                                 From="0"
                                 To="1"

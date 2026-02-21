@@ -128,7 +128,7 @@
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                         FontSize="64"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="{StaticResource PlaylistMusicGlyph}" />
+                        Glyph="{StaticResource PlaylistGlyph}" />
                 </Grid>
 
                 <StackPanel

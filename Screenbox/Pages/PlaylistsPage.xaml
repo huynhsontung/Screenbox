@@ -37,7 +37,10 @@
                     IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
                     ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
                     <controls:CommonGridViewItem.PlaceholderIconSource>
-                        <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="{x:Bind Converter={StaticResource MediaGlyphConverter}}" />
+                        <FontIconSource
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
+                            Glyph="{StaticResource PlaylistGlyph}" />
                     </controls:CommonGridViewItem.PlaceholderIconSource>
                 </controls:CommonGridViewItem>
             </DataTemplate>
