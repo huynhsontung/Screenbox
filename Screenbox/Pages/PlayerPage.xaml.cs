@@ -137,6 +137,7 @@ namespace Screenbox.Pages
 
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
             {
+                PlayerTitleBar.SetDragRegion();
                 // Focus can fail if player is file activated
                 // Controls are disabled by default until playback is ready
                 PlayerControls.FocusFirstButton();
