@@ -592,37 +592,24 @@
                 </Button>
             </controls:TitleBar.Footer>
 
-            <Grid
-                x:Name="TitleBarContentGrid"
-                Padding="12,0,0,28"
-                ColumnSpacing="8"
-                IsHitTestVisible="False">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.Transitions>
+            <StackPanel
+                x:Name="TitleBarContentStackPanel"
+                Margin="12,0,0,28"
+                IsHitTestVisible="False"
+                Orientation="Vertical">
+                <StackPanel.Transitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
                     </TransitionCollection>
-                </Grid.Transitions>
+                </StackPanel.Transitions>
                 <TextBlock
                     x:Name="TitleBarTitleTextBlock"
-                    Grid.Row="0"
-                    Grid.ColumnSpan="2"
                     d:Text="Lorem ipsum dolor sit amet"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextWrapping="NoWrap" />
-
                 <TextBlock
                     x:Name="TitleBarSubtitleTextBlock"
-                    Grid.Row="1"
-                    Grid.ColumnSpan="2"
                     d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                     Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
                     OpticalMarginAlignment="TrimSideBearings"
@@ -630,7 +617,7 @@
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
                     TextWrapping="NoWrap"
                     Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
-            </Grid>
+            </StackPanel>
         </controls:TitleBar>
 
         <VisualStateManager.VisualStateGroups>
@@ -818,7 +805,7 @@
                         <Setter Target="PlayerTitleBar.MinHeight" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="16,16,0,16" />
-                        <Setter Target="TitleBarContentGrid.Margin" Value="8,0,0,28" />
+                        <Setter Target="TitleBarContentStackPanel.Margin" Value="16,0,0,56" />
                         <Setter Target="LivelyOptionsButton.Margin" Value="4,16,0,16" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
@@ -827,6 +814,10 @@
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                     <Storyboard>
+                        <RepositionThemeAnimation
+                            FromHorizontalOffset="8"
+                            FromVerticalOffset="-8"
+                            TargetName="TitleBarContentStackPanel" />
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="PlayerControls" />
                     </Storyboard>
@@ -837,12 +828,10 @@
                         <Setter Target="PlayerTitleBar.MinHeight" Value="32" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarContentGrid.Padding" Value="12,8,0,8" />
+                        <Setter Target="TitleBarContentStackPanel.Margin" Value="12,8,0,8" />
+                        <Setter Target="TitleBarContentStackPanel.Orientation" Value="Horizontal" />
+                        <Setter Target="TitleBarContentStackPanel.Spacing" Value="8" />
                         <Setter Target="TitleBarTitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
-                        <Setter Target="TitleBarTitleTextBlock.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="TitleBarSubtitleTextBlock.(Grid.Row)" Value="0" />
-                        <Setter Target="TitleBarSubtitleTextBlock.(Grid.Column)" Value="1" />
-                        <Setter Target="TitleBarSubtitleTextBlock.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="TitleBarSubtitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
