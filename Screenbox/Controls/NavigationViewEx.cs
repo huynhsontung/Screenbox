@@ -42,19 +42,19 @@ namespace Screenbox.Controls;
 /// <example>
 /// This example shows how to create a simple NavigationView with an overlay,
 /// including some of its new capabilities.
-/// <code>
-/// &lt;controls:NavigationViewEx BackButtonAccessKey="B"
-///                            CloseButtonStyle="{StaticResource AccentButtonStyle}"
-///                            OverlayZIndex="2"&gt;
-///     &lt;controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators&gt;
-///         &lt;KeyboardAccelerator Key="T" Modifiers="Control" /&gt;
-///     &lt;/controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators&gt;
+/// <code lang="xml"><![CDATA[
+/// <local:NavigationViewEx BackButtonAccessKey="B"
+///                         CloseButtonStyle="{StaticResource AccentButtonStyle}"
+///                         OverlayZIndex="2">
+///     <local:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+///         <KeyboardAccelerator Key="T" Modifiers="Control" />
+///     </local:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
 /// 
-///     &lt;controls:NavigationViewEx.Overlay&gt;
-///         &lt;Border Background="Red" Height="200" /&gt;
-///     &lt;/controls:NavigationViewEx.Overlay&gt;
-/// &lt;/controls:NavigationViewEx&gt;
-/// </code>
+///     <local:NavigationViewEx.Overlay>
+///         <Border Background="Red" Height="200" />
+///     </local:NavigationViewEx.Overlay>
+/// </local:NavigationViewEx>
+/// ]]></code>
 /// </example>
 public sealed partial class NavigationViewEx : NavigationView
 {
@@ -92,19 +92,15 @@ public sealed partial class NavigationViewEx : NavigationView
     private Grid? _paneToggleButtonGrid;
     private Grid? _contentGrid;
     private Grid? _paneContentGrid;
-    private Button? _paneToggleButton;
     private Button? _paneSearchButton;
     private Button? _backButton;
     private Button? _closeButton;
 
     public NavigationViewEx()
     {
+        DefaultStyleKey = typeof(NavigationView);
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-        DisplayModeChanged += OnDisplayModeChanged;
-        PaneOpening += OnPaneOpening;
-        PaneClosing += OnPaneClosing;
-        PaneClosed += OnPaneClosed;
     }
 
     protected override void OnApplyTemplate()
@@ -116,8 +112,6 @@ public sealed partial class NavigationViewEx : NavigationView
 
         if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
         {
-            _paneToggleButton = paneToggleButton;
-
             if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
             {
                 paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
@@ -260,6 +254,11 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        DisplayModeChanged += OnDisplayModeChanged;
+        PaneOpening += OnPaneOpening;
+        PaneClosing += OnPaneClosing;
+        PaneClosed += OnPaneClosed;
+
         if (Overlay != null && _splitView?.FindDescendant<Grid>() is { } splitViewGrid)
         {
             splitViewGrid.Children.Add(_overlayRoot);
@@ -284,8 +283,6 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
-        Unloaded -= OnUnloaded;
         DisplayModeChanged -= OnDisplayModeChanged;
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
@@ -295,6 +292,17 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             _overlayChildRectangle.Tapped -= OverlayLightDismissLayer_OnTapped;
         }
+
+        _overlayRoot = null;
+        _overlayChildBorder = null;
+        _overlayChildRectangle = null;
+        _splitView = null;
+        _paneToggleButtonGrid = null;
+        _contentGrid = null;
+        _paneContentGrid = null;
+        _paneSearchButton = null;
+        _backButton = null;
+        _closeButton = null;
     }
 
     private void OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
