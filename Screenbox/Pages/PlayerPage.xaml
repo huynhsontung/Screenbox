@@ -35,7 +35,7 @@
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#2C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
 
-                    <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                    <LinearGradientBrush x:Key="PlayerTitleBarBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.GradientStops>
                             <GradientStop Offset="0" Color="{StaticResource SystemAltMediumColor}" />
                             <GradientStop Offset="0.5" Color="{StaticResource SystemAltLowColor}" />
@@ -54,7 +54,7 @@
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#F9F9F9</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.15</x:Double>
 
-                    <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                    <LinearGradientBrush x:Key="PlayerTitleBarBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.GradientStops>
                             <GradientStop Offset="0" Color="{StaticResource SystemAltMediumColor}" />
                             <GradientStop Offset="0.5" Color="{StaticResource SystemAltLowColor}" />
@@ -76,10 +76,12 @@
                     <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorButtonTextColorBrush" />
                     <Thickness x:Key="ProgressBarBorderThemeThickness">0</Thickness>
 
-                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
+                    <StaticResource x:Key="PlayerTitleBarBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                     <StaticResource x:Key="PlayerControlsBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+
+            <Thickness x:Key="PlayerTitleBarButtonMargin">4,2,0,28</Thickness>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -192,7 +194,6 @@
             </Button.Resources>
             <StackPanel>
                 <TextBlock
-                    x:Name="TitleText"
                     HorizontalAlignment="Left"
                     d:Text="Lorem ipsum dolor sit amet"
                     Style="{StaticResource BodyStrongTextBlockStyle}"
@@ -200,7 +201,6 @@
                     TextWrapping="NoWrap" />
 
                 <TextBlock
-                    x:Name="SubtitleText"
                     d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     OpticalMarginAlignment="TrimSideBearings"
@@ -476,95 +476,125 @@
         <controls:TitleBar
             x:Name="PlayerTitleBar"
             MinHeight="80"
-            Background="{ThemeResource HeaderBackgroundBrush}">
+            Background="{ThemeResource PlayerTitleBarBackgroundBrush}">
             <controls:TitleBar.Resources>
-                <VerticalAlignment x:Key="TitleBarHeaderVerticalAlignment">Top</VerticalAlignment>
                 <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Left</HorizontalAlignment>
-                <VerticalAlignment x:Key="TitleBarFooterVerticalAlignment">Top</VerticalAlignment>
             </controls:TitleBar.Resources>
-            <controls:TitleBar.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                    <Button
-                        x:Name="BackButton"
-                        Grid.Column="0"
-                        Width="44"
-                        Height="44"
-                        Margin="4,6,0,2"
-                        AccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
-                        AutomationProperties.Name="{x:Bind strings:Resources.MinimizeImmersiveView}"
-                        Command="{x:Bind ViewModel.GoBackCommand}"
-                        Style="{StaticResource SubtleButtonStyle}"
-                        ToolTipService.ToolTip="{x:Bind strings:Resources.MinimizeImmersiveView}">
-                        <muxc:AnimatedIcon>
-                            <muxc:AnimatedIcon.Source>
-                                <animatedvisuals:AnimatedChevronDownSmallVisualSource />
-                            </muxc:AnimatedIcon.Source>
-                            <muxc:AnimatedIcon.FallbackIconSource>
-                                <muxc:FontIconSource Glyph="&#xE70D;" />
-                            </muxc:AnimatedIcon.FallbackIconSource>
-                        </muxc:AnimatedIcon>
-                    </Button>
+                <Button
+                    x:Name="BackButton"
+                    Grid.Column="0"
+                    Width="44"
+                    Height="44"
+                    Margin="{StaticResource PlayerTitleBarButtonMargin}"
+                    AccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.MinimizeImmersiveView}"
+                    Command="{x:Bind ViewModel.GoBackCommand}"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.MinimizeImmersiveView}">
+                    <muxc:AnimatedIcon Width="20" Height="20">
+                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                        <muxc:AnimatedIcon.FallbackIconSource>
+                            <muxc:FontIconSource Glyph="&#xE70D;" />
+                        </muxc:AnimatedIcon.FallbackIconSource>
+                    </muxc:AnimatedIcon>
+                </Button>
 
-                    <Button
-                        x:Name="PlayQueueButton"
-                        Grid.Column="1"
-                        Width="44"
-                        Height="44"
-                        Margin="4,6,0,2"
-                        Padding="0"
-                        AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
-                        AllowDrop="True"
-                        AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
-                        DragEnter="PlayQueueButton_OnDragEnter"
-                        DragLeave="PlayQueueButton_OnDragLeave"
-                        Style="{StaticResource SubtleButtonStyle}"
-                        ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
-                        <FontIcon
-                            x:Name="PlayQueueButtonIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            FontSize="20"
-                            Glyph="{StaticResource PlaylistMusicGlyph}" />
-                        <Button.Flyout>
-                            <Flyout
-                                x:Name="PlayQueueFlyout"
-                                Opened="PlayQueueFlyout_OnOpened"
-                                Opening="PlayQueueFlyout_OnOpening"
-                                Placement="BottomEdgeAlignedLeft">
-                                <Flyout.FlyoutPresenterStyle>
-                                    <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
-                                        <!--  Remove side and bottom padding, allowing the content to set these values  -->
-                                        <Setter Property="Padding" Value="0,12,0,0" />
-                                        <!--  Turn off vertical scroll to prevent a second scrollbar on smaller pages  -->
-                                        <!--<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />-->
-                                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
-                                    </Style>
-                                </Flyout.FlyoutPresenterStyle>
-                                <controls:PlayQueueControl
-                                    x:Name="PlayQueue"
-                                    Width="432"
-                                    MinHeight="200"
-                                    MaxHeight="500"
-                                    Padding="12,0"
-                                    x:Load="False"
-                                    IsAccessKeyScope="True"
-                                    IsFlyout="True" />
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </Grid>
-            </controls:TitleBar.Header>
+                <Button
+                    x:Name="PlayQueueButton"
+                    Grid.Column="1"
+                    Width="44"
+                    Height="44"
+                    Margin="{StaticResource PlayerTitleBarButtonMargin}"
+                    Padding="0"
+                    AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
+                    AllowDrop="True"
+                    AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
+                    DragEnter="PlayQueueButton_OnDragEnter"
+                    DragLeave="PlayQueueButton_OnDragLeave"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
+                    <FontIcon
+                        x:Name="PlayQueueButtonIcon"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        FontSize="20"
+                        Glyph="{StaticResource PlaylistMusicGlyph}" />
+                    <Button.Transitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition />
+                        </TransitionCollection>
+                    </Button.Transitions>
+                    <Button.Flyout>
+                        <Flyout
+                            x:Name="PlayQueueFlyout"
+                            Opened="PlayQueueFlyout_OnOpened"
+                            Opening="PlayQueueFlyout_OnOpening"
+                            Placement="BottomEdgeAlignedLeft">
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                    <!--  Remove side and bottom padding, allowing the content to set these values  -->
+                                    <Setter Property="Padding" Value="0,12,0,0" />
+                                    <!--  Turn off vertical scroll to prevent a second scrollbar on smaller pages  -->
+                                    <!--<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />-->
+                                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <controls:PlayQueueControl
+                                x:Name="PlayQueue"
+                                Width="432"
+                                MinHeight="200"
+                                MaxHeight="500"
+                                Padding="12,0"
+                                x:Load="False"
+                                IsAccessKeyScope="True"
+                                IsFlyout="True" />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <StackPanel
+                    x:Name="TitleBarContentStackPanel"
+                    Grid.Column="2"
+                    Margin="20,0,0,28"
+                    VerticalAlignment="Center"
+                    IsHitTestVisible="False"
+                    Orientation="Vertical">
+                    <StackPanel.Transitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition />
+                        </TransitionCollection>
+                    </StackPanel.Transitions>
+                    <TextBlock
+                        x:Name="TitleBarTitleTextBlock"
+                        d:Text="Lorem ipsum dolor sit amet"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
+                        TextWrapping="NoWrap" />
+                    <TextBlock
+                        x:Name="TitleBarSubtitleTextBlock"
+                        d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                        Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
+                        OpticalMarginAlignment="TrimSideBearings"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
+                        TextWrapping="NoWrap"
+                        Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
+                </StackPanel>
+            </Grid>
+
             <controls:TitleBar.Footer>
                 <Button
                     x:Name="LivelyOptionsButton"
                     Grid.Column="4"
                     Width="44"
                     Height="44"
-                    Margin="4,6,0,2"
+                    Margin="{StaticResource PlayerTitleBarButtonMargin}"
                     Padding="0"
                     AutomationProperties.Name="{x:Bind strings:Resources.VisualizerOptionsToolTip}"
                     Style="{StaticResource SubtleButtonStyle}"
@@ -591,33 +621,6 @@
                     </Button.Flyout>
                 </Button>
             </controls:TitleBar.Footer>
-
-            <StackPanel
-                x:Name="TitleBarContentStackPanel"
-                Margin="12,0,0,28"
-                IsHitTestVisible="False"
-                Orientation="Vertical">
-                <StackPanel.Transitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition />
-                    </TransitionCollection>
-                </StackPanel.Transitions>
-                <TextBlock
-                    x:Name="TitleBarTitleTextBlock"
-                    d:Text="Lorem ipsum dolor sit amet"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
-                    TextWrapping="NoWrap" />
-                <TextBlock
-                    x:Name="TitleBarSubtitleTextBlock"
-                    d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-                    Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
-                    OpticalMarginAlignment="TrimSideBearings"
-                    Style="{StaticResource BodyTextBlockStyle}"
-                    Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
-                    TextWrapping="NoWrap"
-                    Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
-            </StackPanel>
         </controls:TitleBar>
 
         <VisualStateManager.VisualStateGroups>
@@ -804,9 +807,9 @@
                     <VisualState.Setters>
                         <Setter Target="PlayerTitleBar.MinHeight" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Margin" Value="16,16,0,16" />
-                        <Setter Target="TitleBarContentStackPanel.Margin" Value="16,0,0,56" />
-                        <Setter Target="LivelyOptionsButton.Margin" Value="4,16,0,16" />
+                        <Setter Target="PlayQueueButton.Margin" Value="20,0,0,44" />
+                        <Setter Target="TitleBarContentStackPanel.Margin" Value="16,0,0,44" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="0,0,0,44" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
                         <Setter Target="PlayerStateBadge.Height" Value="80" />
@@ -814,10 +817,6 @@
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                     <Storyboard>
-                        <RepositionThemeAnimation
-                            FromHorizontalOffset="8"
-                            FromVerticalOffset="-8"
-                            TargetName="TitleBarContentStackPanel" />
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="PlayerControls" />
                     </Storyboard>
@@ -865,10 +864,7 @@
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="PlayerTitleBar.Visibility" Value="Collapsed" />
-                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="MiniPlayerTitleButton.Visibility" Value="Visible" />
-                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.CornerRadius" Value="{StaticResource ControlCornerRadius}" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
@@ -904,11 +900,7 @@
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="PlayerTitleBar.Visibility" Value="Collapsed" />
-                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="MiniPlayerTitleButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
-                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
                         <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
