@@ -90,6 +90,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="CaptionButtonBackgroundBrush" Value="{ThemeResource TitleBarCaptionButtonBackground}" />
         <Setter Property="CaptionButtonBackgroundPointerOverBrush" Value="{ThemeResource TitleBarCaptionButtonBackgroundPointerOver}" />
         <Setter Property="CaptionButtonBackgroundPressedBrush" Value="{ThemeResource TitleBarCaptionButtonBackgroundPressed}" />

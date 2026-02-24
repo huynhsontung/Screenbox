@@ -295,7 +295,10 @@ namespace Screenbox.Pages
 
         private void NavView_OnPaneClosing(NavigationView sender, object args)
         {
-            UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
+            // Deferred to ensure IsPaneOpen reports the correct state
+            // when closing the pane via gamepad.
+            _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen));
         }
 
         private void NavViewSearchBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
