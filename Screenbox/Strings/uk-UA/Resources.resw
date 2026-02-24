@@ -741,7 +741,7 @@
     <value>Розширене</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Приватніть</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Розширений режим</value>
@@ -982,12 +982,12 @@
     <value>Тека</value>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Історія позицій відтворення</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Зберегти історію відтворення на цьому пристрої, щоби продовжити з того місця, де ви зупинилися</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Очистити історію позицій відтворення пристрою</value>
   </data>
 </root>
