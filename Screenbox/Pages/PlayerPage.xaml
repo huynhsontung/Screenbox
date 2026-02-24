@@ -184,6 +184,7 @@
             AutomationProperties.Name="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
             BorderThickness="0"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
+            IsTabStop="False"
             Visibility="Collapsed">
             <Button.Resources>
                 <StaticResource x:Key="ButtonBackground" ResourceKey="SubtleFillColorTransparentBrush" />
