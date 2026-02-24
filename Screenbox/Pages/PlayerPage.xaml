@@ -2,11 +2,10 @@
     x:Class="Screenbox.Pages.PlayerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
@@ -375,9 +374,7 @@
                 <KeyboardAccelerator Key="I" />
             </Button.KeyboardAccelerators>
             <muxc:AnimatedIcon Width="20">
-                <muxc:AnimatedIcon.Source>
-                    <animatedvisuals:AnimatedChevronUpDownSmallVisualSource />
-                </muxc:AnimatedIcon.Source>
+                <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
                 <muxc:AnimatedIcon.FallbackIconSource>
                     <muxc:SymbolIconSource Symbol="Up" />
                 </muxc:AnimatedIcon.FallbackIconSource>
@@ -499,7 +496,7 @@
                     Style="{StaticResource SubtleButtonStyle}"
                     ToolTipService.ToolTip="{x:Bind strings:Resources.MinimizeImmersiveView}">
                     <muxc:AnimatedIcon Width="20" Height="20">
-                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                        <animatedVisuals:AnimatedChevronDownSmallVisualSource />
                         <muxc:AnimatedIcon.FallbackIconSource>
                             <muxc:FontIconSource Glyph="&#xE70D;" />
                         </muxc:AnimatedIcon.FallbackIconSource>
@@ -513,13 +510,13 @@
                     Height="44"
                     Margin="{StaticResource PlayerTitleBarButtonMargin}"
                     Padding="0"
-                    AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.PlayerQueueKey}"
                     AllowDrop="True"
-                    AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.PlayQueue}"
                     DragEnter="PlayQueueButton_OnDragEnter"
                     DragLeave="PlayQueueButton_OnDragLeave"
                     Style="{StaticResource SubtleButtonStyle}"
-                    ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                     <FontIcon
                         x:Name="PlayQueueButtonIcon"
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
@@ -559,9 +556,9 @@
                 </Button>
 
                 <StackPanel
-                    x:Name="TitleBarContentStackPanel"
+                    x:Name="TitleBarTextStackPanel"
                     Grid.Column="2"
-                    Margin="20,0,0,28"
+                    Margin="16,0,0,28"
                     VerticalAlignment="Center"
                     IsHitTestVisible="False"
                     Orientation="Vertical">
@@ -808,8 +805,8 @@
                         <Setter Target="PlayerTitleBar.MinHeight" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,0,0,44" />
-                        <Setter Target="TitleBarContentStackPanel.Margin" Value="16,0,0,44" />
-                        <Setter Target="LivelyOptionsButton.Margin" Value="0,0,0,44" />
+                        <Setter Target="TitleBarTextStackPanel.Margin" Value="20,0,0,44" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="4,0,0,44" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
                         <Setter Target="PlayerStateBadge.Height" Value="80" />
@@ -827,9 +824,9 @@
                         <Setter Target="PlayerTitleBar.MinHeight" Value="32" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarContentStackPanel.Margin" Value="12,8,0,8" />
-                        <Setter Target="TitleBarContentStackPanel.Orientation" Value="Horizontal" />
-                        <Setter Target="TitleBarContentStackPanel.Spacing" Value="8" />
+                        <Setter Target="TitleBarTextStackPanel.Margin" Value="12,8,0,8" />
+                        <Setter Target="TitleBarTextStackPanel.Orientation" Value="Horizontal" />
+                        <Setter Target="TitleBarTextStackPanel.Spacing" Value="8" />
                         <Setter Target="TitleBarTitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="TitleBarSubtitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->

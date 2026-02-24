@@ -217,7 +217,6 @@ namespace Screenbox.Pages
                         case WindowViewMode.Compact:
                             ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
                             VisualStateManager.GoToState(this, "CompactOverlay", true);
-                            PlayerTitleBar.SetDragRegion();
                             break;
                         case WindowViewMode.FullScreen:
                             ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
