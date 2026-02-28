@@ -18,6 +18,25 @@
         <ResourceDictionary>
             <MenuFlyout x:Key="ItemFlyout">
                 <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayGlyph}}"
+                    Text="{strings:Resources Key=Play}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayAddGlyph}}"
+                    Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
                     Command="{x:Bind RenamePlaylistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Rename}"

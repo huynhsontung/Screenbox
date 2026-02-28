@@ -4,12 +4,16 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels;
 
-public partial class PlaylistsPageViewModel : ObservableObject
+public partial class PlaylistsPageViewModel : ObservableRecipient
 {
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
@@ -44,5 +48,24 @@ public partial class PlaylistsPageViewModel : ObservableObject
     {
         await _playlistService.DeletePlaylistAsync(playlist.Id);
         Playlists.Remove(playlist);
+    }
+
+    [RelayCommand]
+    private async Task Play(PlaylistViewModel playlistVm)
+    {
+        var playlist = playlistVm.ToPlaylist();
+        Messenger.Send(new QueuePlaylistMessage(playlist, true));
+    }
+
+    [RelayCommand]
+    private async Task PlayNext(PlaylistViewModel playlistVm)
+    {
+        Messenger.SendPlayNext(playlistVm.Items);
+    }
+
+    [RelayCommand]
+    private async Task AddToQueue(PlaylistViewModel playlistVm)
+    {
+        Messenger.SendAddToQueue(playlistVm.Items);
     }
 }

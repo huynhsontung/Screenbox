@@ -45,9 +45,9 @@ public partial class PlaylistViewModel : ObservableObject
         OnPropertyChanged(nameof(ItemsCount));
     }
 
-    public Playlist GetPlaylist()
+    public Playlist ToPlaylist()
     {
-        return new Playlist(Items);
+        return new Playlist(0, Items);
     }
 
     public void Load(PersistentPlaylist persistentPlaylist)
