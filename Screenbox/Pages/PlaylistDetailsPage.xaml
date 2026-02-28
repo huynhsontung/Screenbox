@@ -146,20 +146,8 @@
                     </TextBlock>
 
                     <TextBlock
-                        x:Name="SubtitleText"
-                        Margin="0,8,0,0"
-                        FontWeight="Normal"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind strings:Resources.ItemsCount(ViewModel.Source.ItemsCount), Mode=OneWay}"
-                        TextWrapping="NoWrap">
-                        <interactivity:Interaction.Behaviors>
-                            <behaviors:OverflowTextToolTipBehavior />
-                        </interactivity:Interaction.Behaviors>
-                    </TextBlock>
-
-                    <TextBlock
                         x:Name="CaptionText"
-                        Margin="0,12,0,0"
+                        Margin="0,20,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
                         Text="{x:Bind local:PlaylistDetailsPage.GetSubtext(ViewModel.Source.Items), Mode=OneWay, FallbackValue=''}"

@@ -36,7 +36,7 @@ public sealed partial class PlaylistDetailsPage : Page
 
     private float CoverScaleFactor => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 0.6f : 0.5f;
 
-    private int ButtonPanelOffset => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 56 : 64;
+    private int ButtonPanelOffset => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 32 : 40;
 
     private float BackgroundVisualHeight => (float)(Header.ActualHeight * 2.5);
 
@@ -135,7 +135,7 @@ public sealed partial class PlaylistDetailsPage : Page
         textVisual.StartAnimation("Translation.X", textTranslationAnimation);
 
         // Get backing visuals for the additional text blocks so that their properties can be animated
-        Visual subtitleVisual = ElementCompositionPreview.GetElementVisual(SubtitleText);
+        //Visual subtitleVisual = ElementCompositionPreview.GetElementVisual(SubtitleText);
         Visual captionVisual = ElementCompositionPreview.GetElementVisual(CaptionText);
 
         // Create an ExpressionAnimation that start opacity fade out animation with threshold for the additional text blocks
@@ -143,7 +143,7 @@ public sealed partial class PlaylistDetailsPage : Page
         ExpressionNode textFadeAnimation = 1 - EF.Conditional(progressNode < fadeThreshold, progressNode / fadeThreshold, 1);
 
         // Start opacity fade out animation on the additional text block visuals
-        subtitleVisual.StartAnimation("Opacity", textFadeAnimation);
+        //subtitleVisual.StartAnimation("Opacity", textFadeAnimation);
         textFadeAnimation.SetScalarParameter("fadeThreshold", 0.2f);
         captionVisual.StartAnimation("Opacity", textFadeAnimation);
 
@@ -183,7 +183,7 @@ public sealed partial class PlaylistDetailsPage : Page
         int itemsCount = items.Count;
         TimeSpan duration = GetTotalDuration(items);
 
-        string itemsCountText = Strings.Resources.SongsCount(itemsCount);
+        string itemsCountText = Strings.Resources.ItemsCount(itemsCount);
         string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
         return $"{itemsCountText} • {runTime}";
     }
