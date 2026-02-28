@@ -110,10 +110,20 @@ public partial class PlaylistViewModel : ObservableObject
 
     private MediaViewModel ToMediaViewModel(PersistentMediaRecord record)
     {
-        MediaViewModel media = Uri.TryCreate(record.Path, UriKind.Absolute, out var uri)
-            ? _mediaFactory.GetSingleton(uri)
-            : _mediaFactory.GetTransient(new Uri("about:blank"));
-        if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
+        MediaViewModel media;
+        if (Uri.TryCreate(record.Path, UriKind.Absolute, out var uri))
+        {
+            media = _mediaFactory.GetSingleton(uri);
+        }
+        else
+        {
+            media = _mediaFactory.GetTransient(new Uri("about:blank"));
+            media.IsAvailable = false;
+        }
+
+        if (!string.IsNullOrEmpty(record.Title))
+            media.Name = record.Title;
+
         media.MediaInfo = record.Properties != null
             ? new MediaInfo(record.Properties)
             : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
@@ -123,6 +133,7 @@ public partial class PlaylistViewModel : ObservableObject
             DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
             media.DateAdded = utcTime.ToLocalTime();
         }
+
         return media;
     }
 }
