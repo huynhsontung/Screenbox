@@ -852,6 +852,8 @@
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="TitleBarArea.VerticalAlignment" Value="Center" />
                         <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
@@ -895,6 +897,8 @@
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="TitleBarArea.VerticalAlignment" Value="Center" />
                         <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />

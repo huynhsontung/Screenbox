@@ -134,6 +134,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Behaviors\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Behaviors\AddToPlaylistFlyoutSubmenuBehavior.cs" />
     <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
@@ -155,7 +156,6 @@
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
-    <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
       <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
     </Compile>
@@ -239,6 +239,7 @@
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
     <Compile Include="Converters\SearchSuggestionConverter.cs" />
+    <Compile Include="Converters\ThicknessFilterKinds.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Extensions\AcceleratorService.cs" />
@@ -452,7 +453,6 @@
     <Content Include="Assets\Visualizers\Music Tunnel\shaders\tunnel.frag" />
     <Content Include="Assets\Visualizers\Music Tunnel\styles\style.css" />
     <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
-    <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.lock.json" />
     <None Include="InvaidXamlResources.txt" />
