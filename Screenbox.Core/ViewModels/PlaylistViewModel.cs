@@ -58,8 +58,12 @@ public partial class PlaylistViewModel : ObservableObject
         Items.Clear();
         foreach (var item in persistentPlaylist.Items)
         {
-            var vm = ToMediaViewModel(item);
-            Items.Add(Items.Contains(vm) ? new MediaViewModel(vm) : vm);
+            try
+            {
+                var vm = ToMediaViewModel(item);
+                Items.Add(Items.Contains(vm) ? new MediaViewModel(vm) : vm);
+            }
+            catch { }
         }
     }
 
@@ -106,7 +110,9 @@ public partial class PlaylistViewModel : ObservableObject
 
     private MediaViewModel ToMediaViewModel(PersistentMediaRecord record)
     {
-        MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+        MediaViewModel media = Uri.TryCreate(record.Path, UriKind.Absolute, out var uri)
+            ? _mediaFactory.GetSingleton(uri)
+            : _mediaFactory.GetTransient(new Uri("about:blank"));
         if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
         media.MediaInfo = record.Properties != null
             ? new MediaInfo(record.Properties)

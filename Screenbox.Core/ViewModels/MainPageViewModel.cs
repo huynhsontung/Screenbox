@@ -300,8 +300,15 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             foreach (var p in loaded)
             {
                 var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
-                playlist.Load(p);
-                _playlistsContext.Playlists.Add(playlist);
+                try
+                {
+                    playlist.Load(p);
+                    _playlistsContext.Playlists.Add(playlist);
+                }
+                catch (Exception e)
+                {
+                    LogService.Log(e);
+                }
             }
         }
         catch (Exception e)
