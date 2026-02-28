@@ -990,4 +990,16 @@
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
   </data>
+  <data name="Equalizer" xml:space="preserve">
+    <value>Equalizer</value>
+  </data>
+  <data name="EqualizerEnable" xml:space="preserve">
+    <value>Enable equalizer</value>
+  </data>
+  <data name="EqualizerPreamp" xml:space="preserve">
+    <value>Preamp</value>
+  </data>
+  <data name="EqualizerPreset" xml:space="preserve">
+    <value>Preset</value>
+  </data>
 </root>

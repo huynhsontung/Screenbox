@@ -153,6 +153,7 @@
     <Compile Include="Commands\OpenUrlCommand.cs" />
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
+    <Compile Include="Commands\ShowEqualizerCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
     <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
@@ -232,6 +233,9 @@
     <Compile Include="Converters\ThicknessFilterKinds.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Dialogs\EqualizerDialog.xaml.cs">
+      <DependentUpon>EqualizerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\AcceleratorService.cs" />
     <Compile Include="Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Extensions\CommandBarExtensions.cs" />
@@ -610,6 +614,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\EqualizerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AlbumDetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -719,6 +727,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Progress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ToggleSwitch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,210 @@
+﻿<ContentDialog
+    x:Class="Screenbox.Dialogs.EqualizerDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Screenbox.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
+    CloseButtonText="{x:Bind strings:Resources.Close}"
+    Loaded="OnLoaded"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/ToggleSwitch.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <StaticResource x:Key="SliderTrackValueFill" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <StaticResource x:Key="SliderTrackValueFill" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <StaticResource x:Key="SliderTrackValueFill" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillPressed" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="SliderTrackValueFillDisabled" ResourceKey="SystemControlTransparentBrush" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <x:Double x:Key="ContentDialogMaxWidth">640</x:Double>
+
+            <x:Double x:Key="EqualizerBandHeight">128</x:Double>
+            <Thickness x:Key="EqualizerBandMargin">8,4,8,12</Thickness>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <ContentDialog.Title>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="{x:Bind strings:Resources.Equalizer}" TextTrimming="CharacterEllipsis">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+
+            <ToggleSwitch
+                Grid.Column="1"
+                AutomationProperties.Name="{x:Bind strings:Resources.EqualizerEnable}"
+                FocusVisualMargin="-7,-9"
+                FontWeight="Normal"
+                IsOn="{x:Bind ViewModel.IsEnabled, Mode=TwoWay}"
+                Style="{StaticResource TextBeforeToggleSwitchStyle}">
+                <ToggleSwitch.Resources>
+                    <x:Double x:Key="ToggleSwitchPreContentMargin">2</x:Double>
+                    <x:Double x:Key="ToggleSwitchPostContentMargin">2</x:Double>
+                </ToggleSwitch.Resources>
+            </ToggleSwitch>
+        </Grid>
+    </ContentDialog.Title>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Margin="0,0,0,12"
+            Orientation="Horizontal"
+            Spacing="8">
+            <TextBlock
+                VerticalAlignment="Center"
+                AutomationProperties.AccessibilityView="Raw"
+                Text="{x:Bind strings:Resources.EqualizerPreset}" />
+            <ComboBox
+                MinWidth="120"
+                AutomationProperties.Name="{x:Bind strings:Resources.EqualizerPreset}"
+                ItemsSource="{x:Bind ViewModel.Presets}"
+                SelectedIndex="{x:Bind ViewModel.SelectedPresetIndex, Mode=TwoWay}" />
+        </StackPanel>
+
+        <!--  Preamp  -->
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Slider
+                Height="{StaticResource EqualizerBandHeight}"
+                Margin="{StaticResource EqualizerBandMargin}"
+                HorizontalAlignment="Center"
+                AutomationProperties.Name="{x:Bind strings:Resources.EqualizerPreamp}"
+                IsEnabled="{x:Bind ViewModel.IsEnabled, Mode=OneWay}"
+                Maximum="20"
+                Minimum="-20"
+                Orientation="Vertical"
+                SmallChange="0.1"
+                TickFrequency="10"
+                TickPlacement="BottomRight"
+                Value="{x:Bind ViewModel.Preamp, Mode=TwoWay}" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind strings:Resources.EqualizerPreamp}" />
+        </StackPanel>
+
+        <!--  Y-Axis  -->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            MinWidth="40"
+            Margin="0,4,8,0"
+            Spacing="12">
+            <TextBlock
+                HorizontalAlignment="Right"
+                IsTextScaleFactorEnabled="False"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="+20 dB" />
+            <TextBlock
+                HorizontalAlignment="Right"
+                IsTextScaleFactorEnabled="False"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="+10 dB" />
+            <TextBlock
+                HorizontalAlignment="Right"
+                IsTextScaleFactorEnabled="False"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="0 dB" />
+            <TextBlock
+                HorizontalAlignment="Right"
+                IsTextScaleFactorEnabled="False"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="-10 dB" />
+            <TextBlock
+                HorizontalAlignment="Right"
+                IsTextScaleFactorEnabled="False"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="-20 dB" />
+        </StackPanel>
+
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.Column="2"
+            Padding="0,0,0,12"
+            HorizontalScrollBarVisibility="Auto"
+            IsEnabled="{x:Bind ViewModel.IsEnabled, Mode=OneWay}"
+            VerticalScrollBarVisibility="Hidden"
+            VerticalScrollMode="Disabled">
+            <muxc:ItemsRepeater ItemsSource="{x:Bind ViewModel.Bands}">
+                <muxc:ItemsRepeater.Layout>
+                    <muxc:UniformGridLayout MinItemWidth="48" />
+                </muxc:ItemsRepeater.Layout>
+                <muxc:ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:EqualizerBandViewModel">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Slider
+                                Grid.Row="0"
+                                Height="{StaticResource EqualizerBandHeight}"
+                                Margin="{StaticResource EqualizerBandMargin}"
+                                HorizontalAlignment="Center"
+                                AutomationProperties.Name="{x:Bind local:EqualizerDialog.FormatFrequency(Frequency)}"
+                                Maximum="20"
+                                Minimum="-20"
+                                Orientation="Vertical"
+                                SmallChange="0.1"
+                                StepFrequency="0.5"
+                                TickFrequency="10"
+                                TickPlacement="Outside"
+                                Value="{x:Bind Gain, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind local:EqualizerDialog.FormatFrequency(Frequency)}" />
+                        </Grid>
+                    </DataTemplate>
+                </muxc:ItemsRepeater.ItemTemplate>
+            </muxc:ItemsRepeater>
+        </ScrollViewer>
+    </Grid>
+</ContentDialog>
