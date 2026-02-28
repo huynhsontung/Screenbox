@@ -20,7 +20,10 @@ public sealed partial class EqualizerDialog : ContentDialog
         FlowDirection = GlobalizationHelper.GetFlowDirection();
         RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
 
-        ViewModel.Presets.Add(Strings.Resources.Custom);
+        if (!ViewModel.Presets.Contains(Strings.Resources.Custom))
+        {
+            ViewModel.Presets.Add(Strings.Resources.Custom);
+        }
     }
 
     public static string FormatFrequency(float frequency)
