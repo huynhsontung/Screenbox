@@ -42,27 +42,32 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         };
     }
 
-    [RelayCommand]
-    private void Play(MediaViewModel item)
-    {
-        if (Source == null) return;
-        Messenger.SendQueueAndPlay(item, Source.Items);
-    }
+    private static bool NotNull(MediaViewModel? item) => item != null;
 
-    [RelayCommand]
-    private void ShuffleAndPlay()
+    private static bool NotEmpty(PlaylistViewModel? playlist) => playlist?.ItemsCount > 0;
+
+    [RelayCommand(CanExecute = nameof(NotNull))]
+    private void Play(MediaViewModel? item)
     {
-        if (Source == null || Source.Items.Count == 0) return;
-        Random rnd = new();
-        List<MediaViewModel> shuffledList = Source.Items.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Playlist(0, shuffledList);
+        if (Source == null || item == null) return;
+        var playlist = new Playlist(item, Source.Items);
         Messenger.Send(new QueuePlaylistMessage(playlist, true));
     }
 
-    [RelayCommand]
-    private async Task Remove(MediaViewModel item)
+    [RelayCommand(CanExecute = nameof(NotEmpty))]
+    private void ShuffleAndPlay(PlaylistViewModel? playlist)
     {
-        if (Source == null) return;
+        if (playlist == null || playlist.Items.Count == 0) return;
+        Random rnd = new();
+        List<MediaViewModel> shuffledList = playlist.Items.OrderBy(_ => rnd.Next()).ToList();
+        var shuffledPlaylist = new Playlist(0, shuffledList);
+        Messenger.Send(new QueuePlaylistMessage(shuffledPlaylist, true));
+    }
+
+    [RelayCommand(CanExecute = nameof(NotNull))]
+    private async Task Remove(MediaViewModel? item)
+    {
+        if (Source == null || item == null) return;
         Source.Items.Remove(item);
         await Source.SaveAsync();
     }

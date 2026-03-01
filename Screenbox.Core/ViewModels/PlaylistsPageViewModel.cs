@@ -50,20 +50,22 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         Playlists.Remove(playlist);
     }
 
-    [RelayCommand]
+    private static bool NotEmpty(PlaylistViewModel? playlist) => playlist?.ItemsCount > 0;
+
+    [RelayCommand(CanExecute = nameof(NotEmpty))]
     private async Task Play(PlaylistViewModel playlistVm)
     {
         var playlist = playlistVm.ToPlaylist();
         Messenger.Send(new QueuePlaylistMessage(playlist, true));
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(NotEmpty))]
     private async Task PlayNext(PlaylistViewModel playlistVm)
     {
         Messenger.SendPlayNext(playlistVm.Items);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(NotEmpty))]
     private async Task AddToQueue(PlaylistViewModel playlistVm)
     {
         Messenger.SendAddToQueue(playlistVm.Items);
