@@ -16,7 +16,10 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <MenuFlyout x:Name="ItemFlyout">
+        <MenuFlyout x:Key="ItemFlyout">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+            </interactivity:Interaction.Behaviors>
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.PlayCommand}"
                 CommandParameter="{Binding}"
@@ -36,6 +39,10 @@
                                    Glyph={StaticResource PlaylistMusicGlyph}}"
                 Text="{strings:Resources Key=AddToQueue}" />
             <MenuFlyoutSeparator />
+            <MenuFlyoutSubItem
+                x:Name="AddToPlaylistSubMenu"
+                Icon="{ui:SymbolIcon Symbol=Add}"
+                Text="{strings:Resources Key=AddToPlaylist}" />
             <MenuFlyoutItem
                 Command="{StaticResource ShowPropertiesCommand}"
                 CommandParameter="{Binding Media}"
@@ -111,7 +118,7 @@
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <behaviors:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
+                <behaviors:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>

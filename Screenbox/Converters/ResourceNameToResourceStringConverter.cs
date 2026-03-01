@@ -16,7 +16,29 @@ namespace Screenbox.Converters;
 /// </summary>
 public sealed class ResourceNameToResourceStringConverter : IValueConverter
 {
-    private readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+    private static readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+
+    /// <summary>
+    /// Gets the localized string value for the specified resource name
+    /// from the application resources.
+    /// </summary>
+    /// <param name="stringValue">The resource name whose value is to be retrieved.</param>
+    /// <returns>The string value of the specified resource name; otherwise, an empty string.</returns>
+    public static string GetResourceString(string? stringValue)
+    {
+        if (stringValue is null)
+        {
+            return string.Empty;
+        }
+
+        // This logic was added to handle resource names prefixed with '#' or '?'.
+        if (stringValue.StartsWith('#') || stringValue.StartsWith('?'))
+        {
+            return stringValue.Substring(1);
+        }
+
+        return _resourceLoader.GetString(stringValue);
+    }
 
     /// <summary>
     /// Take the source string as a resource name that will be looked up in the App Resources.
@@ -30,18 +52,9 @@ public sealed class ResourceNameToResourceStringConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object parameter, string language)
     {
         string? stringValue = value?.ToString();
-        if (stringValue is null)
-        {
-            return string.Empty;
-        }
 
-        // This logic was added to handle resource names prefixed with '#' or '?'.
-        if (stringValue.StartsWith('#') || stringValue.StartsWith('?'))
-        {
-            return stringValue.Substring(1);
-        }
-
-        return _resourceLoader.GetString(stringValue);
+        // The resource string logic was extracted for direct x:Bind usage.
+        return GetResourceString(stringValue);
     }
 
     /// <summary>

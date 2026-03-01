@@ -45,6 +45,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private string _globalArguments;
     [ObservableProperty] private bool _isRelaunchRequired;
     [ObservableProperty] private int _selectedLanguage;
+    [ObservableProperty] private bool _persistPlaybackPosition;
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -63,6 +64,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
+    private readonly LastPositionTracker _lastPositionTracker;
     private static InitialValues? _initialValues;
     private StorageLibrary? _videosLibrary;
     private StorageLibrary? _musicLibrary;
@@ -79,12 +81,14 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         ISettingsService settingsService,
         LibraryContext libraryContext,
         ILibraryService libraryService,
-        LibraryController libraryController)
+        LibraryController libraryController,
+        LastPositionTracker lastPositionTracker)
     {
         _settingsService = settingsService;
         _libraryContext = libraryContext;
         _libraryService = libraryService;
         _libraryController = libraryController;
+        _lastPositionTracker = lastPositionTracker;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
         MusicLocations = new ObservableCollection<StorageFolder>();
@@ -115,6 +119,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
         _useIndexer = _settingsService.UseIndexer;
         _showRecent = _settingsService.ShowRecent;
+        _persistPlaybackPosition = _settingsService.PersistPlaybackPosition;
         _theme = ((int)_settingsService.Theme + 2) % 3;
         _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
         _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
@@ -295,6 +300,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         CheckForRelaunch();
     }
 
+    partial void OnPersistPlaybackPositionChanged(bool value)
+    {
+        _settingsService.PersistPlaybackPosition = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PersistPlaybackPosition), typeof(SettingsPageViewModel)));
+    }
+
     [RelayCommand]
     private async Task RefreshLibrariesAsync()
     {
@@ -349,6 +360,20 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private void ClearRecentHistory()
     {
         StorageApplicationPermissions.MostRecentlyUsedList.Clear();
+    }
+
+    [RelayCommand]
+    private async Task ClearPlaybackPositionHistoryAsync()
+    {
+        try
+        {
+            _lastPositionTracker.ClearAll();
+            await _lastPositionTracker.SaveToDiskAsync();
+        }
+        catch (Exception)
+        {
+            // pass
+        }
     }
 
     public void OnNavigatedFrom()

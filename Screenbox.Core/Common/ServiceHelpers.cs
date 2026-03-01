@@ -2,7 +2,6 @@
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Controllers;
 using Screenbox.Core.Factories;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -31,6 +30,7 @@ public static class ServiceHelpers
         services.AddTransient<PlayQueueViewModel>();
         services.AddTransient<AlbumDetailsPageViewModel>();
         services.AddTransient<ArtistDetailsPageViewModel>();
+        services.AddTransient<PlaylistDetailsPageViewModel>();
         services.AddTransient<SongsPageViewModel>();
         services.AddTransient<AlbumsPageViewModel>();
         services.AddTransient<ArtistsPageViewModel>();
@@ -41,12 +41,11 @@ public static class ServiceHelpers
         services.AddTransient<LivelyWallpaperPlayerViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
+        services.AddTransient<PlaylistViewModel>();
+        services.AddTransient<PlaylistsPageViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist
-
-        // Misc
-        services.AddTransient<LastPositionTracker>();
 
         // Factories
         services.AddSingleton<MediaViewModelFactory>();
@@ -55,11 +54,13 @@ public static class ServiceHelpers
 
         // Contexts
         services.AddSingleton<PlayerContext>();
+        services.AddSingleton<PlaylistsContext>();
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
 
         // Controllers
         services.AddSingleton<LibraryController>();
+        services.AddSingleton<LastPositionTracker>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();

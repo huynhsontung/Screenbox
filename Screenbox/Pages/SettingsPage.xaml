@@ -28,6 +28,7 @@
     <Page.Resources>
         <!--<x:Double x:Key="SettingsCardActionIconMaxSize">14</x:Double>-->
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
+        <x:Double x:Key="SettingsCardButtonMinWidth">120</x:Double>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
 
@@ -91,6 +92,10 @@
 
         <DataTemplate x:Key="RemovableStorageFolderTemplate" x:DataType="storage:StorageFolder">
             <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ResourceNameToResourceStringTemplate" x:DataType="x:String">
+            <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.GetResourceString((x:String))}" />
         </DataTemplate>
     </Page.Resources>
 
@@ -275,13 +280,11 @@
                                              Glyph={StaticResource FiltersGlyph}}">
                     <ComboBox
                         MinWidth="150"
-                        PlaceholderText="{x:Bind strings:Resources.ThemeAuto}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <!--  The app settings guidelines recommend theme options to follow this order.  -->
                         <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
                         <x:String>ThemeLight</x:String>
@@ -296,7 +299,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
                     <ComboBox
                         x:Name="LanguageComboBox"
-                        MinWidth="200"
+                        MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
                         ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
@@ -305,38 +308,14 @@
                                 <TextBlock FlowDirection="{x:Bind converters:LanguageLayoutDirectionToFlowDirectionConverter.ToFlowDirection(LayoutDirection)}" Text="{x:Bind NativeName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                     </ComboBox>
                 </ctc:SettingsCard>
 
                 <!--  General section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
-
-                <ctc:SettingsExpander
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
-                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
-                    <ctc:SettingsExpander.HeaderIcon>
-                        <FontIcon
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
-                            MirroredWhenRightToLeft="True" />
-                    </ctc:SettingsExpander.HeaderIcon>
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:SettingsExpanderXYNavigationBehavior />
-                    </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch
-                        x:Name="ShowRecentToggleSwitch"
-                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
-                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
-                    <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard
-                            x:Name="SettingsClearRecentCard"
-                            AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
-                            Header="{strings:Resources Key=SettingsClearRecentHeader}">
-                            <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
-                        </ctc:SettingsCard>
-                    </ctc:SettingsExpander.Items>
-                </ctc:SettingsExpander>
 
                 <ctc:SettingsCard
                     x:Name="SettingsEnqueueAllFilesInFolderCard"
@@ -346,14 +325,6 @@
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FolderListGlyph}}">
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
-                </ctc:SettingsCard>
-
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
-                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
-                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <!--  Player section  -->
@@ -368,12 +339,11 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsAutoResizeDescription}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <x:String>Always</x:String>
                         <x:String>OnLaunch</x:String>
                         <x:String>Never</x:String>
@@ -389,12 +359,11 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsVolumeBoostDescription}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <x:String>None</x:String>
                         <x:String>#125%</x:String>
                         <x:String>#150%</x:String>
@@ -425,6 +394,9 @@
                                         <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
                             </ComboBox>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -511,12 +483,11 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsVideoUpscalingHeader}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
                         SelectedIndex="{x:Bind ViewModel.VideoUpscaling, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
                         <x:String>VideoUpscalingLinear</x:String>
                         <x:String>VideoUpscalingPoint</x:String>
                         <x:String>VideoUpscalingSuper</x:String>
@@ -569,6 +540,64 @@
                             <ctc:SettingsCard.Description>
                                 <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
                             </ctc:SettingsCard.Description>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+
+                <!--  Privacy  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind strings:Resources.SettingsCategoryPrivacy}" />
+
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
+                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
+                    <ctc:SettingsExpander.HeaderIcon>
+                        <FontIcon
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            MirroredWhenRightToLeft="True" />
+                    </ctc:SettingsExpander.HeaderIcon>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch
+                        x:Name="ShowRecentToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
+                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
+                            x:Name="SettingsClearRecentCard"
+                            AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
+                            Header="{strings:Resources Key=SettingsClearRecentHeader}">
+                            <Button
+                                MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                                Command="{x:Bind ViewModel.ClearRecentHistoryCommand}"
+                                Content="{strings:Resources Key=Clear}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}"
+                    Header="{x:Bind strings:Resources.SettingsSavePlaybackPositionHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PersistPlaybackPosition, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
+                            Description="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}"
+                            Header="{x:Bind strings:Resources.SettingsRestorePlaybackPositionHeader}"
+                            IsEnabled="{x:Bind ViewModel.PersistPlaybackPosition, Mode=OneWay}">
+                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard AutomationProperties.Name="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}" Header="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}">
+                            <Button
+                                MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                                Command="{x:Bind ViewModel.ClearPlaybackPositionHistoryCommand}"
+                                Content="{x:Bind strings:Resources.Clear}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
