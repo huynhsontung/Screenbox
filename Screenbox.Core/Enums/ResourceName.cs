@@ -42,9 +42,6 @@
         AccessDeniedVideosLibraryTitle,
         AccessDeniedPicturesLibraryTitle,
         OpenPrivacySettingsButtonText,
-        AccessDeniedMessage,
-        PlaylistCreatedNotificationTitle,
-        PlaylistDeletedNotificationTitle,
-        PlaylistRenamedNotificationTitle
+        AccessDeniedMessage
     }
 }
