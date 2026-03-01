@@ -1042,4 +1042,34 @@
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
   </data>
+  <data name="ExportPlaylist" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="SaveQueueAsPlaylist" xml:space="preserve">
+    <value>Save as playlist</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist created</value>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed</value>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist deleted</value>
+  </data>
+  <data name="PlaylistExportedNotificationTitle" xml:space="preserve">
+    <value>Playlist exported</value>
+  </data>
+  <data name="PlaylistImportedNotificationTitle" xml:space="preserve">
+    <value>Playlist imported</value>
+  </data>
+  <data name="FailedToExportPlaylistNotificationTitle" xml:space="preserve">
+    <value>Failed to export playlist</value>
+  </data>
+  <data name="FailedToImportPlaylistNotificationTitle" xml:space="preserve">
+    <value>Failed to import playlist</value>
+  </data>
 </root>

@@ -206,6 +206,79 @@ public sealed class PlaylistService : IPlaylistService
         return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
     }
 
+    public async Task ExportPlaylistAsync(PersistentPlaylist playlist, StorageFile file)
+    {
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine("#EXTM3U");
+        foreach (var item in playlist.Items)
+        {
+            int durationSeconds = (int)item.Duration.TotalSeconds;
+            lines.AppendLine($"#EXTINF:{durationSeconds},{item.Title}");
+            lines.AppendLine(item.Path);
+        }
+
+        await FileIO.WriteTextAsync(file, lines.ToString());
+    }
+
+    public async Task<PersistentPlaylist?> ImportPlaylistAsync(StorageFile file)
+    {
+        try
+        {
+            string content = await FileIO.ReadTextAsync(file);
+            string[] fileLines = content.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var items = new List<PersistentMediaRecord>();
+            string? pendingTitle = null;
+            int pendingDuration = 0;
+
+            foreach (string line in fileLines)
+            {
+                if (line.StartsWith("#EXTINF:", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Parse #EXTINF:duration,title
+                    string info = line.Substring(8);
+                    int commaIndex = info.IndexOf(',');
+                    if (commaIndex >= 0)
+                    {
+                        int.TryParse(info.Substring(0, commaIndex), out pendingDuration);
+                        pendingTitle = info.Substring(commaIndex + 1).Trim();
+                    }
+                }
+                else if (!line.StartsWith("#"))
+                {
+                    string path = line.Trim();
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        string title = pendingTitle ?? System.IO.Path.GetFileNameWithoutExtension(path);
+                        var record = new PersistentMediaRecord
+                        {
+                            Title = title,
+                            Path = path,
+                            Duration = pendingDuration > 0 ? TimeSpan.FromSeconds(pendingDuration) : TimeSpan.Zero,
+                            DateAdded = DateTime.UtcNow
+                        };
+                        items.Add(record);
+                        pendingTitle = null;
+                        pendingDuration = 0;
+                    }
+                }
+            }
+
+            if (items.Count == 0) return null;
+
+            return new PersistentPlaylist
+            {
+                Id = Guid.NewGuid().ToString(),
+                DisplayName = System.IO.Path.GetFileNameWithoutExtension(file.Name),
+                LastUpdated = DateTimeOffset.Now,
+                Items = items
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public async Task AddToPlaylistAsync(string playlistId, IReadOnlyList<MediaViewModel> items)
     {
         if (string.IsNullOrWhiteSpace(playlistId)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(playlistId));

@@ -11,6 +11,7 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -24,6 +25,13 @@ public partial class PlaylistViewModel : ObservableObject
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private object? _thumbnail;
     [ObservableProperty] private DateTimeOffset _lastUpdated = DateTimeOffset.Now;
+    [ObservableProperty] private BitmapImage? _thumbnail1;
+    [ObservableProperty] private BitmapImage? _thumbnail2;
+    [ObservableProperty] private BitmapImage? _thumbnail3;
+    [ObservableProperty] private BitmapImage? _thumbnail4;
+
+    /// <summary>Gets whether at least one thumbnail image is loaded for the collage.</summary>
+    public bool HasThumbnails => Thumbnail1 != null || Thumbnail2 != null || Thumbnail3 != null || Thumbnail4 != null;
 
     public string Id => _id.ToString();
 
@@ -67,6 +75,19 @@ public partial class PlaylistViewModel : ObservableObject
         }
     }
 
+    /// <summary>Loads thumbnails for the first 4 items to populate the collage.</summary>
+    public async Task LoadThumbnailsAsync()
+    {
+        var itemsToLoad = Items.Take(4).ToList();
+        await Task.WhenAll(itemsToLoad.Select(m => m.LoadThumbnailAsync()));
+
+        Thumbnail1 = itemsToLoad.Count > 0 ? itemsToLoad[0].Thumbnail : null;
+        Thumbnail2 = itemsToLoad.Count > 1 ? itemsToLoad[1].Thumbnail : null;
+        Thumbnail3 = itemsToLoad.Count > 2 ? itemsToLoad[2].Thumbnail : null;
+        Thumbnail4 = itemsToLoad.Count > 3 ? itemsToLoad[3].Thumbnail : null;
+        OnPropertyChanged(nameof(HasThumbnails));
+    }
+
     public async Task SaveAsync()
     {
         LastUpdated = DateTimeOffset.Now;
@@ -92,7 +113,7 @@ public partial class PlaylistViewModel : ObservableObject
         await SaveAsync();
     }
 
-    private PersistentPlaylist ToPersistentPlaylist()
+    internal PersistentPlaylist ToPersistentPlaylist()
     {
         return new PersistentPlaylist
         {
@@ -137,3 +158,4 @@ public partial class PlaylistViewModel : ObservableObject
         return media;
     }
 }
+

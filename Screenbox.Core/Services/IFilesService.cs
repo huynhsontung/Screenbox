@@ -29,5 +29,6 @@ namespace Screenbox.Core.Services
         public Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName);
         public Task<T> LoadFromDiskAsync<T>(StorageFile file);
         public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
+        public Task<StorageFile?> PickSaveFileAsync(string suggestedFileName, params string[] formats);
     }
 }

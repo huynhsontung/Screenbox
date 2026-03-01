@@ -210,6 +210,29 @@ public sealed class FilesService : IFilesService
         return new MediaInfo(mediaType);
     }
 
+    public async Task<StorageFile?> PickSaveFileAsync(string suggestedFileName, params string[] formats)
+    {
+        FileSavePicker picker = new()
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            SuggestedFileName = suggestedFileName
+        };
+
+        if (formats.Length == 0)
+        {
+            picker.FileTypeChoices.Add("M3U8 playlist", new List<string> { ".m3u8" });
+        }
+        else
+        {
+            foreach (string format in formats)
+            {
+                picker.FileTypeChoices.Add(format.TrimStart('.').ToUpperInvariant() + " file", new List<string> { format });
+            }
+        }
+
+        return await picker.PickSaveFileAsync();
+    }
+
     private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)
     {
         FileOpenPicker picker = new()

@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,6 +30,15 @@ namespace Screenbox.Pages
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)
         {
             await PlayQueue.SmoothScrollActiveItemIntoViewAsync();
+        }
+
+        private async void HeaderSaveButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
+            if (!string.IsNullOrWhiteSpace(playlistName))
+            {
+                await PlayQueue.ViewModel.SaveToNewPlaylistAsync(playlistName!);
+            }
         }
     }
 }

@@ -64,33 +64,51 @@
                 HorizontalAlignment="Left"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
-            <muxc:SplitButton
-                x:Name="HeaderAddButton"
+            <StackPanel
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                AutomationProperties.Name="{x:Bind HeaderAddButtonText.Text}"
-                Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
-                Flyout="{StaticResource AddToPlayQueueFlyout}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        Margin="{StaticResource IconButtonStandardIconMargin}"
-                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                        Glyph="{StaticResource FolderOpenGlyph}" />
-                    <TextBlock
-                        x:Name="HeaderAddButtonText"
-                        Margin="8,0,0,0"
-                        Text="{strings:Resources Key=AddFiles}" />
-                </StackPanel>
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:SplitButtonXYNavigationBehavior />
-                    <behaviors:AutoFocusBehavior />
-                </interactivity:Interaction.Behaviors>
-            </muxc:SplitButton>
+                Orientation="Horizontal"
+                Spacing="8">
+                <Button
+                    x:Name="HeaderSaveButton"
+                    AutomationProperties.Name="{strings:Resources Key=SaveQueueAsPlaylist}"
+                    Click="HeaderSaveButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            Glyph="&#xE74E;" />
+                        <TextBlock
+                            x:Name="HeaderSaveButtonText"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=SaveQueueAsPlaylist}" />
+                    </StackPanel>
+                </Button>
+                <muxc:SplitButton
+                    x:Name="HeaderAddButton"
+                    extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
+                    extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
+                    extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}"
+                    AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
+                    AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
+                    AutomationProperties.Name="{x:Bind HeaderAddButtonText.Text}"
+                    Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
+                    Flyout="{StaticResource AddToPlayQueueFlyout}">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource FolderOpenGlyph}" />
+                        <TextBlock
+                            x:Name="HeaderAddButtonText"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=AddFiles}" />
+                    </StackPanel>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SplitButtonXYNavigationBehavior />
+                        <behaviors:AutoFocusBehavior />
+                    </interactivity:Interaction.Behaviors>
+                </muxc:SplitButton>
+            </StackPanel>
         </Grid>
 
         <controls:PlayQueueControl
@@ -116,6 +134,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="HeaderSaveButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueue.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>

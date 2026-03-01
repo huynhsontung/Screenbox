@@ -6,8 +6,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -43,13 +45,15 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 
     private readonly IFilesService _filesService;
     private readonly IResourceService _resourceService;
+    private readonly PlaylistsContext _playlistsContext;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
+    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService, PlaylistsContext playlistsContext)
     {
         Playlist = playlist;
         _filesService = filesService;
         _resourceService = resourceService;
+        _playlistsContext = playlistsContext;
         SelectionCheckState = GetSelectionCheckState(_selectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -224,5 +228,18 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
             Messenger.Send(new ErrorMessage(
                 _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
         }
+    }
+
+    /// <summary>Saves the current play queue as a new named playlist.</summary>
+    public async Task SaveToNewPlaylistAsync(string name)
+    {
+        if (Playlist.Items.Count == 0) return;
+
+        var playlistVm = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+        playlistVm.Name = name;
+        var items = Playlist.Items.ToList();
+        await playlistVm.AddItemsAsync(items);
+
+        _playlistsContext.Playlists.Insert(0, playlistVm);
     }
 }

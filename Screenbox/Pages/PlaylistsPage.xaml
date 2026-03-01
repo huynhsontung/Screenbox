@@ -55,6 +55,7 @@
                     Width="{StaticResource CommonGridViewItemWidth}"
                     Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
                     IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+                    ThumbnailSource="{x:Bind Thumbnail1, Mode=OneWay}"
                     ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
                     <controls:CommonGridViewItem.PlaceholderIconSource>
                         <FontIconSource
@@ -84,19 +85,34 @@
                 x:Name="HeaderText"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=Playlists}" />
-            <Button
-                x:Name="HeaderCreateButton"
+            <StackPanel
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Click="HeaderCreateButton_OnClick">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                    <TextBlock
-                        x:Name="HeaderCreateButtonText"
-                        Margin="8,0,0,0"
-                        Text="{strings:Resources Key=NewPlaylist}" />
-                </StackPanel>
-            </Button>
+                Orientation="Horizontal"
+                Spacing="8">
+                <Button
+                    x:Name="HeaderImportButton"
+                    Command="{x:Bind ViewModel.ImportPlaylistCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8B5;" />
+                        <TextBlock
+                            x:Name="HeaderImportButtonText"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=ImportPlaylist}" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    x:Name="HeaderCreateButton"
+                    Click="HeaderCreateButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                        <TextBlock
+                            x:Name="HeaderCreateButtonText"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=NewPlaylist}" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <GridView
