@@ -277,7 +277,6 @@
                         <Setter Target="CoverArt.Width" Value="160" />
                         <Setter Target="CoverArt.Height" Value="160" />
                         <Setter Target="CoverArtIcon.FontSize" Value="52" />
-                        <Setter Target="SubtitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ListHeaderPadding.Height" Value="72" />
                     </VisualState.Setters>

@@ -36,7 +36,7 @@ public sealed partial class PlaylistDetailsPage : Page
 
     private float CoverScaleFactor => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 0.6f : 0.5f;
 
-    private int ButtonPanelOffset => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 32 : 40;
+    private int ButtonPanelOffset => 40;
 
     private float BackgroundVisualHeight => (float)(Header.ActualHeight * 2.5);
 
