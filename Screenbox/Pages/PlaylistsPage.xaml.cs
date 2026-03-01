@@ -28,7 +28,7 @@ public sealed partial class PlaylistsPage : Page
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 
-    private async void HeaderCreateButton_OnClick(object sender, RoutedEventArgs e)
+    private async void HeaderCreateButton_OnClick(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
     {
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(playlistName))

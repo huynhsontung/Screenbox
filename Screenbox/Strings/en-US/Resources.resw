@@ -1033,6 +1033,12 @@
     <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import playlist</value>
+  </data>
+  <data name="ExportPlaylist" xml:space="preserve">
+    <value>Export playlist</value>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Playback position history</value>
   </data>

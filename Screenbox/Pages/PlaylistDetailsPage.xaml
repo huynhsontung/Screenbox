@@ -204,6 +204,12 @@
                                 Label="{strings:Resources Key=AddFiles}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
 
+                            <AppBarButton
+                                Command="{x:Bind ViewModel.ExportPlaylistCommand}"
+                                Icon="{ui:FontIcon Glyph=&#xEDE1;}"
+                                Label="{strings:Resources Key=ExportPlaylist}"
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+
                             <CommandBar.SecondaryCommands>
                                 <AppBarButton
                                     Command="{x:Bind RenamePlaylistCommand}"
