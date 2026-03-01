@@ -509,7 +509,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             {
                 Items.SyncItems(playlist.Items);
             }
-            else
+            else if (!Items.SequenceEqual(playlist.Items))
             {
                 Items.Clear();
                 foreach (var item in playlist.Items)

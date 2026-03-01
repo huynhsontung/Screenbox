@@ -16,6 +16,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Screenbox.Triggers"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
@@ -150,6 +151,19 @@
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
                     </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="PlayQueueNavItemText" Text="{strings:Resources Key=PlayQueue}" />
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem
+                    extensions:AcceleratorService.ToolTip="{x:Bind PlaylistsNavItemText.Text}"
+                    AccessKey="{x:Bind strings:KeyboardResources.NavigationItemPlaylistKey}"
+                    KeyTipPlacementMode="Right"
+                    Tag="playlists">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlaylistGlyph}" />
+                    </muxc:NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="P" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
+                    <TextBlock x:Name="PlaylistsNavItemText" Text="{strings:Resources Key=Playlists}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.FooterMenuItems>
@@ -321,6 +335,12 @@
                                 Duration="{StaticResource NavItemTextShowDuration}" />
                             <DoubleAnimation
                                 Storyboard.TargetName="PlayQueueNavItemText"
+                                Storyboard.TargetProperty="Opacity"
+                                From="0"
+                                To="1"
+                                Duration="{StaticResource NavItemTextShowDuration}" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="PlaylistsNavItemText"
                                 Storyboard.TargetProperty="Opacity"
                                 From="0"
                                 To="1"
