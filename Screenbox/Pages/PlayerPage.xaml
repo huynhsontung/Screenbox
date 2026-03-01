@@ -80,7 +80,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
-            <Thickness x:Key="PlayerTitleBarButtonMargin">4,2,0,28</Thickness>
+            <Thickness x:Key="PlayerTitleBarButtonMargin">4,-24,0,0</Thickness>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -478,6 +478,7 @@
             <controls:TitleBar.Resources>
                 <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Left</HorizontalAlignment>
             </controls:TitleBar.Resources>
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -559,8 +560,7 @@
                 <StackPanel
                     x:Name="TitleBarTextStackPanel"
                     Grid.Column="2"
-                    Margin="16,0,0,28"
-                    VerticalAlignment="Center"
+                    Margin="16,-12,0,16"
                     IsHitTestVisible="False"
                     Orientation="Vertical">
                     <StackPanel.Transitions>
@@ -805,9 +805,9 @@
                     <VisualState.Setters>
                         <Setter Target="PlayerTitleBar.MinHeight" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Margin" Value="20,0,0,44" />
-                        <Setter Target="TitleBarTextStackPanel.Margin" Value="20,0,0,44" />
-                        <Setter Target="LivelyOptionsButton.Margin" Value="4,0,0,44" />
+                        <Setter Target="PlayQueueButton.Margin" Value="20,-40,0,2" />
+                        <Setter Target="TitleBarTextStackPanel.Margin" Value="20,-24,0,24" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="4,-40,0,2" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
                         <Setter Target="PlayerStateBadge.Height" Value="80" />
@@ -823,9 +823,10 @@
                 <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
                         <Setter Target="PlayerTitleBar.MinHeight" Value="32" />
+                        <Setter Target="PlayerTitleBar.Icon" Value="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.png, ShowAsMonochrome=False}" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarTextStackPanel.Margin" Value="12,8,0,8" />
+                        <Setter Target="TitleBarTextStackPanel.Margin" Value="0,8,0,8" />
                         <Setter Target="TitleBarTextStackPanel.Orientation" Value="Horizontal" />
                         <Setter Target="TitleBarTextStackPanel.Spacing" Value="8" />
                         <Setter Target="TitleBarTitleTextBlock.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />

@@ -30,7 +30,6 @@
             <Thickness x:Key="AppTitleBarExpandedMargin">48,0,0,0</Thickness>
             <Thickness x:Key="AppTitleBarCompactMargin">72,0,0,0</Thickness>
             <Thickness x:Key="AppTitleBarMinimalMargin">100,0,0,0</Thickness>
-            <Thickness x:Key="TitleBarIconMargin">0,0,16,0</Thickness>
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
@@ -56,6 +55,9 @@
             ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
             Canvas.ZIndex="1"
             HeightMode="Tall">
+            <controls:TitleBar.Resources>
+                <Thickness x:Key="TitleBarIconMargin">0,0,16,0</Thickness>
+            </controls:TitleBar.Resources>
             <controls:TitleBar.Icon>
                 <muxc:ImageIcon Source="ms-appx:///Assets/Square44x44Logo.png" />
             </controls:TitleBar.Icon>
