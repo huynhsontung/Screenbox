@@ -1042,4 +1042,13 @@
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist created</value>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist deleted</value>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed</value>
+  </data>
 </root>

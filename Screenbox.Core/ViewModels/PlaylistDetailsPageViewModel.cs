@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -24,12 +25,17 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
+    private readonly INotificationService _notificationService;
+    private readonly IResourceService _resourceService;
 
-    public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
+    public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
+        MediaViewModelFactory mediaFactory, INotificationService notificationService, IResourceService resourceService)
     {
         _filesService = filesService;
         _playlistService = playlistService;
         _mediaFactory = mediaFactory;
+        _notificationService = notificationService;
+        _resourceService = resourceService;
     }
 
     public void OnNavigatedTo(object? parameter)
@@ -91,7 +97,16 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     {
         if (Source == null) return false;
 
+        string name = Source.Name;
         await _playlistService.DeletePlaylistAsync(Source.Id);
+        _notificationService.RaiseInfo(_resourceService.GetString(ResourceName.PlaylistDeletedNotificationTitle), name);
         return true;
+    }
+
+    public async Task RenamePlaylistAsync(string newDisplayName)
+    {
+        if (Source == null) return;
+        await Source.RenameAsync(newDisplayName);
+        _notificationService.RaiseInfo(_resourceService.GetString(ResourceName.PlaylistRenamedNotificationTitle), newDisplayName);
     }
 }
