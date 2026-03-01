@@ -6,8 +6,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -43,13 +45,15 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 
     private readonly IFilesService _filesService;
     private readonly IResourceService _resourceService;
+    private readonly PlaylistsContext _playlistsContext;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
+    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService, PlaylistsContext playlistsContext)
     {
         Playlist = playlist;
         _filesService = filesService;
         _resourceService = resourceService;
+        _playlistsContext = playlistsContext;
         SelectionCheckState = GetSelectionCheckState(_selectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -208,6 +212,26 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     {
         EnableMultiSelect = false;
         SelectionCount = 0;
+    }
+
+    /// <summary>
+    /// Creates a new playlist with the given display name and populates it with all items in the current queue.
+    /// The new playlist is added to the shared playlists context.
+    /// </summary>
+    /// <param name="displayName">The name for the new playlist.</param>
+    public async Task SaveQueueAsNewPlaylistAsync(string displayName)
+    {
+        var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+        playlist.Name = displayName;
+        foreach (var item in Playlist.Items)
+        {
+            playlist.Items.Add(item);
+        }
+
+        await playlist.SaveAsync();
+
+        // Assume sort by last updated
+        _playlistsContext.Playlists.Insert(0, playlist);
     }
 
     [RelayCommand]

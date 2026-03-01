@@ -984,6 +984,9 @@
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Add to playlist</value>
   </data>
+  <data name="SaveAsPlaylist" xml:space="preserve">
+    <value>Save as playlist</value>
+  </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
     <value>Create new playlist</value>
   </data>
