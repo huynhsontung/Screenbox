@@ -206,8 +206,7 @@
 
                             <CommandBar.SecondaryCommands>
                                 <AppBarButton
-                                    Command="{x:Bind ViewModel.ExportPlaylistCommand}"
-                                    CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
+                                    Command="{x:Bind ExportPlaylistCommand}"
                                     Icon="{ui:FontIcon Glyph=&#xEDE1;}"
                                     Label="{strings:Resources Key=ExportPlaylist}" />
                                 <AppBarButton

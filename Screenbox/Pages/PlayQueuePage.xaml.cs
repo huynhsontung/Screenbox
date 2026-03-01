@@ -3,6 +3,8 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Controls;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,11 +22,14 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
+        private readonly INotificationService _notificationService;
+
         public PlayQueuePage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayQueuePageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+            _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
         }
 
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)
@@ -38,6 +43,8 @@ namespace Screenbox.Pages
             if (!string.IsNullOrWhiteSpace(playlistName))
             {
                 await PlayQueue.ViewModel.SaveToNewPlaylistAsync(playlistName!);
+                _notificationService.RaiseNotification(NotificationLevel.Success,
+                    Strings.Resources.PlaylistCreatedNotificationTitle, playlistName!);
             }
         }
     }

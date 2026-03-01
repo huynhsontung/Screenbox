@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -24,18 +23,13 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
-    private readonly INotificationService _notificationService;
-    private readonly IResourceService _resourceService;
     private readonly MediaViewModelFactory _mediaFactory;
 
     public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
-        INotificationService notificationService, IResourceService resourceService,
         MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
         _playlistService = playlistService;
-        _notificationService = notificationService;
-        _resourceService = resourceService;
         _mediaFactory = mediaFactory;
     }
 
@@ -94,44 +88,19 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         await Source.AddItemsAsync(mediaList);
     }
 
-    [RelayCommand(CanExecute = nameof(NotEmpty))]
-    private async Task ExportPlaylistAsync(PlaylistViewModel? playlist)
+    /// <summary>Exports the source playlist to the specified M3U8 file.</summary>
+    public async Task ExportPlaylistAsync(StorageFile file)
     {
-        if (playlist == null) return;
-
-        StorageFile? file = await _filesService.PickSaveFileAsync(playlist.Name, ".m3u8");
-        if (file == null) return;
-
-        try
-        {
-            PersistentPlaylist persistentPlaylist = playlist.ToPersistentPlaylist();
-            await _playlistService.ExportPlaylistAsync(persistentPlaylist, file);
-            _notificationService.RaiseNotification(NotificationLevel.Success,
-                _resourceService.GetString(ResourceName.PlaylistExportedNotificationTitle), file.Name);
-        }
-        catch (Exception)
-        {
-            _notificationService.RaiseError(
-                _resourceService.GetString(ResourceName.FailedToExportPlaylistNotificationTitle), file.Name);
-        }
+        if (Source == null) return;
+        PersistentPlaylist persistentPlaylist = Source.ToPersistentPlaylist();
+        await _playlistService.ExportPlaylistAsync(persistentPlaylist, file);
     }
 
     public async Task<bool> DeletePlaylistAsync()
     {
         if (Source == null) return false;
 
-        string name = Source.Name;
         await _playlistService.DeletePlaylistAsync(Source.Id);
-        _notificationService.RaiseNotification(NotificationLevel.Success,
-            _resourceService.GetString(ResourceName.PlaylistDeletedNotificationTitle), name);
         return true;
-    }
-
-    public async Task RenamePlaylistAsync(string newDisplayName)
-    {
-        if (Source == null) return;
-        await Source.RenameAsync(newDisplayName);
-        _notificationService.RaiseNotification(NotificationLevel.Success,
-            _resourceService.GetString(ResourceName.PlaylistRenamedNotificationTitle), newDisplayName);
     }
 }

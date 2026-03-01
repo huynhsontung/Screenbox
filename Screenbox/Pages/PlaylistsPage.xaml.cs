@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Controls;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -21,11 +24,16 @@ public sealed partial class PlaylistsPage : Page
 
     internal CommonViewModel Common { get; }
 
+    private readonly INotificationService _notificationService;
+    private readonly IFilesService _filesService;
+
     public PlaylistsPage()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlaylistsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+        _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+        _filesService = Ioc.Default.GetRequiredService<IFilesService>();
     }
 
     private async void HeaderCreateButton_OnClick(object sender, RoutedEventArgs e)
@@ -34,6 +42,26 @@ public sealed partial class PlaylistsPage : Page
         if (!string.IsNullOrWhiteSpace(playlistName))
         {
             await ViewModel.CreatePlaylistAsync(playlistName!);
+            _notificationService.RaiseNotification(NotificationLevel.Success,
+                Strings.Resources.PlaylistCreatedNotificationTitle, playlistName!);
+        }
+    }
+
+    private async void HeaderImportButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        StorageFile? file = await _filesService.PickFileAsync(".m3u8", ".m3u");
+        if (file == null) return;
+
+        try
+        {
+            await ViewModel.ImportPlaylistAsync(file);
+            _notificationService.RaiseNotification(NotificationLevel.Success,
+                Strings.Resources.PlaylistImportedNotificationTitle, file.DisplayName);
+        }
+        catch (Exception)
+        {
+            _notificationService.RaiseError(
+                Strings.Resources.FailedToImportPlaylistNotificationTitle, file.Name);
         }
     }
 
@@ -45,6 +73,8 @@ public sealed partial class PlaylistsPage : Page
         if (!string.IsNullOrWhiteSpace(newName) && newName != playlist.Name)
         {
             await ViewModel.RenamePlaylistAsync(playlist, newName!);
+            _notificationService.RaiseNotification(NotificationLevel.Success,
+                Strings.Resources.PlaylistRenamedNotificationTitle, newName!);
         }
     }
 
@@ -54,6 +84,11 @@ public sealed partial class PlaylistsPage : Page
         var deleteConfirmation = new DeletePlaylistDialog(playlist.Name);
         var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
+        {
+            string name = playlist.Name;
             await ViewModel.DeletePlaylistAsync(playlist);
+            _notificationService.RaiseNotification(NotificationLevel.Success,
+                Strings.Resources.PlaylistDeletedNotificationTitle, name);
+        }
     }
 }

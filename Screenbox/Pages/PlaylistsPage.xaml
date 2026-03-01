@@ -92,7 +92,7 @@
                 Spacing="8">
                 <Button
                     x:Name="HeaderImportButton"
-                    Command="{x:Bind ViewModel.ImportPlaylistCommand}">
+                    Click="HeaderImportButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8B5;" />
                         <TextBlock

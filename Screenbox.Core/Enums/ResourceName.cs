@@ -42,14 +42,6 @@
         AccessDeniedVideosLibraryTitle,
         AccessDeniedPicturesLibraryTitle,
         OpenPrivacySettingsButtonText,
-        AccessDeniedMessage,
-        PlaylistCreatedNotificationTitle,
-        PlaylistRenamedNotificationTitle,
-        PlaylistDeletedNotificationTitle,
-        PlaylistExportedNotificationTitle,
-        PlaylistImportedNotificationTitle,
-        FailedToExportPlaylistNotificationTitle,
-        FailedToImportPlaylistNotificationTitle,
-        SaveQueueAsPlaylist,
+        AccessDeniedMessage
     }
 }

@@ -10,7 +10,10 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Controls;
 using Screenbox.Core;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Windows.Storage;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -30,7 +33,10 @@ public sealed partial class PlaylistDetailsPage : Page
 
     internal CommonViewModel Common { get; }
 
-    private int ClampSize => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 64 : 96;
+    private readonly INotificationService _notificationService;
+    private readonly IFilesService _filesService;
+
+    private int ClampSize=> Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 64 : 96;
 
     private float BackgroundScaleFactor => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 0.75f : 0.625f;
 
@@ -51,6 +57,8 @@ public sealed partial class PlaylistDetailsPage : Page
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlaylistDetailsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+        _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+        _filesService = Ioc.Default.GetRequiredService<IFilesService>();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -202,6 +210,26 @@ public sealed partial class PlaylistDetailsPage : Page
     }
 
     [RelayCommand]
+    private async Task ExportPlaylistAsync()
+    {
+        if (ViewModel.Source == null) return;
+        StorageFile? file = await _filesService.PickSaveFileAsync(ViewModel.Source.Name, ".m3u8");
+        if (file == null) return;
+
+        try
+        {
+            await ViewModel.ExportPlaylistAsync(file);
+            _notificationService.RaiseNotification(NotificationLevel.Success,
+                Strings.Resources.PlaylistExportedNotificationTitle, file.Name);
+        }
+        catch (Exception)
+        {
+            _notificationService.RaiseError(
+                Strings.Resources.FailedToExportPlaylistNotificationTitle, file.Name);
+        }
+    }
+
+    [RelayCommand]
     private async Task RenamePlaylistAsync()
     {
         if (ViewModel.Source == null) return;
@@ -209,7 +237,9 @@ public sealed partial class PlaylistDetailsPage : Page
         string? newName = await dialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Name)
         {
-            await ViewModel.RenamePlaylistAsync(newName!);
+            await ViewModel.Source.RenameAsync(newName!);
+            _notificationService.RaiseNotification(NotificationLevel.Success,
+                Strings.Resources.PlaylistRenamedNotificationTitle, newName!);
         }
     }
 
@@ -221,10 +251,16 @@ public sealed partial class PlaylistDetailsPage : Page
         var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
+            string name = ViewModel.Source.Name;
             bool deleted = await ViewModel.DeletePlaylistAsync();
-            if (deleted && Frame.CanGoBack)
+            if (deleted)
             {
-                Frame.GoBack();
+                _notificationService.RaiseNotification(NotificationLevel.Success,
+                    Strings.Resources.PlaylistDeletedNotificationTitle, name);
+                if (Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                }
             }
         }
     }
