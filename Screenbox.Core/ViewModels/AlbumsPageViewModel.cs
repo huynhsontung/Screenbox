@@ -8,20 +8,22 @@ using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
+
+    private MusicLibrary MusicLibrary => _libraryContext.MusicLibrary;
 
     [ObservableProperty]
     private string _sortBy = string.Empty;
@@ -40,9 +42,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Music) return;
+        if (message.Sender is not LibraryContext) return;
         _dispatcherQueue.TryEnqueue(FetchAlbums);
     }
 
@@ -55,9 +57,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
         IsLoading = _libraryContext.IsLoadingMusic;
-        Songs = _libraryContext.Songs;
+        Songs = MusicLibrary.Songs;
 
-        var groups = GetCurrentGrouping(_libraryContext, SortBy);
+        var groups = GetCurrentGrouping(_libraryContext.MusicLibrary, SortBy);
         if (Songs.Count < 5000)
         {
             // Only sync when the number of items is low enough
@@ -84,11 +86,11 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         }
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetDefaultGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetDefaultGrouping(MusicLibrary library)
     {
-        var groups = context.Albums.Values
+        var groups = library.Albums.Values
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-            .GroupBy(album => album == context.UnknownAlbum
+            .GroupBy(album => album == library.UnknownAlbum
                 ? MediaGroupingHelpers.OtherGroupSymbol
                 : MediaGroupingHelpers.GetFirstLetterGroup(album.Name))
             .ToList();
@@ -110,13 +112,13 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return sortedGroup;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetArtistGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetArtistGrouping(MusicLibrary library)
     {
-        var groups = context.Albums.Values.GroupBy(a => a.ArtistName)
+        var groups = library.Albums.Values.GroupBy(a => a.ArtistName)
             .OrderBy(g => g.Key, StringComparer.CurrentCulture)
             .ToList();
 
-        var index = groups.FindIndex(g => g.Key == context.UnknownArtist.Name);
+        var index = groups.FindIndex(g => g.Key == library.UnknownArtist.Name);
         if (index >= 0)
         {
             var firstGroup = groups[index];
@@ -127,9 +129,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetYearGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetYearGrouping(MusicLibrary library)
     {
-        var groups = context.Albums.Values.GroupBy(a =>
+        var groups = library.Albums.Values.GroupBy(a =>
                 a.Year > 0
                     ? a.Year.ToString()
                     : MediaGroupingHelpers.OtherGroupSymbol)
@@ -138,9 +140,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetDateAddedGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetDateAddedGrouping(MusicLibrary library)
     {
-        var groups = context.Albums.Values.GroupBy(a => a.DateAdded.Date)
+        var groups = library.Albums.Values.GroupBy(a => a.DateAdded.Date)
             .OrderByDescending(g => g.Key)
             .Select(g =>
                 new ListGrouping<string, AlbumViewModel>(
@@ -150,14 +152,14 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(LibraryContext context, string sortBy)
+    private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(MusicLibrary library, string sortBy)
     {
         return sortBy switch
         {
-            "artist" => GetArtistGrouping(context),
-            "year" => GetYearGrouping(context),
-            "dateAdded" => GetDateAddedGrouping(context),
-            _ => GetDefaultGrouping(context)
+            "artist" => GetArtistGrouping(library),
+            "year" => GetYearGrouping(library),
+            "dateAdded" => GetDateAddedGrouping(library),
+            _ => GetDefaultGrouping(library)
         };
     }
 
@@ -172,7 +174,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     partial void OnSortByChanged(string value)
     {
-        var groups = GetCurrentGrouping(_libraryContext, value);
+        var groups = GetCurrentGrouping(_libraryContext.MusicLibrary, value);
         GroupedAlbums.Clear();
         foreach (IGrouping<string, AlbumViewModel> group in groups)
         {
