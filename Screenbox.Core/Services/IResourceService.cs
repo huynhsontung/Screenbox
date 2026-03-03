@@ -1,9 +1,2 @@
-﻿using Screenbox.Core.Enums;
-
-namespace Screenbox.Core.Services
-{
-    public interface IResourceService
-    {
-        string GetString(ResourceName name, params object[] parameters);
-    }
-}
+// This file is intentionally left empty.
+// IResourceService has been removed. Localized strings are now accessed directly in the main Screenbox project.

@@ -43,7 +43,6 @@ namespace Screenbox.Core.ViewModels
         private readonly IPlayerService _playerService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
-        private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _clickTimer;
         private readonly DisplayRequestTracker _requestTracker;
@@ -58,14 +57,12 @@ namespace Screenbox.Core.ViewModels
             PlayerContext playerContext,
             IPlayerService playerService,
             ISettingsService settingsService,
-            ISystemMediaTransportControlsService transportControlsService,
-            IResourceService resourceService)
+            ISystemMediaTransportControlsService transportControlsService)
         {
             _playerContext = playerContext;
             _playerService = playerService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
-            _resourceService = resourceService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _clickTimer = _dispatcherQueue.CreateTimer();
             _requestTracker = new DisplayRequestTracker();
@@ -124,8 +121,7 @@ namespace Screenbox.Core.ViewModels
                 catch (VLCException e)
                 {
                     player = _playerService.Initialize(swapChainOptions);
-                    Messenger.Send(new ErrorMessage(
-                        _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
+                    Messenger.Send(new ErrorMessage(null, e.Message));
                 }
 
                 if (player is not VlcMediaPlayer vlcMediaPlayer)

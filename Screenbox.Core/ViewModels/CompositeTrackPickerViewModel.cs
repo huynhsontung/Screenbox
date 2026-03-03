@@ -45,18 +45,29 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     [ObservableProperty] private int _subtitleTrackIndex;
     [ObservableProperty] private int _audioTrackIndex;
     [ObservableProperty] private int _videoTrackIndex;
+
+    /// <summary>
+    /// The localized label for the "Disable" option in the subtitle track list.
+    /// Set from the view layer.
+    /// </summary>
+    public string DisableTrackLabel { get; set; } = string.Empty;
+
+    /// <summary>
+    /// A function that returns a localized default label for a track given its 1-based index.
+    /// Set from the view layer.
+    /// </summary>
+    public Func<int, string> GetTrackIndexLabel { get; set; } = index => index.ToString();
+
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
     private bool _flyoutOpened;
     private CancellationTokenSource? _cts;
 
     public CompositeTrackPickerViewModel(PlayerContext playerContext, IFilesService filesService,
-        IResourceService resourceService, ISettingsService settingsService)
+        ISettingsService settingsService)
     {
         _filesService = filesService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _playerContext = playerContext;
         SubtitleTracks = new ObservableCollection<string>();
@@ -260,8 +271,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToLoadSubtitleNotificationTitle), e.ToString()));
+            Messenger.Send(new ErrorMessage(null, e.ToString()));
         }
     }
 
@@ -292,7 +302,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         for (int index = 0; index < ItemAudioTrackList.Count; index++)
         {
             AudioTrack audioTrack = ItemAudioTrackList[index];
-            string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
+            string defaultTrackLabel = GetTrackIndexLabel(index + 1);
             AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
         }
     }
@@ -307,7 +317,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         for (int index = 0; index < ItemVideoTrackList.Count; index++)
         {
             VideoTrack videoTrack = ItemVideoTrackList[index];
-            string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
+            string defaultTrackLabel = GetTrackIndexLabel(index + 1);
             VideoTracks.Add(string.IsNullOrEmpty(videoTrack.Label) ? defaultTrackLabel : videoTrack.Label);
         }
     }
@@ -316,13 +326,13 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     {
         if (ItemSubtitleTrackList == null) return;
         SubtitleTracks.Clear();
-        SubtitleTracks.Add(_resourceService.GetString(ResourceName.Disable));
+        SubtitleTracks.Add(DisableTrackLabel);
         if (ItemSubtitleTrackList.Count <= 0) return;
 
         for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
         {
             SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
-            string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
+            string defaultTrackLabel = GetTrackIndexLabel(index + 1);
             SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label);
         }
     }

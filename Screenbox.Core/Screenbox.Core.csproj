@@ -184,6 +184,7 @@
     <Compile Include="Messages\RaiseLibraryAccessDeniedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseResumePositionNotificationMessage.cs" />
+    <Compile Include="Messages\RaiseNotificationMessage.cs" />
     <Compile Include="Messages\RefreshFolderMessage.cs" />
     <Compile Include="Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Messages\SettingsChangedMessage.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
     <Compile Include="Services\IPlayerService.cs" />
+    <Compile Include="Services\IVlcDialogService.cs" />
     <Compile Include="Services\IPlaylistService.cs" />
     <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />

@@ -15,7 +15,6 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Navigation;
-using IResourceService = Screenbox.Core.Services.IResourceService;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -29,13 +28,11 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     private bool HasLibrary => _libraryContext.VideosLibrary != null;
 
     private readonly LibraryContext _libraryContext;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public VideosPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
+    public VideosPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _resourceService = resourceService;
         _hasVideos = true;
         Breadcrumbs = new ObservableCollection<StorageFolder>();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -105,8 +102,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
+            Messenger.Send(new ErrorMessage(null, e.Message));
         }
     }
 }

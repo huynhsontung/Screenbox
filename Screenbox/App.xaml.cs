@@ -105,6 +105,8 @@ sealed partial class App : Application
         ServiceHelpers.PopulateCoreServices(services);
 
         // View models
+        services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
+        services.AddTransient<Screenbox.ViewModels.PropertyViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>(provider =>
             new LivelyWallpaperSelectorViewModel(
                 provider.GetRequiredService<ILivelyWallpaperService>(),
@@ -116,7 +118,7 @@ sealed partial class App : Application
         services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
 
         // Services
-        services.AddSingleton<IResourceService, ResourceService>();
+        services.AddSingleton<IVlcDialogService, VlcDialogService>();
         services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
             new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
             new KeyValuePair<Type, Type>(typeof(PlaylistsPageViewModel), typeof(PlaylistsPage)),

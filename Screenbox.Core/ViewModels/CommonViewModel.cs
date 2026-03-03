@@ -34,7 +34,6 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
@@ -42,14 +41,12 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        IResourceService resourceService,
         ISettingsService settingsService,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
@@ -147,8 +144,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            Messenger.Send(new ErrorMessage(null, e.Message));
         }
     }
 }

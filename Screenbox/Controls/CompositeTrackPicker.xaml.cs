@@ -18,6 +18,8 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<CompositeTrackPickerViewModel>();
+            ViewModel.DisableTrackLabel = Screenbox.Strings.Resources.Disable;
+            ViewModel.GetTrackIndexLabel = Screenbox.Strings.Resources.TrackIndex;
         }
     }
 }

@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
 
@@ -22,13 +21,11 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     private bool LibraryLoaded => _libraryContext.MusicLibrary != null;
 
     private readonly LibraryContext _libraryContext;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public MusicPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
+    public MusicPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _resourceService = resourceService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _hasContent = true;
 
@@ -57,8 +54,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
+            Messenger.Send(new ErrorMessage(null, e.Message));
         }
     }
 }

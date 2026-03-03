@@ -30,7 +30,6 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<UpdateStatusMessage>,
-    IRecipient<UpdateVolumeStatusMessage>,
     IRecipient<TogglePlayerVisibilityMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<PlaylistCurrentItemChangedMessage>,
@@ -63,6 +62,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool SeekBarPointerInteracting { get; set; }
 
+    /// <summary>
+    /// A formatter function for scale status messages, set from the view layer.
+    /// If not set, the raw percentage value is used.
+    /// </summary>
+    public Func<string, string>? ScaleStatusFormatter { get; set; }
+
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly DispatcherQueue _dispatcherQueue;
@@ -72,18 +77,16 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _playPauseBadgeTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
-    private readonly IResourceService _resourceService;
     private readonly IFilesService _filesService;
     private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
     private bool _resizeNext;
     private DateTimeOffset _lastUpdated;
 
-    public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService,
+    public PlayerPageViewModel(IWindowService windowService,
         ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext)
     {
         _windowService = windowService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _filesService = filesService;
         _playerContext = playerContext;
@@ -161,12 +164,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             MediaPlayer.PlaybackStateChanged += OnStateChanged;
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
-    }
-
-    public void Receive(UpdateVolumeStatusMessage message)
-    {
-        Receive(new UpdateStatusMessage(
-            _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, message.Value)));
     }
 
     public void Receive(UpdateStatusMessage message)
@@ -789,7 +786,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         double actualScalar = _windowService.ResizeWindow(desiredSize, scalar);
         if (actualScalar > 0)
         {
-            string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
+            string percentage = $"{actualScalar * 100:0.##}%";
+            string status = ScaleStatusFormatter?.Invoke(percentage) ?? percentage;
             Messenger.Send(new UpdateStatusMessage(status));
             return true;
         }

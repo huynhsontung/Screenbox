@@ -59,7 +59,6 @@ namespace Screenbox.Core.ViewModels
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
-        private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
         private readonly PlayerContext _playerContext;
         private Size _aspectRatio;
@@ -68,12 +67,10 @@ namespace Screenbox.Core.ViewModels
             MediaListViewModel playlist,
             ISettingsService settingsService,
             IWindowService windowService,
-            IResourceService resourceService,
             PlayerContext playerContext)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _windowService = windowService;
-            _resourceService = resourceService;
             _settingsService = settingsService;
             _playerContext = playerContext;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
@@ -168,8 +165,10 @@ namespace Screenbox.Core.ViewModels
         /// </list>
         /// </remarks>
         /// <param name="modifiers">The modifier keys held during the key press.</param>
+        /// <param name="subtitleStatusFormatter">A function that formats a subtitle label into a status string.</param>
+        /// <param name="disabledLabel">The localized label for when subtitles are disabled.</param>
         /// <returns><see langword="true"/> if the toggle operation was successful; otherwise, <see langword="false"/>.</returns>
-        public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
+        public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers, Func<string, string> subtitleStatusFormatter, string disabledLabel)
         {
             if (MediaPlayer?.PlaybackItem is null)
             {
@@ -222,8 +221,8 @@ namespace Screenbox.Core.ViewModels
             }
 
             string status = subtitleTracks.SelectedIndex == -1
-                ? _resourceService.GetString(ResourceName.SubtitleStatus, _resourceService.GetString(ResourceName.None))
-                : _resourceService.GetString(ResourceName.SubtitleStatus, subtitleTracks[subtitleTracks.SelectedIndex].Label);
+                ? subtitleStatusFormatter(disabledLabel)
+                : subtitleStatusFormatter(subtitleTracks[subtitleTracks.SelectedIndex].Label);
 
             Messenger.Send(new UpdateStatusMessage(status));
             return true;
@@ -412,8 +411,7 @@ namespace Screenbox.Core.ViewModels
                 }
                 catch (Exception e)
                 {
-                    Messenger.Send(new ErrorMessage(
-                        _resourceService.GetString(ResourceName.FailedToSaveFrameNotificationTitle), e.ToString()));
+                    Messenger.Send(new ErrorMessage(null, e.ToString()));
                     // TODO: track error
                 }
             }
