@@ -81,6 +81,10 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <Thickness x:Key="PlayerTitleBarButtonMargin">4,-24,0,0</Thickness>
+
+            <TransitionCollection x:Key="RepositionTransitionCollection">
+                <RepositionThemeTransition />
+            </TransitionCollection>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -203,7 +207,6 @@
                 <TextBlock
                     d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    OpticalMarginAlignment="TrimSideBearings"
                     Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
                     TextWrapping="NoWrap"
@@ -474,8 +477,10 @@
         <controls:TitleBar
             x:Name="PlayerTitleBar"
             MinHeight="80"
-            Background="{ThemeResource PlayerTitleBarBackgroundBrush}">
+            Background="{ThemeResource PlayerTitleBarBackgroundBrush}"
+            FooterTransitions="{StaticResource RepositionTransitionCollection}">
             <controls:TitleBar.Resources>
+                <Thickness x:Key="TitleBarIconMargin">12,0,12,0</Thickness>
                 <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Left</HorizontalAlignment>
             </controls:TitleBar.Resources>
 
@@ -518,17 +523,13 @@
                     DragEnter="PlayQueueButton_OnDragEnter"
                     DragLeave="PlayQueueButton_OnDragLeave"
                     Style="{StaticResource SubtleButtonStyle}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}"
+                    Transitions="{StaticResource RepositionTransitionCollection}">
                     <FontIcon
                         x:Name="PlayQueueButtonIcon"
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                         FontSize="20"
                         Glyph="{StaticResource PlaylistMusicGlyph}" />
-                    <Button.Transitions>
-                        <TransitionCollection>
-                            <RepositionThemeTransition />
-                        </TransitionCollection>
-                    </Button.Transitions>
                     <Button.Flyout>
                         <Flyout
                             x:Name="PlayQueueFlyout"
@@ -562,12 +563,8 @@
                     Grid.Column="2"
                     Margin="16,-12,0,16"
                     IsHitTestVisible="False"
-                    Orientation="Vertical">
-                    <StackPanel.Transitions>
-                        <TransitionCollection>
-                            <RepositionThemeTransition />
-                        </TransitionCollection>
-                    </StackPanel.Transitions>
+                    Orientation="Vertical"
+                    Transitions="{StaticResource RepositionTransitionCollection}">
                     <TextBlock
                         x:Name="TitleBarTitleTextBlock"
                         d:Text="Lorem ipsum dolor sit amet"
