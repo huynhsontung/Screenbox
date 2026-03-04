@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
 using CommunityToolkit.WinUI;
@@ -101,6 +102,15 @@ public sealed partial class NavigationViewEx : NavigationView
         DefaultStyleKey = typeof(NavigationView);
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
+        DisplayModeChanged += OnDisplayModeChanged;
+        PaneOpening += OnPaneOpening;
+        PaneClosing += OnPaneClosing;
+        PaneClosed += OnPaneClosed;
+
+        BackButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
+        PaneToggleButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
+        PaneSearchButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
+        SettingsItemKeyboardAccelerators = new List<KeyboardAccelerator>();
     }
 
     protected override void OnApplyTemplate()
@@ -254,11 +264,6 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        DisplayModeChanged += OnDisplayModeChanged;
-        PaneOpening += OnPaneOpening;
-        PaneClosing += OnPaneClosing;
-        PaneClosed += OnPaneClosed;
-
         if (Overlay != null && _splitView?.FindDescendant<Grid>() is { } splitViewGrid)
         {
             splitViewGrid.Children.Add(_overlayRoot);

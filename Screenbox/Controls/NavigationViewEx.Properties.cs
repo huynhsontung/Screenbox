@@ -79,7 +79,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="BackButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(BackButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(BackButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the back button.
@@ -124,7 +124,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="CloseButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty CloseButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(CloseButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(CloseButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the close button.
@@ -154,7 +154,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneToggleButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneToggleButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(PaneToggleButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(PaneToggleButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the menu toggle button.
@@ -184,7 +184,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneSearchButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(PaneSearchButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the search button.
@@ -229,7 +229,7 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="SettingsItemKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the settings navigation view item.
