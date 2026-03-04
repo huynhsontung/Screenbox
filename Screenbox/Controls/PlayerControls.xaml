@@ -33,6 +33,7 @@
             <x:Double x:Key="Speed175">1.75</x:Double>
             <x:Double x:Key="Speed200">2.0</x:Double>
 
+            <commands:ShowEqualizerCommand x:Key="ShowEqualizerCommand" />
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
 
             <Flyout x:Key="VolumeControlFlyout">
@@ -137,6 +138,15 @@
                     Text="{x:Bind strings:Resources.Properties}">
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="I" Modifiers="Control" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <!--  Equalizer  -->
+                <MenuFlyoutItem
+                    Command="{StaticResource ShowEqualizerCommand}"
+                    Icon="{ui:FontIcon Glyph=&#xE9E9;}"
+                    Text="{x:Bind strings:Resources.Equalizer}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="E" Modifiers="Control,Shift" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem

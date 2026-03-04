@@ -46,6 +46,7 @@ public static class ServiceHelpers
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist
+        services.AddSingleton<EqualizerViewModel>();
 
         // Factories
         services.AddSingleton<MediaViewModelFactory>();
