@@ -8,6 +8,7 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -105,7 +106,6 @@ public sealed partial class NavigationViewEx : NavigationView
         DisplayModeChanged += OnDisplayModeChanged;
         PaneOpening += OnPaneOpening;
         PaneClosing += OnPaneClosing;
-        PaneClosed += OnPaneClosed;
 
         BackButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
         PaneToggleButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
@@ -291,7 +291,6 @@ public sealed partial class NavigationViewEx : NavigationView
         DisplayModeChanged -= OnDisplayModeChanged;
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
-        PaneClosed -= OnPaneClosed;
 
         if (_overlayChildRectangle != null)
         {
@@ -322,14 +321,9 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnPaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
     {
-        UpdateOverlayLayout();
-    }
-
-    private void OnPaneClosed(NavigationView sender, object args)
-    {
         // This ensures closing the pane via the gamepad 'B' button correctly
         // hides the overlay dismiss layer.
-        UpdateOverlayLightDismissLayerVisibility();
+        _ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, UpdateOverlayLayout);
     }
 
     private void OverlayLightDismissLayer_OnTapped(object sender, TappedRoutedEventArgs e)
