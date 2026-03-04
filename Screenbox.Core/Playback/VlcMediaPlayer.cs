@@ -515,6 +515,13 @@ namespace Screenbox.Core.Playback
         public void StepForwardOneFrame()
         {
             VlcPlayer.NextFrame();
+            var newValue = TimeSpan.FromMilliseconds(VlcPlayer.Time);
+            if (newValue != _position)
+            {
+                var oldValue = _position;
+                _position = newValue;
+                PositionChanged?.Invoke(this, new ValueChangedEventArgs<TimeSpan>(newValue, oldValue));
+            }
         }
 
         private void Replay()
