@@ -233,6 +233,7 @@
     <Compile Include="Converters\ThicknessFilterKinds.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Converters\UnitDisplayConverter.cs" />
     <Compile Include="Dialogs\EqualizerDialog.xaml.cs">
       <DependentUpon>EqualizerDialog.xaml</DependentUpon>
     </Compile>
