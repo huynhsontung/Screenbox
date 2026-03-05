@@ -42,21 +42,21 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
+    /// <summary>
+    /// The currently selected subtitle track index. <c>-1</c> means subtitles are disabled;
+    /// <c>0</c> to <c>SubtitleTracks.Count - 1</c> are the actual track indices.
+    /// </summary>
     [ObservableProperty] private int _subtitleTrackIndex;
+
+    /// <summary>
+    /// The currently selected audio track index. <c>-1</c> means no track is selected.
+    /// </summary>
     [ObservableProperty] private int _audioTrackIndex;
+
+    /// <summary>
+    /// The currently selected video track index. <c>-1</c> means no track is selected.
+    /// </summary>
     [ObservableProperty] private int _videoTrackIndex;
-
-    /// <summary>
-    /// The localized label for the "Disable" option in the subtitle track list.
-    /// Set from the view layer.
-    /// </summary>
-    public string DisableTrackLabel { get; set; } = string.Empty;
-
-    /// <summary>
-    /// A function that returns a localized default label for a track given its 1-based index.
-    /// Set from the view layer.
-    /// </summary>
-    public Func<int, string> GetTrackIndexLabel { get; set; } = index => index.ToString();
 
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
@@ -224,25 +224,23 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
     partial void OnSubtitleTrackIndexChanged(int value)
     {
-        if (ItemSubtitleTrackList != null && value >= 0 && value < SubtitleTracks.Count)
+        if (ItemSubtitleTrackList == null) return;
+
+        // -1 means subtitles are disabled; set the underlying track list selection accordingly
+        ItemSubtitleTrackList.SelectedIndex = value;
+
+        if (!_flyoutOpened) return;
+
+        if (value < 0)
         {
-            ItemSubtitleTrackList.SelectedIndex = value - 1;
-
-            if (_flyoutOpened)
-            {
-                if (value == 0)
-                {
-                    _settingsService.PersistentSubtitleLanguage = string.Empty;
-                }
-                else
-                {
-                    var subtitle = ItemSubtitleTrackList[ItemSubtitleTrackList.SelectedIndex];
-                    _settingsService.PersistentSubtitleLanguage =
-                        $"{subtitle.LanguageTag},{subtitle.Language},{LanguageHelper.GetPreferredLanguage().Substring(0, 2)}";
-                }
-            }
+            _settingsService.PersistentSubtitleLanguage = string.Empty;
         }
-
+        else if (value < SubtitleTracks.Count)
+        {
+            var subtitle = ItemSubtitleTrackList[value];
+            _settingsService.PersistentSubtitleLanguage =
+                $"{subtitle.LanguageTag},{subtitle.Language},{LanguageHelper.GetPreferredLanguage().Substring(0, 2)}";
+        }
     }
 
     partial void OnAudioTrackIndexChanged(int value)
@@ -280,7 +278,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         UpdateSubtitleTrackList();
         UpdateAudioTrackList();
         UpdateVideoTrackList();
-        SubtitleTrackIndex = (ItemSubtitleTrackList?.SelectedIndex + 1) ?? 0;
+        SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex ?? -1;
         AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
         VideoTrackIndex = ItemVideoTrackList?.SelectedIndex ?? -1;
 
@@ -302,8 +300,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         for (int index = 0; index < ItemAudioTrackList.Count; index++)
         {
             AudioTrack audioTrack = ItemAudioTrackList[index];
-            string defaultTrackLabel = GetTrackIndexLabel(index + 1);
-            AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
+            AudioTracks.Add(audioTrack.Label);
         }
     }
 
@@ -317,8 +314,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         for (int index = 0; index < ItemVideoTrackList.Count; index++)
         {
             VideoTrack videoTrack = ItemVideoTrackList[index];
-            string defaultTrackLabel = GetTrackIndexLabel(index + 1);
-            VideoTracks.Add(string.IsNullOrEmpty(videoTrack.Label) ? defaultTrackLabel : videoTrack.Label);
+            VideoTracks.Add(videoTrack.Label);
         }
     }
 
@@ -326,14 +322,12 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     {
         if (ItemSubtitleTrackList == null) return;
         SubtitleTracks.Clear();
-        SubtitleTracks.Add(DisableTrackLabel);
         if (ItemSubtitleTrackList.Count <= 0) return;
 
         for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
         {
             SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
-            string defaultTrackLabel = GetTrackIndexLabel(index + 1);
-            SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label);
+            SubtitleTracks.Add(subtitleTrack.Label);
         }
     }
 }

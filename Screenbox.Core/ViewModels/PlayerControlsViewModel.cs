@@ -165,20 +165,21 @@ namespace Screenbox.Core.ViewModels
         /// </list>
         /// </remarks>
         /// <param name="modifiers">The modifier keys held during the key press.</param>
-        /// <param name="subtitleStatusFormatter">A function that formats a subtitle label into a status string.</param>
-        /// <param name="disabledLabel">The localized label for when subtitles are disabled.</param>
-        /// <returns><see langword="true"/> if the toggle operation was successful; otherwise, <see langword="false"/>.</returns>
-        public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers, Func<string, string> subtitleStatusFormatter, string disabledLabel)
+        /// <returns>
+        /// A tuple where <c>Handled</c> is <see langword="true"/> if the toggle succeeded, and
+        /// <c>TrackLabel</c> is the label of the newly selected track, or <see langword="null"/> if subtitles were disabled.
+        /// </returns>
+        public (bool Handled, string? TrackLabel) ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
         {
             if (MediaPlayer?.PlaybackItem is null)
             {
-                return false;
+                return (false, null);
             }
 
             PlaybackSubtitleTrackList subtitleTracks = MediaPlayer.PlaybackItem.SubtitleTracks;
             if (subtitleTracks.Count == 0)
             {
-                return false;
+                return (false, null);
             }
 
             switch (modifiers)
@@ -217,15 +218,24 @@ namespace Screenbox.Core.ViewModels
 
                     break;
                 default:
-                    return false;
+                    return (false, null);
             }
 
-            string status = subtitleTracks.SelectedIndex == -1
-                ? subtitleStatusFormatter(disabledLabel)
-                : subtitleStatusFormatter(subtitleTracks[subtitleTracks.SelectedIndex].Label);
+            string? label = subtitleTracks.SelectedIndex == -1
+                ? null
+                : subtitleTracks[subtitleTracks.SelectedIndex].Label;
 
-            Messenger.Send(new UpdateStatusMessage(status));
-            return true;
+            return (true, label);
+        }
+
+        /// <summary>
+        /// Sends a status message via the messenger.
+        /// The view layer should call this after formatting a localized status string.
+        /// </summary>
+        /// <param name="message">The formatted status message to display.</param>
+        public void SendStatusMessage(string? message)
+        {
+            Messenger.Send(new UpdateStatusMessage(message));
         }
 
         partial void OnPlaybackSpeedChanged(double value)

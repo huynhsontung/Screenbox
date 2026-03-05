@@ -5,11 +5,9 @@ using System.ComponentModel;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -55,7 +53,6 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-            ViewModel.ScaleStatusFormatter = Screenbox.Strings.Resources.ScaleStatus;
             AlbumArtImage.RegisterPropertyChangedCallback(ImageBrush.ImageSourceProperty, AlbumArtImageOnSourceChanged);
             LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
 
@@ -63,16 +60,7 @@ namespace Screenbox.Pages
             navigationService.Navigated += NavigationServiceOnNavigated;
 
             AccessKeyManager.IsDisplayModeEnabledChanged += AccessKeyManager_OnIsDisplayModeEnabledChanged;
-
-            // Convert volume change messages to formatted status messages using localized strings
-            WeakReferenceMessenger.Default.Register<UpdateVolumeStatusMessage>(this, OnUpdateVolumeStatusMessage);
         }
-
-        private void OnUpdateVolumeStatusMessage(object recipient, UpdateVolumeStatusMessage message)
-        {
-            WeakReferenceMessenger.Default.Send(new UpdateStatusMessage(Screenbox.Strings.Resources.VolumeChangeStatusMessage(message.Value)));
-        }
-
         private void NavigationServiceOnNavigated(object sender, EventArgs e)
         {
             if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
@@ -319,6 +307,10 @@ namespace Screenbox.Pages
 
                     UpdateContentState();
                     break;
+                case nameof(PlayerPageViewModel.PendingVolumeForStatus):
+                    // The VM received a volume change; format the localized status string and send it back via the VM
+                    ViewModel.SendStatusMessage(Screenbox.Strings.Resources.VolumeChangeStatusMessage(ViewModel.PendingVolumeForStatus));
+                    break;
             }
         }
 
@@ -545,7 +537,12 @@ namespace Screenbox.Pages
 
         private void WindowResizeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            args.Handled = ViewModel.ProcessResizeKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+            double? scale = ViewModel.ProcessResizeKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+            args.Handled = scale.HasValue;
+            if (scale.HasValue)
+            {
+                ViewModel.SendStatusMessage(Screenbox.Strings.Resources.ScaleStatus($"{scale.Value * 100:0.##}%"));
+            }
         }
 
         private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
