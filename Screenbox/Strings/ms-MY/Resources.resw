@@ -982,52 +982,52 @@
     <value>Folder</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Tambah ke senarai main</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Cipta senarai main baharu</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Senarai main baharu</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Item terpilih</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Tiada senarai main</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Cipta</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Batal</value>
   </data>
   <data name="PlaylistName" xml:space="preserve">
-    <value>Playlist name</value>
+    <value>Nama senarai main</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Masukkan nama untuk senarai main ini</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Senarai main</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Padam</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Nama Semula</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Masukkan nama baharu untuk senarai main ini</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Nama semula senarai main</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Padam senarai main</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
     <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
