@@ -8,9 +8,9 @@ using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Controls;
 
-[StyleTypedProperty(Property = "BackButtonStyle", StyleTargetType = typeof(Button))]
-[StyleTypedProperty(Property = "PaneToggleButtonStyle", StyleTargetType = typeof(Button))]
-[StyleTypedProperty(Property = "PaneSearchButtonStyle", StyleTargetType = typeof(Button))]
+[StyleTypedProperty(Property = nameof(BackButtonStyle), StyleTargetType = typeof(Button))]
+[StyleTypedProperty(Property = nameof(PaneToggleButtonStyle), StyleTargetType = typeof(Button))]
+[StyleTypedProperty(Property = nameof(PaneSearchButtonStyle), StyleTargetType = typeof(Button))]
 public sealed partial class NavigationViewEx
 {
     /// <summary>
