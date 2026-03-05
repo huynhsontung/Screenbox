@@ -16,8 +16,8 @@ namespace Screenbox.Controls;
 /// enabling the app view to extend into the title bar area.
 /// </summary>
 /// <remarks>
-/// Use the <b>TitleBar</b> control to replace the default system title bar with a custom
-/// title bar that integrates with your app UI.
+/// Use the <b>TitleBar</b> control to replace the default system title bar with
+/// a custom title bar that integrates with your app UI.
 /// <para>Key features include:</para>
 /// <list type="bullet">
 /// <item><description><b>Interactive content:</b> Place arbitrary UI in the title bar,
@@ -28,7 +28,8 @@ namespace Screenbox.Controls;
 /// </list>
 /// </remarks>
 /// <example>
-/// XAML example that demonstrates header, content and footer in the title bar:
+/// This example creates a simple title bar that replaces the system title bar.
+/// It has a title, icon, custom content, and a footer.
 /// <code lang="xml"><![CDATA[
 /// <Page>
 ///     <Grid x:Name="RootGrid">
@@ -72,9 +73,6 @@ public sealed partial class TitleBar : ContentControl
     private const string LeftPaddingColumnName = "LeftPaddingColumn";
     private const string RightPaddingColumnName = "RightPaddingColumn";
     private const string DragRegionName = "DragRegion";
-    private const string HeaderContentPresenterName = "HeaderContentPresenter";
-    private const string ContentPresenterName = "ContentPresenter";
-    private const string FooterContentPresenterName = "FooterContentPresenter";
 
     private const string ActivatedStateName = "Activated";
     private const string DeactivatedStateName = "Deactivated";
@@ -101,9 +99,6 @@ public sealed partial class TitleBar : ContentControl
     private ColumnDefinition? _leftPaddingColumn;
     private ColumnDefinition? _rightPaddingColumn;
     private Grid? _dragRegion;
-    private FrameworkElement? _headerArea;
-    private FrameworkElement? _contentArea;
-    private FrameworkElement? _footerArea;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TitleBar"/> class.
@@ -140,19 +135,18 @@ public sealed partial class TitleBar : ContentControl
         UpdateFooter();
     }
 
+    /// <summary>
+    /// Resets the title bar to its default appearance.
+    /// </summary>
     public void ResetTitleBar()
     {
-        if (_window is not null)
-        {
-            _window.SetTitleBar(null);
-        }
-
-        if (_coreTitleBar is not null)
-        {
-            _coreTitleBar.ExtendViewIntoTitleBar = false;
-        }
+        _window?.SetTitleBar(null);
+        _coreTitleBar?.ExtendViewIntoTitleBar = false;
     }
 
+    /// <summary>
+    /// Sets the drag region for the window title bar.
+    /// </summary>
     public void SetDragRegion()
     {
         if (_window is null) return;
@@ -183,37 +177,25 @@ public sealed partial class TitleBar : ContentControl
         }
 
         _window = Window.Current;
-        if (_window is not null)
-        {
-            _window.Activated += Window_OnActivated;
-        }
+        _window?.Activated += Window_OnActivated;
 
         _flowDirectionCallbackToken = RegisterPropertyChangedCallback(FlowDirectionProperty, OnFlowDirectionChanged);
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        if (_coreTitleBar is not null)
-        {
-            _coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_OnLayoutMetricsChanged;
-            //_coreTitleBar.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
-            _coreTitleBar = null;
-        }
+        _coreTitleBar?.LayoutMetricsChanged -= CoreTitleBar_OnLayoutMetricsChanged;
+        //_coreTitleBar?.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
+        _coreTitleBar = null;
 
-        if (_window is not null)
-        {
-            _window.Activated -= Window_OnActivated;
-            _window = null;
-        }
+        _window?.Activated -= Window_OnActivated;
+        _window = null;
 
         UnregisterPropertyChangedCallback(FlowDirectionProperty, _flowDirectionCallbackToken);
 
         _leftPaddingColumn = null;
         _rightPaddingColumn = null;
         _dragRegion = null;
-        _headerArea = null;
-        _contentArea = null;
-        _footerArea = null;
     }
 
     private void Window_OnActivated(object sender, WindowActivatedEventArgs e)
@@ -310,15 +292,8 @@ public sealed partial class TitleBar : ContentControl
         double trailingInset = _coreTitleBar.SystemOverlayRightInset;
         bool isRtl = FlowDirection is FlowDirection.RightToLeft;
 
-        if (_leftPaddingColumn is not null)
-        {
-            _leftPaddingColumn.Width = new GridLength(isRtl ? trailingInset : leadingInset);
-        }
-
-        if (_rightPaddingColumn is not null)
-        {
-            _rightPaddingColumn.Width = new GridLength(isRtl ? leadingInset : trailingInset);
-        }
+        _leftPaddingColumn?.Width = new GridLength(isRtl ? trailingInset : leadingInset);
+        _rightPaddingColumn?.Width = new GridLength(isRtl ? leadingInset : trailingInset);
     }
 
     private void UpdateHeader()
@@ -329,7 +304,6 @@ public sealed partial class TitleBar : ContentControl
         }
         else
         {
-            _headerArea ??= (FrameworkElement?)GetTemplateChild(HeaderContentPresenterName);
             //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, HeaderVisibleStateName, false);
         }
@@ -363,7 +337,6 @@ public sealed partial class TitleBar : ContentControl
         }
         else
         {
-            _contentArea ??= (FrameworkElement?)GetTemplateChild(ContentPresenterName);
             //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, ContentVisibleStateName, false);
         }
@@ -379,7 +352,6 @@ public sealed partial class TitleBar : ContentControl
         }
         else
         {
-            _footerArea ??= (FrameworkElement?)GetTemplateChild(FooterContentPresenterName);
             //HeightMode = TitleBarHeightMode.Tall;
             VisualStateManager.GoToState(this, FooterVisibleStateName, false);
         }
@@ -407,8 +379,8 @@ public sealed partial class TitleBar : ContentControl
 
     private static Color? GetNullableColorFromBrush(Brush brush)
     {
-        return brush is SolidColorBrush solidColorBrush
-            ? solidColorBrush.Color
-            : null;
+        return brush is not SolidColorBrush solidColorBrush
+            ? null
+            : solidColorBrush.Color;
     }
 }
