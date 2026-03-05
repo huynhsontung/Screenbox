@@ -63,11 +63,24 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool SeekBarPointerInteracting { get; set; }
 
+    private int _pendingVolumeForStatus;
+
     /// <summary>
     /// The last raw volume value received from a <see cref="UpdateVolumeStatusMessage"/>.
     /// The view layer observes this property and formats a localized status string via <see cref="SendStatusMessage"/>.
+    /// This always raises <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>,
+    /// even when the value has not changed, to ensure every volume update results in a status message.
     /// </summary>
-    [ObservableProperty] private int _pendingVolumeForStatus;
+    public int PendingVolumeForStatus
+    {
+        get => _pendingVolumeForStatus;
+        private set
+        {
+            _pendingVolumeForStatus = value;
+            // Always notify so repeated volume-at-max/min also shows the status message
+            OnPropertyChanged();
+        }
+    }
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
