@@ -290,18 +290,8 @@ sealed partial class App : Application
 
             var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
             rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
-
-            // Register a handler for when the theme mode changes
-            rootFrame.ActualThemeChanged += OnActualThemeChanged;
-
-            TitleBarHelper.SetCaptionButtonColors(rootFrame);
         }
 
         return rootFrame;
-    }
-
-    private void OnActualThemeChanged(FrameworkElement sender, object args)
-    {
-        TitleBarHelper.SetCaptionButtonColors(sender);
     }
 }
