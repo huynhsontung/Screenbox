@@ -991,7 +991,7 @@
     <value>Senarai main baharu</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Item terpilih</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
     <value>Item terpilih</value>
@@ -1030,7 +1030,7 @@
     <value>Padam senarai main</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
+    <value>Anda pasti mahu memadam senarai main '{0}'? Tindakan ini tidak boleh dibuat asal.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
