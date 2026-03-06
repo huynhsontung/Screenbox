@@ -30,6 +30,7 @@ public static class ServiceHelpers
         services.AddTransient<PlayQueueViewModel>();
         services.AddTransient<AlbumDetailsPageViewModel>();
         services.AddTransient<ArtistDetailsPageViewModel>();
+        services.AddTransient<PlaylistDetailsPageViewModel>();
         services.AddTransient<SongsPageViewModel>();
         services.AddTransient<AlbumsPageViewModel>();
         services.AddTransient<ArtistsPageViewModel>();
@@ -40,6 +41,8 @@ public static class ServiceHelpers
         services.AddTransient<LivelyWallpaperPlayerViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
+        services.AddTransient<PlaylistViewModel>();
+        services.AddTransient<PlaylistsPageViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist
@@ -53,6 +56,7 @@ public static class ServiceHelpers
 
         // Contexts
         services.AddSingleton<PlayerContext>();
+        services.AddSingleton<PlaylistsContext>();
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
 

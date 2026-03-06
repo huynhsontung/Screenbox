@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ProtoBuf;
 using Screenbox.Core.Enums;
@@ -112,14 +113,19 @@ public sealed class FilesService : IFilesService
 
     public async Task SaveToDiskAsync<T>(StorageFile file, T source)
     {
-        using var stream = await file.OpenStreamForWriteAsync();
-        // using var dataWriter = new StreamWriter(stream);
-        // using var jsonWriter = new JsonTextWriter(dataWriter);
-        // var serializer = JsonSerializer.Create();
-        // serializer.Serialize(jsonWriter, source);
-        Serializer.Serialize(stream, source);
-        stream.SetLength(stream.Position);  // A weird quirk of protobuf-net
-        await stream.FlushAsync();
+        if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+        {
+            var json = JsonSerializer.Serialize(source);
+            await FileIO.WriteTextAsync(file, json);
+        }
+        else
+        {
+            using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+            var writeStream = stream.AsStreamForWrite();
+            Serializer.Serialize(writeStream, source);
+            writeStream.SetLength(writeStream.Position);  // A weird quirk of protobuf-net
+            await stream.FlushAsync();
+        }
     }
 
     public async Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName)
@@ -130,12 +136,14 @@ public sealed class FilesService : IFilesService
 
     public async Task<T> LoadFromDiskAsync<T>(StorageFile file)
     {
-        using Stream readStream = await file.OpenStreamForReadAsync();
-        return Serializer.Deserialize<T>(readStream);
-        // using var dataReader = new StreamReader(readStream);
-        // using var jsonReader = new JsonTextReader(dataReader);
-        // var serializer = JsonSerializer.Create();
-        // return serializer.Deserialize<T>(jsonReader) ?? throw new NullReferenceException();
+        if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+        {
+            string json = await FileIO.ReadTextAsync(file);
+            return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize JSON");
+        }
+
+        using var readStream = await file.OpenReadAsync();
+        return Serializer.Deserialize<T>(readStream.AsStream());
     }
 
     public async Task OpenFileLocationAsync(string path)
