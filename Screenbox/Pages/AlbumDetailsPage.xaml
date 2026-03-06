@@ -6,7 +6,6 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -180,13 +179,13 @@
 
                     <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that opening the overflow popup does not reset the command bar position.  -->
                     <Grid x:Name="ButtonPanel">
-                        <CommandBar
+                        <controls:CommandBarEx
                             Margin="-8,8,0,0"
                             HorizontalAlignment="Left"
-                            extensions:CommandBarExtensions.MoreButtonStyle="{StaticResource EllipsisDefaultButtonStyle}"
-                            AccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                            DefaultLabelPosition="Right">
-                            <CommandBar.Resources>
+                            AccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                            DefaultLabelPosition="Right"
+                            MoreButtonStyle="{StaticResource EllipsisDefaultButtonStyle}">
+                            <controls:CommandBarEx.Resources>
                                 <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
@@ -197,7 +196,7 @@
                                 <Thickness x:Key="AppBarButtonContentViewboxMargin">16,16,0,16</Thickness>
                                 <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,14,16,15</Thickness>
                                 <Thickness x:Key="AppBarButtonInnerBorderMargin">4,8,4,8</Thickness>
-                            </CommandBar.Resources>
+                            </controls:CommandBarEx.Resources>
 
                             <AppBarButton
                                 AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
@@ -220,7 +219,7 @@
                                                    MirroredWhenRightToLeft=True}"
                                 Label="{strings:Resources Key=ShuffleAndPlay}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
-                        </CommandBar>
+                        </controls:CommandBarEx>
                     </Grid>
                 </StackPanel>
             </Grid>

@@ -6,6 +6,7 @@
     xmlns:contract6Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,6)"
     xmlns:contract7NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations">
 
     <x:Double x:Key="AppBarButtonDefaultWidth">68</x:Double>
@@ -53,6 +54,8 @@
             To="1"
             Duration="{StaticResource ControlFasterAnimationDuration}" />
     </ctAnimations:ImplicitAnimationSet>
+
+    <Style BasedOn="{StaticResource DefaultCommandBarStyle}" TargetType="controls:CommandBarEx" />
 
     <!--  AppBarButton styled to resemble the default button. For complete results, use this in conjunction with the above adjusted margins  -->
     <!--  Using styles within a command bar overrides the overflow style. To work around this, apply stretch alignment and specify width at the visual state level rather than at the style level.  -->
