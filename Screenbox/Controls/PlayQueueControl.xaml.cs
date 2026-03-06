@@ -3,9 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.ViewModels;
 using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
@@ -36,6 +39,13 @@ namespace Screenbox.Controls
         internal CommonViewModel Common { get; }
 
         private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
+        private IAsyncRelayCommand? _saveQueueAsNewPlaylistCommand;
+
+        /// <summary>
+        /// Lazily-created command that shows a dialog to name the new playlist, then saves the queue to it.
+        /// </summary>
+        private IAsyncRelayCommand SaveQueueAsNewPlaylistCommand =>
+            _saveQueueAsNewPlaylistCommand ??= new AsyncRelayCommand(SaveQueueAsNewPlaylistAsync);
 
         public PlayQueueControl()
         {
@@ -81,6 +91,51 @@ namespace Screenbox.Controls
             if (e.DragUIOverride != null)
             {
                 e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
+            }
+        }
+
+        private async Task SaveQueueAsNewPlaylistAsync()
+        {
+            string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
+            if (string.IsNullOrWhiteSpace(playlistName)) return;
+            await ViewModel.SaveQueueAsNewPlaylistAsync(playlistName!);
+        }
+
+        private void SaveAsPlaylistFlyout_OnOpening(object sender, object e)
+        {
+            var flyout = (MenuFlyout)sender;
+            flyout.Items.Clear();
+
+            flyout.Items.Add(new MenuFlyoutItem
+            {
+                Icon = new SymbolIcon(Symbol.Add),
+                Text = Strings.Resources.CreateNewPlaylist,
+                Command = SaveQueueAsNewPlaylistCommand
+            });
+
+            flyout.Items.Add(new MenuFlyoutSeparator());
+
+            var playlists = Ioc.Default.GetRequiredService<PlaylistsContext>().Playlists;
+            if (playlists.Count == 0)
+            {
+                flyout.Items.Add(new MenuFlyoutItem
+                {
+                    Text = Strings.Resources.NoPlaylists,
+                    IsEnabled = false
+                });
+                return;
+            }
+
+            // Snapshot the queue items so that later mutations don't affect the command parameter
+            List<MediaViewModel> queueItems = ViewModel.Playlist.Items.ToList();
+            foreach (var playlist in playlists)
+            {
+                flyout.Items.Add(new MenuFlyoutItem
+                {
+                    Text = playlist.Name,
+                    Command = playlist.AddItemsCommand,
+                    CommandParameter = queueItems
+                });
             }
         }
 
@@ -142,3 +197,4 @@ namespace Screenbox.Controls
         }
     }
 }
+

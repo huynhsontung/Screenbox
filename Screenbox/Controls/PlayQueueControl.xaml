@@ -125,6 +125,25 @@
             </Button>
 
             <Button
+                x:Name="SaveAsPlaylistButton"
+                Margin="0,0,8,0"
+                AutomationProperties.Name="{x:Bind SaveAsPlaylistButtonLabel.Text}"
+                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        Glyph="&#xE74E;" />
+                    <TextBlock
+                        x:Name="SaveAsPlaylistButtonLabel"
+                        Margin="8,0,0,0"
+                        Text="{strings:Resources Key=SaveAsPlaylist}" />
+                </StackPanel>
+                <Button.Flyout>
+                    <MenuFlyout x:Name="SaveAsPlaylistFlyout" Opening="SaveAsPlaylistFlyout_OnOpening" />
+                </Button.Flyout>
+            </Button>
+
+            <Button
                 x:Name="ClearButton"
                 Margin="0,0,8,0"
                 AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
@@ -366,6 +385,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AddFilesButton.Visibility" Value="Visible" />
+                        <Setter Target="SaveAsPlaylistButton.(ToolTipService.ToolTip)" Value="{x:Bind SaveAsPlaylistButtonLabel.Text}" />
+                        <Setter Target="SaveAsPlaylistButtonLabel.Visibility" Value="Collapsed" />
                         <Setter Target="ClearButton.(ToolTipService.ToolTip)" Value="{x:Bind ClearButtonLabel.Text}" />
                         <Setter Target="ClearButtonLabel.Visibility" Value="Collapsed" />
                         <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
