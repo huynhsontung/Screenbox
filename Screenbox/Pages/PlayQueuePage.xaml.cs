@@ -1,6 +1,8 @@
-﻿#nullable enable
+#nullable enable
 
+using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,11 +20,31 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
+        /// <summary>
+        /// Code-behind command for adding a folder's media files to the play queue.
+        /// Catches errors and sends a localized error notification via the view model.
+        /// </summary>
+        public IAsyncRelayCommand AddFolderCommand { get; }
+
         public PlayQueuePage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayQueuePageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+
+            AddFolderCommand = new AsyncRelayCommand(AddFolderExecuteAsync);
+        }
+
+        private async System.Threading.Tasks.Task AddFolderExecuteAsync()
+        {
+            try
+            {
+                await ViewModel.AddFolderAsync();
+            }
+            catch (Exception e)
+            {
+                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message);
+            }
         }
 
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)

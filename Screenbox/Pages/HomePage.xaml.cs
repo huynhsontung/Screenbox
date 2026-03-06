@@ -1,6 +1,8 @@
-﻿#nullable enable
+#nullable enable
 
+using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,11 +21,31 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
+        /// <summary>
+        /// Code-behind command for opening media files.
+        /// Catches errors and sends a localized error notification via the common view model.
+        /// </summary>
+        public IAsyncRelayCommand OpenFilesCommand { get; }
+
         public HomePage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<HomePageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+
+            OpenFilesCommand = new AsyncRelayCommand(OpenFilesExecuteAsync);
+        }
+
+        private async System.Threading.Tasks.Task OpenFilesExecuteAsync()
+        {
+            try
+            {
+                await Common.OpenFilesAsync();
+            }
+            catch (Exception e)
+            {
+                Common.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message);
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

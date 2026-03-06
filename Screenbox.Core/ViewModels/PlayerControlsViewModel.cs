@@ -48,7 +48,6 @@ namespace Screenbox.Core.ViewModels
         private bool _isCompact;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
         private bool _hasVideo;
 
         [ObservableProperty]
@@ -279,7 +278,6 @@ namespace Screenbox.Core.ViewModels
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() => HasVideo = MediaPlayer?.NaturalVideoHeight > 0);
-            SaveSnapshotCommand.NotifyCanExecuteChanged();
         }
 
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
@@ -405,26 +403,34 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(HasVideo))]
-        private async Task SaveSnapshotAsync()
+        /// <summary>
+        /// Saves a snapshot of the current video frame to the Pictures library.
+        /// Throws on failure; the view layer handles error notifications.
+        /// </summary>
+        public async Task SaveSnapshotAsync()
         {
-            if (MediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
+            if (MediaPlayer?.PlaybackState is not (MediaPlaybackState.Paused or MediaPlaybackState.Playing)) return;
+            try
             {
-                try
-                {
-                    StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
-                    Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
-                }
-                catch (Exception e)
-                {
-                    Messenger.Send(new ErrorMessage(null, e.ToString()));
-                    // TODO: track error
-                }
+                StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
+                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
             }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
+            }
+            // Other exceptions propagate to the caller for localized error notification
+        }
+
+        /// <summary>
+        /// Sends an error notification message via the messenger.
+        /// The view layer calls this with a localized title after an operation fails.
+        /// </summary>
+        /// <param name="title">The localized notification title.</param>
+        /// <param name="message">The error detail message.</param>
+        public void SendErrorMessage(string? title, string message)
+        {
+            Messenger.Send(new ErrorMessage(title, message));
         }
 
         private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)

@@ -3,7 +3,6 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -18,7 +17,8 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
 {
     [ObservableProperty] private bool _hasContent;
 
-    private bool LibraryLoaded => _libraryContext.MusicLibrary != null;
+    /// <summary>Gets a value indicating whether the Music library is available, used to enable the add-folder command.</summary>
+    public bool LibraryLoaded => _libraryContext.MusicLibrary != null;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -41,20 +41,26 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     public void UpdateSongs()
     {
         HasContent = _libraryContext.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
-        AddFolderCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(LibraryLoaded));
     }
 
-
-    [RelayCommand(CanExecute = nameof(LibraryLoaded))]
-    private async Task AddFolder()
+    /// <summary>
+    /// Requests adding a new folder to the Music library.
+    /// Throws on failure; the view layer handles the error notification.
+    /// </summary>
+    public async Task AddFolderAsync()
     {
-        try
-        {
-            await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
-        }
-        catch (Exception e)
-        {
-            Messenger.Send(new ErrorMessage(null, e.Message));
-        }
+        await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
+    }
+
+    /// <summary>
+    /// Sends an error notification message via the messenger.
+    /// The view layer calls this with a localized title after an operation fails.
+    /// </summary>
+    /// <param name="title">The localized notification title.</param>
+    /// <param name="message">The error detail message.</param>
+    public void SendErrorMessage(string? title, string message)
+    {
+        Messenger.Send(new ErrorMessage(title, message));
     }
 }

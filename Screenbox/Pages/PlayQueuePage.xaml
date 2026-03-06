@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.PlayQueuePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,14 +21,14 @@
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
                 AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
-                Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
+                Command="{x:Bind PlayQueue.AddFilesCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderOpenGlyph}}"
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
                 x:Name="AddToPlayQueueMenuFlyoutFolderItem"
                 AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
-                Command="{x:Bind ViewModel.AddFolderCommand}"
+                Command="{x:Bind AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderListGlyph}}"
                 Text="{strings:Resources Key=AddFolder}" />
@@ -74,7 +74,7 @@
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderAddButtonText.Text}"
-                Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
+                Command="{x:Bind PlayQueue.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon

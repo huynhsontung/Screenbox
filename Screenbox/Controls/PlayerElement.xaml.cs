@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
@@ -33,6 +33,16 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
+
+            // Observe initialization errors and send a localized error notification via the view model
+            ViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(PlayerElementViewModel.InitializationError)
+                    && ViewModel.InitializationError is { } error)
+                {
+                    ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToInitializeNotificationTitle, error.Message);
+                }
+            };
         }
 
         private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
@@ -53,20 +63,5 @@ namespace Screenbox.Controls
             ViewModel.OnClick();
             Click?.Invoke(sender, e);
         }
-
-        // private void PlayerElement_OnLoaded(object sender, RoutedEventArgs e)
-        // {
-        //     ViewModel.ClearViewRequested += ViewModelOnClearViewRequested;
-        // }
-        //
-        // private void PlayerElement_OnUnloaded(object sender, RoutedEventArgs e)
-        // {
-        //     ViewModel.ClearViewRequested -= ViewModelOnClearViewRequested;
-        // }
-        //
-        // private void ViewModelOnClearViewRequested(object sender, EventArgs e)
-        // {
-        //     VlcVideoView.Clear();
-        // }
     }
 }

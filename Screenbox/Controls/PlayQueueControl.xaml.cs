@@ -1,10 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
 using Screenbox.Extensions;
@@ -35,6 +36,12 @@ namespace Screenbox.Controls
 
         internal CommonViewModel Common { get; }
 
+        /// <summary>
+        /// Code-behind command for adding files to the play queue.
+        /// Catches errors and sends a localized error notification via the view model.
+        /// </summary>
+        public IAsyncRelayCommand AddFilesCommand { get; }
+
         private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
 
         public PlayQueueControl()
@@ -42,6 +49,20 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayQueueViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+
+            AddFilesCommand = new AsyncRelayCommand(AddFilesExecuteAsync);
+        }
+
+        private async Task AddFilesExecuteAsync()
+        {
+            try
+            {
+                await ViewModel.AddFilesAsync();
+            }
+            catch (Exception e)
+            {
+                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message);
+            }
         }
 
         public async Task SmoothScrollActiveItemIntoViewAsync()

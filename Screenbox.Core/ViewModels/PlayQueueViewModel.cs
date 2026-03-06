@@ -207,18 +207,25 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         SelectionCount = 0;
     }
 
-    [RelayCommand]
-    private async Task AddFilesAsync()
+    /// <summary>
+    /// Opens a file picker for the user to select files to add to the play queue.
+    /// Throws on failure; the view layer handles the error notification.
+    /// </summary>
+    public async Task AddFilesAsync()
     {
-        try
-        {
-            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return;
-            await Playlist.EnqueueAsync(files);
-        }
-        catch (Exception e)
-        {
-            Messenger.Send(new ErrorMessage(null, e.Message));
-        }
+        IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+        if (files == null || files.Count == 0) return;
+        await Playlist.EnqueueAsync(files);
+    }
+
+    /// <summary>
+    /// Sends an error notification message via the messenger.
+    /// The view layer calls this with a localized title after an operation fails.
+    /// </summary>
+    /// <param name="title">The localized notification title.</param>
+    /// <param name="message">The error detail message.</param>
+    public void SendErrorMessage(string? title, string message)
+    {
+        Messenger.Send(new ErrorMessage(title, message));
     }
 }

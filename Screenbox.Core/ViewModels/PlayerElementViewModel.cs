@@ -33,6 +33,24 @@ namespace Screenbox.Core.ViewModels
 
         public MediaPlayer? VlcPlayer => VlcMediaPlayer?.VlcPlayer;
 
+        /// <summary>
+        /// The last initialization error from <see cref="Initialize"/>, set when VLC could not
+        /// initialize with the requested settings and fell back to defaults.
+        /// The view observes this property and sends a localized error notification.
+        /// </summary>
+        public Exception? InitializationError
+        {
+            get => _initializationError;
+            private set
+            {
+                _initializationError = value;
+                // Always notify so the view can react on every failure
+                OnPropertyChanged();
+            }
+        }
+
+        private Exception? _initializationError;
+
         private VlcMediaPlayer? VlcMediaPlayer
         {
             get => _playerContext.MediaPlayer as VlcMediaPlayer;
@@ -121,7 +139,7 @@ namespace Screenbox.Core.ViewModels
                 catch (VLCException e)
                 {
                     player = _playerService.Initialize(swapChainOptions);
-                    Messenger.Send(new ErrorMessage(null, e.Message));
+                    _dispatcherQueue.TryEnqueue(() => InitializationError = e);
                 }
 
                 if (player is not VlcMediaPlayer vlcMediaPlayer)
@@ -140,6 +158,17 @@ namespace Screenbox.Core.ViewModels
         private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
         {
             if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Sends an error notification message via the messenger.
+        /// The view layer calls this with a localized title after an initialization failure.
+        /// </summary>
+        /// <param name="title">The localized notification title.</param>
+        /// <param name="message">The error detail message.</param>
+        public void SendErrorMessage(string? title, string message)
+        {
+            Messenger.Send(new ErrorMessage(title, message));
         }
 
         public void OnClick()

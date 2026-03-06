@@ -1,11 +1,12 @@
-﻿#nullable enable
+#nullable enable
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -31,6 +32,12 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
+        /// <summary>
+        /// Code-behind command for adding a folder to the Videos library.
+        /// Catches errors and sends a localized error notification via the view model.
+        /// </summary>
+        public IAsyncRelayCommand AddFolderCommand { get; }
+
         private readonly Dictionary<string, Type> _pages;
 
         public VideosPage()
@@ -39,11 +46,32 @@ namespace Screenbox.Pages
             DataContext = Ioc.Default.GetRequiredService<VideosPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
 
+            AddFolderCommand = new AsyncRelayCommand(AddFolderExecuteAsync, () => ViewModel.HasLibrary);
+
+            // Keep AddFolderCommand CanExecute in sync with ViewModel.LibraryLoaded
+            ViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(VideosPageViewModel.HasLibrary))
+                    AddFolderCommand.NotifyCanExecuteChanged();
+            };
+
             _pages = new Dictionary<string, Type>
             {
                 { "folders", typeof(FolderViewPage) },
                 { "all", typeof(AllVideosPage) }
             };
+        }
+
+        private async System.Threading.Tasks.Task AddFolderExecuteAsync()
+        {
+            try
+            {
+                await ViewModel.AddFolderAsync();
+            }
+            catch (Exception e)
+            {
+                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToAddFolderNotificationTitle, e.Message);
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

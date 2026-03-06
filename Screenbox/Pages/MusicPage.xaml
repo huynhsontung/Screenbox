@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.MusicPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -81,7 +81,7 @@
                 <Button
                     AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
-                    Command="{x:Bind ViewModel.AddFolderCommand}"
+                    Command="{x:Bind AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
@@ -150,7 +150,7 @@
                     VerticalAlignment="Top"
                     AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
-                    Command="{x:Bind ViewModel.AddFolderCommand}"
+                    Command="{x:Bind AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <StackPanel Orientation="Horizontal">

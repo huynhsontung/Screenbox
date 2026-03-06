@@ -12,7 +12,6 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
-using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -113,9 +112,6 @@ sealed partial class App : Application
                 provider.GetRequiredService<IFilesService>(),
                 provider.GetRequiredService<ISettingsService>(),
                 Strings.Resources.Default, "ms-appx:///Assets/DefaultAudioVisual.png"));
-
-        // Factories
-        services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
 
         // Services
         services.AddSingleton<IVlcDialogService, VlcDialogService>();

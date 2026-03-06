@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
+using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
@@ -20,13 +21,6 @@ namespace Screenbox.Services
     public sealed class VlcDialogService : IVlcDialogService
     {
         private string? _progressTitle;
-
-        private readonly Func<IVlcLoginDialog> _vlcLoginDialogFactory;
-
-        public VlcDialogService(Func<IVlcLoginDialog> vlcLoginDialogFactory)
-        {
-            _vlcLoginDialogFactory = vlcLoginDialogFactory;
-        }
 
         /// <inheritdoc/>
         public void SetVlcDialogHandlers(LibVLC libVlc)
@@ -61,7 +55,7 @@ namespace Screenbox.Services
         private async Task DisplayLoginDialog(Dialog dialog, string? title, string? text, string? defaultUsername, bool askStore, CancellationToken token)
         {
             if (token.IsCancellationRequested) return;
-            IVlcLoginDialog loginDialog = _vlcLoginDialogFactory();
+            IVlcLoginDialog loginDialog = new VLCLoginDialog();
             loginDialog.Title = title ?? string.Empty;
             loginDialog.Text = text;
             loginDialog.Username = defaultUsername;

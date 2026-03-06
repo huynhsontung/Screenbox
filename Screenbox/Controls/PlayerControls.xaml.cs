@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Linq;
@@ -36,6 +36,18 @@ namespace Screenbox.Controls
 
         internal CommonViewModel Common { get; }
 
+        /// <summary>
+        /// Code-behind command for saving a video frame snapshot.
+        /// Catches errors and sends a localized error notification via the view model.
+        /// </summary>
+        public IAsyncRelayCommand SaveSnapshotCommand { get; }
+
+        /// <summary>
+        /// Code-behind command for opening media files.
+        /// Catches errors and sends a localized error notification via the common view model.
+        /// </summary>
+        public IAsyncRelayCommand OpenFilesCommand { get; }
+
         private Flyout? _castFlyout;
 
         public PlayerControls()
@@ -45,6 +57,40 @@ namespace Screenbox.Controls
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
             AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
+
+            SaveSnapshotCommand = new AsyncRelayCommand(SaveSnapshotExecuteAsync, () => ViewModel.HasVideo);
+            OpenFilesCommand = new AsyncRelayCommand(OpenFilesExecuteAsync);
+
+            // Keep SaveSnapshotCommand CanExecute in sync with ViewModel.HasVideo
+            ViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(PlayerControlsViewModel.HasVideo))
+                    SaveSnapshotCommand.NotifyCanExecuteChanged();
+            };
+        }
+
+        private async System.Threading.Tasks.Task SaveSnapshotExecuteAsync()
+        {
+            try
+            {
+                await ViewModel.SaveSnapshotAsync();
+            }
+            catch (Exception e)
+            {
+                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToSaveFrameNotificationTitle, e.ToString());
+            }
+        }
+
+        private async System.Threading.Tasks.Task OpenFilesExecuteAsync()
+        {
+            try
+            {
+                await Common.OpenFilesAsync();
+            }
+            catch (Exception e)
+            {
+                Common.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message);
+            }
         }
 
         private void ShowSubtitleOptions()
@@ -165,3 +211,4 @@ namespace Screenbox.Controls
         }
     }
 }
+

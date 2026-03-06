@@ -15,6 +15,12 @@ namespace Screenbox.Controls
         public IRelayCommand? ShowAudioOptionsCommand { get; set; }
 
         /// <summary>
+        /// Code-behind command for adding a subtitle file.
+        /// Catches errors and sends a localized error notification via the view model.
+        /// </summary>
+        public IAsyncRelayCommand AddSubtitleCommand { get; }
+
+        /// <summary>
         /// View-level subtitle track list that prepends a localized "Disable" entry to
         /// <see cref="CompositeTrackPickerViewModel.SubtitleTracks"/> and applies "Track N"
         /// fallback labels for unlabeled tracks. The subtitle ListView binds to this list.
@@ -40,10 +46,24 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<CompositeTrackPickerViewModel>();
 
+            AddSubtitleCommand = new AsyncRelayCommand(AddSubtitleExecuteAsync);
+
             ViewModel.SubtitleTracks.CollectionChanged += (_, _) => RebuildSubtitleDisplayList();
             ViewModel.AudioTracks.CollectionChanged += (_, _) => RebuildAudioDisplayList();
             ViewModel.VideoTracks.CollectionChanged += (_, _) => RebuildVideoDisplayList();
             ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        private async System.Threading.Tasks.Task AddSubtitleExecuteAsync()
+        {
+            try
+            {
+                await ViewModel.AddSubtitleAsync();
+            }
+            catch (System.Exception e)
+            {
+                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToLoadSubtitleNotificationTitle, e.ToString());
+            }
         }
 
         /// <summary>Formats a track's display name, falling back to "Track N" when the label is empty.</summary>
