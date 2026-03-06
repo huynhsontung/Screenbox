@@ -6,7 +6,6 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -21,6 +20,48 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <MenuFlyout x:Name="ItemFlyout">
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayGlyph}}"
+                    Text="{x:Bind strings:Resources.Play}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.PlayNextCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayAddGlyph}}"
+                    Text="{x:Bind strings:Resources.PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{x:Bind strings:Resources.AddToQueue}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{StaticResource ShowPropertiesCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
+                    Text="{strings:Resources Key=Properties}" />
+                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
+                <MenuFlyoutItem
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Setting}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
+                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
+                    <MenuFlyoutItem.Command>
+                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -63,6 +104,7 @@
                 <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
+                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                 <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>
