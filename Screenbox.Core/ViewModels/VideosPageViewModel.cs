@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -15,7 +14,6 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Navigation;
-using IResourceService = Screenbox.Core.Services.IResourceService;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -26,16 +24,15 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
 
     [ObservableProperty] private bool _hasVideos;
 
-    private bool HasLibrary => _libraryContext.VideosLibrary != null;
+    /// <summary>Gets a value indicating whether the Videos library is available, used to enable the add-folder command.</summary>
+    public bool HasLibrary => _libraryContext.VideosLibrary != null;
 
     private readonly LibraryContext _libraryContext;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public VideosPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
+    public VideosPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _resourceService = resourceService;
         _hasVideos = true;
         Breadcrumbs = new ObservableCollection<StorageFolder>();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -54,7 +51,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
             Breadcrumbs.Add(firstFolder);
         HasVideos = _libraryContext.Videos.Count > 0;
-        AddFolderCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(HasLibrary));
     }
 
     public void OnContentFrameNavigated(object sender, NavigationEventArgs e)
@@ -96,17 +93,23 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         }
     }
 
-    [RelayCommand(CanExecute = nameof(HasLibrary))]
-    private async Task AddFolder()
+    /// <summary>
+    /// Requests adding a new folder to the Videos library.
+    /// Throws on failure; the view layer handles the error notification.
+    /// </summary>
+    public async Task AddFolderAsync()
     {
-        try
-        {
-            await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
-        }
-        catch (Exception e)
-        {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
-        }
+        await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
+    }
+
+    /// <summary>
+    /// Sends an error notification message via the messenger.
+    /// The view layer calls this with a localized title after an operation fails.
+    /// </summary>
+    /// <param name="title">The localized notification title.</param>
+    /// <param name="message">The error detail message.</param>
+    public void SendErrorMessage(string? title, string message)
+    {
+        Messenger.Send(new ErrorMessage(title, message));
     }
 }

@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Enums;
-using Screenbox.Core.ViewModels;
+using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

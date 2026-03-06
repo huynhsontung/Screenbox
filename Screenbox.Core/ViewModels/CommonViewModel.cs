@@ -34,7 +34,6 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
@@ -42,14 +41,12 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        IResourceService resourceService,
         ISettingsService settingsService,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
@@ -136,19 +133,25 @@ public sealed partial class CommonViewModel : ObservableRecipient,
             new NavigationMetadata(typeof(PlaylistsPageViewModel), playlist));
     }
 
-    [RelayCommand]
-    private async Task OpenFilesAsync()
+    /// <summary>
+    /// Opens a file picker for the user to select one or more media files to play.
+    /// Throws on failure; the view layer handles the error notification.
+    /// </summary>
+    public async Task OpenFilesAsync()
     {
-        try
-        {
-            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return;
-            Messenger.Send(new PlayMediaMessage(files));
-        }
-        catch (Exception e)
-        {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
-        }
+        IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+        if (files == null || files.Count == 0) return;
+        Messenger.Send(new PlayMediaMessage(files));
+    }
+
+    /// <summary>
+    /// Sends an error notification message via the messenger.
+    /// The view layer calls this with a localized title after an operation fails.
+    /// </summary>
+    /// <param name="title">The localized notification title.</param>
+    /// <param name="message">The error detail message.</param>
+    public void SendErrorMessage(string? title, string message)
+    {
+        Messenger.Send(new ErrorMessage(title, message));
     }
 }

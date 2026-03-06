@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
@@ -9,64 +11,60 @@ using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace Screenbox.Controls
+namespace Screenbox.Controls;
+
+public sealed partial class PlayerElement : UserControl
 {
-    public sealed partial class PlayerElement : UserControl
+    public static readonly DependencyProperty ButtonMarginProperty = DependencyProperty.Register(
+        nameof(ButtonMargin),
+        typeof(Thickness),
+        typeof(PlayerElement),
+        new PropertyMetadata(default(Thickness)));
+
+    public Thickness ButtonMargin
     {
-        public static readonly DependencyProperty ButtonMarginProperty = DependencyProperty.Register(
-            nameof(ButtonMargin),
-            typeof(Thickness),
-            typeof(PlayerElement),
-            new PropertyMetadata(default(Thickness)));
+        get => (Thickness)GetValue(ButtonMarginProperty);
+        set => SetValue(ButtonMarginProperty, value);
+    }
 
-        public Thickness ButtonMargin
+    public event RoutedEventHandler? Click;
+
+    internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
+
+    public PlayerElement()
+    {
+        this.InitializeComponent();
+        DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
+    }
+
+    private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
+    {
+        // Try to init VLC player on non-UI thread
+        Task.Run(() =>
         {
-            get => (Thickness)GetValue(ButtonMarginProperty);
-            set => SetValue(ButtonMarginProperty, value);
-        }
+            try
+            {
+                ViewModel.Initialize(e.SwapChainOptions);
+            }
+            catch (Exception e)
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                    ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToInitializeNotificationTitle, e.Message));
+            }
+        });
+    }
 
-        public event RoutedEventHandler? Click;
+    private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (!IsEnabled) return;
+        ViewModel.OnClick();
+        Click?.Invoke(sender, e);
+    }
 
-        internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
-
-        public PlayerElement()
-        {
-            this.InitializeComponent();
-            DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
-        }
-
-        private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
-        {
-            ViewModel.Initialize(e.SwapChainOptions);
-        }
-
-        private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (!IsEnabled) return;
-            ViewModel.OnClick();
-            Click?.Invoke(sender, e);
-        }
-
-        private void VideoViewButton_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            if (!IsEnabled) return;
-            ViewModel.OnClick();
-            Click?.Invoke(sender, e);
-        }
-
-        // private void PlayerElement_OnLoaded(object sender, RoutedEventArgs e)
-        // {
-        //     ViewModel.ClearViewRequested += ViewModelOnClearViewRequested;
-        // }
-        //
-        // private void PlayerElement_OnUnloaded(object sender, RoutedEventArgs e)
-        // {
-        //     ViewModel.ClearViewRequested -= ViewModelOnClearViewRequested;
-        // }
-        //
-        // private void ViewModelOnClearViewRequested(object sender, EventArgs e)
-        // {
-        //     VlcVideoView.Clear();
-        // }
+    private void VideoViewButton_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        if (!IsEnabled) return;
+        ViewModel.OnClick();
+        Click?.Invoke(sender, e);
     }
 }

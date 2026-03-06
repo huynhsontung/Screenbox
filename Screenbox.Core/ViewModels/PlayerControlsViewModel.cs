@@ -48,7 +48,6 @@ namespace Screenbox.Core.ViewModels
         private bool _isCompact;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
         private bool _hasVideo;
 
         [ObservableProperty]
@@ -59,7 +58,6 @@ namespace Screenbox.Core.ViewModels
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
-        private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
         private readonly PlayerContext _playerContext;
         private Size _aspectRatio;
@@ -68,12 +66,10 @@ namespace Screenbox.Core.ViewModels
             MediaListViewModel playlist,
             ISettingsService settingsService,
             IWindowService windowService,
-            IResourceService resourceService,
             PlayerContext playerContext)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _windowService = windowService;
-            _resourceService = resourceService;
             _settingsService = settingsService;
             _playerContext = playerContext;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
@@ -168,18 +164,21 @@ namespace Screenbox.Core.ViewModels
         /// </list>
         /// </remarks>
         /// <param name="modifiers">The modifier keys held during the key press.</param>
-        /// <returns><see langword="true"/> if the toggle operation was successful; otherwise, <see langword="false"/>.</returns>
-        public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
+        /// <returns>
+        /// A tuple where <c>Handled</c> is <see langword="true"/> if the toggle succeeded, and
+        /// <c>TrackLabel</c> is the label of the newly selected track, or <see langword="null"/> if subtitles were disabled.
+        /// </returns>
+        public (bool Handled, string? TrackLabel) ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
         {
             if (MediaPlayer?.PlaybackItem is null)
             {
-                return false;
+                return (false, null);
             }
 
             PlaybackSubtitleTrackList subtitleTracks = MediaPlayer.PlaybackItem.SubtitleTracks;
             if (subtitleTracks.Count == 0)
             {
-                return false;
+                return (false, null);
             }
 
             switch (modifiers)
@@ -218,15 +217,24 @@ namespace Screenbox.Core.ViewModels
 
                     break;
                 default:
-                    return false;
+                    return (false, null);
             }
 
-            string status = subtitleTracks.SelectedIndex == -1
-                ? _resourceService.GetString(ResourceName.SubtitleStatus, _resourceService.GetString(ResourceName.None))
-                : _resourceService.GetString(ResourceName.SubtitleStatus, subtitleTracks[subtitleTracks.SelectedIndex].Label);
+            string? label = subtitleTracks.SelectedIndex == -1
+                ? null
+                : subtitleTracks[subtitleTracks.SelectedIndex].Label;
 
-            Messenger.Send(new UpdateStatusMessage(status));
-            return true;
+            return (true, label);
+        }
+
+        /// <summary>
+        /// Sends a status message via the messenger.
+        /// The view layer should call this after formatting a localized status string.
+        /// </summary>
+        /// <param name="message">The formatted status message to display.</param>
+        public void SendStatusMessage(string? message)
+        {
+            Messenger.Send(new UpdateStatusMessage(message));
         }
 
         partial void OnPlaybackSpeedChanged(double value)
@@ -270,7 +278,6 @@ namespace Screenbox.Core.ViewModels
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() => HasVideo = MediaPlayer?.NaturalVideoHeight > 0);
-            SaveSnapshotCommand.NotifyCanExecuteChanged();
         }
 
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
@@ -396,27 +403,34 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(HasVideo))]
-        private async Task SaveSnapshotAsync()
+        /// <summary>
+        /// Saves a snapshot of the current video frame to the Pictures library.
+        /// Throws on failure; the view layer handles error notifications.
+        /// </summary>
+        public async Task SaveSnapshotAsync()
         {
-            if (MediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
+            if (MediaPlayer?.PlaybackState is not (MediaPlaybackState.Paused or MediaPlaybackState.Playing)) return;
+            try
             {
-                try
-                {
-                    StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
-                    Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
-                }
-                catch (Exception e)
-                {
-                    Messenger.Send(new ErrorMessage(
-                        _resourceService.GetString(ResourceName.FailedToSaveFrameNotificationTitle), e.ToString()));
-                    // TODO: track error
-                }
+                StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
+                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
             }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
+            }
+            // Other exceptions propagate to the caller for localized error notification
+        }
+
+        /// <summary>
+        /// Sends an error notification message via the messenger.
+        /// The view layer calls this with a localized title after an operation fails.
+        /// </summary>
+        /// <param name="title">The localized notification title.</param>
+        /// <param name="message">The error detail message.</param>
+        public void SendErrorMessage(string? title, string message)
+        {
+            Messenger.Send(new ErrorMessage(title, message));
         }
 
         private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)

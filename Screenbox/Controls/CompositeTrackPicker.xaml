@@ -21,7 +21,7 @@
         <!--  Video tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.VideoTracks}"
+            ItemsSource="{x:Bind VideoDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.VideoTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -50,7 +50,7 @@
         <!--  Audio tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.AudioTracks}"
+            ItemsSource="{x:Bind AudioDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -92,10 +92,11 @@
 
         <!--  Subtitle tracks  -->
         <ListView
+            x:Name="SubtitleTrackListView"
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
+            ItemsSource="{x:Bind SubtitleDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
-            SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
+            SelectionChanged="SubtitleTrackListView_SelectionChanged"
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.ItemTemplate>
@@ -144,7 +145,7 @@
                     Padding="12,4"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Left"
-                    Command="{x:Bind ViewModel.AddSubtitleCommand}"
+                    Command="{x:Bind AddSubtitleCommand}"
                     Content="{strings:Resources Key=AddSubtitle}"
                     Style="{StaticResource SubtleButtonStyle}">
                     <Button.Resources>

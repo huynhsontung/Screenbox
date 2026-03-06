@@ -90,7 +90,7 @@
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
-                    Command="{x:Bind Common.OpenFilesCommand}"
+                    Command="{x:Bind OpenFilesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderOpenGlyph}}"
                     Text="{strings:Resources Key=OpenFiles}" />
@@ -140,7 +140,7 @@
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderOpenButtonText.Text}"
-                Command="{x:Bind Common.OpenFilesCommand}"
+                Command="{x:Bind OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
@@ -210,7 +210,7 @@
                     AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                     AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
-                    Command="{x:Bind Common.OpenFilesCommand}"
+                    Command="{x:Bind OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"
                     Style="{StaticResource AccentSplitButtonStyle}">
                     <StackPanel Orientation="Horizontal">

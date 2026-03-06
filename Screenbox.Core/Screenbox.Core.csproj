@@ -132,7 +132,6 @@
     <Compile Include="Contexts\PlaylistsContext.cs" />
     <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
-    <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
@@ -140,8 +139,6 @@
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />
     <Compile Include="Events\FolderViewNavigationEventArgs.cs" />
-    <Compile Include="Events\NotificationRaisedEventArgs.cs" />
-    <Compile Include="Events\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Events\RendererEventArgs.cs" />
     <Compile Include="Events\ValueChangedEventArgs.cs" />
     <Compile Include="Events\ViewModeChangedEventArgs.cs" />
@@ -184,6 +181,7 @@
     <Compile Include="Messages\RaiseLibraryAccessDeniedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseResumePositionNotificationMessage.cs" />
+    <Compile Include="Messages\RaiseNotificationMessage.cs" />
     <Compile Include="Messages\RefreshFolderMessage.cs" />
     <Compile Include="Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Messages\SettingsChangedMessage.cs" />
@@ -204,7 +202,7 @@
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
-	<Compile Include="Models\PersistentPlaylist.cs" />
+    <Compile Include="Models\PersistentPlaylist.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
@@ -239,11 +237,10 @@
     <Compile Include="Services\ILivelyWallpaperService.cs" />
     <Compile Include="Factories\IMediaListFactory.cs" />
     <Compile Include="Services\INavigationService.cs" />
-    <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
     <Compile Include="Services\IPlayerService.cs" />
+    <Compile Include="Services\IVlcDialogService.cs" />
     <Compile Include="Services\IPlaylistService.cs" />
-    <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
@@ -254,7 +251,6 @@
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Factories\MediaListFactory.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaybackControlService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
@@ -286,7 +282,6 @@
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\MusicPageViewModel.cs" />
     <Compile Include="ViewModels\NetworkPageViewModel.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
@@ -295,7 +290,6 @@
     <Compile Include="ViewModels\PlayQueueViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsPageViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
-    <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />

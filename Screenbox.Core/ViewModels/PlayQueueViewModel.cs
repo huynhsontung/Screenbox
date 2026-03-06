@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -42,14 +41,12 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     private bool _hasItems;
 
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
+    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService)
     {
         Playlist = playlist;
         _filesService = filesService;
-        _resourceService = resourceService;
         SelectionCheckState = GetSelectionCheckState(_selectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -210,19 +207,25 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         SelectionCount = 0;
     }
 
-    [RelayCommand]
-    private async Task AddFilesAsync()
+    /// <summary>
+    /// Opens a file picker for the user to select files to add to the play queue.
+    /// Throws on failure; the view layer handles the error notification.
+    /// </summary>
+    public async Task AddFilesAsync()
     {
-        try
-        {
-            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return;
-            await Playlist.EnqueueAsync(files);
-        }
-        catch (Exception e)
-        {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
-        }
+        IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+        if (files == null || files.Count == 0) return;
+        await Playlist.EnqueueAsync(files);
+    }
+
+    /// <summary>
+    /// Sends an error notification message via the messenger.
+    /// The view layer calls this with a localized title after an operation fails.
+    /// </summary>
+    /// <param name="title">The localized notification title.</param>
+    /// <param name="message">The error detail message.</param>
+    public void SendErrorMessage(string? title, string message)
+    {
+        Messenger.Send(new ErrorMessage(title, message));
     }
 }
