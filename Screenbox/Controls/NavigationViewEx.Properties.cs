@@ -20,9 +20,13 @@ public sealed partial class NavigationViewEx
         nameof(Overlay), typeof(UIElement), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the content to be displayed as an overlay. By default, the overlay appears
-    /// between the <see cref="Windows.UI.Xaml.Controls.SplitView"/> pane and the content area, but its order can be adjusted.
+    /// Gets or sets the content to be displayed as an overlay.
     /// </summary>
+    /// <value>An element that contains the overlay's content. The default is <see langword="null"/>.</value>
+    /// <remarks>
+    /// By default, the overlay appears between the <see cref="SplitView"/> pane
+    /// and the content area, the order can be adjusted with the <see cref="OverlayZIndex"/>
+    /// property.</remarks>
     public UIElement? Overlay
     {
         get => (UIElement?)GetValue(OverlayProperty);
@@ -36,9 +40,10 @@ public sealed partial class NavigationViewEx
         nameof(OverlayZIndex), typeof(int), typeof(NavigationViewEx), new PropertyMetadata(0, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the Z-order of the overlay element.
+    /// Gets or sets the Z-order of the <see cref="Overlay"/>, relative to other
+    /// active regions on the screen.
     /// </summary>
-    /// <value>The ZIndex value in the range ±1,000,000. The default is 0.</value>
+    /// <value>The Z-order of the <see cref="Overlay"/>. The default is 0.</value>
     /// <remarks>
     /// Values above 1 will render the element above the navigation pane,
     /// and values below -1 renders the element below the main content.
@@ -58,6 +63,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the visibility of everything except the overlay element.
     /// </summary>
+    /// <value>A value of the enumeration. The default value is <b>Visible</b>.</value>
     public Visibility ContentVisibility
     {
         get => (Visibility)GetValue(ContentVisibilityProperty);
@@ -73,6 +79,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the back button.
     /// </summary>
+    /// <value>The access key (mnemonic) for the back button.</value>
     public string? BackButtonAccessKey
     {
         get => (string?)GetValue(BackButtonAccessKeyProperty);
@@ -88,6 +95,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the back button.
     /// </summary>
+    /// <value>The collection of <see cref="KeyboardAccelerator"/> objects.</value>
     public IList<KeyboardAccelerator>? BackButtonKeyboardAccelerators
     {
         get => (IList<KeyboardAccelerator>?)GetValue(BackButtonKeyboardAcceleratorsProperty);
@@ -103,6 +111,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the style that defines the look of the back button.
     /// </summary>
+    /// <value>The Style that defines the look of the back button. The default is <see langword="null"/>.</value>
     public Style? BackButtonStyle
     {
         get => (Style?)GetValue(BackButtonStyleProperty);
@@ -118,6 +127,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the close button.
     /// </summary>
+    /// <value>The access key (mnemonic) for the close button.</value>
     public string? CloseButtonAccessKey
     {
         get => (string?)GetValue(CloseButtonAccessKeyProperty);
@@ -133,6 +143,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the close button.
     /// </summary>
+    /// <value>The collection of <see cref="KeyboardAccelerator"/> objects.</value>
     public IList<KeyboardAccelerator>? CloseButtonKeyboardAccelerators
     {
         get => (IList<KeyboardAccelerator>?)GetValue(CloseButtonKeyboardAcceleratorsProperty);
@@ -148,6 +159,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the menu toggle button.
     /// </summary>
+    /// <value>The access key (mnemonic) for the menu toggle button.</value>
     public string? PaneToggleButtonAccessKey
     {
         get => (string?)GetValue(PaneToggleButtonAccessKeyProperty);
@@ -163,6 +175,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the menu toggle button.
     /// </summary>
+    /// <value>The collection of <see cref="KeyboardAccelerator"/> objects.</value>
     public IList<KeyboardAccelerator>? PaneToggleButtonKeyboardAccelerators
     {
         get => (IList<KeyboardAccelerator>?)GetValue(PaneToggleButtonKeyboardAcceleratorsProperty);
@@ -178,6 +191,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the search button.
     /// </summary>
+    /// <value>The access key (mnemonic) for the search button.</value>
     public string? PaneSearchButtonAccessKey
     {
         get => (string?)GetValue(PaneSearchButtonAccessKeyProperty);
@@ -193,6 +207,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the search button.
     /// </summary>
+    /// <value>The collection of <see cref="KeyboardAccelerator"/> objects.</value>
     public IList<KeyboardAccelerator>? PaneSearchButtonKeyboardAccelerators
     {
         get => (IList<KeyboardAccelerator>?)GetValue(PaneSearchButtonKeyboardAcceleratorsProperty);
@@ -208,6 +223,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the style that defines the look of the search button.
     /// </summary>
+    /// <value>The Style that defines the look of the search button. The default is <see langword="null"/>.</value>
     public Style? PaneSearchButtonStyle
     {
         get => (Style?)GetValue(PaneSearchButtonStyleProperty);
@@ -223,6 +239,7 @@ public sealed partial class NavigationViewEx
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the settings navigation view item.
     /// </summary>
+    /// <value>The access key (mnemonic) for the settings navigation view item.</value>
     public string? SettingsItemAccessKey
     {
         get => (string?)GetValue(SettingsItemAccessKeyProperty);
@@ -236,8 +253,10 @@ public sealed partial class NavigationViewEx
         nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
-    /// Gets or sets the collection of keyboard combinations for the settings navigation view item.
+    /// Gets or sets the collection of keyboard combinations for the settings
+    /// navigation view item.
     /// </summary>
+    /// <value>The collection of <see cref="KeyboardAccelerator"/> objects.</value>
     public IList<KeyboardAccelerator>? SettingsItemKeyboardAccelerators
     {
         get => (IList<KeyboardAccelerator>?)GetValue(SettingsItemKeyboardAcceleratorsProperty);
@@ -245,18 +264,20 @@ public sealed partial class NavigationViewEx
     }
 
     /// <summary>
-    /// Identifies the <see cref="ContentAnimationDirection"/> dependency property.
+    /// Identifies the <see cref="ContentTranslationDirection"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty ContentAnimationDirectionProperty = DependencyProperty.Register(
-        nameof(ContentAnimationDirection), typeof(AnimationDirection?), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
+    public static readonly DependencyProperty ContentTranslationDirectionProperty = DependencyProperty.Register(
+        nameof(ContentTranslationDirection), typeof(AnimationDirection?), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the direction used for the translation animation of the content grid.
+    /// Gets or sets a value that determines which direction the content grid should
+    /// translate when the animation runs.
     /// </summary>
-    public AnimationDirection? ContentAnimationDirection
+    /// <value>A value of the enumeration. The default is <see langword="null"/>.</value>
+    public AnimationDirection? ContentTranslationDirection
     {
-        get => (AnimationDirection?)GetValue(ContentAnimationDirectionProperty);
-        set => SetValue(ContentAnimationDirectionProperty, value);
+        get => (AnimationDirection?)GetValue(ContentTranslationDirectionProperty);
+        set => SetValue(ContentTranslationDirectionProperty, value);
     }
 
     private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

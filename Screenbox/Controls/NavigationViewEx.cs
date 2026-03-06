@@ -98,6 +98,9 @@ public sealed partial class NavigationViewEx : NavigationView
     private Button? _backButton;
     private Button? _closeButton;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NavigationViewEx"/> class.
+    /// </summary>
     public NavigationViewEx()
     {
         DefaultStyleKey = typeof(NavigationView);
@@ -360,7 +363,7 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             UpdatePaneSearchButtonStyle();
         }
-        else if (property == ContentAnimationDirectionProperty)
+        else if (property == ContentTranslationDirectionProperty)
         {
             UpdateContentGridAnimations();
         }
@@ -538,17 +541,17 @@ public sealed partial class NavigationViewEx : NavigationView
             new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear }
         };
 
-        if (ContentAnimationDirection != null)
+        if (ContentTranslationDirection != null)
         {
             showAnimationSet.Add(new TranslationAnimation
             {
-                To = GetContentGridAnimationOffset(ContentAnimationDirection, true),
+                To = GetContentGridAnimationOffset(ContentTranslationDirection, true),
                 Duration = TimeSpan.FromMilliseconds(400),
                 EasingMode = EasingMode.EaseOut
             });
             hideAnimationSet.Add(new TranslationAnimation
             {
-                To = GetContentGridAnimationOffset(ContentAnimationDirection, false),
+                To = GetContentGridAnimationOffset(ContentTranslationDirection, false),
                 Duration = TimeSpan.FromMilliseconds(250),
                 EasingMode = EasingMode.EaseIn
             });
