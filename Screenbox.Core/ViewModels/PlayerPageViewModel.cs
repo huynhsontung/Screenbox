@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -452,7 +453,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     public bool ProcessTogglePlaybackRateKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
         const double PlaybackRateStep = 0.25;
-        const double MinRate = 0.25;
 
         if (MediaPlayer == null ||
             modifiers != VirtualKeyModifiers.Shift ||
@@ -474,10 +474,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 return false;
         }
 
-        double newRate = Math.Max(MediaPlayer.PlaybackRate + rateDelta, MinRate);
-
-        double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Round(newRate, 2)));
-        Messenger.Send(new UpdateStatusMessage($"{rate}×"));
+        double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(MediaPlayer.PlaybackRate + rateDelta, 0.25, 4)));
+        Messenger.Send(new UpdateStatusMessage($"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×"));
         return true;
     }
 

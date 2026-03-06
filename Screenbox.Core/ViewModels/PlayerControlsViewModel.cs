@@ -143,11 +143,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ChangePlaybackRateRequestMessage message)
         {
-            const double MinRate = 0.05;
-            const double MaxRate = 4.0;
-
-            double newValue = Math.Clamp(message.Value, MinRate, MaxRate);
-            SetPlaybackRate(newValue);
+            SetPlaybackRate(message.Value);
             message.Reply(PlaybackRate);
         }
 

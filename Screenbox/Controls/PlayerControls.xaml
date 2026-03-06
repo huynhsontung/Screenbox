@@ -58,7 +58,7 @@
                         Header="{strings:Resources Key=CustomPlaybackSpeed}"
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
-                        Minimum="0.05"
+                        Minimum="0"
                         SmallChange="0.01"
                         StepFrequency="0.05"
                         ValueChanged="SpeedSlider_OnValueChanged"
