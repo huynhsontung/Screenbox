@@ -25,7 +25,8 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
+    public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
+        MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
         _playlistService = playlistService;

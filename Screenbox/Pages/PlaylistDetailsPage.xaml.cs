@@ -10,6 +10,7 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Controls;
 using Screenbox.Core;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -46,11 +47,14 @@ public sealed partial class PlaylistDetailsPage : Page
     private SpriteVisual? _backgroundVisual;
     private ScrollViewer? _scrollViewer;
 
+    private readonly INotificationService _notificationService;
+
     public PlaylistDetailsPage()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlaylistDetailsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+        _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -210,6 +214,7 @@ public sealed partial class PlaylistDetailsPage : Page
         if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Name)
         {
             await ViewModel.Source.RenameAsync(newName!);
+            _notificationService.RaiseInfo(Strings.Resources.PlaylistRenamedNotificationTitle, newName!);
         }
     }
 
@@ -221,10 +226,15 @@ public sealed partial class PlaylistDetailsPage : Page
         var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
+            string name = ViewModel.Source.Name;
             bool deleted = await ViewModel.DeletePlaylistAsync();
-            if (deleted && Frame.CanGoBack)
+            if (deleted)
             {
-                Frame.GoBack();
+                _notificationService.RaiseInfo(Strings.Resources.PlaylistDeletedNotificationTitle, name);
+                if (Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                }
             }
         }
     }

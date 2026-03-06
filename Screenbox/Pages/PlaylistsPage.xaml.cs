@@ -1,10 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Controls;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,11 +22,14 @@ public sealed partial class PlaylistsPage : Page
 
     internal CommonViewModel Common { get; }
 
+    private readonly INotificationService _notificationService;
+
     public PlaylistsPage()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlaylistsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+        _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
     }
 
     private async void HeaderCreateButton_OnClick(object sender, RoutedEventArgs e)
@@ -34,6 +38,7 @@ public sealed partial class PlaylistsPage : Page
         if (!string.IsNullOrWhiteSpace(playlistName))
         {
             await ViewModel.CreatePlaylistAsync(playlistName!);
+            _notificationService.RaiseInfo(Strings.Resources.PlaylistCreatedNotificationTitle, playlistName!);
         }
     }
 
@@ -45,6 +50,7 @@ public sealed partial class PlaylistsPage : Page
         if (!string.IsNullOrWhiteSpace(newName) && newName != playlist.Name)
         {
             await ViewModel.RenamePlaylistAsync(playlist, newName!);
+            _notificationService.RaiseInfo(Strings.Resources.PlaylistRenamedNotificationTitle, newName!);
         }
     }
 
@@ -54,6 +60,9 @@ public sealed partial class PlaylistsPage : Page
         var deleteConfirmation = new DeletePlaylistDialog(playlist.Name);
         var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
+        {
             await ViewModel.DeletePlaylistAsync(playlist);
+            _notificationService.RaiseInfo(Strings.Resources.PlaylistDeletedNotificationTitle, playlist.Name);
+        }
     }
 }
