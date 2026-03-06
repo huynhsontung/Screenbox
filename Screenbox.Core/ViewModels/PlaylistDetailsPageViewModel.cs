@@ -19,6 +19,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 {
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ExportPlaylistCommand))]
     private PlaylistViewModel? _source;
 
     private readonly IFilesService _filesService;
@@ -86,6 +87,25 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
         await Source.AddItemsAsync(mediaList);
     }
+
+    /// <summary>
+    /// Exports the current playlist to an M3U8 file chosen by the user.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanExportPlaylist))]
+    private async Task ExportPlaylistAsync()
+    {
+        if (Source == null) return;
+
+        StorageFile? file = await _filesService.PickSaveFileAsync(
+            Source.Name,
+            "M3U Playlist",
+            new List<string> { ".m3u8" });
+        if (file == null) return;
+
+        await _playlistService.ExportToM3u8Async(Source.Items, file);
+    }
+
+    private bool CanExportPlaylist() => Source?.ItemsCount > 0;
 
     public async Task<bool> DeletePlaylistAsync()
     {

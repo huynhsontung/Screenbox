@@ -232,4 +232,15 @@ public sealed class FilesService : IFilesService
 
         return picker;
     }
+
+    public IAsyncOperation<StorageFile> PickSaveFileAsync(string suggestedFileName, string description, IList<string> extensions)
+    {
+        FileSavePicker picker = new()
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            SuggestedFileName = suggestedFileName
+        };
+        picker.FileTypeChoices.Add(description, extensions);
+        return picker.PickSaveFileAsync();
+    }
 }

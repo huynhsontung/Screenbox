@@ -70,4 +70,14 @@ public interface IPlaylistService
     /// Appends media items to an existing persistent playlist and persists the updated playlist.
     /// </summary>
     Task AddToPlaylistAsync(string playlistId, IReadOnlyList<MediaViewModel> items);
+
+    /// <summary>
+    /// Export playlist items to an M3U8 file
+    /// </summary>
+    Task ExportToM3u8Async(IReadOnlyList<MediaViewModel> items, StorageFile file);
+
+    /// <summary>
+    /// Import media paths from an M3U8 file
+    /// </summary>
+    Task<IReadOnlyList<string>> ImportFromM3u8Async(StorageFile file);
 }

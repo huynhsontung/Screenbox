@@ -47,6 +47,12 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{strings:Resources Key=Delete}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.ExportPlaylistCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xEDE1;}"
+                    Text="{strings:Resources Key=ExportPlaylist}" />
             </MenuFlyout>
 
             <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
@@ -84,7 +90,7 @@
                 x:Name="HeaderText"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=Playlists}" />
-            <Button
+            <muxc:SplitButton
                 x:Name="HeaderCreateButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
@@ -96,7 +102,15 @@
                         Margin="8,0,0,0"
                         Text="{strings:Resources Key=NewPlaylist}" />
                 </StackPanel>
-            </Button>
+                <muxc:SplitButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Command="{x:Bind ViewModel.ImportPlaylistCommand}"
+                            Icon="{ui:FontIcon Glyph=&#xEB05;}"
+                            Text="{strings:Resources Key=ImportPlaylist}" />
+                    </MenuFlyout>
+                </muxc:SplitButton.Flyout>
+            </muxc:SplitButton>
         </Grid>
 
         <GridView
