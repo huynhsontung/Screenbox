@@ -11,7 +11,7 @@
 
     <x:Double x:Key="AppBarButtonDefaultWidth">68</x:Double>
 
-    <!--  Include these adjusted margin values in the command bar resources to better align with the size and layout of the default button  -->
+    <!--  Add these adjusted margin values to the CommandBar resources to ensure proper alignment with the default button size and layout.  -->
     <!--<Thickness x:Key="AppBarEllipsisButtonInnerBorderMargin">4,8,4,8</Thickness>-->
     <!--<Thickness x:Key="AppBarButtonContentViewboxMargin">16,16,0,16</Thickness>
     <Thickness x:Key="AppBarButtonContentViewboxCollapsedMargin">0,16,0,2</Thickness>
@@ -57,9 +57,9 @@
 
     <Style BasedOn="{StaticResource DefaultCommandBarStyle}" TargetType="controls:CommandBarEx" />
 
-    <!--  AppBarButton styled to resemble the default button. For complete results, use this in conjunction with the above adjusted margins  -->
-    <!--  Using styles within a command bar overrides the overflow style. To work around this, apply stretch alignment and specify width at the visual state level rather than at the style level.  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/AppBarButton_themeresources.xaml  -->
+    <!--  AppBarButton styled to resemble the default button. For optimal results, apply this style together with the adjusted margin values.  -->
+    <!--  Using styles in a CommandBar overrides the overflow style. To work around this, we set horizontal alignment to stretch and define width in visual states, not in the style setters.  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/CommonStyles/AppBarButton_themeresources.xaml  -->
     <Style x:Key="DefaultButtonAppBarButtonStyle" TargetType="AppBarButton">
         <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
@@ -199,16 +199,16 @@
                             <VisualStateGroup x:Name="ApplicationViewStates">
                                 <VisualState x:Name="FullSize">
                                     <VisualState.Setters>
-                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <!--  Change: Width added to offset the removal of the fixed-width constraint.  -->
                                         <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Compact">
                                     <VisualState.Setters>
-                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <!--  Change: Width added to offset the removal of the fixed-width constraint.  -->
                                         <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderCompactMargin}" />
                                     </VisualState.Setters>
                                     <Storyboard>
@@ -235,11 +235,11 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="TextAlignment">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Left" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Margin">
+                                            <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonTextLabelOnRightMargin}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--  Add the font size to match the default button style, to be used alongside margin overrides  -->
+                                        <!--  Change: FontSize added to align with the default button style, use with the adjusted margins.  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="FontSize">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlContentThemeFontSize}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -251,7 +251,7 @@
 
                                 <VisualState x:Name="LabelCollapsed">
                                     <VisualState.Setters>
-                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <!--  Change: Width added to offset the removal of the fixed-width constraint.  -->
                                         <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                     </VisualState.Setters>
                                     <Storyboard>
@@ -267,7 +267,7 @@
                                 <VisualState x:Name="Overflow">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.Visibility" Value="Collapsed" />
                                         <Setter Target="TextLabel.Visibility" Value="Collapsed" />
@@ -278,7 +278,7 @@
                                 <VisualState x:Name="OverflowWithToggleButtons">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.Visibility" Value="Collapsed" />
                                         <Setter Target="TextLabel.Visibility" Value="Collapsed" />
@@ -290,7 +290,7 @@
                                 <VisualState x:Name="OverflowWithMenuIcons">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.HorizontalAlignment" Value="Left" />
                                         <Setter Target="ContentViewbox.VerticalAlignment" Value="Center" />
@@ -306,7 +306,7 @@
                                 <VisualState x:Name="OverflowWithToggleButtonsAndMenuIcons">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.HorizontalAlignment" Value="Left" />
                                         <Setter Target="ContentViewbox.VerticalAlignment" Value="Center" />
@@ -361,10 +361,10 @@
 
                                 <VisualState x:Name="OverflowNormal">
                                     <VisualState.Setters>
-                                        <!--  Add AppBarButtonInnerBorder, Content and OverflowTextLabel brushes to offset the default button brushes  -->
+                                        <!--  Change: AppBarButtonInnerBorder, Content, and OverflowTextLabel brushes added to offset the default button brushes.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackground}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrush}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
@@ -377,7 +377,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPointerOver}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPointerOver}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
@@ -393,7 +393,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPressed}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPressed}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
@@ -409,7 +409,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundSubMenuOpened}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushSubMenuOpened}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
@@ -464,9 +464,9 @@
         </Setter>
     </Style>
 
-    <!--  AppBarButton styled to resemble the accent button. For complete results, use this in conjunction with the above adjusted margins  -->
-    <!--  Using styles within a command bar overrides the overflow style. To work around this, apply stretch alignment and specify width at the visual state level rather than at the style level.  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/AppBarButton_themeresources.xaml  -->
+    <!--  AppBarButton styled to resemble the accent button. For optimal results, apply this style together with the adjusted margin values.  -->
+    <!--  Using styles in a CommandBar overrides the overflow style. To work around this, we use stretch alignment and define the width in visual states, not in the style.  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/CommonStyles/AppBarButton_themeresources.xaml  -->
     <Style x:Key="AccentButtonAppBarButtonStyle" TargetType="AppBarButton">
         <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource AccentButtonForeground}" />
@@ -606,16 +606,16 @@
                             <VisualStateGroup x:Name="ApplicationViewStates">
                                 <VisualState x:Name="FullSize">
                                     <VisualState.Setters>
-                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <!--  Change: Width added to offset the removal of the fixed-width constraint.  -->
                                         <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Compact">
                                     <VisualState.Setters>
-                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <!--  Change: Width added to offset the removal of the fixed-width constraint.  -->
                                         <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderCompactMargin}" />
                                     </VisualState.Setters>
                                     <Storyboard>
@@ -642,11 +642,11 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="TextAlignment">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Left" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Margin">
+                                            <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonTextLabelOnRightMargin}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--  Add the font size to match the default button style, to be used alongside margin overrides  -->
+                                        <!--  Change: FontSize added to align with the default button style, use with the adjusted margins.  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="FontSize">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlContentThemeFontSize}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -658,7 +658,7 @@
 
                                 <VisualState x:Name="LabelCollapsed">
                                     <VisualState.Setters>
-                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <!--  Change: Width added to offset the removal of the fixed-width constraint.  -->
                                         <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                     </VisualState.Setters>
                                     <Storyboard>
@@ -674,7 +674,7 @@
                                 <VisualState x:Name="Overflow">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.Visibility" Value="Collapsed" />
                                         <Setter Target="TextLabel.Visibility" Value="Collapsed" />
@@ -685,7 +685,7 @@
                                 <VisualState x:Name="OverflowWithToggleButtons">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.Visibility" Value="Collapsed" />
                                         <Setter Target="TextLabel.Visibility" Value="Collapsed" />
@@ -697,7 +697,7 @@
                                 <VisualState x:Name="OverflowWithMenuIcons">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.HorizontalAlignment" Value="Left" />
                                         <Setter Target="ContentViewbox.VerticalAlignment" Value="Center" />
@@ -713,7 +713,7 @@
                                 <VisualState x:Name="OverflowWithToggleButtonsAndMenuIcons">
                                     <VisualState.Setters>
                                         <Setter Target="ContentRoot.MinHeight" Value="0" />
-                                        <!--  Change StaticResource to ThemeResource to enable overriding  -->
+                                        <!--  Change: StaticResource modified to ThemeResource to enable customization.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderOverflowMargin}" />
                                         <Setter Target="ContentViewbox.HorizontalAlignment" Value="Left" />
                                         <Setter Target="ContentViewbox.VerticalAlignment" Value="Center" />
@@ -768,10 +768,10 @@
 
                                 <VisualState x:Name="OverflowNormal">
                                     <VisualState.Setters>
-                                        <!--  Add AppBarButtonInnerBorder, Content and OverflowTextLabel brushes to offset the accent button brushes  -->
+                                        <!--  Change: AppBarButtonInnerBorder, Content, and OverflowTextLabel brushes added to offset the accent button brushes.  -->
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackground}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrush}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
@@ -784,7 +784,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPointerOver}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPointerOver}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
@@ -800,7 +800,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPressed}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPressed}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
@@ -816,7 +816,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundSubMenuOpened}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushSubMenuOpened}" />
-                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <!--  Change: BorderThickness modified to align with the default menu flyout item.  -->
                                         <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
