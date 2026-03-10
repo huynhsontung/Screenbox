@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Linq;
@@ -62,12 +62,14 @@ public sealed partial class PlayerControls : UserControl
 
         SaveSnapshotCommand = new NotificationCommand(
             ViewModel.SaveSnapshotCommand,
-            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToSaveFrameNotificationTitle, e.Message));
+            onFailure: e => Common.SendErrorMessage(Screenbox.Strings.Resources.FailedToSaveFrameNotificationTitle, e.Message));
 
         OpenFilesCommand = new NotificationCommand(
             Common.OpenFilesCommand,
             onFailure: e => Common.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message));
-    }    private void ShowSubtitleOptions()
+    }
+
+    private void ShowSubtitleOptions()
     {
         AudioSubtitlePickerFlyout.Hide();
         Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];

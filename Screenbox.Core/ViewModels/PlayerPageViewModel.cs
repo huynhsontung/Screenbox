@@ -63,24 +63,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool SeekBarPointerInteracting { get; set; }
 
-    private int _pendingVolumeForStatus;
-
-    /// <summary>
-    /// The last raw volume value received from a <see cref="UpdateVolumeStatusMessage"/>.
-    /// The view layer observes this property and formats a localized status string via <see cref="SendStatusMessage"/>.
-    /// This always raises <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>,
-    /// even when the value has not changed, to ensure every volume update results in a status message.
-    /// </summary>
-    public int PendingVolumeForStatus
-    {
-        get => _pendingVolumeForStatus;
-        private set
-        {
-            _pendingVolumeForStatus = value;
-            // Always notify so repeated volume-at-max/min also shows the status message
-            OnPropertyChanged();
-        }
-    }
+    public Func<double, string>? GetVolumeChangeStatusMessage { get; set; }
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
@@ -199,12 +182,14 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Receives a volume change message and exposes the new volume value via
-    /// <see cref="PendingVolumeForStatus"/> so the view can format a localized status message.
+    /// Receives a volume change message and exposes the new volume value
     /// </summary>
     public void Receive(UpdateVolumeStatusMessage message)
     {
-        PendingVolumeForStatus = message.Value;
+        if (GetVolumeChangeStatusMessage == null)
+            return;
+
+        Messenger.Send(new UpdateStatusMessage(GetVolumeChangeStatusMessage(message.Value)));
     }
 
     /// <summary>
@@ -212,7 +197,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// The view layer should call this after formatting a localized status string.
     /// </summary>
     /// <param name="message">The formatted status message to display.</param>
-    public void SendStatusMessage(string? message)
+    public void SendStatusMessage(string message)
     {
         Messenger.Send(new UpdateStatusMessage(message));
     }

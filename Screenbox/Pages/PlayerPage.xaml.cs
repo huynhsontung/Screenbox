@@ -42,6 +42,7 @@ public sealed partial class PlayerPage : Page
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
+        ViewModel.GetVolumeChangeStatusMessage = Screenbox.Strings.Resources.VolumeChangeStatusMessage;
         _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         RegisterSeekBarPointerHandlers();
@@ -306,10 +307,6 @@ public sealed partial class PlayerPage : Page
                 }
 
                 UpdateContentState();
-                break;
-            case nameof(PlayerPageViewModel.PendingVolumeForStatus):
-                // The VM received a volume change; format the localized status string and send it back via the VM
-                ViewModel.SendStatusMessage(Screenbox.Strings.Resources.VolumeChangeStatusMessage(ViewModel.PendingVolumeForStatus));
                 break;
         }
     }
