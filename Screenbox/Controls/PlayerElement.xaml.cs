@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
@@ -35,23 +34,20 @@ public sealed partial class PlayerElement : UserControl
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
+        ViewModel.FailedToInitializeNotificationTitle = Screenbox.Strings.Resources.FailedToInitializeNotificationTitle;
     }
 
     private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
     {
-        // Try to init VLC player on non-UI thread
-        Task.Run(() =>
+        try
         {
-            try
-            {
-                ViewModel.Initialize(e.SwapChainOptions);
-            }
-            catch (Exception e)
-            {
-                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
-                    ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToInitializeNotificationTitle, e.Message));
-            }
-        });
+            ViewModel.Initialize(e.SwapChainOptions);
+        }
+        catch (Exception ex)
+        {
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToInitializeNotificationTitle, ex.Message));
+        }
     }
 
     private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)

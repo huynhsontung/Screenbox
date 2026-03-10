@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
@@ -32,6 +33,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     public event EventHandler<EventArgs>? ClearViewRequested;
 
     public MediaPlayer? VlcPlayer => VlcMediaPlayer?.VlcPlayer;
+
+    public string FailedToInitializeNotificationTitle { get; set; } = string.Empty;
 
     private VlcMediaPlayer? VlcMediaPlayer
     {
@@ -99,43 +102,58 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             VlcMediaPlayer = null;
         }
 
-        var args = new List<string>();
-        if (_settingsService.GlobalArguments.Length > 0)
+        // Try to initialize the player in a background thread to avoid blocking the UI
+        Task.Run(() =>
         {
-            args.AddRange(_settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
-        }
+            try
+            {
+                var args = new List<string>();
+                if (_settingsService.GlobalArguments.Length > 0)
+                {
+                    args.AddRange(_settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                }
 
-        if (_settingsService.VideoUpscale != VideoUpscaleOption.Linear)
-        {
-            args.Add($"--d3d11-upscale-mode={_settingsService.VideoUpscale.ToString().ToLower()}");
-        }
+                if (_settingsService.VideoUpscale != VideoUpscaleOption.Linear)
+                {
+                    args.Add($"--d3d11-upscale-mode={_settingsService.VideoUpscale.ToString().ToLower()}");
+                }
 
-        args.AddRange(swapChainOptions);
-        IMediaPlayer player;
-        ExceptionDispatchInfo? initException = null;
-        try
-        {
-            player = _playerService.Initialize(args.ToArray());
-        }
-        catch (VLCException e)
-        {
-            player = _playerService.Initialize(swapChainOptions);
-            initException = ExceptionDispatchInfo.Capture(e);  // Passable exeception
-        }
+                args.AddRange(swapChainOptions);
+                IMediaPlayer player;
+                ExceptionDispatchInfo? initException = null;
+                try
+                {
+                    player = _playerService.Initialize(args.ToArray());
+                }
+                catch (VLCException e)
+                {
+                    player = _playerService.Initialize(swapChainOptions);
+                    initException = ExceptionDispatchInfo.Capture(e);  // Passable exeception
+                }
 
-        if (player is not VlcMediaPlayer vlcMediaPlayer)
-        {
-            throw new InvalidOperationException("PlayerService must return a VlcMediaPlayer instance.");
-        }
+                if (player is not VlcMediaPlayer vlcMediaPlayer)
+                {
+                    throw new InvalidOperationException("PlayerService must return a VlcMediaPlayer instance.");
+                }
 
-        VlcMediaPlayer = vlcMediaPlayer;
-        player.PlaybackStateChanged += OnPlaybackStateChanged;
-        player.PositionChanged += OnPositionChanged;
-        player.MediaFailed += OnMediaFailed;
-        player.PlaybackItemChanged += OnPlaybackItemChanged;
+                VlcMediaPlayer = vlcMediaPlayer;
+                player.PlaybackStateChanged += OnPlaybackStateChanged;
+                player.PositionChanged += OnPositionChanged;
+                player.MediaFailed += OnMediaFailed;
+                player.PlaybackItemChanged += OnPlaybackItemChanged;
 
-        if (initException != null)
-            initException.Throw();
+                if (initException != null)
+                    initException.Throw();
+            }
+            catch (Exception ex)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    Messenger.Send(new ErrorMessage(FailedToInitializeNotificationTitle, ex.Message));
+                });
+            }
+
+        });
     }
 
     private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
