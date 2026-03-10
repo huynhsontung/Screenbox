@@ -152,6 +152,7 @@
     <Compile Include="Behaviors\SplitButtonXYNavigationBehavior.cs" />
     <Compile Include="Behaviors\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Commands\BindableCommand.cs" />
+    <Compile Include="Commands\NotificationCommand.cs" />
     <Compile Include="Commands\OpenUrlCommand.cs" />
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />

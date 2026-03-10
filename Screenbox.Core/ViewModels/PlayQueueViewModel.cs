@@ -209,9 +209,10 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 
     /// <summary>
     /// Opens a file picker for the user to select files to add to the play queue.
-    /// Throws on failure; the view layer handles the error notification.
+    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
     /// </summary>
-    public async Task AddFilesAsync()
+    [RelayCommand]
+    private async Task AddFilesAsync()
     {
         IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
         if (files == null || files.Count == 0) return;

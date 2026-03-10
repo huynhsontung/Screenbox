@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -51,7 +52,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
             Breadcrumbs.Add(firstFolder);
         HasVideos = _libraryContext.Videos.Count > 0;
-        OnPropertyChanged(nameof(HasLibrary));
+        AddFolderCommand.NotifyCanExecuteChanged();
     }
 
     public void OnContentFrameNavigated(object sender, NavigationEventArgs e)
@@ -95,9 +96,10 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
 
     /// <summary>
     /// Requests adding a new folder to the Videos library.
-    /// Throws on failure; the view layer handles the error notification.
+    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
     /// </summary>
-    public async Task AddFolderAsync()
+    [RelayCommand(CanExecute = nameof(HasLibrary))]
+    private async Task AddFolderAsync()
     {
         await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
     }

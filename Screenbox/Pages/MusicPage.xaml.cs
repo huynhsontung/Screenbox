@@ -1,11 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
+using Screenbox.Commands;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
@@ -31,6 +31,13 @@ public sealed partial class MusicPage : Page, IContentFrame
 
     internal CommonViewModel Common { get; }
 
+    /// <summary>
+    /// Wraps <see cref="MusicPageViewModel.AddFolderCommand"/> with a
+    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
+    /// CanExecute is relayed from the underlying VM command (<see cref="MusicPageViewModel.LibraryLoaded"/>).
+    /// </summary>
+    public ICommand AddFolderCommand { get; }
+
     private readonly Dictionary<string, Type> _pages;
 
     public MusicPage()
@@ -39,12 +46,9 @@ public sealed partial class MusicPage : Page, IContentFrame
         DataContext = Ioc.Default.GetRequiredService<MusicPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
 
-        // Keep AddFolderCommand CanExecute in sync with ViewModel.CanAddFolder
-        ViewModel.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(MusicPageViewModel.LibraryLoaded))
-                AddFolderCommand.NotifyCanExecuteChanged();
-        };
+        AddFolderCommand = new NotificationCommand(
+            ViewModel.AddFolderCommand,
+            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToAddFolderNotificationTitle, e.Message));
 
         _pages = new Dictionary<string, Type>
         {
@@ -52,21 +56,6 @@ public sealed partial class MusicPage : Page, IContentFrame
             { "artists", typeof(ArtistsPage) },
             { "albums", typeof(AlbumsPage) }
         };
-    }
-
-    private bool CanAddFolder => ViewModel.LibraryLoaded;
-
-    [RelayCommand(CanExecute = nameof(CanAddFolder))]
-    private async Task AddFolderAsync()
-    {
-        try
-        {
-            await ViewModel.AddFolderAsync();
-        }
-        catch (Exception e)
-        {
-            ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToAddFolderNotificationTitle, e.Message);
-        }
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)

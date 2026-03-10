@@ -1,11 +1,12 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -37,6 +38,18 @@ public sealed partial class PlayerControls : UserControl
 
     internal CommonViewModel Common { get; }
 
+    /// <summary>
+    /// Wraps <see cref="PlayerControlsViewModel.SaveSnapshotCommand"/> with a
+    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
+    /// </summary>
+    public ICommand SaveSnapshotCommand { get; }
+
+    /// <summary>
+    /// Wraps <see cref="CommonViewModel.OpenFilesCommand"/> with a
+    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
+    /// </summary>
+    public ICommand OpenFilesCommand { get; }
+
     private Flyout? _castFlyout;
 
     public PlayerControls()
@@ -47,43 +60,14 @@ public sealed partial class PlayerControls : UserControl
         AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
         AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
 
-        // Keep SaveSnapshotCommand CanExecute in sync with ViewModel.HasVideo
-        ViewModel.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(PlayerControlsViewModel.HasVideo))
-                SaveSnapshotCommand.NotifyCanExecuteChanged();
-        };
-    }
+        SaveSnapshotCommand = new NotificationCommand(
+            ViewModel.SaveSnapshotCommand,
+            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToSaveFrameNotificationTitle, e.Message));
 
-    private bool CanSaveSnapshot => ViewModel.HasVideo;
-
-    [RelayCommand(CanExecute = nameof(CanSaveSnapshot))]
-    private async Task SaveSnapshotAsync()
-    {
-        try
-        {
-            await ViewModel.SaveSnapshotAsync();
-        }
-        catch (Exception e)
-        {
-            ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToSaveFrameNotificationTitle, e.Message);
-        }
-    }
-
-    [RelayCommand]
-    private async Task OpenFilesAsync()
-    {
-        try
-        {
-            await Common.OpenFilesAsync();
-        }
-        catch (Exception e)
-        {
-            Common.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message);
-        }
-    }
-
-    private void ShowSubtitleOptions()
+        OpenFilesCommand = new NotificationCommand(
+            Common.OpenFilesCommand,
+            onFailure: e => Common.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message));
+    }    private void ShowSubtitleOptions()
     {
         AudioSubtitlePickerFlyout.Hide();
         Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];

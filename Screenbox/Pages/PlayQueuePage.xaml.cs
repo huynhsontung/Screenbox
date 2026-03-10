@@ -1,9 +1,8 @@
-﻿#nullable enable
+#nullable enable
 
-using System;
-using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
+using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,24 +20,21 @@ public sealed partial class PlayQueuePage : Page
 
     internal CommonViewModel Common { get; }
 
+    /// <summary>
+    /// Wraps <see cref="PlayQueuePageViewModel.AddFolderCommand"/> with a
+    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
+    /// </summary>
+    public ICommand AddFolderCommand { get; }
+
     public PlayQueuePage()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayQueuePageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-    }
 
-    [RelayCommand]
-    private async Task AddFolderAsync()
-    {
-        try
-        {
-            await ViewModel.AddFolderAsync();
-        }
-        catch (Exception e)
-        {
-            ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message);
-        }
+        AddFolderCommand = new NotificationCommand(
+            ViewModel.AddFolderCommand,
+            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message));
     }
 
     private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)

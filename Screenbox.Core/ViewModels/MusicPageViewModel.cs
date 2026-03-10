@@ -3,6 +3,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -41,14 +42,15 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     public void UpdateSongs()
     {
         HasContent = _libraryContext.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
-        OnPropertyChanged(nameof(LibraryLoaded));
+        AddFolderCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>
     /// Requests adding a new folder to the Music library.
-    /// Throws on failure; the view layer handles the error notification.
+    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
     /// </summary>
-    public async Task AddFolderAsync()
+    [RelayCommand(CanExecute = nameof(LibraryLoaded))]
+    private async Task AddFolderAsync()
     {
         await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
     }
@@ -64,3 +66,4 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         Messenger.Send(new ErrorMessage(title, message));
     }
 }
+

@@ -30,9 +30,10 @@ namespace Screenbox.Core.ViewModels
 
         /// <summary>
         /// Opens a folder picker and queues all supported media files in the selected folder.
-        /// Throws on failure; the view layer handles the error notification.
+        /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
         /// </summary>
-        public async Task AddFolderAsync()
+        [RelayCommand]
+        private async Task AddFolderAsync()
         {
             StorageFolder? folder = await _filesService.PickFolderAsync();
             if (folder == null) return;

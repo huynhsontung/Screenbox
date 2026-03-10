@@ -1,10 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 
@@ -16,6 +17,12 @@ public sealed partial class CompositeTrackPicker : UserControl
 {
     public IRelayCommand? ShowSubtitleOptionsCommand { get; set; }
     public IRelayCommand? ShowAudioOptionsCommand { get; set; }
+
+    /// <summary>
+    /// Wraps <see cref="CompositeTrackPickerViewModel.AddSubtitleCommand"/> with an
+    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
+    /// </summary>
+    public ICommand AddSubtitleCommand { get; }
 
     /// <summary>
     /// View-level subtitle track list that prepends a localized "Disable" entry to
@@ -43,23 +50,14 @@ public sealed partial class CompositeTrackPicker : UserControl
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<CompositeTrackPickerViewModel>();
 
+        AddSubtitleCommand = new NotificationCommand(
+            ViewModel.AddSubtitleCommand,
+            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToLoadSubtitleNotificationTitle, e.Message));
+
         ViewModel.SubtitleTracks.CollectionChanged += (_, _) => RebuildSubtitleDisplayList();
         ViewModel.AudioTracks.CollectionChanged += (_, _) => RebuildAudioDisplayList();
         ViewModel.VideoTracks.CollectionChanged += (_, _) => RebuildVideoDisplayList();
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-    }
-
-    [RelayCommand]
-    private async Task AddSubtitleAsync()
-    {
-        try
-        {
-            await ViewModel.AddSubtitleAsync();
-        }
-        catch (System.Exception e)
-        {
-            ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToLoadSubtitleNotificationTitle, e.ToString());
-        }
     }
 
     /// <summary>Formats a track's display name, falling back to "Track N" when the label is empty.</summary>

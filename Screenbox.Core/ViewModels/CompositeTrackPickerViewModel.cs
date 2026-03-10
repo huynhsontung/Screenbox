@@ -256,9 +256,10 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Adds a subtitle file to the current media. Throws on error; the view layer handles the error notification.
+    /// Adds a subtitle file to the current media. Throws on error; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
     /// </summary>
-    public async Task AddSubtitleAsync()
+    [RelayCommand]
+    private async Task AddSubtitleAsync()
     {
         if (ItemSubtitleTrackList == null || MediaPlayer is not VlcMediaPlayer player) return;
         StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());

@@ -135,9 +135,10 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     /// <summary>
     /// Opens a file picker for the user to select one or more media files to play.
-    /// Throws on failure; the view layer handles the error notification.
+    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
     /// </summary>
-    public async Task OpenFilesAsync()
+    [RelayCommand]
+    private async Task OpenFilesAsync()
     {
         IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
         if (files == null || files.Count == 0) return;

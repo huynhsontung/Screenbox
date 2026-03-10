@@ -48,6 +48,7 @@ namespace Screenbox.Core.ViewModels
         private bool _isCompact;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
         private bool _hasVideo;
 
         [ObservableProperty]
@@ -405,9 +406,10 @@ namespace Screenbox.Core.ViewModels
 
         /// <summary>
         /// Saves a snapshot of the current video frame to the Pictures library.
-        /// Throws on failure; the view layer handles error notifications.
+        /// Throws on failure; the view layer handles error notifications via <see cref="NotificationCommand"/>.
         /// </summary>
-        public async Task SaveSnapshotAsync()
+        [RelayCommand(CanExecute = nameof(HasVideo))]
+        private async Task SaveSnapshotAsync()
         {
             if (MediaPlayer?.PlaybackState is not (MediaPlaybackState.Paused or MediaPlaybackState.Playing)) return;
             try
