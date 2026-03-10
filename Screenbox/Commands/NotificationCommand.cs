@@ -1,10 +1,9 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.Input;
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Screenbox.Commands;
 
@@ -21,6 +20,9 @@ namespace Screenbox.Commands;
 /// </remarks>
 internal sealed class NotificationCommand : ICommand
 {
+    /// <inheritdoc/>
+    public event EventHandler? CanExecuteChanged;
+
     private readonly ICommand _innerCommand;
     private readonly Action? _onSuccess;
     private readonly Action<Exception>? _onFailure;
@@ -39,49 +41,30 @@ internal sealed class NotificationCommand : ICommand
         _onFailure = onFailure;
 
         _innerCommand.CanExecuteChanged += OnInnerCanExecuteChanged;
-
-        // Subscribe to PropertyChanged so we can monitor async execution task completion.
-        if (_innerCommand is INotifyPropertyChanged notifyPropertyChanged)
-        {
-            notifyPropertyChanged.PropertyChanged += OnInnerPropertyChanged;
-        }
     }
 
     /// <inheritdoc/>
     public bool CanExecute(object? parameter) => _innerCommand.CanExecute(parameter);
 
     /// <inheritdoc/>
-    public void Execute(object? parameter) => _innerCommand.Execute(parameter);
-
-    /// <inheritdoc/>
-    public event EventHandler? CanExecuteChanged;
-
-    private void OnInnerCanExecuteChanged(object? sender, EventArgs e) =>
-        CanExecuteChanged?.Invoke(this, e);
-
-    private void OnInnerPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(IAsyncRelayCommand.ExecutionTask)) return;
-        if (_innerCommand is not IAsyncRelayCommand asyncCommand) return;
-        if (asyncCommand.ExecutionTask is not { } task) return;
-
-        _ = MonitorExecutionTaskAsync(task);
-    }
-
-    /// <summary>
-    /// Awaits the given execution task and invokes <see cref="_onSuccess"/> on normal
-    /// completion or <see cref="_onFailure"/> when the task faults.
-    /// </summary>
-    private async Task MonitorExecutionTaskAsync(Task task)
+    public async void Execute(object? parameter)
     {
         try
         {
-            await task;
+            _innerCommand.Execute(parameter);
+            if (_innerCommand is IAsyncRelayCommand { ExecutionTask: { } task })
+            {
+                await task;
+            }
+
             _onSuccess?.Invoke();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _onFailure?.Invoke(e);
+            _onFailure?.Invoke(ex);
         }
     }
+
+    private void OnInnerCanExecuteChanged(object? sender, EventArgs e) =>
+        CanExecuteChanged?.Invoke(this, e);
 }
