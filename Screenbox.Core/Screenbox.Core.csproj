@@ -168,6 +168,11 @@
     <Compile Include="Messages\CriticalErrorMessage.cs" />
     <Compile Include="Messages\DragDropMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\FailedToAddFolderNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToInitializeNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToLoadSubtitleNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToOpenFilesNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToSaveFrameNotificationMessage.cs" />
     <Compile Include="Messages\LibraryContentChangedMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />

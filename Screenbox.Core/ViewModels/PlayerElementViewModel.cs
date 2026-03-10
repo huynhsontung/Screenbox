@@ -34,8 +34,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public MediaPlayer? VlcPlayer => VlcMediaPlayer?.VlcPlayer;
 
-    public string FailedToInitializeNotificationTitle { get; set; } = string.Empty;
-
     private VlcMediaPlayer? VlcMediaPlayer
     {
         get => _playerContext.MediaPlayer as VlcMediaPlayer;
@@ -149,7 +147,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
-                    Messenger.Send(new ErrorMessage(FailedToInitializeNotificationTitle, ex.Message));
+                    Messenger.Send(new FailedToInitializeNotificationMessage(ex.Message));
                 });
             }
 
@@ -159,17 +157,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
     {
         if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
-    }
-
-    /// <summary>
-    /// Sends an error notification message via the messenger.
-    /// The view layer calls this with a localized title after an initialization failure.
-    /// </summary>
-    /// <param name="title">The localized notification title.</param>
-    /// <param name="message">The error detail message.</param>
-    public void SendErrorMessage(string? title, string message)
-    {
-        Messenger.Send(new ErrorMessage(title, message));
     }
 
     public void OnClick()

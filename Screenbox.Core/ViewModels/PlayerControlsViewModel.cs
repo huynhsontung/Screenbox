@@ -406,7 +406,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     /// <summary>
     /// Saves a snapshot of the current video frame to the Pictures library.
-    /// Throws on failure; the view layer handles error notifications via <see cref="NotificationCommand"/>.
+    /// Sends a <see cref="FailedToSaveFrameNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand(CanExecute = nameof(HasVideo))]
     private async Task SaveSnapshotAsync()
@@ -421,7 +421,10 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         {
             Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
         }
-        // Other exceptions propagate to the caller for localized error notification
+        catch (Exception e)
+        {
+            Messenger.Send(new FailedToSaveFrameNotificationMessage(e.Message));
+        }
     }
 
     private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)

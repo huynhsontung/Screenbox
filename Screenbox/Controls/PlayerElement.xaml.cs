@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
@@ -34,20 +33,11 @@ public sealed partial class PlayerElement : UserControl
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
-        ViewModel.FailedToInitializeNotificationTitle = Screenbox.Strings.Resources.FailedToInitializeNotificationTitle;
     }
 
     private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
     {
-        try
-        {
-            ViewModel.Initialize(e.SwapChainOptions);
-        }
-        catch (Exception ex)
-        {
-            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
-                ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToInitializeNotificationTitle, ex.Message));
-        }
+        ViewModel.Initialize(e.SwapChainOptions);
     }
 
     private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)

@@ -89,7 +89,7 @@
                 <Button
                     AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
-                    Command="{x:Bind AddFolderCommand}"
+                    Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
@@ -153,7 +153,7 @@
                     VerticalAlignment="Top"
                     AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
-                    Command="{x:Bind AddFolderCommand}"
+                    Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <StackPanel Orientation="Horizontal">

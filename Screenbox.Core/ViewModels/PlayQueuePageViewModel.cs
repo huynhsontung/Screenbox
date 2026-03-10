@@ -30,26 +30,23 @@ namespace Screenbox.Core.ViewModels
 
         /// <summary>
         /// Opens a folder picker and queues all supported media files in the selected folder.
-        /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
+        /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
         /// </summary>
         [RelayCommand]
         private async Task AddFolderAsync()
         {
-            StorageFolder? folder = await _filesService.PickFolderAsync();
-            if (folder == null) return;
-            IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
-            Messenger.Send(new PlayFilesMessage(items));
+            try
+            {
+                StorageFolder? folder = await _filesService.PickFolderAsync();
+                if (folder == null) return;
+                IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
+                Messenger.Send(new PlayFilesMessage(items));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
+            }
         }
 
-        /// <summary>
-        /// Sends an error notification message via the messenger.
-        /// The view layer calls this with a localized title after an operation fails.
-        /// </summary>
-        /// <param name="title">The localized notification title.</param>
-        /// <param name="message">The error detail message.</param>
-        public void SendErrorMessage(string? title, string message)
-        {
-            Messenger.Send(new ErrorMessage(title, message));
-        }
     }
 }

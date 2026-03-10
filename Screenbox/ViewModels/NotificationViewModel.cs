@@ -25,7 +25,12 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<CloseNotificationMessage>,
     IRecipient<SubtitleAddedNotificationMessage>,
     IRecipient<RaiseNotificationMessage>,
-    IRecipient<ErrorMessage>
+    IRecipient<ErrorMessage>,
+    IRecipient<FailedToSaveFrameNotificationMessage>,
+    IRecipient<FailedToLoadSubtitleNotificationMessage>,
+    IRecipient<FailedToOpenFilesNotificationMessage>,
+    IRecipient<FailedToAddFolderNotificationMessage>,
+    IRecipient<FailedToInitializeNotificationMessage>
 {
     [ObservableProperty] private NotificationLevel _severity;
 
@@ -253,6 +258,91 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
                 Content = ButtonContent,
                 Command = ActionCommand
             };
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+        });
+    }
+
+    /// <summary>
+    /// Handles a notification that saving a video frame snapshot failed.
+    /// </summary>
+    public void Receive(FailedToSaveFrameNotificationMessage message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Title = Resources.FailedToSaveFrameNotificationTitle;
+            Message = message.Reason;
+            Severity = NotificationLevel.Error;
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+        });
+    }
+
+    /// <summary>
+    /// Handles a notification that loading a subtitle file failed.
+    /// </summary>
+    public void Receive(FailedToLoadSubtitleNotificationMessage message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Title = Resources.FailedToLoadSubtitleNotificationTitle;
+            Message = message.Reason;
+            Severity = NotificationLevel.Error;
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+        });
+    }
+
+    /// <summary>
+    /// Handles a notification that opening files or a folder for playback failed.
+    /// </summary>
+    public void Receive(FailedToOpenFilesNotificationMessage message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Title = Resources.FailedToOpenFilesNotificationTitle;
+            Message = message.Reason;
+            Severity = NotificationLevel.Error;
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+        });
+    }
+
+    /// <summary>
+    /// Handles a notification that adding a folder to a media library failed.
+    /// </summary>
+    public void Receive(FailedToAddFolderNotificationMessage message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Title = Resources.FailedToAddFolderNotificationTitle;
+            Message = message.Reason;
+            Severity = NotificationLevel.Error;
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+        });
+    }
+
+    /// <summary>
+    /// Handles a notification that media player initialization failed.
+    /// </summary>
+    public void Receive(FailedToInitializeNotificationMessage message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Title = Resources.FailedToInitializeNotificationTitle;
+            Message = message.Reason;
+            Severity = NotificationLevel.Error;
 
             IsOpen = true;
             _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));

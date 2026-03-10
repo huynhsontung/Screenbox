@@ -145,7 +145,7 @@
                     Padding="12,4"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Left"
-                    Command="{x:Bind AddSubtitleCommand}"
+                    Command="{x:Bind ViewModel.AddSubtitleCommand}"
                     Content="{strings:Resources Key=AddSubtitle}"
                     Style="{StaticResource SubtleButtonStyle}">
                     <Button.Resources>

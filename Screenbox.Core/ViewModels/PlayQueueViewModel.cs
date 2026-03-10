@@ -209,24 +209,21 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 
     /// <summary>
     /// Opens a file picker for the user to select files to add to the play queue.
-    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
+    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand]
     private async Task AddFilesAsync()
     {
-        IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-        if (files == null || files.Count == 0) return;
-        await Playlist.EnqueueAsync(files);
+        try
+        {
+            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+            if (files == null || files.Count == 0) return;
+            await Playlist.EnqueueAsync(files);
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
+        }
     }
 
-    /// <summary>
-    /// Sends an error notification message via the messenger.
-    /// The view layer calls this with a localized title after an operation fails.
-    /// </summary>
-    /// <param name="title">The localized notification title.</param>
-    /// <param name="message">The error detail message.</param>
-    public void SendErrorMessage(string? title, string message)
-    {
-        Messenger.Send(new ErrorMessage(title, message));
-    }
 }

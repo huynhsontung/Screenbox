@@ -118,7 +118,7 @@
             <MenuFlyout x:Key="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
-                    Command="{x:Bind OpenFilesCommand}"
+                    Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderOpenGlyph}}"
                     KeyTipPlacementMode="Left"
@@ -213,7 +213,7 @@
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemSaveSnapshotKey}"
-                    Command="{x:Bind SaveSnapshotCommand}"
+                    Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource ImageExportGlyph}}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"

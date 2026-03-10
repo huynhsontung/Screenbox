@@ -4,10 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
-using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
 using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
@@ -37,12 +35,6 @@ public sealed partial class PlayQueueControl : UserControl
 
     internal CommonViewModel Common { get; }
 
-    /// <summary>
-    /// Wraps <see cref="PlayQueueViewModel.AddFilesCommand"/> with a
-    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
-    /// </summary>
-    public ICommand AddFilesCommand { get; }
-
     private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
 
     public PlayQueueControl()
@@ -50,10 +42,6 @@ public sealed partial class PlayQueueControl : UserControl
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayQueueViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-
-        AddFilesCommand = new NotificationCommand(
-            ViewModel.AddFilesCommand,
-            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToOpenFilesNotificationTitle, e.Message));
     }
 
     public async Task SmoothScrollActiveItemIntoViewAsync()

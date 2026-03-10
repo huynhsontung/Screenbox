@@ -256,29 +256,26 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Adds a subtitle file to the current media. Throws on error; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
+    /// Adds a subtitle file to the current media. Sends a <see cref="Core.Messages.FailedToLoadSubtitleNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand]
     private async Task AddSubtitleAsync()
     {
-        if (ItemSubtitleTrackList == null || MediaPlayer is not VlcMediaPlayer player) return;
-        StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
-        if (file == null) return;
+        try
+        {
+            if (ItemSubtitleTrackList == null || MediaPlayer is not VlcMediaPlayer player) return;
+            StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
+            if (file == null) return;
 
-        ItemSubtitleTrackList.AddExternalSubtitle(player, file, true);
-        Messenger.Send(new SubtitleAddedNotificationMessage(file));
+            ItemSubtitleTrackList.AddExternalSubtitle(player, file, true);
+            Messenger.Send(new SubtitleAddedNotificationMessage(file));
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new FailedToLoadSubtitleNotificationMessage(e.Message));
+        }
     }
 
-    /// <summary>
-    /// Sends an error notification message via the messenger.
-    /// The view layer calls this with a localized title after an operation fails.
-    /// </summary>
-    /// <param name="title">The localized notification title.</param>
-    /// <param name="message">The error detail message.</param>
-    public void SendErrorMessage(string? title, string message)
-    {
-        Messenger.Send(new ErrorMessage(title, message));
-    }
 
     public void OnFlyoutOpening()
     {

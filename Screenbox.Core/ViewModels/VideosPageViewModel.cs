@@ -96,22 +96,19 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
 
     /// <summary>
     /// Requests adding a new folder to the Videos library.
-    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
+    /// Sends a <see cref="Core.Messages.FailedToAddFolderNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand(CanExecute = nameof(HasLibrary))]
     private async Task AddFolderAsync()
     {
-        await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
+        try
+        {
+            await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new FailedToAddFolderNotificationMessage(e.Message));
+        }
     }
 
-    /// <summary>
-    /// Sends an error notification message via the messenger.
-    /// The view layer calls this with a localized title after an operation fails.
-    /// </summary>
-    /// <param name="title">The localized notification title.</param>
-    /// <param name="message">The error detail message.</param>
-    public void SendErrorMessage(string? title, string message)
-    {
-        Messenger.Send(new ErrorMessage(title, message));
-    }
 }

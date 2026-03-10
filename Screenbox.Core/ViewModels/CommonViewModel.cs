@@ -135,24 +135,21 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     /// <summary>
     /// Opens a file picker for the user to select one or more media files to play.
-    /// Throws on failure; the view layer handles the error notification via <see cref="Commands.NotificationCommand"/>.
+    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand]
     private async Task OpenFilesAsync()
     {
-        IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-        if (files == null || files.Count == 0) return;
-        Messenger.Send(new PlayMediaMessage(files));
+        try
+        {
+            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+            if (files == null || files.Count == 0) return;
+            Messenger.Send(new PlayMediaMessage(files));
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
+        }
     }
 
-    /// <summary>
-    /// Sends an error notification message via the messenger.
-    /// The view layer calls this with a localized title after an operation fails.
-    /// </summary>
-    /// <param name="title">The localized notification title.</param>
-    /// <param name="message">The error detail message.</param>
-    public void SendErrorMessage(string? title, string message)
-    {
-        Messenger.Send(new ErrorMessage(title, message));
-    }
 }

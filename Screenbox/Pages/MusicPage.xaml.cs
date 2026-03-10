@@ -3,9 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Commands;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
@@ -31,13 +29,6 @@ public sealed partial class MusicPage : Page, IContentFrame
 
     internal CommonViewModel Common { get; }
 
-    /// <summary>
-    /// Wraps <see cref="MusicPageViewModel.AddFolderCommand"/> with a
-    /// <see cref="NotificationCommand"/> that sends a localized error notification on failure.
-    /// CanExecute is relayed from the underlying VM command (<see cref="MusicPageViewModel.LibraryLoaded"/>).
-    /// </summary>
-    public ICommand AddFolderCommand { get; }
-
     private readonly Dictionary<string, Type> _pages;
 
     public MusicPage()
@@ -45,10 +36,6 @@ public sealed partial class MusicPage : Page, IContentFrame
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<MusicPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-
-        AddFolderCommand = new NotificationCommand(
-            ViewModel.AddFolderCommand,
-            onFailure: e => ViewModel.SendErrorMessage(Screenbox.Strings.Resources.FailedToAddFolderNotificationTitle, e.Message));
 
         _pages = new Dictionary<string, Type>
         {
