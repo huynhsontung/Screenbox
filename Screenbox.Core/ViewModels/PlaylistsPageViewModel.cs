@@ -37,17 +37,21 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 
         // Assume sort by last updated
         Playlists.Insert(0, playlist);
+        Messenger.Send(new PlaylistCreatedNotificationMessage(displayName));
     }
 
     public async Task RenamePlaylistAsync(PlaylistViewModel playlist, string newDisplayName)
     {
         await playlist.RenameAsync(newDisplayName);
+        Messenger.Send(new PlaylistRenamedNotificationMessage(newDisplayName));
     }
 
     public async Task DeletePlaylistAsync(PlaylistViewModel playlist)
     {
+        string playlistName = playlist.Name;
         await _playlistService.DeletePlaylistAsync(playlist.Id);
         Playlists.Remove(playlist);
+        Messenger.Send(new PlaylistDeletedNotificationMessage(playlistName));
     }
 
     private static bool NotEmpty(PlaylistViewModel? playlist) => playlist?.ItemsCount > 0;
