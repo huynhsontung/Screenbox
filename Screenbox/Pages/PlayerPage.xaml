@@ -81,10 +81,6 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <Thickness x:Key="PlayerTitleBarButtonMargin">4,-24,0,0</Thickness>
-
-            <TransitionCollection x:Key="RepositionTransitionCollection">
-                <RepositionThemeTransition />
-            </TransitionCollection>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -477,14 +473,13 @@
         <controls:TitleBar
             x:Name="PlayerTitleBar"
             MinHeight="80"
-            Background="{ThemeResource PlayerTitleBarBackgroundBrush}"
-            FooterTransitions="{StaticResource RepositionTransitionCollection}">
+            Background="{ThemeResource PlayerTitleBarBackgroundBrush}">
             <controls:TitleBar.Resources>
                 <Thickness x:Key="TitleBarIconMargin">12,0,12,0</Thickness>
                 <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Left</HorizontalAlignment>
             </controls:TitleBar.Resources>
 
-            <Grid>
+            <Grid x:Name="PlayerTitleBarContentGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -523,8 +518,7 @@
                     DragEnter="PlayQueueButton_OnDragEnter"
                     DragLeave="PlayQueueButton_OnDragLeave"
                     Style="{StaticResource SubtleButtonStyle}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}"
-                    Transitions="{StaticResource RepositionTransitionCollection}">
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                     <FontIcon
                         x:Name="PlayQueueButtonIcon"
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
@@ -563,8 +557,7 @@
                     Grid.Column="2"
                     Margin="16,-12,0,16"
                     IsHitTestVisible="False"
-                    Orientation="Vertical"
-                    Transitions="{StaticResource RepositionTransitionCollection}">
+                    Orientation="Vertical">
                     <TextBlock
                         x:Name="TitleBarTitleTextBlock"
                         d:Text="Lorem ipsum dolor sit amet"
@@ -812,7 +805,18 @@
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                     <Storyboard>
-                        <RepositionThemeAnimation FromVerticalOffset="-96" TargetName="AlbumArtPanel" />
+                        <RepositionThemeAnimation
+                            FromHorizontalOffset="48"
+                            FromVerticalOffset="-12"
+                            TargetName="PlayerTitleBarContentGrid" />
+                        <RepositionThemeAnimation
+                            FromHorizontalOffset="-24"
+                            FromVerticalOffset="-12"
+                            TargetName="LivelyOptionsButton" />
+                        <RepositionThemeAnimation
+                            FromHorizontalOffset="48"
+                            FromVerticalOffset="-96"
+                            TargetName="AlbumArtPanel" />
                         <RepositionThemeAnimation FromVerticalOffset="-96" TargetName="PlayerControls" />
                     </Storyboard>
                 </VisualState>
@@ -843,11 +847,12 @@
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                     </VisualState.Setters>
                     <Storyboard>
-                        <RepositionThemeAnimation FromVerticalOffset="48" TargetName="PlayerControls" />
+                        <RepositionThemeAnimation FromHorizontalOffset="-96" TargetName="PlayerTitleBar" />
                         <RepositionThemeAnimation
                             FromHorizontalOffset="-48"
                             FromVerticalOffset="48"
                             TargetName="AlbumArtPanel" />
+                        <RepositionThemeAnimation FromVerticalOffset="48" TargetName="PlayerControls" />
                     </Storyboard>
                 </VisualState>
 
@@ -923,13 +928,25 @@
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Fullscreen" To="Normal">
                         <Storyboard>
-                            <RepositionThemeAnimation FromVerticalOffset="40" TargetName="AlbumArtPanel" />
+                            <RepositionThemeAnimation
+                                FromHorizontalOffset="-24"
+                                FromVerticalOffset="12"
+                                TargetName="PlayerTitleBarContentGrid" />
+                            <RepositionThemeAnimation
+                                FromHorizontalOffset="24"
+                                FromVerticalOffset="12"
+                                TargetName="LivelyOptionsButton" />
+                            <RepositionThemeAnimation
+                                FromHorizontalOffset="-20"
+                                FromVerticalOffset="40"
+                                TargetName="AlbumArtPanel" />
                             <RepositionThemeAnimation FromVerticalOffset="40" TargetName="PlayerControls" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="CompactOverlay" To="Normal">
                         <Storyboard>
+                            <RepositionThemeAnimation FromHorizontalOffset="256" TargetName="PlayerTitleBar" />
                             <RepositionThemeAnimation
                                 FromHorizontalOffset="256"
                                 FromVerticalOffset="-256"
