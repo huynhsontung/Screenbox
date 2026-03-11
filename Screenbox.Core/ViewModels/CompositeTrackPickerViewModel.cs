@@ -227,8 +227,8 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     {
         if (ItemSubtitleTrackList == null) return;
 
-        // VM index -1 (disabled) maps to display index 0 ("Disable"); VM index N maps to display index N+1.
-        // decrement value by 1 to convert from ListView index to actual subtitle track index
+        // VM index 0 maps to actual track index -1, which is "Disable"
+        // Decrement value by 1 to convert from display index to actual subtitle track index
         value = Math.Max(-1, value - 1);
         ItemSubtitleTrackList.SelectedIndex = value;
 
