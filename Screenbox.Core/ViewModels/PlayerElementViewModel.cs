@@ -126,7 +126,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 catch (VLCException e)
                 {
                     player = _playerService.Initialize(swapChainOptions);
-                    initException = ExceptionDispatchInfo.Capture(e);  // Passable exeception
+                    initException = ExceptionDispatchInfo.Capture(e);  // Passable exception
                 }
 
                 if (player is not VlcMediaPlayer vlcMediaPlayer)

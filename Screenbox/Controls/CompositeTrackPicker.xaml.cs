@@ -37,8 +37,6 @@ public sealed partial class CompositeTrackPicker : UserControl
 
     internal CompositeTrackPickerViewModel ViewModel => (CompositeTrackPickerViewModel)DataContext;
 
-    private bool _updatingSubtitleIndex;
-
     public CompositeTrackPicker()
     {
         this.InitializeComponent();
@@ -65,7 +63,7 @@ public sealed partial class CompositeTrackPicker : UserControl
             newList.Add(GetTrackDisplayName(ViewModel.SubtitleTracks[i], i + 1));
         }
 
-        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexepected SelectedIndex change.
+        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexpected SelectedIndex change.
         SubtitleDisplayList.SyncItems(newList);
     }
 
@@ -73,7 +71,7 @@ public sealed partial class CompositeTrackPicker : UserControl
     {
         var newList = ViewModel.AudioTracks.Select((label, index) => GetTrackDisplayName(label, index + 1)).ToList();
 
-        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexepected SelectedIndex change.
+        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexpected SelectedIndex change.
         AudioDisplayList.SyncItems(newList);
     }
 
@@ -81,7 +79,7 @@ public sealed partial class CompositeTrackPicker : UserControl
     {
         var newList = ViewModel.VideoTracks.Select((label, index) => GetTrackDisplayName(label, index + 1)).ToList();
 
-        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexepected SelectedIndex change.
+        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexpected SelectedIndex change.
         VideoDisplayList.SyncItems(newList);
     }
 }

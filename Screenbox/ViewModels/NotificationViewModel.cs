@@ -99,10 +99,10 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(MediaLoadFailedNotificationMessage message)
     {
-        var message = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
+        var body = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
             ? $"{message.Path}{message.Reason}"
             : $"{message.Path}{Environment.NewLine}{message.Reason}";
-        ShowErrorNotification(Resources.FailedToLoadMediaNotificationTitle, message);
+        ShowErrorNotification(Resources.FailedToLoadMediaNotificationTitle, body);
     }
 
     /// <summary>

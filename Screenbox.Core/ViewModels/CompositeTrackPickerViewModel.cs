@@ -40,8 +40,12 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     /// <summary>
-    /// The currently selected subtitle track index. <c>-1</c> means subtitles are disabled;
-    /// <c>0</c> to <c>SubtitleTracks.Count - 1</c> are the actual track indices.
+    /// The currently selected subtitle track UI index.
+    /// <list type="bullet">
+    /// <item><description><c>0</c> = subtitles disabled (corresponds to the prepended "Disable" option in the UI).</description></item>
+    /// <item><description><c>1</c> to <c>SubtitleTracks.Count</c> = the <c>SelectedIndex</c> of an enabled subtitle track in the UI; the
+    /// actual underlying subtitle track index is typically obtained by subtracting <c>1</c> from this value.</description></item>
+    /// </list>
     /// </summary>
     [ObservableProperty] private int _subtitleTrackIndex;
 
