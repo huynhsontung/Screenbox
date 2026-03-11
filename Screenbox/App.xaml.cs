@@ -12,7 +12,6 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
-using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -105,6 +104,8 @@ sealed partial class App : Application
         ServiceHelpers.PopulateCoreServices(services);
 
         // View models
+        services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
+        services.AddTransient<Screenbox.ViewModels.PropertyViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>(provider =>
             new LivelyWallpaperSelectorViewModel(
                 provider.GetRequiredService<ILivelyWallpaperService>(),
@@ -112,11 +113,8 @@ sealed partial class App : Application
                 provider.GetRequiredService<ISettingsService>(),
                 Strings.Resources.Default, "ms-appx:///Assets/DefaultAudioVisual.png"));
 
-        // Factories
-        services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
-
         // Services
-        services.AddSingleton<IResourceService, ResourceService>();
+        services.AddSingleton<IVlcDialogService, VlcDialogService>();
         services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
             new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
             new KeyValuePair<Type, Type>(typeof(PlaylistsPageViewModel), typeof(PlaylistsPage)),

@@ -34,7 +34,6 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
@@ -42,14 +41,12 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        IResourceService resourceService,
         ISettingsService settingsService,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
@@ -136,6 +133,10 @@ public sealed partial class CommonViewModel : ObservableRecipient,
             new NavigationMetadata(typeof(PlaylistsPageViewModel), playlist));
     }
 
+    /// <summary>
+    /// Opens a file picker for the user to select one or more media files to play.
+    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
+    /// </summary>
     [RelayCommand]
     private async Task OpenFilesAsync()
     {
@@ -147,8 +148,8 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
         }
     }
+
 }
