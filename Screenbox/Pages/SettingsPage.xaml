@@ -28,6 +28,7 @@
     <Page.Resources>
         <!--<x:Double x:Key="SettingsCardActionIconMaxSize">14</x:Double>-->
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
+        <x:Double x:Key="SettingsCardButtonMinWidth">120</x:Double>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
 
@@ -316,33 +317,6 @@
                 <!--  General section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
 
-                <ctc:SettingsExpander
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
-                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
-                    <ctc:SettingsExpander.HeaderIcon>
-                        <FontIcon
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
-                            MirroredWhenRightToLeft="True" />
-                    </ctc:SettingsExpander.HeaderIcon>
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:SettingsExpanderXYNavigationBehavior />
-                    </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch
-                        x:Name="ShowRecentToggleSwitch"
-                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
-                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
-                    <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard
-                            x:Name="SettingsClearRecentCard"
-                            AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
-                            Header="{strings:Resources Key=SettingsClearRecentHeader}">
-                            <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
-                        </ctc:SettingsCard>
-                    </ctc:SettingsExpander.Items>
-                </ctc:SettingsExpander>
-
                 <ctc:SettingsCard
                     x:Name="SettingsEnqueueAllFilesInFolderCard"
                     Margin="{StaticResource SettingsCardMargin}"
@@ -351,14 +325,6 @@
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FolderListGlyph}}">
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
-                </ctc:SettingsCard>
-
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
-                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
-                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <!--  Player section  -->
@@ -574,6 +540,64 @@
                             <ctc:SettingsCard.Description>
                                 <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
                             </ctc:SettingsCard.Description>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+
+                <!--  Privacy  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind strings:Resources.SettingsCategoryPrivacy}" />
+
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
+                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
+                    <ctc:SettingsExpander.HeaderIcon>
+                        <FontIcon
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            MirroredWhenRightToLeft="True" />
+                    </ctc:SettingsExpander.HeaderIcon>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch
+                        x:Name="ShowRecentToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
+                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
+                            x:Name="SettingsClearRecentCard"
+                            AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
+                            Header="{strings:Resources Key=SettingsClearRecentHeader}">
+                            <Button
+                                MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                                Command="{x:Bind ViewModel.ClearRecentHistoryCommand}"
+                                Content="{strings:Resources Key=Clear}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}"
+                    Header="{x:Bind strings:Resources.SettingsSavePlaybackPositionHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PersistPlaybackPosition, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
+                            Description="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}"
+                            Header="{x:Bind strings:Resources.SettingsRestorePlaybackPositionHeader}"
+                            IsEnabled="{x:Bind ViewModel.PersistPlaybackPosition, Mode=OneWay}">
+                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard AutomationProperties.Name="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}" Header="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}">
+                            <Button
+                                MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                                Command="{x:Bind ViewModel.ClearPlaybackPositionHistoryCommand}"
+                                Content="{x:Bind strings:Resources.Clear}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>

@@ -30,7 +30,10 @@
 
                 <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
 
-                <MenuFlyout x:Name="ItemFlyout">
+                <MenuFlyout x:Key="ItemFlyout">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                    </interactivity:Interaction.Behaviors>
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
                         CommandParameter="{Binding}"
@@ -44,6 +47,10 @@
                                            Glyph={StaticResource PlayAddGlyph}}"
                         Text="{strings:Resources Key=PlayNext}" />
                     <MenuFlyoutSeparator />
+                    <MenuFlyoutSubItem
+                        x:Name="AddToPlaylistSubMenu"
+                        Icon="{ui:SymbolIcon Symbol=Add}"
+                        Text="{strings:Resources Key=AddToPlaylist}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.RemoveCommand}"
                         CommandParameter="{Binding}"
@@ -329,7 +336,7 @@
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>

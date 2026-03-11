@@ -1,11 +1,14 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -41,19 +44,19 @@ namespace Screenbox.Controls;
 /// <example>
 /// This example shows how to create a simple NavigationView with an overlay,
 /// including some of its new capabilities.
-/// <code>
-/// &lt;controls:NavigationViewEx BackButtonAccessKey="B"
-///                            CloseButtonStyle="{StaticResource AccentButtonStyle}"
-///                            OverlayZIndex="2"&gt;
-///     &lt;controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators&gt;
-///         &lt;KeyboardAccelerator Key="T" Modifiers="Control" /&gt;
-///     &lt;/controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators&gt;
+/// <code lang="xml"><![CDATA[
+/// <local:NavigationViewEx BackButtonAccessKey="B"
+///                         CloseButtonStyle="{StaticResource AccentButtonStyle}"
+///                         OverlayZIndex="2">
+///     <local:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+///         <KeyboardAccelerator Key="T" Modifiers="Control" />
+///     </local:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
 /// 
-///     &lt;controls:NavigationViewEx.Overlay&gt;
-///         &lt;Border Background="Red" Height="200" /&gt;
-///     &lt;/controls:NavigationViewEx.Overlay&gt;
-/// &lt;/controls:NavigationViewEx&gt;
-/// </code>
+///     <local:NavigationViewEx.Overlay>
+///         <Border Background="Red" Height="200" />
+///     </local:NavigationViewEx.Overlay>
+/// </local:NavigationViewEx>
+/// ]]></code>
 /// </example>
 public sealed partial class NavigationViewEx : NavigationView
 {
@@ -68,8 +71,6 @@ public sealed partial class NavigationViewEx : NavigationView
     private const string NavViewSettingsItem = "SettingsItem";
 
     private const string ShadowCaster = "ShadowCaster";
-
-    private const string ContentGridFinalValue = "400";
 
     private static readonly ImplicitAnimationSet _slowFadeInAnimationSet = new()
     {
@@ -93,20 +94,26 @@ public sealed partial class NavigationViewEx : NavigationView
     private Grid? _paneToggleButtonGrid;
     private Grid? _contentGrid;
     private Grid? _paneContentGrid;
-    private Button? _paneToggleButton;
     private Button? _paneSearchButton;
     private Button? _backButton;
     private Button? _closeButton;
-    private NavigationViewItem? _settingsItem;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NavigationViewEx"/> class.
+    /// </summary>
     public NavigationViewEx()
     {
+        DefaultStyleKey = typeof(NavigationView);
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
         DisplayModeChanged += OnDisplayModeChanged;
         PaneOpening += OnPaneOpening;
         PaneClosing += OnPaneClosing;
-        PaneClosed += OnPaneClosed;
+
+        BackButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
+        PaneToggleButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
+        PaneSearchButtonKeyboardAccelerators = new List<KeyboardAccelerator>();
+        SettingsItemKeyboardAccelerators = new List<KeyboardAccelerator>();
     }
 
     protected override void OnApplyTemplate()
@@ -114,11 +121,10 @@ public sealed partial class NavigationViewEx : NavigationView
         base.OnApplyTemplate();
 
         _splitView = (SplitView?)GetTemplateChild(RootSplitViewName);
+        _contentGrid = (Grid?)GetTemplateChild(ContentGridName);
 
         if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
         {
-            _paneToggleButton = paneToggleButton;
-
             if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
             {
                 paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
@@ -224,21 +230,14 @@ public sealed partial class NavigationViewEx : NavigationView
             Implicit.SetHideAnimations(paneToggleButtonGrid, _slowFadeOutAnimationSet);
         }
 
-        if (GetTemplateChild(ContentGridName) is Grid contentGrid)
-        {
-            _contentGrid = contentGrid;
-
-            // Set implicit animations to play when ContentVisibility changes.
-            UpdateContentGridAnimations();
-        }
-
         if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
         {
             shadowCaster.Translation = new Vector3(0, 0, 32);
         }
 
-        UpdateOverlay();
-        UpdateContentVisibility(ContentVisibility);
+        LoadOverlay();
+        UpdateOverlayLayout();
+        UpdateContentVisibility();
     }
 
     protected override void OnKeyDown(KeyRoutedEventArgs e)
@@ -273,12 +272,8 @@ public sealed partial class NavigationViewEx : NavigationView
             splitViewGrid.Children.Add(_overlayRoot);
         }
 
-        if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name == NavViewSettingsItem) is NavigationViewItem settingsItem)
+        if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name.Equals(NavViewSettingsItem, StringComparison.Ordinal)) is { } settingsItem)
         {
-            _settingsItem = settingsItem;
-
-            UpdateSettingsItemStyle();
-
             if (!string.IsNullOrEmpty(SettingsItemAccessKey))
             {
                 settingsItem.AccessKey = SettingsItemAccessKey;
@@ -296,17 +291,25 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
-        Unloaded -= OnUnloaded;
         DisplayModeChanged -= OnDisplayModeChanged;
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
-        PaneClosed -= OnPaneClosed;
 
         if (_overlayChildRectangle != null)
         {
             _overlayChildRectangle.Tapped -= OverlayLightDismissLayer_OnTapped;
         }
+
+        _overlayRoot = null;
+        _overlayChildBorder = null;
+        _overlayChildRectangle = null;
+        _splitView = null;
+        _paneToggleButtonGrid = null;
+        _contentGrid = null;
+        _paneContentGrid = null;
+        _paneSearchButton = null;
+        _backButton = null;
+        _closeButton = null;
     }
 
     private void OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
@@ -321,12 +324,9 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnPaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
     {
-        UpdateOverlayLayout();
-    }
-
-    private void OnPaneClosed(NavigationView sender, object args)
-    {
-        UpdateOverlayLightDismissLayerVisibility();
+        // This ensures closing the pane via the gamepad 'B' button correctly
+        // hides the overlay dismiss layer.
+        _ = Dispatcher.RunAsync(CoreDispatcherPriority.Low, UpdateOverlayLayout);
     }
 
     private void OverlayLightDismissLayer_OnTapped(object sender, TappedRoutedEventArgs e)
@@ -337,25 +337,58 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
-    private void UpdateContentVisibility(Visibility visibility)
+    private void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        var property = e.Property;
+
+        if (property == OverlayProperty)
+        {
+            LoadOverlay();
+        }
+        else if (property == OverlayZIndexProperty)
+        {
+            UpdateOverlayZIndex();
+        }
+        else if (property == ContentVisibilityProperty)
+        {
+            UpdateContentVisibility();
+            UpdateOverlayLayout();
+        }
+        else if (property == BackButtonStyleProperty)
+        {
+            UpdateBackButtonStyle();
+            UpdateCloseButtonStyle();
+        }
+        else if (property == PaneSearchButtonStyleProperty)
+        {
+            UpdatePaneSearchButtonStyle();
+        }
+        else if (property == ContentTranslationDirectionProperty)
+        {
+            UpdateContentGridAnimations();
+        }
+    }
+
+    private void UpdateContentVisibility()
     {
         if (_paneToggleButtonGrid != null)
         {
-            _paneToggleButtonGrid.Visibility = visibility;
+            _paneToggleButtonGrid.Visibility = ContentVisibility;
         }
 
         if (_contentGrid != null)
         {
-            _contentGrid.Visibility = visibility;
+            _contentGrid.Visibility = ContentVisibility;
+            UpdateContentGridAnimations();
         }
 
         if (_paneContentGrid != null)
         {
-            _paneContentGrid.Visibility = visibility;
+            _paneContentGrid.Visibility = ContentVisibility;
         }
     }
 
-    private void UpdateOverlay()
+    private void LoadOverlay()
     {
         if (Overlay == null) return;
 
@@ -388,14 +421,13 @@ public sealed partial class NavigationViewEx : NavigationView
         _overlayRoot.Children.Clear();
         _overlayRoot.Children.Add(_overlayChildBorder);
         _overlayRoot.Children.Add(_overlayChildRectangle);
-        UpdateOverlayLayout();
     }
 
-    private void UpdateOverlayZIndex(int index)
+    private void UpdateOverlayZIndex()
     {
         if (_overlayRoot != null)
         {
-            Canvas.SetZIndex(_overlayRoot, index);
+            Canvas.SetZIndex(_overlayRoot, OverlayZIndex);
         }
     }
 
@@ -403,7 +435,7 @@ public sealed partial class NavigationViewEx : NavigationView
     {
         if (_overlayRoot == null) return;
 
-        // Aligns the overlay layout with the SplitView content area.
+        // Mirror SplitView content area and light-dismiss visual behavior.
         if (ContentVisibility == Visibility.Collapsed)
         {
             Grid.SetColumn(_overlayRoot, 0);
@@ -432,27 +464,12 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateOverlayLightDismissLayerFill()
     {
-        if (_overlayChildRectangle == null) return;
-
-        if (_splitView != null)
+        if (_overlayChildRectangle != null &&
+            _splitView?.FindDescendant<Rectangle>(r => r.Name.Equals("LightDismissLayer", StringComparison.Ordinal)) is { } contentRootRect)
         {
             // We use the ContentGrid LightDismissLayer rectangle fill to avoid tracking
             // LightDismissOverlayMode, theme and high contrast changes ourselves.
-            if (_splitView?.FindDescendant<Rectangle>(r => r.Name == "LightDismissLayer") is Rectangle contentRootRect)
-            {
-                _overlayChildRectangle.Fill = contentRootRect.Fill;
-            }
-
-            //var dismissOverlayBrush = Application.Current.Resources["SplitViewLightDismissOverlayBackground"] as SolidColorBrush; // SystemControlPageBackgroundMediumAltMediumBrush
-
-            //_overlayChildRectangle.Fill = _splitView.LightDismissOverlayMode switch
-            //{
-            //    LightDismissOverlayMode.On => dismissOverlayBrush,
-            //    LightDismissOverlayMode.Auto => DeviceInfoHelper.IsXbox
-            //                        ? dismissOverlayBrush
-            //                        : new SolidColorBrush(Colors.Transparent),
-            //    _ => new SolidColorBrush(Colors.Transparent),
-            //};
+            _overlayChildRectangle.Fill = contentRootRect.Fill;
         }
     }
 
@@ -471,57 +488,45 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateBackButtonStyle()
     {
-        if (_backButton != null)
+        if (_backButton != null && BackButtonStyle != null)
         {
-            if (BackButtonStyle != null)
-            {
-                _backButton.Style = BackButtonStyle;
-            }
+            _backButton.Style = BackButtonStyle;
         }
     }
 
     private void UpdateCloseButtonStyle()
     {
-        if (_closeButton != null)
+        if (_closeButton != null && BackButtonStyle != null)
         {
-            if (BackButtonStyle != null)
-            {
-                _closeButton.Style = BackButtonStyle;
-            }
+            _closeButton.Style = BackButtonStyle;
         }
     }
 
     private void UpdatePaneSearchButtonStyle()
     {
-        if (_paneSearchButton != null)
+        if (_paneSearchButton != null && PaneSearchButtonStyle != null)
         {
-            if (PaneSearchButtonStyle != null)
-            {
-                _paneSearchButton.Style = PaneSearchButtonStyle;
-            }
+            _paneSearchButton.Style = PaneSearchButtonStyle;
         }
     }
 
-    private void UpdateSettingsItemStyle()
+    private string GetContentGridAnimationOffset(AnimationDirection? direction, bool isEntrance)
     {
-        if (_settingsItem != null)
+        if (_contentGrid == null)
         {
-            if (SettingsItemStyle != null)
-            {
-                _settingsItem.Style = SettingsItemStyle;
-            }
+            return "0,0,0";
         }
-    }
 
-    private string GetContentAnimationTranslationTo(AnimationDirection? direction, bool isEntrance)
-    {
+        string height = _contentGrid.ActualHeight.ToString(CultureInfo.InvariantCulture);
+        string width = _contentGrid.ActualWidth.ToString(CultureInfo.InvariantCulture);
+
         return direction switch
         {
-            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
-            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
-            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
-            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
-            _ => "0,0,0"
+            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{width},0,0",
+            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0,-{height},0",
+            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{width},0,0",
+            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{height},0",
+            _ => "0,0,0",
         };
     }
 
@@ -536,17 +541,17 @@ public sealed partial class NavigationViewEx : NavigationView
             new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear }
         };
 
-        if (ContentAnimationDirection != null)
+        if (ContentTranslationDirection != null)
         {
             showAnimationSet.Add(new TranslationAnimation
             {
-                To = GetContentAnimationTranslationTo(ContentAnimationDirection, true),
+                To = GetContentGridAnimationOffset(ContentTranslationDirection, true),
                 Duration = TimeSpan.FromMilliseconds(400),
                 EasingMode = EasingMode.EaseOut
             });
             hideAnimationSet.Add(new TranslationAnimation
             {
-                To = GetContentAnimationTranslationTo(ContentAnimationDirection, false),
+                To = GetContentGridAnimationOffset(ContentTranslationDirection, false),
                 Duration = TimeSpan.FromMilliseconds(250),
                 EasingMode = EasingMode.EaseIn
             });

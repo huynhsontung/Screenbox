@@ -804,8 +804,8 @@
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                     <Storyboard>
-                        <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
-                        <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="PlayerControls" />
+                        <RepositionThemeAnimation FromVerticalOffset="-96" TargetName="AlbumArtPanel" />
+                        <RepositionThemeAnimation FromVerticalOffset="-96" TargetName="PlayerControls" />
                     </Storyboard>
                 </VisualState>
 
@@ -834,8 +834,11 @@
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                     </VisualState.Setters>
                     <Storyboard>
-                        <RepositionThemeAnimation FromVerticalOffset="40" TargetName="PlayerControls" />
-                        <RepositionThemeAnimation FromVerticalOffset="30" TargetName="AlbumArtPanel" />
+                        <RepositionThemeAnimation FromVerticalOffset="48" TargetName="PlayerControls" />
+                        <RepositionThemeAnimation
+                            FromHorizontalOffset="-48"
+                            FromVerticalOffset="48"
+                            TargetName="AlbumArtPanel" />
                     </Storyboard>
                 </VisualState>
 
@@ -852,6 +855,8 @@
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="TitleBarArea.VerticalAlignment" Value="Center" />
                         <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
@@ -895,6 +900,8 @@
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="TitleBarArea.VerticalAlignment" Value="Center" />
                         <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
@@ -921,6 +928,25 @@
                         <FadeOutThemeAnimation TargetName="LayoutRoot" />
                     </Storyboard>
                 </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Fullscreen" To="Normal">
+                        <Storyboard>
+                            <RepositionThemeAnimation FromVerticalOffset="40" TargetName="AlbumArtPanel" />
+                            <RepositionThemeAnimation FromVerticalOffset="40" TargetName="PlayerControls" />
+                        </Storyboard>
+                    </VisualTransition>
+
+                    <VisualTransition From="CompactOverlay" To="Normal">
+                        <Storyboard>
+                            <RepositionThemeAnimation
+                                FromHorizontalOffset="256"
+                                FromVerticalOffset="-256"
+                                TargetName="AlbumArtPanel" />
+                            <RepositionThemeAnimation FromVerticalOffset="-80" TargetName="PlayerControls" />
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="MiniPlayerMarginGroup">

@@ -69,6 +69,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool SeekBarPointerInteracting { get; set; }
 
+    public Func<double, string>? GetVolumeChangeStatusMessage { get; set; }
+
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly DispatcherQueue _dispatcherQueue;
@@ -78,18 +80,16 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _playPauseBadgeTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
-    private readonly IResourceService _resourceService;
     private readonly IFilesService _filesService;
     private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
     private bool _resizeNext;
     private DateTimeOffset _lastUpdated;
 
-    public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService,
+    public PlayerPageViewModel(IWindowService windowService,
         ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext)
     {
         _windowService = windowService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _filesService = filesService;
         _playerContext = playerContext;
@@ -169,12 +169,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
     }
 
-    public void Receive(UpdateVolumeStatusMessage message)
-    {
-        Receive(new UpdateStatusMessage(
-            _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, message.Value)));
-    }
-
     public void Receive(UpdateStatusMessage message)
     {
         // Don't show status message when player is not visible
@@ -191,6 +185,27 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
             _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
         });
+    }
+
+    /// <summary>
+    /// Receives a volume change message and exposes the new volume value
+    /// </summary>
+    public void Receive(UpdateVolumeStatusMessage message)
+    {
+        if (GetVolumeChangeStatusMessage == null)
+            return;
+
+        Messenger.Send(new UpdateStatusMessage(GetVolumeChangeStatusMessage(message.Value)));
+    }
+
+    /// <summary>
+    /// Sends a status message via the messenger.
+    /// The view layer should call this after formatting a localized status string.
+    /// </summary>
+    /// <param name="message">The formatted status message to display.</param>
+    public void SendStatusMessage(string message)
+    {
+        Messenger.Send(new UpdateStatusMessage(message));
     }
 
     public async void Receive(PlaylistCurrentItemChangedMessage message)
@@ -529,10 +544,13 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// </remarks>
     /// <param name="key">The key that was pressed.</param>
     /// <param name="modifiers">The modifier keys held during the key press.</param>
-    /// <returns><see langword="true"/> if a window resize was performed; otherwise, <see langword="false"/>.</returns>
-    public bool ProcessResizeKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
+    /// <returns>
+    /// The actual scale factor applied (e.g., <c>1.5</c> means 150%), or <see langword="null"/> if no resize was performed.
+    /// The view layer should use this to format and display a localized status message via <see cref="SendStatusMessage"/>.
+    /// </returns>
+    public double? ProcessResizeKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (MediaPlayer == null) return false;
+        if (MediaPlayer == null) return null;
 
         Size videoSize = new(MediaPlayer.NaturalVideoWidth, MediaPlayer.NaturalVideoHeight);
         var view = ApplicationView.GetForCurrentView();
@@ -553,7 +571,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             VirtualKey.Number4 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 0),
             VK_OEM_PLUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
             VK_OEM_MINUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
-            _ => false,
+            _ => null,
         };
     }
 
@@ -755,7 +773,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             Size desiredSize = new(sender.NaturalVideoWidth, sender.NaturalVideoHeight);
-            if (ResizeWindow(desiredSize, 1)) return;
+            if (ResizeWindow(desiredSize, 1).HasValue) return;
 
             // Resize to fill the screen only when video size is bigger than max window size
             Size maxWindowSize = _windowService.GetMaxWindowSize();
@@ -765,17 +783,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         });
     }
 
-    private bool ResizeWindow(Size desiredSize, double scalar = 1)
+    private double? ResizeWindow(Size desiredSize, double scalar = 1)
     {
-        if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+        if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return null;
         double actualScalar = _windowService.ResizeWindow(desiredSize, scalar);
-        if (actualScalar > 0)
-        {
-            string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
-            Messenger.Send(new UpdateStatusMessage(status));
-            return true;
-        }
-
-        return false;
+        return actualScalar > 0 ? actualScalar : null;
     }
 }
