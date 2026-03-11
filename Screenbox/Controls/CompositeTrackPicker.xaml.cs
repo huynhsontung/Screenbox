@@ -1,9 +1,11 @@
-#nullable enable
+﻿#nullable enable
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 
@@ -45,7 +47,6 @@ public sealed partial class CompositeTrackPicker : UserControl
         ViewModel.SubtitleTracks.CollectionChanged += (_, _) => RebuildSubtitleDisplayList();
         ViewModel.AudioTracks.CollectionChanged += (_, _) => RebuildAudioDisplayList();
         ViewModel.VideoTracks.CollectionChanged += (_, _) => RebuildVideoDisplayList();
-        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
     /// <summary>Formats a track's display name, falling back to "Track N" when the label is empty.</summary>
@@ -56,63 +57,31 @@ public sealed partial class CompositeTrackPicker : UserControl
 
     private void RebuildSubtitleDisplayList()
     {
-        SubtitleDisplayList.Clear();
         // Index 0 = "Disable" in the display list (maps to VM SubtitleTrackIndex = -1)
-        SubtitleDisplayList.Add(Screenbox.Strings.Resources.Disable);
+        var newList = new List<string>();
+        newList.Add(Screenbox.Strings.Resources.Disable);
         for (int i = 0; i < ViewModel.SubtitleTracks.Count; i++)
         {
-            SubtitleDisplayList.Add(GetTrackDisplayName(ViewModel.SubtitleTracks[i], i + 1));
+            newList.Add(GetTrackDisplayName(ViewModel.SubtitleTracks[i], i + 1));
         }
 
-        // Re-sync the display index after the list is rebuilt
-        SyncSubtitleDisplayIndex();
+        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexepected SelectedIndex change.
+        SubtitleDisplayList.SyncItems(newList);
     }
 
     private void RebuildAudioDisplayList()
     {
-        AudioDisplayList.Clear();
-        for (int i = 0; i < ViewModel.AudioTracks.Count; i++)
-        {
-            AudioDisplayList.Add(GetTrackDisplayName(ViewModel.AudioTracks[i], i + 1));
-        }
+        var newList = ViewModel.AudioTracks.Select((label, index) => GetTrackDisplayName(label, index + 1)).ToList();
+
+        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexepected SelectedIndex change.
+        AudioDisplayList.SyncItems(newList);
     }
 
     private void RebuildVideoDisplayList()
     {
-        VideoDisplayList.Clear();
-        for (int i = 0; i < ViewModel.VideoTracks.Count; i++)
-        {
-            VideoDisplayList.Add(GetTrackDisplayName(ViewModel.VideoTracks[i], i + 1));
-        }
-    }
+        var newList = ViewModel.VideoTracks.Select((label, index) => GetTrackDisplayName(label, index + 1)).ToList();
 
-    private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(CompositeTrackPickerViewModel.SubtitleTrackIndex))
-        {
-            SyncSubtitleDisplayIndex();
-        }
-    }
-
-    /// <summary>
-    /// Syncs the subtitle ListView's selected index to reflect the VM's SubtitleTrackIndex.
-    /// VM index -1 (disabled) maps to display index 0 ("Disable"); VM index N maps to display index N+1.
-    /// </summary>
-    private void SyncSubtitleDisplayIndex()
-    {
-        if (_updatingSubtitleIndex) return;
-        _updatingSubtitleIndex = true;
-        SubtitleTrackListView.SelectedIndex = ViewModel.SubtitleTrackIndex + 1;
-        _updatingSubtitleIndex = false;
-    }
-
-    private void SubtitleTrackListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (_updatingSubtitleIndex) return;
-        var listView = (ListView)sender;
-        _updatingSubtitleIndex = true;
-        // Display index 0 = "Disable" -> VM index -1; display index N -> VM index N-1
-        ViewModel.SubtitleTrackIndex = listView.SelectedIndex - 1;
-        _updatingSubtitleIndex = false;
+        // Avoid clearing and repopulating the existing ObservableCollection to prevent unexepected SelectedIndex change.
+        VideoDisplayList.SyncItems(newList);
     }
 }

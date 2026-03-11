@@ -96,7 +96,7 @@
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind SubtitleDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
-            SelectionChanged="SubtitleTrackListView_SelectionChanged"
+            SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.ItemTemplate>

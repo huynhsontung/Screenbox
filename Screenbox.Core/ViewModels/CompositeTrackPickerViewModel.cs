@@ -19,9 +19,6 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.Search;
-using AudioTrack = Screenbox.Core.Playback.AudioTrack;
-using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
-using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -226,7 +223,9 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     {
         if (ItemSubtitleTrackList == null) return;
 
-        // -1 means subtitles are disabled; set the underlying track list selection accordingly
+        // VM index -1 (disabled) maps to display index 0 ("Disable"); VM index N maps to display index N+1.
+        // decrement value by 1 to convert from ListView index to actual subtitle track index
+        value = Math.Max(-1, value - 1);
         ItemSubtitleTrackList.SelectedIndex = value;
 
         if (!_flyoutOpened) return;
@@ -282,7 +281,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         UpdateSubtitleTrackList();
         UpdateAudioTrackList();
         UpdateVideoTrackList();
-        SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex ?? -1;
+        SubtitleTrackIndex = (ItemSubtitleTrackList?.SelectedIndex + 1) ?? 0;
         AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
         VideoTrackIndex = ItemVideoTrackList?.SelectedIndex ?? -1;
 
@@ -297,41 +296,23 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     private void UpdateAudioTrackList()
     {
         if (ItemAudioTrackList == null) return;
-        AudioTracks.Clear();
         ItemAudioTrackList.Refresh();
-        if (ItemAudioTrackList.Count <= 0) return;
-
-        for (int index = 0; index < ItemAudioTrackList.Count; index++)
-        {
-            AudioTrack audioTrack = ItemAudioTrackList[index];
-            AudioTracks.Add(audioTrack.Label);
-        }
+        var trackLabels = ItemAudioTrackList.Select(track => track.Label).ToList();
+        AudioTracks.SyncItems(trackLabels);
     }
 
     private void UpdateVideoTrackList()
     {
         if (ItemVideoTrackList == null) return;
-        VideoTracks.Clear();
         ItemVideoTrackList.Refresh();
-        if (ItemVideoTrackList.Count <= 0) return;
-
-        for (int index = 0; index < ItemVideoTrackList.Count; index++)
-        {
-            VideoTrack videoTrack = ItemVideoTrackList[index];
-            VideoTracks.Add(videoTrack.Label);
-        }
+        var trackLabels = ItemVideoTrackList.Select(track => track.Label).ToList();
+        VideoTracks.SyncItems(trackLabels);
     }
 
     private void UpdateSubtitleTrackList()
     {
         if (ItemSubtitleTrackList == null) return;
-        SubtitleTracks.Clear();
-        if (ItemSubtitleTrackList.Count <= 0) return;
-
-        for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
-        {
-            SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
-            SubtitleTracks.Add(subtitleTrack.Label);
-        }
+        var trackLabels = ItemSubtitleTrackList.Select(track => track.Label).ToList();
+        SubtitleTracks.SyncItems(trackLabels);
     }
 }
