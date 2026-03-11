@@ -66,18 +66,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(ErrorMessage message)
     {
-        void SetNotification()
-        {
-            Reset();
-            Title = message.Title;
-            Message = message.Message;
-            Severity = NotificationLevel.Error;
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
-        }
-
-        _dispatcherQueue.TryEnqueue(SetNotification);
+        ShowErrorNotification(message.Title, message.Message);
     }
 
     /// <summary>
@@ -110,18 +99,10 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(MediaLoadFailedNotificationMessage message)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            Reset();
-            Title = Resources.FailedToLoadMediaNotificationTitle;
-            Severity = NotificationLevel.Error;
-            Message = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
-                ? $"{message.Path}{message.Reason}"
-                : $"{message.Path}{Environment.NewLine}{message.Reason}";
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
-        });
+        var message = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
+            ? $"{message.Path}{message.Reason}"
+            : $"{message.Path}{Environment.NewLine}{message.Reason}";
+        ShowErrorNotification(Resources.FailedToLoadMediaNotificationTitle, message);
     }
 
     /// <summary>
@@ -235,16 +216,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToSaveFrameNotificationMessage message)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            Reset();
-            Title = Resources.FailedToSaveFrameNotificationTitle;
-            Message = message.Reason;
-            Severity = NotificationLevel.Error;
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
-        });
+        ShowErrorNotification(Resources.FailedToSaveFrameNotificationTitle, message.Reason);
     }
 
     /// <summary>
@@ -252,16 +224,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToLoadSubtitleNotificationMessage message)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            Reset();
-            Title = Resources.FailedToLoadSubtitleNotificationTitle;
-            Message = message.Reason;
-            Severity = NotificationLevel.Error;
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
-        });
+        ShowErrorNotification(Resources.FailedToLoadSubtitleNotificationTitle, message.Reason);
     }
 
     /// <summary>
@@ -269,16 +232,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToOpenFilesNotificationMessage message)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            Reset();
-            Title = Resources.FailedToOpenFilesNotificationTitle;
-            Message = message.Reason;
-            Severity = NotificationLevel.Error;
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
-        });
+        ShowErrorNotification(Resources.FailedToOpenFilesNotificationTitle, message.Reason);
     }
 
     /// <summary>
@@ -286,16 +240,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToAddFolderNotificationMessage message)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            Reset();
-            Title = Resources.FailedToAddFolderNotificationTitle;
-            Message = message.Reason;
-            Severity = NotificationLevel.Error;
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
-        });
+        ShowErrorNotification(Resources.FailedToAddFolderNotificationTitle, message.Reason);
     }
 
     /// <summary>
@@ -303,11 +248,16 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToInitializeNotificationMessage message)
     {
+        ShowErrorNotification(Resources.FailedToInitializeNotificationTitle, message.Reason);
+    }
+
+    private void ShowErrorNotification(string? title, string? message)
+    {
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
-            Title = Resources.FailedToInitializeNotificationTitle;
-            Message = message.Reason;
+            Title = title;
+            Message = message;
             Severity = NotificationLevel.Error;
 
             IsOpen = true;
