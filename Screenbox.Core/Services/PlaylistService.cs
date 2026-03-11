@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -230,5 +231,41 @@ public sealed class PlaylistService : IPlaylistService
 
         playlist.LastUpdated = DateTimeOffset.Now;
         await SavePlaylistAsync(playlist);
+    }
+
+    /// <summary>
+    /// Exports the given media items to an M3U8 playlist file.
+    /// </summary>
+    public async Task ExportToM3u8Async(IReadOnlyList<MediaViewModel> items, StorageFile file)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("#EXTM3U");
+        foreach (MediaViewModel item in items)
+        {
+            long duration = (long)item.Duration.TotalSeconds;
+            sb.AppendLine($"#EXTINF:{duration},{item.Name}");
+            sb.AppendLine(item.Location);
+        }
+
+        await FileIO.WriteTextAsync(file, sb.ToString());
+    }
+
+    /// <summary>
+    /// Reads media paths from an M3U8 playlist file, skipping comment lines.
+    /// </summary>
+    public async Task<IReadOnlyList<string>> ImportFromM3u8Async(StorageFile file)
+    {
+        string content = await FileIO.ReadTextAsync(file);
+        var paths = new List<string>();
+        foreach (string line in content.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string trimmed = line.Trim();
+            if (!trimmed.StartsWith("#") && trimmed.Length > 0)
+            {
+                paths.Add(trimmed);
+            }
+        }
+
+        return paths;
     }
 }
