@@ -24,7 +24,6 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<MediaLoadFailedNotificationMessage>,
     IRecipient<CloseNotificationMessage>,
     IRecipient<SubtitleAddedNotificationMessage>,
-    IRecipient<RaiseNotificationMessage>,
     IRecipient<ErrorMessage>,
     IRecipient<FailedToSaveFrameNotificationMessage>,
     IRecipient<FailedToLoadSubtitleNotificationMessage>,
@@ -87,39 +86,6 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     public void Receive(CloseNotificationMessage message)
     {
         IsOpen = false;
-    }
-
-    /// <summary>
-    /// Handles a notification raised via the messaging pattern (e.g., from VLC dialog handlers).
-    /// </summary>
-    public void Receive(RaiseNotificationMessage message)
-    {
-        void SetNotification()
-        {
-            Reset();
-            Title = message.Title;
-            Message = message.Message;
-            Severity = message.Level;
-
-            TimeSpan timeout;
-            switch (message.Level)
-            {
-                case NotificationLevel.Warning:
-                    timeout = TimeSpan.FromSeconds(10);
-                    break;
-                case NotificationLevel.Error:
-                    timeout = TimeSpan.FromSeconds(15);
-                    break;
-                default:
-                    timeout = TimeSpan.FromSeconds(6);
-                    break;
-            }
-
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, timeout);
-        }
-
-        _dispatcherQueue.TryEnqueue(SetNotification);
     }
 
     /// <summary>

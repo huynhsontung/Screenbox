@@ -186,7 +186,6 @@
     <Compile Include="Messages\RaiseLibraryAccessDeniedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseResumePositionNotificationMessage.cs" />
-    <Compile Include="Messages\RaiseNotificationMessage.cs" />
     <Compile Include="Messages\RefreshFolderMessage.cs" />
     <Compile Include="Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Messages\SettingsChangedMessage.cs" />
