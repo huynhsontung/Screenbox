@@ -195,11 +195,21 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         Messenger.Send(new TimeChangeOverrideMessage(false));
     }
 
-    public void HandlePointerWheelInput(int delta, bool isHorizontal)
+    /// <summary>
+    /// Interprets a pointer wheel input and requests changes to the current playback.
+    /// </summary>
+    /// <remarks>
+    /// The pointer wheel vertical component adjusts the playback volume, its horizontal
+    /// component seeks the current media playback position.
+    /// </remarks>
+    /// <param name="delta">The pointer wheel delta.</param>
+    /// <param name="isHorizontal"><see langword="true"/> to treat the input as horizontal;
+    /// otherwise, treat it as vertical.</param>
+    public void ProcessPointerWheelInput(int delta, bool isHorizontal)
     {
         if (!isHorizontal)
         {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta, true));
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 5 : -5, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
         else
@@ -208,7 +218,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             {
                 _timeBeforeManipulation = VlcMediaPlayer.Position;
                 Messenger.Send(new TimeChangeOverrideMessage(true));
-                var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-delta / 2), true)).Response.NewPosition;
+                var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(delta > 0 ? -5 : 5), true)).Response.NewPosition;
                 UpdateTimeStatusMessage(newTime);
             }
         }
@@ -268,7 +278,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     if (VlcMediaPlayer.PlaybackRate != HoldingSpeed)
                     {
                         Messenger.Send(new ChangePlaybackRateRequestMessage(HoldingSpeed));
-                        Messenger.Send(new UpdateStatusMessage($"{HoldingSpeed}×"));
+                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(HoldingSpeed)));
                     }
                     IsHolding = true;
                 }
@@ -280,7 +290,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold)
                     {
                         Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
-                        Messenger.Send(new UpdateStatusMessage($"{_playbackRateBeforeHold}×"));
+                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(_playbackRateBeforeHold)));
                     }
                     IsHolding = false;
                 }

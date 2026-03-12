@@ -26,9 +26,9 @@ public sealed partial class PlayerElement : UserControl
         set => SetValue(ButtonMarginProperty, value);
     }
 
-    public event RoutedEventHandler? Click;
+    private GestureRecognizer? _gestureRecognizer;
 
-    private GestureRecognizer _gestureRecognizer;
+    public event RoutedEventHandler? Click;
 
     internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
 
@@ -43,6 +43,14 @@ public sealed partial class PlayerElement : UserControl
         };
 
         _gestureRecognizer.Holding += GestureRecognizer_OnHolding;
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _gestureRecognizer?.CompleteGesture();
+        _gestureRecognizer?.GestureSettings = GestureSettings.None;
+        _gestureRecognizer?.Holding -= GestureRecognizer_OnHolding;
+        _gestureRecognizer = null;
     }
 
     private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
@@ -73,7 +81,7 @@ public sealed partial class PlayerElement : UserControl
     {
         if (!IsEnabled) return;
 
-        _gestureRecognizer.CompleteGesture();
+        _gestureRecognizer?.CompleteGesture();
         VideoViewButton.ReleasePointerCapture(e.Pointer);
         e.Handled = true;
     }
@@ -82,14 +90,14 @@ public sealed partial class PlayerElement : UserControl
     {
         if (ViewModel.IsHolding || !IsEnabled) return;
 
-        _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(this));
+        _gestureRecognizer?.ProcessMoveEvents(e.GetIntermediatePoints(this));
     }
 
     private void VideoViewButton_OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         if (!IsEnabled) return;
 
-        _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
+        _gestureRecognizer?.ProcessDownEvent(e.GetCurrentPoint(this));
         VideoViewButton.CapturePointer(e.Pointer);
         e.Handled = true;
     }
@@ -98,7 +106,7 @@ public sealed partial class PlayerElement : UserControl
     {
         if (!IsEnabled) return;
 
-        _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
+        _gestureRecognizer?.ProcessUpEvent(e.GetCurrentPoint(this));
         VideoViewButton.ReleasePointerCapture(e.Pointer);
         e.Handled = true;
     }
@@ -109,7 +117,7 @@ public sealed partial class PlayerElement : UserControl
 
         var pointer = e.GetCurrentPoint(VideoViewButton);
         var properties = pointer.Properties;
-        ViewModel.HandlePointerWheelInput(properties.MouseWheelDelta, properties.IsHorizontalMouseWheel);
+        ViewModel.ProcessPointerWheelInput(properties.MouseWheelDelta, properties.IsHorizontalMouseWheel);
         e.Handled = true;
     }
 

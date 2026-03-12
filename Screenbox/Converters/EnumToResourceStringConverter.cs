@@ -15,8 +15,9 @@ public sealed class EnumToResourceStringConverter : IValueConverter
     /// </summary>
     /// <param name="enumValue">The enum member to localize.</param>
     /// <returns>
-    /// The resource string using the key format "{EnumType}{EnumMember}",
-    /// and if not found, "EnumMember"; otherwise, the string representation.
+    /// The resource string using the key format <b>"EnumTypeEnumMember"</b>, and if not found,
+    /// <b>"EnumMember"</b>, and if still not found, the string representation; otherwise,
+    /// an empty string if <paramref name="enumValue"/> is <see langword="null"/>.
     /// </returns>
     public static string GetResourceString(Enum? enumValue)
     {
