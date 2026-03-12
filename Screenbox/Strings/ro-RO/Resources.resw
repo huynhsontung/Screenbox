@@ -1000,49 +1000,49 @@
     <value>Creare playlist nouă</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Playlist nou</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Element selectat</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Elemente selectate</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Niciun playlist</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Creare</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Anulare</value>
   </data>
   <data name="PlaylistName" xml:space="preserve">
-    <value>Playlist name</value>
+    <value>Nume playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Introduceți un nume pentru acest playlist</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Playlist-uri</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Ștergere</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Redenumire</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Introduceți un nume nou pentru acest playlist</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Redenumire playlist</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Ștergere playlist</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
+    <value>Sunteți sigur că doriți să ștergeți playlist-ul „{0}”? Această acțiune nu poate fi anulată.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
