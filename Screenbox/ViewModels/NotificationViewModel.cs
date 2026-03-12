@@ -259,7 +259,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistCreatedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistCreatedNotificationTitle, message.PlaylistName);
+        ShowSuccessNotification(Resources.PlaylistCreatedNotificationTitle(message.PlaylistName), null);
     }
 
     /// <summary>
@@ -267,7 +267,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistDeletedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistDeletedNotificationTitle, message.PlaylistName);
+        ShowSuccessNotification(Resources.PlaylistDeletedNotificationTitle(message.PlaylistName), null);
     }
 
     /// <summary>
@@ -275,7 +275,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistRenamedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistRenamedNotificationTitle, message.NewName);
+        ShowSuccessNotification(Resources.PlaylistRenamedNotificationTitle(message.NewName), null);
     }
 
     private void ShowSuccessNotification(string? title, string? message)

@@ -698,13 +698,16 @@
     <value>Subtitle added</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist created</value>
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist deleted</value>
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed</value>
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Critical error</value>
