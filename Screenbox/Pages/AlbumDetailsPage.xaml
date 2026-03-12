@@ -24,7 +24,7 @@
 
             <MenuFlyout x:Key="ItemFlyout">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                    <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
                 </interactivity:Interaction.Behaviors>
 
                 <MenuFlyoutItem

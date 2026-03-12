@@ -136,7 +136,7 @@
     </Compile>
     <Compile Include="Assets\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Behaviors\AdaptiveLayoutBreakpointsBehavior.cs" />
-    <Compile Include="Behaviors\AddToPlaylistFlyoutSubmenuBehavior.cs" />
+    <Compile Include="Behaviors\AddToPlaylistFlyoutBehavior.cs" />
     <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
     <Compile Include="Behaviors\AutoFocusBehavior.cs" />
     <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />

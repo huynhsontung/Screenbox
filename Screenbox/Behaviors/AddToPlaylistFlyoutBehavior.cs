@@ -16,14 +16,14 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Behaviors;
 
 /// <summary>
-/// Populates a named <see cref="MenuFlyoutSubItem"/> within a <see cref="MenuFlyout"/> with playlist actions.
+/// Populates a <see cref="MenuFlyout"/> or a named <see cref="MenuFlyoutSubItem"/> within a <see cref="MenuFlyout"/> with playlist actions.
 /// </summary>
-internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
+internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
 {
     public static readonly DependencyProperty TargetSubItemNameProperty = DependencyProperty.Register(
         nameof(TargetSubItemName),
         typeof(string),
-        typeof(AddToPlaylistFlyoutSubmenuBehavior),
+        typeof(AddToPlaylistFlyoutBehavior),
         new PropertyMetadata(string.Empty));
 
     /// <summary>
@@ -39,7 +39,7 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
 
     private readonly PlaylistsContext _playlistsContext;
 
-    public AddToPlaylistFlyoutSubmenuBehavior()
+    public AddToPlaylistFlyoutBehavior()
     {
         _playlistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
         CreatePlaylistCommand = new AsyncRelayCommand<MediaViewModel?>(CreatePlaylistAsync);
