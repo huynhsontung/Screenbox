@@ -698,15 +698,15 @@
     <value>Legenda adicionada</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Lista de reprodução "{0}" criada</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Lista de reprodução "{0}" eliminada</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Nome da lista de reprodução foi mudado para "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -994,13 +994,13 @@
     <value>Pasta</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Adicionar à lista de reprodução</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Criar lista de reprodução</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Nova lista de reprodução</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
@@ -1009,40 +1009,40 @@
     <value>Selected items</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Sem listas de reprodução</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Criar</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
   <data name="PlaylistName" xml:space="preserve">
-    <value>Playlist name</value>
+    <value>Nome da Lista de Reprodução</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Introduza um nome para esta lista de reprodução</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Listas de reprodução</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Eliminar</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Mudar o nome</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Introduza um novo nome para esta lista de reprodução</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Mudar o nome da lista de reprodução</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Eliminar lista de reprodução</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
+    <value>Tem a certeza de que pretende eliminar a lista de reprodução "{0}"?  Não é possível anular esta ação.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
