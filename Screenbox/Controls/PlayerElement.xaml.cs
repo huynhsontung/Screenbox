@@ -39,12 +39,9 @@ public sealed partial class PlayerElement : UserControl
 
         _gestureRecognizer = new GestureRecognizer
         {
-            GestureSettings = GestureSettings.Hold | GestureSettings.HoldWithMouse |
-                GestureSettings.ManipulationTranslateX | GestureSettings.ManipulationTranslateY,
+            GestureSettings = GestureSettings.Hold | GestureSettings.HoldWithMouse,
         };
-        _gestureRecognizer.ManipulationStarted += GestureRecognizer_OnManipulationStarted;
-        _gestureRecognizer.ManipulationUpdated += GestureRecognizer_OnManipulationUpdated;
-        _gestureRecognizer.ManipulationCompleted += GestureRecognizer_OnManipulationCompleted;
+
         _gestureRecognizer.Holding += GestureRecognizer_OnHolding;
     }
 
@@ -116,27 +113,14 @@ public sealed partial class PlayerElement : UserControl
         e.Handled = true;
     }
 
-    private void GestureRecognizer_OnManipulationStarted(GestureRecognizer sender, ManipulationStartedEventArgs args)
+    private void VideoViewButton_OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
     {
-        ViewModel.OnManipulationStarted();
-    }
-
-    private void GestureRecognizer_OnManipulationUpdated(GestureRecognizer sender, ManipulationUpdatedEventArgs args)
-    {
-    }
-
-    private void GestureRecognizer_OnManipulationCompleted(GestureRecognizer sender, ManipulationCompletedEventArgs args)
-    {
-        if (args.ContactCount == 1)
-        {
-            ViewModel.HandleSwipeGesture(args.Cumulative.Translation.X, args.Cumulative.Translation.Y);
-        }
-
+        ViewModel.ProcessSwipeGesture(e.Cumulative.Translation);
         ViewModel.OnManipulationCompleted();
     }
 
     private void GestureRecognizer_OnHolding(GestureRecognizer sender, HoldingEventArgs args)
     {
-        ViewModel.HandleHoldingGesture(args.HoldingState);
+        ViewModel.ProcessHoldingGesture(args.HoldingState);
     }
 }

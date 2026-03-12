@@ -162,33 +162,33 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PrivacyPersistPlaybackPosition, value);
     }
 
-    public PlayerGestureOption PlayerTapGesture
+    public PlaybackActionKind PlayerTapGesture
     {
-        get => (PlayerGestureOption)GetValue<int>(PlayerGestureTapKey);
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureTapKey);
         set => SetValue(PlayerGestureTapKey, (int)value);
     }
 
-    public PlayerGestureOption PlayerSwipeUpGesture
+    public PlaybackActionKind PlayerSwipeUpGesture
     {
-        get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeUpKey);
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeUpKey);
         set => SetValue(PlayerGestureSwipeUpKey, (int)value);
     }
 
-    public PlayerGestureOption PlayerSwipeDownGesture
+    public PlaybackActionKind PlayerSwipeDownGesture
     {
-        get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeDownKey);
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeDownKey);
         set => SetValue(PlayerGestureSwipeDownKey, (int)value);
     }
 
-    public PlayerGestureOption PlayerSwipeLeftGesture
+    public PlaybackActionKind PlayerSwipeLeftGesture
     {
-        get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeLeftKey);
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeLeftKey);
         set => SetValue(PlayerGestureSwipeLeftKey, (int)value);
     }
 
-    public PlayerGestureOption PlayerSwipeRightGesture
+    public PlaybackActionKind PlayerSwipeRightGesture
     {
-        get => (PlayerGestureOption)GetValue<int>(PlayerGestureSwipeRightKey);
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeRightKey);
         set => SetValue(PlayerGestureSwipeRightKey, (int)value);
     }
 
@@ -215,22 +215,22 @@ public sealed class SettingsService : ISettingsService
         SetDefault(GlobalArgumentsKey, string.Empty);
         SetDefault(PlayerShowChaptersKey, true);
         SetDefault(PrivacyPersistPlaybackPosition, true);
-        SetDefault(PlayerGestureTapKey, (int)PlayerGestureOption.PlayPause);
-        SetDefault(PlayerGestureSwipeUpKey, (int)PlayerGestureOption.IncreaseVolume);
-        SetDefault(PlayerGestureSwipeDownKey, (int)PlayerGestureOption.DecreaseVolume);
-        SetDefault(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.Rewind);
-        SetDefault(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.FastForward);
+        SetDefault(PlayerGestureTapKey, (int)PlaybackActionKind.PlayPause);
+        SetDefault(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.IncreaseVolume);
+        SetDefault(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.DecreaseVolume);
+        SetDefault(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.Rewind);
+        SetDefault(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.FastForward);
         SetDefault(PlayerGestureTapAndHoldKey, true);
 
         // Device family specific overrides
         if (SystemInformation.IsXbox)
         {
             SetValue(PlayerShowControlsKey, true);
-            SetValue(PlayerGestureTapKey, (int)PlayerGestureOption.None);
-            SetValue(PlayerGestureSwipeUpKey, (int)PlayerGestureOption.None);
-            SetValue(PlayerGestureSwipeDownKey, (int)PlayerGestureOption.None);
-            SetValue(PlayerGestureSwipeLeftKey, (int)PlayerGestureOption.None);
-            SetValue(PlayerGestureSwipeRightKey, (int)PlayerGestureOption.None);
+            SetValue(PlayerGestureTapKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.None);
             SetValue(PlayerGestureTapAndHoldKey, false);
         }
     }

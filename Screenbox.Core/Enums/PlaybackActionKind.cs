@@ -1,6 +1,9 @@
 ﻿namespace Screenbox.Core.Enums;
 
-public enum PlayerGestureOption
+/// <summary>
+/// Represents the action that was taken on the media playback.
+/// </summary>
+public enum PlaybackActionKind
 {
     None,
     PlayPause,
@@ -8,6 +11,8 @@ public enum PlayerGestureOption
     FastForward,
     DecreaseVolume,
     IncreaseVolume,
+    DecreaseRate,
+    IncreaseRate,
     //PreviousTrack,
     //NextTrack,
     //PreviousChapter,

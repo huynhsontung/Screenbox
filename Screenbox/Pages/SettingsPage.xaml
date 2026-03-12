@@ -99,8 +99,8 @@
             <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.GetResourceString((x:String))}" />
         </DataTemplate>
 
-        <DataTemplate x:Key="GestureMediaCommandTemplate" x:DataType="enums:PlayerGestureOption">
-            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:PlayerGestureOption))}" />
+        <DataTemplate x:Key="PlaybackActionKindTemplate" x:DataType="enums:PlaybackActionKind">
+            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:PlaybackActionKind))}" />
         </DataTemplate>
     </Page.Resources>
 
@@ -416,7 +416,7 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureTapHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
@@ -427,7 +427,7 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeUpHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
@@ -438,7 +438,7 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeDownHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
@@ -449,7 +449,7 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeLeftHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
@@ -460,7 +460,7 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeRightHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                ItemTemplate="{StaticResource GestureMediaCommandTemplate}"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
                                 SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
