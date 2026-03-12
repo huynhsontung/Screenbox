@@ -180,7 +180,10 @@
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
     <Compile Include="Messages\PlayFilesMessage.cs" />
+    <Compile Include="Messages\PlaylistCreatedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />
+    <Compile Include="Messages\PlaylistDeletedNotificationMessage.cs" />
+    <Compile Include="Messages\PlaylistRenamedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
     <Compile Include="Messages\QueuePlaylistMessage.cs" />
