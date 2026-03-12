@@ -56,6 +56,7 @@
     <x:String x:Key="MoviesOffGlyph">&#xF0022;</x:String>
     <x:String x:Key="AudioGlyph">&#xE8D6;</x:String>
     <x:String x:Key="AudioOffGlyph">&#xF0036;</x:String>
+    <x:String x:Key="PlaylistGlyph">&#xF00A8;</x:String>
     <x:String x:Key="DeleteGlyph">&#xE74D;</x:String>
     <x:String x:Key="StatusPlayingGlyph">&#xE93D;</x:String>
     <x:String x:Key="PlaylistMusicGlyph">&#xE93F;</x:String>

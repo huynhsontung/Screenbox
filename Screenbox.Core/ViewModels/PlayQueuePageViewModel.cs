@@ -6,23 +6,19 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using IResourceService = Screenbox.Core.Services.IResourceService;
 
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayQueuePageViewModel : ObservableRecipient
     {
         private readonly IFilesService _filesService;
-        private readonly IResourceService _resourceService;
 
-        public PlayQueuePageViewModel(IFilesService filesService, IResourceService resourceService)
+        public PlayQueuePageViewModel(IFilesService filesService)
         {
             _filesService = filesService;
-            _resourceService = resourceService;
         }
 
         [RelayCommand]
@@ -32,6 +28,10 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new PlayMediaMessage(uri));
         }
 
+        /// <summary>
+        /// Opens a folder picker and queues all supported media files in the selected folder.
+        /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
+        /// </summary>
         [RelayCommand]
         private async Task AddFolderAsync()
         {
@@ -44,9 +44,9 @@ namespace Screenbox.Core.ViewModels
             }
             catch (Exception e)
             {
-                Messenger.Send(new ErrorMessage(
-                    _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+                Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
             }
         }
+
     }
 }

@@ -46,15 +46,13 @@ public static partial class GlyphConverter
         const string RepeatOffGlyph = "\uF5E7";
         const string RepeatOneGlyph = "\uE8ED";
         const string RepeatAllGlyph = "\uE8EE";
-        const string RepeatOffMirroredGlyph = "\U000F0127";
         const string RepeatOneMirroredGlyph = "\U000F004D";
-        const string RepeatAllMirroredGlyph = "\U000F004E";
 
         return repeatMode switch
         {
-            MediaPlaybackAutoRepeatMode.None => GlobalizationHelper.IsRightToLeftLanguage ? RepeatOffMirroredGlyph : RepeatOffGlyph,
+            MediaPlaybackAutoRepeatMode.None => RepeatOffGlyph,
             MediaPlaybackAutoRepeatMode.Track => GlobalizationHelper.IsRightToLeftLanguage ? RepeatOneMirroredGlyph : RepeatOneGlyph,
-            MediaPlaybackAutoRepeatMode.List => GlobalizationHelper.IsRightToLeftLanguage ? RepeatAllMirroredGlyph : RepeatAllGlyph,
+            MediaPlaybackAutoRepeatMode.List => RepeatAllGlyph,
             _ => throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null),
         };
     }

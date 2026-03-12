@@ -385,6 +385,10 @@
     <value>NQ</value>
     <comment>{Range="A-Z"}{Limit=2}Access key for the play queue page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
+  <data name="NavigationItemPlaylistKey" xml:space="preserve">
+    <value>NP</value>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the playlist page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
+  </data>
   <data name="NavigationItemSettingsKey" xml:space="preserve">
     <value>NS</value>
     <comment>{Range="A-Z"}{Limit=2}Access key for the settings page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>

@@ -34,6 +34,8 @@ public partial class MediaViewModel : ObservableRecipient
 
     public bool IsFromLibrary { get; set; }
 
+    public bool DetailsLoaded { get; private set; }
+
     public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
     public Lazy<PlaybackItem?> Item { get; internal set; }
@@ -74,12 +76,12 @@ public partial class MediaViewModel : ObservableRecipient
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
-    [ObservableProperty] private string _name;
+    [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private bool _isMediaActive;
     [ObservableProperty] private bool _isAvailable = true;
     [ObservableProperty] private AlbumViewModel? _album;
-    [ObservableProperty] private string? _caption;  // For list item subtitle
-    [ObservableProperty] private string? _altCaption;   // For player page subtitle
+    [ObservableProperty] private string _caption = string.Empty;  // For list item subtitle
+    [ObservableProperty] private string _altCaption = string.Empty;   // For player page subtitle
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DurationText))]
@@ -113,6 +115,7 @@ public partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         DateAdded = source.DateAdded;
         IsFromLibrary = source.IsFromLibrary;
+        DetailsLoaded = source.DetailsLoaded;
     }
 
     private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
@@ -134,7 +137,7 @@ public partial class MediaViewModel : ObservableRecipient
         : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
     {
         Location = file.Path;
-        _name = file.DisplayName;
+        _name = file.Name;
         _altCaption = file.Name;
     }
 
@@ -230,6 +233,7 @@ public partial class MediaViewModel : ObservableRecipient
 
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
+        DetailsLoaded = true;
         switch (Source)
         {
             case StorageFile file:
@@ -271,6 +275,9 @@ public partial class MediaViewModel : ObservableRecipient
             videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
             videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
         }
+
+        if (Name == AltCaption)
+            AltCaption = string.Empty;
     }
 
     public async Task LoadThumbnailAsync()

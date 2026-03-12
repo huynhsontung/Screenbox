@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
 
@@ -19,16 +18,15 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
 {
     [ObservableProperty] private bool _hasContent;
 
-    private bool LibraryLoaded => _libraryContext.MusicLibrary != null;
+    /// <summary>Gets a value indicating whether the Music library is available, used to enable the add-folder command.</summary>
+    public bool LibraryLoaded => _libraryContext.MusicLibrary != null;
 
     private readonly LibraryContext _libraryContext;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public MusicPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
+    public MusicPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _resourceService = resourceService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _hasContent = true;
 
@@ -47,9 +45,12 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         AddFolderCommand.NotifyCanExecuteChanged();
     }
 
-
+    /// <summary>
+    /// Requests adding a new folder to the Music library.
+    /// Sends a <see cref="Core.Messages.FailedToAddFolderNotificationMessage"/> on failure.
+    /// </summary>
     [RelayCommand(CanExecute = nameof(LibraryLoaded))]
-    private async Task AddFolder()
+    private async Task AddFolderAsync()
     {
         try
         {
@@ -57,8 +58,9 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
+            Messenger.Send(new FailedToAddFolderNotificationMessage(e.Message));
         }
     }
+
 }
+
