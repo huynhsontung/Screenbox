@@ -1008,8 +1008,8 @@
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
     <value>Swipe right</value>
   </data>
-  <data name="SettingsGestureTapAndHoldHeader" xml:space="preserve">
-    <value>Tap and hold boosts playback speed to 2×</value>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Press and hold to increase playback speed to 2×</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
     <value>Nothing</value>

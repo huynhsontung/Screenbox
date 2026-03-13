@@ -274,7 +274,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool OnPlayerClick()
     {
-        if (!ControlsHidden) return (_settingsService.PlayerTapGesture == PlaybackActionKind.None) && TryHideControls(true);
+        if (!ControlsHidden) return (_settingsService.PlayerGestureTap == PlaybackActionKind.None) && TryHideControls(true);
         ControlsHidden = false;
         DelayHideControls();
         return true;

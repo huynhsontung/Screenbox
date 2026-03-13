@@ -53,14 +53,14 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private Size _viewSize;
     private Size _aspectRatio;
     private TimeSpan _timeBeforeManipulation;
-    private PlaybackActionKind _playerTapGesture;
-    private PlaybackActionKind _playerSwipeUpGesture;
-    private PlaybackActionKind _playerSwipeDownGesture;
-    private PlaybackActionKind _playerSwipeLeftGesture;
-    private PlaybackActionKind _playerSwipeRightGesture;
-    private bool _playerTapAndHoldGesture;
-    private double _playbackRateBeforeHold;
-    private bool _suppressTap;
+    private PlaybackActionKind _playerGestureTap;
+    private PlaybackActionKind _playerGestureSwipeUp;
+    private PlaybackActionKind _playerGestureSwipeDown;
+    private PlaybackActionKind _playerGestureSwipeLeft;
+    private PlaybackActionKind _playerGestureSwipeRight;
+    private bool _playerGesturePressAndHold;
+    private double? _playbackRateBeforeHold;
+    private bool _suppressNextTap;
 
     public PlayerElementViewModel(
         PlayerContext playerContext,
@@ -170,14 +170,14 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnClick()
     {
-        if (_settingsService.PlayerTapGesture == PlaybackActionKind.None || VlcMediaPlayer?.PlaybackItem == null)
+        if (_settingsService.PlayerGestureTap is PlaybackActionKind.None || VlcMediaPlayer?.PlaybackItem == null)
         {
             return;
         }
 
-        if (_suppressTap)
+        if (_suppressNextTap)
         {
-            _suppressTap = false;
+            _suppressNextTap = false;
             return;
         }
 
@@ -186,7 +186,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             _clickTimer.Stop();
             return;
         }
-        _clickTimer.Debounce(() => ProcessPlayerGesture(_playerTapGesture, GestureStepAmount), TimeSpan.FromMilliseconds(200));
+        _clickTimer.Debounce(() => ProcessPlayerGesture(_playerGestureTap, GestureStepAmount), TimeSpan.FromMilliseconds(200));
     }
 
     public void OnManipulationCompleted()
@@ -245,11 +245,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
         if (absoluteCumulativeX > absoluteCumulativeY && absoluteCumulativeX >= SwipeThreshold)
         {
-            gesture = cumulative.X > 0 ? _playerSwipeRightGesture : _playerSwipeLeftGesture;
+            gesture = cumulative.X > 0 ? _playerGestureSwipeRight : _playerGestureSwipeLeft;
         }
         else if (absoluteCumulativeY > absoluteCumulativeX && absoluteCumulativeY >= SwipeThreshold)
         {
-            gesture = cumulative.Y > 0 ? _playerSwipeDownGesture : _playerSwipeUpGesture;
+            gesture = cumulative.Y > 0 ? _playerGestureSwipeDown : _playerGestureSwipeUp;
         }
 
         if (gesture is PlaybackActionKind.None) return;
@@ -266,7 +266,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         const double HoldingSpeed = 2.0;
 
-        if (!_playerTapAndHoldGesture || VlcMediaPlayer == null) return;
+        if (!_playerGesturePressAndHold || VlcMediaPlayer is null || VlcMediaPlayer.PlaybackState is MediaPlaybackState.Paused) return;
 
         switch (holdingState)
         {
@@ -274,7 +274,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 if (!IsHolding)
                 {
                     _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
-                    _suppressTap = true;
+                    _suppressNextTap = true;
                     if (VlcMediaPlayer.PlaybackRate != HoldingSpeed)
                     {
                         Messenger.Send(new ChangePlaybackRateRequestMessage(HoldingSpeed));
@@ -287,15 +287,14 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             case HoldingState.Canceled:
                 if (IsHolding)
                 {
-                    if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold)
+                    if (_playbackRateBeforeHold.HasValue && VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
                     {
-                        Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
-                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(_playbackRateBeforeHold)));
+                        Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
+                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(_playbackRateBeforeHold.Value)));
                     }
+                    _playbackRateBeforeHold = null;
                     IsHolding = false;
                 }
-                break;
-            default:
                 break;
         }
     }
@@ -434,12 +433,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private void LoadSettings()
     {
-        _playerTapGesture = _settingsService.PlayerTapGesture;
-        _playerSwipeUpGesture = _settingsService.PlayerSwipeUpGesture;
-        _playerSwipeDownGesture = _settingsService.PlayerSwipeDownGesture;
-        _playerSwipeLeftGesture = _settingsService.PlayerSwipeLeftGesture;
-        _playerSwipeRightGesture = _settingsService.PlayerSwipeRightGesture;
-        _playerTapAndHoldGesture = _settingsService.PlayerTapAndHoldGesture;
+        _playerGestureTap = _settingsService.PlayerGestureTap;
+        _playerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
+        _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
+        _playerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
+        _playerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
+        _playerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
     }
 
     private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)

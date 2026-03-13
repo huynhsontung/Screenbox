@@ -468,8 +468,8 @@
                                 </interactivity:Interaction.Behaviors>
                             </ComboBox>
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureTapAndHoldHeader}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureTapAndHold, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGesturePressAndHoldHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGesturePressAndHold, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>

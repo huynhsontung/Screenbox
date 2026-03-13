@@ -2,6 +2,7 @@
 
 using System;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters;
@@ -53,7 +54,7 @@ public sealed class EnumToResourceStringConverter : IValueConverter
             return GetResourceString(enumValue);
         }
 
-        return null;
+        return DependencyProperty.UnsetValue;
     }
 
     /// <inheritdoc/>

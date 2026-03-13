@@ -34,31 +34,31 @@ public interface ISettingsService
     /// <summary>
     /// Gets or sets the media command invoked by a tap gesture.
     /// </summary>
-    PlaybackActionKind PlayerTapGesture { get; set; }
+    PlaybackActionKind PlayerGestureTap { get; set; }
 
     /// <summary>
     /// Gets or sets the media command invoked by an upward swipe gesture.
     /// </summary>
-    PlaybackActionKind PlayerSwipeUpGesture { get; set; }
+    PlaybackActionKind PlayerGestureSwipeUp { get; set; }
 
     /// <summary>
     /// Gets or sets the media command invoked by a downward swipe gesture.
     /// </summary>
-    PlaybackActionKind PlayerSwipeDownGesture { get; set; }
+    PlaybackActionKind PlayerGestureSwipeDown { get; set; }
 
     /// <summary>
     /// Gets or sets the media command invoked by a left swipe gesture.
     /// </summary>
-    PlaybackActionKind PlayerSwipeLeftGesture { get; set; }
+    PlaybackActionKind PlayerGestureSwipeLeft { get; set; }
 
     /// <summary>
     /// Gets or sets the media command invoked by a right swipe gesture.
     /// </summary>
-    PlaybackActionKind PlayerSwipeRightGesture { get; set; }
+    PlaybackActionKind PlayerGestureSwipeRight { get; set; }
 
     /// <summary>
-    /// Gets or sets a value that indicates whether the tap and hold gesture
+    /// Gets or sets a value that indicates whether the press and hold gesture
     /// is enabled in the player.
     /// </summary>
-    bool PlayerTapAndHoldGesture { get; set; }
+    bool PlayerGesturePressAndHold { get; set; }
 }

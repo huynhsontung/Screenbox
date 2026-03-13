@@ -40,7 +40,7 @@ public sealed class SettingsService : ISettingsService
     private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
     private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
     private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
-    private const string PlayerGestureTapAndHoldKey = "Player/Gesture/TapAndHold";
+    private const string PlayerGesturePressAndHoldKey = "Player/Gesture/PressAndHold";
 
     public bool UseIndexer
     {
@@ -162,40 +162,40 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PrivacyPersistPlaybackPosition, value);
     }
 
-    public PlaybackActionKind PlayerTapGesture
+    public PlaybackActionKind PlayerGestureTap
     {
         get => (PlaybackActionKind)GetValue<int>(PlayerGestureTapKey);
         set => SetValue(PlayerGestureTapKey, (int)value);
     }
 
-    public PlaybackActionKind PlayerSwipeUpGesture
+    public PlaybackActionKind PlayerGestureSwipeUp
     {
         get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeUpKey);
         set => SetValue(PlayerGestureSwipeUpKey, (int)value);
     }
 
-    public PlaybackActionKind PlayerSwipeDownGesture
+    public PlaybackActionKind PlayerGestureSwipeDown
     {
         get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeDownKey);
         set => SetValue(PlayerGestureSwipeDownKey, (int)value);
     }
 
-    public PlaybackActionKind PlayerSwipeLeftGesture
+    public PlaybackActionKind PlayerGestureSwipeLeft
     {
         get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeLeftKey);
         set => SetValue(PlayerGestureSwipeLeftKey, (int)value);
     }
 
-    public PlaybackActionKind PlayerSwipeRightGesture
+    public PlaybackActionKind PlayerGestureSwipeRight
     {
         get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeRightKey);
         set => SetValue(PlayerGestureSwipeRightKey, (int)value);
     }
 
-    public bool PlayerTapAndHoldGesture
+    public bool PlayerGesturePressAndHold
     {
-        get => GetValue<bool>(PlayerGestureTapAndHoldKey);
-        set => SetValue(PlayerGestureTapAndHoldKey, value);
+        get => GetValue<bool>(PlayerGesturePressAndHoldKey);
+        set => SetValue(PlayerGesturePressAndHoldKey, value);
     }
 
     public SettingsService()
@@ -220,7 +220,7 @@ public sealed class SettingsService : ISettingsService
         SetDefault(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.DecreaseVolume);
         SetDefault(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.Rewind);
         SetDefault(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.FastForward);
-        SetDefault(PlayerGestureTapAndHoldKey, true);
+        SetDefault(PlayerGesturePressAndHoldKey, true);
 
         // Device family specific overrides
         if (SystemInformation.IsXbox)
@@ -231,7 +231,7 @@ public sealed class SettingsService : ISettingsService
             SetValue(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.None);
             SetValue(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.None);
             SetValue(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.None);
-            SetValue(PlayerGestureTapAndHoldKey, false);
+            SetValue(PlayerGesturePressAndHoldKey, false);
         }
     }
 

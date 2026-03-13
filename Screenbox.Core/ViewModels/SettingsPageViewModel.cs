@@ -31,7 +31,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeDown;
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeLeft;
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeRight;
-    [ObservableProperty] private bool _playerGestureTapAndHold;
+    [ObservableProperty] private bool _playerGesturePressAndHold;
     [ObservableProperty] private bool _playerShowControls;
     [ObservableProperty] private bool _playerShowChapters;
     [ObservableProperty] private int _playerControlsHideDelay;
@@ -118,12 +118,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         // Load values
         _playerAutoResize = (int)_settingsService.PlayerAutoResize;
-        _playerGestureTap = _settingsService.PlayerTapGesture;
-        _playerGestureSwipeUp = _settingsService.PlayerSwipeUpGesture;
-        _playerGestureSwipeDown = _settingsService.PlayerSwipeDownGesture;
-        _playerGestureSwipeLeft = _settingsService.PlayerSwipeLeftGesture;
-        _playerGestureSwipeRight = _settingsService.PlayerSwipeRightGesture;
-        _playerGestureTapAndHold = _settingsService.PlayerTapAndHoldGesture;
+        _playerGestureTap = _settingsService.PlayerGestureTap;
+        _playerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
+        _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
+        _playerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
+        _playerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
+        _playerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
         _playerShowControls = _settingsService.PlayerShowControls;
         _playerShowChapters = _settingsService.PlayerShowChapters;
         _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
@@ -188,38 +188,38 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     partial void OnPlayerGestureTapChanged(PlaybackActionKind value)
     {
-        _settingsService.PlayerTapGesture = value;
+        _settingsService.PlayerGestureTap = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTap), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerGestureSwipeUpChanged(PlaybackActionKind value)
     {
-        _settingsService.PlayerSwipeUpGesture = value;
+        _settingsService.PlayerGestureSwipeUp = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeUp), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerGestureSwipeDownChanged(PlaybackActionKind value)
     {
-        _settingsService.PlayerSwipeDownGesture = value;
+        _settingsService.PlayerGestureSwipeDown = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeDown), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerGestureSwipeLeftChanged(PlaybackActionKind value)
     {
-        _settingsService.PlayerSwipeLeftGesture = value;
+        _settingsService.PlayerGestureSwipeLeft = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeLeft), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerGestureSwipeRightChanged(PlaybackActionKind value)
     {
-        _settingsService.PlayerSwipeRightGesture = value;
+        _settingsService.PlayerGestureSwipeRight = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeRight), typeof(SettingsPageViewModel)));
     }
 
-    partial void OnPlayerGestureTapAndHoldChanged(bool value)
+    partial void OnPlayerGesturePressAndHoldChanged(bool value)
     {
-        _settingsService.PlayerTapAndHoldGesture = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTapAndHold), typeof(SettingsPageViewModel)));
+        _settingsService.PlayerGesturePressAndHold = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGesturePressAndHold), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerShowControlsChanged(bool value)
