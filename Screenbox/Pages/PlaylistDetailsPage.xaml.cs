@@ -209,7 +209,7 @@ public sealed partial class PlaylistDetailsPage : Page
         string? newName = await dialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Name)
         {
-            await ViewModel.Source.RenameAsync(newName!);
+            await ViewModel.RenamePlaylistAsync(newName!);
         }
     }
 

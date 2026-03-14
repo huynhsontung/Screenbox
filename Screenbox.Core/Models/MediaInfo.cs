@@ -34,14 +34,16 @@ public sealed class MediaInfo
 
     internal MediaInfo(IMediaProperties properties)
     {
-        MediaType = MediaPlaybackType.Music;
+        MediaType = MediaPlaybackType.Unknown;
         if (properties is MusicInfo musicProperties)
         {
+            MediaType = MediaPlaybackType.Music;
             MusicProperties = musicProperties;
             VideoProperties = new VideoInfo();
         }
         else if (properties is VideoInfo videoProperties)
         {
+            MediaType = MediaPlaybackType.Video;
             MusicProperties = new MusicInfo();
             VideoProperties = videoProperties;
         }

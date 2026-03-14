@@ -53,8 +53,6 @@ public sealed partial class PlayerPage : Page
 
         INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
         navigationService.Navigated += NavigationServiceOnNavigated;
-
-        AccessKeyManager.IsDisplayModeEnabledChanged += AccessKeyManager_OnIsDisplayModeEnabledChanged;
     }
     private void NavigationServiceOnNavigated(object sender, EventArgs e)
     {
@@ -142,11 +140,6 @@ public sealed partial class PlayerPage : Page
             // Controls are disabled by default until playback is ready
             PlayerControls.FocusFirstButton();
         }
-    }
-
-    private void AccessKeyManager_OnIsDisplayModeEnabledChanged(object sender, object args)
-    {
-        ViewModel.KeyTipsVisible = AccessKeyManager.IsDisplayModeEnabled;
     }
 
     private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)

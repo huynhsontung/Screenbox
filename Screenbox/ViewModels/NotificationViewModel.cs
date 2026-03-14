@@ -29,7 +29,11 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<FailedToLoadSubtitleNotificationMessage>,
     IRecipient<FailedToOpenFilesNotificationMessage>,
     IRecipient<FailedToAddFolderNotificationMessage>,
-    IRecipient<FailedToInitializeNotificationMessage>
+    IRecipient<FailedToInitializeNotificationMessage>,
+    IRecipient<PlaylistCreatedNotificationMessage>,
+    IRecipient<PlaylistDeletedNotificationMessage>,
+    IRecipient<PlaylistRenamedNotificationMessage>,
+    IRecipient<PlaylistItemsAddedNotificationMessage>
 {
     [ObservableProperty] private NotificationLevel _severity;
 
@@ -249,6 +253,49 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     public void Receive(FailedToInitializeNotificationMessage message)
     {
         ShowErrorNotification(Resources.FailedToInitializeNotificationTitle, message.Reason);
+    }
+
+    /// <summary>
+    /// Handles a notification that a playlist was created.
+    /// </summary>
+    public void Receive(PlaylistCreatedNotificationMessage message)
+    {
+        ShowSuccessNotification(Resources.PlaylistCreatedNotificationTitle(message.PlaylistName), null);
+    }
+
+    /// <summary>
+    /// Handles a notification that a playlist was deleted.
+    /// </summary>
+    public void Receive(PlaylistDeletedNotificationMessage message)
+    {
+        ShowSuccessNotification(Resources.PlaylistDeletedNotificationTitle(message.PlaylistName), null);
+    }
+
+    /// <summary>
+    /// Handles a notification that a playlist was renamed.
+    /// </summary>
+    public void Receive(PlaylistRenamedNotificationMessage message)
+    {
+        ShowSuccessNotification(Resources.PlaylistRenamedNotificationTitle(message.NewName), null);
+    }
+
+    public void Receive(PlaylistItemsAddedNotificationMessage message)
+    {
+        ShowSuccessNotification(Resources.PlaylistItemsAddedNotificationTitle(message.ItemCount, message.PlaylistName), null);
+    }
+
+    private void ShowSuccessNotification(string? title, string? message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Title = title;
+            Message = message;
+            Severity = NotificationLevel.Success;
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(5));
+        });
     }
 
     private void ShowErrorNotification(string? title, string? message)

@@ -76,13 +76,13 @@ public sealed partial class PlayerControls : UserControl
     {
         Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
         customSpeedFlyout.ShowAt(MoreButton);
-        if (SpeedSlider.Value != ViewModel.PlaybackSpeed)
+        if (SpeedSlider.Value != ViewModel.PlaybackRate)
         {
-            SpeedSlider.Value = ViewModel.PlaybackSpeed;
+            SpeedSlider.Value = ViewModel.PlaybackRate;
         }
         else
         {
-            SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackSpeed);
+            SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackRate);
         }
     }
 
@@ -94,8 +94,14 @@ public sealed partial class PlayerControls : UserControl
 
     private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
     {
-        ViewModel.PlaybackSpeed = e.NewValue;
-        SelectAlternatePlaybackSpeedItem(e.NewValue);
+        double newValue = Math.Max(e.NewValue, 0.05);
+        if (Math.Abs(SpeedSlider.Value - newValue) > 0.0001)
+        {
+            SpeedSlider.Value = newValue;
+        }
+
+        ViewModel.SetPlaybackRateCommand.Execute(newValue);
+        SelectAlternatePlaybackSpeedItem(newValue);
     }
 
     private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)

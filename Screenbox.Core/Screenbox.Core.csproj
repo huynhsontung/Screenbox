@@ -161,6 +161,7 @@
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
     <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
+    <Compile Include="Messages\ChangePlaybackRateRequestMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
     <Compile Include="Messages\ClearPlaylistMessage.cs" />
@@ -179,7 +180,11 @@
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
     <Compile Include="Messages\PlayFilesMessage.cs" />
+    <Compile Include="Messages\PlaylistCreatedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />
+    <Compile Include="Messages\PlaylistDeletedNotificationMessage.cs" />
+    <Compile Include="Messages\PlaylistItemsAddedNotificationMessage.cs" />
+    <Compile Include="Messages\PlaylistRenamedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
     <Compile Include="Messages\QueuePlaylistMessage.cs" />
@@ -198,7 +203,7 @@
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
     <Compile Include="Models\IMediaProperties.cs" />
-    <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LanguageInfo.cs" />
     <Compile Include="Models\LivelyInfoModel.cs" />
     <Compile Include="Models\LivelyMusicModel.cs" />
     <Compile Include="Models\LivelyPlaybackStateModel.cs" />

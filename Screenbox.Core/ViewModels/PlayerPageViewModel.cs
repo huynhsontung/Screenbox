@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -25,6 +27,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -40,6 +43,11 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
 {
+    private const VirtualKey VK_OEM_PLUS = (VirtualKey)0xBB;
+    private const VirtualKey VK_OEM_COMMA = (VirtualKey)0xBC;
+    private const VirtualKey VK_OEM_MINUS = (VirtualKey)0xBD;
+    private const VirtualKey VK_OEM_PERIOD = (VirtualKey)0xBE;
+
     [ObservableProperty] private bool _controlsHidden;
     [ObservableProperty] private string? _statusMessage;
     [ObservableProperty] private bool _isPlaying;
@@ -51,7 +59,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
     [ObservableProperty] private MediaViewModel? _media;
     [ObservableProperty] private bool _showVisualizer;
-    [ObservableProperty] private bool _keyTipsVisible;
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
@@ -311,12 +318,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         switch (key)
         {
-            case (VirtualKey)0xBB:  // Plus ("+")
+            case VK_OEM_PLUS:  // Plus ("+")
             case VirtualKey.Add:
             case VirtualKey.Up when playerVisible:
                 volumeChange = 5;
                 break;
-            case (VirtualKey)0xBD:  // Minus ("-")
+            case VK_OEM_MINUS:  // Minus ("-")
             case VirtualKey.Subtract:
             case VirtualKey.Down when playerVisible:
                 volumeChange = -5;
@@ -461,6 +468,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <returns><see langword="true"/> if a playback rate change was performed; otherwise, <see langword="false"/>.</returns>
     public bool ProcessTogglePlaybackRateKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
+        const double PlaybackRateStep = 0.25;
+
         if (MediaPlayer == null ||
             modifiers != VirtualKeyModifiers.Shift ||
             PlayerVisibility != PlayerVisibilityState.Visible)
@@ -468,17 +477,22 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             return false;
         }
 
+        double rateDelta;
         switch (key)
         {
-            case (VirtualKey)190:   // Shift + . (">")
-                TogglePlaybackRate(true);
-                return true;
-            case (VirtualKey)188:   // Shift + , ("<")
-                TogglePlaybackRate(false);
-                return true;
+            case VK_OEM_PERIOD:  // Shift + . (">")
+                rateDelta = PlaybackRateStep;
+                break;
+            case VK_OEM_COMMA:   // Shift + , ("<")
+                rateDelta = -PlaybackRateStep;
+                break;
             default:
                 return false;
         }
+
+        double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(MediaPlayer.PlaybackRate + rateDelta, 0.25, 4)));
+        Messenger.Send(new UpdateStatusMessage($"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×"));
+        return true;
     }
 
     /// <summary>
@@ -504,10 +518,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         switch (key)
         {
-            case (VirtualKey)190:   // Period (".")
+            case VK_OEM_PERIOD:
                 MediaPlayer.StepForwardOneFrame();
                 return true;
-            case (VirtualKey)188:   // Comma (",")
+            case VK_OEM_COMMA:
                 MediaPlayer.StepBackwardOneFrame();
                 return true;
             default:
@@ -556,8 +570,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             VirtualKey.Number2 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 1),
             VirtualKey.Number3 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 1.5),
             VirtualKey.Number4 when modifiers == VirtualKeyModifiers.None => ResizeWindow(videoSize, 0),
-            (VirtualKey)0xBB when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
-            (VirtualKey)0xBD when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
+            VK_OEM_PLUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 + desiredStepSize),   // Plus ("+")
+            VK_OEM_MINUS when modifiers == VirtualKeyModifiers.Control => ResizeWindow(currentSize, 1 - desiredStepSize),   // Minus ("-")
             _ => null,
         };
     }
@@ -579,37 +593,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
     }
 
-    private void TogglePlaybackRate(bool speedUp)
-    {
-        if (MediaPlayer == null) return;
-        Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 };
-        double lastPositiveStep = steps[0];
-        foreach (double step in steps)
-        {
-            double diff = step - MediaPlayer.PlaybackRate;
-            if (speedUp && diff > 0)
-            {
-                MediaPlayer.PlaybackRate = step;
-                Messenger.Send(new UpdateStatusMessage($"{step}×"));
-                return;
-            }
-
-            if (!speedUp)
-            {
-                if (-diff > 0)
-                {
-                    lastPositiveStep = step;
-                }
-                else
-                {
-                    MediaPlayer.PlaybackRate = lastPositiveStep;
-                    Messenger.Send(new UpdateStatusMessage($"{lastPositiveStep}×"));
-                    return;
-                }
-            }
-        }
-    }
-
     partial void OnControlsHiddenChanged(bool value)
     {
         if (value)
@@ -627,18 +610,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     partial void OnPlayerVisibilityChanged(PlayerVisibilityState value)
     {
         if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
-    }
-
-    partial void OnKeyTipsVisibleChanged(bool value)
-    {
-        if (value)
-        {
-            ControlsHidden = false;
-        }
-        else
-        {
-            DelayHideControls();
-        }
     }
 
     [RelayCommand]
@@ -680,7 +651,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;
         if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
-            SeekBarPointerInteracting || AudioOnly || ControlsHidden || KeyTipsVisible) return false;
+            SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
         if (!skipFocusCheck)
         {
@@ -689,11 +660,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             // using arrow keys without affecting focus.
             if (focused is Slider { IsFocusEngaged: true }) return false;
 
-            // Don't hide controls when a flyout is in focus
-            // Flyout is not in the same XAML tree of the Window content, use this fact to detect flyout opened
-            Control? root = focused?.FindAscendant<Frame>(frame => frame == Window.Current.Content) ??
-                            focused?.FindChild<Frame>(frame => frame == Window.Current.Content);
-            if (root == null) return false;
+            // Do not hide controls while a popup is open.
+            bool isPopupOpen = VisualTreeHelper.GetOpenPopups(Window.Current).Any();
+            if (isPopupOpen) return false;
         }
 
         ControlsHidden = true;
@@ -706,7 +675,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     private void DelayHideControls()
     {
-        if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly || KeyTipsVisible) return;
+        if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly) return;
 
         int delayInSeconds = _settingsService.PlayerControlsHideDelay;
         _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));

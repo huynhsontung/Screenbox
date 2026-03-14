@@ -12,12 +12,10 @@
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
-    <StackPanel Spacing="8">
-        <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{strings:Resources Key=PlaylistName}" />
-        <TextBox
-            x:Name="PlaylistNameTextBox"
-            MaxLength="100"
-            PlaceholderText="{strings:Resources Key=CreatePlaylistPlaceholder}"
-            TextChanged="PlaylistNameTextBox_OnTextChanged" />
-    </StackPanel>
+    <TextBox
+        x:Name="PlaylistNameTextBox"
+        MaxLength="100"
+        PlaceholderText="{x:Bind strings:Resources.CreatePlaylistPlaceholder}"
+        SelectedText="{x:Bind strings:Resources.NewPlaylistDefaultName}"
+        TextChanged="PlaylistNameTextBox_OnTextChanged" />
 </ContentDialog>
