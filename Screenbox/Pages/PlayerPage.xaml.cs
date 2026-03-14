@@ -59,8 +59,6 @@ public sealed partial class PlayerPage : Page
 
         INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
         navigationService.Navigated += NavigationServiceOnNavigated;
-
-        AccessKeyManager.IsDisplayModeEnabledChanged += AccessKeyManager_OnIsDisplayModeEnabledChanged;
     }
     private void NavigationServiceOnNavigated(object sender, EventArgs e)
     {
@@ -162,11 +160,6 @@ public sealed partial class PlayerPage : Page
         // Left padding should only be set if we pin flow direction on the title bar.
         // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
         RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
-    }
-
-    private void AccessKeyManager_OnIsDisplayModeEnabledChanged(object sender, object args)
-    {
-        ViewModel.KeyTipsVisible = AccessKeyManager.IsDisplayModeEnabled;
     }
 
     private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
