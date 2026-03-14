@@ -59,14 +59,26 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource ContentPagePadding}">
+            Padding="{StaticResource ContentPagePadding}"
+            ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
             <TextBlock
-                HorizontalAlignment="Left"
+                Grid.Column="0"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=PlayQueue}" />
+                Text="{strings:Resources Key=PlayQueue}"
+                TextWrapping="NoWrap">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+
             <muxc:SplitButton
                 x:Name="HeaderAddButton"
-                HorizontalAlignment="Right"
+                Grid.Column="1"
                 VerticalAlignment="Top"
                 extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
