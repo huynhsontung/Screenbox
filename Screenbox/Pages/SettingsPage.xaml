@@ -10,6 +10,7 @@
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enums="using:Screenbox.Core.Enums"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -96,6 +97,10 @@
 
         <DataTemplate x:Key="ResourceNameToResourceStringTemplate" x:DataType="x:String">
             <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.GetResourceString((x:String))}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="PlaybackActionKindTemplate" x:DataType="enums:PlaybackActionKind">
+            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:PlaybackActionKind))}" />
         </DataTemplate>
     </Page.Resources>
 
@@ -408,14 +413,63 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureSeek}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureTapHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureVolume}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeUpHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureTap}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeDownHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeLeftHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeRightHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource PlaybackActionKindTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GestureOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGesturePressAndHoldHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGesturePressAndHold, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>

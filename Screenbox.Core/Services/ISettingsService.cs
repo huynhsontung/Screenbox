@@ -7,9 +7,6 @@ public interface ISettingsService
 {
     PlayerAutoResizeOption PlayerAutoResize { get; set; }
     bool UseIndexer { get; set; }
-    bool PlayerVolumeGesture { get; set; }
-    bool PlayerSeekGesture { get; set; }
-    bool PlayerTapGesture { get; set; }
     bool PlayerShowControls { get; set; }
     bool PlayerShowChapters { get; set; }
     int PlayerControlsHideDelay { get; set; }
@@ -33,4 +30,35 @@ public interface ISettingsService
     /// and restored between sessions.
     /// </summary>
     bool PersistPlaybackPosition { get; set; }
+
+    /// <summary>
+    /// Gets or sets the media command invoked by a tap gesture.
+    /// </summary>
+    PlaybackActionKind PlayerGestureTap { get; set; }
+
+    /// <summary>
+    /// Gets or sets the media command invoked by an upward swipe gesture.
+    /// </summary>
+    PlaybackActionKind PlayerGestureSwipeUp { get; set; }
+
+    /// <summary>
+    /// Gets or sets the media command invoked by a downward swipe gesture.
+    /// </summary>
+    PlaybackActionKind PlayerGestureSwipeDown { get; set; }
+
+    /// <summary>
+    /// Gets or sets the media command invoked by a left swipe gesture.
+    /// </summary>
+    PlaybackActionKind PlayerGestureSwipeLeft { get; set; }
+
+    /// <summary>
+    /// Gets or sets the media command invoked by a right swipe gesture.
+    /// </summary>
+    PlaybackActionKind PlayerGestureSwipeRight { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether the press and hold gesture
+    /// is enabled in the player.
+    /// </summary>
+    bool PlayerGesturePressAndHold { get; set; }
 }

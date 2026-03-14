@@ -16,9 +16,6 @@ public sealed class SettingsService : ISettingsService
 
     private const string GeneralThemeKey = "General/Theme";
     private const string PlayerAutoResizeKey = "Player/AutoResize";
-    private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
-    private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
-    private const string PlayerTapGestureKey = "Player/Gesture/Tap";
     private const string PlayerShowControlsKey = "Player/ShowControls";
     private const string PlayerControlsHideDelayKey = "Player/ControlsHideDelay";
     private const string PlayerLivelyPathKey = "Player/Lively/Path";
@@ -38,6 +35,13 @@ public sealed class SettingsService : ISettingsService
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
+    private const string PlayerGestureTapKey = "Player/Gesture/Tap";
+    private const string PlayerGestureSwipeUpKey = "Player/Gesture/SwipeUp";
+    private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
+    private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
+    private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
+    private const string PlayerGesturePressAndHoldKey = "Player/Gesture/PressAndHold";
+
     public bool UseIndexer
     {
         get => GetValue<bool>(LibrariesUseIndexerKey);
@@ -54,24 +58,6 @@ public sealed class SettingsService : ISettingsService
     {
         get => (PlayerAutoResizeOption)GetValue<int>(PlayerAutoResizeKey);
         set => SetValue(PlayerAutoResizeKey, (int)value);
-    }
-
-    public bool PlayerVolumeGesture
-    {
-        get => GetValue<bool>(PlayerVolumeGestureKey);
-        set => SetValue(PlayerVolumeGestureKey, value);
-    }
-
-    public bool PlayerSeekGesture
-    {
-        get => GetValue<bool>(PlayerSeekGestureKey);
-        set => SetValue(PlayerSeekGestureKey, value);
-    }
-
-    public bool PlayerTapGesture
-    {
-        get => GetValue<bool>(PlayerTapGestureKey);
-        set => SetValue(PlayerTapGestureKey, value);
     }
 
     public int PersistentVolume
@@ -176,12 +162,45 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PrivacyPersistPlaybackPosition, value);
     }
 
+    public PlaybackActionKind PlayerGestureTap
+    {
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureTapKey);
+        set => SetValue(PlayerGestureTapKey, (int)value);
+    }
+
+    public PlaybackActionKind PlayerGestureSwipeUp
+    {
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeUpKey);
+        set => SetValue(PlayerGestureSwipeUpKey, (int)value);
+    }
+
+    public PlaybackActionKind PlayerGestureSwipeDown
+    {
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeDownKey);
+        set => SetValue(PlayerGestureSwipeDownKey, (int)value);
+    }
+
+    public PlaybackActionKind PlayerGestureSwipeLeft
+    {
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeLeftKey);
+        set => SetValue(PlayerGestureSwipeLeftKey, (int)value);
+    }
+
+    public PlaybackActionKind PlayerGestureSwipeRight
+    {
+        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeRightKey);
+        set => SetValue(PlayerGestureSwipeRightKey, (int)value);
+    }
+
+    public bool PlayerGesturePressAndHold
+    {
+        get => GetValue<bool>(PlayerGesturePressAndHoldKey);
+        set => SetValue(PlayerGesturePressAndHoldKey, value);
+    }
+
     public SettingsService()
     {
         SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
-        SetDefault(PlayerVolumeGestureKey, true);
-        SetDefault(PlayerSeekGestureKey, true);
-        SetDefault(PlayerTapGestureKey, true);
         SetDefault(PlayerShowControlsKey, true);
         SetDefault(PlayerControlsHideDelayKey, 3);
         SetDefault(PersistentVolumeKey, 100);
@@ -196,15 +215,23 @@ public sealed class SettingsService : ISettingsService
         SetDefault(GlobalArgumentsKey, string.Empty);
         SetDefault(PlayerShowChaptersKey, true);
         SetDefault(PrivacyPersistPlaybackPosition, true);
+        SetDefault(PlayerGestureTapKey, (int)PlaybackActionKind.PlayPause);
+        SetDefault(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.IncreaseVolume);
+        SetDefault(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.DecreaseVolume);
+        SetDefault(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.Rewind);
+        SetDefault(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.FastForward);
+        SetDefault(PlayerGesturePressAndHoldKey, true);
 
         // Device family specific overrides
         if (SystemInformation.IsXbox)
         {
-            SetValue(PlayerTapGestureKey, false);
-            SetValue(PlayerSeekGestureKey, false);
-            SetValue(PlayerVolumeGestureKey, false);
-            SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             SetValue(PlayerShowControlsKey, true);
+            SetValue(PlayerGestureTapKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGesturePressAndHoldKey, false);
         }
     }
 
