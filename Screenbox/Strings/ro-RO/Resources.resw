@@ -1017,8 +1017,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>Anulare</value>
   </data>
-  <data name="PlaylistName" xml:space="preserve">
-    <value>Nume playlist</value>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Introduceți un nume pentru acest playlist</value>
