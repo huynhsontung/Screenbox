@@ -1017,8 +1017,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>Batal</value>
   </data>
-  <data name="PlaylistName" xml:space="preserve">
-    <value>Nama senarai main</value>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Masukkan nama untuk senarai main ini</value>
