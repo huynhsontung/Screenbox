@@ -1017,8 +1017,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>취소</value>
   </data>
-  <data name="PlaylistName" xml:space="preserve">
-    <value>재생목록 이름</value>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>재생목록의 이름을 입력하세요</value>
