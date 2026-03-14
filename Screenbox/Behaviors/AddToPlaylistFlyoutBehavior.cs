@@ -103,6 +103,7 @@ internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
             MediaViewModel vm => [vm],
             IReadOnlyList<MediaViewModel> list => list,
             IEnumerable<MediaViewModel> collection => collection.ToList(),
+            IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToList(),
             _ => Array.Empty<MediaViewModel>(),
         };
 
