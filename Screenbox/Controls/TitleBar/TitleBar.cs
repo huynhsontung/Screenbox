@@ -141,7 +141,8 @@ public sealed partial class TitleBar : ContentControl
     public void ResetTitleBar()
     {
         _window?.SetTitleBar(null);
-        _coreTitleBar?.ExtendViewIntoTitleBar = false;
+        if (_coreTitleBar != null)
+            _coreTitleBar.ExtendViewIntoTitleBar = false;
     }
 
     /// <summary>
@@ -177,19 +178,26 @@ public sealed partial class TitleBar : ContentControl
         }
 
         _window = Window.Current;
-        _window?.Activated += Window_OnActivated;
+        if (_window != null)
+            _window.Activated += Window_OnActivated;
 
         _flowDirectionCallbackToken = RegisterPropertyChangedCallback(FlowDirectionProperty, OnFlowDirectionChanged);
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        _coreTitleBar?.LayoutMetricsChanged -= CoreTitleBar_OnLayoutMetricsChanged;
-        //_coreTitleBar?.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
-        _coreTitleBar = null;
+        if (_coreTitleBar != null)
+        {
+            _coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_OnLayoutMetricsChanged;
+            //_coreTitleBar.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
+            _coreTitleBar = null;
+        }
 
-        _window?.Activated -= Window_OnActivated;
-        _window = null;
+        if (_window != null)
+        {
+            _window.Activated -= Window_OnActivated;
+            _window = null;
+        }
 
         UnregisterPropertyChangedCallback(FlowDirectionProperty, _flowDirectionCallbackToken);
 
@@ -292,8 +300,11 @@ public sealed partial class TitleBar : ContentControl
         double trailingInset = _coreTitleBar.SystemOverlayRightInset;
         bool isRtl = FlowDirection is FlowDirection.RightToLeft;
 
-        _leftPaddingColumn?.Width = new GridLength(isRtl ? trailingInset : leadingInset);
-        _rightPaddingColumn?.Width = new GridLength(isRtl ? leadingInset : trailingInset);
+        if (_leftPaddingColumn != null)
+            _leftPaddingColumn.Width = new GridLength(isRtl ? trailingInset : leadingInset);
+
+        if (_rightPaddingColumn != null)
+            _rightPaddingColumn.Width = new GridLength(isRtl ? leadingInset : trailingInset);
     }
 
     private void UpdateHeader()
