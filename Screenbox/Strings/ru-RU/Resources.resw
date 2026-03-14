@@ -455,7 +455,7 @@
     <value>Исполнители</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Песня</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Песни</value>
@@ -652,10 +652,10 @@
     <value>Разрешить максимальный уровень громкости выше 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Управление экраном</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Выберите, какой элемент появится на экране и измените поведение авто скрытия</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Жесты</value>
@@ -698,15 +698,15 @@
     <value>Субтитры добавлены</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Плейлист "{0}" создан</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Плейлист "{0}" удален</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Плейлист переименован на "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -753,7 +753,7 @@
     <value>Расширенные</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Конфиденциальность</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Расширенный режим</value>
@@ -849,7 +849,7 @@
     <value>Упорядочить по</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Сортировать по опции {0}</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -958,7 +958,7 @@
     <value>Билинейный</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Точка</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
     <value>Супер разрешение</value>
@@ -967,14 +967,14 @@
     <value>Показывать название главы при наличии</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Спрятать элементы управления после</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} секунды</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} секунд</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
@@ -987,79 +987,79 @@
     <value>Язык системы</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Ничего не найдено для "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Папка</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Добавить в плейлист</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Создать новый плейлист</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Новый плейлист</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Выбранный элемент</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Выбранные элементы</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Плейлисты отсутствуют</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Создать</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="PlaylistName" xml:space="preserve">
-    <value>Playlist name</value>
+    <value>Название плейлиста</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Введите название для этого плейлиста</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Плейлисты</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Удалить</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Переименовать</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Введите новое название для этого плейлиста</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Переименовать плейлист</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Удалить плейлист</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? This action cannot be undone.</value>
+    <value>Вы уверены, что хотите удалить '{0}' плейлист ? Это действие нельзя отменить.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Воспроизвести с последнего места</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Хранить последнее место воспроизведения на этом устройстве, чтобы возобновить, где вы остановились</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Очистить историю сохраненного места воспроизведения</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Добавлен {0} элемент в плейлист "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Добавлено {0} элементов в плейлист "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>
