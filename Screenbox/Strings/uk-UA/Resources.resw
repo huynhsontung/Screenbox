@@ -1017,8 +1017,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>Скасувати</value>
   </data>
-  <data name="PlaylistName" xml:space="preserve">
-    <value>Назва списку відтворення</value>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Введіть назву цього списку відтворення</value>
