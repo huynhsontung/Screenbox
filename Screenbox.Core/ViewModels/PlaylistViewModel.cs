@@ -7,14 +7,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels;
 
-public partial class PlaylistViewModel : ObservableObject
+public partial class PlaylistViewModel : ObservableRecipient
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 
@@ -90,6 +92,7 @@ public partial class PlaylistViewModel : ObservableObject
         }
 
         await SaveAsync();
+        Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
     }
 
     private PersistentPlaylist ToPersistentPlaylist()

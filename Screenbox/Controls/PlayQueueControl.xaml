@@ -13,6 +13,7 @@
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="752"
@@ -32,7 +33,7 @@
 
                 <MenuFlyout x:Key="ItemFlyout">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                        <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
                     </interactivity:Interaction.Behaviors>
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
@@ -144,6 +145,28 @@
                 </StackPanel>
             </Button>
 
+            <muxc:DropDownButton
+                x:Name="AddToPlaylistButton"
+                Margin="0,0,8,0"
+                AutomationProperties.Name="{x:Bind AddToPlaylistButtonLabel.Text}"
+                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
+                KeyTipPlacementMode="Bottom">
+                <muxc:DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind ViewModel.Playlist.Items}" />
+                        </interactivity:Interaction.Behaviors>
+                    </MenuFlyout>
+                </muxc:DropDownButton.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                    <TextBlock
+                        x:Name="AddToPlaylistButtonLabel"
+                        Margin="8,0,0,0"
+                        Text="{strings:Resources Key=AddToPlaylist}" />
+                </StackPanel>
+            </muxc:DropDownButton>
+
             <ToggleButton
                 x:Name="MultiSelectToggle"
                 AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
@@ -203,6 +226,19 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Label="{strings:Resources Key=PlayNext}" />
+                <AppBarButton
+                    x:Name="AddToPlaylistSelectionButton"
+                    Icon="{ui:SymbolIcon Symbol=Add}"
+                    IsEnabled="{x:Bind ViewModel.SelectionCount, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}"
+                    Label="{strings:Resources Key=AddToPlaylist}">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <interactivity:Interaction.Behaviors>
+                                <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind PlaylistListView.SelectedItems}" />
+                            </interactivity:Interaction.Behaviors>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"
@@ -368,10 +404,14 @@
                         <Setter Target="AddFilesButton.Visibility" Value="Visible" />
                         <Setter Target="ClearButton.(ToolTipService.ToolTip)" Value="{x:Bind ClearButtonLabel.Text}" />
                         <Setter Target="ClearButtonLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="AddToPlaylistButton.(ToolTipService.ToolTip)" Value="{x:Bind AddToPlaylistButtonLabel.Text}" />
+                        <Setter Target="AddToPlaylistButtonLabel.Visibility" Value="Collapsed" />
                         <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
                         <Setter Target="MultiSelectToggleLabel.Visibility" Value="Collapsed" />
                         <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="PlayNextButton.(ToolTipService.ToolTip)" Value="{x:Bind PlayNextButton.Label}" />
+                        <Setter Target="AddToPlaylistSelectionButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="AddToPlaylistSelectionButton.(ToolTipService.ToolTip)" Value="{x:Bind AddToPlaylistSelectionButton.Label}" />
                         <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
                         <Setter Target="Footer.Visibility" Value="Collapsed" />
