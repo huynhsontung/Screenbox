@@ -14,6 +14,7 @@ using Screenbox.Core.Controllers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
 using Windows.Globalization;
@@ -53,7 +54,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
-    public List<Models.Language> AvailableLanguages { get; }
+    public List<LanguageInfo> AvailableLanguages { get; }
 
     public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
 
@@ -95,10 +96,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         VideoLocations = new ObservableCollection<StorageFolder>();
         RemovableStorageFolders = new ObservableCollection<StorageFolder>();
 
-        var manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l)).ToList();
-        AvailableLanguages = manifestLanguages.Select(l => new Models.Language(l.NativeName, l.LanguageTag, l.LayoutDirection))
+        IEnumerable<Language> manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l));
+        AvailableLanguages = manifestLanguages.Select(l => new LanguageInfo(l.NativeName, l.LanguageTag))
             .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
-            .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
+            .Prepend(new LanguageInfo(string.Empty, string.Empty))
             .ToList();
 
         if (SystemInformation.IsXbox)
