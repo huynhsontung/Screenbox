@@ -114,9 +114,18 @@ public partial class PlaylistViewModel : ObservableRecipient
     private MediaViewModel ToMediaViewModel(PersistentMediaRecord record)
     {
         MediaViewModel media;
+        bool existing = false;
         if (Uri.TryCreate(record.Path, UriKind.Absolute, out var uri))
         {
-            media = _mediaFactory.GetSingleton(uri);
+            if (_mediaFactory.TryGetSingleton(uri, out var existingMedia))
+            {
+                media = existingMedia!;
+                existing = true;
+            }
+            else
+            {
+                media = _mediaFactory.GetSingleton(uri);
+            }
         }
         else
         {
@@ -124,17 +133,20 @@ public partial class PlaylistViewModel : ObservableRecipient
             media.IsAvailable = false;
         }
 
-        if (!string.IsNullOrEmpty(record.Title))
-            media.Name = record.Title;
-
-        media.MediaInfo = record.Properties != null
-            ? new MediaInfo(record.Properties)
-            : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
-
-        if (record.DateAdded != default)
+        if (!existing)
         {
-            DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
-            media.DateAdded = utcTime.ToLocalTime();
+            if (!string.IsNullOrEmpty(record.Title))
+                media.Name = record.Title;
+
+            media.MediaInfo = record.Properties != null
+                ? new MediaInfo(record.Properties)
+                : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
+
+            if (record.DateAdded != default)
+            {
+                DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
+                media.DateAdded = utcTime.ToLocalTime();
+            }
         }
 
         return media;
