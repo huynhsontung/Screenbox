@@ -1054,4 +1054,12 @@
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Șterge istoricul pozițiilor de redare ale dispozitivului</value>
   </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
 </root>
