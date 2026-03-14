@@ -46,16 +46,16 @@
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayAddGlyph}}"
                         Text="{strings:Resources Key=PlayNext}" />
-                    <MenuFlyoutItem
-                        Command="{StaticResource OpenWithCommand}"
-                        CommandParameter="{Binding}"
-                        Icon="{ui:FontIcon Glyph=&#xE7AC;}"
-                        Text="{x:Bind strings:Resources.OpenWith}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutSubItem
                         x:Name="AddToPlaylistSubMenu"
                         Icon="{ui:SymbolIcon Symbol=Add}"
                         Text="{strings:Resources Key=AddToPlaylist}" />
+                    <MenuFlyoutItem
+                        Command="{StaticResource OpenWithCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                        Text="{x:Bind strings:Resources.OpenWith}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.RemoveCommand}"
                         CommandParameter="{Binding}"
