@@ -1017,8 +1017,8 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="PlaylistName" xml:space="preserve">
-    <value>Nombre de la lista de reproducción</value>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Ingrese un nombre para esta lista</value>
