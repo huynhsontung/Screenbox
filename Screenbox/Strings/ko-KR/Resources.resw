@@ -1018,7 +1018,8 @@
     <value>취소</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>제목 없는 재생목록
+</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>재생목록의 이름을 입력하세요</value>
@@ -1055,11 +1056,11 @@
     <value>재생 위치 기록 지우기</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>재생목록 "{1}"에 {0} 항목을 추가했습니다</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>재생목록 "{1}"에 항목 {0}개를 추가했습니다</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>
