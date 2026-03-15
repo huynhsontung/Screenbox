@@ -352,6 +352,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Dosya konumunu aç</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Albüm</value>
   </data>
