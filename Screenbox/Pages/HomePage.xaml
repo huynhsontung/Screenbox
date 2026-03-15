@@ -54,6 +54,11 @@
                     Icon="{ui:SymbolIcon Symbol=Add}"
                     Text="{strings:Resources Key=AddToPlaylist}" />
                 <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
+                <MenuFlyoutItem
                     Command="{x:Bind ViewModel.RemoveCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Clear}"

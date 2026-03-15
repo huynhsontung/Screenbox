@@ -28,6 +28,7 @@
 
                     <!--  Commands  -->
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
+                    <commands:OpenWithCommand x:Key="OpenWithCommand" />
 
                     <!--  Converters  -->
                     <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
