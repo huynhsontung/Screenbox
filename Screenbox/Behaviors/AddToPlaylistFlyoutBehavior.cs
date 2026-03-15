@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xaml.Interactivity;
-using Screenbox.Controls;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.ViewModels;
+using Screenbox.Dialogs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

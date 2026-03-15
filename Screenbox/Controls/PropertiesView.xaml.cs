@@ -18,7 +18,7 @@ public sealed partial class PropertiesView : UserControl
         typeof(PropertiesView),
         new PropertyMetadata(null, OnMediaChanged));
 
-    internal MediaViewModel? Media
+    public MediaViewModel? Media
     {
         get => (MediaViewModel?)GetValue(MediaProperty);
         set => SetValue(MediaProperty, value);

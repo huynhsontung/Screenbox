@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
-using Screenbox.Controls;
+using Screenbox.Dialogs;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Composition;
