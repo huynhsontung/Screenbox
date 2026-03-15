@@ -460,7 +460,7 @@
     <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.lock.json" />
-    <None Include="InvaidXamlResources.txt" />
+    <None Include="InvalidXamlResources.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="Secrets.cs.template" />
   </ItemGroup>
@@ -765,10 +765,6 @@
     <Page Include="Styles\Progress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
