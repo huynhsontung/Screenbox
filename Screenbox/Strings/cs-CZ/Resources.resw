@@ -869,4 +869,112 @@
   <data name="VideoLibrary" xml:space="preserve">
     <value>Videos</value>
   </data>
-</root>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Další informace o tomto problému a možných opravách naleznete na adrese</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Nepodařilo se načíst vizuální prvek</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Složka</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Použít jazyk systému</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Žádné výsledky pro {0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} sekunda</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} sekund</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Přizpůsobení</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Při otevření jednoho souboru automaticky přidat všechny ostatní soubory ve složce do fronty přehrávání</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Přidat všechny soubory ve složce do fronty</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Změna jazyka zobrazení aplikace</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>Jazyk aplikace</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Vyberte prvky, které se mohou zobrazit v ovládacích prvcích, a nastavte chování automatického skrytí</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Ovládání na obrazovce</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Skrýt ovládací prvky po uplynutí tohoto času</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Pokračovat v přehrávání od místa, kde jste naposledy skončili, při otevření souboru</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Vždy pokračovat od poslední pozice</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Zobrazit název kapitoly, je-li k dispozici</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Změna celkového barevného schématu aplikace</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Motiv aplikace</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Zvětšení s vyšším rozlišením vyžaduje kompatibilní hardware a podporu ovladačů</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Metoda zvětšení videa</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Zobrazit album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Zobrazit interpreta</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Skladba</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Seřadit podle {0} vybrané možnosti</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Použít nastavení systému</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Tmavý</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Světlý</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Uběhlý čas</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Celková délka</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Zbývající čas</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineární</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Bodový</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Superrozlišení</value>
+  </data></root>

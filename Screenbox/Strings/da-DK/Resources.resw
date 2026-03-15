@@ -869,4 +869,112 @@
   <data name="VideoLibrary" xml:space="preserve">
     <value>Videos</value>
   </data>
-</root>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For mere information om dette problem og mulige løsninger, besøg</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Kunne ikke indlæse visualisering</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Mappe</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Brug systemsprog</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Ingen resultater for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} sekund</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} sekunder</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Tilpasning</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Når du åbner en enkelt fil, tilføjes alle andre filer i mappen automatisk til afspilningskøen</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Tilføj alle filer i mappen til køen</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Skift appens visningssprog</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App-sprog</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Vælg hvilke elementer der kan vises i kontrolelementerne, og juster automatisk skjul-adfærden</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Skærmkontroller</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Skjul kontroller efter dette tidsrum</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Fortsæt afspilningen fra det sted, hvor du sidst stoppede, når du åbner en fil</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Genoptag altid fra sidste position</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Vis kapitelnavn, når det er tilgængeligt</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Skift appens overordnede farveskema</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>App-tema</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super-opløsning opskalering kræver kompatibel hardware og driversupport</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video-opskaleringsmetode</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Vis album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Vis kunstner</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Sang</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sorter efter {0} valgt mulighed</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Brug systemindstilling</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Mørk</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Lys</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Forløbet tid</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Total varighed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Resterende tid</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineær</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Punkt</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super-opløsning</value>
+  </data></root>

@@ -761,4 +761,220 @@
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
   </data>
-</root>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Arguments actius</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Més opcions per afegir multimèdia a la cua de reproducció</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artista</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Cerca fitxers</value>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Per obtenir més informació sobre aquest problema i possibles solucions, visiteu</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Data d'addició</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Per defecte</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>No s'ha pogut carregar el visual</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fitxer</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Carpeta</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Obteniu Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Descarregueu visuals a GitHub</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Utilitza l'idioma del sistema</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Multimèdia</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimitza la vista immersiva</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Música</value>
+  </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Més opcions per obrir multimèdia</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Amb el suport de Lively Wallpaper</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Any de publicació</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Cerca vídeos, cançons, àlbums i més</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Cap resultat per a "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} segon</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} segons</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Selecciona-ho tot</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Selecciona tots els elements d'aquesta vista</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>No seleccionis res</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Neteja la selecció</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Trieu un fons per donar un toc visual a la reproducció d'àudio a la vista immersiva</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Visual d'àudio</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalització</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>En obrir un fitxer únic, afegeix automàticament tots els altres fitxers de la carpeta a la cua de reproducció</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Afegeix tots els fitxers de la carpeta a la cua</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Obteniu més visuals a través de l'aplicació Lively Wallpaper o descarregueu-los de GitHub</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Importa visuals</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Canvieu l'idioma de visualització de l'aplicació</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>Idioma de l'aplicació</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Trieu quins elements poden aparèixer als controls i ajusteu el comportament d'ocultació automàtica</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Controls en pantalla</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Amaga els controls després d'aquest temps</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continua la reproducció des d'on vas deixar quan obres un fitxer</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Reprèn sempre des de l'última posició</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Inclou multimèdia de dispositius d'emmagatzematge com ara memòries USB a les vostres biblioteques</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Cerca emmagatzematge extraïble</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Mostra el nom del capítol quan estigui disponible</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Mostra els controls quan estigui en pausa</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Canvieu l'esquema de colors general de l'aplicació</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Tema de l'aplicació</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Obre sempre els fitxers multimèdia en una nova instància</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Permet múltiples instàncies</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>L'escalat de super resolució requereix maquinari compatible i suport de controladors</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Mètode d'escalat de vídeo</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Mostra l'àlbum</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Mostra l'artista</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Cançó</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Ordena per</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Ordena per {0} opció seleccionada</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Utilitza la configuració del sistema</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Fosc</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Clar</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Reconeixements de programari de tercers</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Temps transcorregut</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Durada total</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Temps restant</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vídeo</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Vídeos</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineal</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Punt</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolució</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Opcions de visual d'àudio</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
+  </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Ajusta el volum</value>
+  </data></root>

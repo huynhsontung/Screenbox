@@ -761,4 +761,220 @@
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
   </data>
-</root>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Aktiewe argumente</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Meer opsies om media by die afspeellys te voeg</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Kunstenaar</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Blaai deur lêers</value>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Vir meer inligting oor hierdie probleem en moontlike oplossings, besoek</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Datum bygevoeg</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Verstek</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Kon nie visueel laai nie</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Lêer</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Vouer</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Kry Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Laai visuele af op GitHub</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Gebruik stelsel se taal</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimeer onderdompelende weergawe</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Musiek</value>
+  </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Meer opsies om media oop te maak</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Aangedryf deur Lively Wallpaper</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Jaar vrygestel</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Soek videos, liedjies, albums en meer</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Geen resultate vir "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} sekonde</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} sekondes</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Kies alles</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Kies alle items in hierdie aansig</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Kies niks</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Maak jou keuse skoon</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Kies 'n agtergrond om jou oudio-afspeel 'n visuele aanslag in die onderdompelende aansig te gee</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Oudio-visueel</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalisering</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Wanneer 'n enkele lêer oopgemaak word, voeg outomaties alle ander lêers in die vouer by die afspeelwag</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Voeg alle lêers in vouer by wag</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Kry meer visuele via die Lively Wallpaper-toep of laai hulle van GitHub af</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Voer visuele in</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Verander die toep se vertoontaal</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>Toep-taal</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Kies watter elemente in die kontroles kan verskyn, en pas die outomatiese verbergingsgedrag aan</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Skermbeheer</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Versteek kontroles na hierdie tyd</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Gaan voort speel van waar jy laas gestop het wanneer 'n lêer oopgemaak word</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Hervat altyd vanaf laaste posisie</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Sluit media van stoortoerusting soos USB-stokkies in jou biblioteke in</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Soek verwyderbare berging</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Wys hoofstuk-naam wanneer beskikbaar</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Wys kontroles wanneer gepouseer</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Verander die toep se algemene kleurskema</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Toep-tema</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Maak altyd medialêers in 'n nuwe instansie oop</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Laat verskeie instansies toe</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super-resolusie opskaling vereis versoenbare hardeware en bestuurderondersteuning</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video-opskalingsmetode</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Wys album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Wys kunstenaar</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Liedjie</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sorteer na</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sorteer na {0} opsie gekies</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Gebruik stelselinstellings</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Donker</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Lig</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Derdeparty-sagteware-erkennings</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Tyd verstreke</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Totale duur</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Tyd oor</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Videos</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineêr</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Punt</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super-resolusie</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Oudio-visuele opsies</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuele</value>
+  </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Pas volume aan</value>
+  </data></root>
