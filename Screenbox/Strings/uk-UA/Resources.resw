@@ -352,6 +352,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Відкрити розташування файлу</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Альбом</value>
   </data>
@@ -455,7 +458,7 @@
     <value>Виконавці</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Пісня</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Пісні</value>
@@ -697,6 +700,18 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Субтитри додано</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Критична помилка</value>
   </data>
@@ -739,6 +754,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Розширене</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Приватніть</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Розширений режим</value>
@@ -972,10 +990,79 @@
     <value>Використовувати мову системи</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Немає результатів для «{0}»</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Тека</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Додати до списку відтворення</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Створити новий список відтворення</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Новий список відтворення</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Вибраний елемент</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Вибрані елементи</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Немає списків відтворення</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Створити</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Введіть назву цього списку відтворення</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Списки відтворення</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Перейменувати</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Введіть назву для цього списку відтворення</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Перейменувати список відтворення</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Видалити список відтворення</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Упевнені, що хочете видалити список відтворення «{0}»? Цю дію не можна скасувати.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Історія позицій відтворення</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Зберегти історію відтворення на цьому пристрої, щоби продовжити з того місця, де ви зупинилися</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Очистити історію позицій відтворення пристрою</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

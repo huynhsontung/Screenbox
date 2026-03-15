@@ -242,7 +242,7 @@
     <value>Alih keluar</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Main kemudian</value>
+    <value>Main seterusnya</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Gerak ke atas</value>
@@ -351,6 +351,9 @@
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Buka lokasi fail</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -697,6 +700,18 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Sari kata ditambah</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Ralat kritikal</value>
   </data>
@@ -739,6 +754,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Lanjutan</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privasi</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Mod lanjutan</value>
@@ -977,5 +995,74 @@
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Tambah ke senarai main</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Cipta senarai main baharu</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Senarai main baharu</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Item terpilih</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Item terpilih</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Tiada senarai main</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Cipta</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Masukkan nama untuk senarai main ini</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Senarai main</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Padam</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Nama Semula</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Masukkan nama baharu untuk senarai main ini</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Nama semula senarai main</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Padam senarai main</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Anda pasti mahu memadam senarai main '{0}'? Tindakan ini tidak boleh dibuat asal.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Sejarah posisi main balik</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Simpan sejarah posisi main balik saya pada peranti ini untuk menyambung semula di tempat anda berhenti</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Bersihkan sejarah posisi main balik peranti</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

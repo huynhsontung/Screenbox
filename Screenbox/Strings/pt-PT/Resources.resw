@@ -352,6 +352,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Abrir localização do ficheiro</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Álbum</value>
   </data>
@@ -634,7 +637,7 @@
     <value>Legendas</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Mostrar ficheiros multimédia reproduzidos recentemente na página inicial</value>
+    <value>Ver conteúdo de multimédia reproduzido recentemente na página inicial</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Limpar histórico de multimédia recente</value>
@@ -697,6 +700,18 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Legenda adicionada</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Lista de reprodução "{0}" criada</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Lista de reprodução "{0}" eliminada</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Nome da lista de reprodução foi mudado para "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Erro crítico</value>
   </data>
@@ -739,6 +754,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Avançado</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacidade</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Modo avançado</value>
@@ -928,10 +946,10 @@
     <value>Personalização</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Retomar sempre da última posição</value>
+    <value>Retomar a sessão anterior</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continuar a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
+    <value>Retomar automaticamente a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Melhorar vídeo</value>
@@ -977,5 +995,74 @@
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Pasta</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Adicionar à lista de reprodução</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Criar lista de reprodução</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nova lista de reprodução</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Selected item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Selected items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Sem listas de reprodução</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Criar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Lista de reprodução sem título</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Introduza um nome para esta lista de reprodução</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Listas de reprodução</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Mudar o nome</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Introduza um novo nome para esta lista de reprodução</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Mudar o nome da lista de reprodução</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Eliminar lista de reprodução</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Tem a certeza de que pretende eliminar a lista de reprodução "{0}"?  Não é possível anular esta ação.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Histórico de posição reproduzida</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Armazenar o meu histórico de posições reproduzidas neste dispositivo para retomar no ponto onde parou</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Limpar o histórico de posição reproduzida do dispositivo</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>{0} item adicionado à lista de reprodução "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>{0} itens adicionados à lista de reprodução "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>
