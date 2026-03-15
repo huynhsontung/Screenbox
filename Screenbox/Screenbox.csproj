@@ -183,8 +183,8 @@
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NavigationViewEx.cs" />
-    <Compile Include="Controls\NavigationViewEx.Properties.cs" />
+    <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
+    <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
