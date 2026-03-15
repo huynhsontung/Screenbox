@@ -882,7 +882,7 @@
     <value>Použít jazyk systému</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>Žádné výsledky pro {0}"</value>
+    <value>Žádné výsledky pro "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
