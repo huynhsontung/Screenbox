@@ -352,6 +352,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>打开文件位置</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>专辑</value>
   </data>
