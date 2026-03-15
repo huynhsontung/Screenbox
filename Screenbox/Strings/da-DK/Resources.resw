@@ -869,4 +869,200 @@
   <data name="VideoLibrary" xml:space="preserve">
     <value>Videos</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Forløbet tid</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Resterende tid</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Samlet varighed</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Åbn med</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Sang</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Kontrolelementer på skærmen</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Vælg hvilke elementer der vises i kontrolelementer, og juster automatisk skjulning</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Afspilningsliste "{0}" oprettet</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Afspilningsliste "{0}" slettet</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Afspilningsliste omdøbt til "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For mere information om dette problem og mulige løsninger, besøg</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privatliv</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sorter efter {0} valgt mulighed</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Vis album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Vis kunstner</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Kunne ikke indlæse visuals</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Når du åbner en enkelt fil, tilføjes alle andre filer i mappen automatisk til afspilningskøen</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Tilføj alle filer i mappen til køen</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Brug systemindstilling</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Mørk</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Lys</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Skift appens overordnede farveskema</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>App-tema</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Tilpasning</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Fortsæt forrige session</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Fortsæt automatisk medieafspilning fra din sidst stoppede position, når du åbner en fil</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Metode til videoupscaling</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution-upscaling kræver kompatibel hardware og driversupport</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineær</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Punkt</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolution</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Vis kapitelnavn når tilgængeligt</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Skjul kontrolelementer efter dette tidsrum</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} sekund</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} sekunder</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App-sprog</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Skift appens visningssprog</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Brug systemsprog</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Ingen resultater for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Mappe</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Føj til afspilningsliste</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Opret ny afspilningsliste</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Ny afspilningsliste</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Valgt element</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Valgte elementer</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Ingen afspilningslister</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Opret</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuller</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Unavngivet afspilningsliste</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Skriv et navn til denne afspilningsliste</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Afspilningslister</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Slet</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Omdøb</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Skriv et nyt navn til denne afspilningsliste</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Omdøb afspilningsliste</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Slet afspilningsliste</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Er du sikker på, at du vil slette afspilningslisten '{0}'? Du kan ikke fortryde denne handling.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Historik for afspilningsposition</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Gem min historik for afspilningsposition på denne enhed for at fortsætte, fra det sted du stoppede</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Ryd enhedens historik for afspilningsposition</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Tilføjede {0} element til afspilningslisten "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Tilføjede {0} elementer til afspilningslisten "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
 </root>
