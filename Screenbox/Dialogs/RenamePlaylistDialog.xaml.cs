@@ -6,7 +6,7 @@ using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls;
+namespace Screenbox.Dialogs;
 
 public sealed partial class RenamePlaylistDialog : ContentDialog
 {

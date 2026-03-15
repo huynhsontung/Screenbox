@@ -1,20 +1,19 @@
 ﻿<ContentDialog
-    x:Class="Screenbox.Controls.RenamePlaylistDialog"
+    x:Class="Screenbox.Dialogs.OpenUrlDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="{strings:Resources Key=RenamePlaylist}"
-    CloseButtonText="{strings:Resources Key=Cancel}"
+    Title="{strings:Resources Key=OpenUrl}"
+    CloseButtonText="{strings:Resources Key=Close}"
     DefaultButton="Primary"
-    PrimaryButtonText="{strings:Resources Key=Rename}"
+    IsPrimaryButtonEnabled="{x:Bind CanOpen(UrlBox.Text), Mode=OneWay}"
+    PrimaryButtonText="{strings:Resources Key=Open}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
-    <TextBox
-        x:Name="PlaylistNameTextBox"
-        MaxLength="100"
-        PlaceholderText="{x:Bind strings:Resources.RenamePlaylistPlaceholder}"
-        TextChanged="PlaylistNameTextBox_OnTextChanged" />
+    <Grid>
+        <TextBox x:Name="UrlBox" PlaceholderText="{strings:Resources Key=OpenUrlPlaceholder}" />
+    </Grid>
 </ContentDialog>

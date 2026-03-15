@@ -1,11 +1,12 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.Input;
-using Screenbox.Controls;
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
+using Screenbox.Dialogs;
 
 namespace Screenbox.Commands;
+
 internal class OpenUrlCommand : IRelayCommand
 {
     public IRelayCommand<Uri>? NextCommand { get; set; }
@@ -28,6 +29,7 @@ internal class OpenUrlCommand : IRelayCommand
     }
 
     public event EventHandler? CanExecuteChanged;
+
     public void NotifyCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

@@ -1,13 +1,13 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.Input;
-using Screenbox.Controls;
-using Screenbox.Core.Models;
-using Screenbox.Core.ViewModels;
 using System;
+using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.ViewModels;
+using Screenbox.Dialogs;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Commands;
+
 internal class SetPlaybackOptionsCommand : IRelayCommand
 {
     public event EventHandler? CanExecuteChanged;
