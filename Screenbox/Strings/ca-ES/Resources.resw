@@ -761,4 +761,308 @@
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Temps transcorregut</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Temps restant</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Durada total</value>
+  </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Ajusta el volum</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Selecciona-ho tot</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Selecciona tots els elements en aquesta vista</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>No seleccioneu res</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Esborra la selecció</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimitza la vista immersiva</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Cerca vídeos, cançons, àlbums i molt més</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Obre amb</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Cançó</value>
+  </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Més opcions per obrir multimèdia</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Més opcions per afegir multimèdia a la cua de reproducció</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Mostra els controls en pausa</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Controls a la pantalla</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Trieu quins elements poden aparèixer als controls i ajusteu el comportament d'ocultació automàtica</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Llista de reproducció "{0}" creada</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Llista de reproducció "{0}" eliminada</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Llista de reproducció canviada de nom a "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Per a més informació sobre aquest problema i possibles solucions, visiteu</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privadesa</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Reconeixements de programari de tercers</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Cerca en emmagatzematge extraïble</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Inclou contingut multimèdia de dispositius d'emmagatzematge com ara memòries USB a les vostres biblioteques</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Arguments actius</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Permet múltiples instàncies</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Obre sempre els fitxers multimèdia en una nova instància</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Ordena per</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Ordena per {0} opció seleccionada</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artista</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Any de publicació</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Visual d'àudio</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Obteniu Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Descarregueu elements visuals a GitHub</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Opcions de visual d'àudio</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Navega pels fitxers</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Per defecte</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Trieu un fons per donar una aparença visual a la reproducció d'àudio en la vista immersiva</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Basat en Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Importa visuals</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Obteniu més visuals a través de l'aplicació Lively Wallpaper o descarregueu-los de GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Data d'afegiment</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Multimèdia</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vídeo</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fitxer</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Música</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Vídeos</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Mostra l'àlbum</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Mostra l'artista</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>No s'ha pogut carregar el visual</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Quan obriu un únic fitxer, afegiu automàticament tots els altres fitxers de la carpeta a la cua de reproducció</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Afegiu tots els fitxers de la carpeta a la cua</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Utilitza la configuració del sistema</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Fosc</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Clar</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Canvia l'esquema de color general de l'aplicació</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Tema de l'aplicació</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalització</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Reprèn la sessió anterior</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Repreneu automàticament la reproducció multimèdia des de la vostra última posició aturada en obrir un fitxer</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Mètode d'ampliació de vídeo</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>L'ampliació de super resolució requereix maquinari compatible i suport de controlador</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineal</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Punt</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolució</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Mostra el nom del capítol quan estigui disponible</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Amaga els controls després d'aquesta quantitat de temps</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} segon</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} segons</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>Idioma de l'aplicació</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Canvia l'idioma de visualització de l'aplicació</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Utilitza l'idioma del sistema</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Sense resultats per a "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Carpeta</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Afegeix a la llista de reproducció</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Crea una nova llista de reproducció</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nova llista de reproducció</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Element seleccionat</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Elements seleccionats</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Sense llistes de reproducció</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Crea</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Llista de reproducció sense títol</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Introduïu un nom per a aquesta llista de reproducció</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Llistes de reproducció</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Suprimeix</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Canvia el nom</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Introduïu un nou nom per a aquesta llista de reproducció</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Canvia el nom de la llista de reproducció</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Suprimeix la llista de reproducció</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Esteu segurs que voleu suprimir la llista de reproducció '{0}'? No podeu desfer aquesta acció.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Historial de la posició de reproducció</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Desa l'historial de la meva posició de reproducció en aquest dispositiu per reprendre des d'on ho vau deixar</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Esborra l'historial de la posició de reproducció del dispositiu</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>S'ha afegit {0} element a la llista de reproducció "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>S'han afegit {0} elements a la llista de reproducció "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
 </root>

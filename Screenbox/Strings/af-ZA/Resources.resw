@@ -761,4 +761,308 @@
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Verstreke tyd</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Tyd oor</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Totale duur</value>
+  </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Stel volume in</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Kies alles</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Kies alle items in hierdie aansig</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Kies niks</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Verwyder seleksie</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimeer meeslepende aansig</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Soek videos, liedjies, albums en meer</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Maak oop met</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Liedjie</value>
+  </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Meer opsies om media oop te maak</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Meer opsies om media by die afspeelwagstou te voeg</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Wys kontroles tydens pouse</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Kontroles op die skerm</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Kies watter elemente in die kontroles mag verskyn en stel die outo-verberg-gedrag in</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Speellys "{0}" geskep</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Speellys "{0}" verwyder</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Speellys hernoem na "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Vir meer inligting oor hierdie kwessie en moontlike oplossings, besoek</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privaatheid</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Derdeparty-sagteware-erkennings</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Deursoek verwyderbare stoor</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Sluit media van stoortoestelle soos USB-stokkies in jou biblioteke in</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Aktiewe argumente</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Laat veelvuldige instansies toe</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Maak mediafiles altyd in 'n nuwe instansie oop</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sorteer volgens</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sorteer volgens {0} opsie gekies</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Kunstenaar</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Vrylatingsjaar</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Klankvisueel</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Kry Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Laai visuele af op GitHub</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Klankvisuele opsies</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuele</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Blaai deur lêers</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Verstek</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Kies 'n agtergrond om jou klankspeling 'n visuele voorkoms te gee in die meeslepende aansig</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Aangedryf deur Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Voer visuele in</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Kry meer visuele via die Lively Wallpaper-toepassing of laai dit af van GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Datum bygevoeg</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Lêer</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Musiek</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Videos</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Wys album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Wys kunstenaar</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Kon nie visueel laai nie</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Wanneer 'n enkele lêer oopgemaak word, voeg outomaties alle ander lêers in die gids by die afspeelwagstou</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Voeg alle lêers in gids by wagstou</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Gebruik stelselinstelling</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Donker</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Lig</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Verander die toepassing se algehele kleurskema</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Toepassing-tema</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalisering</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Hervat vorige sessie</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Hervat outomaties mediaweergawe vanaf jou laaste gestopte posisie wanneer 'n lêer oopgemaak word</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video-opskaalmetode</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super-resolusie-opskaling vereis versoenbare hardeware en drywersteuning</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineêr</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Punt</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super-resolusie</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Wys hoofstuknaam indien beskikbaar</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Versteek kontroles na hierdie tydperk</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} sekonde</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} sekondes</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>Toepassing-taal</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Verander die toepassing se vertaaltaal</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Gebruik stelsel-taal</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Geen resultate vir "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Gids</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Voeg by speellys</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Skep nuwe speellys</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nuwe speellys</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Geselekteerde item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Geselekteerde items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Geen speellyste</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Skep</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Kanselleer</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Naamlose speellys</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Voer 'n naam vir hierdie speellys in</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Speellyste</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Verwyder</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Hernoem</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Voer 'n nuwe naam vir hierdie speellys in</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Hernoem speellys</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Verwyder speellys</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Is jy seker jy wil die speellys '{0}' verwyder? Jy kan nie hierdie handeling ontdoen nie.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Geskiedenis van afspeelposisie</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Stoor my geskiedenis van afspeelposisie op hierdie toestel om te hervat waar jy opgehou het</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Vee toestel se afspeelposisiegeskiedenis uit</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>{0} item by speellys "{1}" gevoeg</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>{0} items by speellys "{1}" gevoeg</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
 </root>

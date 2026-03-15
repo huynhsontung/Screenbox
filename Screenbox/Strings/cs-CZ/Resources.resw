@@ -869,4 +869,200 @@
   <data name="VideoLibrary" xml:space="preserve">
     <value>Videos</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Uplynulý čas</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Zbývající čas</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Celková délka</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Otevřít pomocí</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Skladba</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Ovládací prvky na obrazovce</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Vyberte, které prvky se mohou zobrazovat v ovládacích prvcích, a nastavte chování automatického skrytí</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist „{0}" byl vytvořen</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist „{0}" byl odstraněn</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist přejmenován na „{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Další informace o tomto problému a možných opravách najdete na</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Soukromí</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Seřadit podle {0} – vybraná možnost</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Zobrazit album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Zobrazit interpreta</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Nepodařilo se načíst vizuál</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Při otevírání jednoho souboru automaticky přidat všechny ostatní soubory ve složce do fronty přehrávání</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Přidat všechny soubory ve složce do fronty</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Použít nastavení systému</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Tmavý</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Světlý</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Změnit celkové barevné schéma aplikace</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Motiv aplikace</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Přizpůsobení</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Obnovit předchozí relaci</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Automaticky obnovit přehrávání médií z poslední zastavené pozice při otevírání souboru</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Metoda zvyšování rozlišení videa</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Zvýšení rozlišení pomocí super rozlišení vyžaduje kompatibilní hardware a podporu ovladačů</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilineární</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Bodové</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super rozlišení</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Zobrazit název kapitoly, pokud je k dispozici</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Skrýt ovládací prvky po uplynutí tohoto času</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} sekunda</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} sekund</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>Jazyk aplikace</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Změnit jazyk zobrazení aplikace</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Použít jazyk systému</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Žádné výsledky pro „{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Složka</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Přidat do playlistu</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Vytvořit nový playlist</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nový playlist</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Vybraná položka</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Vybrané položky</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Žádné playlisty</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Vytvořit</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Zrušit</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Playlist bez názvu</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Zadejte název tohoto playlistu</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlisty</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Odstranit</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Přejmenovat</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Zadejte nový název tohoto playlistu</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Přejmenovat playlist</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Odstranit playlist</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Opravdu chcete odstranit playlist „{0}"? Tuto akci nelze vrátit zpět.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Historie pozice přehrávání</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Uložit historii pozice přehrávání na tomto zařízení, abyste mohli pokračovat tam, kde jste skončili</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Vymazat historii pozice přehrávání v zařízení</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Přidána {0} položka do playlistu „{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Přidáno {0} položek do playlistu „{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
 </root>
