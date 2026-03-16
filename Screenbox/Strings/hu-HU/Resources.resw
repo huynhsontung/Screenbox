@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -353,7 +353,7 @@
     <value>Fájl helyének megnyitása</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Megnyitás ezzel</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -458,7 +458,7 @@
     <value>Előadók</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Dal</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Dalok</value>
@@ -628,7 +628,7 @@
     <value>Legutóbbiak mutatása</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Kezelőfelület mutatása szüneteltetéskor</value>
+    <value>Vezérlők megjelenítése szüneteltetéskor</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Videó könyvtár helye(i)</value>
@@ -655,10 +655,10 @@
     <value>Engedélyezi hogy a maximális hangerő meghaladja a 100%-ot</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Képernyőn megjelenő vezérlők</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Válassza ki, hogy mely elemek jelenhetnek meg a vezérlőkben, és állítsa be az automatikus elrejtési viselkedést</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesztusok</value>
@@ -701,15 +701,15 @@
     <value>Felirat hozzáadva</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>"{0}" lejátszási lista létrehozva</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>"{0}" lejátszási lista törölve</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>A lejátszási lista átnevezve erre: "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -719,7 +719,7 @@
     <value>Nincs elérhető kompatibilis render. Kérlek ellenőrizd hogy elérhető e az eszközödön a Direct3D 11.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>A problémával és a lehetséges javításokkal kapcsolatos további információkért látogasson el ide:</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Nem sikerült megnyitni a fájlt(fájlokat)</value>
@@ -756,7 +756,7 @@
     <value>Haladó</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Adatvédelem</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Haladó mód</value>
@@ -852,7 +852,7 @@
     <value>Rendezés</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Rendezés {0} lehetőség szerint, kiválasztva</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -913,156 +913,156 @@
     <value>Videók</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Album megjelenítése</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Előadó megjelenítése</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Nem sikerült betölteni a vizualizációt</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>Egyetlen fájl megnyitásakor a mappában lévő összes többi fájl automatikusan hozzáadódik a lejátszási sorhoz</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Összes fájl hozzáadása a mappából a sorhoz</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Rendszerbeállítás használata</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Sötét</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Világos</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Az alkalmazás általános színsémájának módosítása</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Alkalmazás témája</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Személyre szabás</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Resume previous session</value>
+    <value>Előző munkamenet folytatása</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Automatically resume media playback from your last stopped position when opening a file</value>
+    <value>Automatikusan folytatja a médialejátszást az utolsó megállított pozícióból, amikor megnyit egy fájlt</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Videó felskálázási módszer</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>A szuperfeloldású felskálázáshoz kompatibilis hardver és illesztőprogram-támogatás szükséges</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Bilineáris</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Pont</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Szuperfeloldás</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Show chapter name when available</value>
+    <value>Fejezetnév megjelenítése, ha elérhető</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Vezérlők elrejtése ennyi idő után</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} másodperc</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} másodperc</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Alkalmazás nyelve</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Az alkalmazás megjelenítési nyelvének módosítása</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Rendszernyelv használata</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Nincs találat erre: "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Mappa</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Hozzáadás lejátszási listához</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Új lejátszási lista létrehozása</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Új lejátszási lista</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Kiválasztott elem</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Kiválasztott elemek</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Nincsenek lejátszási listák</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Létrehozás</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Mégse</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Névtelen lejátszási lista</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Adjon nevet a lejátszási listának</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Lejátszási listák</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Törlés</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Átnevezés</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Adjon új nevet a lejátszási listának</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Lejátszási lista átnevezése</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Lejátszási lista törlése</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>Biztosan törli a(z) '{0}' lejátszási listát? Ez a művelet nem vonható vissza.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Lejátszási pozíció előzményei</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Az eszközön tárolja lejátszási pozícióm előzményeit, hogy folytathasson ott, ahol abbahagyta</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Eszköz lejátszási pozíció előzményeinek törlése</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>{0} elem hozzáadva a(z) "{1}" lejátszási listához</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>{0} elem hozzáadva a(z) "{1}" lejátszási listához</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -140,13 +140,13 @@
     <value>Не ўдалося захаваць кадр</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Мінулы час</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Час, які застаўся</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Агульная працягласць</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Глава {0}</value>
@@ -177,7 +177,7 @@
     <value>Гучнасць</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Змяніць гучнасць</value>
+    <value>Наладзіць гучнасць</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Пераматаць</value>
@@ -224,16 +224,16 @@
     <value>Дадаць у чаргу</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Выбраць усе</value>
+    <value>Выбраць усё</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Выбраць усе элементы ў гэтым рэжыме</value>
+    <value>Выбраць усе элементы ў гэтым выглядзе</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Зняць вылучэнне</value>
+    <value>Не выбіраць нічога</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Ачысціць выбар</value>
+    <value>Скасаваць выбар</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Адмяніць выбар</value>
@@ -275,7 +275,7 @@
     <value>Аднавіць прагляд</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Згарнуць поўнаэкранны рэжым</value>
+    <value>Згарнуць зануральны выгляд</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Трансляцыя</value>
@@ -353,7 +353,7 @@
     <value>Адкрыць размяшчэнне файла</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Адкрыць з дапамогай</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Альбом</value>
@@ -458,7 +458,7 @@
     <value>Выканаўцы</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Песня</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Песні</value>
@@ -467,7 +467,7 @@
     <value>Прагляд файлаў для прайгравання</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>Больш опцый для адкрыцця медыя</value>
+    <value>Дадатковыя параметры для адкрыцця мультымедыя</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Дадаць файл(ы)</value>
@@ -476,7 +476,7 @@
     <value>Прагляд файла(аў) для дадання ў чаргу прайгравання</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>Больш опцый для дадання медыя ў чаргу</value>
+    <value>Дадатковыя параметры для дадання мультымедыя ў чаргу прайгравання</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Дадаць папку ў вашую музычную бібліятэку</value>
@@ -628,7 +628,7 @@
     <value>Паказваць нядаўняе</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Паказваць кнопкі кіравання на паўзе</value>
+    <value>Паказваць элементы кіравання пры прыпынку</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Размяшчэнне відэа бібліятэкі</value>
@@ -655,10 +655,10 @@
     <value>Дазволіць максімальны ўзровень гучнасці вышэй за 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Элементы кіравання на экране</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Выберыце, якія элементы могуць з'яўляцца ў кіраванні, і наладзьце паводзіны аўтаматычнага схавання</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Жэсты</value>
@@ -701,15 +701,15 @@
     <value>Субтытры дададзены</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Спіс прайгравання "{0}" створаны</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Спіс прайгравання "{0}" выдалены</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Спіс прайгравання перайменаваны на "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -719,7 +719,7 @@
     <value>Няма даступных сумяшчальных прылад. Пераканайцеся, што Direct3D 11 даступны на вашым прыладзе.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Для атрымання дадатковай інфармацыі аб гэтай праблеме і магчымых выпраўленнях наведайце</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Не атрымалася адкрыць файл(ы)</value>
@@ -756,7 +756,7 @@
     <value>Пашыраныя</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Прыватнасць</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Пашыраны рэжым</value>
@@ -792,7 +792,7 @@
     <value>Ліцэнзія</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Падзякі іншаму праграмнаму забеспячэнню</value>
+    <value>Заўвагі аб праграмным забеспячэнні іншых вытворцаў</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Дапамагчы з перакладам</value>
@@ -834,25 +834,25 @@
     <value>Устанавіць аргументы</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Пошук здымных назапашвальнікаў</value>
+    <value>Пошук на зменным носьбіце</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Уключыць медыя з назапашвальнікаў, такіх як USB-флэшкі ў вашыя бібліятэкі</value>
+    <value>Уключаць мультымедыя з прылад захавання, такіх як USB-флэшкі, у вашы бібліятэкі</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Уключаныя аргументы</value>
+    <value>Актыўныя аргументы</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Дазволіць некалькі вокнаў</value>
+    <value>Дазволіць некалькі экзэмпляраў</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Заўсёды адчыняць медыяфайлы ў новым акне</value>
+    <value>Заўсёды адкрываць мультымедыйныя файлы ў новым экзэмпляры</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Упарадкаваць па</value>
+    <value>Сартаваць па</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Сартаваць па {0} выбраны параметр</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -862,37 +862,37 @@
     <value>Год выпуску</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Аўдыёвізуал</value>
+    <value>Аўдыявізуальны</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
     <value>Атрымаць Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Спампаваць візуальныя эфекты праз GitHub</value>
+    <value>Спампаваць візуальныя элементы на GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Опцыі візуальных эфектаў аўдыё</value>
+    <value>Параметры аўдыявізуальнага</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Візуальныя эфекты</value>
+    <value>Візуальныя элементы</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Агляд файла(аў)</value>
+    <value>Агляд файлаў</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Па змаўчанні</value>
+    <value>Па змоўчанні</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Абярыце фон для прайгравання гуку ў поўнаэкранным рэжыме</value>
+    <value>Выберыце фон, каб надаць прайгравання гуку візуальны шарм у зануральным выглядзе</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Працуе на Lively Wallpaper</value>
+    <value>Пры ўдзеле Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Імпартаваць візуалы</value>
+    <value>Імпартаваць візуальныя элементы</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Атрымаеце больш візуальных эфектаў праз прыкладанне Lively Wallpaper або запампуйце з GitHub</value>
+    <value>Атрымайце больш візуальных элементаў праз дадатак Lively Wallpaper або спампуйце іх з GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Дата дадання</value>
@@ -913,19 +913,19 @@
     <value>Відэа</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Паказаць альбом</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Паказаць выканаўцу</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Не атрымалася загрузіць візуальны элемент</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>Пры адкрыцці аднаго файла аўтаматычна дадавайце ўсе іншыя файлы ў папцы ў чаргу прайгравання</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Дадаць усе файлы ў папцы ў чаргу</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
     <value>Use system setting</value>

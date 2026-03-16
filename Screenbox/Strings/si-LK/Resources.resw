@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -140,13 +140,13 @@
     <value>රාමුව සුරැකීමට අසමත් විය</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>ගත ව කලය</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>ඉතර කලය</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>මළ කලය</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>පරිච්ඡේදය {0}</value>
@@ -177,7 +177,7 @@
     <value>හඬපරිමාව</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>හඬ පරිමාව සකස් කරන්න</value>
+    <value>ශබදය සකස කරනන</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>සොයන්න</value>
@@ -224,16 +224,16 @@
     <value>පෝලිමට ඇතුළත් කරන්න</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>සියල්ල තෝරන්න</value>
+    <value>සයල්ල තරනන</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>මෙම දර්ශනයේ ඇති සියලුම අයිතම තෝරන්න</value>
+    <value>මම දරශනය සයල අයතම තරනන</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>කිසිවක් තෝරා නොගන්න</value>
+    <value>කසවක තරනන එප</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>ඔබේ තේරීම ඉවත් කරන්න</value>
+    <value>ඔබ තරම ඉවත කරනන</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>තේරීම් ඉවත් කරන්න</value>
@@ -275,7 +275,7 @@
     <value>වීඩියෝ දර්ශනය ප්‍රතිසාධනය කරන්න</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Immersive දර්ශනය අවම කරන්න</value>
+    <value>ගල දරශනය කඩ කරනන</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>විකාශනය කරන්න</value>
@@ -332,7 +332,7 @@
     <value>සොයන්න</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>වීඩියෝ, ගීත, ඇල්බම සහ වෙනස් ඒවා සඳහා සොයන්න</value>
+    <value>වඩය, ගත, ඇලබම සහ තවත් ද සයනන</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>සැකසීම්</value>
@@ -353,7 +353,7 @@
     <value>ගොනු ස්ථානය විවෘත කරන්න</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>සමඟ වවත කරනන</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>ඇල්බමය</value>
@@ -458,7 +458,7 @@
     <value>කලාකරුවන්</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>ගතය</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>ගීත</value>
@@ -467,7 +467,7 @@
     <value>ගොනු ධාවනය කිරීමට බ්‍රවුස් කරන්න</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>මාධ්ය විවෘත කිරීම සඳහා තවත් විකල්ප</value>
+    <value>මධය වවත කරමට තවත වකලප</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>ගොනු (ය) එක් කරන්න</value>
@@ -476,7 +476,7 @@
     <value>ධාවන එක් කිරීමට ගොනු(ය) සඳහා බ්‍රවුස් කරන්න</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>ධාවන පෝලිමට මාධ්‍ය එකතු කිරීම සඳහා තවත් විකල්ප</value>
+    <value>ධවන පළමට මධය එක කරමට තවත වකලප</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>ඔබගේ සංගීත පුස්තකාලයට ෆෝල්ඩරයක් එක් කරන්න</value>
@@ -628,7 +628,7 @@
     <value>මෑත කාලීන පෙන්වන්න</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>විරාමයේදී සංදර්ශක පාලන</value>
+    <value>වරම කරන වට පලන පනවනන</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>වීඩියෝ පුස්තකාල ස්ථාන</value>
@@ -655,10 +655,10 @@
     <value>උපරිම පරිමාව 100% ට වඩා වැඩි වීමට ඉඩ දෙන්න</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>තරය පලන</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>පලනවල දස්වය හක මලදරවය තරනන, සහ සවයකරය-සඟවම හසරම සකස කරනන</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>අභිනයන්</value>
@@ -701,15 +701,15 @@
     <value>උපසිරැසි එකතු කරන ලදී</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>ධවන ලයසතව "{0}" සදන ලද</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>ධවන ලයසතව "{0}" මක දමන ලද</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>ධවන ලයසතව "{0}" ලස නවත නම කරන ලද</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -719,7 +719,7 @@
     <value>ගැළපෙන විදැහුම්කරුවෙකු නොමැත. කරුණාකර Direct3D 11 ඔබගේ උපාංගයේ තිබෙන බව සහතික කර ගන්න.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>මම ගටලව සහ හක නරකරණ ගන වඩදුර තරතර සඳහ, පවසනන</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>ගොනු(ය) විවෘත කිරීමට අසමත් විය</value>
@@ -756,7 +756,7 @@
     <value>උසස්</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>පදගලකතවය</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>උසස් මාදිලිය</value>
@@ -792,7 +792,7 @@
     <value>බලපත්රය</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>තෙවන පාර්ශ්වයේ මෘදුකාංග පිළිගැනීම්</value>
+    <value>තවන පරශව මදකග දනමදීම</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>පරිවර්තනයට උදව් කරන්න</value>
@@ -834,98 +834,98 @@
     <value>තර්ක සකසන්න</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>ඉවත් කළ හැකි ආචයනය සොයන්න</value>
+    <value>ඉවත කළ හක ගබඩ සවම</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>ඔබේ පුස්තකාලවල USB ආචයන වැනි ගබඩා උපාංගවලින් මාධ්‍ය ඇතුළත් කරන්න</value>
+    <value>USB සටක වන ගබඩ උපකරණවලන මධය ඔබ පසතකලවලට ඇතළත කරනන</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>ක්රියාකාරී තර්ක</value>
+    <value>කරයකර තරක</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>අවස්ථා කිහිපයක් ඉඩ දෙන්න</value>
+    <value>බහ අවසථ ඉඩ දනන</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>සෑම විටම නව අවස්ථාවක මාධ්‍ය ගොනු විවෘත කරන්න</value>
+    <value>සම වටම නව අවසථවකද මධය ගන වවත කරනන</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>අනුව තෝරන්න</value>
+    <value>අනව වරග කරනන</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>{0} වකලපය අනව වරග කරම තරය</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>කලාකරුවා</value>
+    <value>ශලප</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>නිකුත් කළ වර්ෂය</value>
+    <value>නකත වරෂය</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>ශ්රව්ය දෘශ්ය</value>
+    <value>ශරවය දශය</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>සජීවී බිතුපත ලබා ගන්න</value>
+    <value>Lively Wallpaper ලබ ගනන</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>GitHub හි දර්ශන බාගන්න</value>
+    <value>GitHub හ දශය බගනන</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>ශ්‍රව්‍ය දෘශ්‍ය‍ය දෘෂ්‍ය විකල්ප</value>
+    <value>ශරවය දශය වකලප</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>දර්ශන</value>
+    <value>දශය</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>ගොනු(ය) පිරික්සන්න</value>
+    <value>ගන පරකසනන</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>පෙරනිමි</value>
+    <value>පරනම</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>ශ්‍රව්‍ය පසුධාවනය මත සංදර්ශන කිරීමට රූප විලාසයක් තෝරන්න</value>
+    <value>ගල දරශනය ඔබ ශරවය ධවනයට දශය සලකණක ලබ දමට පසතල තරනන</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>සජීවී බිතුපත මගින් බලගන්වයි</value>
+    <value>Lively Wallpaper මගන බල ගනව</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>දර්ශන ආනයනය කරන්න</value>
+    <value>දශය ආනය කරනන</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>සජීවි බිතුපත යෙදුම හරහා තවත් දර්ශන ලබා ගන්න හෝ GitHub වෙතින් බාගන්න</value>
+    <value>Lively Wallpaper යදම හරහ වඩදර දශය ලබගනන, නතනම GitHub හ සට බගනන</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>එකතු කළ දිනය</value>
+    <value>එකත කළ දනය</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>මාධ්ය</value>
+    <value>මධය</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>වීඩියෝ</value>
+    <value>වඩය</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>ගොනුව</value>
+    <value>ගනව</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>සංගීතය</value>
+    <value>සගතය</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>වීඩියෝ</value>
+    <value>වඩය</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>ඇලබමය පනවනන</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>ශලප පනවනන</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>දශය පරණය කරමට අසමත වය</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>තන ගනවක වවත කරන වට, ෆලඩරය ඇත අනකත සයල ගන සවයකරයව ධවන පළමට එක කරනන</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>ෆලඩරය සයල ගන පළමට එකත කරනන</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
     <value>Use system setting</value>
