@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Failed to save frame</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Time elapsed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Time remaining</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Total duration</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Chapter {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -166,6 +175,9 @@
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
+  </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Adjust volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -211,6 +223,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Add to queue</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Select all items in this view</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Select none</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Clear your selection</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Clear selection</value>
   </data>
@@ -248,7 +272,10 @@
     <value>Empty</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Restore immersive view</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Cast</value>
@@ -304,6 +331,9 @@
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Search videos, songs, albums, and more</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -321,6 +351,9 @@
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Open file location</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -424,17 +457,26 @@
   <data name="Artists" xml:space="preserve">
     <value>Artists</value>
   </data>
+  <data name="Song" xml:space="preserve">
+    <value>Song</value>
+  </data>
   <data name="Songs" xml:space="preserve">
     <value>Songs</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Browse for files to play</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>More options for opening media</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Add file(s)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Browse for file(s) to add to the play queue</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>More options for adding media to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Add a folder to your music library</value>
@@ -583,7 +625,10 @@
     <value>Music library locations</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Show recent media</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Show controls when paused</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Video library locations</value>
@@ -592,7 +637,7 @@
     <value>Subtitles</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>See recently played media on the home page</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Clear recent media history</value>
@@ -608,6 +653,12 @@
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Allow the maximum volume to go above 100%</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>On-screen controls</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestures</value>
@@ -631,7 +682,7 @@
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Support the development</value>
   </data>
   <data name="Always" xml:space="preserve">
     <value>Always</value>
@@ -649,11 +700,26 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Subtitle added</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Critical error</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For more information about this issue and possible fixes, visit</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Failed to open file(s)</value>
@@ -689,17 +755,20 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Advanced mode</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Global arguments</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Command line arguments that apply to all media playback</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remove folder</value>
@@ -721,6 +790,9 @@
   </data>
   <data name="License" xml:space="preserve">
     <value>License</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Third-party software acknowledgments</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Help translate</value>
@@ -760,5 +832,237 @@
   </data>
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Search removable storage</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Include media from storage devices like USB sticks in your libraries</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Active arguments</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Allow multiple instances</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Always open media files in a new instance</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sort by {0} option selected</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Released year</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Audio visual</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Get Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Download visuals on GitHub</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Audio visual options</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Browse files</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Import visuals</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Videos</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Show album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Show artist</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Failed to load visual</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Add all files in folder to queue</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Use system setting</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Change the app's overall color scheme</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>App theme</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Resume previous session</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Automatically resume media playback from your last stopped position when opening a file</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video upscaling method</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilinear</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolution</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Show chapter name when available</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dismiss controls after this amount of time</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>No results for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Create new playlist</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Selected item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Selected items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>No playlists</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a name for this playlist</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a new name for this playlist</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Rename playlist</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where you left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>
