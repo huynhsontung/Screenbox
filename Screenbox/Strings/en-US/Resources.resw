@@ -1052,7 +1052,7 @@
     <value>Playback position history</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store playback position history on this device to resume where you left off</value>
+    <value>Store my playback position history on this device to enable quick media resumption</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
