@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
@@ -29,7 +30,9 @@ internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
     /// <inheritdoc/>
     public bool CanExecute(MediaViewModel? parameter)
     {
-        return parameter?.Source is StorageFile && _asyncCommand.CanExecute(parameter);
+        return parameter?.Source is StorageFile
+            || parameter?.IsFromLibrary == true
+            && _asyncCommand.CanExecute(parameter);
     }
 
     /// <inheritdoc/>
@@ -62,10 +65,17 @@ internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
 
     private async Task OpenWithAsync(MediaViewModel? parameter)
     {
-        if (parameter?.Source is not StorageFile file)
-        {
-            // This should not happen if CanExecute is working correctly
+        if (parameter == null)
             return;
+
+        if (parameter.Source is not StorageFile file)
+        {
+            var filesService = Ioc.Default.GetRequiredService<IFilesService>();
+            await parameter.LoadDetailsAsync(filesService);
+            if (parameter.Source is not StorageFile loadedFile)
+                return;
+
+            file = loadedFile;
         }
 
         try
