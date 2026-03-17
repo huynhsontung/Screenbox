@@ -949,7 +949,7 @@
     <value>Återuppta alltid från senaste position</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Automatically resume media playback from your last stopped position when opening a file</value>
+    <value>Automatically resume media playback from last stopped position when opening a file</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Video upscaling method</value>
@@ -1052,7 +1052,7 @@
     <value>Playback position history</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to resume where you left off</value>
+    <value>Store my playback position history on this device to enable quick session resumption</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
