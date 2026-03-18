@@ -320,7 +320,7 @@
     <value>Selecionar vários</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>Não conseguimos encontrar qualquer música</value>
+    <value>Não foi possível localizar nenhuma música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
     <value>A sua biblioteca de música não contém qualquer conteúdo musical.</value>
@@ -353,7 +353,7 @@
     <value>Abrir localização do ficheiro</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Abrir com</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Álbum</value>
@@ -550,19 +550,19 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Acesso negado. Por favor, verifica as tuas definições de privacidade para garantir que o Screenbox tenha as permissões necessárias.</value>
+    <value>Acesso negado. Verifique as suas definições de privacidade para garantir que o Screenbox tem permissões suficientes.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Não é possível aceder a biblioteca de música</value>
+    <value>Não é possível aceder à biblioteca de música</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Não é possível aceder a biblioteca de imagens</value>
+    <value>Não é possível aceder à biblioteca de imagens</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Não é possível aceder a biblioteca de vídeos</value>
+    <value>Não é possível aceder à biblioteca de vídeos</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>Não conseguimos localizar nenhum vídeo</value>
+    <value>Não foi possível localizar nenhum vídeo</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
     <value>A sua biblioteca de vídeo não contém qualquer conteúdo de vídeo.</value>
@@ -628,7 +628,7 @@
     <value>Mostar recentes</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Mostrar controlos ao pausar</value>
+    <value>Mostrar os controlos quando em pausa</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Localizações da biblioteca de vídeos</value>
@@ -673,7 +673,7 @@
     <value>Toque em qualquer lugar para reproduzir ou pausar</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Leitor multimédia Screenbox</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
     <value>Código-fonte</value>
@@ -722,7 +722,7 @@
     <value>Para obter mais informações e sugestões para corrigir este problema, visite</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Não foi possível abrir o ficheiro(s)</value>
+    <value>Não foi possível abrir o(s) ficheiro(s)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
     <value>Introduza o URL de um ficheiro, fluxo ou lista de reprodução</value>
@@ -768,7 +768,7 @@
     <value>Argumentos universais</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Argumentos da linha de comandos que se aplicam a todas as reproduções de multimédia.</value>
+    <value>Argumentos da linha de comandos que se aplicam a todas as reproduções de multimédia</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remover pasta</value>
@@ -946,10 +946,10 @@
     <value>Personalização</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Retomar a sessão anterior</value>
+    <value>Retomar sempre a sessão anterior</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Retomar automaticamente a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
+    <value>Retomar automaticamente a reprodução a partir da posição onde foi interrompida ao abrir um ficheiro</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Melhorar vídeo</value>
@@ -1052,7 +1052,7 @@
     <value>Histórico de posição reproduzida</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Armazenar o meu histórico de posições reproduzidas neste dispositivo para retomar no ponto onde parou</value>
+    <value>Armazenar o meu histórico de posições reproduzidas neste dispositivo para retomar rapidamente a sessão</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Limpar o histórico de posição reproduzida do dispositivo</value>
