@@ -234,12 +234,12 @@
                 <AppBarButton
                     x:Name="AddToPlaylistSelectionButton"
                     Icon="Add"
-                    IsEnabled="{x:Bind ViewModel.SelectionCount, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}"
                     Label="{strings:Resources Key=AddToPlaylist}">
                     <AppBarButton.Resources>
                         <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
                         <x:String x:Key="AppBarButtonFlyoutGlyph">&#xE972;</x:String>
                         <x:Double x:Key="AppBarButtonSubItemChevronFontSize">12</x:Double>
+                        <Thickness x:Key="AppBarButtonSubItemChevronMargin">-8,18,8,0</Thickness>
                         <Thickness x:Key="AppBarButtonSubItemChevronLabelOnRightMargin">-7,18,12,0</Thickness>
                     </AppBarButton.Resources>
                     <AppBarButton.Flyout>
