@@ -130,7 +130,6 @@
                     <GridView
                         x:Name="ArtistGridView"
                         Padding="{StaticResource GridViewContentPagePadding}"
-                        ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                         IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
@@ -161,7 +160,6 @@
                     <GridView
                         x:Name="AlbumGridView"
                         Padding="{StaticResource GridViewContentPagePadding}"
-                        ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
@@ -235,7 +233,6 @@
                     <GridView
                         x:Name="VideosGridView"
                         Padding="{StaticResource GridViewContentPagePadding}"
-                        ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                         ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                         IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
@@ -278,6 +275,19 @@
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="VideosResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="SystemEffectsStates">
+                <VisualState x:Name="AnimationsEnabled">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
+                        <Setter Target="AlbumGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
+                        <Setter Target="VideosGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

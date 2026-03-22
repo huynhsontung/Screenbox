@@ -85,7 +85,6 @@
             x:Name="VideosGridView"
             Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource GridViewContentPagePadding}"
-            ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
@@ -119,6 +118,17 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="SystemEffectsStates">
+                <VisualState x:Name="AnimationsEnabled">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="VideosGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

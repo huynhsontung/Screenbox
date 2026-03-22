@@ -49,7 +49,6 @@
             Grid.Row="1"
             Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource GridViewContentPagePadding}"
-            ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
             ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
@@ -80,6 +79,17 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="AlbumGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="SystemEffectsStates">
+                <VisualState x:Name="AnimationsEnabled">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AlbumGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

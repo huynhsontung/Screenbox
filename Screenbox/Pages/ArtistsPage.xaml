@@ -88,7 +88,6 @@
                     x:Name="ArtistGridView"
                     Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource GridViewContentPagePadding}"
-                    ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
@@ -155,6 +154,17 @@
                         <!--<Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />-->
                         <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="SystemEffectsStates">
+                <VisualState x:Name="AnimationsEnabled">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArtistGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
