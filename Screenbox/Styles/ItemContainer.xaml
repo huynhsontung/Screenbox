@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
-    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)">
+    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
+    xmlns:extensions="using:Screenbox.Extensions">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
@@ -354,17 +355,24 @@
         </Setter>
     </contract13Present:Style>
 
-    <!--  ListViewItem featuring a larger MinHeight, vertical margin added between items given the absence of an inner border, and that requires focus engagement for improved gamepad interactivity and navigation  -->
+    <!--  ListView with increased item corner radii and no side margins  -->
+    <Style x:Key="MediaListViewStyle" TargetType="ListView">
+        <!--<Setter Property="extensions:ListViewExtensions.ItemMinHeight" Value="48" />-->
+        <Setter Property="extensions:ListViewExtensions.ItemMargin" Value="0,2,0,2" />
+        <Setter Property="extensions:ListViewExtensions.ItemCornerRadius" Value="{StaticResource MediaItemCornerRadius}" />
+        <!--<Setter Property="extensions:ListViewExtensions.ItemIsFocusEngagementEnabled" Value="True" />-->
+        <Setter Property="ItemContainerStyle" Value="{StaticResource MediaListViewItemStyle}" />
+    </Style>
+
+    <!--  ListViewItem with larger MinHeight and focus engagement requirement  -->
     <!--  https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#focus-engagement  -->
     <contract13NotPresent:Style
         x:Key="MediaListViewItemStyle"
         BasedOn="{StaticResource DefaultListViewItemStyle}"
         TargetType="ListViewItem">
         <Setter Property="MinHeight" Value="44" />
-        <Setter Property="Margin" Value="0,2,0,2" />
         <Setter Property="IsFocusEngagementEnabled" Value="True" />
     </contract13NotPresent:Style>
-    <!--  ListViewItem featuring a larger MinHeight, and that requires focus engagement for improved gamepad interactivity and navigation  -->
     <contract13Present:Style
         x:Key="MediaListViewItemStyle"
         BasedOn="{StaticResource DefaultListViewItemStyle}"

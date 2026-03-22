@@ -32,6 +32,8 @@ namespace Screenbox.Core.Playback
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
+        public event TypedEventHandler<VlcMediaPlayer, ValueChangedEventArgs<double>>? SubtitleDelayChanged;
+        public event TypedEventHandler<VlcMediaPlayer, ValueChangedEventArgs<double>>? AudioDelayChanged;
 
         public ChapterCue? Chapter
         {
@@ -125,6 +127,52 @@ namespace Screenbox.Core.Playback
                     double oldValue = VlcPlayer.Rate;
                     VlcPlayer.SetRate((float)value);
                     PlaybackRateChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the subtitle timing offset.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="SubtitleDelayChanged"/> event is raised whenever this property changes,
+        /// providing both the new and old values. The value is converted from milliseconds to microseconds
+        /// before being passed to the LibVLC API.
+        /// </remarks>
+        /// <value>A <see cref="double"/> representing the subtitle offset in milliseconds.</value>
+        public double SubtitleDelay
+        {
+            get => ConvertMicrosecondsToMilliseconds(VlcPlayer.SpuDelay);
+            set
+            {
+                double oldValue = ConvertMicrosecondsToMilliseconds(VlcPlayer.SpuDelay);
+                if (Math.Abs(oldValue - value) > 0.0001)
+                {
+                    VlcPlayer.SetSpuDelay(ConvertMillisecondsToMicroseconds(value));
+                    SubtitleDelayChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the audio timing offset.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="AudioDelayChanged"/> event is raised whenever this property changes,
+        /// providing both the new and old values. The value is converted from milliseconds to microseconds
+        /// before being passed to the LibVLC API.
+        /// </remarks>
+        /// <value>A <see cref="double"/> representing the audio offset in milliseconds.</value>
+        public double AudioDelay
+        {
+            get => ConvertMicrosecondsToMilliseconds(VlcPlayer.AudioDelay);
+            set
+            {
+                double oldValue = ConvertMicrosecondsToMilliseconds(VlcPlayer.AudioDelay);
+                if (Math.Abs(oldValue - value) > 0.0001)
+                {
+                    VlcPlayer.SetAudioDelay(ConvertMillisecondsToMicroseconds(value));
+                    AudioDelayChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
                 }
             }
         }
@@ -467,6 +515,13 @@ namespace Screenbox.Core.Playback
         public void StepForwardOneFrame()
         {
             VlcPlayer.NextFrame();
+            var newValue = TimeSpan.FromTicks(VlcPlayer.Time * TimeSpan.TicksPerMillisecond);
+            if (newValue != _position)
+            {
+                var oldValue = _position;
+                _position = newValue;
+                PositionChanged?.Invoke(this, new ValueChangedEventArgs<TimeSpan>(newValue, oldValue));
+            }
         }
 
         private void Replay()
@@ -481,6 +536,16 @@ namespace Screenbox.Core.Playback
             {
                 VlcPlayer.SetOutputDevice(args.Id);
             }
+        }
+
+        private static double ConvertMicrosecondsToMilliseconds(long microseconds)
+        {
+            return microseconds / 1000.0;
+        }
+
+        private static long ConvertMillisecondsToMicroseconds(double milliseconds)
+        {
+            return (long)(milliseconds * 1000.0);
         }
     }
 }

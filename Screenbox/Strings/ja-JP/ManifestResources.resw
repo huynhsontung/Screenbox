@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>ドルビーAC-3オーディオ</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
@@ -159,7 +159,7 @@
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>DTS オーディオ</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
@@ -215,7 +215,7 @@
     <comment>Display name for the file type ".m4v"</comment>
   </data>
   <data name="FileDisplayNameMXF" xml:space="preserve">
-    <value>MXF Video</value>
+    <value>MXFビデオ</value>
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
@@ -227,11 +227,11 @@
     <comment>Display name for the file type ".ogg" and ".oga"</comment>
   </data>
   <data name="FileDisplayNameOggSpeex" xml:space="preserve">
-    <value>Ogg Speex Audio</value>
+    <value>Ogg Speex オーディオ</value>
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>Opus オーディオ</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
@@ -243,11 +243,11 @@
     <comment>Display name for the file type ".mov" and ".qt"</comment>
   </data>
   <data name="FileDisplayNameRealAudio" xml:space="preserve">
-    <value>RealAudio File</value>
+    <value>RealAudio ファイル</value>
     <comment>Display name for the file type ".ra"</comment>
   </data>
   <data name="FileDisplayNameRealMedia" xml:space="preserve">
-    <value>RealMedia File</value>
+    <value>RealmEDIA ファイル</value>
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
@@ -271,7 +271,7 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>ASFファイル</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
@@ -279,11 +279,11 @@
     <comment>Display name for the file type ".wm"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio (WMA)</value>
+    <value>Windows Media Audio</value>
     <comment>Display name for the file type ".wma"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video (WMV)</value>
+    <value>Windows Media Video</value>
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">

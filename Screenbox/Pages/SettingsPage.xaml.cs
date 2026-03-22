@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Numerics;
+﻿using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
-using Screenbox.Helpers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -27,20 +24,15 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<SettingsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-            PendingChangesInfoBar.Translation = new Vector3(0, 0, 16);
 
-            VlcCommandLineHelpTextParts = new string[2];
-            string[] parts = Strings.Resources.VlcCommandLineHelpText
-                .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim()).ToArray();
-            Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
+            var helpText = Strings.Resources.VlcCommandLineHelpText;
+            VlcCommandLineHelpTextParts = helpText.Contains("{0}")
+                ? helpText.Split("{0}").Select(s => s.Trim()).Take(2).ToArray()
+                : new[] { helpText, string.Empty };
 
             // Set the "System default" language option string
             var systemLanguageOption = ViewModel.AvailableLanguages[0];
             systemLanguageOption.NativeName = Strings.Resources.LanguageSystemDefault;
-            systemLanguageOption.LayoutDirection = GlobalizationHelper.IsRightToLeftLanguage
-                ? Windows.Globalization.LanguageLayoutDirection.Rtl
-                : Windows.Globalization.LanguageLayoutDirection.Ltr;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

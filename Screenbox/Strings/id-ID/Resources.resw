@@ -121,7 +121,7 @@
     <value>Frame tersimpan</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>Gambar dalam gambar</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Simpan frame saat ini</value>
@@ -140,10 +140,10 @@
     <value>Gagal menyimpan frame</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Waktu berlalu</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Waktu Tersisa</value>
+    <value>Waktu tersisa</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
     <value>Durasi total</value>
@@ -227,13 +227,13 @@
     <value>Pilih semua</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Pilih semua item dalam tampilan ini</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Pilih tidak ada</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Hapus pilihan Anda</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Bersihkan pilihan</value>
@@ -275,7 +275,7 @@
     <value>Pulihkan tampilan video</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Minimalkan tampilan imersif</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Siarkan</value>
@@ -332,7 +332,7 @@
     <value>Cari</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Cari video, lagu, album, dan lainnya</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Pengaturan</value>
@@ -352,6 +352,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Buka lokasi file</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
   </data>
@@ -359,7 +362,7 @@
     <value>Artis album</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>Laju bit</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
     <value>Tipe konten</value>
@@ -454,6 +457,9 @@
   <data name="Artists" xml:space="preserve">
     <value>Artis</value>
   </data>
+  <data name="Song" xml:space="preserve">
+    <value>Lagu</value>
+  </data>
   <data name="Songs" xml:space="preserve">
     <value>Lagu</value>
   </data>
@@ -461,7 +467,7 @@
     <value>Jelajahi file untuk diputar</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Opsi lainnya untuk membuka media</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Tambahkan file</value>
@@ -470,7 +476,7 @@
     <value>Jelajahi file untuk ditambahkan ke antrian pemutaran</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Opsi lainnya untuk menambahkan media ke antrean</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Tambahkan folder ke perpustakaan musik Anda</value>
@@ -622,7 +628,7 @@
     <value>Tampilkan terbaru</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Tampilkan kontrol saat jeda</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Lokasi perpustakaan video</value>
@@ -647,6 +653,12 @@
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Izinkan volume maksimum melebihi 100%</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Kontrol di layar</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Pilih elemen mana yang boleh muncul di kontrol, dan sesuaikan perilaku sembunyikan otomatis</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestur</value>
@@ -688,6 +700,18 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Takarir ditambahkan</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Kesalahan kritis</value>
   </data>
@@ -695,7 +719,7 @@
     <value>Tidak ada renderer kompatibel yang tersedia. Pastikan Direct3D 11 tersedia di perangkat Anda.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Untuk informasi lebih lanjut dan solusi yang mungkin, kunjungi</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Gagal membuka file</value>
@@ -731,6 +755,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Tingkat lanjut</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Mode lanjut</value>
   </data>
@@ -765,7 +792,7 @@
     <value>Lisensi</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Pengakuan perangkat lunak pihak ketiga</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Bantu terjemahkan</value>
@@ -816,16 +843,20 @@
     <value>Argumen aktif</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Izinkan beberapa instance</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Selalu buka media di instance yang baru</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Urut berdasarkan</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Urutkan berdasarkan opsi {0} yang dipilih</value>
+    <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artis</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
     <value>Tahun Rilis</value>
@@ -834,25 +865,25 @@
     <value>Visualisasi Audio</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Dapatkan Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Unduh visual di GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Opsi visual audio</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Visual</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse files</value>
+    <value>Cari file</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Bawaan</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>Pilih latar belakang untuk menambah nuansa visual pada pemutaran audio dalam tampilan imersif</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Didukung oleh Lively Wallpaper</value>
@@ -891,37 +922,37 @@
     <value>Gagal memuat visual</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>Saat membuka satu file, otomatis tambahkan semua file lain dalam folder ke antrean putar</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Tambahkan semua file dalam folder ke antrean</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Gunakan pengaturan sistem</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Gelap</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Terang</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Ubah skema warna keseluruhan aplikasi</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Tema aplikasi</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Personalisasi</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Selalu lanjutkan dari posisi terakhir</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Lanjutkan pemutaran dari tempat terakhir saat membuka file</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Metode peningkatan video</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
@@ -930,21 +961,108 @@
     <value>Bilinear</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Titik</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Resolusi super</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Tampilkan nama bab jika tersedia</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Batalkan kontrol setelah jangka waktu ini</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} detik</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} detik</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Bahasa aplikasi</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Ubah bahasa tampilan aplikasi</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Gunakan bahasa sistem</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Tidak ada hasil untuk "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Create new playlist</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Selected item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Selected items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>No playlists</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a name for this playlist</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a new name for this playlist</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Rename playlist</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to enable quick session resumption</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

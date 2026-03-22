@@ -2,10 +2,10 @@
     x:Class="Screenbox.Controls.CompositeTrackPicker"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
@@ -21,7 +21,7 @@
         <!--  Video tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.VideoTracks}"
+            ItemsSource="{x:Bind VideoDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.VideoTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -50,7 +50,7 @@
         <!--  Audio tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.AudioTracks}"
+            ItemsSource="{x:Bind AudioDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -92,8 +92,9 @@
 
         <!--  Subtitle tracks  -->
         <ListView
+            x:Name="SubtitleTrackListView"
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
+            ItemsSource="{x:Bind SubtitleDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -105,7 +106,7 @@
                         Text="{x:Bind}"
                         TextTrimming="{StaticResource MenuFlyoutItemTextTrimming}">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
                 </DataTemplate>

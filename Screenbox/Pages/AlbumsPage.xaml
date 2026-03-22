@@ -2,10 +2,10 @@
     x:Class="Screenbox.Pages.AlbumsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -39,6 +39,16 @@
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding PlayAlbumNextCommand}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayAddGlyph}}"
+                    Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{Binding AddAlbumToQueueCommand}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
@@ -50,7 +60,7 @@
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
-        <interactions:AutoFocusBehavior />
+        <behaviors:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
@@ -83,7 +93,7 @@
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
             AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
-            AutomationProperties.Name="{x:Bind SortByText.Text}"
+            AutomationProperties.Name="{x:Bind GetSortByButtonAutomationName(ViewModel.SortBy), Mode=OneWay}"
             Background="Transparent"
             BorderBrush="Transparent">
             <muxc:DropDownButton.Flyout>
@@ -155,8 +165,8 @@
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </GridView.Footer>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:ListViewContextTriggerBehavior Flyout="{StaticResource AlbumFlyout}" />
-                        <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                        <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource AlbumFlyout}" />
+                        <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedInView>
@@ -182,7 +192,7 @@
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy, Mode=OneWay}" />
+                        <behaviors:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy, Mode=OneWay}" />
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>

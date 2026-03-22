@@ -352,6 +352,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Dateipfad öffnen</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
   </data>
@@ -453,6 +456,9 @@
   </data>
   <data name="Artists" xml:space="preserve">
     <value>Künstler</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Lied</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Songs</value>
@@ -646,7 +652,13 @@
     <value>Lautstärkeverstärker</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Erlaube die maximale Lautstärke über 100% zu gehen</value>
+    <value>Erlaube der maximalen Lautstärke über 100% zu gehen</value>
+  </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Bildschirmsteuerung</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Wählen Sie, welche Steuerelemente im Overlay angezeigt werden können und das Verhalten für automatisches Ausblenden</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesten</value>
@@ -687,6 +699,18 @@
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Untertitel wurden hinzugefügt</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Kritischer Fehler</value>
@@ -730,6 +754,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Erweitert</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Erweiterter Modus</value>
@@ -823,6 +850,10 @@
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sortieren nach</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Wird nach {0} sortiert</value>
+    <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
     <value>Künstler</value>
@@ -924,27 +955,114 @@
     <value>Skalierungsmethode</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>Super Resolution-Skalierung erfordert kompatible Hardware und Treiberunterstützung.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>Bilinear</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Nächster Nachbar</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super Resolution</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Kapitelnamen anzeigen, wenn verfügbar</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Steuerung nach dieser Zeit ausblenden</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} Sekunde</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} Sekunden</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>App-Sprache</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Die Anzeigesprache der App ändern</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Systemsprache verwenden</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Keine Ergebnisse für "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Ordner</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Create new playlist</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Selected item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Selected items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>No playlists</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a name for this playlist</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a new name for this playlist</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Rename playlist</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Playback position history</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to enable quick session resumption</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

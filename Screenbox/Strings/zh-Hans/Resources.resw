@@ -230,7 +230,7 @@
     <value>选择此视图中的所有项目</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>无选择</value>
+    <value>未选择</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>清除选择</value>
@@ -272,7 +272,7 @@
     <value>空</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>恢复视频视图</value>
+    <value>恢复沉浸视图</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
     <value>最小化沉浸视图</value>
@@ -351,6 +351,9 @@
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>打开文件位置</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>专辑</value>
@@ -453,6 +456,9 @@
   </data>
   <data name="Artists" xml:space="preserve">
     <value>艺术家</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>歌曲</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>歌曲</value>
@@ -648,6 +654,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>允许最大音量超过 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>屏幕控制</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>选择哪些元素可能出现在控件中，并调整自动隐藏行为</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>手势</value>
   </data>
@@ -687,6 +699,18 @@
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>添加了字幕</value>
+  </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" created</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Playlist "{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Playlist renamed to "{0}"</value>
+    <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
     <value>严重错误</value>
@@ -730,6 +754,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>高级</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>隐私</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>高级模式</value>
@@ -823,6 +850,10 @@
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>排序方式</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>按所选 {0} 选项排序</value>
+    <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
     <value>艺术家</value>
@@ -936,15 +967,102 @@
     <value>超分辨率</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>可用时显示章节名称</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>在这段时间后取消控制</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>应用语言</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>更改应用的显示语言</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>使用系统语言</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>没有 "{0}" 的搜索结果</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>文件夹</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Create new playlist</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Selected item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Selected items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>No playlists</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Untitled playlist</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a name for this playlist</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Enter a new name for this playlist</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Rename playlist</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>播放位置记录</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>在本设备上保存播放位置记录，以便从上次停止的位置继续播放</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>清除设备播放位置记录</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>Added {0} item to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>Added {0} items to playlist "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

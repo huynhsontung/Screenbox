@@ -7,6 +7,7 @@
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -31,6 +32,7 @@
             <x:Double x:Key="Speed150">1.5</x:Double>
             <x:Double x:Key="Speed175">1.75</x:Double>
             <x:Double x:Key="Speed200">2.0</x:Double>
+            <x:Double x:Key="Speed400">4.0</x:Double>
 
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
 
@@ -56,7 +58,7 @@
                         Header="{strings:Resources Key=CustomPlaybackSpeed}"
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
-                        Minimum="0.05"
+                        Minimum="0"
                         SmallChange="0.01"
                         StepFrequency="0.05"
                         ValueChanged="SpeedSlider_OnValueChanged"
@@ -126,6 +128,12 @@
                         <KeyboardAccelerator Key="O" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemPropertiesKey}"
@@ -144,32 +152,32 @@
                     KeyTipPlacementMode="Left"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToSpeedGlyph(ViewModel.PlaybackRate), Mode=OneWay}" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed025MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed025}"
                         Text="0.25 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed05MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed05MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed050}"
                         Text="0.5 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed075MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed075MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed075}"
                         Text="0.75 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed1MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed1MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         IsChecked="True"
@@ -177,32 +185,39 @@
                         Text="1 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed125MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed125MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed125}"
                         Text="1.25 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed15MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed15MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed150}"
                         Text="1.5 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed175MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed175MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed175}"
                         Text="1.75 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed2MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed2MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed200}"
                         Text="2 ×" />
+                    <muxc:RadioMenuFlyoutItem
+                        x:Name="PlaybackSpeed4MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed4MenuItem.Tag}"
+                        GroupName="SpeedGroup"
+                        Tag="{StaticResource Speed400}"
+                        Text="4 ×" />
                     <MenuFlyoutSeparator />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="CustomPlaybackSpeedMenuItem"
@@ -376,25 +391,25 @@
             <Button
                 x:Name="PlayPauseButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
-                AutomationProperties.Name="{x:Bind PlayPauseButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind PlayPauseButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
-                    <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
-                    <KeyboardAccelerator Key="Space" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
+                    <KeyboardAccelerator Key="P" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
+                    <KeyboardAccelerator Key="K" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
+                    <KeyboardAccelerator Key="Space" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
                 </Button.KeyboardAccelerators>
             </Button>
             <!--  Previous/Next  -->
             <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
                 <Button
                     x:Name="PreviousButton"
-                    controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                     AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
-                    AutomationProperties.Name="{x:Bind PreviousButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                    AutomationProperties.Name="{x:Bind PreviousButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                     Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                     CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                     Style="{StaticResource PlayerButtonStyle}">
@@ -406,9 +421,9 @@
                 </Button>
                 <Button
                     x:Name="NextButton"
-                    controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
                     AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
-                    AutomationProperties.Name="{x:Bind NextButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                    AutomationProperties.Name="{x:Bind NextButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                     Command="{x:Bind ViewModel.Playlist.NextCommand}"
                     CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                     Style="{StaticResource PlayerButtonStyle}">
@@ -442,14 +457,14 @@
             <Button
                 x:Name="VolumeButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
                 AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
-                AutomationProperties.Name="{x:Bind VolumeButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind VolumeButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="Collapsed">
-                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" MirroredWhenRightToLeft="True" />
+                <FontIcon Glyph="{x:Bind converters:GlyphConverter.ToVolumeGlyph(VolumeControl.ViewModel.IsMute, VolumeControl.ViewModel.Volume), Mode=OneWay}" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>
@@ -464,13 +479,13 @@
             <ToggleButton
                 x:Name="ShuffleButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerShuffleKey}"
-                AutomationProperties.Name="{x:Bind ShuffleButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind ShuffleButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToShuffleGlyph(ViewModel.Playlist.ShuffleMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToShuffleGlyph(ViewModel.Playlist.ShuffleMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -479,14 +494,14 @@
             <ToggleButton
                 x:Name="RepeatButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerRepeatKey}"
-                AutomationProperties.Name="{x:Bind RepeatButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind RepeatButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToRepeatGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToRepeatGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -495,21 +510,21 @@
             <Button
                 x:Name="AudioAndCaptionButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
                 AccessKey="{strings:KeyboardResources Key=PlayerAudioAndCaptionsKey}"
-                AutomationProperties.Name="{x:Bind AudioAndCaptionButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind AudioAndCaptionButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xED1F;" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="C" Invoked="{x:Bind ViewModel.ToggleSubtitle}" />
+                    <KeyboardAccelerator Key="C" Invoked="ToggleSubtitleKeyboardAccelerator_OnInvoked" />
                     <KeyboardAccelerator
                         Key="C"
-                        Invoked="{x:Bind ViewModel.ToggleSubtitle}"
+                        Invoked="ToggleSubtitleKeyboardAccelerator_OnInvoked"
                         Modifiers="Control" />
                     <KeyboardAccelerator
                         Key="C"
-                        Invoked="{x:Bind ViewModel.ToggleSubtitle}"
+                        Invoked="ToggleSubtitleKeyboardAccelerator_OnInvoked"
                         Modifiers="Control,Shift" />
                 </Button.KeyboardAccelerators>
                 <Button.Flyout>
@@ -527,9 +542,9 @@
             <Button
                 x:Name="CompactOverlayButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerCompactOverlayKey}"
-                AutomationProperties.Name="{x:Bind CompactOverlayButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind CompactOverlayButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
@@ -547,9 +562,9 @@
             <Button
                 x:Name="FullscreenButton"
                 Margin="0,0,4,0"
-                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerFullscreenKey}"
-                AutomationProperties.Name="{x:Bind FullscreenButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind FullscreenButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">

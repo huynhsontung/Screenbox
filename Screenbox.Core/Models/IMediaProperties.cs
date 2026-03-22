@@ -1,12 +1,12 @@
-﻿using ProtoBuf;
-using System;
+﻿using System;
+using ProtoBuf;
 
 namespace Screenbox.Core.Models;
 
 [ProtoContract]
 [ProtoInclude(11, typeof(MusicInfo))]
 [ProtoInclude(12, typeof(VideoInfo))]
-internal interface IMediaProperties
+public interface IMediaProperties
 {
     string Title { get; set; }
     uint Year { get; set; }

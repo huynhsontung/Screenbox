@@ -231,7 +231,7 @@
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>ஓபஸ் ஆடியோ</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">

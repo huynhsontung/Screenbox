@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Screenbox.Core.ViewModels;
 public abstract partial class BaseMusicContentViewModel : ObservableRecipient
@@ -25,8 +25,7 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
         if (Songs.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = Songs.OrderBy(_ => rnd.Next()).ToList();
-        Messenger.Send(new ClearPlaylistMessage());
-        Messenger.Send(new QueuePlaylistMessage(shuffledList));
-        Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
+        var playlist = new Models.Playlist(0, shuffledList);
+        Messenger.Send(new QueuePlaylistMessage(playlist, true));
     }
 }

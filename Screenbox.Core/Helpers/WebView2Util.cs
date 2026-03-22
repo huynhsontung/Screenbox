@@ -1,10 +1,10 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using Windows.System;
 
 namespace Screenbox.Core.Helpers;
@@ -52,7 +52,7 @@ public static class WebView2Util
         script.Append("(");
         for (int i = 0; i < parameters.Length; i++)
         {
-            script.Append(JsonConvert.SerializeObject(parameters[i]));
+            script.Append(JsonSerializer.Serialize(parameters[i]));
             if (i < parameters.Length - 1)
             {
                 script.Append(", ");

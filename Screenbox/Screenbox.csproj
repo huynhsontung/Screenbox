@@ -9,10 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Screenbox</RootNamespace>
     <AssemblyName>Screenbox</AssemblyName>
-    <LangVersion>10.0</LangVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -38,7 +37,6 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -52,7 +50,6 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -65,7 +62,6 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
@@ -79,7 +75,6 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
@@ -93,7 +88,6 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <OutputPath>bin\ARM64\Release\</OutputPath>
@@ -107,7 +101,6 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -120,7 +113,6 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -134,7 +126,6 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -143,12 +134,30 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\Animations\AnimatedPlayingVisualSource.cs" />
+    <Compile Include="Behaviors\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Behaviors\AddToPlaylistFlyoutBehavior.cs" />
+    <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
+    <Compile Include="Behaviors\AutoFocusBehavior.cs" />
+    <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />
+    <Compile Include="Behaviors\ComboBoxWidthFromPopupBehavior.cs" />
+    <Compile Include="Behaviors\FocusOnItemClickBehavior.cs" />
+    <Compile Include="Behaviors\GamepadXYNavigationBehavior.cs" />
+    <Compile Include="Behaviors\GroupingOverviewBehavior.cs" />
+    <Compile Include="Behaviors\ListViewContextTriggerBehavior.cs" />
+    <Compile Include="Behaviors\ListViewContextRequestedEventArgs.cs" />
+    <Compile Include="Behaviors\MediaListViewItemBehavior.cs" />
+    <Compile Include="Behaviors\OverflowTextToolTipBehavior.cs" />
+    <Compile Include="Behaviors\SettingsExpanderXYNavigationBehavior.cs" />
+    <Compile Include="Behaviors\SplitButtonXYNavigationBehavior.cs" />
+    <Compile Include="Behaviors\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Commands\BindableCommand.cs" />
     <Compile Include="Commands\OpenUrlCommand.cs" />
+    <Compile Include="Commands\OpenWithCommand.cs" />
+    <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
-    <Compile Include="Controls\AcceleratorService.cs" />
-    <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
+    <Compile Include="Controls\CommandBarEx\CommandBarEx.cs" />
     <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
       <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
     </Compile>
@@ -161,27 +170,16 @@
     <Compile Include="Controls\CommonGridViewItem.xaml.cs">
       <DependentUpon>CommonGridViewItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CustomNavigationView.cs" />
+    <Compile Include="Controls\CreatePlaylistDialog.xaml.cs">
+      <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomSlider.cs" />
-    <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
-    <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\SplitButtonExtensions.cs" />
-    <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
-    <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
-    <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
-    <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
-    <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
-    <Compile Include="Controls\Interactions\GamepadXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\GroupingOverviewBehavior.cs" />
-    <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
-    <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
-    <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
-    <Compile Include="Controls\Interactions\NavigationViewKeyboardBehavior.cs" />
-    <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
-    <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
+    <Compile Include="Controls\DeletePlaylistDialog.xaml.cs">
+      <DependentUpon>DeletePlaylistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ErrorInfo.xaml.cs">
+      <DependentUpon>ErrorInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LivelyWallpaperSelector.xaml.cs">
       <DependentUpon>LivelyWallpaperSelector.xaml</DependentUpon>
     </Compile>
@@ -191,6 +189,8 @@
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NavigationViewEx.cs" />
+    <Compile Include="Controls\NavigationViewEx.Properties.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -203,14 +203,17 @@
     <Compile Include="Controls\PlayerElement.xaml.cs">
       <DependentUpon>PlayerElement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PlaylistView.xaml.cs">
-      <DependentUpon>PlaylistView.xaml</DependentUpon>
+    <Compile Include="Controls\PlayQueueControl.xaml.cs">
+      <DependentUpon>PlayQueueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertiesDialog.xaml.cs">
       <DependentUpon>PropertiesDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RenamePlaylistDialog.xaml.cs">
+      <DependentUpon>RenamePlaylistDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
@@ -221,29 +224,44 @@
     <Compile Include="Controls\TimeDisplay.xaml.cs">
       <DependentUpon>TimeDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TitleBar\TitleBar.cs" />
+    <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
+    <Compile Include="Controls\TitleBar\TitleBarAutomationPeer.cs" />
+    <Compile Include="Controls\TitleBar\TitleBarHeightMode.cs" />
     <Compile Include="Controls\VLCLoginDialog.xaml.cs">
       <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\CheckBoxToToolTipConverter.cs" />
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
+    <Compile Include="Converters\GlyphConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
-    <Compile Include="Converters\LanguageLayoutDirectionToFlowDirectionConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
-    <Compile Include="Converters\SearchItemGlyphConverter.cs" />
-    <Compile Include="Converters\ThicknessFilterConverter.cs" />
+    <Compile Include="Converters\SearchSuggestionConverter.cs" />
+    <Compile Include="Converters\ThicknessFilterKinds.cs" />
+    <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Extensions\AcceleratorService.cs" />
+    <Compile Include="Extensions\ApplicationViewExtensions.cs" />
+    <Compile Include="Extensions\ListViewExtensions.cs" />
+    <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
-    <Compile Include="Helpers\GlyphConvert.cs" />
-    <Compile Include="Helpers\TitleBarHelper.cs" />
+    <Compile Include="Helpers\KeyboardAcceleratorHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PlaylistDetailsPage.xaml.cs">
+      <DependentUpon>PlaylistDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PlaylistsPage.xaml.cs">
+      <DependentUpon>PlaylistsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Search\AlbumSearchResultPage.xaml.cs">
       <DependentUpon>AlbumSearchResultPage.xaml</DependentUpon>
@@ -308,7 +326,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
-    <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Services\VlcDialogService.cs" />
+    <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\PropertyViewModel.cs" />
+    <Compile Include="Triggers\WindowActivationModeTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -316,9 +337,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <Content Include="Assets\Icons\AudiobookFileAssociation.targetsize-128.png" />
     <Content Include="Assets\Icons\AudiobookFileAssociation.targetsize-16.png" />
     <Content Include="Assets\Icons\AudiobookFileAssociation.targetsize-20.png" />
@@ -440,7 +458,6 @@
     <Content Include="Assets\Visualizers\Music Tunnel\shaders\tunnel.frag" />
     <Content Include="Assets\Visualizers\Music Tunnel\styles\style.css" />
     <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
-    <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.lock.json" />
     <None Include="InvaidXamlResources.txt" />
@@ -520,7 +537,7 @@
     <PRIResource Include="Strings\zh-Hans\KeyboardResources.resw" />
     <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hans\Resources.resw" />
-    <PRIResource Include="Strings\zh-Hans\KeyboardResources.resw" />
+    <PRIResource Include="Strings\zh-Hant\KeyboardResources.resw" />
     <PRIResource Include="Strings\zh-Hant\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hant\Resources.resw" />
   </ItemGroup>
@@ -542,6 +559,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChapterProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CreatePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DeletePlaylistDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ErrorInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -573,7 +602,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\PlaylistView.xaml">
+    <Page Include="Controls\PlayQueueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -585,6 +614,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\RenamePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\SeekBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -593,15 +626,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Styles\NoAnimationProgressBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Templates\GridViewItemTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TimeDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TitleBar\TitleBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -614,6 +647,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\AlbumDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\PlaylistDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PlaylistsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -717,25 +758,37 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Progress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.1.240916</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.1.240916</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.1.240916</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.1.240916</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.1.240916</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.1.240916</Version>
+      <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
@@ -744,7 +797,7 @@
       <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>9.0.2</Version>
+      <Version>9.0.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
@@ -753,7 +806,7 @@
       <Version>2.8.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>2.0.1</Version>
+      <Version>3.0.0</Version>
     </PackageReference>
     <PackageReference Include="ReswPlus">
       <Version>0.3.1.5</Version>
@@ -762,7 +815,7 @@
       <Version>3.0.21-2505100334</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>5.5.0</Version>
+      <Version>5.15.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -774,14 +827,6 @@
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

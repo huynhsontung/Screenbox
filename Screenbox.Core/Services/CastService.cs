@@ -1,76 +1,25 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Diagnostics;
-using LibVLCSharp.Shared;
-using Screenbox.Core.Events;
-using Screenbox.Core.Models;
 using System;
-using System.Collections.Generic;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 
-namespace Screenbox.Core.Services
+namespace Screenbox.Core.Services;
+
+public sealed class CastService : ICastService
 {
-    public sealed class CastService : ICastService
+    public RendererWatcher CreateRendererWatcher(IMediaPlayer player)
     {
-        public event EventHandler<RendererFoundEventArgs>? RendererFound;
-        public event EventHandler<RendererLostEventArgs>? RendererLost;
+        if (player is not VlcMediaPlayer vlcMediaPlayer)
+            throw new NotSupportedException("RendererWatcher only supports VlcMediaPlayer.");
 
-        private readonly LibVlcService _libVlcService;
-        private readonly List<Renderer> _renderers;
-        private RendererDiscoverer? _discoverer;
+        return new RendererWatcher(vlcMediaPlayer);
+    }
 
-        public CastService(LibVlcService libVlcService)
-        {
-            _libVlcService = libVlcService;
-            _renderers = new List<Renderer>();
-        }
-
-        public bool SetActiveRenderer(Renderer? renderer)
-        {
-            return _libVlcService.MediaPlayer?.VlcPlayer.SetRenderer(renderer?.Target) ?? false;
-        }
-
-        public bool Start()
-        {
-            Stop();
-            LibVLC? libVlc = _libVlcService.LibVlc;
-            Guard.IsNotNull(libVlc, nameof(libVlc));
-            _discoverer = new RendererDiscoverer(libVlc);
-            _discoverer.ItemAdded += DiscovererOnItemAdded;
-            _discoverer.ItemDeleted += DiscovererOnItemDeleted;
-            return _discoverer.Start();
-        }
-
-        public void Stop()
-        {
-            if (_discoverer == null) return;
-            _discoverer.Stop();
-            _discoverer.ItemAdded -= DiscovererOnItemAdded;
-            _discoverer.ItemDeleted -= DiscovererOnItemDeleted;
-            _discoverer.Dispose();
-            _discoverer = null;
-            foreach (Renderer renderer in _renderers)
-            {
-                renderer.Dispose();
-            }
-
-            _renderers.Clear();
-        }
-
-        private void DiscovererOnItemAdded(object sender, RendererDiscovererItemAddedEventArgs e)
-        {
-            Guard.IsNotNull(_discoverer, nameof(_discoverer));
-            Renderer renderer = new(e.RendererItem);
-            _renderers.Add(renderer);
-            RendererFound?.Invoke(this, new RendererFoundEventArgs(renderer));
-        }
-
-        private void DiscovererOnItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e)
-        {
-            Renderer? item = _renderers.Find(r => r.Target == e.RendererItem);
-            if (item != null)
-            {
-                RendererLost?.Invoke(this, new RendererLostEventArgs(item));
-            }
-        }
+    public bool SetActiveRenderer(IMediaPlayer player, Renderer? renderer)
+    {
+        if (player is not VlcMediaPlayer vlcMediaPlayer) return false;
+        return vlcMediaPlayer.VlcPlayer.SetRenderer(renderer?.Target);
     }
 }

@@ -38,5 +38,10 @@ namespace Screenbox.Core.Models
             IsAvailable = false;
             _item.Dispose();
         }
+
+        public override string ToString()
+        {
+            return $"{Name}, {Type}";
+        }
     }
 }

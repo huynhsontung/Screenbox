@@ -320,7 +320,7 @@
     <value>Selecionar vários</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>Não conseguimos encontrar qualquer música</value>
+    <value>Não foi possível localizar nenhuma música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
     <value>A sua biblioteca de música não contém qualquer conteúdo musical.</value>
@@ -351,6 +351,9 @@
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Abrir localização do ficheiro</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Abrir com</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Álbum</value>
@@ -454,6 +457,9 @@
   <data name="Artists" xml:space="preserve">
     <value>Artistas</value>
   </data>
+  <data name="Song" xml:space="preserve">
+    <value>Música</value>
+  </data>
   <data name="Songs" xml:space="preserve">
     <value>Músicas</value>
   </data>
@@ -544,19 +550,19 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Acesso negado. Por favor, verifica as tuas definições de privacidade para garantir que o Screenbox tenha as permissões necessárias.</value>
+    <value>Acesso negado. Verifique as suas definições de privacidade para garantir que o Screenbox tem permissões suficientes.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Não é possível aceder a biblioteca de música</value>
+    <value>Não é possível aceder à biblioteca de música</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Não é possível aceder a biblioteca de imagens</value>
+    <value>Não é possível aceder à biblioteca de imagens</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Não é possível aceder a biblioteca de vídeos</value>
+    <value>Não é possível aceder à biblioteca de vídeos</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>Não conseguimos localizar nenhum vídeo</value>
+    <value>Não foi possível localizar nenhum vídeo</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
     <value>A sua biblioteca de vídeo não contém qualquer conteúdo de vídeo.</value>
@@ -622,7 +628,7 @@
     <value>Mostar recentes</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Mostrar controlos ao pausar</value>
+    <value>Mostrar os controlos quando em pausa</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Localizações da biblioteca de vídeos</value>
@@ -631,7 +637,7 @@
     <value>Legendas</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Mostrar ficheiros multimédia reproduzidos recentemente na página inicial</value>
+    <value>Ver conteúdo de multimédia reproduzido recentemente na página inicial</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Limpar histórico de multimédia recente</value>
@@ -648,6 +654,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Permitir que o volume máximo exceda 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>Controlos no ecrã</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Escolher os elementos que podem aparecer nos controlos, e o comportamento da ocultação automática</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
   </data>
@@ -661,7 +673,7 @@
     <value>Toque em qualquer lugar para reproduzir ou pausar</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Leitor multimédia Screenbox</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
     <value>Código-fonte</value>
@@ -688,6 +700,18 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Legenda adicionada</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>Lista de reprodução "{0}" criada</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>Lista de reprodução "{0}" eliminada</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>Nome da lista de reprodução foi mudado para "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Erro crítico</value>
   </data>
@@ -698,7 +722,7 @@
     <value>Para obter mais informações e sugestões para corrigir este problema, visite</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Não foi possível abrir o ficheiro(s)</value>
+    <value>Não foi possível abrir o(s) ficheiro(s)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
     <value>Introduza o URL de um ficheiro, fluxo ou lista de reprodução</value>
@@ -731,6 +755,9 @@
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Avançado</value>
   </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacidade</value>
+  </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Modo avançado</value>
   </data>
@@ -741,7 +768,7 @@
     <value>Argumentos universais</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Argumentos da linha de comandos que se aplicam a todas as reproduções de multimédia.</value>
+    <value>Argumentos da linha de comandos que se aplicam a todas as reproduções de multimédia</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remover pasta</value>
@@ -824,6 +851,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Ordenar por</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Opção de ordenação {0} selecionada</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Artista</value>
   </data>
@@ -867,7 +898,7 @@
     <value>Data de adição</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Multimédia</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Vídeo</value>
@@ -915,36 +946,123 @@
     <value>Personalização</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Retomar sempre da última posição</value>
+    <value>Retomar sempre a sessão anterior</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continuar a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
+    <value>Retomar automaticamente a reprodução a partir da posição onde foi interrompida ao abrir um ficheiro</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
     <value>Melhorar vídeo</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>A super resolução requer hardware compatível e suporte do controlador</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>Bi-linear</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Ponto</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
     <value>Super resolução</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Mostrar, se disponível, o nome do capítulo</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dispensar controlos após este período de tempo</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} segundo</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} segundos</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Idioma da aplicação</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Selecionar o idioma de apresentação da aplicação</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Utilizar idioma do sistema</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>Nenhum resultado para "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Pasta</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>Adicionar à lista de reprodução</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>Criar lista de reprodução</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>Nova lista de reprodução</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>Selected item</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>Selected items</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>Sem listas de reprodução</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Criar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>Lista de reprodução sem título</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>Introduza um nome para esta lista de reprodução</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Listas de reprodução</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Mudar o nome</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>Introduza um novo nome para esta lista de reprodução</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>Mudar o nome da lista de reprodução</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>Eliminar lista de reprodução</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>Tem a certeza de que pretende eliminar a lista de reprodução "{0}"?  Não é possível anular esta ação.</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Histórico de posição reproduzida</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Armazenar o meu histórico de posições reproduzidas neste dispositivo para retomar rapidamente a sessão</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Limpar o histórico de posição reproduzida do dispositivo</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>{0} item adicionado à lista de reprodução "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>{0} itens adicionados à lista de reprodução "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

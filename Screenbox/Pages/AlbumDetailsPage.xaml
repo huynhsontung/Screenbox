@@ -2,11 +2,10 @@
     x:Class="Screenbox.Pages.AlbumDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,7 +22,11 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <MenuFlyout x:Name="ItemFlyout">
+            <MenuFlyout x:Key="ItemFlyout">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                </interactivity:Interaction.Behaviors>
+
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
@@ -36,7 +39,22 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
+                <MenuFlyoutSubItem
+                    x:Name="AddToPlaylistSubMenu"
+                    Icon="{ui:SymbolIcon Symbol=Add}"
+                    Text="{strings:Resources Key=AddToPlaylist}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
@@ -133,10 +151,10 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name, FallbackValue={x:Null}}"
+                        Text="{x:Bind ViewModel.Source.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
@@ -145,10 +163,10 @@
                         Margin="0,8,0,0"
                         FontWeight="Normal"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.ArtistName, FallbackValue={x:Null}}"
+                        Text="{x:Bind ViewModel.Source.ArtistName, Converter={StaticResource ArtistTextConverter}, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
@@ -160,19 +178,19 @@
                         Text="{x:Bind local:AlbumDetailsPage.GetSubtext(ViewModel.Year, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
+                            <behaviors:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
                     <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that opening the overflow popup does not reset the command bar position.  -->
                     <Grid x:Name="ButtonPanel">
-                        <CommandBar
+                        <controls:CommandBarEx
                             Margin="-8,8,0,0"
                             HorizontalAlignment="Left"
-                            extensions:CommandBarExtensions.MoreButtonStyle="{StaticResource EllipsisDefaultButtonStyle}"
-                            AccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                            DefaultLabelPosition="Right">
-                            <CommandBar.Resources>
+                            AccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                            DefaultLabelPosition="Right"
+                            MoreButtonStyle="{StaticResource EllipsisDefaultButtonStyle}">
+                            <controls:CommandBarEx.Resources>
                                 <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
@@ -183,7 +201,7 @@
                                 <Thickness x:Key="AppBarButtonContentViewboxMargin">16,16,0,16</Thickness>
                                 <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,14,16,15</Thickness>
                                 <Thickness x:Key="AppBarButtonInnerBorderMargin">4,8,4,8</Thickness>
-                            </CommandBar.Resources>
+                            </controls:CommandBarEx.Resources>
 
                             <AppBarButton
                                 AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
@@ -194,7 +212,7 @@
                                 Label="{strings:Resources Key=Play}"
                                 Style="{StaticResource AccentButtonAppBarButtonStyle}">
                                 <interactivity:Interaction.Behaviors>
-                                    <interactions:AutoFocusBehavior />
+                                    <behaviors:AutoFocusBehavior />
                                 </interactivity:Interaction.Behaviors>
                             </AppBarButton>
 
@@ -206,7 +224,7 @@
                                                    MirroredWhenRightToLeft=True}"
                                 Label="{strings:Resources Key=ShuffleAndPlay}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
-                        </CommandBar>
+                        </controls:CommandBarEx>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -216,14 +234,12 @@
             x:Name="ItemList"
             Grid.Row="1"
             Padding="{StaticResource ContentPagePadding}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
-            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind ViewModel.SortedItems}"
-            SelectionMode="None">
+            SelectionMode="None"
+            Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
@@ -239,18 +255,18 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
             <interactivity:Interaction.Behaviors>
-                <interactions:AlternatingListViewBehavior
+                <behaviors:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
-                <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                <interactions:FocusOnItemClickBehavior />
+                <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
         </ListView>
 
         <interactivity:Interaction.Behaviors>
-            <interactions:GamepadXYNavigationBehavior />
+            <behaviors:GamepadXYNavigationBehavior />
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
