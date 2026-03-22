@@ -307,10 +307,10 @@
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Compact" To="Expanded">
                         <Storyboard>
-                            <!--  -272 offset is derived from subtracting OpenPaneLength from CompactPaneLength (48 - 320).  -->
-                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="PlayerFrame" />
                             <!--  24 offset is derived by subtracting AppTitleBarExpandedMargin from AppTitleBarCompactMargin (72 - 48).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="24" TargetName="AppTitleBar" />
+                            <!--  -272 offset is derived from subtracting OpenPaneLength from CompactPaneLength (48 - 320).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="PlayerFrame" />
                             <DoubleAnimation
                                 Storyboard.TargetName="HomeNavItemText"
                                 Storyboard.TargetProperty="Opacity"
@@ -361,10 +361,10 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarCompactMargin}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--  272 offset is derived from subtracting CompactPaneLength from OpenPaneLength (320 - 48).  -->
-                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="PlayerFrame" />
                             <!--  -24 offset is derived by subtracting AppTitleBarCompactMargin from AppTitleBarExpandedMargin (48 - 72).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="-24" TargetName="AppTitleBar" />
+                            <!--  272 offset is derived from subtracting CompactPaneLength from OpenPaneLength (320 - 48).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="PlayerFrame" />
                         </Storyboard>
                     </VisualTransition>
 
@@ -373,10 +373,12 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarMinimalMargin}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--  48 offset corresponds to CompactPaneLength (48).  -->
-                            <RepositionThemeAnimation FromHorizontalOffset="48" TargetName="PlayerFrame" />
                             <!--  -28 offset is derived by subtracting AppTitleBarMinimalMargin from AppTitleBarCompactMargin (72 - 100).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="-28" TargetName="AppTitleBar" />
+                            <!--  48 offset corresponds to CompactPaneLength (48).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="48" TargetName="PlayerFrame" />
+                            <!--  40 offset is derived by subtracting ...PageMinimalPadding from ...PagePadding (52/56 - 12/16).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="40" TargetName="ContentFrame" />
                         </Storyboard>
                     </VisualTransition>
 
@@ -385,10 +387,12 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitleBar" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleBarCompactMargin}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--  -48 offset is derived from subtracting CompactPaneLength (48).  -->
-                            <RepositionThemeAnimation FromHorizontalOffset="-48" TargetName="PlayerFrame" />
                             <!--  28 offset is derived by subtracting AppTitleBarCompactMargin from AppTitleBarMinimalMargin (100 - 72).  -->
                             <RepositionThemeAnimation FromHorizontalOffset="28" TargetName="AppTitleBar" />
+                            <!--  -48 offset is derived from subtracting CompactPaneLength (48).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-48" TargetName="PlayerFrame" />
+                            <!--  -40 offset is derived by subtracting ...PagePadding from ...PageMinimalPadding (12/16 - 52/56).  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-40" TargetName="ContentFrame" />
                         </Storyboard>
                     </VisualTransition>
 
