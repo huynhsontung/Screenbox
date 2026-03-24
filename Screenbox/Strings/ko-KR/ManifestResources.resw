@@ -238,6 +238,10 @@
     <value>Ogg 비디오</value>
     <comment>Display name for the file type ".ogv"</comment>
   </data>
+  <data name="FileDisplayNameOggMedia" xml:space="preserve">
+    <value>Ogg Media File</value>
+    <comment>Display name for the file type ".ogm"</comment>
+  </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
     <value>QuickTime 동영상</value>
     <comment>Display name for the file type ".mov" and ".qt"</comment>
