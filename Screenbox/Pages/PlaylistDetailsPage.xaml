@@ -118,16 +118,19 @@
                     BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
-                    FlowDirection="LeftToRight"
                     Shadow="{StaticResource ElevationThemeShadow}"
                     SizeChanged="CoverArt_OnSizeChanged"
                     Translation="0,0,16">
+                    <Border CornerRadius="{x:Bind CoverArt.CornerRadius}">
+                        <Image Source="{x:Bind ViewModel.Source.Thumbnail, Mode=OneWay}" Stretch="UniformToFill" />
+                    </Border>
                     <FontIcon
                         x:Name="CoverArtIcon"
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                         FontSize="64"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="{StaticResource PlaylistGlyph}" />
+                        Glyph="{StaticResource PlaylistGlyph}"
+                        Visibility="{x:Bind ViewModel.Source.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, FallbackValue=Visible}" />
                 </Grid>
 
                 <StackPanel
