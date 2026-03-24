@@ -25,7 +25,7 @@ public sealed class SearchService : ISearchService
             .Select(t => t.Album)
             .ToImmutableList();
         ImmutableList<ArtistViewModel> artists = context.Artists
-            .Select(pair => (Artist: pair.Value, Index: pair.Key.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
+            .Select(pair => (Artist: pair.Value, Index: pair.Value.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
             .Where(t => t.Index >= 0)
             .OrderBy(t => t.Index)
             .Select(t => t.Artist)
