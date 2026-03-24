@@ -78,7 +78,8 @@
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, ItemsCount)}"
             Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
-            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+            ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
                 <FontIconSource
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
