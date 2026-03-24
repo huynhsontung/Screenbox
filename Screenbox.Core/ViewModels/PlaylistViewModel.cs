@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,13 +18,18 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
 using Windows.System;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlaylistViewModel : ObservableRecipient,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
+    private const int ThumbnailCollageSize = 768;
+
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 
     public double ItemsCount => Items.Count;    // For binding
@@ -30,7 +37,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial bool IsQueueActive { get; set; }
-    [ObservableProperty] public partial object? Thumbnail { get; set; }
+    [ObservableProperty] public partial WriteableBitmap? Thumbnail { get; set; }
     [ObservableProperty] public partial DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
 
     public string Id => _id.ToString();
@@ -81,6 +88,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
+        OnPropertyChanged(nameof(Thumbnail));
 
         _playlistSaveTimer.Debounce(async () =>
         {
@@ -98,6 +106,9 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             PlayNextCommand.NotifyCanExecuteChanged();
             AddToQueueCommand.NotifyCanExecuteChanged();
         }, TimeSpan.FromMilliseconds(50));
+
+        // TODO: Update the collage only when the first four items in the collection change.
+        _ = UpdateThumbnailCollageAsync();
     }
 
     public QueueSession ToQueueSession()
@@ -280,5 +291,118 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
 
         return media;
+    }
+
+    private async Task UpdateThumbnailCollageAsync()
+    {
+        if (ItemsCount == 0)
+        {
+            Thumbnail = null;
+            return;
+        }
+
+        try
+        {
+            var sources = new List<IRandomAccessStream?>();
+
+            foreach (var item in Items.Take(4))
+            {
+                try
+                {
+                    var stream = await item.GetThumbnailSourceAsync();
+                    sources.Add(stream);
+                }
+                catch
+                {
+                    sources.Add(null);
+                }
+            }
+
+            var bitmap = await CombineStreamsToWriteableBitmapAsync(sources);
+            if (bitmap is null) return;
+
+            if (_dispatcherQueue is not null)
+            {
+                _dispatcherQueue.TryEnqueue(() => Thumbnail = bitmap);
+            }
+        }
+        catch
+        {
+        }
+    }
+
+    private static async Task<WriteableBitmap?> CombineStreamsToWriteableBitmapAsync(IReadOnlyList<IRandomAccessStream?> sources)
+    {
+        const int Bpp = 4;
+
+        int width = ThumbnailCollageSize;
+        int height = ThumbnailCollageSize;
+
+        byte[] result = new byte[width * height * Bpp];
+
+        // Cell size for a 2x2 grid.
+        int cellWidth = width / 2;
+        int cellHeight = height / 2;
+
+        for (int i = 0; i < Math.Min(4, sources.Count); i++)
+        {
+            var stream = sources[i];
+
+            if (stream is null) continue;
+
+            try
+            {
+                stream.Seek(0);
+                var decoder = await BitmapDecoder.CreateAsync(stream);
+
+                var transform = new BitmapTransform
+                {
+                    ScaledWidth = (uint)cellWidth,
+                    ScaledHeight = (uint)cellHeight,
+                    InterpolationMode = BitmapInterpolationMode.Fant,
+                };
+
+                var pixelData = await decoder.GetPixelDataAsync(
+                    BitmapPixelFormat.Bgra8,
+                    BitmapAlphaMode.Straight,
+                    transform,
+                    ExifOrientationMode.IgnoreExifOrientation,
+                    ColorManagementMode.DoNotColorManage);
+
+                byte[] sourcePixels = pixelData.DetachPixelData();
+
+                int sourceStride = cellWidth * Bpp;
+
+                int col = i % 2;
+                int row = i / 2;
+                int offsetX = col * cellWidth;
+                int offsetY = row * cellHeight;
+
+                for (int y = 0; y < cellHeight; y++)
+                {
+                    int sourceIndex = y * sourceStride;
+                    int destinationIndex = ((offsetY + y) * width + offsetX) * Bpp;
+                    sourcePixels.AsSpan(sourceIndex, sourceStride).CopyTo(result.AsSpan(destinationIndex, sourceStride));
+                }
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+
+        try
+        {
+            var writableBitmap = new WriteableBitmap(width, height);
+            using (var stream = writableBitmap.PixelBuffer.AsStream())
+            {
+                await stream.WriteAsync(result, 0, result.Length);
+            }
+
+            return writableBitmap;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
