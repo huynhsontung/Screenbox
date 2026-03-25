@@ -280,7 +280,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
                     {
                         Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(effectiveHoldingSpeed), isSticky: true));
+                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
                     }
                     IsHolding = true;
                 }

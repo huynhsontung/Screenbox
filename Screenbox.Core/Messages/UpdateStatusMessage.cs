@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.Core.Messages;
@@ -10,18 +11,10 @@ namespace Screenbox.Core.Messages;
 public sealed class UpdateStatusMessage : ValueChangedMessage<string?>
 {
     /// <summary>
-    /// Gets a value that indicates whether the status message remains visible
-    /// until explicitly cleared.
+    /// Gets the duration of the status message.
     /// </summary>
-    /// <value>
-    /// <see langword="true" /> if the status message persists; otherwise, <see langword="false" />.
-    /// The default is <see langword="false" />.
-    /// </value>
-    /// <remarks>
-    /// The status message is cleared by sending an <see cref="UpdateStatusMessage"/>
-    /// with a <see langword="null" /> value.
-    /// </remarks>
-    public bool IsSticky { get; }
+    /// <value>The duration of the message. The default is 1 second.</value>
+    public TimeSpan Duration { get; } = TimeSpan.FromSeconds(1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateStatusMessage"/> class
@@ -34,13 +27,12 @@ public sealed class UpdateStatusMessage : ValueChangedMessage<string?>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateStatusMessage"/> class
-    /// using the specified text and visibility behavior.
+    /// using the specified text and display time.
     /// </summary>
     /// <param name="value">The value to set for the status message.</param>
-    /// <param name="isSticky"><see langword="true"/> to make the message persistent;
-    /// otherwise, <see langword="false"/>.</param>
-    public UpdateStatusMessage(string? value, bool isSticky) : this(value)
+    /// <param name="duration">The duration of the status message.</param>
+    public UpdateStatusMessage(string? value, TimeSpan duration) : this(value)
     {
-        IsSticky = isSticky;
+        Duration = duration;
     }
 }

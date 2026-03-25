@@ -178,13 +178,13 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             StatusMessage = message.Value;
-            if (message.Value is null || message.IsSticky)
+            if (message.Value is null || message.Duration == System.Threading.Timeout.InfiniteTimeSpan)
             {
                 _statusMessageTimer.Stop();
                 return;
             }
 
-            _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
+            _statusMessageTimer.Debounce(() => StatusMessage = null, message.Duration);
         });
     }
 
