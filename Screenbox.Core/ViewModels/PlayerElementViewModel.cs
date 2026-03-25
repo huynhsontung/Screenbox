@@ -275,10 +275,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 {
                     _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
                     _suppressNextTap = true;
-                    if (VlcMediaPlayer.PlaybackRate != HoldingSpeed)
+                    // If the rate is already faster than the holding speed, set it to twice the holding speed.
+                    double effectiveHoldingSpeed = VlcMediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
+                    if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
                     {
-                        Messenger.Send(new ChangePlaybackRateRequestMessage(HoldingSpeed));
-                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(HoldingSpeed)));
+                        Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
+                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(effectiveHoldingSpeed), isSticky: true));
                     }
                     IsHolding = true;
                 }

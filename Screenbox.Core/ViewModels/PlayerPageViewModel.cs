@@ -178,7 +178,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             StatusMessage = message.Value;
-            if (message.Value == null)
+            if (message.Value is null || message.IsSticky)
             {
                 _statusMessageTimer.Stop();
                 return;
