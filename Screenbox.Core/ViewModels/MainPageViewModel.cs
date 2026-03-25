@@ -229,7 +229,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             return -1;
 
         int index = text.IndexOf(query, StringComparison.CurrentCultureIgnoreCase);
-        if (query.Contains(' '))
+        if (query.Contains(' ') || index < 0)
         {
             return index;
         }
