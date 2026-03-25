@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -26,6 +27,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -57,7 +59,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
     [ObservableProperty] private MediaViewModel? _media;
     [ObservableProperty] private bool _showVisualizer;
-    [ObservableProperty] private bool _keyTipsVisible;
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
@@ -611,18 +612,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
     }
 
-    partial void OnKeyTipsVisibleChanged(bool value)
-    {
-        if (value)
-        {
-            ControlsHidden = false;
-        }
-        else
-        {
-            DelayHideControls();
-        }
-    }
-
     [RelayCommand]
     public void GoBack()
     {
@@ -662,7 +651,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;
         if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
-            SeekBarPointerInteracting || AudioOnly || ControlsHidden || KeyTipsVisible) return false;
+            SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
         if (!skipFocusCheck)
         {
@@ -671,11 +660,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             // using arrow keys without affecting focus.
             if (focused is Slider { IsFocusEngaged: true }) return false;
 
-            // Don't hide controls when a flyout is in focus
-            // Flyout is not in the same XAML tree of the Window content, use this fact to detect flyout opened
-            Control? root = focused?.FindAscendant<Frame>(frame => frame == Window.Current.Content) ??
-                            focused?.FindChild<Frame>(frame => frame == Window.Current.Content);
-            if (root == null) return false;
+            // Do not hide controls while a popup is open.
+            bool isPopupOpen = VisualTreeHelper.GetOpenPopups(Window.Current).Any();
+            if (isPopupOpen) return false;
         }
 
         ControlsHidden = true;
@@ -688,7 +675,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     private void DelayHideControls()
     {
-        if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly || KeyTipsVisible) return;
+        if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly) return;
 
         int delayInSeconds = _settingsService.PlayerControlsHideDelay;
         _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));

@@ -7,24 +7,36 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xaml.Interactivity;
-using Screenbox.Controls;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.ViewModels;
+using Screenbox.Dialogs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
 
 /// <summary>
-/// Populates a named <see cref="MenuFlyoutSubItem"/> within a <see cref="MenuFlyout"/> with playlist actions.
+/// Populates a <see cref="MenuFlyout"/> or a named <see cref="MenuFlyoutSubItem"/> within a <see cref="MenuFlyout"/> with playlist actions.
 /// </summary>
-internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
+internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
 {
     public static readonly DependencyProperty TargetSubItemNameProperty = DependencyProperty.Register(
         nameof(TargetSubItemName),
         typeof(string),
-        typeof(AddToPlaylistFlyoutSubmenuBehavior),
+        typeof(AddToPlaylistFlyoutBehavior),
         new PropertyMetadata(string.Empty));
+
+    public static readonly DependencyProperty DataContextProperty = DependencyProperty.Register(
+        nameof(DataContext),
+        typeof(object),
+        typeof(AddToPlaylistFlyoutBehavior),
+        new PropertyMetadata(null));
+
+    public object? DataContext
+    {
+        get => GetValue(DataContextProperty);
+        set => SetValue(DataContextProperty, value);
+    }
 
     /// <summary>
     /// Gets or sets the x:Name of the <see cref="MenuFlyoutSubItem"/> that should be populated.
@@ -35,14 +47,15 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
         set => SetValue(TargetSubItemNameProperty, value);
     }
 
-    public IAsyncRelayCommand<MediaViewModel?> CreatePlaylistCommand { get; }
+    private IAsyncRelayCommand<IEnumerable<MediaViewModel>> CreatePlaylistCommand { get; }
 
     private readonly PlaylistsContext _playlistsContext;
+    private FrameworkElement? _flyoutTarget;
 
-    public AddToPlaylistFlyoutSubmenuBehavior()
+    public AddToPlaylistFlyoutBehavior()
     {
         _playlistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
-        CreatePlaylistCommand = new AsyncRelayCommand<MediaViewModel?>(CreatePlaylistAsync);
+        CreatePlaylistCommand = new AsyncRelayCommand<IEnumerable<MediaViewModel>>(CreatePlaylistAsync);
     }
 
     protected override void OnAttached()
@@ -62,45 +75,52 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
 
     private void AssociatedObjectOnOpening(object sender, object e)
     {
+        _flyoutTarget = AssociatedObject.Target;
         PopulateMenu();
     }
 
     private void PopulateMenu()
     {
-        if (string.IsNullOrWhiteSpace(TargetSubItemName))
+        // The DataContext set at behavior level takes precedence, then the DataContext of the target sub-menu (if specified),
+        // and finally the DataContext of the element
+        object? dataContext = DataContext;
+
+        // If a TargetSubItemName is specified, we want to populate that sub-menu instead of the root level of the flyout.
+        IList<MenuFlyoutItemBase> menuItems = AssociatedObject.Items;
+        if (!string.IsNullOrWhiteSpace(TargetSubItemName) &&
+            TryFindSubItem(AssociatedObject.Items, TargetSubItemName, out var targetSubItem))
         {
-            return;
+            dataContext ??= targetSubItem.DataContext;
+            menuItems = targetSubItem.Items;
         }
 
-        if (!TryFindSubItem(AssociatedObject.Items, TargetSubItemName, out var targetSubItem))
-        {
-            return;
-        }
+        // If no DataContext is set at the behavior or sub-menu level, we can try to fall back to the target element's DataContext
+        dataContext ??= _flyoutTarget?.DataContext;
 
-        MediaViewModel? clicked = targetSubItem.DataContext switch
+        IReadOnlyList<MediaViewModel> contextItems = dataContext switch
         {
-            StorageItemViewModel svm => svm.Media,
-            MediaViewModel vm => vm,
-            _ => null,
+            StorageItemViewModel { Media: { } media } => [media],
+            MediaViewModel vm => [vm],
+            IReadOnlyList<MediaViewModel> list => list,
+            IEnumerable<MediaViewModel> collection => collection.ToList(),
+            IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToList(),
+            _ => Array.Empty<MediaViewModel>(),
         };
-        IReadOnlyList<MediaViewModel> clickedItems = clicked is not null
-            ? [clicked]
-            : Array.Empty<MediaViewModel>();
 
-        targetSubItem.Items.Clear();
-        targetSubItem.Items.Add(new MenuFlyoutItem
+        menuItems.Clear();
+        menuItems.Add(new MenuFlyoutItem
         {
             Icon = new SymbolIcon(Symbol.Add),
             Text = Strings.Resources.CreateNewPlaylist,
             Command = CreatePlaylistCommand,
-            CommandParameter = clicked
+            CommandParameter = contextItems
         });
 
-        targetSubItem.Items.Add(new MenuFlyoutSeparator());
+        menuItems.Add(new MenuFlyoutSeparator());
 
         if (_playlistsContext.Playlists.Count == 0)
         {
-            targetSubItem.Items.Add(new MenuFlyoutItem
+            menuItems.Add(new MenuFlyoutItem
             {
                 Text = Strings.Resources.NoPlaylists,
                 IsEnabled = false
@@ -110,16 +130,16 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
 
         foreach (var playlist in _playlistsContext.Playlists.Where(p => p is not null))
         {
-            targetSubItem.Items.Add(new MenuFlyoutItem
+            menuItems.Add(new MenuFlyoutItem
             {
                 Text = playlist.Name,
                 Command = playlist.AddItemsCommand,
-                CommandParameter = clickedItems
+                CommandParameter = contextItems
             });
         }
     }
 
-    private async Task CreatePlaylistAsync(MediaViewModel? parameter)
+    private async Task CreatePlaylistAsync(IEnumerable<MediaViewModel>? itemsToAdd)
     {
         var playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (string.IsNullOrWhiteSpace(playlistName))
@@ -127,9 +147,12 @@ internal sealed class AddToPlaylistFlyoutSubmenuBehavior : Behavior<MenuFlyout>
 
         var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
         playlist.Name = playlistName!;
-        if (parameter != null)
+        if (itemsToAdd != null)
         {
-            playlist.Items.Add(parameter);
+            foreach (var item in itemsToAdd)
+            {
+                playlist.Items.Add(item);
+            }
         }
 
         await playlist.SaveAsync();

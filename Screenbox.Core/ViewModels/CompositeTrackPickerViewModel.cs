@@ -230,6 +230,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         // VM index 0 maps to actual track index -1, which is "Disable"
         // Decrement value by 1 to convert from display index to actual subtitle track index
         value = Math.Max(-1, value - 1);
+        if (value >= ItemSubtitleTrackList.Count) return;
         ItemSubtitleTrackList.SelectedIndex = value;
 
         if (!_flyoutOpened) return;
@@ -248,13 +249,13 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
     partial void OnAudioTrackIndexChanged(int value)
     {
-        if (ItemAudioTrackList != null && value >= 0 && value < AudioTracks.Count)
+        if (ItemAudioTrackList != null && value >= 0 && value < ItemAudioTrackList.Count)
             ItemAudioTrackList.SelectedIndex = value;
     }
 
     partial void OnVideoTrackIndexChanged(int value)
     {
-        if (ItemVideoTrackList != null && value >= 0 && value < VideoTracks.Count)
+        if (ItemVideoTrackList != null && value >= 0 && value < ItemVideoTrackList.Count)
             ItemVideoTrackList.SelectedIndex = value;
     }
 

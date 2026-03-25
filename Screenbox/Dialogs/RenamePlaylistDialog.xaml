@@ -1,5 +1,5 @@
 ﻿<ContentDialog
-    x:Class="Screenbox.Controls.RenamePlaylistDialog"
+    x:Class="Screenbox.Dialogs.RenamePlaylistDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,12 +12,9 @@
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
-    <StackPanel Spacing="8">
-        <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{strings:Resources Key=PlaylistName}" />
-        <TextBox
-            x:Name="PlaylistNameTextBox"
-            MaxLength="100"
-            PlaceholderText="{strings:Resources Key=RenamePlaylistPlaceholder}"
-            TextChanged="PlaylistNameTextBox_OnTextChanged" />
-    </StackPanel>
+    <TextBox
+        x:Name="PlaylistNameTextBox"
+        MaxLength="100"
+        PlaceholderText="{x:Bind strings:Resources.RenamePlaylistPlaceholder}"
+        TextChanged="PlaylistNameTextBox_OnTextChanged" />
 </ContentDialog>

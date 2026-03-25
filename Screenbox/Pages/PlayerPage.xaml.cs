@@ -11,7 +11,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
@@ -48,19 +47,12 @@ public sealed partial class PlayerPage : Page
         RegisterSeekBarPointerHandlers();
         UpdatePreviewType();
 
-        CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-        LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
-        RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
-        coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         AlbumArtImage.RegisterPropertyChangedCallback(ImageBrush.ImageSourceProperty, AlbumArtImageOnSourceChanged);
         LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
 
         INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
         navigationService.Navigated += NavigationServiceOnNavigated;
-
-        AccessKeyManager.IsDisplayModeEnabledChanged += AccessKeyManager_OnIsDisplayModeEnabledChanged;
     }
     private void NavigationServiceOnNavigated(object sender, EventArgs e)
     {
@@ -120,11 +112,6 @@ public sealed partial class PlayerPage : Page
         e.Handled = handled;
     }
 
-    private void SetTitleBar()
-    {
-        Window.Current.SetTitleBar(TitleBarDragRegion);
-    }
-
     private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
     {
         PlayBackgroundArtChangeCrossFadeAnimation();
@@ -148,25 +135,11 @@ public sealed partial class PlayerPage : Page
 
         if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
         {
+            PlayerTitleBar.SetDragRegion();
             // Focus can fail if player is file activated
             // Controls are disabled by default until playback is ready
             PlayerControls.FocusFirstButton();
         }
-    }
-
-    private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-    {
-        // Get the size of the caption controls and set padding.
-        // In RTL languages, Grid is flipped automatically.
-        // Left is always the side without the system controls.
-        // Left padding should only be set if we pin flow direction on the title bar.
-        // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
-        RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
-    }
-
-    private void AccessKeyManager_OnIsDisplayModeEnabledChanged(object sender, object args)
-    {
-        ViewModel.KeyTipsVisible = AccessKeyManager.IsDisplayModeEnabled;
     }
 
     private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -237,7 +210,6 @@ public sealed partial class PlayerPage : Page
                     case WindowViewMode.Compact:
                         ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
                         VisualStateManager.GoToState(this, "CompactOverlay", true);
-                        SetTitleBar();
                         break;
                     case WindowViewMode.FullScreen:
                         ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
@@ -260,7 +232,7 @@ public sealed partial class PlayerPage : Page
                     case PlayerVisibilityState.Visible:
                         VisualStateManager.GoToState(this, "NoPreview", true);
                         VisualStateManager.GoToState(this, "Normal", true);
-                        SetTitleBar();
+                        PlayerTitleBar.SetDragRegion();
                         break;
                     case PlayerVisibilityState.Minimal:
                         VisualStateManager.GoToState(this, "MiniPlayer", true);
@@ -413,7 +385,6 @@ public sealed partial class PlayerPage : Page
         LayoutRoot.RequestedTheme = !ViewModel.AudioOnly && ViewModel.PlayerVisibility == PlayerVisibilityState.Visible
             ? ElementTheme.Dark
             : ElementTheme.Default;
-        TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
     }
 
     private void PlayQueueFlyout_OnOpening(object sender, object e)

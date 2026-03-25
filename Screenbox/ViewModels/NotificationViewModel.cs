@@ -32,7 +32,8 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<FailedToInitializeNotificationMessage>,
     IRecipient<PlaylistCreatedNotificationMessage>,
     IRecipient<PlaylistDeletedNotificationMessage>,
-    IRecipient<PlaylistRenamedNotificationMessage>
+    IRecipient<PlaylistRenamedNotificationMessage>,
+    IRecipient<PlaylistItemsAddedNotificationMessage>
 {
     [ObservableProperty] private NotificationLevel _severity;
 
@@ -276,6 +277,11 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     public void Receive(PlaylistRenamedNotificationMessage message)
     {
         ShowSuccessNotification(Resources.PlaylistRenamedNotificationTitle(message.NewName), null);
+    }
+
+    public void Receive(PlaylistItemsAddedNotificationMessage message)
+    {
+        ShowSuccessNotification(Resources.PlaylistItemsAddedNotificationTitle(message.ItemCount, message.PlaylistName), null);
     }
 
     private void ShowSuccessNotification(string? title, string? message)

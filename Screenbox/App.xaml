@@ -28,6 +28,7 @@
 
                     <!--  Commands  -->
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
+                    <commands:OpenWithCommand x:Key="OpenWithCommand" />
 
                     <!--  Converters  -->
                     <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
@@ -101,6 +102,8 @@
 
                     <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
 
+                    <NavigationViewDisplayMode x:Key="MinimalNavigationViewDisplayMode">Minimal</NavigationViewDisplayMode>
+
                     <!--  Animations  -->
                     <ctAnimations:ImplicitAnimationSet x:Key="FadeInImplicitAnimation">
                         <ctAnimations:OpacityAnimation
@@ -146,6 +149,7 @@
                     </DataTemplate>
                 </ResourceDictionary>
 
+                <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Icon.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/ItemContainer.xaml" />

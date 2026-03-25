@@ -21,7 +21,7 @@
         <ResourceDictionary>
             <MenuFlyout x:Key="ItemFlyout">
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:AddToPlaylistFlyoutSubmenuBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                    <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
                 </interactivity:Interaction.Behaviors>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
@@ -46,6 +46,11 @@
                     x:Name="AddToPlaylistSubMenu"
                     Icon="{ui:SymbolIcon Symbol=Add}"
                     Text="{strings:Resources Key=AddToPlaylist}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding Media}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding Media}"
@@ -170,11 +175,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
-                            <triggers:IsEqualStateTrigger.To>
-                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
-                            </triggers:IsEqualStateTrigger.To>
-                        </triggers:IsEqualStateTrigger>
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="TitleText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />

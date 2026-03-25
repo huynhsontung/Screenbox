@@ -55,8 +55,7 @@ public sealed class MediaViewModelFactory
     public MediaViewModel GetSingleton(StorageFile file)
     {
         string id = file.Path;
-        if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
-            reference.TryGetTarget(out MediaViewModel instance))
+        if (TryGetSingleton(id, out MediaViewModel? instance) && instance != null)
         {
             // Prefer storage file source
             if (instance.Source is not IStorageFile)
@@ -82,8 +81,8 @@ public sealed class MediaViewModelFactory
     public MediaViewModel GetSingleton(Uri uri)
     {
         string id = uri.OriginalString;
-        if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
-            reference.TryGetTarget(out MediaViewModel instance)) return instance;
+        if (TryGetSingleton(id, out MediaViewModel? instance) && instance != null)
+            return instance;
 
         // No existing reference, create new instance
         instance = new MediaViewModel(_playerContext, _playerService, uri);
@@ -94,6 +93,32 @@ public sealed class MediaViewModelFactory
         }
 
         return instance;
+    }
+
+    public bool TryGetSingleton(StorageFile file, out MediaViewModel? mediaViewModel)
+    {
+        string id = file.Path;
+        return TryGetSingleton(id, out mediaViewModel);
+    }
+
+    public bool TryGetSingleton(Uri uri, out MediaViewModel? mediaViewModel)
+    {
+        string id = uri.OriginalString;
+        return TryGetSingleton(id, out mediaViewModel);
+    }
+
+    private bool TryGetSingleton(string id, out MediaViewModel? mediaViewModel)
+    {
+        mediaViewModel = null;
+        if (!string.IsNullOrWhiteSpace(id) &&
+            _references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
+            reference.TryGetTarget(out MediaViewModel instance))
+        {
+            mediaViewModel = instance;
+            return true;
+        }
+
+        return false;
     }
 
     private void CleanUpStaleReferences()
