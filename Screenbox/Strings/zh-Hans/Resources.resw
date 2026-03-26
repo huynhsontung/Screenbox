@@ -353,7 +353,7 @@
     <value>打开文件位置</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>打开方式</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>专辑</value>
@@ -701,15 +701,15 @@
     <value>添加了字幕</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>播放列表"{0}" 已创建</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>播放列表 "{0}" 已删除</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>播放列表重命名为 "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -997,13 +997,13 @@
     <value>文件夹</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>添加到播放列表</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>创建新的播放列表</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>新建播放列表</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
