@@ -125,6 +125,8 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
     {
+        if (ViewModel.IsHolding || !IsEnabled) return;
+
         ViewModel.ProcessSwipeGesture(e.Cumulative.Translation);
         ViewModel.OnManipulationCompleted();
     }
