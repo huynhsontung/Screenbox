@@ -1,0 +1,21 @@
+﻿<ContentDialog
+    x:Class="Screenbox.Dialogs.CreatePlaylistDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    Title="{strings:Resources Key=CreateNewPlaylist}"
+    CloseButtonText="{strings:Resources Key=Cancel}"
+    DefaultButton="Primary"
+    PrimaryButtonText="{strings:Resources Key=Create}"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <TextBox
+        x:Name="PlaylistNameTextBox"
+        MaxLength="100"
+        PlaceholderText="{x:Bind strings:Resources.CreatePlaylistPlaceholder}"
+        SelectedText="{x:Bind strings:Resources.NewPlaylistDefaultName}"
+        TextChanged="PlaylistNameTextBox_OnTextChanged" />
+</ContentDialog>

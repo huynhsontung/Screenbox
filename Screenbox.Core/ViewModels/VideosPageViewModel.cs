@@ -15,7 +15,6 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Navigation;
-using IResourceService = Screenbox.Core.Services.IResourceService;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -26,16 +25,15 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
 
     [ObservableProperty] private bool _hasVideos;
 
-    private bool HasLibrary => _libraryContext.VideosLibrary != null;
+    /// <summary>Gets a value indicating whether the Videos library is available, used to enable the add-folder command.</summary>
+    public bool HasLibrary => _libraryContext.VideosLibrary != null;
 
     private readonly LibraryContext _libraryContext;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public VideosPageViewModel(LibraryContext libraryContext, IResourceService resourceService)
+    public VideosPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _resourceService = resourceService;
         _hasVideos = true;
         Breadcrumbs = new ObservableCollection<StorageFolder>();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -96,8 +94,12 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         }
     }
 
+    /// <summary>
+    /// Requests adding a new folder to the Videos library.
+    /// Sends a <see cref="Core.Messages.FailedToAddFolderNotificationMessage"/> on failure.
+    /// </summary>
     [RelayCommand(CanExecute = nameof(HasLibrary))]
-    private async Task AddFolder()
+    private async Task AddFolderAsync()
     {
         try
         {
@@ -105,8 +107,8 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
+            Messenger.Send(new FailedToAddFolderNotificationMessage(e.Message));
         }
     }
+
 }

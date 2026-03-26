@@ -28,6 +28,7 @@
 
                     <!--  Commands  -->
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
+                    <commands:OpenWithCommand x:Key="OpenWithCommand" />
 
                     <!--  Converters  -->
                     <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
@@ -93,12 +94,15 @@
                     <Thickness x:Key="TopMediumMargin">0,12,0,0</Thickness>
                     <Thickness x:Key="TopLargeMargin">0,16,0,0</Thickness>
                     <Thickness x:Key="BottomMediumMargin">0,0,0,12</Thickness>
+                    <Thickness x:Key="BottomLargeMargin">0,0,0,16</Thickness>
 
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,100</Thickness>
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
 
                     <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
+
+                    <NavigationViewDisplayMode x:Key="MinimalNavigationViewDisplayMode">Minimal</NavigationViewDisplayMode>
 
                     <!--  Animations  -->
                     <ctAnimations:ImplicitAnimationSet x:Key="FadeInImplicitAnimation">
@@ -145,6 +149,7 @@
                     </DataTemplate>
                 </ResourceDictionary>
 
+                <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Icon.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/ItemContainer.xaml" />

@@ -19,7 +19,10 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <MenuFlyout x:Name="ItemFlyout">
+            <MenuFlyout x:Key="ItemFlyout">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                </interactivity:Interaction.Behaviors>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
@@ -39,6 +42,15 @@
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
                     Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
+                <MenuFlyoutSubItem
+                    x:Name="AddToPlaylistSubMenu"
+                    Icon="{ui:SymbolIcon Symbol=Add}"
+                    Text="{strings:Resources Key=AddToPlaylist}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding Media}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding Media}"
@@ -136,7 +148,7 @@
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoFocusBehavior />
-                <behaviors:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
+                <behaviors:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
@@ -163,11 +175,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
-                            <triggers:IsEqualStateTrigger.To>
-                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
-                            </triggers:IsEqualStateTrigger.To>
-                        </triggers:IsEqualStateTrigger>
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="TitleText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />

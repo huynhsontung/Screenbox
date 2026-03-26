@@ -1,0 +1,58 @@
+﻿<ContentDialog
+    x:Class="Screenbox.Dialogs.DeletePlaylistDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    Title="{strings:Resources Key=DeletePlaylist}"
+    CloseButtonText="{strings:Resources Key=Cancel}"
+    PrimaryButtonStyle="{StaticResource AccentButtonStyle}"
+    PrimaryButtonText="{strings:Resources Key=Delete}"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="DangerFillColorPrimaryBrush" Color="{StaticResource SystemFillColorCritical}" />
+                    <SolidColorBrush
+                        x:Key="DangerFillColorSecondaryBrush"
+                        Opacity="0.9"
+                        Color="{StaticResource SystemFillColorCritical}" />
+                    <SolidColorBrush
+                        x:Key="DangerFillColorTertiaryBrush"
+                        Opacity="0.8"
+                        Color="{StaticResource SystemFillColorCritical}" />
+
+                    <StaticResource x:Key="AccentButtonBackground" ResourceKey="DangerFillColorPrimaryBrush" />
+                    <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="DangerFillColorSecondaryBrush" />
+                    <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="DangerFillColorTertiaryBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="DangerFillColorPrimaryBrush" Color="{StaticResource SystemFillColorCritical}" />
+                    <SolidColorBrush
+                        x:Key="DangerFillColorSecondaryBrush"
+                        Opacity="0.9"
+                        Color="{StaticResource SystemFillColorCritical}" />
+                    <SolidColorBrush
+                        x:Key="DangerFillColorTertiaryBrush"
+                        Opacity="0.8"
+                        Color="{StaticResource SystemFillColorCritical}" />
+
+                    <StaticResource x:Key="AccentButtonBackground" ResourceKey="DangerFillColorPrimaryBrush" />
+                    <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="DangerFillColorSecondaryBrush" />
+                    <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="DangerFillColorTertiaryBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <StaticResource x:Key="AccentButtonBackground" ResourceKey="SystemColorHighlightColorBrush" />
+                    <StaticResource x:Key="AccentButtonBackgroundPointerOver" ResourceKey="SystemColorButtonTextColorBrush" />
+                    <StaticResource x:Key="AccentButtonBackgroundPressed" ResourceKey="SystemColorButtonFaceColorBrush" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind strings:Resources.DeletePlaylistConfirmation(PlaylistName)}" />
+</ContentDialog>

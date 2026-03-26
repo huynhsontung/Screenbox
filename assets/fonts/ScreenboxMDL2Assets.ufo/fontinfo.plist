@@ -13,7 +13,7 @@
     <key>versionMajor</key>
     <integer>26</integer>
     <key>versionMinor</key>
-    <integer>01</integer>
+    <integer>02</integer>
     <key>copyright</key>
     <string>Copyright (c) 2023-2026 Screenbox Project Authors.</string>
     <key>unitsPerEm</key>
@@ -39,7 +39,7 @@
     <key>openTypeNameManufacturerURL</key>
     <string>https://github.com/huynhsontung/Screenbox</string>
     <key>openTypeNameVersion</key>
-    <string>Version 26.01</string>
+    <string>Version 26.02</string>
     <key>openTypeNameUniqueID</key>
     <string>Screenbox MDL2 Assets</string>
     <key>openTypeNameSampleText</key>

@@ -134,7 +134,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Behaviors\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Behaviors\AddToPlaylistFlyoutBehavior.cs" />
     <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
     <Compile Include="Behaviors\AutoFocusBehavior.cs" />
     <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />
@@ -151,11 +153,12 @@
     <Compile Include="Behaviors\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Commands\BindableCommand.cs" />
     <Compile Include="Commands\OpenUrlCommand.cs" />
+    <Compile Include="Commands\OpenWithCommand.cs" />
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Commands\ShowEqualizerCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
-    <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
+    <Compile Include="Controls\CommandBarEx\CommandBarEx.cs" />
     <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
       <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
     </Compile>
@@ -181,13 +184,10 @@
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NavigationViewEx.cs" />
-    <Compile Include="Controls\NavigationViewEx.Properties.cs" />
+    <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
+    <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\OpenUrlDialog.xaml.cs">
-      <DependentUpon>OpenUrlDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PlayerControls.xaml.cs">
       <DependentUpon>PlayerControls.xaml</DependentUpon>
@@ -198,24 +198,19 @@
     <Compile Include="Controls\PlayQueueControl.xaml.cs">
       <DependentUpon>PlayQueueControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PropertiesDialog.xaml.cs">
-      <DependentUpon>PropertiesDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SetOptionsDialog.xaml.cs">
-      <DependentUpon>SetOptionsDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TimeDisplay.xaml.cs">
       <DependentUpon>TimeDisplay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\VLCLoginDialog.xaml.cs">
-      <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\TitleBar\TitleBar.cs" />
+    <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
+    <Compile Include="Controls\TitleBar\TitleBarAutomationPeer.cs" />
+    <Compile Include="Controls\TitleBar\TitleBarHeightMode.cs" />
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
@@ -224,7 +219,6 @@
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\GlyphConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
-    <Compile Include="Converters\LanguageLayoutDirectionToFlowDirectionConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
@@ -234,20 +228,45 @@
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Converters\UnitDisplayConverter.cs" />
+    <Compile Include="Dialogs\CreatePlaylistDialog.xaml.cs">
+      <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DeletePlaylistDialog.xaml.cs">
+      <DependentUpon>DeletePlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\EqualizerDialog.xaml.cs">
       <DependentUpon>EqualizerDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OpenUrlDialog.xaml.cs">
+      <DependentUpon>OpenUrlDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PropertiesDialog.xaml.cs">
+      <DependentUpon>PropertiesDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RenamePlaylistDialog.xaml.cs">
+      <DependentUpon>RenamePlaylistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SetOptionsDialog.xaml.cs">
+      <DependentUpon>SetOptionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\VLCLoginDialog.xaml.cs">
+      <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\AcceleratorService.cs" />
     <Compile Include="Extensions\ApplicationViewExtensions.cs" />
-    <Compile Include="Extensions\CommandBarExtensions.cs" />
     <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
     <Compile Include="Helpers\KeyboardAcceleratorHelper.cs" />
-    <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PlaylistDetailsPage.xaml.cs">
+      <DependentUpon>PlaylistDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PlaylistsPage.xaml.cs">
+      <DependentUpon>PlaylistsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Search\AlbumSearchResultPage.xaml.cs">
       <DependentUpon>AlbumSearchResultPage.xaml</DependentUpon>
@@ -312,7 +331,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
-    <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Services\VlcDialogService.cs" />
+    <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="Triggers\WindowActivationModeTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -442,10 +463,9 @@
     <Content Include="Assets\Visualizers\Music Tunnel\shaders\tunnel.frag" />
     <Content Include="Assets\Visualizers\Music Tunnel\styles\style.css" />
     <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
-    <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.lock.json" />
-    <None Include="InvaidXamlResources.txt" />
+    <None Include="InvalidXamlResources.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="Secrets.cs.template" />
   </ItemGroup>
@@ -567,10 +587,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\OpenUrlDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\PlayerControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -583,19 +599,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\PropertiesDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\PropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SeekBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SetOptionsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -607,7 +615,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\VLCLoginDialog.xaml">
+    <Page Include="Controls\TitleBar\TitleBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -615,11 +623,47 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\CreatePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DeletePlaylistDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\EqualizerDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\OpenUrlDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PropertiesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RenamePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\SetOptionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\VLCLoginDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AlbumDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\PlaylistDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PlaylistsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

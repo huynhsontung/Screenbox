@@ -231,7 +231,9 @@ public sealed class LibraryService : ILibraryService
             {
                 if (!string.IsNullOrEmpty(record.Title))
                     media.Name = record.Title;
-                media.MediaInfo = new MediaInfo(record.Properties);
+                media.MediaInfo = record.Properties != null
+                    ? new MediaInfo(record.Properties)
+                    : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
             }
 
             if (record.DateAdded != default)

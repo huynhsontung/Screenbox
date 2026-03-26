@@ -21,7 +21,7 @@
         <!--  Video tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.VideoTracks}"
+            ItemsSource="{x:Bind VideoDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.VideoTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -50,7 +50,7 @@
         <!--  Audio tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.AudioTracks}"
+            ItemsSource="{x:Bind AudioDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
@@ -92,8 +92,9 @@
 
         <!--  Subtitle tracks  -->
         <ListView
+            x:Name="SubtitleTrackListView"
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
+            ItemsSource="{x:Bind SubtitleDisplayList}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
