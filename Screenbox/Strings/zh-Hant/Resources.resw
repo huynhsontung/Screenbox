@@ -353,7 +353,7 @@
     <value>開啟檔案位置</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>開啟方式</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>專輯</value>
@@ -701,15 +701,15 @@
     <value>已新增字幕</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>播放清單"{0}" 已建立</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>播放清單 "{0}" 已刪除</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>播放清單已重新命名為 "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -756,7 +756,7 @@
     <value>進階</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>隱私</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>進階模式</value>
@@ -997,13 +997,13 @@
     <value>資料夾</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>加入播放清單</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>建立新播放清單</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>新播放清單</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
