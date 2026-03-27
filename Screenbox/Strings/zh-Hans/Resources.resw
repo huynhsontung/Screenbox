@@ -955,7 +955,7 @@
     <value>视频增强方法</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>超分辨率放大需要兼容的硬件和驱动程序支持</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>双线性插值</value>
