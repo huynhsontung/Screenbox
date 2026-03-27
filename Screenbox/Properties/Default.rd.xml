@@ -21,11 +21,37 @@
       An Assembly element with Name="*Application*" applies to all assemblies in
       the application package. The asterisks are not wildcards.
     -->
-    <Assembly Name="*Application*" Dynamic="Required All" />
+    <!--<Assembly Name="*Application*" Dynamic="Required All" />-->
     
     
     <!-- Add your application specific runtime directives here. -->
+    
+    <Namespace Name="ProtoBuf.Serializers" Dynamic="Required Public" />
+    <!--<Type Name="ProtoBuf.Serializers.EnumSerializerSByte`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerInt16`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerInt32`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerInt64`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerByte`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerUInt16`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerUInt32`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.EnumSerializerUInt64`1" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.ConcurrentDictionarySerializer`3" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.DictionarySerializer`2" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.DictionarySerializer`3" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.DictionaryOfIReadOnlyDictionarySerializer`2" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.ImmutableDictionarySerializer`2" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.ImmutableSortedDictionarySerializer`2" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.ImmutableIDictionarySerializer`2" Activate="Required Public" />
+    <Type Name="ProtoBuf.Serializers.ConcurrentBagSerializer`2" Activate="Required Public" />
+    ...-->
 
+    <!--<Namespace Name="ProtoBuf.Internal" Dynamic="Required All" />-->
+    <Type Name="ProtoBuf.Internal.Level300DefaultSerializer" Dynamic="Required All" />
+    <Type Name="ProtoBuf.Internal.Level300FixedSerializer" Dynamic="Required All" />
+    
+    <Type Name="CommunityToolkit.Mvvm.Messaging.IMessengerExtensions" Dynamic="Required All" />
 
+    <!-- Required for Lively Wallpaper. -->
+    <Namespace Name="System.Text.Json" Serialize="All" />
   </Application>
 </Directives>
