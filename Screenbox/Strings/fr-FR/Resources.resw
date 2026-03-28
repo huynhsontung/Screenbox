@@ -121,7 +121,7 @@
     <value>Image vidéo sauvegardée</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Mode "Picture in Picture"</value>
+    <value>Mode Image sur image</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Sauvegarder l'image vidéo courante</value>
@@ -183,7 +183,7 @@
     <value>Chercher</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Sortir du mode "Picture in Picture"</value>
+    <value>Sortir du mode Image sur Image</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>Suivant</value>
@@ -1058,11 +1058,11 @@
     <value>Effacer la mémoire de position d'écoute sur cet appareil</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Ajouter {0} item à la liste "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Ajouter {0} items à la liste "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>
