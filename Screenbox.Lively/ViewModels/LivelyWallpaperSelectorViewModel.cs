@@ -5,8 +5,10 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using Screenbox.Lively.Models;
+using Screenbox.Lively.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 
-namespace Screenbox.Core.ViewModels;
+namespace Screenbox.Lively.ViewModels;
 
 // Copyright (c) Dani John
 // Licensed under the GNU General Public License v3.0.
@@ -87,6 +89,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         // Ignore null value. Null is only a temporary value
         if (value == null) return;
         _settingsService.LivelyActivePath = value.Path;
+        Messenger.Send(new VisualizerChangedMessage(value.Path));
     }
 
     [RelayCommand]
