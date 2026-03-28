@@ -110,12 +110,6 @@ sealed partial class App : Application
         // View models
         services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
         services.AddTransient<Screenbox.ViewModels.PropertyViewModel>();
-        services.AddTransient<LivelyWallpaperSelectorViewModel>(provider =>
-            new LivelyWallpaperSelectorViewModel(
-                provider.GetRequiredService<ILivelyWallpaperService>(),
-                provider.GetRequiredService<IFilesService>(),
-                provider.GetRequiredService<ISettingsService>(),
-                Strings.Resources.Default, "ms-appx:///Assets/DefaultAudioVisual.png"));
 
         // Services
         services.AddSingleton<IVlcDialogService, VlcDialogService>();

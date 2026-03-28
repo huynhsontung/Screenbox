@@ -1,5 +1,10 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -9,11 +14,7 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Lively.Models;
 using Screenbox.Lively.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.System;
 
@@ -26,6 +27,9 @@ namespace Screenbox.Lively.ViewModels;
 public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>
 {
+    private const string DefaultPreviewPath = "ms-appx:///Assets/DefaultAudioVisual.png";
+    private const string DefaultTitleResourceKey = "Default";
+
     public ObservableCollection<LivelyWallpaperModel> Visualizers { get; } = new();
 
     [ObservableProperty]
@@ -36,7 +40,8 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     {
         IsPreset = true,
         Path = string.Empty,
-        Model = new LivelyInfoModel { Title = "Default" }
+        PreviewPath = DefaultPreviewPath,
+        Model = new LivelyInfoModel { Title = DefaultTitleResourceKey }
     };
 
     private readonly ILivelyWallpaperService _wallpaperService;
@@ -44,21 +49,18 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     private readonly ISettingsService _settingsService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService,
-        string defaultTitle, string defaultPreviewPath) : this(wallpaperService, filesService, settingsService)
-    {
-        _default.PreviewPath = defaultPreviewPath;
-        _default.Model.Title = defaultTitle;
-
-        IsActive = true;
-    }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LivelyWallpaperSelectorViewModel"/> class.
+    /// </summary>
     public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService)
     {
         _wallpaperService = wallpaperService;
         _filesService = filesService;
         _settingsService = settingsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _default.Model.Title = ResourceLoader.GetForViewIndependentUse().GetString(DefaultTitleResourceKey);
+
+        IsActive = true;
     }
 
     public async Task InitializeVisualizers()
@@ -152,7 +154,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
             var folder = await StorageFolder.GetFolderFromPathAsync(visualizer.Path);
             await folder.DeleteAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Show error.
         }
