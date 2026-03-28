@@ -272,12 +272,6 @@ public sealed partial class PlayerPage : Page
 
                 break;
             case nameof(PlayerPageViewModel.ShowVisualizer):
-                if (ViewModel.ShowVisualizer)
-                {
-                    // Load the visualizer if not already
-                    FindName(nameof(LivelyWallpaperPlayer));
-                }
-
                 UpdateContentState();
                 break;
         }
