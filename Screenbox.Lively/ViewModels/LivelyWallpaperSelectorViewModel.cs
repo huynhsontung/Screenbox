@@ -14,7 +14,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Lively.Models;
 using Screenbox.Lively.Services;
-using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.System;
 
@@ -28,7 +27,6 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>
 {
     private const string DefaultPreviewPath = "ms-appx:///Assets/DefaultAudioVisual.png";
-    private const string DefaultTitleResourceKey = "Default";
 
     public ObservableCollection<LivelyWallpaperModel> Visualizers { get; } = new();
 
@@ -41,7 +39,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         IsPreset = true,
         Path = string.Empty,
         PreviewPath = DefaultPreviewPath,
-        Model = new LivelyInfoModel { Title = DefaultTitleResourceKey }
+        Model = new LivelyInfoModel { Title = "" }
     };
 
     private readonly ILivelyWallpaperService _wallpaperService;
@@ -58,7 +56,6 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         _filesService = filesService;
         _settingsService = settingsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _default.Model.Title = ResourceLoader.GetForViewIndependentUse().GetString(DefaultTitleResourceKey);
 
         IsActive = true;
     }

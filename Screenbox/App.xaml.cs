@@ -19,8 +19,6 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Screenbox.Lively;
-using Screenbox.Lively.Services;
-using Screenbox.Lively.ViewModels;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
