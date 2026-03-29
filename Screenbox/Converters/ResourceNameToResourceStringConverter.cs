@@ -19,12 +19,48 @@ public sealed class ResourceNameToResourceStringConverter : IValueConverter
     private static readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
     /// <summary>
+    /// Gets the localized resource string associated with the specified enum member.
+    /// </summary>
+    /// <param name="enumValue">The enum member to localize.</param>
+    /// <returns>
+    /// The resource string using the key format <b>"EnumTypeEnumMember"</b>, and if not found,
+    /// <b>"EnumMember"</b>, and if still not found, the string representation; otherwise,
+    /// an empty string if <paramref name="enumValue"/> is <see langword="null"/>.
+    /// </returns>
+    public static string FromEnum(Enum? enumValue)
+    {
+        if (enumValue is null)
+        {
+            return string.Empty;
+        }
+
+        var type = enumValue.GetType();
+        string typeName = type.Name;
+        string memberName = enumValue.ToString();
+        string fullKey = $"{typeName}{memberName}";
+
+        string defaultResult = _resourceLoader.GetString(fullKey);
+        if (!string.IsNullOrWhiteSpace(defaultResult))
+        {
+            return defaultResult;
+        }
+
+        defaultResult = _resourceLoader.GetString(memberName);
+        if (!string.IsNullOrWhiteSpace(defaultResult))
+        {
+            return defaultResult;
+        }
+
+        return memberName;
+    }
+
+    /// <summary>
     /// Gets the localized string value for the specified resource name
     /// from the application resources.
     /// </summary>
     /// <param name="stringValue">The resource name whose value is to be retrieved.</param>
     /// <returns>The string value of the specified resource name; otherwise, an empty string.</returns>
-    public static string GetResourceString(string? stringValue)
+    public static string FromName(string? stringValue)
     {
         if (stringValue is null)
         {
@@ -54,7 +90,7 @@ public sealed class ResourceNameToResourceStringConverter : IValueConverter
         string? stringValue = value?.ToString();
 
         // The resource string logic was extracted for direct x:Bind usage.
-        return GetResourceString(stringValue);
+        return FromName(stringValue);
     }
 
     /// <summary>

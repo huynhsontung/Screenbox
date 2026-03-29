@@ -94,11 +94,11 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ResourceNameToResourceStringTemplate" x:DataType="x:String">
-            <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.GetResourceString((x:String))}" />
+            <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromName((x:String))}" />
         </DataTemplate>
 
         <DataTemplate x:Key="PlaybackActionKindTemplate" x:DataType="enums:PlaybackActionKind">
-            <TextBlock Text="{x:Bind converters:EnumToResourceStringConverter.GetResourceString((enums:PlaybackActionKind))}" />
+            <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((enums:PlaybackActionKind))}" />
         </DataTemplate>
     </Page.Resources>
 
