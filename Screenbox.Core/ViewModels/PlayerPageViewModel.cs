@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -318,7 +317,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             if (MediaPlayer.PlaybackRate != effectiveHoldingSpeed)
             {
                 Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
             }
 
             _isSpaceKeyHolding = true;
@@ -346,7 +345,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             if (_playbackRateBeforeHold.HasValue && MediaPlayer is not null && MediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
             {
                 Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
-                Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(_playbackRateBeforeHold.Value)));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
             }
 
             _playbackRateBeforeHold = null;
@@ -550,7 +549,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
 
         double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(MediaPlayer.PlaybackRate + rateDelta, 0.25, 4)));
-        Messenger.Send(new UpdateStatusMessage($"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×"));
+        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(rate)));
         return true;
     }
 
@@ -834,10 +833,5 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return null;
         double actualScalar = _windowService.ResizeWindow(desiredSize, scalar);
         return actualScalar > 0 ? actualScalar : null;
-    }
-
-    private static string FormatPlaybackRate(double rate)
-    {
-        return $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×";
     }
 }

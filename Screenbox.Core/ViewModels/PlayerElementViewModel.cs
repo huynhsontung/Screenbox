@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -199,12 +198,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// Interprets a pointer wheel input and requests changes to the current playback.
     /// </summary>
     /// <remarks>
-    /// The pointer wheel vertical component adjusts the playback volume, its horizontal
-    /// component seeks the current media playback position.
+    /// The pointer wheel vertical component adjusts the playback volume, while the
+    /// horizontal component seeks the current media playback position.
     /// </remarks>
     /// <param name="delta">The pointer wheel delta.</param>
     /// <param name="isHorizontal"><see langword="true"/> to treat the input as horizontal;
-    /// otherwise, treat it as vertical.</param>
+    /// otherwise, <see langword="false"/> to treat it as vertical.</param>
     public void ProcessPointerWheelInput(int delta, bool isHorizontal)
     {
         if (!isHorizontal)
@@ -228,8 +227,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// Interprets a swipe manipulation and requests the corresponding playback interaction.
     /// </summary>
     /// <param name="cumulative">The cumulative translation of the pointer manipulation.
-    /// The <see cref="Point.X"/> component represents horizontal movement,
-    /// and the <see cref="Point.Y"/> component represents vertical movement.</param>
+    /// The <see cref="Point.X"/> component represents horizontal movement, while
+    /// the <see cref="Point.Y"/> component represents vertical movement.</param>
     public void ProcessSwipeGesture(Point cumulative)
     {
         const double SwipeThreshold = 100.0;
@@ -261,7 +260,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// Interprets a holding gesture and adjusts the playback rate based on the state.
     /// </summary>
     /// <remarks>Increases the playback rate while holding, and restores it on release.</remarks>
-    /// <param name="holdingState">The current state of the holding gesture.</param>
+    /// <param name="holdingState">A value of the enumeration that specifies the current
+    /// state of the holding gesture.</param>
     public void ProcessHoldingGesture(HoldingState holdingState)
     {
         const double HoldingSpeed = 2.0;
@@ -280,7 +280,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
                     {
                         Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
+                        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
                     }
                     IsHolding = true;
                 }
@@ -292,7 +292,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     if (_playbackRateBeforeHold.HasValue && VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
                     {
                         Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
-                        Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(_playbackRateBeforeHold.Value)));
+                        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
                     }
                     _playbackRateBeforeHold = null;
                     IsHolding = false;
@@ -341,11 +341,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 break;
             case PlaybackActionKind.DecreaseRate:
                 double rateDown = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(playbackRate - rateDelta, 0.25, 4)));
-                Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(rateDown)));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(rateDown)));
                 break;
             case PlaybackActionKind.IncreaseRate:
                 double rateUp = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(playbackRate + rateDelta, 0.25, 4)));
-                Messenger.Send(new UpdateStatusMessage(FormatPlaybackRate(rateUp)));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(rateUp)));
                 break;
         }
     }
@@ -468,10 +468,5 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         }
         var status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
         Messenger.Send(new UpdateStatusMessage(status));
-    }
-
-    private static string FormatPlaybackRate(double rate)
-    {
-        return $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×";
     }
 }
