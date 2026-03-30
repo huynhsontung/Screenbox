@@ -1057,6 +1057,18 @@
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
     <value>Clear device playback position history</value>
   </data>
+  <data name="SettingsSaveFrameLocationHeader" xml:space="preserve">
+    <value>Save location for captured frames</value>
+  </data>
+  <data name="SettingsSaveFrameLocationDescription" xml:space="preserve">
+    <value>Choose a custom folder where captured frames will be saved. When no custom folder is selected, frames are saved to the Pictures library.</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Reset to default</value>
+  </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
     <value>Added {0} item to playlist "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
