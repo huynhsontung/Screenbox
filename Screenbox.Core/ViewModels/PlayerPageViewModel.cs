@@ -306,7 +306,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         const double HoldingSpeed = 2.0;
 
-        if (_isSpaceKeyHolding || MediaPlayer is null || MediaPlayer.PlaybackState is MediaPlaybackState.Paused)
+        if (!_settingsService.PlayerGesturePressAndHold ||
+            _isSpaceKeyHolding ||
+            MediaPlayer is null || MediaPlayer.PlaybackState is MediaPlaybackState.Paused)
             return;
 
         _spaceKeyHoldTimer.Debounce(() =>
