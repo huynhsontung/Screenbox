@@ -988,8 +988,11 @@
                         <triggers:WindowActivationModeTrigger ActivationMode="Deactivated" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TitleBarTitleTextBlock.Foreground" Value="{StaticResource TextFillColorTertiaryBrush}" />
-                        <Setter Target="TitleBarSubtitleTextBlock.Foreground" Value="{StaticResource TextFillColorTertiaryBrush}" />
+                        <Setter Target="BackButton.Opacity" Value="{ThemeResource TextFillColorTertiaryOpacity}" />
+                        <Setter Target="PlayQueueButton.Opacity" Value="{ThemeResource TextFillColorTertiaryOpacity}" />
+                        <Setter Target="TitleBarTitleTextBlock.Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <Setter Target="TitleBarSubtitleTextBlock.Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <Setter Target="LivelyOptionsButton.Opacity" Value="{ThemeResource TextFillColorTertiaryOpacity}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
