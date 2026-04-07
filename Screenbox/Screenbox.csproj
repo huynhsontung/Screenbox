@@ -171,6 +171,9 @@
       <DependentUpon>CommonGridViewItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CustomSlider.cs" />
+    <Compile Include="Controls\EmptyStateBar\EmptyStateBar.cs" />
+    <Compile Include="Controls\EmptyStateBar\EmptyStateBar.properties.cs" />
+    <Compile Include="Controls\EmptyStateBar\EmptyStateBarAutomationPeer.cs" />
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
     </Compile>
@@ -559,6 +562,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChapterProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EmptyStateBar\EmptyStateBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
