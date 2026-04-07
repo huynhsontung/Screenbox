@@ -46,24 +46,31 @@
             Navigated="FolderViewFrame_OnNavigated" />
 
         <!--  Network-Drive-is-empty content  -->
-        <controls:EmptyStateBar
-            x:Name="NoNetworkDrivePanel"
-            Title="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}"
+        <ScrollViewer
+            x:Name="NoNetworkDriveViewer"
             Grid.Row="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPagePadding}"
-            IsOpen="False"
-            Message="{strings:Resources Key=NoNetworkDrivePanelSubtext}">
-            <controls:EmptyStateBar.ActionContent>
-                <HyperlinkButton Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}" NavigateUri="ms-settings:connecteddevices" />
-            </controls:EmptyStateBar.ActionContent>
-            <FontIcon
-                x:Name="NoNetworkDrivePanelIcon"
-                Margin="0,0,16,0"
-                FontSize="{StaticResource NoContentPanelIconFontSize}"
-                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xE8CD;" />
-        </controls:EmptyStateBar>
+            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollMode="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="Collapsed">
+            <controls:EmptyStateBar
+                x:Name="NoNetworkDrivePanel"
+                Title="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}"
+                IsOpen="False"
+                Message="{strings:Resources Key=NoNetworkDrivePanelSubtext}">
+                <controls:EmptyStateBar.ActionContent>
+                    <HyperlinkButton Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}" NavigateUri="ms-settings:connecteddevices" />
+                </controls:EmptyStateBar.ActionContent>
+                <FontIcon
+                    x:Name="NoNetworkDrivePanelIcon"
+                    Margin="0,0,16,0"
+                    FontSize="{StaticResource NoContentPanelIconFontSize}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Glyph="&#xE8CD;" />
+            </controls:EmptyStateBar>
+        </ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
@@ -76,7 +83,7 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoNetworkDriveViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoNetworkDrivePanelIcon.Margin" Value="0,0,0,0" />
                         <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                     </VisualState.Setters>
@@ -87,6 +94,7 @@
                 <VisualState x:Name="NoNetworkDrive">
                     <VisualState.Setters>
                         <Setter Target="FolderViewFrame.Visibility" Value="Collapsed" />
+                        <Setter Target="NoNetworkDriveViewer.Visibility" Value="Visible" />
                         <Setter Target="NoNetworkDrivePanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
