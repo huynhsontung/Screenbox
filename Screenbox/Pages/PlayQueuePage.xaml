@@ -11,6 +11,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:primitives="using:Windows.UI.Xaml.Controls.Primitives"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -18,7 +19,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
+        <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
             <MenuFlyoutItem
                 AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                 Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"

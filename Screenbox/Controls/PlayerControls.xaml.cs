@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -69,7 +70,7 @@ public sealed partial class PlayerControls : UserControl
     private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
     {
         _castFlyout ??= CastControl.GetFlyout();
-        _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
+        _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
     }
 
     private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)

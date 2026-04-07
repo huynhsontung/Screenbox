@@ -6,6 +6,7 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -220,6 +221,17 @@
                     <VisualState.Setters>
                         <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
                         <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SortByFlyout.Placement" Value="BottomEdgeAlignedLeft" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

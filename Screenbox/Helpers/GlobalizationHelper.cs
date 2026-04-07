@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Screenbox.Helpers;
 
@@ -24,5 +25,38 @@ public static class GlobalizationHelper
     public static FlowDirection GetFlowDirection()
     {
         return IsRightToLeftLanguage ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+    }
+
+    /// <summary>
+    /// Mirrors the horizontal placement of the specified <see cref="FlyoutPlacementMode"/>
+    /// for right-to-left (RTL) layouts.
+    /// </summary>
+    /// <param name="placement">A value of the enumeration that specifies the placement of the flyout.</param>
+    /// <returns>
+    /// A mirrored horizontal placement value for the <see cref="FlyoutBase.Placement"/> property
+    /// if <see cref="IsRightToLeftLanguage"/> is <see langword="true"/>; otherwise, returns the
+    /// original value.
+    /// </returns>
+    public static FlyoutPlacementMode MirrorFlyoutPlacementWhenRightToLeft(FlyoutPlacementMode placement)
+    {
+        if (!IsRightToLeftLanguage)
+        {
+            return placement;
+        }
+
+        return placement switch
+        {
+            FlyoutPlacementMode.Left => FlyoutPlacementMode.Right,
+            FlyoutPlacementMode.Right => FlyoutPlacementMode.Left,
+            FlyoutPlacementMode.TopEdgeAlignedLeft => FlyoutPlacementMode.TopEdgeAlignedRight,
+            FlyoutPlacementMode.TopEdgeAlignedRight => FlyoutPlacementMode.TopEdgeAlignedLeft,
+            FlyoutPlacementMode.BottomEdgeAlignedLeft => FlyoutPlacementMode.BottomEdgeAlignedRight,
+            FlyoutPlacementMode.BottomEdgeAlignedRight => FlyoutPlacementMode.BottomEdgeAlignedLeft,
+            FlyoutPlacementMode.LeftEdgeAlignedTop => FlyoutPlacementMode.RightEdgeAlignedTop,
+            FlyoutPlacementMode.LeftEdgeAlignedBottom => FlyoutPlacementMode.RightEdgeAlignedBottom,
+            FlyoutPlacementMode.RightEdgeAlignedTop => FlyoutPlacementMode.LeftEdgeAlignedTop,
+            FlyoutPlacementMode.RightEdgeAlignedBottom => FlyoutPlacementMode.LeftEdgeAlignedBottom,
+            _ => placement,
+        };
     }
 }
