@@ -61,3 +61,9 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# Set the default line endings for font source files.
+###############################################################################
+*.plist text eol=lf
+*.glif  text eol=lf
