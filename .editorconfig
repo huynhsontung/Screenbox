@@ -233,7 +233,7 @@ dotnet_naming_symbols.async_method.applicable_accessibilities = public, internal
 dotnet_naming_symbols.async_method.required_modifiers = async
 
 dotnet_naming_symbols.constants.applicable_kinds = field, local
-dotnet_naming_symbols.constants.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.constants.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected, local
 dotnet_naming_symbols.constants.required_modifiers = const
 
 dotnet_naming_symbols.private_and_internal_field.applicable_kinds = field
