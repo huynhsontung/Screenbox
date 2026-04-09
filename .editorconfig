@@ -14,7 +14,7 @@ indent_style = tab
 tab_width = 4
 
 # XML project files
-[*.{csproj,filters}]
+[*.{csproj,filters,projitems,shproj}]
 indent_size = 2
 insert_final_newline = false
 
@@ -28,6 +28,10 @@ insert_final_newline = false
 end_of_line = lf
 indent_size = 2
 
+# XML solution files
+[*.slnx]
+indent_size = 2
+
 # XML user interface files
 [*.xaml]
 charset = utf-8-bom
@@ -39,6 +43,10 @@ indent_size = 2
 
 # Markdown files
 [*.md]
+indent_size = 2
+
+# Powershell files
+[*.{ps1,psd1,psm1}]
 indent_size = 2
 
 # C# files
