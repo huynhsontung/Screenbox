@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
@@ -24,11 +24,5 @@ public sealed partial class HomePage : Page
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<HomePageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-    }
-
-    protected override void OnNavigatedTo(NavigationEventArgs e)
-    {
-        base.OnNavigatedTo(e);
-        VisualStateManager.GoToState(this, ViewModel.HasRecentMedia ? "RecentMedia" : "Welcome", false);
     }
 }
