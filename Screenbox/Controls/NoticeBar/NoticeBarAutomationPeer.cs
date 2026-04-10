@@ -4,15 +4,15 @@ using Windows.UI.Xaml.Automation.Peers;
 namespace Screenbox.Controls;
 
 /// <summary>
-/// Exposes <see cref="EmptyStateBar"/> types to <a href="https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32">Microsoft UI Automation</a>.
+/// Exposes <see cref="NoticeBar"/> types to <a href="https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32">Microsoft UI Automation</a>.
 /// </summary>
-public sealed class EmptyStateBarAutomationPeer : FrameworkElementAutomationPeer
+public sealed class NoticeBarAutomationPeer : FrameworkElementAutomationPeer
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="EmptyStateBarAutomationPeer"/> class.
+    /// Initializes a new instance of the <see cref="NoticeBarAutomationPeer"/> class.
     /// </summary>
-    /// <param name="owner">The <see cref="EmptyStateBar"/> to create the peer for.</param>
-    public EmptyStateBarAutomationPeer(FrameworkElement owner) : base(owner)
+    /// <param name="owner">The <see cref="NoticeBar"/> to create the peer for.</param>
+    public NoticeBarAutomationPeer(FrameworkElement owner) : base(owner)
     {
     }
 
@@ -23,7 +23,7 @@ public sealed class EmptyStateBarAutomationPeer : FrameworkElementAutomationPeer
 
     protected override string GetClassNameCore()
     {
-        return nameof(EmptyStateBar);
+        return nameof(NoticeBar);
     }
 
     internal void RaiseIsOpen(string displayString)
@@ -32,6 +32,6 @@ public sealed class EmptyStateBarAutomationPeer : FrameworkElementAutomationPeer
             AutomationNotificationKind.Other,
             AutomationNotificationProcessing.CurrentThenMostRecent,
             displayString,
-            "EmptyStateBarIsOpenActivityId");
+            "NoticeBarIsOpenActivityId");
     }
 }

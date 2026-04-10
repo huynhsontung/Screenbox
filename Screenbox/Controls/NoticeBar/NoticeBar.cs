@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Controls;
 
 /// <summary>
-/// Represents a control that displays placeholder content when no content is available.
+/// Represents a control that displays placeholder content when no data is present.
 /// </summary>
 /// <remarks>
 /// Once the control is open, any changes made to the various properties, like updating
@@ -15,22 +15,22 @@ namespace Screenbox.Controls;
 /// </remarks>
 /// <example>
 /// <code language="xml"><![CDATA[
-/// <local:EmptyStateBar Title="This folder is empty"
-///                      Message="There are no images to display. Add files to it to get started."
-///                      IsOpen="True">
-///     <local:EmptyStateBar.Content>
+/// <local:NoticeBar Title="This folder is empty"
+///                  Message="There are no images to display. Add files to it to get started."
+///                  IsOpen="True">
+///     <local:NoticeBar.Content>
 ///         <FontIcon Glyph="&#xE8B9;" />
-///     </local:EmptyStateBar.Content>
-///     <local:EmptyStateBar.ActionContent>
+///     </local:NoticeBar.Content>
+///     <local:NoticeBar.ActionContent>
 ///         <Button Content="Add folder" Click="AddImagesButton_Click" />
-///     </local:EmptyStateBar.ActionContent>
-/// </local:EmptyStateBar>
+///     </local:NoticeBar.ActionContent>
+/// </local:NoticeBar>
 /// ]]></code>
 /// </example>
-public sealed partial class EmptyStateBar : ContentControl
+public sealed partial class NoticeBar : ContentControl
 {
-    private const string EmptyStateBarCollapsedStateName = "EmptyStateBarCollapsed";
-    private const string EmptyStateBarVisibleStateName = "EmptyStateBarVisible";
+    private const string NoticeBarCollapsedStateName = "NoticeBarCollapsed";
+    private const string NoticeBarVisibleStateName = "NoticeBarVisible";
     private const string ContentCollapsedStateName = "ContentCollapsed";
     private const string ContentVisibleStateName = "ContentVisible";
     private const string TitleTextBlockCollapsedStateName = "TitleTextBlockCollapsed";
@@ -41,16 +41,16 @@ public sealed partial class EmptyStateBar : ContentControl
     private const string ActionContentVisibleStateName = "ActionContentVisible";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EmptyStateBar"/> class.
+    /// Initializes a new instance of the <see cref="NoticeBar"/> class.
     /// </summary>
-    public EmptyStateBar()
+    public NoticeBar()
     {
-        this.DefaultStyleKey = typeof(EmptyStateBar);
+        this.DefaultStyleKey = typeof(NoticeBar);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer()
     {
-        return new EmptyStateBarAutomationPeer(this);
+        return new NoticeBarAutomationPeer(this);
     }
 
     protected override void OnApplyTemplate()
@@ -104,7 +104,7 @@ public sealed partial class EmptyStateBar : ContentControl
     {
         if (IsOpen)
         {
-            if (FrameworkElementAutomationPeer.FromElement(this) is EmptyStateBarAutomationPeer peer)
+            if (FrameworkElementAutomationPeer.FromElement(this) is NoticeBarAutomationPeer peer)
             {
                 string notificationString;
                 if (!string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message))
@@ -123,12 +123,12 @@ public sealed partial class EmptyStateBar : ContentControl
                 peer.RaiseIsOpen(notificationString);
             }
 
-            VisualStateManager.GoToState(this, EmptyStateBarVisibleStateName, false);
+            VisualStateManager.GoToState(this, NoticeBarVisibleStateName, false);
             AutomationProperties.SetAccessibilityView(this, AccessibilityView.Control);
         }
         else
         {
-            VisualStateManager.GoToState(this, EmptyStateBarCollapsedStateName, false);
+            VisualStateManager.GoToState(this, NoticeBarCollapsedStateName, false);
             AutomationProperties.SetAccessibilityView(this, AccessibilityView.Raw);
         }
     }

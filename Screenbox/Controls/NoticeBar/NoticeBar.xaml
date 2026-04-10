@@ -3,20 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls">
 
-    <x:Double x:Key="EmptyStateBarMaxWidth">688</x:Double>
+    <x:Double x:Key="NoticeBarMaxWidth">688</x:Double>
 
-    <Thickness x:Key="EmptyStateBarContentMargin">0,0,16,0</Thickness>
-    <Thickness x:Key="EmptyStateBarTitleMargin">0,0,0,8</Thickness>
-    <Thickness x:Key="EmptyStateBarMessageMargin">0,0,0,12</Thickness>
+    <Thickness x:Key="NoticeBarContentMargin">0,0,16,0</Thickness>
+    <Thickness x:Key="NoticeBarTitleMargin">0,0,0,8</Thickness>
+    <Thickness x:Key="NoticeBarMessageMargin">0,0,0,12</Thickness>
 
-    <Style BasedOn="{StaticResource DefaultEmptyStateBarStyle}" TargetType="controls:EmptyStateBar" />
+    <Style BasedOn="{StaticResource DefaultNoticeBarStyle}" TargetType="controls:NoticeBar" />
 
-    <Style x:Key="DefaultEmptyStateBarStyle" TargetType="controls:EmptyStateBar">
-        <Setter Property="MaxWidth" Value="{ThemeResource EmptyStateBarMaxWidth}" />
+    <Style x:Key="DefaultNoticeBarStyle" TargetType="controls:NoticeBar">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{ThemeResource NoticeBarMaxWidth}" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controls:EmptyStateBar">
+                <ControlTemplate TargetType="controls:NoticeBar">
                     <Grid
                         x:Name="RootGrid"
                         Padding="{TemplateBinding Padding}"
@@ -40,7 +42,7 @@
                         <ContentPresenter
                             x:Name="ContentPresenter"
                             Grid.Column="0"
-                            Margin="{StaticResource EmptyStateBarContentMargin}"
+                            Margin="{StaticResource NoticeBarContentMargin}"
                             x:DeferLoadStrategy="Lazy"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -56,7 +58,7 @@
                             <TextBlock
                                 x:Name="TitleTextBlock"
                                 Grid.Row="0"
-                                Margin="{ThemeResource EmptyStateBarTitleMargin}"
+                                Margin="{ThemeResource NoticeBarTitleMargin}"
                                 Style="{StaticResource TitleTextBlockStyle}"
                                 Text="{TemplateBinding Title}"
                                 Visibility="Collapsed" />
@@ -64,7 +66,7 @@
                             <TextBlock
                                 x:Name="MessageTextBlock"
                                 Grid.Row="1"
-                                Margin="{ThemeResource EmptyStateBarMessageMargin}"
+                                Margin="{ThemeResource NoticeBarMessageMargin}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Style="{StaticResource BodyTextBlockStyle}"
                                 Text="{TemplateBinding Message}"
@@ -88,9 +90,9 @@
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="VisibilityGroup">
-                                <VisualState x:Name="EmptyStateBarVisible" />
+                                <VisualState x:Name="NoticeBarVisible" />
 
-                                <VisualState x:Name="EmptyStateBarCollapsed">
+                                <VisualState x:Name="NoticeBarCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="RootGrid.Visibility" Value="Collapsed" />
                                     </VisualState.Setters>

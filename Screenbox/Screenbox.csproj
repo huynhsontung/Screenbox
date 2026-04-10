@@ -171,9 +171,6 @@
       <DependentUpon>CommonGridViewItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CustomSlider.cs" />
-    <Compile Include="Controls\EmptyStateBar\EmptyStateBar.cs" />
-    <Compile Include="Controls\EmptyStateBar\EmptyStateBar.properties.cs" />
-    <Compile Include="Controls\EmptyStateBar\EmptyStateBarAutomationPeer.cs" />
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
     </Compile>
@@ -188,6 +185,9 @@
     </Compile>
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
+    <Compile Include="Controls\NoticeBar\NoticeBar.cs" />
+    <Compile Include="Controls\NoticeBar\NoticeBar.Properties.cs" />
+    <Compile Include="Controls\NoticeBar\NoticeBarAutomationPeer.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -565,10 +565,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\EmptyStateBar\EmptyStateBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\ErrorInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -582,6 +578,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MediaListViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NoticeBar\NoticeBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

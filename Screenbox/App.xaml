@@ -149,7 +149,7 @@
                     </DataTemplate>
                 </ResourceDictionary>
 
-                <ResourceDictionary Source="ms-appx:///Controls/EmptyStateBar/EmptyStateBar.xaml" />
+                <ResourceDictionary Source="ms-appx:///Controls/NoticeBar/NoticeBar.xaml" />
                 <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Icon.xaml" />
