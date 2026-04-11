@@ -153,7 +153,7 @@
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                    Glyph="{StaticResource PlaylistGlyph}" />
+                    Glyph="{StaticResource PlaylistOffGlyph}" />
                 <controls:NoticeBar.ActionContent>
                     <Button
                         AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
