@@ -217,8 +217,9 @@
             VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
             <controls:NoticeBar
+                x:Name="WelcomePanel"
                 Title="{x:Bind strings:Resources.WelcomePanelHeader}"
-                IsOpen="{x:Bind converters:BooleanConverter.Invert(ViewModel.HasRecentMedia), Mode=OneWay}"
+                IsOpen="False"
                 Message="{x:Bind strings:Resources.WelcomePanelSubtext}">
                 <FontIcon
                     x:Name="WelcomePanelIcon"
@@ -228,7 +229,6 @@
                     Glyph="&#x1F44B;" />
                 <controls:NoticeBar.ActionContent>
                     <muxc:SplitButton
-                        x:Name="WelcomePanelOpenButton"
                         extensions:SplitButtonExtensions.PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
                         extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
                         extensions:SplitButtonExtensions.SecondaryButtonToolTip="{x:Bind strings:Resources.OpenFilesSecondaryToolTip}"
@@ -283,12 +283,13 @@
 
                 <VisualState x:Name="Welcome">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind converters:BooleanConverter.Invert(ViewModel.HasRecentMedia), Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind helpers:CollectionExtensions.IsNullOrEmpty(ViewModel.Recent), Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderOpenButton.Visibility" Value="Collapsed" />
                         <Setter Target="RecentFilesPanel.Visibility" Value="Collapsed" />
                         <Setter Target="WelcomeViewer.Visibility" Value="Visible" />
+                        <Setter Target="WelcomePanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

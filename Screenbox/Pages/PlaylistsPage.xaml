@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -131,6 +132,47 @@
             </interactivity:Interaction.Behaviors>
         </GridView>
 
+        <!--  Empty playlists  -->
+        <ScrollViewer
+            x:Name="NoPlaylistsViewer"
+            Grid.Row="2"
+            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+            Padding="{StaticResource ContentPagePadding}"
+            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollMode="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="Collapsed">
+            <controls:NoticeBar
+                x:Name="NoPlaylistsPanel"
+                Title="{x:Bind strings:Resources.NoPlaylistsPanelHeader}"
+                IsOpen="False"
+                Message="{x:Bind strings:Resources.NoPlaylistsPanelSubtext}">
+                <FontIcon
+                    x:Name="NoPlaylistsPanelIcon"
+                    Margin="0,0,16,0"
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    FontSize="{StaticResource NoContentPanelIconFontSize}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Glyph="{StaticResource PlaylistGlyph}" />
+                <controls:NoticeBar.ActionContent>
+                    <Button
+                        AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
+                        AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
+                        Click="HeaderCreateButton_OnClick"
+                        Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
+                        </StackPanel>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:AutoFocusBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </Button>
+                </controls:NoticeBar.ActionContent>
+            </controls:NoticeBar>
+        </ScrollViewer>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
@@ -144,6 +186,21 @@
                         <Setter Target="HeaderCreateButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.NewPlaylist}" />
                         <Setter Target="HeaderCreateButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistsGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="ContentStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="NoPlaylists">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:CollectionExtensions.IsNullOrEmpty(ViewModel.Playlists), Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HeaderCreateButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlaylistsGridView.Visibility" Value="Collapsed" />
+                        <Setter Target="NoPlaylistsViewer.Visibility" Value="Visible" />
+                        <Setter Target="NoPlaylistsPanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

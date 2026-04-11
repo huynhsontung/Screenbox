@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,8 +24,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 {
     public ObservableCollection<MediaViewModel> Recent { get; }
 
-    [ObservableProperty] private bool _hasRecentMedia;
-
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
@@ -43,9 +40,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
-        _hasRecentMedia = _settingsService.ShowRecent && StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0;
         Recent = new ObservableCollection<MediaViewModel>();
-        Recent.CollectionChanged += Recent_OnCollectionChanged;
 
         // Activate the view model's messenger
         IsActive = true;
@@ -67,16 +62,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     public async void OnLoaded()
     {
         await UpdateContentAsync();
-    }
-
-    private void Recent_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        UpdateHasRecentMedia();
-    }
-
-    private void UpdateHasRecentMedia()
-    {
-        HasRecentMedia = _settingsService.ShowRecent && Recent.Count > 0;
     }
 
     [RelayCommand]
