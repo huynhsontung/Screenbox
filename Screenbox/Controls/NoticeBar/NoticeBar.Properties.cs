@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿#nullable enable
+
+using Windows.UI.Xaml;
 
 namespace Screenbox.Controls;
 
@@ -39,9 +41,9 @@ public sealed partial class NoticeBar
     /// </summary>
     /// <value>The title of the <see cref="NoticeBar"/>. The default
     /// is an empty <see langword="string"/>.</value>
-    public string Title
+    public string? Title
     {
-        get { return (string)GetValue(TitleProperty); }
+        get { return (string?)GetValue(TitleProperty); }
         set { SetValue(TitleProperty, value); }
     }
 
@@ -59,9 +61,9 @@ public sealed partial class NoticeBar
     /// </summary>
     /// <value>The message of the <see cref="NoticeBar"/>. The default
     /// is an empty <see langword="string"/>.</value>
-    public string Message
+    public string? Message
     {
-        get { return (string)GetValue(MessageProperty); }
+        get { return (string?)GetValue(MessageProperty); }
         set { SetValue(MessageProperty, value); }
     }
 

@@ -156,13 +156,13 @@
 
         <!--  Empty content  -->
         <controls:NoticeBar
-            x:Name="NoContentText"
+            x:Name="NoContentPanel"
             Grid.Row="2"
             Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource ContentPagePadding}"
             VerticalAlignment="Top"
             IsOpen="{x:Bind ViewModel.IsEmpty, Mode=OneWay}"
-            Message="{strings:Resources Key=EmptyFolder}" />
+            Message="{x:Bind strings:Resources.EmptyFolder}" />
 
         <interactivity:Interaction.Behaviors>
             <behaviors:GamepadXYNavigationBehavior />
@@ -180,7 +180,7 @@
                         <Setter Target="TitleText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
-                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoContentPanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

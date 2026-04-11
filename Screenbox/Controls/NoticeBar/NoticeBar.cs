@@ -66,11 +66,13 @@ public sealed partial class NoticeBar : ContentControl
 
     protected override void OnContentChanged(object oldContent, object newContent)
     {
+        base.OnContentChanged(oldContent, newContent);
         UpdateContent();
     }
 
     protected override void OnContentTemplateChanged(DataTemplate oldContentTemplate, DataTemplate newContentTemplate)
     {
+        base.OnContentTemplateChanged(oldContentTemplate, newContentTemplate);
         UpdateContent();
     }
 
