@@ -155,15 +155,14 @@
         </GridView>
 
         <!--  Empty content  -->
-        <TextBlock
+        <controls:NoticeBar
             x:Name="NoContentText"
             Grid.Row="2"
             Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource ContentPagePadding}"
-            HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Text="{strings:Resources Key=EmptyFolder}"
-            Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            IsOpen="{x:Bind ViewModel.IsEmpty, Mode=OneWay}"
+            Message="{strings:Resources Key=EmptyFolder}" />
 
         <interactivity:Interaction.Behaviors>
             <behaviors:GamepadXYNavigationBehavior />

@@ -165,9 +165,6 @@
                             <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
                         </StackPanel>
-                        <interactivity:Interaction.Behaviors>
-                            <behaviors:AutoFocusBehavior />
-                        </interactivity:Interaction.Behaviors>
                     </Button>
                 </controls:NoticeBar.ActionContent>
             </controls:NoticeBar>
