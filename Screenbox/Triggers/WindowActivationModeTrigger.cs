@@ -79,7 +79,7 @@ public sealed class WindowActivationModeTrigger : StateTriggerBase
 
         _weakEventListener = new(this)
         {
-            OnEventAction = (instance, sender, args) => CoreWindow_OnActivated(sender, args),
+            OnEventAction = static (instance, sender, args) => instance.CoreWindow_OnActivated(sender, args),
             OnDetachAction = (weakEventListener) => _coreWindow.Activated -= weakEventListener.OnEvent
         };
 
