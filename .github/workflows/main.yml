@@ -8,10 +8,6 @@ on:
     - v**
   pull_request:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   xaml-lint:
     runs-on: windows-latest
