@@ -778,22 +778,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
@@ -802,7 +802,7 @@
       <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>9.0.9</Version>
+      <Version>10.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
@@ -811,7 +811,7 @@
       <Version>2.8.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>3.0.0</Version>
+      <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="ReswPlus">
       <Version>0.3.1.5</Version>
@@ -820,7 +820,7 @@
       <Version>3.0.21-2505100334</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>5.15.1</Version>
+      <Version>5.16.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
