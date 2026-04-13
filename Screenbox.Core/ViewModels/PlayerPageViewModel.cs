@@ -530,6 +530,25 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     }
 
     /// <summary>
+    /// Handles the Delete shortcut in player context.
+    /// </summary>
+    /// <param name="key">The key that was pressed.</param>
+    /// <param name="modifiers">The modifier keys held during the key press.</param>
+    /// <returns><see langword="true"/> if handled; otherwise, <see langword="false"/>.</returns>
+    public bool ProcessDeleteKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (PlayerVisibility != PlayerVisibilityState.Visible)
+        {
+            return false;
+        }
+
+        if (key != VirtualKey.Delete || modifiers != VirtualKeyModifiers.None)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Handles a window resize operation based on keyboard input.
     /// </summary>
     /// <remarks>

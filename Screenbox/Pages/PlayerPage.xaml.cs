@@ -520,7 +520,13 @@ public sealed partial class PlayerPage : Page
 
     private void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        args.Handled = false;
+        if (FocusManager.GetFocusedElement() is TextBox)
+        {
+            args.Handled = false;
+            return;
+        }
+
+        args.Handled = ViewModel.ProcessDeleteKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
     }
 
     private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
