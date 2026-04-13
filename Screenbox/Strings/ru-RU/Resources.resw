@@ -353,7 +353,7 @@
     <value>Открыть расположение файла</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Открыть с помощью</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Альбом</value>
@@ -1021,7 +1021,7 @@
     <value>Отмена</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Безымянный плейлист</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Введите название для этого плейлиста</value>
