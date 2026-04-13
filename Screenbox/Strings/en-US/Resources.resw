@@ -712,6 +712,13 @@
     <value>Playlist renamed to "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
+  <data name="MediaFileDeletedNotificationTitle" xml:space="preserve">
+    <value>Deleted "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="FailedToDeleteMediaFileNotificationTitle" xml:space="preserve">
+    <value>Failed to delete file</value>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Critical error</value>
   </data>

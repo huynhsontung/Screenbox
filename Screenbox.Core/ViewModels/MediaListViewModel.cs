@@ -628,8 +628,14 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private async Task<bool> DeleteCurrentMediaFileAsync()
     {
-        // checks here for the video to delete
-        if (CurrentItem is not { } mediaToDelete) return false;
+        bool Fail(string? reason = null)
+        {
+            Messenger.Send(new FailedToDeleteMediaFileNotificationMessage(reason));
+            return false;
+        }
+
+        if (CurrentItem is not { } mediaToDelete) return Fail();
+        string deletedName = mediaToDelete.Name;
 
         StorageFile? file = mediaToDelete.Source as StorageFile;
         if (file == null && mediaToDelete.Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
@@ -640,14 +646,14 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             }
             catch (Exception)
             {
-                return false;
+                return Fail();
             }
         }
 
-        if (file == null) return false;
+        if (file == null) return Fail();
 
         int deleteIndex = Items.IndexOf(mediaToDelete);
-        if (deleteIndex < 0) return false;
+        if (deleteIndex < 0) return Fail();
 
         bool wasPlaying = MediaPlayer?.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
         MediaViewModel? replacement = Items.Count <= 1
@@ -666,11 +672,11 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             MediaPlayer?.Play();
         }
 
-        // finally we can delete the video!
-        if (!await _filesService.TryDeleteFileAsync(file)) return false;
+        if (!await _filesService.TryDeleteFileAsync(file)) return Fail();
 
         Items.Remove(mediaToDelete);
         mediaToDelete.Clean();
+        Messenger.Send(new MediaFileDeletedNotificationMessage(deletedName));
         return true;
     }
 
