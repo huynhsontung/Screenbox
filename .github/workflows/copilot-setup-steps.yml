@@ -25,5 +25,5 @@ jobs:
       uses: microsoft/setup-msbuild@v3
 
     - name: Restore nuget packages
-      shell: powershell
+      shell: pwsh
       run: msbuild Screenbox.sln -t:restore -p:RestoreConfigFile=nuget.config -p:RestoreLockedMode=false -p:Platform=x64 -p:Configuration=Release
