@@ -546,6 +546,16 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         {
             return false;
         }
+
+        try
+        {
+            _ = Messenger.Send(new DeleteCurrentMediaFileRequestMessage());
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     /// <summary>

@@ -36,6 +36,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     IRecipient<QueuePlaylistMessage>,
     IRecipient<ClearPlaylistMessage>,
     IRecipient<PlaylistRequestMessage>,
+    IRecipient<DeleteCurrentMediaFileRequestMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
     // UI-bindable properties
@@ -181,6 +182,11 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     public void Receive(PlaylistRequestMessage message)
     {
         message.Reply(new Playlist(_playlist));
+    }
+
+    public void Receive(DeleteCurrentMediaFileRequestMessage message)
+    {
+        message.Reply(DeleteCurrentMediaFileAsync());
     }
 
     public async void Receive(PlayMediaMessage message)
@@ -618,6 +624,54 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
         LoadFromPlaylist(playlist);
         PlaySingle(nextItem);
+    }
+
+    private async Task<bool> DeleteCurrentMediaFileAsync()
+    {
+        // checks here for the video to delete
+        if (CurrentItem is not { } mediaToDelete) return false;
+
+        StorageFile? file = mediaToDelete.Source as StorageFile;
+        if (file == null && mediaToDelete.Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
+        {
+            try
+            {
+                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        if (file == null) return false;
+
+        int deleteIndex = Items.IndexOf(mediaToDelete);
+        if (deleteIndex < 0) return false;
+
+        bool wasPlaying = MediaPlayer?.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
+        MediaViewModel? replacement = Items.Count <= 1
+            ? null
+            : deleteIndex < Items.Count - 1
+                ? Items[deleteIndex + 1]
+                : Items[deleteIndex - 1];
+
+        CurrentItem = replacement;
+        if (replacement == null)
+        {
+            MediaPlayer?.Pause();
+        }
+        else if (wasPlaying)
+        {
+            MediaPlayer?.Play();
+        }
+
+        // finally we can delete the video!
+        if (!await _filesService.TryDeleteFileAsync(file)) return false;
+
+        Items.Remove(mediaToDelete);
+        mediaToDelete.Clean();
+        return true;
     }
 
     #endregion
