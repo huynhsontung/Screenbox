@@ -302,7 +302,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
@@ -311,16 +311,16 @@
       <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <Version>9.0.9</Version>
+      <Version>10.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Diagnostics">
-      <Version>8.4.0</Version>
+      <Version>8.4.2</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.4.0</Version>
+      <Version>8.4.2</Version>
     </PackageReference>
     <PackageReference Include="LibVLCSharp">
       <Version>3.7.0</Version>
@@ -329,7 +329,7 @@
       <Version>3.2.30</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>5.15.1</Version>
+      <Version>5.16.3</Version>
     </PackageReference>
     <PackageReference Include="TagLibSharp">
       <Version>2.3.0</Version>

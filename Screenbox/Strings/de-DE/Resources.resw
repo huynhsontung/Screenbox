@@ -201,7 +201,7 @@
     <value>Mehr</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Wiedergabeliste abspielen</value>
+    <value>Warteschlange abspielen</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>Wiederholen: Aus</value>
@@ -353,7 +353,7 @@
     <value>Dateipfad öffnen</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Öffnen mit</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -473,10 +473,10 @@
     <value>Datei(en) hinzufügen</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Suche nach Datei(en) zum Hinzufügen zur Wiedergabeliste</value>
+    <value>Suche nach Datei(en) zum Hinzufügen zur Warteschlange</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>Weitere Optionen zum Hinzufügen von Medien zur Wiedergabeliste</value>
+    <value>Weitere Optionen zum Hinzufügen von Medien zur Warteschlange</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Ordner zur Musikbibliothek hinzufügen</value>
@@ -701,15 +701,15 @@
     <value>Untertitel wurden hinzugefügt</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Playlist "{0}" erstellt</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Playlist "{0}" gelöscht</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Playlist umbenannt in "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -756,7 +756,7 @@
     <value>Erweitert</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Datenschutz</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Erweiterter Modus</value>
@@ -922,10 +922,10 @@
     <value>Fehler beim Laden der Grafik</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>Beim Öffnen einer einzelnen Datei automatisch alle anderen Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
+    <value>Beim Öffnen einer einzelnen Datei automatisch alle anderen Dateien im Ordner zur Warteschlange hinzufügen</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Alle Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
+    <value>Alle Dateien im Ordner zur Warteschlange hinzufügen</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
     <value>Systemeinstellung verwenden</value>
@@ -997,72 +997,72 @@
     <value>Ordner</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Zu Playlist hinzufügen</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Neue Playlist erstellen</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Neue Playlist</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Ausgewähltes Element</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Ausgewählte Elemente</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Keine Playlists</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Erstellen</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Abbrechen</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Unbenannte Playlist</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Geben Sie einen Namen für diese Playlist ein</value>
   </data>
   <data name="Playlists" xml:space="preserve">
     <value>Playlists</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Löschen</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Umbenennen</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Geben Sie einen neuen Namen für diese Playlist ein</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Playlist umbenennen</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Playlist löschen</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>Sind Sie sicher, dass Sie Playlist '{0}' löschen möchten? Sie können diese Aktion nicht rückgängig machen.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Verlauf der Wiedergabeposition</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to enable quick session resumption</value>
+    <value>Speichere den Verlauf meiner Wiedergabeposition auf diesem Gerät, um eine schnelle Wiederaufnahme der Sitzung zu ermöglichen</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Verlauf der Wiedergabeposition des Geräts löschen</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>{0} Element zur Playlist "{1}" hinzugefügt</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>{0} Elemente zur Playlist "{1}" hinzugefügt</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

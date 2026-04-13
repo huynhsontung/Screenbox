@@ -353,7 +353,7 @@
     <value>פתח את מיקום הקובץ</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>פתח באמצעות</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>אלבום</value>
@@ -701,11 +701,11 @@
     <value>נוספה כתובית</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>רשימת ההשמעה "{0}" נוצרה</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>רשימת ההשמעה "{0}" נמחקה</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
@@ -997,13 +997,13 @@
     <value>תיקיה</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>הוסף לרשימת השמעה</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>צור רשימת השמעה חדשה</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>רשימת השמעה חדשה</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
@@ -1012,13 +1012,13 @@
     <value>Selected items</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>אין רשימות השמעה</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>צור</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>ביטול</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
     <value>Untitled playlist</value>
@@ -1027,13 +1027,13 @@
     <value>Enter a name for this playlist</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>רשימות השמעה</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>מחק</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>שנה שם</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
     <value>Enter a new name for this playlist</value>
@@ -1042,10 +1042,10 @@
     <value>Rename playlist</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>מחק רשימת השמעה</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>האם אתה בטוח שברצונך למחוק את רשימת ההשמעה '{0}'? לא ניתן לבטל פעולה זו.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1058,11 +1058,11 @@
     <value>ניקוי היסטוריית מיקומי השמעה במכשיר זה</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>נוסף פריט {0} לרשימת ההשמעה "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>נוספו {0} פריטים לרשימת ההשמעה "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>
