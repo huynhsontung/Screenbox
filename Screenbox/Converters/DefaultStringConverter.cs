@@ -14,9 +14,10 @@ namespace Screenbox.Converters;
 internal sealed class DefaultStringConverter : IValueConverter
 {
     /// <summary>
-    /// Gets or sets the default string to display when the value is <see langword="null"/> or empty.
+    /// Gets or sets the default string to display when the value is <see langword="null"/>
+    /// or empty.
     /// </summary>
-    /// <value>The fallback display string. The default is <see cref="string.Empty"/>.</value>
+    /// <value>The fallback display string. The default is an empty string.</value>
     public string Default { get; set; } = string.Empty;
 
     /// <summary>
@@ -29,7 +30,7 @@ internal sealed class DefaultStringConverter : IValueConverter
     /// </returns>
     public static string GetValueOrDefault(string value)
     {
-        return !string.IsNullOrEmpty(value) ? value : Strings.Resources.Default;
+        return string.IsNullOrEmpty(value) ? Strings.Resources.Default : value;
     }
 
     /// <summary>
@@ -41,9 +42,9 @@ internal sealed class DefaultStringConverter : IValueConverter
     /// The <paramref name="value"/> if it is not <see langword="null"/> or empty;
     /// otherwise, <paramref name="fallback"/>.
     /// </returns>
-    public static string GetValueOrDefault(string value, string fallback)
+    public static string GetValueOrFallback(string value, string fallback)
     {
-        return !string.IsNullOrEmpty(value) ? value : fallback;
+        return string.IsNullOrEmpty(value) ? fallback : value;
     }
 
     /// <inheritdoc/>
