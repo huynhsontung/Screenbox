@@ -7,6 +7,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
+using Screenbox.Dialogs;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
@@ -518,7 +519,7 @@ public sealed partial class PlayerPage : Page
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
     }
 
-    private void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    private async void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (FocusManager.GetFocusedElement() is TextBox)
         {
@@ -526,7 +527,22 @@ public sealed partial class PlayerPage : Page
             return;
         }
 
-        args.Handled = ViewModel.ProcessDeleteKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        if (ViewModel.Media == null)
+        {
+            args.Handled = false;
+            return;
+        }
+
+        var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
+        var result = await deleteConfirmation.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            args.Handled = ViewModel.ProcessDeleteKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        }
+        else
+        {
+            args.Handled = true;
+        }
     }
 
     private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

@@ -1055,6 +1055,13 @@
     <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="DeleteMediaFile" xml:space="preserve">
+    <value>Delete file</value>
+  </data>
+  <data name="DeleteMediaFileConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete '{0}'? You cannot undo this action.</value>
+    <comment>#Format[String fileName]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Playback position history</value>
   </data>
