@@ -518,6 +518,11 @@ public sealed partial class PlayerPage : Page
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
     }
 
+    private void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        args.Handled = false;
+    }
+
     private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (ViewModel.ViewMode == WindowViewMode.Default)
