@@ -230,7 +230,7 @@ Helper classes provide focused utilities and lightweight wrappers for specific f
 
 - **`RendererWatcher`**: Lightweight wrapper around VLC's RendererDiscoverer for network renderer discovery, exposing events for renderer found/lost notifications and maintaining a list of available renderers
 - **`DisplayRequestTracker`**: Manages display sleep prevention during media playback
-- **`LastPositionTracker`**: Tracks and persists media playback positions for resume functionality
+- **`PlaybackProgressTracker`**: Tracks and persists media playback positions for resume functionality. Positions are kept in memory and lazily flushed to the SQLite database on app suspend.
 
 #### UI-Specific Services (Screenbox Project)
 - **`ResourceService.cs`**: Localization and resource string management
@@ -261,8 +261,18 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 - **`MusicInfo.cs`**: Audio metadata and music library information
 
 #### Application State Models  
-- **`PersistentMediaRecord.cs`**: Saved playback state and resume positions
-- **`PersistentStorageLibrary.cs`**: Library folder persistence
+- **`PlaybackProgressEntity.cs`**: SQLite entity for persisted playback resume positions
+- **`MediaRecordEntity.cs`**: SQLite entity for cached media library records (flat single-table)
+- **`LibraryFolderEntity.cs`**: SQLite entity for cached library folder paths
+
+#### Cache Layer Design
+The application uses a SQLite database (`screenbox.db` in `LocalFolder`) as a **cache only**, managed through `IScreenboxDatabase` / `ScreenboxDatabase`. The database is initialised at startup via `ScreenboxDatabase.InitializeAsync()`, which:
+
+1. Creates the schema on first run using `EnsureCreatedAsync()`
+2. Deletes and recreates the database if it is corrupt or missing — data loss is handled gracefully and triggers a full disk recrawl
+3. Removes legacy Protobuf `.bin` cache files from previous app versions (`songs.bin`, `videos.bin`, `last_positions.bin`)
+
+Playlist data remains JSON file-based and is managed independently by `PlaylistService`.
 
 ## 🛠️ Technology Stack
 
@@ -290,7 +300,7 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 #### Media and Data Processing
 - [LibVLCSharp](https://github.com/videolan/libvlcsharp) - VLC media player integration
 - [TagLibSharp](https://github.com/mono/taglib-sharp) - Audio metadata reading
-- [protobuf-net](https://github.com/protobuf-net/protobuf-net) - Protocol Buffers serialization
+- [Microsoft.EntityFrameworkCore.Sqlite](https://learn.microsoft.com/en-us/ef/core/) - SQLite cache layer for media library and playback progress
 
 #### Monitoring and Analytics
 - [Microsoft.AppCenter](https://www.nuget.org/packages/Microsoft.AppCenter/) - Crash reporting and usage analytics

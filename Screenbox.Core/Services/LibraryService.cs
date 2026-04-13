@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Data;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -29,16 +31,15 @@ public sealed class LibraryService : ILibraryService
     private readonly ISettingsService _settingsService;
     private readonly IFilesService _filesService;
     private readonly MediaViewModelFactory _mediaFactory;
-
-    private const string SongsCacheFileName = "songs.bin";
-    private const string VideoCacheFileName = "videos.bin";
+    private readonly IScreenboxDatabase _database;
 
     public LibraryService(ISettingsService settingsService, IFilesService filesService,
-        MediaViewModelFactory mediaFactory)
+        MediaViewModelFactory mediaFactory, IScreenboxDatabase database)
     {
         _settingsService = settingsService;
         _filesService = filesService;
         _mediaFactory = mediaFactory;
+        _database = database;
     }
 
     public StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer)
@@ -164,17 +165,11 @@ public sealed class LibraryService : ILibraryService
     private async Task CacheSongsAsync(LibraryContext context, CancellationToken cancellationToken)
     {
         var folderPaths = context.MusicLibrary!.Folders.Select(f => f.Path).ToList();
-        var records = context.Songs.Select(song =>
-            new PersistentMediaRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
-        var libraryCache = new PersistentStorageLibrary
-        {
-            FolderPaths = folderPaths,
-            Records = records
-        };
+        var records = context.Songs.Select(song => CreateMediaRecord(song, MediaPlaybackType.Music)).ToList();
         cancellationToken.ThrowIfCancellationRequested();
         try
         {
-            await _filesService.SaveToDiskAsync(ApplicationData.Current.LocalFolder, SongsCacheFileName, libraryCache);
+            await _database.SaveLibraryCacheAsync(MediaPlaybackType.Music, records, folderPaths);
         }
         catch (Exception)
         {
@@ -185,17 +180,11 @@ public sealed class LibraryService : ILibraryService
     private async Task CacheVideosAsync(LibraryContext context, CancellationToken cancellationToken)
     {
         var folderPaths = context.VideosLibrary!.Folders.Select(f => f.Path).ToList();
-        List<PersistentMediaRecord> records = context.Videos.Select(video =>
-            new PersistentMediaRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
-        var libraryCache = new PersistentStorageLibrary()
-        {
-            FolderPaths = folderPaths,
-            Records = records
-        };
+        var records = context.Videos.Select(video => CreateMediaRecord(video, MediaPlaybackType.Video)).ToList();
         cancellationToken.ThrowIfCancellationRequested();
         try
         {
-            await _filesService.SaveToDiskAsync(ApplicationData.Current.LocalFolder, VideoCacheFileName, libraryCache);
+            await _database.SaveLibraryCacheAsync(MediaPlaybackType.Video, records, folderPaths);
         }
         catch (Exception)
         {
@@ -203,27 +192,64 @@ public sealed class LibraryService : ILibraryService
         }
     }
 
-    private async Task<PersistentStorageLibrary?> LoadStorageLibraryCacheAsync(string fileName)
+    private static MediaRecordEntity CreateMediaRecord(MediaViewModel media, MediaPlaybackType libraryType)
+    {
+        var record = new MediaRecordEntity
+        {
+            LibraryType = libraryType,
+            Title = media.Name,
+            Path = media.Location,
+            MediaType = media.MediaInfo.MediaType,
+            DateAddedUtc = media.DateAdded.UtcDateTime,
+        };
+
+        if (media.MediaInfo.MediaType == MediaPlaybackType.Music)
+        {
+            MusicInfo music = media.MediaInfo.MusicProperties;
+            record.DurationTicks = music.Duration.Ticks;
+            record.Year = music.Year;
+            record.Artist = music.Artist;
+            record.Album = music.Album;
+            record.AlbumArtist = music.AlbumArtist;
+            record.Composers = music.Composers;
+            record.Genre = music.Genre;
+            record.TrackNumber = music.TrackNumber;
+            record.MusicBitrate = music.Bitrate;
+        }
+        else
+        {
+            VideoInfo video = media.MediaInfo.VideoProperties;
+            record.DurationTicks = video.Duration.Ticks;
+            record.Year = video.Year;
+            record.VideoSubtitle = video.Subtitle;
+            record.Producers = video.Producers;
+            record.Writers = video.Writers;
+            record.Width = video.Width;
+            record.Height = video.Height;
+            record.VideoBitrate = video.Bitrate;
+        }
+
+        return record;
+    }
+
+    private async Task<(List<MediaRecordEntity>? Records, List<string>? FolderPaths)> LoadLibraryCacheAsync(
+        MediaPlaybackType libraryType)
     {
         try
         {
-            return await _filesService.LoadFromDiskAsync<PersistentStorageLibrary>(
-                ApplicationData.Current.LocalFolder, fileName);
+            var result = await _database.LoadLibraryCacheAsync(libraryType);
+            return (result.Records, result.FolderPaths);
         }
         catch (Exception)
         {
-            // FileNotFoundException
-            // UnauthorizedAccessException
-            // and other Protobuf exceptions
-            // Deserialization failed
-            return null;
+            // DB not ready or corrupt — triggers a recrawl
+            return (null, null);
         }
     }
 
-    private List<MediaViewModel> GetMediaFromCache(PersistentStorageLibrary libraryCache)
+    private List<MediaViewModel> GetMediaFromCache(List<MediaRecordEntity> records)
     {
-        var records = libraryCache.Records;
-        List<MediaViewModel> mediaList = records.Select(record =>
+        return records.Select(record =>
         {
             MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
             media.IsFromLibrary = true;
@@ -231,20 +257,49 @@ public sealed class LibraryService : ILibraryService
             {
                 if (!string.IsNullOrEmpty(record.Title))
                     media.Name = record.Title;
-                media.MediaInfo = record.Properties != null
-                    ? new MediaInfo(record.Properties)
-                    : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
+
+                if (record.MediaType == MediaPlaybackType.Music)
+                {
+                    var musicInfo = new MusicInfo
+                    {
+                        Title = record.Title,
+                        Artist = record.Artist ?? string.Empty,
+                        Album = record.Album ?? string.Empty,
+                        AlbumArtist = record.AlbumArtist ?? string.Empty,
+                        Composers = record.Composers ?? string.Empty,
+                        Genre = record.Genre ?? string.Empty,
+                        TrackNumber = record.TrackNumber ?? 0,
+                        Year = record.Year,
+                        Duration = TimeSpan.FromTicks(record.DurationTicks),
+                        Bitrate = record.MusicBitrate ?? 0
+                    };
+                    media.MediaInfo = new MediaInfo(musicInfo);
+                }
+                else
+                {
+                    var videoInfo = new VideoInfo
+                    {
+                        Title = record.Title,
+                        Subtitle = record.VideoSubtitle ?? string.Empty,
+                        Producers = record.Producers ?? string.Empty,
+                        Writers = record.Writers ?? string.Empty,
+                        Year = record.Year,
+                        Duration = TimeSpan.FromTicks(record.DurationTicks),
+                        Width = record.Width ?? 0,
+                        Height = record.Height ?? 0,
+                        Bitrate = record.VideoBitrate ?? 0
+                    };
+                    media.MediaInfo = new MediaInfo(videoInfo);
+                }
             }
 
-            if (record.DateAdded != default)
+            if (record.DateAddedUtc != default)
             {
-                DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
-                media.DateAdded = utcTime.ToLocalTime();
+                media.DateAdded = DateTime.SpecifyKind(record.DateAddedUtc, DateTimeKind.Utc).ToLocalTime();
             }
 
             return media;
         }).ToList();
-        return mediaList;
     }
 
     private async Task FetchMusicCancelableAsync(LibraryContext context, bool useCache, CancellationToken cancellationToken)
@@ -262,11 +317,11 @@ public sealed class LibraryService : ILibraryService
             List<MediaViewModel> songs = new();
             if (useCache)
             {
-                var libraryCache = await LoadStorageLibraryCacheAsync(SongsCacheFileName);
-                if (libraryCache?.Records.Count > 0)
+                var (cachedRecords, cachedFolderPaths) = await LoadLibraryCacheAsync(MediaPlaybackType.Music);
+                if (cachedRecords?.Count > 0 && cachedFolderPaths != null)
                 {
-                    songs = GetMediaFromCache(libraryCache);
-                    hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, context.MusicLibrary);
+                    songs = GetMediaFromCache(cachedRecords);
+                    hasCache = !AreLibraryPathsChanged(cachedFolderPaths, context.MusicLibrary);
 
                     // Update cache with changes from library tracker. Invalidate cache if needed.
                     if (hasCache)
@@ -396,11 +451,11 @@ public sealed class LibraryService : ILibraryService
             List<MediaViewModel> videos = new();
             if (useCache)
             {
-                var libraryCache = await LoadStorageLibraryCacheAsync(VideoCacheFileName);
-                if (libraryCache?.Records.Count > 0)
+                var (cachedRecords, cachedFolderPaths) = await LoadLibraryCacheAsync(MediaPlaybackType.Video);
+                if (cachedRecords?.Count > 0 && cachedFolderPaths != null)
                 {
-                    videos = GetMediaFromCache(libraryCache);
-                    hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, context.VideosLibrary);
+                    videos = GetMediaFromCache(cachedRecords);
+                    hasCache = !AreLibraryPathsChanged(cachedFolderPaths, context.VideosLibrary);
 
                     // Update cache with changes from library tracker. Invalidate cache if needed.
                     if (hasCache)

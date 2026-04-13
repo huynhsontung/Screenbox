@@ -27,7 +27,37 @@
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
   <Library Name="Screenbox.Core">
 
-  	<!-- add directives for your library here -->
+  	<!-- EF Core SQLite runtime directives required by .NET Native -->
+
+  	<!-- EF Core infrastructure -->
+  	<Namespace Name="Microsoft.EntityFrameworkCore" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.ChangeTracking" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.ChangeTracking.Internal" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Infrastructure" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Internal" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Metadata" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Metadata.Internal" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Migrations" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Query" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Query.Internal" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Storage" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Storage.Internal" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Update" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Update.Internal" Dynamic="Required All" />
+
+  	<!-- EF Core SQLite provider -->
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Sqlite" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal" Dynamic="Required All" />
+  	<Namespace Name="Microsoft.EntityFrameworkCore.Sqlite.Storage.Internal" Dynamic="Required All" />
+
+  	<!-- SQLitePCL -->
+  	<Namespace Name="SQLitePCL" Dynamic="Required All" />
+
+  	<!-- Screenbox entity types accessed by EF Core via reflection -->
+  	<Type Name="Screenbox.Core.Data.MediaRecordEntity" Dynamic="Required All" />
+  	<Type Name="Screenbox.Core.Data.LibraryFolderEntity" Dynamic="Required All" />
+  	<Type Name="Screenbox.Core.Data.PlaybackProgressEntity" Dynamic="Required All" />
+  	<Type Name="Screenbox.Core.Data.ScreenboxDbContext" Dynamic="Required All" />
 
   </Library>
 </Directives>

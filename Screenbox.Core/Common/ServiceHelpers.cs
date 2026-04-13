@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Controllers;
+using Screenbox.Core.Data;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Windows.Storage;
 
 namespace Screenbox.Core;
 
@@ -60,7 +63,15 @@ public static class ServiceHelpers
 
         // Controllers
         services.AddSingleton<LibraryController>();
-        services.AddSingleton<LastPositionTracker>();
+        services.AddSingleton<PlaybackProgressTracker>();
+
+        // Database
+        string dbPath = System.IO.Path.Combine(ApplicationData.Current.LocalFolder.Path, "screenbox.db");
+        services.AddDbContext<ScreenboxDbContext>(
+            options => options.UseSqlite($"Data Source={dbPath}"),
+            ServiceLifetime.Transient,
+            ServiceLifetime.Singleton);
+        services.AddSingleton<IScreenboxDatabase, ScreenboxDatabase>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();

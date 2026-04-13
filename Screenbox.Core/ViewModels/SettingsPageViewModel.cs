@@ -65,7 +65,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
-    private readonly LastPositionTracker _lastPositionTracker;
+    private readonly PlaybackProgressTracker _playbackProgressTracker;
     private static InitialValues? _initialValues;
     private StorageLibrary? _videosLibrary;
     private StorageLibrary? _musicLibrary;
@@ -83,13 +83,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         LibraryContext libraryContext,
         ILibraryService libraryService,
         LibraryController libraryController,
-        LastPositionTracker lastPositionTracker)
+        PlaybackProgressTracker playbackProgressTracker)
     {
         _settingsService = settingsService;
         _libraryContext = libraryContext;
         _libraryService = libraryService;
         _libraryController = libraryController;
-        _lastPositionTracker = lastPositionTracker;
+        _playbackProgressTracker = playbackProgressTracker;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
         MusicLocations = new ObservableCollection<StorageFolder>();
@@ -368,8 +368,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         try
         {
-            _lastPositionTracker.ClearAll();
-            await _lastPositionTracker.SaveToDiskAsync();
+            _playbackProgressTracker.ClearAll();
+            await _playbackProgressTracker.SaveToDbAsync();
         }
         catch (Exception)
         {

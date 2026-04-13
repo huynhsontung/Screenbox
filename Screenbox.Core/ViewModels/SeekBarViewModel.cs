@@ -65,17 +65,17 @@ public sealed partial class SeekBarViewModel :
     private readonly DispatcherQueueTimer _bufferingTimer;
     private readonly DispatcherQueueTimer _seekTimer;
     private readonly DispatcherQueueTimer _originalPositionTimer;
-    private readonly LastPositionTracker _lastPositionTracker;
+    private readonly PlaybackProgressTracker _playbackProgressTracker;
     private TimeSpan _originalPosition;
     private TimeSpan _lastTrackedPosition;
     private bool _timeChangeOverride;
     private MediaViewModel? _currentItem;
 
-    public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker,
+    public SeekBarViewModel(ISettingsService settingsService, PlaybackProgressTracker playbackProgressTracker,
         PlayerContext playerContext)
     {
         _settingsService = settingsService;
-        _lastPositionTracker = lastPositionTracker;
+        _playbackProgressTracker = playbackProgressTracker;
         _playerContext = playerContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _bufferingTimer = _dispatcherQueue.CreateTimer();
@@ -106,9 +106,9 @@ public sealed partial class SeekBarViewModel :
     {
         _lastTrackedPosition = TimeSpan.Zero;
         _currentItem = message.Value;
-        if (message.Value != null && _lastPositionTracker.IsLoaded)
+        if (message.Value != null && _playbackProgressTracker.IsLoaded)
         {
-            RestoreLastPosition(message.Value);
+            RestorePlaybackProgress(message.Value);
         }
     }
 
@@ -152,12 +152,12 @@ public sealed partial class SeekBarViewModel :
             MediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
             MediaPlayer.CanSeekChanged += OnCanSeekChanged;
 
-            if (!_lastPositionTracker.IsLoaded)
+            if (!_playbackProgressTracker.IsLoaded)
             {
-                await _lastPositionTracker.LoadFromDiskAsync();
+                await _playbackProgressTracker.LoadFromDbAsync();
                 if (_currentItem != null)
                 {
-                    RestoreLastPosition(_currentItem);
+                    RestorePlaybackProgress(_currentItem);
                 }
             }
         }
@@ -221,31 +221,31 @@ public sealed partial class SeekBarViewModel :
             }
         }
 
-        UpdateLastPosition(newPosition);
+        UpdatePlaybackProgress(newPosition);
     }
 
-    private void RestoreLastPosition(MediaViewModel media)
+    private void RestorePlaybackProgress(MediaViewModel media)
     {
         if (!_settingsService.PersistPlaybackPosition) return;
 
-        TimeSpan lastPosition = _lastPositionTracker.GetPosition(media.Location);
-        if (lastPosition <= TimeSpan.Zero) return;
+        TimeSpan savedProgress = _playbackProgressTracker.GetPlaybackProgress(media.Location);
+        if (savedProgress <= TimeSpan.Zero) return;
         if (_settingsService.RestorePlaybackPosition)
         {
             if (media.IsPlaying ?? false)
             {
-                _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => SetPlayerPosition(lastPosition, false));
+                _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => SetPlayerPosition(savedProgress, false));
                 _lastTrackedPosition = TimeSpan.Zero;
             }
             else
             {
                 // Media is not seekable yet, so we need to wait for the PlaybackStateChanged event
-                _lastTrackedPosition = lastPosition;
+                _lastTrackedPosition = savedProgress;
             }
         }
         else
         {
-            Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
+            Messenger.Send(new RaiseResumePositionNotificationMessage(savedProgress));
         }
     }
 
@@ -392,20 +392,20 @@ public sealed partial class SeekBarViewModel :
         // Chapters.SyncItems(chapterList);
     }
 
-    private void UpdateLastPosition(TimeSpan position)
+    private void UpdatePlaybackProgress(TimeSpan position)
     {
         if (!_settingsService.PersistPlaybackPosition ||
             _currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
-            DateTimeOffset.Now - _lastPositionTracker.LastUpdated <= TimeSpan.FromSeconds(3))
+            DateTimeOffset.Now - _playbackProgressTracker.LastUpdated <= TimeSpan.FromSeconds(3))
             return;
 
         if (position > TimeSpan.FromSeconds(30) && position + TimeSpan.FromSeconds(10) < NaturalDuration)
         {
-            _lastPositionTracker.UpdateLastPosition(_currentItem.Location, position);
+            _playbackProgressTracker.UpdatePlaybackProgress(_currentItem.Location, position);
         }
         else if (position > TimeSpan.FromSeconds(5))
         {
-            _lastPositionTracker.RemovePosition(_currentItem.Location);
+            _playbackProgressTracker.RemovePlaybackProgress(_currentItem.Location);
         }
     }
 }

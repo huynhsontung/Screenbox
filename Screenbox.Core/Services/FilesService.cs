@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ProtoBuf;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -120,11 +119,7 @@ public sealed class FilesService : IFilesService
         }
         else
         {
-            using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-            var writeStream = stream.AsStreamForWrite();
-            Serializer.Serialize(writeStream, source);
-            writeStream.SetLength(writeStream.Position);  // A weird quirk of protobuf-net
-            await stream.FlushAsync();
+            throw new NotSupportedException($"File format not supported: {file.Name}. Only JSON (.json) files are supported.");
         }
     }
 
@@ -142,8 +137,7 @@ public sealed class FilesService : IFilesService
             return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize JSON");
         }
 
-        using var readStream = await file.OpenReadAsync();
-        return Serializer.Deserialize<T>(readStream.AsStream());
+        throw new NotSupportedException($"File format not supported: {file.Name}. Only JSON (.json) files are supported.");
     }
 
     public async Task OpenFileLocationAsync(string path)
