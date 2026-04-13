@@ -265,7 +265,7 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            x:Load="{x:Bind ViewModel.ShowVisualizer, Mode=OneWay}"
+            x:Load="False"
             Visibility="Collapsed" />
 
         <controls:PlayerElement
