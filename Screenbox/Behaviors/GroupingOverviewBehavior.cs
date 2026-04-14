@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xaml.Interactivity;
+using Screenbox.Core.Helpers;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,7 +41,7 @@ internal class GroupingOverviewBehavior : Behavior<GridView>
 
     private void UpdateGroupViewItemWidth()
     {
-        if (AssociatedObject.ItemsPanelRoot == null) return;
+        if (AssociatedObject?.ItemsPanelRoot == null) return;
         var gridContentWidth = AssociatedObject.ActualWidth -
                                (AssociatedObject.Margin.Left + AssociatedObject.Margin.Right) -
                                (AssociatedObject.Padding.Left + AssociatedObject.Padding.Right);
@@ -52,11 +53,13 @@ internal class GroupingOverviewBehavior : Behavior<GridView>
         foreach (var child in AssociatedObject.ItemsPanelRoot.Children)
         {
             var element = (FrameworkElement)child;
-            element.Width = GroupType == "year"
-                ? 80
-                : AssociatedObject.HorizontalAlignment != HorizontalAlignment.Stretch
-                    ? double.NaN
-                    : itemWidth;
+            element.Width = GroupType switch
+            {
+                "year" => 80,
+                "" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 80,
+                _ when AssociatedObject.HorizontalAlignment != HorizontalAlignment.Stretch => double.NaN,
+                _ => itemWidth
+            };
         }
     }
 }

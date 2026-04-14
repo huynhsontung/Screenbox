@@ -133,6 +133,9 @@
                             <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:GroupingOverviewBehavior GroupType="" />
+                    </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>

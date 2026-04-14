@@ -90,13 +90,12 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
             .GroupBy(album => album == context.UnknownAlbum
                 ? MediaGroupingHelpers.OtherGroupSymbol
-                : MediaGroupingHelpers.GetFirstLetterGroup(album.Name))
+                : MediaGroupingHelpers.GetCharacterGroupLabel(album.Name))
             .ToList();
 
         var sortedGroup = new List<IGrouping<string, AlbumViewModel>>();
-        foreach (char header in MediaGroupingHelpers.GroupHeaders)
+        foreach (string groupHeader in MediaGroupingHelpers.CharacterGroupLabels)
         {
-            string groupHeader = header.ToString();
             if (groups.Find(g => g.Key == groupHeader) is { } group)
             {
                 sortedGroup.Add(group);
