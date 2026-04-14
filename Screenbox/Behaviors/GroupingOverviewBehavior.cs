@@ -56,7 +56,7 @@ internal class GroupingOverviewBehavior : Behavior<GridView>
             element.Width = GroupType switch
             {
                 "year" => 80,
-                "" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 80,
+                "" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 100,
                 _ when AssociatedObject.HorizontalAlignment != HorizontalAlignment.Stretch => double.NaN,
                 _ => itemWidth
             };
