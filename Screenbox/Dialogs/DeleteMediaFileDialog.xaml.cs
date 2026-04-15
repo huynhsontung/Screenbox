@@ -10,6 +10,8 @@ public sealed partial class DeleteMediaFileDialog : ContentDialog
 {
     private string MediaName { get; }
 
+    public bool SkipWarning => SkipWarningCheckBox.IsChecked == true;
+
     public DeleteMediaFileDialog(string mediaName)
     {
         this.DefaultStyleKey = typeof(ContentDialog);

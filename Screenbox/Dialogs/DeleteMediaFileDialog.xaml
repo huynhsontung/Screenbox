@@ -1,4 +1,4 @@
-<ContentDialog
+﻿<ContentDialog
     x:Class="Screenbox.Dialogs.DeleteMediaFileDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -54,5 +54,10 @@
         </ResourceDictionary>
     </ContentDialog.Resources>
 
-    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind strings:Resources.DeleteMediaFileConfirmation(MediaName)}" />
+    <StackPanel Spacing="12">
+        <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind strings:Resources.DeleteMediaFileConfirmation(MediaName)}" />
+        <CheckBox
+            x:Name="SkipWarningCheckBox"
+            Content="{strings:Resources Key=DeleteMediaFileSkipWarning}" />
+    </StackPanel>
 </ContentDialog>

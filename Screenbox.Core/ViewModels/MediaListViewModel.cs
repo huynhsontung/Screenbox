@@ -652,27 +652,29 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (file == null) return Fail();
 
-        int deleteIndex = Items.IndexOf(mediaToDelete);
-        if (deleteIndex < 0) return Fail();
-
-        bool wasPlaying = MediaPlayer?.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
-        MediaViewModel? replacement = Items.Count <= 1
-            ? null
-            : deleteIndex < Items.Count - 1
-                ? Items[deleteIndex + 1]
-                : Items[deleteIndex - 1];
-
-        CurrentItem = replacement;
-        if (replacement == null)
+        // Stop playback first to release the file handle before deleting.
+        try
         {
-            MediaPlayer?.Pause();
+            if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.VlcPlayer.Stop();
+            }
+            else
+            {
+                MediaPlayer?.Pause();
+            }
         }
-        else if (wasPlaying)
+        catch (Exception)
         {
-            MediaPlayer?.Play();
+            return Fail();
         }
 
         if (!await _filesService.TryDeleteFileAsync(file)) return Fail();
+
+        if (ReferenceEquals(CurrentItem, mediaToDelete))
+        {
+            CurrentItem = null;
+        }
 
         Items.Remove(mediaToDelete);
         mediaToDelete.Clean();

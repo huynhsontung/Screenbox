@@ -13,6 +13,7 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -32,11 +33,21 @@ namespace Screenbox.Pages;
 /// </summary>
 public sealed partial class PlayerPage : Page
 {
+    private const string SkipDeleteMediaFileWarningSettingKey = "SkipDeleteMediaFileWarning";
+
     internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
+
+    private static bool SkipDeleteMediaFileWarning
+    {
+        get => ApplicationData.Current.LocalSettings.Values.TryGetValue(SkipDeleteMediaFileWarningSettingKey, out object value)
+            && value is bool enabled
+            && enabled;
+        set => ApplicationData.Current.LocalSettings.Values[SkipDeleteMediaFileWarningSettingKey] = value;
+    }
 
     public PlayerPage()
     {
@@ -533,16 +544,20 @@ public sealed partial class PlayerPage : Page
             return;
         }
 
-        var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
-        var result = await deleteConfirmation.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        if (!SkipDeleteMediaFileWarning)
         {
-            args.Handled = ViewModel.ProcessDeleteKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+            var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
+            var result = await deleteConfirmation.ShowAsync();
+            if (result != ContentDialogResult.Primary)
+            {
+                args.Handled = true;
+                return;
+            }
+
+            SkipDeleteMediaFileWarning = deleteConfirmation.SkipWarning;
         }
-        else
-        {
-            args.Handled = true;
-        }
+
+        args.Handled = ViewModel.ProcessDeleteKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
     }
 
     private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

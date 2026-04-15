@@ -1062,6 +1062,9 @@
     <value>Are you sure you want to delete '{0}'? You cannot undo this action.</value>
     <comment>#Format[String fileName]</comment>
   </data>
+  <data name="DeleteMediaFileSkipWarning" xml:space="preserve">
+    <value>Don't show this warning again</value>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Playback position history</value>
   </data>
