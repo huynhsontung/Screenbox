@@ -43,13 +43,9 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Fetch Gomplate
-      uses: dsaltares/fetch-gh-release-asset@1.1.2
-      with:
-        repo: hairyhenderson/gomplate
-        version: tags/v3.11.3
-        file: gomplate_windows-amd64-slim.exe
-        target: gomplate.exe
-        token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release download v5.0.0 --repo hairyhenderson/gomplate --pattern 'gomplate_*amd64.exe' --output .\gomplate.exe
 
     - name: Render secrets
       env:
