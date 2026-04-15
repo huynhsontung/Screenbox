@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
@@ -530,18 +531,16 @@ public sealed partial class PlayerPage : Page
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
     }
 
-    private async void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    private async void PlayerControls_OnDeleteMediaFileRequested(object sender, RoutedEventArgs e)
     {
-        if (FocusManager.GetFocusedElement() is TextBox)
-        {
-            args.Handled = false;
-            return;
-        }
+        await TryDeleteCurrentMediaFileAsync(VirtualKey.Delete, VirtualKeyModifiers.None);
+    }
 
+    private async Task<bool> TryDeleteCurrentMediaFileAsync(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
         if (ViewModel.Media == null)
         {
-            args.Handled = false;
-            return;
+            return false;
         }
 
         if (!SkipDeleteMediaFileWarning)
@@ -550,14 +549,24 @@ public sealed partial class PlayerPage : Page
             var result = await deleteConfirmation.ShowAsync();
             if (result != ContentDialogResult.Primary)
             {
-                args.Handled = true;
-                return;
+                return true;
             }
 
             SkipDeleteMediaFileWarning = deleteConfirmation.SkipWarning;
         }
 
-        args.Handled = ViewModel.ProcessDeleteKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        return ViewModel.ProcessDeleteKeyDown(key, modifiers);
+    }
+
+    private async void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (FocusManager.GetFocusedElement() is TextBox)
+        {
+            args.Handled = false;
+            return;
+        }
+
+        args.Handled = await TryDeleteCurrentMediaFileAsync(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
     }
 
     private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

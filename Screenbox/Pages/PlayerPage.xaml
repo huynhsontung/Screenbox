@@ -468,6 +468,7 @@
 
         <controls:PlayerControls
             x:Name="PlayerControls"
+            DeleteMediaFileRequested="PlayerControls_OnDeleteMediaFileRequested"
             Grid.Row="2"
             Grid.Column="0"
             Padding="6,20,6,12" />
