@@ -1,4 +1,6 @@
-﻿using Microsoft.Xaml.Interactivity;
+﻿#nullable enable
+
+using Microsoft.Xaml.Interactivity;
 using Screenbox.Core.Helpers;
 using System;
 using Windows.UI.Xaml;
@@ -10,9 +12,9 @@ internal class GroupingOverviewBehavior : Behavior<GridView>
     public static readonly DependencyProperty GroupTypeProperty = DependencyProperty.Register(
         nameof(GroupType), typeof(string), typeof(GroupingOverviewBehavior), new PropertyMetadata(default(string), OnGroupTypeChanged));
 
-    public string GroupType
+    public string? GroupType
     {
-        get => (string)GetValue(GroupTypeProperty);
+        get => (string?)GetValue(GroupTypeProperty);
         set => SetValue(GroupTypeProperty, value);
     }
 
@@ -56,7 +58,7 @@ internal class GroupingOverviewBehavior : Behavior<GridView>
             element.Width = GroupType switch
             {
                 "year" => 80,
-                "" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 100,
+                null or "" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 100,
                 _ when AssociatedObject.HorizontalAlignment != HorizontalAlignment.Stretch => double.NaN,
                 _ => itemWidth
             };

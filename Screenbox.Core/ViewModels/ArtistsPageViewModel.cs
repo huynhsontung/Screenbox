@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
@@ -89,7 +91,7 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
 
     private void PopulateGroups()
     {
-        foreach (string key in MediaGroupingHelpers.CharacterGroupLabels.Select(letter => letter.ToString()))
+        foreach (string key in MediaGroupingHelpers.CharacterGroupLabels)
         {
             GroupedArtists.AddGroup(key);
         }

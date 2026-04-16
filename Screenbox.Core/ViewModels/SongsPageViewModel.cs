@@ -145,12 +145,12 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     {
         var groups = Songs
             .GroupBy(m => MediaGroupingHelpers.GetCharacterGroupLabel(m.Name))
-            .ToList();
+            .ToDictionary(g => g.Key);
 
         var sortedGroup = new List<IGrouping<string, MediaViewModel>>();
         foreach (string groupHeader in MediaGroupingHelpers.CharacterGroupLabels)
         {
-            if (groups.Find(g => g.Key == groupHeader) is { } group)
+            if (groups.TryGetValue(groupHeader, out var group))
             {
                 sortedGroup.Add(group);
             }

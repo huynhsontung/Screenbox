@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Screenbox.Core.Services;
+using Windows.Globalization;
 using Windows.Globalization.Collation;
 
 namespace Screenbox.Core.Helpers;
@@ -11,20 +13,23 @@ public static class MediaGroupingHelpers
 {
     public const string OtherGroupSymbol = "\u2026";
 
-    public static readonly IReadOnlyList<string> CharacterGroupLabels;
+    public static IReadOnlyList<string> CharacterGroupLabels { get; }
 
-    public static readonly int MaxGroupLabelLength;
+    public static int MaxGroupLabelLength { get; }
 
-    private static readonly CharacterGroupings _characterGroupings = new();
-
+    private static readonly CharacterGroupings _characterGroupings;
     private static readonly HashSet<string> _characterGroupSet;
 
     static MediaGroupingHelpers()
     {
-        CharacterGroupLabels = [.. _characterGroupings
+        _characterGroupings = string.IsNullOrWhiteSpace(ApplicationLanguages.PrimaryLanguageOverride)
+            ? new CharacterGroupings()
+            : new CharacterGroupings(ApplicationLanguages.PrimaryLanguageOverride);
+        CharacterGroupLabels = _characterGroupings
             .Select(x => string.IsNullOrEmpty(x.Label) ? OtherGroupSymbol : x.Label)
-            .Distinct()];
-        MaxGroupLabelLength = CharacterGroupLabels.Select(x => x.Length).Max();
+            .Distinct()
+            .ToList();
+        MaxGroupLabelLength = CharacterGroupLabels.Max(x => x.Length);
 
         _characterGroupSet = new HashSet<string>(CharacterGroupLabels, StringComparer.Ordinal);
     }
@@ -39,7 +44,11 @@ public static class MediaGroupingHelpers
 
             return label;
         }
-        catch { }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
+
         return OtherGroupSymbol;
     }
 }
