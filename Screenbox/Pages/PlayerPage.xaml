@@ -173,8 +173,8 @@
             <KeyboardAccelerator Key="NumberPad9" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="Home" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="End" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
-            <!--  Hide controls  -->
-            <KeyboardAccelerator Key="Escape" Invoked="HideControlsKeyboardAccelerator_OnInvoked" />
+            <!--  Escape key handling  -->
+            <KeyboardAccelerator Key="Escape" Invoked="EscapeKeyboardAccelerator_OnInvoked" />
         </Grid.KeyboardAccelerators>
 
         <Button
