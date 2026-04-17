@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
@@ -68,13 +70,12 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
             .GroupBy(artist => artist == context.UnknownArtist
                 ? MediaGroupingHelpers.OtherGroupSymbol
-                : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name))
+                : MediaGroupingHelpers.GetCharacterGroupLabel(artist.Name))
             .ToList();
 
         var sortedGroup = new List<IGrouping<string, ArtistViewModel>>();
-        foreach (char header in MediaGroupingHelpers.GroupHeaders)
+        foreach (string groupHeader in MediaGroupingHelpers.CharacterGroupLabels)
         {
-            string groupHeader = header.ToString();
             if (groups.Find(g => g.Key == groupHeader) is { } group)
             {
                 sortedGroup.Add(group);
@@ -90,7 +91,7 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
 
     private void PopulateGroups()
     {
-        foreach (string key in MediaGroupingHelpers.GroupHeaders.Select(letter => letter.ToString()))
+        foreach (string key in MediaGroupingHelpers.CharacterGroupLabels)
         {
             GroupedArtists.AddGroup(key);
         }
