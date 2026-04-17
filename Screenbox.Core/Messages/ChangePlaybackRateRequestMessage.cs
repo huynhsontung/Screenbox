@@ -10,6 +10,7 @@ public sealed class ChangePlaybackRateRequestMessage : RequestMessage<double>
     /// <summary>
     /// Gets the playback rate value.
     /// </summary>
+    /// <value>The playback rate, expressed as a ratio.</value>
     public double Value { get; }
 
     /// <summary>

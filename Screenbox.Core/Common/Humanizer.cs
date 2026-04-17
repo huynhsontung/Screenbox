@@ -18,13 +18,13 @@ namespace Screenbox.Core
         }
 
         /// <summary>
-        /// Formats a playback rate for display.
+        /// Formats a playback rate value for display.
         /// </summary>
         /// <param name="rate">The playback rate to format.</param>
-        /// <returns> A string that represents the playback rate formatted with
-        /// up to two decimal places and appended with the multiplication sign (<c>×</c>).
+        /// <returns>
+        /// A string that represents the playback rate formatted with up to two
+        /// decimal places and appended with the multiplication sign (<c>×</c>).
         /// </returns>
-        /// <remarks>The formatting uses the current culture (<see cref="CultureInfo.CurrentCulture"/>).</remarks>
         public static string FormatPlaybackRate(double rate)
         {
             return $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×";
