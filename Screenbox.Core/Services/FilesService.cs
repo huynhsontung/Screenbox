@@ -168,6 +168,19 @@ public sealed class FilesService : IFilesService
         }
     }
 
+    public async Task<bool> TryDeleteFileAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default)
+    {
+        try
+        {
+            await file.DeleteAsync(deleteOption);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
     public void AddToRecent(IStorageItem item)
     {
         string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();

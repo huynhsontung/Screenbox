@@ -173,6 +173,7 @@
             <KeyboardAccelerator Key="NumberPad9" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="Home" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="End" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <KeyboardAccelerator Key="Delete" Invoked="DeleteKeyboardAccelerator_OnInvoked" />
             <!--  Hide controls  -->
             <KeyboardAccelerator Key="Escape" Invoked="HideControlsKeyboardAccelerator_OnInvoked" />
         </Grid.KeyboardAccelerators>
@@ -467,6 +468,7 @@
 
         <controls:PlayerControls
             x:Name="PlayerControls"
+            DeleteMediaFileRequested="PlayerControls_OnDeleteMediaFileRequested"
             Grid.Row="2"
             Grid.Column="0"
             Padding="6,20,6,12" />

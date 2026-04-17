@@ -3,15 +3,18 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
+using Screenbox.Dialogs;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -31,11 +34,21 @@ namespace Screenbox.Pages;
 /// </summary>
 public sealed partial class PlayerPage : Page
 {
+    private const string SkipDeleteMediaFileWarningSettingKey = "SkipDeleteMediaFileWarning";
+
     internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
+
+    private static bool SkipDeleteMediaFileWarning
+    {
+        get => ApplicationData.Current.LocalSettings.Values.TryGetValue(SkipDeleteMediaFileWarningSettingKey, out object value)
+            && value is bool enabled
+            && enabled;
+        set => ApplicationData.Current.LocalSettings.Values[SkipDeleteMediaFileWarningSettingKey] = value;
+    }
 
     public PlayerPage()
     {
@@ -516,6 +529,44 @@ public sealed partial class PlayerPage : Page
     private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
+    }
+
+    private async void PlayerControls_OnDeleteMediaFileRequested(object sender, RoutedEventArgs e)
+    {
+        await TryDeleteCurrentMediaFileAsync(VirtualKey.Delete, VirtualKeyModifiers.None);
+    }
+
+    private async Task<bool> TryDeleteCurrentMediaFileAsync(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (ViewModel.Media == null)
+        {
+            return false;
+        }
+
+        if (!SkipDeleteMediaFileWarning)
+        {
+            var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
+            var result = await deleteConfirmation.ShowAsync();
+            if (result != ContentDialogResult.Primary)
+            {
+                return true;
+            }
+
+            SkipDeleteMediaFileWarning = deleteConfirmation.SkipWarning;
+        }
+
+        return ViewModel.ProcessDeleteKeyDown(key, modifiers);
+    }
+
+    private async void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (FocusManager.GetFocusedElement() is TextBox)
+        {
+            args.Handled = false;
+            return;
+        }
+
+        args.Handled = await TryDeleteCurrentMediaFileAsync(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
     }
 
     private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

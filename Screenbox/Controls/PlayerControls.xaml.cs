@@ -36,6 +36,8 @@ public sealed partial class PlayerControls : UserControl
 
     internal CommonViewModel Common { get; }
 
+    public event RoutedEventHandler? DeleteMediaFileRequested;
+
     private Flyout? _castFlyout;
 
     public PlayerControls()
@@ -70,6 +72,11 @@ public sealed partial class PlayerControls : UserControl
     {
         _castFlyout ??= CastControl.GetFlyout();
         _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
+    }
+
+    private void DeleteMediaFileMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        DeleteMediaFileRequested?.Invoke(this, e);
     }
 
     private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)

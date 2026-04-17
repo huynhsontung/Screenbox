@@ -23,6 +23,7 @@ namespace Screenbox.Core.Services
         public IAsyncOperation<StorageFolder> PickFolderAsync();
         public Task OpenFileLocationAsync(string path);
         public Task OpenFileLocationAsync(StorageFile file);
+        public Task<bool> TryDeleteFileAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default);
         public void AddToRecent(IStorageItem item);
         public Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source);
         public Task SaveToDiskAsync<T>(StorageFile file, T source);
