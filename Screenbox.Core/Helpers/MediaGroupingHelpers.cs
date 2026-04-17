@@ -39,10 +39,9 @@ public static class MediaGroupingHelpers
         try
         {
             string? label = _characterGroupings.Lookup(name);
-            if (string.IsNullOrEmpty(label) || !_characterGroupSet.Contains(label))
-                return OtherGroupSymbol;
-
-            return label;
+            return string.IsNullOrEmpty(label) || !_characterGroupSet.Contains(label)
+                ? OtherGroupSymbol
+                : label;
         }
         catch (Exception e)
         {
