@@ -1008,9 +1008,6 @@
   <data name="ImportPlaylist" xml:space="preserve">
     <value>Import playlist</value>
   </data>
-  <data name="ExportPlaylist" xml:space="preserve">
-    <value>Export playlist</value>
-  </data>
   <data name="Export" xml:space="preserve">
     <value>Export</value>
   </data>
