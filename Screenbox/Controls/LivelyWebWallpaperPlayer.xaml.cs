@@ -3,7 +3,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using Screenbox.Core.ViewModels;
+using Screenbox.Lively.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;

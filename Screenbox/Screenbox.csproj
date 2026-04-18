@@ -819,6 +819,10 @@
       <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
       <Name>Screenbox.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Screenbox.Lively\Screenbox.Lively.csproj">
+      <Project>{9b443f29-bff0-45b7-8a84-ee88cd5ae405}</Project>
+      <Name>Screenbox.Lively</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

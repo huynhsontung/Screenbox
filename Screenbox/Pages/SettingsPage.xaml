@@ -425,7 +425,7 @@
                     Header="{strings:Resources Key=SettingsAudioVisualHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource MusicVisualizerGlyph}}">
-                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind converters:DefaultStringConverter.GetValueOrDefault(AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title), Mode=OneWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
                             <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" />

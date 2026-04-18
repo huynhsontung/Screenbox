@@ -86,15 +86,6 @@
           "NETStandard.Library": "2.0.3"
         }
       },
-      "Microsoft.UI.Xaml": {
-        "type": "Direct",
-        "requested": "[2.8.7, )",
-        "resolved": "2.8.7",
-        "contentHash": "GuYRY8KcB0K4IufFqxob40qUL6Gh+zi4RjHXVMENlJTRsXcVGl+QFNIyZVGbHDRgwIN8n0We9TBk0rUQP41Yig==",
-        "dependencies": {
-          "Microsoft.Web.WebView2": "1.0.2849.39"
-        }
-      },
       "protobuf-net": {
         "type": "Direct",
         "requested": "[3.2.30, )",
@@ -170,6 +161,14 @@
         "type": "Transitive",
         "resolved": "2.1.0",
         "contentHash": "GmkKfoyerqmsHMn7OZj0AKpcBabD+GaafqphvX2Mw406IwiJRy1pKcKqdCfKJfYmkRyJ6+e+RaUylgdJoDa1jQ=="
+      },
+      "Microsoft.UI.Xaml": {
+        "type": "Transitive",
+        "resolved": "2.8.7",
+        "contentHash": "GuYRY8KcB0K4IufFqxob40qUL6Gh+zi4RjHXVMENlJTRsXcVGl+QFNIyZVGbHDRgwIN8n0We9TBk0rUQP41Yig==",
+        "dependencies": {
+          "Microsoft.Web.WebView2": "1.0.2849.39"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
