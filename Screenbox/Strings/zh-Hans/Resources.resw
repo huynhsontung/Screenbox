@@ -230,7 +230,7 @@
     <value>选择此视图中的所有项目</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>无选择</value>
+    <value>未选择</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>清除选择</value>
@@ -272,7 +272,7 @@
     <value>空</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>恢复视频视图</value>
+    <value>恢复沉浸视图</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
     <value>最小化沉浸视图</value>
@@ -351,6 +351,9 @@
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>打开文件位置</value>
+  </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>打开方式</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>专辑</value>
@@ -455,7 +458,7 @@
     <value>艺术家</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>歌曲</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>歌曲</value>
@@ -697,6 +700,18 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>添加了字幕</value>
   </data>
+  <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
+    <value>播放列表"{0}" 已创建</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
+    <value>播放列表 "{0}" 已删除</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
+    <value>播放列表重命名为 "{0}"</value>
+    <comment>#Format[String name]</comment>
+  </data>
   <data name="CriticalError" xml:space="preserve">
     <value>严重错误</value>
   </data>
@@ -739,6 +754,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>高级</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>隐私</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>高级模式</value>
@@ -937,7 +955,7 @@
     <value>视频增强方法</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>超分辨率放大需要兼容的硬件和驱动程序支持</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>双线性插值</value>
@@ -972,10 +990,79 @@
     <value>使用系统语言</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>没有 "{0}" 的搜索结果</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>文件夹</value>
+  </data>
+  <data name="AddToPlaylist" xml:space="preserve">
+    <value>添加到播放列表</value>
+  </data>
+  <data name="CreateNewPlaylist" xml:space="preserve">
+    <value>创建新的播放列表</value>
+  </data>
+  <data name="NewPlaylist" xml:space="preserve">
+    <value>新建播放列表</value>
+  </data>
+  <data name="SelectedItem" xml:space="preserve">
+    <value>选中的项目</value>
+  </data>
+  <data name="SelectedItems" xml:space="preserve">
+    <value>选中的项目</value>
+  </data>
+  <data name="NoPlaylists" xml:space="preserve">
+    <value>无播放列表</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="NewPlaylistDefaultName" xml:space="preserve">
+    <value>未命名播放列表</value>
+  </data>
+  <data name="CreatePlaylistPlaceholder" xml:space="preserve">
+    <value>输入播放列表的名称</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>播放列表</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="RenamePlaylistPlaceholder" xml:space="preserve">
+    <value>输入播放列表的新名称</value>
+  </data>
+  <data name="RenamePlaylist" xml:space="preserve">
+    <value>重命名播放列表</value>
+  </data>
+  <data name="DeletePlaylist" xml:space="preserve">
+    <value>删除播放列表</value>
+  </data>
+  <data name="DeletePlaylistConfirmation" xml:space="preserve">
+    <value>确定要删除 '{0}' 播放列表吗？此操作不能撤消。</value>
+    <comment>#Format[String playlistName]</comment>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>播放位置记录</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>在本设备上保存播放位置记录，以便从上次停止的位置继续播放</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>清除设备播放位置记录</value>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
+    <value>{0} 向播放列表添加 "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
+    <value>{0} 向播放列表添加 "{1}"</value>
+    <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

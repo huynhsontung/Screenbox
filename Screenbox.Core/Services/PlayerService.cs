@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Playback;
 using Windows.ApplicationModel.DataTransfer;
@@ -12,12 +13,12 @@ namespace Screenbox.Core.Services;
 
 public sealed class PlayerService : IPlayerService
 {
-    private readonly NotificationService _notificationService;
+    private readonly IVlcDialogService _vlcDialogService;
     private readonly bool _useFal;
 
-    public PlayerService(INotificationService notificationService)
+    public PlayerService(IVlcDialogService vlcDialogService)
     {
-        _notificationService = (NotificationService)notificationService;
+        _vlcDialogService = vlcDialogService;
 
         // FutureAccessList is preferred because it can handle network StorageFiles
         // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
@@ -25,8 +26,16 @@ public sealed class PlayerService : IPlayerService
 
         try
         {
-            // Clear FA periodically because of 1000 items limit
-            StorageApplicationPermissions.FutureAccessList.Clear();
+            // Clear FA periodically because of 1000 items limit 
+            // Delete any entries with "media" metadata to avoid hitting the limit with stale entries
+            var tokensToRemove = StorageApplicationPermissions.FutureAccessList.Entries
+                .Where(entry => entry.Metadata == "media")
+                .Select(entry => entry.Token)
+                .ToList();
+            foreach (var token in tokensToRemove)
+            {
+                StorageApplicationPermissions.FutureAccessList.Remove(token);
+            }
         }
         catch (Exception)   // FileNotFoundException
         {
@@ -87,12 +96,16 @@ public sealed class PlayerService : IPlayerService
 
     private Media CreateMedia(VlcMediaPlayer player, IStorageFile file, params string[] options)
     {
-        if (file is StorageFile storageFile &&
-            storageFile.Provider.Id.Equals("network", StringComparison.OrdinalIgnoreCase) &&
-            !string.IsNullOrEmpty(storageFile.Path))
+        // NOTE: There have been reports of network locations not working when using the URI approach.
+        // Optimization is disable until we can confirm that the issue is resolved in newer versions of LibVLC and/or Windows.
+        if (file is StorageFile storageFile
+            && storageFile.Provider.Id.Equals("network", StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrEmpty(storageFile.Path)
+            && !_useFal
+            && Uri.TryCreate(storageFile.Path, UriKind.Absolute, out var uri))
         {
             // Optimization for network files. Avoid having to deal with WinRT quirks.
-            return CreateMedia(player, new Uri(storageFile.Path, UriKind.Absolute), options);
+            return CreateMedia(player, uri, options);
         }
 
         string token = _useFal
@@ -153,7 +166,7 @@ public sealed class PlayerService : IPlayerService
         LibVLC libVlc = new(false, options.ToArray());
 #endif
         LogService.RegisterLibVlcLogging(libVlc);
-        _notificationService.SetVlcDialogHandlers(libVlc);
+        _vlcDialogService.SetVlcDialogHandlers(libVlc);
         return libVlc;
     }
 }

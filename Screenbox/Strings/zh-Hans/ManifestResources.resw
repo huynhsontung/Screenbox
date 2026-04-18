@@ -238,6 +238,10 @@
     <value>Ogg 视频</value>
     <comment>Display name for the file type ".ogv"</comment>
   </data>
+  <data name="FileDisplayNameOggMedia" xml:space="preserve">
+    <value>RealMedia 文件</value>
+    <comment>Display name for the file type ".ogm"</comment>
+  </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
     <value>QuickTime 影片</value>
     <comment>Display name for the file type ".mov" and ".qt"</comment>

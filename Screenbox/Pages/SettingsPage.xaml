@@ -30,8 +30,6 @@
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
         <x:Double x:Key="SettingsCardButtonMinWidth">120</x:Double>
 
-        <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-
         <!--  Section header text style  -->
         <Style
             x:Key="SettingsSectionHeaderTextBlockStyle"
@@ -304,8 +302,8 @@
                         ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:Language">
-                                <TextBlock FlowDirection="{x:Bind converters:LanguageLayoutDirectionToFlowDirectionConverter.ToFlowDirection(LayoutDirection)}" Text="{x:Bind NativeName}" />
+                            <DataTemplate x:DataType="models:LanguageInfo">
+                                <TextBlock Text="{x:Bind NativeName}" TextAlignment="DetectFromContent" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
@@ -427,7 +425,7 @@
                     Header="{strings:Resources Key=SettingsAudioVisualHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource MusicVisualizerGlyph}}">
-                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind converters:DefaultStringConverter.GetValueOrDefault(AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title), Mode=OneWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
                             <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" />
@@ -664,11 +662,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
-                            <triggers:IsEqualStateTrigger.To>
-                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
-                            </triggers:IsEqualStateTrigger.To>
-                        </triggers:IsEqualStateTrigger>
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />

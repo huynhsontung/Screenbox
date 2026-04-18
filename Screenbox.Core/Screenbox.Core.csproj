@@ -130,9 +130,7 @@
     <Compile Include="Contexts\CastContext.cs" />
     <Compile Include="Contexts\LibraryContext.cs" />
     <Compile Include="Contexts\PlaylistsContext.cs" />
-    <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
-    <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
@@ -140,8 +138,6 @@
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />
     <Compile Include="Events\FolderViewNavigationEventArgs.cs" />
-    <Compile Include="Events\NotificationRaisedEventArgs.cs" />
-    <Compile Include="Events\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Events\RendererEventArgs.cs" />
     <Compile Include="Events\ValueChangedEventArgs.cs" />
     <Compile Include="Events\ViewModeChangedEventArgs.cs" />
@@ -155,15 +151,14 @@
     <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Controllers\LastPositionTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
-    <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\RendererWatcher.cs" />
     <Compile Include="Helpers\StreamAbstraction.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
-    <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
+    <Compile Include="Messages\ChangePlaybackRateRequestMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
     <Compile Include="Messages\ClearPlaylistMessage.cs" />
@@ -171,12 +166,21 @@
     <Compile Include="Messages\CriticalErrorMessage.cs" />
     <Compile Include="Messages\DragDropMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\FailedToAddFolderNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToInitializeNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToLoadSubtitleNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToOpenFilesNotificationMessage.cs" />
+    <Compile Include="Messages\FailedToSaveFrameNotificationMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
     <Compile Include="Messages\PlayFilesMessage.cs" />
+    <Compile Include="Messages\PlaylistCreatedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />
+    <Compile Include="Messages\PlaylistDeletedNotificationMessage.cs" />
+    <Compile Include="Messages\PlaylistItemsAddedNotificationMessage.cs" />
+    <Compile Include="Messages\PlaylistRenamedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
     <Compile Include="Messages\QueuePlaylistMessage.cs" />
@@ -194,17 +198,14 @@
     <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
+    <Compile Include="Messages\VisualizerChangedMessage.cs" />
     <Compile Include="Models\IMediaProperties.cs" />
-    <Compile Include="Models\Language.cs" />
-    <Compile Include="Models\LivelyInfoModel.cs" />
-    <Compile Include="Models\LivelyMusicModel.cs" />
-    <Compile Include="Models\LivelyPlaybackStateModel.cs" />
-    <Compile Include="Models\LivelyWallpaperModel.cs" />
+    <Compile Include="Models\LanguageInfo.cs" />
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibrary.cs" />
-	  <Compile Include="Models\PersistentPlaylist.cs" />
+    <Compile Include="Models\PersistentPlaylist.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
@@ -237,25 +238,21 @@
     <Compile Include="Services\ICastService.cs" />
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
-    <Compile Include="Services\ILivelyWallpaperService.cs" />
     <Compile Include="Factories\IMediaListFactory.cs" />
     <Compile Include="Services\INavigationService.cs" />
-    <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
     <Compile Include="Services\IPlayerService.cs" />
+    <Compile Include="Services\IVlcDialogService.cs" />
     <Compile Include="Services\IPlaylistService.cs" />
-    <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\IWindowService.cs" />
     <Compile Include="Controllers\LibraryController.cs" />
     <Compile Include="Services\LibraryService.cs" />
-    <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Factories\MediaListFactory.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaybackControlService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
@@ -280,14 +277,11 @@
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
-    <Compile Include="ViewModels\LivelyWallpaperPlayerViewModel.cs" />
-    <Compile Include="ViewModels\LivelyWallpaperSelectorViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MediaListViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\MusicPageViewModel.cs" />
     <Compile Include="ViewModels\NetworkPageViewModel.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
@@ -296,7 +290,6 @@
     <Compile Include="ViewModels\PlayQueueViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsPageViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
-    <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
@@ -310,7 +303,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
@@ -319,28 +312,25 @@
       <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <Version>9.0.9</Version>
+      <Version>10.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Diagnostics">
-      <Version>8.4.0</Version>
+      <Version>8.4.2</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.4.0</Version>
+      <Version>8.4.2</Version>
     </PackageReference>
     <PackageReference Include="LibVLCSharp">
       <Version>3.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.7</Version>
     </PackageReference>
     <PackageReference Include="protobuf-net">
       <Version>3.2.30</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>5.15.1</Version>
+      <Version>5.16.3</Version>
     </PackageReference>
     <PackageReference Include="TagLibSharp">
       <Version>2.3.0</Version>

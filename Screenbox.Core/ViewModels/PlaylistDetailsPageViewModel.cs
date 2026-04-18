@@ -91,7 +91,16 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     {
         if (Source == null) return false;
 
+        string playlistName = Source.Name;
         await _playlistService.DeletePlaylistAsync(Source.Id);
+        Messenger.Send(new PlaylistDeletedNotificationMessage(playlistName));
         return true;
+    }
+
+    public async Task RenamePlaylistAsync(string newDisplayName)
+    {
+        if (Source == null) return;
+        await Source.RenameAsync(newDisplayName);
+        Messenger.Send(new PlaylistRenamedNotificationMessage(newDisplayName));
     }
 }

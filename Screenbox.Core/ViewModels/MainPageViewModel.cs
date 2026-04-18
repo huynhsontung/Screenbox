@@ -225,8 +225,11 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     private static double GetRanking(string text, string query)
     {
+        if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(query))
+            return -1;
+
         int index = text.IndexOf(query, StringComparison.CurrentCultureIgnoreCase);
-        if (query.Contains(' '))
+        if (query.Contains(' ') || index < 0)
         {
             return index;
         }

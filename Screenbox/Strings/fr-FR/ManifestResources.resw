@@ -175,7 +175,7 @@
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
-    <value>Film Flash Shockwave</value>
+    <value>Fichier Flash Shockwave</value>
     <comment>Display name for the file type ".swf" (Small Web Format)</comment>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
@@ -237,6 +237,10 @@
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
     <value>Vidéo Ogg</value>
     <comment>Display name for the file type ".ogv"</comment>
+  </data>
+  <data name="FileDisplayNameOggMedia" xml:space="preserve">
+    <value>Fichier Ogg</value>
+    <comment>Display name for the file type ".ogm"</comment>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
     <value>Vidéo QuickTime</value>

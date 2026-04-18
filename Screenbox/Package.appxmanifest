@@ -373,6 +373,16 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="ogm">
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameOggMedia</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\Icons\VideoFileAssociation.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="video/x-ogm">.ogm</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="quicktime">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameQuickTime</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>

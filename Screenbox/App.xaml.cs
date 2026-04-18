@@ -12,13 +12,13 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
-using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
+using Screenbox.Lively;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
@@ -103,20 +103,14 @@ sealed partial class App : Application
     {
         ServiceCollection services = new();
         ServiceHelpers.PopulateCoreServices(services);
+        services.AddLivelyWallpaperServices();
 
         // View models
-        services.AddTransient<LivelyWallpaperSelectorViewModel>(provider =>
-            new LivelyWallpaperSelectorViewModel(
-                provider.GetRequiredService<ILivelyWallpaperService>(),
-                provider.GetRequiredService<IFilesService>(),
-                provider.GetRequiredService<ISettingsService>(),
-                Strings.Resources.Default, "ms-appx:///Assets/DefaultAudioVisual.png"));
-
-        // Factories
-        services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
+        services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
+        services.AddTransient<Screenbox.ViewModels.PropertyViewModel>();
 
         // Services
-        services.AddSingleton<IResourceService, ResourceService>();
+        services.AddSingleton<IVlcDialogService, VlcDialogService>();
         services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
             new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
             new KeyValuePair<Type, Type>(typeof(PlaylistsPageViewModel), typeof(PlaylistsPage)),
@@ -290,18 +284,8 @@ sealed partial class App : Application
 
             var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
             rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
-
-            // Register a handler for when the theme mode changes
-            rootFrame.ActualThemeChanged += OnActualThemeChanged;
-
-            TitleBarHelper.SetCaptionButtonColors(rootFrame);
         }
 
         return rootFrame;
-    }
-
-    private void OnActualThemeChanged(FrameworkElement sender, object args)
-    {
-        TitleBarHelper.SetCaptionButtonColors(sender);
     }
 }

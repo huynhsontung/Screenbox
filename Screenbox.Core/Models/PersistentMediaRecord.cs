@@ -16,7 +16,8 @@ public class PersistentMediaRecord
     [ProtoMember(2)]
     public string Path { get; set; }
 
-    [JsonIgnore]
+    // System.Text.Json in .NET Native does not support polymorphic type hierarchy serialization/deserialization
+    [JsonIgnore]    // TODO: Remove this when we migrate to .NET AOT
     [ProtoMember(3)]
     public IMediaProperties? Properties { get; set; }
 
@@ -45,6 +46,7 @@ public class PersistentMediaRecord
         Title = title;
         Path = path;
         DateAdded = dateAdded.UtcDateTime;
+        Properties = properties;
         Duration = properties.Duration;
         Year = properties.Year;
         MediaType = properties switch

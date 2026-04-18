@@ -13,6 +13,8 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
+using Windows.System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -31,31 +33,36 @@ public sealed partial class CommonViewModel : ObservableRecipient,
     [ObservableProperty] private Thickness _scrollBarMargin;
     [ObservableProperty] private Thickness _footerBottomPaddingMargin;
     [ObservableProperty] private double _footerBottomPaddingHeight;
+    [ObservableProperty] private bool _animationsEnabled;
 
+    private readonly DispatcherQueue _dispatcherQueue;
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
     private readonly Dictionary<string, object> _pageStates;
+    private readonly UISettings _uiSettings;
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        IResourceService resourceService,
         ISettingsService settingsService,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _resourceService = resourceService;
         _settingsService = settingsService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
+
+        _uiSettings = new UISettings();
+        _uiSettings.AnimationsEnabledChanged += UISettings_OnAnimationsEnabledChanged;
+        _animationsEnabled = _uiSettings.AnimationsEnabled;
 
         // Activate the view model's messenger
         IsActive = true;
@@ -100,6 +107,14 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         return _pageStates.TryGetValue(pageTypeName + backStackDepth, out state);
     }
 
+    private void UISettings_OnAnimationsEnabledChanged(UISettings sender, UISettingsAnimationsEnabledChangedEventArgs args)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            AnimationsEnabled = sender.AnimationsEnabled;
+        });
+    }
+
     [RelayCommand]
     private void PlayNext(MediaViewModel media)
     {
@@ -136,6 +151,10 @@ public sealed partial class CommonViewModel : ObservableRecipient,
             new NavigationMetadata(typeof(PlaylistsPageViewModel), playlist));
     }
 
+    /// <summary>
+    /// Opens a file picker for the user to select one or more media files to play.
+    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
+    /// </summary>
     [RelayCommand]
     private async Task OpenFilesAsync()
     {
@@ -147,8 +166,8 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
         }
     }
+
 }

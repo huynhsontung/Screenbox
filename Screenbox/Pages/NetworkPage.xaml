@@ -2,6 +2,7 @@
     x:Class="Screenbox.Pages.NetworkPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -45,54 +46,31 @@
             Navigated="FolderViewFrame_OnNavigated" />
 
         <!--  Network-Drive-is-empty content  -->
-        <Grid
-            x:Name="NoNetworkDrivePanel"
+        <ScrollViewer
+            x:Name="NoNetworkDriveViewer"
             Grid.Row="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPagePadding}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            ColumnSpacing="32"
+            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollMode="Disabled"
+            VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.ChildrenTransitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition />
-                </TransitionCollection>
-            </Grid.ChildrenTransitions>
-
-            <FontIcon
-                x:Name="NoNetworkDrivePanelIcon"
-                Grid.Column="0"
-                FontSize="{StaticResource NoContentPanelIconFontSize}"
-                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xE8CD;" />
-
-            <StackPanel
-                Grid.Column="1"
-                MaxWidth="420"
-                VerticalAlignment="Center"
-                Orientation="Vertical">
-                <TextBlock
-                    Margin="0,0,0,4"
-                    Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{strings:Resources Key=NoNetworkDrivePanelHeader}" />
-
-                <TextBlock
-                    Margin="0,0,0,8"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{strings:Resources Key=NoNetworkDrivePanelSubtext}"
-                    TextWrapping="Wrap" />
-
-                <HyperlinkButton
-                    Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                    Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}"
-                    NavigateUri="ms-settings:connecteddevices" />
-            </StackPanel>
-        </Grid>
+            <controls:ContentUnavailableView
+                x:Name="NoNetworkDrivePanel"
+                Title="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}"
+                IsOpen="False"
+                Message="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}">
+                <controls:ContentUnavailableView.ActionContent>
+                    <HyperlinkButton Content="{x:Bind strings:Resources.OpenConnectedDevicesSettingsButtonText}" NavigateUri="ms-settings:connecteddevices" />
+                </controls:ContentUnavailableView.ActionContent>
+                <FontIcon
+                    x:Name="NoNetworkDrivePanelIcon"
+                    Margin="0,0,16,0"
+                    FontSize="{StaticResource NoContentPanelIconFontSize}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Glyph="&#xE8CD;" />
+            </controls:ContentUnavailableView>
+        </ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
@@ -100,17 +78,13 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
-                            <triggers:IsEqualStateTrigger.To>
-                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
-                            </triggers:IsEqualStateTrigger.To>
-                        </triggers:IsEqualStateTrigger>
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="NoNetworkDrivePanel.ColumnSpacing" Value="16" />
+                        <Setter Target="NoNetworkDriveViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoNetworkDrivePanelIcon.Margin" Value="0,0,0,0" />
                         <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
@@ -120,7 +94,8 @@
                 <VisualState x:Name="NoNetworkDrive">
                     <VisualState.Setters>
                         <Setter Target="FolderViewFrame.Visibility" Value="Collapsed" />
-                        <Setter Target="NoNetworkDrivePanel.Visibility" Value="Visible" />
+                        <Setter Target="NoNetworkDriveViewer.Visibility" Value="Visible" />
+                        <Setter Target="NoNetworkDrivePanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="FolderView" />

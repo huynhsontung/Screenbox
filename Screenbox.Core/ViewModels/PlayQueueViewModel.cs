@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -42,14 +41,12 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     private bool _hasItems;
 
     private readonly IFilesService _filesService;
-    private readonly IResourceService _resourceService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
+    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService)
     {
         Playlist = playlist;
         _filesService = filesService;
-        _resourceService = resourceService;
         SelectionCheckState = GetSelectionCheckState(_selectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -210,6 +207,10 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         SelectionCount = 0;
     }
 
+    /// <summary>
+    /// Opens a file picker for the user to select files to add to the play queue.
+    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
+    /// </summary>
     [RelayCommand]
     private async Task AddFilesAsync()
     {
@@ -221,8 +222,8 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(
-                _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
         }
     }
+
 }
