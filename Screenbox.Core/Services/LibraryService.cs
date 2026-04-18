@@ -251,6 +251,18 @@ public sealed class LibraryService : ILibraryService
         if (context.StorageMusicLibrary == null || context.MusicLibraryQueryResult == null) return;
         context.IsLoadingMusic = true;
         var existingLibrary = context.MusicLibrary;
+        var progressLibrary = new MusicLibrary(
+            new List<MediaViewModel>(),
+            existingLibrary.Albums,
+            existingLibrary.Artists,
+            existingLibrary.UnknownAlbum,
+            existingLibrary.UnknownArtist);
+        context.MusicLibrary = progressLibrary;
+        IProgress<List<MediaViewModel>> progressReporter = new Progress<List<MediaViewModel>>(songsProgress =>
+        {
+            UpdateProgressList(progressLibrary.Songs, songsProgress);
+            progress.Report(songsProgress);
+        });
         StorageFileQueryResult libraryQuery = context.MusicLibraryQueryResult;
         StorageLibraryChangeTracker? libraryChangeTracker = null;
         StorageLibraryChangeReader? changeReader = null;
@@ -302,18 +314,13 @@ public sealed class LibraryService : ILibraryService
                 songs = new List<MediaViewModel>();
                 foreach (var query in queries)
                 {
-                    await BatchFetchMediaAsync(query, songs, progress, cancellationToken);
+                    await BatchFetchMediaAsync(query, songs, progressReporter, cancellationToken);
                 }
             }
 
-            // After async operation we need to check the context still have the same reference
-            if (existingLibrary == context.MusicLibrary)
+            foreach (var song in existingLibrary.Songs)
             {
-                // Ensure only songs not in the library has IsFromLibrary = false
-                foreach (var song in existingLibrary.Songs)
-                {
-                    song.IsFromLibrary = false;
-                }
+                song.IsFromLibrary = false;
             }
 
             songs.ForEach(song => song.IsFromLibrary = true);
@@ -322,6 +329,7 @@ public sealed class LibraryService : ILibraryService
             // Populate Album and Artists for each song
             var albumFactory = new AlbumViewModelFactory();
             var artistFactory = new ArtistViewModelFactory();
+            var lastProgressReport = DateTimeOffset.Now;
             foreach (MediaViewModel song in songs)
             {
                 if (!song.IsFromLibrary) continue;
@@ -337,6 +345,12 @@ public sealed class LibraryService : ILibraryService
                     cancellationToken.ThrowIfCancellationRequested();
                     albumFactory.AddSong(song);
                     artistFactory.AddSong(song);
+                }
+
+                if ((DateTimeOffset.Now - lastProgressReport).TotalSeconds > 3)
+                {
+                    progressReporter.Report([.. songs]);
+                    lastProgressReport = DateTimeOffset.Now;
                 }
             }
 
@@ -382,6 +396,13 @@ public sealed class LibraryService : ILibraryService
     {
         if (context.StorageVideosLibrary == null || context.VideosLibraryQueryResult == null) return;
         var existingLibrary = context.VideosLibrary;
+        var progressLibrary = new VideosLibrary(new List<MediaViewModel>());
+        context.VideosLibrary = progressLibrary;
+        IProgress<List<MediaViewModel>> progressReporter = new Progress<List<MediaViewModel>>(videosProgress =>
+        {
+            UpdateProgressList(progressLibrary.Videos, videosProgress);
+            progress.Report(videosProgress);
+        });
         StorageFileQueryResult libraryQuery = context.VideosLibraryQueryResult;
         context.IsLoadingVideos = true;
         StorageLibraryChangeTracker? libraryChangeTracker = null;
@@ -435,7 +456,7 @@ public sealed class LibraryService : ILibraryService
                 videos = new List<MediaViewModel>();
                 foreach (var query in queries)
                 {
-                    await BatchFetchMediaAsync(query, videos, progress, cancellationToken);
+                    await BatchFetchMediaAsync(query, videos, progressReporter, cancellationToken);
                 }
             }
 
@@ -487,6 +508,12 @@ public sealed class LibraryService : ILibraryService
                 lastProgressReport = DateTimeOffset.Now;
             }
         }
+    }
+
+    private static void UpdateProgressList(List<MediaViewModel> target, List<MediaViewModel> source)
+    {
+        target.Clear();
+        target.AddRange(source);
     }
 
     /// <summary>
