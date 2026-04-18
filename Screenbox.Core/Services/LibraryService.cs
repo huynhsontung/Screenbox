@@ -258,7 +258,7 @@ public sealed class LibraryService : ILibraryService
             existingLibrary.UnknownAlbum,
             existingLibrary.UnknownArtist);
         context.MusicLibrary = progressLibrary;
-        var progressReporter = new Progress<List<MediaViewModel>>(songsProgress =>
+        IProgress<List<MediaViewModel>> progressReporter = new Progress<List<MediaViewModel>>(songsProgress =>
         {
             UpdateProgressList(progressLibrary.Songs, songsProgress);
             progress.Report(songsProgress);
@@ -398,7 +398,7 @@ public sealed class LibraryService : ILibraryService
         var existingLibrary = context.VideosLibrary;
         var progressLibrary = new VideosLibrary(new List<MediaViewModel>());
         context.VideosLibrary = progressLibrary;
-        var progressReporter = new Progress<List<MediaViewModel>>(videosProgress =>
+        IProgress<List<MediaViewModel>> progressReporter = new Progress<List<MediaViewModel>>(videosProgress =>
         {
             UpdateProgressList(progressLibrary.Videos, videosProgress);
             progress.Report(videosProgress);
