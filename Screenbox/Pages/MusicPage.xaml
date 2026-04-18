@@ -103,7 +103,7 @@
                     HorizontalScrollMode="Disabled"
                     VerticalScrollBarVisibility="Auto"
                     Visibility="Collapsed">
-                    <controls:NoticeBar
+                    <controls:ContentUnavailableView
                         x:Name="NoMusicPanel"
                         Title="{x:Bind strings:Resources.NoMusicPanelHeader}"
                         IsOpen="False"
@@ -115,7 +115,7 @@
                             FontSize="{StaticResource NoContentPanelIconFontSize}"
                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                             Glyph="{StaticResource AudioOffGlyph}" />
-                        <controls:NoticeBar.ActionContent>
+                        <controls:ContentUnavailableView.ActionContent>
                             <Button
                                 AccessKey="{x:Bind strings:KeyboardResources.CommandAddFolderKey}"
                                 AutomationProperties.Name="{x:Bind strings:Resources.AddFolder}"
@@ -132,8 +132,8 @@
                                     <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
                                 </StackPanel>
                             </Button>
-                        </controls:NoticeBar.ActionContent>
-                    </controls:NoticeBar>
+                        </controls:ContentUnavailableView.ActionContent>
+                    </controls:ContentUnavailableView>
                 </ScrollViewer>
             </Grid>
         </muxc:NavigationView>

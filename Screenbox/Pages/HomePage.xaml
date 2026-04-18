@@ -216,7 +216,7 @@
             HorizontalScrollMode="Disabled"
             VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
-            <controls:NoticeBar
+            <controls:ContentUnavailableView
                 x:Name="WelcomePanel"
                 Title="{x:Bind strings:Resources.WelcomePanelHeader}"
                 IsOpen="False"
@@ -227,7 +227,7 @@
                     FontFamily="Segoe UI Emoji"
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Glyph="&#x1F44B;" />
-                <controls:NoticeBar.ActionContent>
+                <controls:ContentUnavailableView.ActionContent>
                     <muxc:SplitButton
                         extensions:SplitButtonExtensions.PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
                         extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
@@ -250,8 +250,8 @@
                             <behaviors:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
                     </muxc:SplitButton>
-                </controls:NoticeBar.ActionContent>
-            </controls:NoticeBar>
+                </controls:ContentUnavailableView.ActionContent>
+            </controls:ContentUnavailableView>
         </ScrollViewer>
 
         <interactivity:Interaction.Behaviors>

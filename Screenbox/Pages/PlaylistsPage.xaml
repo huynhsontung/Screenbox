@@ -143,7 +143,7 @@
             HorizontalScrollMode="Disabled"
             VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
-            <controls:NoticeBar
+            <controls:ContentUnavailableView
                 x:Name="NoPlaylistsPanel"
                 Title="{x:Bind strings:Resources.NoPlaylistsPanelHeader}"
                 IsOpen="False"
@@ -155,7 +155,7 @@
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Glyph="{StaticResource PlaylistOffGlyph}" />
-                <controls:NoticeBar.ActionContent>
+                <controls:ContentUnavailableView.ActionContent>
                     <Button
                         AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
@@ -167,8 +167,8 @@
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
                         </StackPanel>
                     </Button>
-                </controls:NoticeBar.ActionContent>
-            </controls:NoticeBar>
+                </controls:ContentUnavailableView.ActionContent>
+            </controls:ContentUnavailableView>
         </ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>

@@ -3,22 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls">
 
-    <x:Double x:Key="NoticeBarMaxWidth">688</x:Double>
+    <x:Double x:Key="ContentUnavailableViewMaxWidth">688</x:Double>
 
-    <Thickness x:Key="NoticeBarContentMargin">0,0,16,0</Thickness>
-    <Thickness x:Key="NoticeBarTitleMargin">0,0,0,8</Thickness>
-    <Thickness x:Key="NoticeBarMessageMargin">0,0,0,12</Thickness>
+    <Thickness x:Key="ContentUnavailableViewContentMargin">0,0,16,0</Thickness>
+    <Thickness x:Key="ContentUnavailableViewTitleMargin">0,0,0,8</Thickness>
+    <Thickness x:Key="ContentUnavailableViewMessageMargin">0,0,0,12</Thickness>
 
-    <Style BasedOn="{StaticResource DefaultNoticeBarStyle}" TargetType="controls:NoticeBar" />
+    <Style BasedOn="{StaticResource DefaultContentUnavailableViewStyle}" TargetType="controls:ContentUnavailableView" />
 
-    <Style x:Key="DefaultNoticeBarStyle" TargetType="controls:NoticeBar">
+    <Style x:Key="DefaultContentUnavailableViewStyle" TargetType="controls:ContentUnavailableView">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="MaxWidth" Value="{ThemeResource NoticeBarMaxWidth}" />
+        <Setter Property="MaxWidth" Value="{ThemeResource ContentUnavailableViewMaxWidth}" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controls:NoticeBar">
+                <ControlTemplate TargetType="controls:ContentUnavailableView">
                     <Grid
                         x:Name="RootGrid"
                         Padding="{TemplateBinding Padding}"
@@ -42,7 +42,7 @@
                         <ContentPresenter
                             x:Name="ContentPresenter"
                             Grid.Column="0"
-                            Margin="{StaticResource NoticeBarContentMargin}"
+                            Margin="{StaticResource ContentUnavailableViewContentMargin}"
                             x:DeferLoadStrategy="Lazy"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -58,7 +58,7 @@
                             <TextBlock
                                 x:Name="TitleTextBlock"
                                 Grid.Row="0"
-                                Margin="{ThemeResource NoticeBarTitleMargin}"
+                                Margin="{ThemeResource ContentUnavailableViewTitleMargin}"
                                 Style="{StaticResource TitleTextBlockStyle}"
                                 Text="{TemplateBinding Title}"
                                 Visibility="Collapsed" />
@@ -66,7 +66,7 @@
                             <TextBlock
                                 x:Name="MessageTextBlock"
                                 Grid.Row="1"
-                                Margin="{ThemeResource NoticeBarMessageMargin}"
+                                Margin="{ThemeResource ContentUnavailableViewMessageMargin}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Style="{StaticResource BodyTextBlockStyle}"
                                 Text="{TemplateBinding Message}"
@@ -90,9 +90,9 @@
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="VisibilityGroup">
-                                <VisualState x:Name="NoticeBarVisible" />
+                                <VisualState x:Name="ContentUnavailableViewVisible" />
 
-                                <VisualState x:Name="NoticeBarCollapsed">
+                                <VisualState x:Name="ContentUnavailableViewCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="RootGrid.Visibility" Value="Collapsed" />
                                     </VisualState.Setters>

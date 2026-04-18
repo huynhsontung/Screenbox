@@ -185,9 +185,9 @@
     </Compile>
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
-    <Compile Include="Controls\NoticeBar\NoticeBar.cs" />
-    <Compile Include="Controls\NoticeBar\NoticeBar.Properties.cs" />
-    <Compile Include="Controls\NoticeBar\NoticeBarAutomationPeer.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableViewAutomationPeer.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -582,7 +582,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\NoticeBar\NoticeBar.xaml">
+    <Page Include="Controls\ContentUnavailableView\ContentUnavailableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

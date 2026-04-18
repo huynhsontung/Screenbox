@@ -55,21 +55,21 @@
             HorizontalScrollMode="Disabled"
             VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
-            <controls:NoticeBar
+            <controls:ContentUnavailableView
                 x:Name="NoNetworkDrivePanel"
                 Title="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}"
                 IsOpen="False"
                 Message="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}">
-                <controls:NoticeBar.ActionContent>
+                <controls:ContentUnavailableView.ActionContent>
                     <HyperlinkButton Content="{x:Bind strings:Resources.OpenConnectedDevicesSettingsButtonText}" NavigateUri="ms-settings:connecteddevices" />
-                </controls:NoticeBar.ActionContent>
+                </controls:ContentUnavailableView.ActionContent>
                 <FontIcon
                     x:Name="NoNetworkDrivePanelIcon"
                     Margin="0,0,16,0"
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Glyph="&#xE8CD;" />
-            </controls:NoticeBar>
+            </controls:ContentUnavailableView>
         </ScrollViewer>
 
         <VisualStateManager.VisualStateGroups>

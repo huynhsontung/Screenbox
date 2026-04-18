@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿#nullable enable
+
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
@@ -15,22 +17,22 @@ namespace Screenbox.Controls;
 /// </remarks>
 /// <example>
 /// <code language="xml"><![CDATA[
-/// <local:NoticeBar Title="This folder is empty"
+/// <local:ContentUnavailableView Title="This folder is empty"
 ///                  Message="There are no images to display. Add files to it to get started."
 ///                  IsOpen="True">
-///     <local:NoticeBar.Content>
+///     <local:ContentUnavailableView.Content>
 ///         <FontIcon Glyph="&#xE8B9;" />
-///     </local:NoticeBar.Content>
-///     <local:NoticeBar.ActionContent>
+///     </local:ContentUnavailableView.Content>
+///     <local:ContentUnavailableView.ActionContent>
 ///         <Button Content="Add folder" Click="AddImagesButton_Click" />
-///     </local:NoticeBar.ActionContent>
-/// </local:NoticeBar>
+///     </local:ContentUnavailableView.ActionContent>
+/// </local:ContentUnavailableView>
 /// ]]></code>
 /// </example>
-public sealed partial class NoticeBar : ContentControl
+public sealed partial class ContentUnavailableView : ContentControl
 {
-    private const string NoticeBarCollapsedStateName = "NoticeBarCollapsed";
-    private const string NoticeBarVisibleStateName = "NoticeBarVisible";
+    private const string ContentUnavailableViewCollapsedStateName = "ContentUnavailableViewCollapsed";
+    private const string ContentUnavailableViewVisibleStateName = "ContentUnavailableViewVisible";
     private const string ContentCollapsedStateName = "ContentCollapsed";
     private const string ContentVisibleStateName = "ContentVisible";
     private const string TitleTextBlockCollapsedStateName = "TitleTextBlockCollapsed";
@@ -41,16 +43,16 @@ public sealed partial class NoticeBar : ContentControl
     private const string ActionContentVisibleStateName = "ActionContentVisible";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NoticeBar"/> class.
+    /// Initializes a new instance of the <see cref="ContentUnavailableView"/> class.
     /// </summary>
-    public NoticeBar()
+    public ContentUnavailableView()
     {
-        this.DefaultStyleKey = typeof(NoticeBar);
+        this.DefaultStyleKey = typeof(ContentUnavailableView);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer()
     {
-        return new NoticeBarAutomationPeer(this);
+        return new ContentUnavailableViewAutomationPeer(this);
     }
 
     protected override void OnApplyTemplate()
@@ -106,7 +108,7 @@ public sealed partial class NoticeBar : ContentControl
     {
         if (IsOpen)
         {
-            if (FrameworkElementAutomationPeer.FromElement(this) is NoticeBarAutomationPeer peer)
+            if (FrameworkElementAutomationPeer.FromElement(this) is ContentUnavailableViewAutomationPeer peer)
             {
                 string notificationString;
                 if (!string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message))
@@ -125,12 +127,12 @@ public sealed partial class NoticeBar : ContentControl
                 peer.RaiseIsOpen(notificationString);
             }
 
-            VisualStateManager.GoToState(this, NoticeBarVisibleStateName, false);
+            VisualStateManager.GoToState(this, ContentUnavailableViewVisibleStateName, false);
             AutomationProperties.SetAccessibilityView(this, AccessibilityView.Control);
         }
         else
         {
-            VisualStateManager.GoToState(this, NoticeBarCollapsedStateName, false);
+            VisualStateManager.GoToState(this, ContentUnavailableViewCollapsedStateName, false);
             AutomationProperties.SetAccessibilityView(this, AccessibilityView.Raw);
         }
     }

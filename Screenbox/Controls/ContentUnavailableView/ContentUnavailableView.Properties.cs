@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 
 namespace Screenbox.Controls;
 
-public sealed partial class NoticeBar
+public sealed partial class ContentUnavailableView
 {
     /// <summary>
     /// Identifies the <see cref="IsOpen"/> dependency property.
@@ -12,14 +12,14 @@ public sealed partial class NoticeBar
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
         nameof(IsOpen),
         typeof(bool),
-        typeof(NoticeBar),
+        typeof(ContentUnavailableView),
         new PropertyMetadata(false, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets a value that indicates whether the <see cref="NoticeBar"/>
+    /// Gets or sets a value that indicates whether the <see cref="ContentUnavailableView"/>
     /// is open.
     /// </summary>
-    /// <value><see langword="true"/> if the <see cref="NoticeBar"/> is open;
+    /// <value><see langword="true"/> if the <see cref="ContentUnavailableView"/> is open;
     /// otherwise, <see langword="false"/>. The default is <see langword="false"/>.</value>
     public bool IsOpen
     {
@@ -33,13 +33,13 @@ public sealed partial class NoticeBar
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title),
         typeof(string),
-        typeof(NoticeBar),
+        typeof(ContentUnavailableView),
         new PropertyMetadata(default(string), OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the title of the <see cref="NoticeBar"/>.
+    /// Gets or sets the title of the <see cref="ContentUnavailableView"/>.
     /// </summary>
-    /// <value>The title of the <see cref="NoticeBar"/>. The default
+    /// <value>The title of the <see cref="ContentUnavailableView"/>. The default
     /// is an empty <see langword="string"/>.</value>
     public string? Title
     {
@@ -53,13 +53,13 @@ public sealed partial class NoticeBar
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
-        typeof(NoticeBar),
+        typeof(ContentUnavailableView),
         new PropertyMetadata(default(string), OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the message of the <see cref="NoticeBar"/>.
+    /// Gets or sets the message of the <see cref="ContentUnavailableView"/>.
     /// </summary>
-    /// <value>The message of the <see cref="NoticeBar"/>. The default
+    /// <value>The message of the <see cref="ContentUnavailableView"/>. The default
     /// is an empty <see langword="string"/>.</value>
     public string? Message
     {
@@ -73,13 +73,13 @@ public sealed partial class NoticeBar
     public static readonly DependencyProperty ActionContentProperty = DependencyProperty.Register(
         nameof(ActionContent),
         typeof(object),
-        typeof(NoticeBar),
+        typeof(ContentUnavailableView),
         new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the action content of the <see cref="NoticeBar"/>.
+    /// Gets or sets the action content of the <see cref="ContentUnavailableView"/>.
     /// </summary>
-    /// <value>The action content of the <see cref="NoticeBar"/>.
+    /// <value>The action content of the <see cref="ContentUnavailableView"/>.
     /// The default is <see langword="null"/>.</value>
     public object ActionContent
     {
@@ -89,7 +89,7 @@ public sealed partial class NoticeBar
 
     private static void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
-        var noticeBar = (NoticeBar)sender;
+        var noticeBar = (ContentUnavailableView)sender;
         noticeBar.OnPropertyChanged(args);
     }
 }
