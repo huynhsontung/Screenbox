@@ -156,15 +156,14 @@
         </GridView>
 
         <!--  Empty content  -->
-        <TextBlock
-            x:Name="NoContentText"
+        <controls:ContentUnavailableView
+            x:Name="NoContentPanel"
             Grid.Row="2"
             Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource ContentPagePadding}"
-            HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Text="{strings:Resources Key=EmptyFolder}"
-            Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+            IsOpen="{x:Bind ViewModel.IsEmpty, Mode=OneWay}"
+            Message="{x:Bind strings:Resources.EmptyFolder}" />
 
         <interactivity:Interaction.Behaviors>
             <behaviors:GamepadXYNavigationBehavior />
@@ -182,7 +181,7 @@
                         <Setter Target="TitleText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
-                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoContentPanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

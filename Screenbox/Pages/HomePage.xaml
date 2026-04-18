@@ -165,80 +165,10 @@
             </muxc:SplitButton>
         </Grid>
 
-        <!--  Recent-is-empty content  -->
-        <Grid
-            x:Name="WelcomePanel"
-            Grid.Row="1"
-            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource ContentPagePadding}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            ColumnSpacing="16"
-            Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.ChildrenTransitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition />
-                </TransitionCollection>
-            </Grid.ChildrenTransitions>
-
-            <TextBlock
-                x:Name="WelcomePanelIcon"
-                Grid.Column="0"
-                Margin="0,-16,0,0"
-                FontSize="{StaticResource NoContentPanelIconFontSize}"
-                Text="👋" />
-
-            <StackPanel
-                Grid.Column="1"
-                MaxWidth="420"
-                VerticalAlignment="Center"
-                Orientation="Vertical">
-                <TextBlock
-                    Margin="0,0,0,4"
-                    Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{strings:Resources Key=WelcomePanelHeader}" />
-
-                <TextBlock
-                    Margin="{StaticResource BottomMediumMargin}"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{strings:Resources Key=WelcomePanelSubtext}"
-                    TextWrapping="Wrap" />
-
-                <muxc:SplitButton
-                    x:Name="WelcomePanelOpenButton"
-                    extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=OpenFilesToolTip}"
-                    extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                    extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=OpenFilesSecondaryToolTip}"
-                    AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                    AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
-                    AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
-                    Command="{x:Bind Common.OpenFilesCommand}"
-                    Flyout="{StaticResource OpenFlyout}"
-                    Style="{StaticResource AccentSplitButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon
-                            Margin="{StaticResource IconButtonStandardIconMargin}"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource FolderOpenGlyph}" />
-                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=OpenFiles}" />
-                    </StackPanel>
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:SplitButtonXYNavigationBehavior />
-                        <behaviors:AutoFocusBehavior />
-                    </interactivity:Interaction.Behaviors>
-                </muxc:SplitButton>
-            </StackPanel>
-        </Grid>
-
         <Grid
             x:Name="RecentFilesPanel"
             Grid.Row="1"
-            HorizontalAlignment="Stretch"
-            Visibility="Collapsed">
+            HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -276,6 +206,54 @@
             </GridView>
         </Grid>
 
+        <!--  Empty recent list  -->
+        <ScrollViewer
+            x:Name="WelcomeViewer"
+            Grid.Row="1"
+            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+            Padding="{StaticResource ContentPagePadding}"
+            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollMode="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="Collapsed">
+            <controls:ContentUnavailableView
+                x:Name="WelcomePanel"
+                Title="{x:Bind strings:Resources.WelcomePanelHeader}"
+                IsOpen="False"
+                Message="{x:Bind strings:Resources.WelcomePanelSubtext}">
+                <FontIcon
+                    x:Name="WelcomePanelIcon"
+                    Margin="0,-16,-8,0"
+                    FontFamily="Segoe UI Emoji"
+                    FontSize="{StaticResource NoContentPanelIconFontSize}"
+                    Glyph="&#x1F44B;" />
+                <controls:ContentUnavailableView.ActionContent>
+                    <muxc:SplitButton
+                        extensions:SplitButtonExtensions.PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
+                        extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                        extensions:SplitButtonExtensions.SecondaryButtonToolTip="{x:Bind strings:Resources.OpenFilesSecondaryToolTip}"
+                        AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
+                        AutomationProperties.Name="{x:Bind strings:Resources.OpenFiles}"
+                        Command="{x:Bind Common.OpenFilesCommand}"
+                        Flyout="{StaticResource OpenFlyout}"
+                        Style="{StaticResource AccentSplitButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon
+                                Margin="{StaticResource IconButtonStandardIconMargin}"
+                                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                Glyph="{StaticResource FolderOpenGlyph}" />
+                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.OpenFiles}" />
+                        </StackPanel>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:SplitButtonXYNavigationBehavior />
+                            <behaviors:AutoFocusBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </muxc:SplitButton>
+                </controls:ContentUnavailableView.ActionContent>
+            </controls:ContentUnavailableView>
+        </ScrollViewer>
+
         <interactivity:Interaction.Behaviors>
             <behaviors:GamepadXYNavigationBehavior />
         </interactivity:Interaction.Behaviors>
@@ -291,29 +269,25 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
-                        <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
-                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                         <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="WelcomeViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="WelcomePanelIcon.Margin" Value="0,0,-16,0" />
+                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Welcome">
+                    <VisualState.StateTriggers>
+                        <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Recent, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderOpenButton.Visibility" Value="Collapsed" />
-                        <Setter Target="WelcomePanel.Visibility" Value="Visible" />
                         <Setter Target="RecentFilesPanel.Visibility" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="RecentMedia">
-                    <VisualState.Setters>
-                        <Setter Target="HeaderOpenButton.Visibility" Value="Visible" />
-                        <Setter Target="WelcomePanel.Visibility" Value="Collapsed" />
-                        <Setter Target="RecentFilesPanel.Visibility" Value="Visible" />
+                        <Setter Target="WelcomeViewer.Visibility" Value="Visible" />
+                        <Setter Target="WelcomePanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
