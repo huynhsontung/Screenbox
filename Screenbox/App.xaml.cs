@@ -17,6 +17,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Core.Services;
 using Screenbox.Helpers;
 using Screenbox.Pages;
 using Screenbox.Services;
@@ -65,6 +66,9 @@ sealed partial class App : Application
 
         IServiceProvider services = ConfigureServices();
         CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
+
+        // Initialise the database cache layer before navigation begins
+        _ = InitializeDatabaseAsync();
     }
 
     [SecurityCritical]
@@ -95,6 +99,20 @@ sealed partial class App : Application
                 SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
                 throw;
             }
+        }
+    }
+
+    private static async Task InitializeDatabaseAsync()
+    {
+        try
+        {
+            var database = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default
+                .GetRequiredService<IScreenboxDatabase>();
+            await database.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            LogService.Log(ex);
         }
     }
 

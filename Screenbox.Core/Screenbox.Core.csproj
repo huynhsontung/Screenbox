@@ -120,6 +120,10 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Data\LibraryFolderEntity.cs" />
+    <Compile Include="Data\MediaRecordEntity.cs" />
+    <Compile Include="Data\PlaybackProgressEntity.cs" />
+    <Compile Include="Data\ScreenboxDbContext.cs" />
     <Compile Include="Common\Humanizer.cs" />
     <Compile Include="Common\IContentFrame.cs" />
     <Compile Include="Common\IDialog.cs" />
@@ -150,7 +154,7 @@
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
-    <Compile Include="Controllers\LastPositionTracker.cs" />
+    <Compile Include="Controllers\PlaybackProgressTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
     <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
@@ -209,10 +213,8 @@
     <Compile Include="Models\LivelyPlaybackStateModel.cs" />
     <Compile Include="Models\LivelyWallpaperModel.cs" />
     <Compile Include="Models\MediaInfo.cs" />
-    <Compile Include="Models\MediaLastPosition.cs" />
+    <Compile Include="Models\MediaPlaybackProgress.cs" />
     <Compile Include="Models\MusicInfo.cs" />
-    <Compile Include="Models\PersistentPlaylist.cs" />
-    <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\NextMediaList.cs" />
@@ -220,6 +222,7 @@
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
     <Compile Include="Models\PersistentMediaRecord.cs" />
+    <Compile Include="Models\PersistentPlaylist.cs" />
     <Compile Include="Models\SearchSuggestionItem.cs" />
     <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
@@ -237,6 +240,8 @@
     <Compile Include="Playback\VideoTrack.cs" />
     <Compile Include="Playback\VlcMediaPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IScreenboxDatabase.cs" />
+    <Compile Include="Services\ScreenboxDatabase.cs" />
     <Compile Include="Services\CastService.cs" />
     <Compile Include="Contexts\PlayerContext.cs" />
     <Compile Include="Services\FilesService.cs" />
@@ -338,8 +343,11 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.7</Version>
     </PackageReference>
-    <PackageReference Include="protobuf-net">
-      <Version>3.2.30</Version>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
+      <Version>6.0.36</Version>
+    </PackageReference>
+    <PackageReference Include="SQLitePCLRaw.bundle_winsqlite3">
+      <Version>2.1.10</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
       <Version>5.16.3</Version>
