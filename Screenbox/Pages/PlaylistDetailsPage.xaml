@@ -210,6 +210,13 @@
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
 
                             <AppBarButton
+                                Command="{x:Bind ViewModel.ExportPlaylistCommand}"
+                                CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
+                                Icon="{ui:SymbolIcon Symbol=Save}"
+                                Label="{strings:Resources Key=Export}"
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+
+                            <AppBarButton
                                 Command="{x:Bind DeletePlaylistCommand}"
                                 Icon="{ui:SymbolIcon Symbol=Delete}"
                                 Label="{strings:Resources Key=Delete}"

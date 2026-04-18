@@ -20,6 +20,7 @@ namespace Screenbox.Core.Services
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder);
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public IAsyncOperation<IReadOnlyList<StorageFile>> PickMultipleFilesAsync(params string[] formats);
+        public IAsyncOperation<StorageFile> PickSaveFileAsync(string suggestedFileName, params string[] formats);
         public IAsyncOperation<StorageFolder> PickFolderAsync();
         public Task OpenFileLocationAsync(string path);
         public Task OpenFileLocationAsync(StorageFile file);

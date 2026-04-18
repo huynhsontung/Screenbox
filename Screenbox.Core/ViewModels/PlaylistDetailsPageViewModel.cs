@@ -87,6 +87,17 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         await Source.AddItemsAsync(mediaList);
     }
 
+    [RelayCommand]
+    private async Task ExportPlaylistAsync(PlaylistViewModel? playlist)
+    {
+        if (playlist is null) return;
+
+        StorageFile? file = await _filesService.PickSaveFileAsync(playlist.Name, ".m3u8");
+        if (file is null) return;
+
+        await _playlistService.ExportPlaylistItemsAsync(playlist.Items, file);
+    }
+
     public async Task<bool> DeletePlaylistAsync()
     {
         if (Source == null) return false;

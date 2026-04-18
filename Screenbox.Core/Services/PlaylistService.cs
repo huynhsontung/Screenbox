@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -11,6 +12,7 @@ using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.Storage.Streams;
 
 namespace Screenbox.Core.Services;
 
@@ -230,5 +232,33 @@ public sealed class PlaylistService : IPlaylistService
 
         playlist.LastUpdated = DateTimeOffset.Now;
         await SavePlaylistAsync(playlist);
+    }
+
+    public async Task<IReadOnlyList<MediaViewModel>> ImportPlaylistItemsAsync(StorageFile file)
+    {
+        if (file is null) throw new ArgumentNullException(nameof(file));
+        var mediaList = await _mediaListFactory.ParseMediaListAsync(file);
+        return mediaList.Items;
+    }
+
+    public async Task ExportPlaylistItemsAsync(IReadOnlyList<MediaViewModel> items, StorageFile file)
+    {
+        if (items is null) throw new ArgumentNullException(nameof(items));
+        if (file is null) throw new ArgumentNullException(nameof(file));
+
+        var lines = new List<string>(items.Count * 2 + 1)
+        {
+            "#EXTM3U"
+        };
+
+        foreach (MediaViewModel item in items.Where(x => x is { Location.Length: > 0 }))
+        {
+            int durationSeconds = item.Duration > TimeSpan.Zero ? (int)Math.Round(item.Duration.TotalSeconds) : -1;
+            string title = item.Name.Replace('\r', ' ').Replace('\n', ' ');
+            lines.Add($"#EXTINF:{durationSeconds},{title}");
+            lines.Add(item.Location);
+        }
+
+        await FileIO.WriteLinesAsync(file, lines, UnicodeEncoding.Utf8);
     }
 }
