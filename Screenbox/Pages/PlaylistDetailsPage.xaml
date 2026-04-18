@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -212,9 +213,12 @@
                             <AppBarButton
                                 Command="{x:Bind ViewModel.ExportPlaylistCommand}"
                                 CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
-                                Icon="{ui:SymbolIcon Symbol=Save}"
                                 Label="{strings:Resources Key=Export}"
-                                Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}">
+                                <AppBarButton.Icon>
+                                    <FontIcon x:Name="ExportPlaylistButtonIcon" Glyph="{StaticResource ExportGlyph}" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
 
                             <AppBarButton
                                 Command="{x:Bind DeletePlaylistCommand}"
@@ -282,6 +286,19 @@
                         <Setter Target="CoverArtIcon.FontSize" Value="52" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ListHeaderPadding.Height" Value="72" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ExportPlaylistButtonIcon.Glyph" Value="{StaticResource ExportMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

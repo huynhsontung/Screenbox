@@ -8,6 +8,7 @@
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -47,8 +48,12 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.ExportPlaylistCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:SymbolIcon Symbol=Save}"
-                    Text="{strings:Resources Key=ExportPlaylist}" />
+                    Text="{strings:Resources Key=Export}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon x:Name="ExportPlaylistButtonIcon" Glyph="{StaticResource ExportGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+
                 <MenuFlyoutItem
                     Command="{x:Bind DeletePlaylistCommand}"
                     CommandParameter="{Binding}"
@@ -56,10 +61,10 @@
                     Text="{strings:Resources Key=Delete}" />
             </MenuFlyout>
 
-            <MenuFlyout x:Key="CreatePlaylistFlyout">
+            <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="BottomEdgeAlignedRight">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.ImportPlaylistCommand}"
-                    Icon="{ui:SymbolIcon Symbol=OpenFile}"
+                    Icon="{ui:SymbolIcon Symbol=Import}"
                     Text="{strings:Resources Key=ImportPlaylist}" />
             </MenuFlyout>
 
@@ -174,6 +179,19 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlaylistsGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ExportPlaylistButtonIcon.Glyph" Value="{StaticResource ExportMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
