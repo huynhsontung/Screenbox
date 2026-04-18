@@ -243,15 +243,12 @@ public sealed class PlaylistService : IPlaylistService
 
     public async Task ExportPlaylistItemsAsync(IReadOnlyList<MediaViewModel> items, StorageFile file)
     {
-        if (items is null) throw new ArgumentNullException(nameof(items));
-        if (file is null) throw new ArgumentNullException(nameof(file));
-
-        var lines = new List<string>(items.Count * 2 + 1)
+        var lines = new List<string>((items.Count * 2) + 1)
         {
             "#EXTM3U"
         };
 
-        foreach (MediaViewModel item in items.Where(x => x is { Location.Length: > 0 }))
+        foreach (MediaViewModel item in items.Where(x => x.Location.Length > 0 && x.Location != "about:blank"))
         {
             int durationSeconds = item.Duration > TimeSpan.Zero ? (int)Math.Round(item.Duration.TotalSeconds) : -1;
             string title = item.Name.Replace('\r', ' ').Replace('\n', ' ');
