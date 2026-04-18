@@ -143,7 +143,7 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="NoMusic">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:BooleanExtensions.Negate(ViewModel.HasContent), Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.HasContent, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SongsMenuItem.Visibility" Value="Collapsed" />

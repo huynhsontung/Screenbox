@@ -162,7 +162,7 @@
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="NoVideos">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:BooleanExtensions.Negate(ViewModel.HasVideos), Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.HasVideos, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="FoldersMenuItem.Visibility" Value="Collapsed" />
