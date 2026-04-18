@@ -178,17 +178,21 @@
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Glyph="{StaticResource PlaylistOffGlyph}" />
                 <controls:ContentUnavailableView.ActionContent>
-                    <Button
+                    <muxc:SplitButton
                         AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
                         AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
                         Click="HeaderCreateButton_OnClick"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Flyout="{StaticResource CreatePlaylistFlyout}"
+                        Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=NewPlaylist}" />
                         </StackPanel>
-                    </Button>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:SplitButtonXYNavigationBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </muxc:SplitButton>
                 </controls:ContentUnavailableView.ActionContent>
             </controls:ContentUnavailableView>
         </ScrollViewer>

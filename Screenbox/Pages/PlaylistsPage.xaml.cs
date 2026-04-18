@@ -4,10 +4,10 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using Screenbox.Dialogs;
 using Screenbox.Core.ViewModels;
-using Windows.UI.Xaml;
+using Screenbox.Dialogs;
 using Windows.UI.Xaml.Controls;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,8 +28,7 @@ public sealed partial class PlaylistsPage : Page
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 
-    private async void HeaderCreateButton_OnClick(Microsoft.UI.Xaml.Controls.SplitButton sender,
-        Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
+    private async void HeaderCreateButton_OnClick(muxc.SplitButton sender, muxc.SplitButtonClickEventArgs args)
     {
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(playlistName))
