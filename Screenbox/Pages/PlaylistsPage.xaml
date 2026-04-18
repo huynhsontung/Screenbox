@@ -189,10 +189,9 @@
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="ContentStates">
-                <VisualState x:Name="Normal" />
-                <VisualState x:Name="NoPlaylists">
+                <VisualState x:Name="PlaylistsEmpty">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:CollectionExtensions.IsNullOrEmpty(ViewModel.Playlists), Mode=OneWay}" />
+                        <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Playlists, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderCreateButton.Visibility" Value="Collapsed" />

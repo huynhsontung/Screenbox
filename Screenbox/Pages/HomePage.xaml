@@ -279,11 +279,9 @@
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="ContentStates">
-                <VisualState x:Name="RecentMedia" />
-
                 <VisualState x:Name="Welcome">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:CollectionExtensions.IsNullOrEmpty(ViewModel.Recent), Mode=OneWay}" />
+                        <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Recent, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderOpenButton.Visibility" Value="Collapsed" />
