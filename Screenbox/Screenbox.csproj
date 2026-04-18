@@ -185,6 +185,9 @@
     </Compile>
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableViewAutomationPeer.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -575,6 +578,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MediaListViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentUnavailableView\ContentUnavailableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
