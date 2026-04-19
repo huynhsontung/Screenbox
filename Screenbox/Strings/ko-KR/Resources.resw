@@ -1066,4 +1066,10 @@
     <value>재생목록 "{1}"에 항목 {0}개를 추가했습니다</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>You don't have any playlists</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Create your first playlist to organize your favorite videos and music.</value>
+  </data>
 </root>
