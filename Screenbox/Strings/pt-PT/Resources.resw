@@ -1065,4 +1065,10 @@
     <value>{0} itens adicionados à lista de reprodução "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>You don't have any playlists</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Create your first playlist to organize your favorite videos and music.</value>
+  </data>
 </root>
