@@ -25,6 +25,7 @@
             DoubleTapped="VideoViewButton_OnDoubleTapped"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
             ManipulationCompleted="VideoViewButton_OnManipulationCompleted"
+            ManipulationDelta="VideoViewButton_ManipulationDelta"
             ManipulationMode="TranslateX,TranslateY"
             PointerCanceled="VideoViewButton_OnPointerCanceled"
             PointerMoved="VideoViewButton_OnPointerMoved"

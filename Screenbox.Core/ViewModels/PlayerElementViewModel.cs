@@ -57,6 +57,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private PlaybackActionKind _playerGestureSwipeDown;
     private PlaybackActionKind _playerGestureSwipeLeft;
     private PlaybackActionKind _playerGestureSwipeRight;
+    private bool _playerGestureSlideVertical;
+    private bool _playerGestureSlideHorizontal;
     private bool _playerGesturePressAndHold;
     private double? _playbackRateBeforeHold;
     private bool _suppressNextTap;
@@ -226,9 +228,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// <summary>
     /// Interprets a swipe manipulation and requests the corresponding playback interaction.
     /// </summary>
-    /// <param name="cumulative">The cumulative translation of the pointer manipulation.
-    /// The <see cref="Point.X"/> component represents horizontal movement, while
-    /// the <see cref="Point.Y"/> component represents vertical movement.</param>
+    /// <param name="cumulative">The cumulative translation of the pointer manipulation.</param>
     public void ProcessSwipeGesture(Point cumulative)
     {
         const double SwipeThreshold = 100.0;
@@ -242,11 +242,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         double absoluteCumulativeY = Math.Abs(cumulative.Y);
         var gesture = PlaybackActionKind.None;
 
-        if (absoluteCumulativeX > absoluteCumulativeY && absoluteCumulativeX >= SwipeThreshold)
+        if (absoluteCumulativeX > absoluteCumulativeY && absoluteCumulativeX >= SwipeThreshold && !_playerGestureSlideHorizontal)
         {
             gesture = cumulative.X > 0 ? _playerGestureSwipeRight : _playerGestureSwipeLeft;
         }
-        else if (absoluteCumulativeY > absoluteCumulativeX && absoluteCumulativeY >= SwipeThreshold)
+        else if (absoluteCumulativeY > absoluteCumulativeX && absoluteCumulativeY >= SwipeThreshold && !_playerGestureSlideVertical)
         {
             gesture = cumulative.Y > 0 ? _playerGestureSwipeDown : _playerGestureSwipeUp;
         }
@@ -254,6 +254,45 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         if (gesture is PlaybackActionKind.None) return;
 
         ProcessPlayerGesture(gesture, GestureStepAmount);
+    }
+
+    /// <summary>
+    /// Interprets a slide manipulation and requests the corresponding playback interaction.
+    /// </summary>
+    /// <param name="delta">The change in pointer position since the last event.</param>
+    /// <param name="cumulative">The cumulative translation of the pointer manipulation.</param>
+    /// <remarks>
+    /// The vertical slide gesture adjusts the playback volume, and the horizontal
+    /// slide gesture performs a time seek relative to the current position.
+    /// </remarks>
+    public void ProcessSlideGesture(Point delta, Point cumulative)
+    {
+        const double HorizontalChangePerPixel = 200;
+
+        double absCumulativeX = Math.Abs(cumulative.X);
+        double absCumulativeY = Math.Abs(cumulative.Y);
+
+        if (VlcMediaPlayer is not null)
+        {
+            _timeBeforeManipulation = VlcMediaPlayer.Position;
+        }
+
+
+        if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 &&
+            _playerGestureSlideVertical)
+        {
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-delta.Y, true));
+            Messenger.Send(new UpdateVolumeStatusMessage(volume));
+        }
+        else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 &&
+            (VlcMediaPlayer?.CanSeek ?? false) &&
+            _playerGestureSlideHorizontal)
+        {
+            Messenger.Send(new TimeChangeOverrideMessage(true));
+            TimeSpan timeChange = TimeSpan.FromMilliseconds(delta.X * HorizontalChangePerPixel);
+            TimeSpan newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+            UpdateTimeStatusMessage(newTime);
+        }
     }
 
     /// <summary>
@@ -440,6 +479,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
         _playerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
         _playerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
+        _playerGestureSlideVertical = _settingsService.PlayerGestureSlideVertical;
+        _playerGestureSlideHorizontal = _settingsService.PlayerGestureSlideHorizontal;
         _playerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
     }
 

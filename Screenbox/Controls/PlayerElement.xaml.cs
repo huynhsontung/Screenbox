@@ -123,6 +123,13 @@ public sealed partial class PlayerElement : UserControl
         e.Handled = true;
     }
 
+    private void VideoViewButton_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+    {
+        if (ViewModel.IsHolding || !IsEnabled) return;
+
+        ViewModel.ProcessSlideGesture(e.Delta.Translation, e.Cumulative.Translation);
+    }
+
     private void VideoViewButton_OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
     {
         if (ViewModel.IsHolding || !IsEnabled) return;

@@ -664,10 +664,10 @@
     <value>Gestures</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Slide horizontally to seek</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Slide vertically to adjust volume</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
     <value>Tap anywhere to play or pause</value>

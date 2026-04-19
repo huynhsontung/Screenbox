@@ -32,6 +32,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeDown;
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeLeft;
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeRight;
+    [ObservableProperty] private bool _playerGestureSlideVertical;
+    [ObservableProperty] private bool _playerGestureSlideHorizontal;
     [ObservableProperty] private bool _playerGesturePressAndHold;
     [ObservableProperty] private bool _playerShowControls;
     [ObservableProperty] private bool _playerShowChapters;
@@ -60,7 +62,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public List<LanguageInfo> AvailableLanguages { get; }
 
     public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
-  
+
     public Array GestureOptions { get; }
 
     private readonly ISettingsService _settingsService;
@@ -108,7 +110,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             .ToList();
 
         GestureOptions = Enum.GetValues(typeof(PlaybackActionKind));
-      
+
         if (SystemInformation.IsXbox)
         {
             _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
@@ -124,6 +126,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
         _playerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
         _playerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
+        _playerGestureSlideVertical = _settingsService.PlayerGestureSlideVertical;
+        _playerGestureSlideHorizontal = _settingsService.PlayerGestureSlideHorizontal;
         _playerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
         _playerShowControls = _settingsService.PlayerShowControls;
         _playerShowChapters = _settingsService.PlayerShowChapters;
@@ -215,6 +219,18 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         _settingsService.PlayerGestureSwipeRight = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeRight), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureSlideVerticalChanged(bool value)
+    {
+        _settingsService.PlayerGestureSlideVertical = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSlideVertical), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerGestureSlideHorizontalChanged(bool value)
+    {
+        _settingsService.PlayerGestureSlideHorizontal = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSlideHorizontal), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerGesturePressAndHoldChanged(bool value)

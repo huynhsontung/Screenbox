@@ -40,6 +40,8 @@ public sealed class SettingsService : ISettingsService
     private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
     private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
     private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
+    private const string PlayerGestureSlideVerticalKey = "Player/Gesture/SlideVertical";
+    private const string PlayerGestureSlideHorizontalKey = "Player/Gesture/SlideHorizontal";
     private const string PlayerGesturePressAndHoldKey = "Player/Gesture/PressAndHold";
 
     public bool UseIndexer
@@ -192,6 +194,18 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PlayerGestureSwipeRightKey, (int)value);
     }
 
+    public bool PlayerGestureSlideVertical
+    {
+        get => GetValue<bool>(PlayerGestureSlideVerticalKey);
+        set => SetValue(PlayerGestureSlideVerticalKey, value);
+    }
+
+    public bool PlayerGestureSlideHorizontal
+    {
+        get => GetValue<bool>(PlayerGestureSlideHorizontalKey);
+        set => SetValue(PlayerGestureSlideHorizontalKey, value);
+    }
+
     public bool PlayerGesturePressAndHold
     {
         get => GetValue<bool>(PlayerGesturePressAndHoldKey);
@@ -220,6 +234,8 @@ public sealed class SettingsService : ISettingsService
         SetDefault(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.DecreaseVolume);
         SetDefault(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.Rewind);
         SetDefault(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.FastForward);
+        SetDefault(PlayerGestureSlideVerticalKey, true);
+        SetDefault(PlayerGestureSlideHorizontalKey, true);
         SetDefault(PlayerGesturePressAndHoldKey, true);
 
         // Device family specific overrides
@@ -231,6 +247,8 @@ public sealed class SettingsService : ISettingsService
             SetValue(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.None);
             SetValue(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.None);
             SetValue(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.None);
+            SetValue(PlayerGestureSlideVerticalKey, false);
+            SetValue(PlayerGestureSlideHorizontalKey, false);
             SetValue(PlayerGesturePressAndHoldKey, false);
         }
     }
