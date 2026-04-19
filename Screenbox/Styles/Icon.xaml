@@ -62,8 +62,6 @@
     <x:String x:Key="StatusPlayingGlyph">&#xE93D;</x:String>
     <x:String x:Key="PlaylistMusicGlyph">&#xE93F;</x:String>
     <x:String x:Key="PlaylistMusicMirroredGlyph">&#xF006F;</x:String>
-    <x:String x:Key="ExportGlyph">&#xEDE1;</x:String>
-    <x:String x:Key="ExportMirroredGlyph">&#xEDE2;</x:String>
     <x:String x:Key="PlayAddGlyph">&#xF5EB;</x:String>
     <!--<x:String x:Key="SingleSelectGlyph">&#xEA20;</x:String>-->
     <!--<x:String x:Key="SingleSelectMirroredGlyph">&#xEA66;</x:String>-->

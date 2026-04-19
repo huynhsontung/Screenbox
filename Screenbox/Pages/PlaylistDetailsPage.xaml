@@ -216,7 +216,7 @@
                                 Label="{strings:Resources Key=Export}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}">
                                 <AppBarButton.Icon>
-                                    <FontIcon x:Name="ExportPlaylistButtonIcon" Glyph="{StaticResource ExportGlyph}" />
+                                    <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
 
@@ -286,19 +286,6 @@
                         <Setter Target="CoverArtIcon.FontSize" Value="52" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ListHeaderPadding.Height" Value="72" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name="FlowDirectionStates">
-                <VisualState x:Name="LeftToRight" />
-
-                <VisualState x:Name="RightToLeft">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="ExportPlaylistButtonIcon.Glyph" Value="{StaticResource ExportMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

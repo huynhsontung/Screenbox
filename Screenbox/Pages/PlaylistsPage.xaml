@@ -50,10 +50,9 @@
                     CommandParameter="{Binding}"
                     Text="{strings:Resources Key=Export}">
                     <MenuFlyoutItem.Icon>
-                        <FontIcon x:Name="ExportPlaylistButtonIcon" Glyph="{StaticResource ExportGlyph}" />
+                        <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
-
                 <MenuFlyoutItem
                     Command="{x:Bind DeletePlaylistCommand}"
                     CommandParameter="{Binding}"
@@ -62,10 +61,11 @@
             </MenuFlyout>
 
             <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="BottomEdgeAlignedRight">
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.ImportPlaylistCommand}"
-                    Icon="{ui:SymbolIcon Symbol=Import}"
-                    Text="{strings:Resources Key=ImportPlaylist}" />
+                <MenuFlyoutItem Command="{x:Bind ViewModel.ImportPlaylistCommand}" Text="{x:Bind strings:Resources.ImportPlaylist}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE8B5;" MirroredWhenRightToLeft="True" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
@@ -235,19 +235,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlaylistsGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name="FlowDirectionStates">
-                <VisualState x:Name="LeftToRight" />
-
-                <VisualState x:Name="RightToLeft">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="ExportPlaylistButtonIcon.Glyph" Value="{StaticResource ExportMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
