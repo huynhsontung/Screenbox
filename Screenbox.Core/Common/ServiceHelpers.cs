@@ -36,8 +36,6 @@ public static class ServiceHelpers
         services.AddTransient<AllVideosPageViewModel>();
         services.AddTransient<MusicPageViewModel>();
         services.AddTransient<SearchResultPageViewModel>();
-        services.AddTransient<LivelyWallpaperPlayerViewModel>();
-        services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<PlaylistsPageViewModel>();
@@ -71,7 +69,6 @@ public static class ServiceHelpers
         services.AddSingleton<ICastService, CastService>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
-        services.AddSingleton<ILivelyWallpaperService, LivelyWallpaperService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
         services.AddSingleton<IPlaylistService, PlaylistService>();
     }

@@ -353,7 +353,7 @@
     <value>Deschidere locație fișier</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Deschidere cu</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -1021,7 +1021,7 @@
     <value>Anulare</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Playlist fără titlu</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Introduceți un nume pentru acest playlist</value>
@@ -1058,11 +1058,11 @@
     <value>Șterge istoricul pozițiilor de redare ale dispozitivului</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>A fost adăugat {0} element la playlist-ul „{1}”</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Au fost adăugate {0} elemente la playlist-ul „{1}”</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
 </root>

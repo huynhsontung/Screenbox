@@ -239,7 +239,7 @@
     <comment>Display name for the file type ".ogv"</comment>
   </data>
   <data name="FileDisplayNameOggMedia" xml:space="preserve">
-    <value>Ogg Media File</value>
+    <value>Ogg médiafájl</value>
     <comment>Display name for the file type ".ogm"</comment>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
@@ -311,7 +311,7 @@
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
-    <value>WavPack Correction File</value>
+    <value>WavPack korrekciós fájl</value>
     <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>

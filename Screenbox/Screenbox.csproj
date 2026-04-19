@@ -185,6 +185,9 @@
     </Compile>
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableViewAutomationPeer.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -578,6 +581,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ContentUnavailableView\ContentUnavailableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NotificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -769,22 +776,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
+      <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
@@ -793,7 +800,7 @@
       <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>9.0.9</Version>
+      <Version>10.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
@@ -802,7 +809,7 @@
       <Version>2.8.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>3.0.0</Version>
+      <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="ReswPlus">
       <Version>0.3.1.5</Version>
@@ -811,13 +818,17 @@
       <Version>3.0.21-2505100334</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>5.15.1</Version>
+      <Version>5.16.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj">
       <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
       <Name>Screenbox.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Screenbox.Lively\Screenbox.Lively.csproj">
+      <Project>{9b443f29-bff0-45b7-8a84-ee88cd5ae405}</Project>
+      <Name>Screenbox.Lively</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -15,6 +15,7 @@
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:triggers="using:Screenbox.Triggers"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="720"
     d:DesignWidth="1280"
@@ -173,8 +174,8 @@
             <KeyboardAccelerator Key="NumberPad9" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="Home" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="End" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
-            <!--  Hide controls  -->
-            <KeyboardAccelerator Key="Escape" Invoked="HideControlsKeyboardAccelerator_OnInvoked" />
+            <!--  Escape key handling  -->
+            <KeyboardAccelerator Key="Escape" Invoked="EscapeKeyboardAccelerator_OnInvoked" />
         </Grid.KeyboardAccelerators>
 
         <Button
@@ -568,7 +569,7 @@
                     <TextBlock
                         x:Name="TitleBarSubtitleTextBlock"
                         d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-                        Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         OpticalMarginAlignment="TrimSideBearings"
                         Style="{StaticResource BodyTextBlockStyle}"
                         Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
@@ -978,6 +979,21 @@
                 <VisualState x:Name="HiddenNormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="WindowActivationGroup">
+                <VisualState x:Name="Deactivated">
+                    <VisualState.StateTriggers>
+                        <triggers:WindowActivationModeTrigger ActivationMode="Deactivated" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BackButton.Opacity" Value="{ThemeResource TextFillColorTertiaryOpacity}" />
+                        <Setter Target="PlayQueueButton.Opacity" Value="{ThemeResource TextFillColorTertiaryOpacity}" />
+                        <Setter Target="TitleBarTitleTextBlock.Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <Setter Target="TitleBarSubtitleTextBlock.Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <Setter Target="LivelyOptionsButton.Opacity" Value="{ThemeResource TextFillColorTertiaryOpacity}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

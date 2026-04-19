@@ -39,7 +39,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<ShowPlayPauseBadgeMessage>,
     IRecipient<OverrideControlsHideDelayMessage>,
     IRecipient<DragDropMessage>,
-    IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
+    IRecipient<VisualizerChangedMessage>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
 {
     private const VirtualKey VK_OEM_PLUS = (VirtualKey)0xBB;
@@ -124,10 +124,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         await OnDropAsync(message.Data);
     }
 
-    public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
+    public void Receive(VisualizerChangedMessage message)
     {
-        if (message.NewValue == null) return;
-        ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.NewValue.Path);
+        if (message.Path is null) return;
+        ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.Path);
     }
 
     public void Receive(TogglePlayerVisibilityMessage message)

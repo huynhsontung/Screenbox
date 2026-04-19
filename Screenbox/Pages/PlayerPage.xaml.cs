@@ -526,12 +526,18 @@ public sealed partial class PlayerPage : Page
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
     }
 
-    private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    private void EscapeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.ViewMode == WindowViewMode.Default)
+        switch (ViewModel.ViewMode)
         {
-            ViewModel.TryHideControls();
-            args.Handled = true;
+            case WindowViewMode.FullScreen:
+                ViewModel.GoBack();
+                args.Handled = true;
+                break;
+            case WindowViewMode.Default:
+                ViewModel.TryHideControls();
+                args.Handled = true;
+                break;
         }
     }
 }
