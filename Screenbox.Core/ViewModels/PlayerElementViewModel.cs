@@ -62,6 +62,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private bool _playerGesturePressAndHold;
     private double? _playbackRateBeforeHold;
     private bool _suppressNextTap;
+    private bool? _slideHorizontally;
 
     public PlayerElementViewModel(
         PlayerContext playerContext,
@@ -192,6 +193,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnManipulationCompleted()
     {
+        _slideHorizontally = null;
         Messenger.Send(new OverrideControlsHideDelayMessage(100));
         Messenger.Send(new TimeChangeOverrideMessage(false));
     }
@@ -277,16 +279,24 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             _timeBeforeManipulation = VlcMediaPlayer.Position;
         }
 
+        if (_slideHorizontally is null)
+        {
+            if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerGestureSlideVertical)
+            {
+                _slideHorizontally = false;
+            }
+            else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerGestureSlideHorizontal)
+            {
+                _slideHorizontally = true;
+            }
+        }
 
-        if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 &&
-            _playerGestureSlideVertical)
+        if (_slideHorizontally is false)
         {
             int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-delta.Y, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
-        else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 &&
-            (VlcMediaPlayer?.CanSeek ?? false) &&
-            _playerGestureSlideHorizontal)
+        else if (_slideHorizontally is true && (VlcMediaPlayer?.CanSeek ?? false))
         {
             Messenger.Send(new TimeChangeOverrideMessage(true));
             TimeSpan timeChange = TimeSpan.FromMilliseconds(delta.X * HorizontalChangePerPixel);
