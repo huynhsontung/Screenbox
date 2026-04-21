@@ -1066,9 +1066,9 @@
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>Nu aveți niciun playlist</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>Creați-vă primul playlist pentru a vă organiza videoclipurile și muzica preferată.</value>
   </data>
 </root>
