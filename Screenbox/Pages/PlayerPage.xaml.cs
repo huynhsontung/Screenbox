@@ -522,6 +522,7 @@ public sealed partial class PlayerPage : Page
     {
         switch (ViewModel.ViewMode)
         {
+            case WindowViewMode.Compact:
             case WindowViewMode.FullScreen:
                 ViewModel.GoBack();
                 args.Handled = true;
