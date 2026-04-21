@@ -61,8 +61,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private bool _playerGestureSlideHorizontal;
     private bool _playerGesturePressAndHold;
     private double? _playbackRateBeforeHold;
-    private bool _suppressNextTap;
-    private bool? _slideHorizontally;
+    private bool _shouldSuppressNextTap;
+    private bool? _isSlideHorizontal;
 
     public PlayerElementViewModel(
         PlayerContext playerContext,
@@ -177,9 +177,9 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             return;
         }
 
-        if (_suppressNextTap)
+        if (_shouldSuppressNextTap)
         {
-            _suppressNextTap = false;
+            _shouldSuppressNextTap = false;
             return;
         }
 
@@ -193,7 +193,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnManipulationCompleted()
     {
-        _slideHorizontally = null;
+        _isSlideHorizontal = null;
         Messenger.Send(new OverrideControlsHideDelayMessage(100));
         Messenger.Send(new TimeChangeOverrideMessage(false));
     }
@@ -279,24 +279,24 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             _timeBeforeManipulation = VlcMediaPlayer.Position;
         }
 
-        if (_slideHorizontally is null)
+        if (_isSlideHorizontal is null)
         {
             if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerGestureSlideVertical)
             {
-                _slideHorizontally = false;
+                _isSlideHorizontal = false;
             }
             else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerGestureSlideHorizontal)
             {
-                _slideHorizontally = true;
+                _isSlideHorizontal = true;
             }
         }
 
-        if (_slideHorizontally is false)
+        if (_isSlideHorizontal is false)
         {
             int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-delta.Y, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
-        else if (_slideHorizontally is true && (VlcMediaPlayer?.CanSeek ?? false))
+        else if (_isSlideHorizontal is true && (VlcMediaPlayer?.CanSeek ?? false))
         {
             Messenger.Send(new TimeChangeOverrideMessage(true));
             TimeSpan timeChange = TimeSpan.FromMilliseconds(delta.X * HorizontalChangePerPixel);
@@ -323,7 +323,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 if (!IsHolding)
                 {
                     _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
-                    _suppressNextTap = true;
+                    _shouldSuppressNextTap = true;
                     // If the rate is already faster than the holding speed, set it to twice the holding speed.
                     double effectiveHoldingSpeed = VlcMediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
                     if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)

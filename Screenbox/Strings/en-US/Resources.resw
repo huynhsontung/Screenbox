@@ -664,13 +664,10 @@
     <value>Gestures</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Slide horizontally to seek</value>
+    <value>Enable slide horizontally to seek</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Slide vertically to adjust volume</value>
-  </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Enable slide vertically to adjust volume</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox Media Player</value>
@@ -1012,7 +1009,7 @@
     <value>Swipe right</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Press and hold to increase playback speed to 2×</value>
+    <value>Enable press and hold to increase playback speed</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
     <value>Nothing</value>
