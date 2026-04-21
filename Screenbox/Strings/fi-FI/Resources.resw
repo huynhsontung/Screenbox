@@ -207,72 +207,72 @@
     <value>Toisto pois käytöstä</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>Toista: Kaikki</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>Toista: Yksi</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>{0} kohde valittu</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>{0} kohdetta valittu</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>Lisää jonoon</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Valitse kaikki</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Valitse kaikki kohteet tästä näkymästä</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Älä valitse mitään</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Tyhjennä valintasi</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Tyhjennä valinta</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Poista</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>Toista seuraavaksi</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>Siirrä ylöspäin</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>Siirrä alaspäin</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>Toistetaan</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Videot</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>Tämä kansio on tyhjä</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} kohde</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} kohdetta</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Tyhjä</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore immersive view</value>
+    <value>Palauta ympäröivä näkymä</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
     <value>Pienennä ympäröivä näkymä</value>
@@ -314,7 +314,7 @@
     <value>Tyhjennä</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Aloitusruutu</value>
+    <value>Aloitusnäyttö</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
     <value>Valitse useita</value>
@@ -538,160 +538,160 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>Kappale tulokset kohteelle "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>Video tulokset kohteelle "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>Ei albumia</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>Pääsy estetty. Tarkista tietosuoja-asetuksesi varmistaaksesi, että Screenboxilla on riittävät käyttöoikeudet.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>Musiikkikirjastoa ei voitu käyttää</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>Kuvakirjastoa ei voitu käyttää</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>Videokirjastoa ei voitu käyttää</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>Videoita ei löytynyt</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>Videokirjastosi ei sisällä videoita.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-    <value>Open privacy settings</value>
+    <value>Avaa tietosuoja-asetukset</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>Mediaa ei voitu ladata</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Kuvasuhde</value>
   </data>
   <data name="Fit" xml:space="preserve">
-    <value>Fit</value>
+    <value>Sovitettu</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>Täytetty</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Mukautettu kuvasuhde</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Mukautettu toistonopeus</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Ei mitään</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Mittakaava: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>Tekstitys: {0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>Kappale {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Lisää tekstitys</value>
   </data>
   <data name="Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>Ääni</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>Tietoja</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>Yleiset</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>Kirjastot</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>Soitin</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>Musiikkikirjaston sijainnit</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent media</value>
+    <value>Näytä viimeaikaiset mediat</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Show controls when paused</value>
+    <value>Näytä ohjaimet kun toisto on keskeytetty</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>Videokirjastojen sijainnit</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>Tekstitykset</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>See recently played media on the home page</value>
+    <value>Näe äskettäin toistettu media aloitusnäytöllä</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Tyhjennä viimeksi toistetut</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>Automaattinen koon muuttaminen</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Automaattisesti muuttaa sovelluksen koon parhaiten videon resoluutiolle sopivaksi</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Äänenvoimakkuuden tehostus</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Anna äänenvoimakkuuden ylittää 100 %</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Näytöllä näkyvät ohjaimet</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Valitse mitkä painikkeet näkyvät ohjaimessa ja säädä milloin ne piilotetaan automaattisesti</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Eleet</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Vedä vaakasuunnassa hakeaksesi</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Vedä pystysuunnassa säätääksesi äänenvoimakkuutta</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Napauta mihin tahansa toistaaksesi tai keskeyttääksesi</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Screenbox mediasoitin</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>Lähdekoodi</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development</value>
+    <value>Tue sovelluksen kehittämistä</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Aina</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Ei koskaan</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>Käynnistyttäessä</value>
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>Versio: {0}</value>
@@ -849,53 +849,53 @@
     <value>Avaa tiedostot aina uudessa ikkunassa</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Lajittele</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Lajittele {0} valitun vaihtoehdon mukaan</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Esittäjä</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Julkaisuvuosi</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Äänen visualisointi</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Hanki Elävä Taustakuva</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Lataa visualisointeja Githubista</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Äänen visualisointi asetukset</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Visuaalit</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse files</value>
+    <value>Selaa tiedostoja</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Oletus</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>Valitse taustakuva antaaksesi äänentoistolle visuaalinen ilme ympäröivässä näkymässä</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Lively Wallpaperin tarjoama</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Tuo visuaaleja</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Hanki lisää visuaaleja Lively Wallpaper sovelluksell tai lataa niitä GitHubista</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Lisäyspäivämäärä</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>Media</value>
@@ -904,103 +904,103 @@
     <value>Video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Tiedosto</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Musiikki</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Videot</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Näytä albumi</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Näytä esittäjä</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Visualisoinnin lataaminen epäonnistui</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>Avatessasi yhden tiedoston, automaattisesti lisää kaikki muut tiedostot kansiosta toistojonoon</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Lisää kaikki kansion tiedostot toistojonoon</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Käytä järjestelmän asetuksia</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Tumma</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Valoisa</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Muuta sovelluksen yleistä väriteemaa</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Sovelluksen teema</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Mukauttaminen</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume previous session</value>
+    <value>Jatka aina edellistä istuntoa</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Automatically resume media playback from last stopped position when opening a file</value>
+    <value>Jatka toistoa automaattisesti viimeiseksi jääneestä kohdasta tiedostoa avattaessa</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Videon skaalaus menetelmä</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support</value>
+    <value>Super resoluutio vaatii yhteensopivan laitteiston ja laiteajurin</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Bilineaarinen</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Piste</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super resoluutio</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Show chapter name when available</value>
+    <value>Näytä luvun nimi, kun se on saatavilla</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Piilota ohjaimet tämän ajan jälkeen</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} sekuntia</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} sekuntia</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Sovelluksen kieli</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Vaihda sovelluksen kieli</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Käytä järjestelmän kieltä</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Ei tuloksia kohteelle "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Kansio</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Lisää soittolistalle</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Luo uusi soittolista</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
     <value>Uusi soittolista</value>
