@@ -353,7 +353,7 @@
     <value>Abrir ubicación del archivo</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Abrir con</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Álbum</value>
