@@ -173,6 +173,11 @@
             <KeyboardAccelerator Key="NumberPad9" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="Home" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
             <KeyboardAccelerator Key="End" Invoked="SeekToPercentageKeyboardAccelerator_OnInvoked" />
+            <!--  Escape key handling  -->
+            <KeyboardAccelerator
+                Key="Escape"
+                Invoked="EscapeKeyboardAccelerator_OnInvoked"
+                IsEnabled="{x:Bind ViewModel.IsPlayerVisibilityVisible, Mode=OneWay}" />
         </Grid.KeyboardAccelerators>
 
         <Button

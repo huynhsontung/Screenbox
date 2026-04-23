@@ -62,6 +62,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
+    [NotifyPropertyChangedFor(nameof(IsPlayerVisibilityVisible))]
     private PlayerVisibilityState _playerVisibility;
 
     [ObservableProperty]
@@ -71,6 +72,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     public bool SeekBarPointerInteracting { get; set; }
 
     public Func<double, string>? GetVolumeChangeStatusMessage { get; set; }
+
+    public bool IsPlayerVisibilityVisible => PlayerVisibility is PlayerVisibilityState.Visible;
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 

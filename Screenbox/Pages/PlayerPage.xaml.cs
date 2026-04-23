@@ -100,7 +100,6 @@ public sealed partial class PlayerPage : Page
                 VideoView.ContextFlyout.ShowAt(PlayerControls,
                     new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
                 break;
-            case VirtualKey.Escape when shouldHideControls:
             case VirtualKey.GamepadB when shouldHideControls:
                 ViewModel.TryHideControls(true);
                 break;
@@ -514,5 +513,21 @@ public sealed partial class PlayerPage : Page
     private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
+    }
+
+    private void EscapeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        switch (ViewModel.ViewMode)
+        {
+            case WindowViewMode.Compact:
+            case WindowViewMode.FullScreen:
+                ViewModel.GoBack();
+                args.Handled = true;
+                break;
+            case WindowViewMode.Default:
+                ViewModel.TryHideControls();
+                args.Handled = true;
+                break;
+        }
     }
 }
