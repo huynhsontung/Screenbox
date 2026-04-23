@@ -27,6 +27,7 @@
                     </ResourceDictionary.ThemeDictionaries>
 
                     <!--  Commands  -->
+                    <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
                     <commands:OpenWithCommand x:Key="OpenWithCommand" />
 

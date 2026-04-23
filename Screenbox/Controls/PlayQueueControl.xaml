@@ -29,8 +29,6 @@
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
-                <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
-
                 <MenuFlyout x:Key="ItemFlyout">
                     <interactivity:Interaction.Behaviors>
                         <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
