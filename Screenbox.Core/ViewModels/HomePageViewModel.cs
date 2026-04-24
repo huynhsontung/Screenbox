@@ -27,6 +27,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PlaySelectedCommand))]
     [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
+    [NotifyCanExecuteChangedFor(nameof(AddSelectedToQueueCommand))]
     [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
     private int _selectionCount;
 
@@ -270,6 +271,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         var items = selectedItems.OfType<MediaViewModel>().Reverse().ToArray();
         Messenger.SendPlayNext(items);
+        selectedItems.Clear();
+        ClearSelection();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void AddSelectedToQueue(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        Messenger.SendAddToQueue(items);
         selectedItems.Clear();
         ClearSelection();
     }

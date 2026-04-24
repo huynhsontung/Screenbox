@@ -233,6 +233,12 @@
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayAddGlyph}}"
                         Label="{x:Bind strings:Resources.PlayNext}" />
+                    <AppBarButton
+                        Command="{x:Bind ViewModel.AddSelectedToQueueCommand}"
+                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlaylistMusicGlyph}}"
+                        Label="{x:Bind strings:Resources.AddToQueue}" />
                     <AppBarButton Icon="Add" Label="{x:Bind strings:Resources.AddToPlaylist}">
                         <AppBarButton.Resources>
                             <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
@@ -363,8 +369,7 @@
         <!--  Empty recent list  -->
         <ScrollViewer
             x:Name="WelcomeViewer"
-            Grid.Row="1"
-            Grid.RowSpan="2"
+            Grid.Row="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPagePadding}"
             HorizontalScrollBarVisibility="Disabled"
