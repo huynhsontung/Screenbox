@@ -87,7 +87,6 @@ public sealed partial class PlayerPage : Page
             return;
         }
 
-        bool handled = true;
         bool shouldHideControls = ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default };
 
         switch (e.Key)
@@ -102,14 +101,12 @@ public sealed partial class PlayerPage : Page
                     new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
                 break;
             case VirtualKey.GamepadB when shouldHideControls:
-                handled = ViewModel.TryHideControls();
+                ViewModel.TryHideControls(true);
                 break;
             default:
                 base.OnKeyDown(e);
                 return;
         }
-
-        e.Handled = handled;
     }
 
     private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -522,6 +519,7 @@ public sealed partial class PlayerPage : Page
     {
         switch (ViewModel.ViewMode)
         {
+            case WindowViewMode.Compact:
             case WindowViewMode.FullScreen:
                 ViewModel.GoBack();
                 args.Handled = true;
