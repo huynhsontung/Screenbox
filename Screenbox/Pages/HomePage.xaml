@@ -205,7 +205,6 @@
                 <CommandBar
                     VerticalContentAlignment="Center"
                     DefaultLabelPosition="Right"
-                    DynamicOverflowItemsChanging="SelectionCommandBar_OnDynamicOverflowItemsChanging"
                     KeyboardAcceleratorPlacementMode="Hidden">
                     <CommandBar.Resources>
                         <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
@@ -214,11 +213,8 @@
                         <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
                     </CommandBar.Resources>
                     <CommandBar.KeyboardAccelerators>
-                        <!--  When an item is moved to the overflow menu, its shortcuts become inaccessible.  -->
-                        <KeyboardAccelerator
-                            Key="Delete"
-                            Invoked="RemoveSelectedKeyboardAccelerator_OnInvoked"
-                            IsEnabled="{x:Bind ViewModel.IsRemoveButtonInOverflow, Mode=OneWay}" />
+                        <!--  When items are placed in the overflow menu, their shortcuts no longer function, so we handle them at the control level instead.  -->
+                        <KeyboardAccelerator Key="Delete" Invoked="RemoveSelectedKeyboardAccelerator_OnInvoked" />
                     </CommandBar.KeyboardAccelerators>
 
                     <AppBarButton
@@ -255,15 +251,11 @@
                         </AppBarButton.Flyout>
                     </AppBarButton>
                     <AppBarButton
-                        x:Name="RemoveCommandBarButton"
                         Command="{x:Bind ViewModel.RemoveSelectedCommand}"
                         CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
                         Icon="Clear"
-                        Label="{x:Bind strings:Resources.Remove}">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="Delete" />
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
+                        KeyboardAcceleratorTextOverride="{x:Bind strings:KeyboardResources.VirtualKeyDelete}"
+                        Label="{x:Bind strings:Resources.Remove}" />
 
                     <CommandBar.Content>
                         <StackPanel Orientation="Horizontal">

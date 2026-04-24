@@ -4,7 +4,6 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -63,18 +62,6 @@ public sealed partial class HomePage : Page
                 RecentFilesGridView.SelectedItems.Add(item);
             }
         }
-        else if (e.PropertyName == nameof(HomePageViewModel.EnableMultiSelect))
-        {
-            if (ViewModel.EnableMultiSelect)
-            {
-                UpdateOverflowButtonState();
-            }
-        }
-    }
-
-    private void SelectionCommandBar_OnDynamicOverflowItemsChanging(CommandBar sender, DynamicOverflowItemsChangingEventArgs args)
-    {
-        UpdateOverflowButtonState();
     }
 
     private void RecentFilesGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -109,13 +96,5 @@ public sealed partial class HomePage : Page
                 args.Handled = true;
             }
         }
-    }
-
-    private void UpdateOverflowButtonState()
-    {
-        _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-        {
-            ViewModel.IsRemoveButtonInOverflow = RemoveCommandBarButton.IsInOverflow;
-        });
     }
 }
