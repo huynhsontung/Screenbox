@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Security;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
@@ -38,6 +40,17 @@ namespace Screenbox;
 sealed partial class App : Application
 {
     /// <summary>
+    /// Name prefix for the per-process named mutex used to signal activation readiness.
+    /// The full name is suffixed with the process ID to be unique per instance.
+    /// </summary>
+    internal const string ActivationReadyMutexPrefix = "ScreenboxActivationReady_";
+
+    // Held while this instance is alive and able to receive activation redirects.
+    // Released when the window is closed so the next activation spawns a fresh instance
+    // instead of being redirected to the dying process (fixes the single-instance race condition).
+    private static Mutex? _instanceReadyMutex;
+
+    /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
@@ -46,6 +59,21 @@ sealed partial class App : Application
         ConfigureAppCenter();
         ConfigureSentry();
         InitializeComponent();
+
+        // Acquire the per-process mutex so that Program.cs can verify whether this
+        // instance is still alive before redirecting a new activation to it.
+        // The mutex name is based on the AppInstance registration key, which is unique
+        // per registered instance and accessible from Program.cs without ProcessId.
+        AppInstance? currentInstance = AppInstance.GetInstances().FirstOrDefault(i => i.IsCurrentInstance);
+        if (currentInstance is not null)
+        {
+            _instanceReadyMutex = new Mutex(initiallyOwned: true, name: $"{ActivationReadyMutexPrefix}{currentInstance.Key}");
+        }
+
+        // Release the mutex as soon as the window is closed.  Once the window is gone
+        // the app can no longer present UI for an incoming activation, so any new
+        // activation should launch a fresh process rather than being redirected here.
+        Window.Current.CoreWindow.Closed += (_, _) => ReleaseInstanceReadyMutex();
 
         if (DeviceInfoHelper.IsXbox)
         {
@@ -167,6 +195,28 @@ sealed partial class App : Application
     {
         //var view = ApplicationView.GetForCurrentView();
         //view.SetPreferredMinSize(new Size(480, 270));
+    }
+
+    /// <summary>
+    /// Releases the activation-ready mutex, signalling to any concurrent
+    /// <c>Program.Main</c> invocation that this instance is no longer accepting
+    /// activation redirects.  Safe to call multiple times.
+    /// </summary>
+    private static void ReleaseInstanceReadyMutex()
+    {
+        try
+        {
+            _instanceReadyMutex?.ReleaseMutex();
+            _instanceReadyMutex?.Dispose();
+        }
+        catch (Exception)
+        {
+            // Ignore; the OS will abandon the mutex automatically when the process exits.
+        }
+        finally
+        {
+            _instanceReadyMutex = null;
+        }
     }
 
     protected override void OnFileActivated(FileActivatedEventArgs args)
