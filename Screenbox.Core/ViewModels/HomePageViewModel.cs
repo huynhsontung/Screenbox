@@ -33,6 +33,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     [ObservableProperty] private bool? _selectionCheckState;
     [ObservableProperty] private bool _enableMultiSelect;
     [ObservableProperty] private MediaViewModel? _selectedItemToAdd;
+    [ObservableProperty] private bool _isRemoveButtonInOverflow;
 
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
