@@ -46,7 +46,7 @@
                     Icon="{ui:SymbolIcon Symbol=Rename}"
                     Text="{strings:Resources Key=Rename}" />
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.ExportPlaylistCommand}"
+                    Command="{x:Bind ExportPlaylistCommand}"
                     CommandParameter="{Binding}"
                     Text="{strings:Resources Key=Export}">
                     <MenuFlyoutItem.Icon>

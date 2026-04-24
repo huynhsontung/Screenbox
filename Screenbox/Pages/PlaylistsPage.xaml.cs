@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
+using Screenbox.Strings;
 using Windows.UI.Xaml.Controls;
 using muxc = Microsoft.UI.Xaml.Controls;
 
@@ -55,5 +56,11 @@ public sealed partial class PlaylistsPage : Page
         var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
             await ViewModel.DeletePlaylistAsync(playlist);
+    }
+
+    [RelayCommand]
+    private async Task ExportPlaylistAsync(PlaylistViewModel playlist)
+    {
+        await ViewModel.ExportPlaylistAsync(playlist, ManifestResources.FileDisplayNameM3U8);
     }
 }

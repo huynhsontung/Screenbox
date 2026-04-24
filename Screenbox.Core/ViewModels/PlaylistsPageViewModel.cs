@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -96,12 +96,11 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         Messenger.Send(new PlaylistCreatedNotificationMessage(playlist.Name));
     }
 
-    [RelayCommand]
-    private async Task ExportPlaylistAsync(PlaylistViewModel? playlist)
+    public async Task ExportPlaylistAsync(PlaylistViewModel playlist, string playlistFileDisplayName = "M3U8")
     {
-        if (playlist is null) return;
-
-        StorageFile? file = await _filesService.PickSaveFileAsync(playlist.Name, ".m3u8");
+        var saveFileTypes = new Dictionary<string, IList<string>> { [playlistFileDisplayName] = [".m3u8"] };
+        StorageFile? file = await _filesService.PickSaveFileAsync(playlist.Name,
+            saveFileTypes, Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
         if (file is null) return;
 
         await _playlistService.ExportPlaylistItemsAsync(playlist.Items, file);

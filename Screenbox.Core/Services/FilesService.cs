@@ -89,20 +89,18 @@ public sealed class FilesService : IFilesService
         return picker.PickMultipleFilesAsync();
     }
 
-    public IAsyncOperation<StorageFile> PickSaveFileAsync(string suggestedFileName, params string[] formats)
+    public IAsyncOperation<StorageFile> PickSaveFileAsync(string suggestedFileName,
+        IDictionary<string, IList<string>> fileTypes, PickerLocationId startLocation = PickerLocationId.ComputerFolder)
     {
         FileSavePicker picker = new()
         {
-            SuggestedStartLocation = PickerLocationId.ComputerFolder,
+            SuggestedStartLocation = startLocation,
             SuggestedFileName = suggestedFileName
         };
 
-        IEnumerable<string> fileTypes = formats.Length == 0 ? new[] { ".m3u8" } : formats;
-        foreach (string fileType in fileTypes)
+        foreach (var fileType in fileTypes)
         {
-            string normalizedType = fileType.StartsWith(".") ? fileType : $".{fileType}";
-            string displayName = normalizedType.TrimStart('.').ToUpperInvariant();
-            picker.FileTypeChoices.Add(displayName, new List<string> { normalizedType });
+            picker.FileTypeChoices.Add(fileType.Key, fileType.Value);
         }
 
         return picker.PickSaveFileAsync();

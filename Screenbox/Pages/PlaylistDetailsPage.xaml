@@ -211,8 +211,7 @@
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
 
                             <AppBarButton
-                                Command="{x:Bind ViewModel.ExportPlaylistCommand}"
-                                CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
+                                Command="{x:Bind ExportPlaylistCommand}"
                                 Label="{strings:Resources Key=Export}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}">
                                 <AppBarButton.Icon>
