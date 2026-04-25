@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -167,7 +168,8 @@ public sealed class MediaListFactory : IMediaListFactory
     /// Parses an M3U or M3U8 playlist file directly, without invoking LibVLC media parsing.
     /// Each non-comment, non-empty line is resolved as either an absolute URI or a path
     /// (absolute or relative to the playlist file's directory) and wrapped in a
-    /// <see cref="MediaViewModel"/>.
+    /// <see cref="MediaViewModel"/>. <c>#EXTINF</c> directives are parsed to pre-populate
+    /// <see cref="MediaViewModel.Name"/> and duration on newly created view models.
     /// </summary>
     /// <param name="playlistFile">The M3U or M3U8 playlist file to parse.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
@@ -192,14 +194,30 @@ public sealed class MediaListFactory : IMediaListFactory
             ? string.Empty
             : Path.GetDirectoryName(playlistFile.Path);
 
+        // EXTINF metadata from the most recent #EXTINF directive, applied to the next media entry.
+        string? extInfTitle = null;
+        TimeSpan extInfDuration = default;
+
         foreach (var rawLine in content.Split('\n', StringSplitOptions.RemoveEmptyEntries))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var line = rawLine.Trim();
-            // Skip empty lines and M3U directive/comment lines (those starting with '#').
-            if (string.IsNullOrEmpty(line) || line[0] == '#')
+            if (string.IsNullOrEmpty(line))
                 continue;
+
+            // Parse #EXTINF directives and store metadata for the immediately following media entry.
+            if (line.StartsWith("#EXTINF:", StringComparison.OrdinalIgnoreCase))
+            {
+                (extInfTitle, extInfDuration) = ParseExtInf(line);
+                continue;
+            }
+
+            // Skip all other M3U directives and comment lines.
+            if (line[0] == '#')
+                continue;
+
+            MediaViewModel? vm = null;
 
             // Try to interpret the entry as an absolute URI first (e.g. http://, file://).
             if (Uri.TryCreate(line, UriKind.Absolute, out Uri? uri))
@@ -208,45 +226,135 @@ public sealed class MediaListFactory : IMediaListFactory
                 {
                     // Local file URI — prefer StorageFile for richer metadata support.
                     var localFile = await FilesHelpers.TryGetFileFromPathAsync(uri.LocalPath);
-                    result.Add(localFile is not null
-                        ? _mediaFactory.GetSingleton(localFile)
-                        : _mediaFactory.GetSingleton(uri));
+                    if (localFile is not null)
+                    {
+                        bool isNew = !_mediaFactory.TryGetSingleton(localFile, out _);
+                        vm = _mediaFactory.GetSingleton(localFile);
+                        if (isNew)
+                            ApplyExtInf(vm, extInfTitle, extInfDuration);
+                    }
+                    else
+                    {
+                        bool isNew = !_mediaFactory.TryGetSingleton(uri, out _);
+                        vm = _mediaFactory.GetSingleton(uri);
+                        if (isNew)
+                            ApplyExtInf(vm, extInfTitle, extInfDuration);
+                    }
                 }
                 else
                 {
-                    result.Add(_mediaFactory.GetTransient(uri));
+                    // Remote URI — always transient, always apply EXTINF data since there is no cache.
+                    vm = _mediaFactory.GetTransient(uri);
+                    ApplyExtInf(vm, extInfTitle, extInfDuration);
+                }
+            }
+            else
+            {
+                // Treat the entry as a path (absolute or relative to the playlist directory).
+                string resolvedPath;
+                try
+                {
+                    if (string.IsNullOrEmpty(baseDirectory) && !Path.IsPathRooted(line))
+                    {
+                        // Cannot resolve relative paths without a known playlist directory; skip.
+                        extInfTitle = null;
+                        extInfDuration = default;
+                        continue;
+                    }
+
+                    resolvedPath = Path.IsPathRooted(line)
+                        ? Path.GetFullPath(line)
+                        : Path.GetFullPath(Path.Combine(baseDirectory!, line));
+                }
+                catch (Exception)
+                {
+                    // Invalid path — skip this entry.
+                    extInfTitle = null;
+                    extInfDuration = default;
+                    continue;
                 }
 
-                continue;
+                var resolvedFile = await FilesHelpers.TryGetFileFromPathAsync(resolvedPath);
+                if (resolvedFile is not null)
+                {
+                    bool isNew = !_mediaFactory.TryGetSingleton(resolvedFile, out _);
+                    vm = _mediaFactory.GetSingleton(resolvedFile);
+                    if (isNew)
+                        ApplyExtInf(vm, extInfTitle, extInfDuration);
+                }
+                else if (Uri.TryCreate(resolvedPath, UriKind.Absolute, out Uri? fileUri))
+                {
+                    // Fall back to URI-based access when the file is not directly accessible.
+                    bool isNew = !_mediaFactory.TryGetSingleton(fileUri, out _);
+                    vm = _mediaFactory.GetSingleton(fileUri);
+                    if (isNew)
+                        ApplyExtInf(vm, extInfTitle, extInfDuration);
+                }
             }
 
-            // Treat the entry as a path (absolute or relative to the playlist directory).
-            string resolvedPath;
-            try
-            {
-                resolvedPath = Path.IsPathRooted(line)
-                    ? Path.GetFullPath(line)
-                    : Path.GetFullPath(Path.Combine(baseDirectory, line));
-            }
-            catch (Exception)
-            {
-                // Invalid path — skip this entry.
-                continue;
-            }
+            // Each #EXTINF directive applies only to the immediately following entry.
+            extInfTitle = null;
+            extInfDuration = default;
 
-            var resolvedFile = await FilesHelpers.TryGetFileFromPathAsync(resolvedPath);
-            if (resolvedFile is not null)
-            {
-                result.Add(_mediaFactory.GetSingleton(resolvedFile));
-            }
-            else if (Uri.TryCreate(resolvedPath, UriKind.Absolute, out Uri? fileUri))
-            {
-                // Fall back to URI-based access when the file is not directly accessible.
-                result.Add(_mediaFactory.GetSingleton(fileUri));
-            }
+            if (vm is not null)
+                result.Add(vm);
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Parses an <c>#EXTINF</c> directive line and returns the display title and duration.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// // Basic format:       #EXTINF:123,Song Title
+    /// // IPTV extended:      #EXTINF:123 tvg-id="id" group-title="group",Song Title
+    /// // Unknown duration:   #EXTINF:-1,Live Stream
+    /// </code>
+    /// </example>
+    private static (string? title, TimeSpan duration) ParseExtInf(string line)
+    {
+        const string prefix = "#EXTINF:";
+        var body = line.Substring(prefix.Length);
+        var commaIndex = body.IndexOf(',');
+        if (commaIndex < 0)
+            return (null, default);
+
+        var title = body.Substring(commaIndex + 1).Trim();
+        var durationPart = body.Substring(0, commaIndex).Trim();
+
+        // Duration may be followed by space-separated key=value attributes (IPTV extension).
+        var spaceIndex = durationPart.IndexOf(' ');
+        var durationStr = spaceIndex >= 0 ? durationPart.Substring(0, spaceIndex) : durationPart;
+
+        TimeSpan duration = default;
+        if (double.TryParse(durationStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds)
+            && seconds >= 0)
+        {
+            duration = TimeSpan.FromSeconds(seconds);
+        }
+
+        return (string.IsNullOrEmpty(title) ? null : title, duration);
+    }
+
+    /// <summary>
+    /// Applies EXTINF-derived metadata (title and duration) to a <see cref="MediaViewModel"/>.
+    /// Duration is written directly to both <see cref="MusicInfo"/> and <see cref="VideoInfo"/>
+    /// so it is visible in the UI before full metadata is loaded via
+    /// <see cref="MediaViewModel.LoadDetailsAsync"/>.
+    /// </summary>
+    private static void ApplyExtInf(MediaViewModel vm, string? title, TimeSpan duration)
+    {
+        if (!string.IsNullOrEmpty(title))
+            vm.Name = title!;
+
+        if (duration > TimeSpan.Zero)
+        {
+            // Pre-populate duration so it appears in the UI without waiting for full metadata loading.
+            vm.MediaInfo.MusicProperties.Duration = duration;
+            vm.MediaInfo.VideoProperties.Duration = duration;
+        }
     }
 
     private async Task<List<MediaViewModel>> ParseSubMediaAsync(MediaViewModel source, CancellationToken cancellationToken = default)
