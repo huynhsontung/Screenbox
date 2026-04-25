@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -47,7 +48,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     {
         Playlist = playlist;
         _filesService = filesService;
-        SelectionCheckState = GetSelectionCheckState(_selectionCount);
+        SelectionCheckState = Playlist.Items.GetSelectionToggleState(SelectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
@@ -64,28 +65,13 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 
     partial void OnSelectionCountChanged(int value)
     {
-        SelectionCheckState = GetSelectionCheckState(value);
+        SelectionCheckState = Playlist.Items.GetSelectionToggleState(value);
     }
 
     partial void OnEnableMultiSelectChanged(bool value)
     {
         if (!value)
             SelectionCount = 0;
-    }
-
-    /// <summary>
-    /// Determines the check state of the current selection based on the number of selected items.
-    /// </summary>
-    /// <param name="selectionCount">The number of items currently selected.</param>
-    /// <returns>
-    /// <see langword="false"/> if no items are selected, and <see langword="true"/> if all items
-    /// in the playlist are selected; otherwise, <see langword="null"/> if the selection is partial.
-    /// </returns>
-    private bool? GetSelectionCheckState(int selectionCount)
-    {
-        return selectionCount == 0
-            ? false
-            : selectionCount == Playlist.Items.Count ? true : null;
     }
 
     private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;

@@ -52,7 +52,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
-        SelectionCheckState = GetSelectionCheckState(_selectionCount);
+        SelectionCheckState = Recent.GetSelectionToggleState(_selectionCount);
 
         // Activate the view model's messenger
         IsActive = true;
@@ -336,16 +336,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
-    private bool? GetSelectionCheckState(int selectionCount)
-    {
-        return selectionCount == 0
-            ? false
-            : selectionCount == Recent.Count ? true : null;
-    }
-
     partial void OnSelectionCountChanged(int value)
     {
-        SelectionCheckState = GetSelectionCheckState(value);
+        SelectionCheckState = Recent.GetSelectionToggleState(value);
     }
 
     partial void OnEnableMultiSelectChanged(bool value)
