@@ -37,37 +37,27 @@ public sealed class MediaListFactory : IMediaListFactory
             var item = storageItemQueue[i];
             switch (item)
             {
-                case StorageFile storageFile when storageFile.IsSupported():
-                    if (IsM3uPlaylist(storageFile.FileType))
+                case StorageFile m3uFile when IsM3uPlaylist(m3uFile.FileType):
+                    // Parse M3U/M3U8 playlists directly without creating a LibVLC Media object.
+                    var m3uItems = await ParseM3uAsync(m3uFile, cancellationToken);
+                    if (m3uItems.Count > 0)
                     {
-                        // Parse M3U/M3U8 playlists directly without creating a LibVLC Media object.
-                        var m3uItems = await ParseM3uAsync(storageFile, cancellationToken);
-                        if (m3uItems.Count > 0)
-                        {
-                            if (playNext != null && storageFile.IsEqual(playNext))
-                                next = m3uItems[0];
-                            queue.AddRange(m3uItems);
-                        }
-                        else
-                        {
-                            // Fallback: add the playlist file itself if parsing yielded no items.
-                            var fallback = _mediaFactory.GetSingleton(storageFile);
-                            if (playNext != null && storageFile.IsEqual(playNext))
-                                next = fallback;
-                            queue.Add(fallback);
-                        }
+                        if (playNext != null && m3uFile.IsEqual(playNext))
+                            next = m3uItems[0];
+                        queue.AddRange(m3uItems);
                     }
-                    else
-                    {
-                        var vm = _mediaFactory.GetSingleton(storageFile);
-                        if (playNext != null && storageFile.IsEqual(playNext))
-                            next = vm;
 
-                        if (storageFile.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(vm, cancellationToken) is { Count: > 0 } playlist)
-                            queue.AddRange(playlist);
-                        else
-                            queue.Add(vm);
-                    }
+                    break;
+
+                case StorageFile storageFile when storageFile.IsSupported():
+                    var vm = _mediaFactory.GetSingleton(storageFile);
+                    if (playNext != null && storageFile.IsEqual(playNext))
+                        next = vm;
+
+                    if (storageFile.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(vm, cancellationToken) is { Count: > 0 } playlist)
+                        queue.AddRange(playlist);
+                    else
+                        queue.Add(vm);
 
                     break;
 
@@ -97,7 +87,7 @@ public sealed class MediaListFactory : IMediaListFactory
         // The ordering of the conditional terms below is important
         // Delay check Item as much as possible. Item is lazy init.
         if ((media.Source is StorageFile file && !file.IsSupportedPlaylist())
-            || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri)
+            || (media.Source is Uri uri && !IsUriLocalPlaylistFile(uri))
             || media.Item.Value?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
             || await ParseSubMediaRecursiveAsync(media, cancellationToken) is not { Count: > 0 } playlist)
         {
@@ -135,7 +125,7 @@ public sealed class MediaListFactory : IMediaListFactory
         if (IsUriLocalM3uFile(uri))
         {
             // Convert local M3U/M3U8 URIs to StorageFile and parse directly without LibVLC.
-            var file = await TryGetStorageFileFromPathAsync(uri.LocalPath);
+            var file = await FilesHelpers.TryGetFileFromPathAsync(uri.LocalPath);
             if (file is not null)
             {
                 var m3uItems = await ParseM3uAsync(file, cancellationToken);
@@ -198,9 +188,11 @@ public sealed class MediaListFactory : IMediaListFactory
         }
 
         var result = new List<MediaViewModel>();
-        var baseDirectory = Path.GetDirectoryName(playlistFile.Path) ?? string.Empty;
+        var baseDirectory = string.IsNullOrEmpty(playlistFile.Path)
+            ? string.Empty
+            : Path.GetDirectoryName(playlistFile.Path);
 
-        foreach (var rawLine in content.Split('\n'))
+        foreach (var rawLine in content.Split('\n', StringSplitOptions.RemoveEmptyEntries))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -215,7 +207,7 @@ public sealed class MediaListFactory : IMediaListFactory
                 if (uri.IsFile && uri.IsLoopback)
                 {
                     // Local file URI — prefer StorageFile for richer metadata support.
-                    var localFile = await TryGetStorageFileFromPathAsync(uri.LocalPath);
+                    var localFile = await FilesHelpers.TryGetFileFromPathAsync(uri.LocalPath);
                     result.Add(localFile is not null
                         ? _mediaFactory.GetSingleton(localFile)
                         : _mediaFactory.GetSingleton(uri));
@@ -242,7 +234,7 @@ public sealed class MediaListFactory : IMediaListFactory
                 continue;
             }
 
-            var resolvedFile = await TryGetStorageFileFromPathAsync(resolvedPath);
+            var resolvedFile = await FilesHelpers.TryGetFileFromPathAsync(resolvedPath);
             if (resolvedFile is not null)
             {
                 result.Add(_mediaFactory.GetSingleton(resolvedFile));
@@ -285,31 +277,12 @@ public sealed class MediaListFactory : IMediaListFactory
     /// Handles both <see cref="StorageFile"/> sources and local <see cref="Uri"/> sources.
     /// Returns <see langword="null"/> when the source is not an M3U/M3U8 file.
     /// </summary>
-    private static async Task<StorageFile?> TryGetM3uStorageFileAsync(object source)
+    private static async Task<StorageFile?> TryGetM3uStorageFileAsync(object source) => source switch
     {
-        return source switch
-        {
-            StorageFile file when IsM3uPlaylist(file.FileType) => file,
-            Uri uri when IsUriLocalM3uFile(uri) => await TryGetStorageFileFromPathAsync(uri.LocalPath),
-            _ => null
-        };
-    }
-
-    /// <summary>
-    /// Attempts to retrieve a <see cref="StorageFile"/> from a file-system path.
-    /// Returns <see langword="null"/> when the file is inaccessible or does not exist.
-    /// </summary>
-    private static async Task<StorageFile?> TryGetStorageFileFromPathAsync(string path)
-    {
-        try
-        {
-            return await StorageFile.GetFileFromPathAsync(path);
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-    }
+        StorageFile file when IsM3uPlaylist(file.FileType) => file,
+        Uri uri when IsUriLocalM3uFile(uri) => await FilesHelpers.TryGetFileFromPathAsync(uri.LocalPath),
+        _ => null
+    };
 
     /// <summary>
     /// Returns <see langword="true"/> when <paramref name="extension"/> is

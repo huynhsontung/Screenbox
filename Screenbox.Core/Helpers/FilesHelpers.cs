@@ -1,8 +1,13 @@
-﻿using Screenbox.Core.Enums;
+﻿#nullable enable
+
+using System;
 using System.Collections.Immutable;
+using System.Threading.Tasks;
+using Screenbox.Core.Enums;
 using Windows.Storage;
 
 namespace Screenbox.Core.Helpers;
+
 public static class FilesHelpers
 {
     public static ImmutableArray<string> SupportedAudioFormats { get; } =
@@ -32,5 +37,21 @@ public static class FilesHelpers
         if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
         if (file.IsSupportedPlaylist()) return MediaPlaybackType.Playlist;
         return MediaPlaybackType.Unknown;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFile"/> from a file-system path.
+    /// Returns <see langword="null"/> when the file is inaccessible or does not exist.
+    /// </summary>
+    public static async Task<StorageFile?> TryGetFileFromPathAsync(string path)
+    {
+        try
+        {
+            return await StorageFile.GetFileFromPathAsync(path);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }
