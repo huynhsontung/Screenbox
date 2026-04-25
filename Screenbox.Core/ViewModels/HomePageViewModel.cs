@@ -52,7 +52,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
-        SelectionCheckState = Recent.GetSelectionToggleState(_selectionCount);
+        SelectionCheckState = Recent.GetSelectionToggleState(SelectionCount);
 
         // Activate the view model's messenger
         IsActive = true;

@@ -86,15 +86,14 @@ public sealed partial class HomePage : Page
 
     private void RemoveSelectedKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.Recent.Count > 0)
+        if (ViewModel.Recent.Count == 0) return;
+
+        var cmd = ViewModel.RemoveSelectedCommand;
+        var parameter = RecentFilesGridView.SelectedItems;
+        if (cmd.CanExecute(parameter))
         {
-            var cmd = ViewModel.RemoveSelectedCommand;
-            var parameter = RecentFilesGridView.SelectedItems;
-            if (cmd.CanExecute(parameter))
-            {
-                cmd.Execute(parameter);
-                args.Handled = true;
-            }
+            cmd.Execute(parameter);
+            args.Handled = true;
         }
     }
 }
