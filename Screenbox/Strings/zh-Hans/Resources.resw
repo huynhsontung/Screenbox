@@ -1066,9 +1066,9 @@
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>您没有播放列表</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>创建您的第一个播放列表，来整理您喜爱的视频和音乐。</value>
   </data>
 </root>
