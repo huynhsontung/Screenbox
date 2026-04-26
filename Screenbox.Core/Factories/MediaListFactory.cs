@@ -106,9 +106,6 @@ public sealed class MediaListFactory : IMediaListFactory
             var m3uItems = await ParseM3uAsync(file, cancellationToken);
             if (m3uItems.Count > 0)
                 return new NextMediaList(m3uItems[0], m3uItems);
-
-            // Fallback: treat the playlist file itself as the media item.
-            return new NextMediaList(_mediaFactory.GetSingleton(file));
         }
 
         var media = _mediaFactory.GetSingleton(file);
@@ -133,9 +130,6 @@ public sealed class MediaListFactory : IMediaListFactory
                 if (m3uItems.Count > 0)
                     return new NextMediaList(m3uItems[0], m3uItems);
             }
-
-            // Fallback: treat the URI as a regular media item.
-            return new NextMediaList(_mediaFactory.GetSingleton(uri));
         }
 
         var media = _mediaFactory.GetTransient(uri);
