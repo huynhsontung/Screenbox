@@ -235,10 +235,13 @@ public sealed class MediaListFactory : IMediaListFactory
 
                 var localFile = await TryGetLocalFileFromUriAsync(uri);
                 // Local file URI — prefer StorageFile for richer metadata support.
-                if (localFile != null && !_mediaFactory.TryGetSingleton(localFile, out vm))
+                if (localFile != null)
                 {
-                    vm = _mediaFactory.GetSingleton(localFile);
-                    ApplyExtInf(vm, extInfTitle, extInfDuration);
+                    if (!_mediaFactory.TryGetSingleton(localFile, out vm))
+                    {
+                        vm = _mediaFactory.GetSingleton(localFile);
+                        ApplyExtInf(vm, extInfTitle, extInfDuration);
+                    }
                 }
                 else if (!_mediaFactory.TryGetSingleton(uri, out vm))
                 {
