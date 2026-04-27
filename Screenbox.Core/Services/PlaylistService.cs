@@ -151,7 +151,7 @@ public sealed class PlaylistService : IPlaylistService
     public async Task<IReadOnlyList<PersistentPlaylist>> ListPlaylistsAsync()
     {
         StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(PlaylistsFolderName, CreationCollisionOption.OpenIfExists);
-        var files = await playlistsFolder.GetFilesAsync();
+        var files = await playlistsFolder.GetFilesAsync(CommonFileQuery.OrderBySearchRank);
         var playlists = new List<PersistentPlaylist>();
         foreach (var file in files)
         {
