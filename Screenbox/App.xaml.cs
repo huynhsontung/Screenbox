@@ -249,7 +249,13 @@ sealed partial class App : Application
         SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
         IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
         await Task.WhenAll(tasks);
-        await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
+        // Fire the Sentry flush without waiting for it.  The OS terminates the process
+        // shortly after deferral.Complete(), so blocking here for up to 2 seconds would
+        // keep the dead AppInstance registration alive and allow incoming file activations
+        // to be redirected to a process that can no longer handle them.  Sentry events
+        // that do not make it out in time are acceptable data loss compared to the UX
+        // regression of the "Application cannot be opened" error on quick reopen.
+        _ = SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
         deferral.Complete();
     }
 
