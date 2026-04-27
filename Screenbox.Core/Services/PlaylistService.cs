@@ -251,9 +251,10 @@ public sealed class PlaylistService : IPlaylistService
         foreach (MediaViewModel item in items.Where(x => x.Location.Length > 0 && x.Location != "about:blank"))
         {
             int durationSeconds = item.Duration > TimeSpan.Zero ? (int)Math.Round(item.Duration.TotalSeconds) : -1;
-            string title = item.Name.Replace('\r', ' ').Replace('\n', ' ');
+            string title = item.Name;
+            string path = Uri.TryCreate(item.Location, UriKind.Absolute, out var uri) ? uri.AbsoluteUri : item.Location;
             lines.Add($"#EXTINF:{durationSeconds},{title}");
-            lines.Add(item.Location);
+            lines.Add(path);
         }
 
         await FileIO.WriteLinesAsync(file, lines, UnicodeEncoding.Utf8);

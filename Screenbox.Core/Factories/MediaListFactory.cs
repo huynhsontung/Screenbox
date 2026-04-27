@@ -82,7 +82,6 @@ public sealed class MediaListFactory : IMediaListFactory
             var m3uItems = await ParseM3uAsync(m3uFile, cancellationToken);
             if (m3uItems.Count > 0)
                 return new NextMediaList(m3uItems[0], m3uItems);
-            return new NextMediaList(media);
         }
 
         // The ordering of the conditional terms below is important
@@ -184,9 +183,18 @@ public sealed class MediaListFactory : IMediaListFactory
         }
 
         var result = new List<MediaViewModel>();
-        var baseDirectory = string.IsNullOrEmpty(playlistFile.Path)
-            ? string.Empty
-            : Path.GetDirectoryName(playlistFile.Path);
+        Uri? baseUri = null;
+        try
+        {
+            baseUri = !string.IsNullOrEmpty(playlistFile.Path)
+                ? new Uri(Path.GetDirectoryName(playlistFile.Path), UriKind.Absolute)
+                : null;
+        }
+        catch (Exception)
+        {
+            // In case file path is a special identifier and not a true path
+            // pass
+        }
 
         // EXTINF metadata from the most recent #EXTINF directive, applied to the next media entry.
         string extInfTitle = string.Empty;
@@ -212,50 +220,30 @@ public sealed class MediaListFactory : IMediaListFactory
                 continue;
 
             MediaViewModel? vm = null;
+            Uri uri;
 
             try
             {
                 // Try to interpret the entry as an absolute URI first (e.g. http://, file://).
-                if (Uri.TryCreate(line, UriKind.Absolute, out Uri? uri))
+                if (!Uri.TryCreate(line, UriKind.Absolute, out uri))
                 {
-                    var localFile = await TryGetLocalFileFromUriAsync(uri);
-                    // Local file URI — prefer StorageFile for richer metadata support.
-                    if (localFile != null && !_mediaFactory.TryGetSingleton(localFile, out vm))
-                    {
-                        vm = _mediaFactory.GetSingleton(localFile);
-                        ApplyExtInf(vm, extInfTitle, extInfDuration);
-                    }
-                    else if (!_mediaFactory.TryGetSingleton(uri, out vm))
-                    {
-                        vm = _mediaFactory.GetSingleton(uri);
-                        ApplyExtInf(vm, extInfTitle, extInfDuration);
-                    }
+                    if (Uri.TryCreate(line, UriKind.Relative, out var relativeUri) && baseUri != null)
+                        uri = new Uri(baseUri, relativeUri);
+                    else
+                        continue; // Skip entries that cannot be parsed as either absolute or relative URIs.
                 }
-                else
+
+                var localFile = await TryGetLocalFileFromUriAsync(uri);
+                // Local file URI — prefer StorageFile for richer metadata support.
+                if (localFile != null && !_mediaFactory.TryGetSingleton(localFile, out vm))
                 {
-                    // Treat the entry as a path (absolute or relative to the playlist directory).
-                    if (string.IsNullOrEmpty(baseDirectory) && !Path.IsPathRooted(line))
-                    {
-                        // Cannot resolve relative paths without a known playlist directory; skip.
-                        continue;
-                    }
-
-                    string resolvedPath = Path.IsPathRooted(line)
-                        ? Path.GetFullPath(line)
-                        : Path.GetFullPath(Path.Combine(baseDirectory, line));
-
-                    var resolvedFile = await FilesHelpers.TryGetFileFromPathAsync(resolvedPath);
-                    if (resolvedFile != null && !_mediaFactory.TryGetSingleton(resolvedFile, out vm))
-                    {
-                        vm = _mediaFactory.GetSingleton(resolvedFile);
-                        ApplyExtInf(vm, extInfTitle, extInfDuration);
-                    }
-                    else if (Uri.TryCreate(resolvedPath, UriKind.Absolute, out Uri? fileUri)
-                        && !_mediaFactory.TryGetSingleton(fileUri, out vm))
-                    {
-                        vm = _mediaFactory.GetSingleton(fileUri);
-                        ApplyExtInf(vm, extInfTitle, extInfDuration);
-                    }
+                    vm = _mediaFactory.GetSingleton(localFile);
+                    ApplyExtInf(vm, extInfTitle, extInfDuration);
+                }
+                else if (!_mediaFactory.TryGetSingleton(uri, out vm))
+                {
+                    vm = _mediaFactory.GetSingleton(uri);
+                    ApplyExtInf(vm, extInfTitle, extInfDuration);
                 }
             }
             catch (Exception)
