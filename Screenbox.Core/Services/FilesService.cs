@@ -89,6 +89,23 @@ public sealed class FilesService : IFilesService
         return picker.PickMultipleFilesAsync();
     }
 
+    public IAsyncOperation<StorageFile> PickSaveFileAsync(string suggestedFileName,
+        IDictionary<string, IList<string>> fileTypes, PickerLocationId startLocation = PickerLocationId.ComputerFolder)
+    {
+        FileSavePicker picker = new()
+        {
+            SuggestedStartLocation = startLocation,
+            SuggestedFileName = suggestedFileName
+        };
+
+        foreach (var fileType in fileTypes)
+        {
+            picker.FileTypeChoices.Add(fileType.Key, fileType.Value);
+        }
+
+        return picker.PickSaveFileAsync();
+    }
+
     public IAsyncOperation<StorageFolder> PickFolderAsync()
     {
         FolderPicker picker = new()

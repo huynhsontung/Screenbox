@@ -7,6 +7,7 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -45,10 +46,26 @@
                     Icon="{ui:SymbolIcon Symbol=Rename}"
                     Text="{strings:Resources Key=Rename}" />
                 <MenuFlyoutItem
+                    Command="{x:Bind ExportPlaylistCommand}"
+                    CommandParameter="{Binding}"
+                    Text="{strings:Resources Key=Export}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
                     Command="{x:Bind DeletePlaylistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{strings:Resources Key=Delete}" />
+            </MenuFlyout>
+
+            <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="BottomEdgeAlignedRight">
+                <MenuFlyoutItem Command="{x:Bind ViewModel.ImportPlaylistCommand}" Text="{x:Bind strings:Resources.ImportPlaylist}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE8B5;" MirroredWhenRightToLeft="True" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
@@ -95,12 +112,14 @@
                 Text="{strings:Resources Key=Playlists}"
                 TextWrapping="NoWrap" />
 
-            <Button
+            <muxc:SplitButton
                 x:Name="HeaderCreateButton"
                 Grid.Column="1"
                 VerticalAlignment="Top"
+                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                 AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
-                Click="HeaderCreateButton_OnClick">
+                Click="HeaderCreateButton_OnClick"
+                Flyout="{StaticResource CreatePlaylistFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
                     <TextBlock
@@ -108,7 +127,10 @@
                         Margin="8,0,0,0"
                         Text="{strings:Resources Key=NewPlaylist}" />
                 </StackPanel>
-            </Button>
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:SplitButtonXYNavigationBehavior />
+                </interactivity:Interaction.Behaviors>
+            </muxc:SplitButton>
         </Grid>
 
         <GridView
@@ -156,17 +178,21 @@
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Glyph="{StaticResource PlaylistOffGlyph}" />
                 <controls:ContentUnavailableView.ActionContent>
-                    <Button
+                    <muxc:SplitButton
                         AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
                         AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
                         Click="HeaderCreateButton_OnClick"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Flyout="{StaticResource CreatePlaylistFlyout}"
+                        Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=NewPlaylist}" />
                         </StackPanel>
-                    </Button>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:SplitButtonXYNavigationBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </muxc:SplitButton>
                 </controls:ContentUnavailableView.ActionContent>
             </controls:ContentUnavailableView>
         </ScrollViewer>
