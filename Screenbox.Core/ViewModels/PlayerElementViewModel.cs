@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -47,6 +48,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _clickTimer;
     private readonly DisplayRequestTracker _requestTracker;
+    private CancellationTokenSource? _initCts;
     private Size _viewSize;
     private Size _aspectRatio;
     private ManipulationLock _manipulationLock;
@@ -89,20 +91,43 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void Initialize(string[] swapChainOptions)
     {
-        if (VlcMediaPlayer != null)
+        // Unsubscribe events and set VlcMediaPlayer to null immediately so that
+        // downstream consumers (e.g. MediaListViewModel._delayPlay) know the player
+        // is unavailable and queue any incoming PlayFilesMessage for later processing.
+        VlcMediaPlayer? oldPlayer = VlcMediaPlayer;
+        if (oldPlayer != null)
         {
-            var oldPlayer = VlcMediaPlayer;
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
             oldPlayer.PositionChanged -= OnPositionChanged;
             oldPlayer.MediaFailed -= OnMediaFailed;
             oldPlayer.PlaybackItemChanged -= OnPlaybackItemChanged;
-            _playerService.DisposePlayer(oldPlayer);
             VlcMediaPlayer = null;
         }
 
-        // Try to initialize the player in a background thread to avoid blocking the UI
+        // Cancel any in-progress initialization so that a stale Task cannot
+        // overwrite the new player after it becomes ready.
+        CancellationTokenSource? oldCts = _initCts;
+        _initCts = new CancellationTokenSource();
+        CancellationToken ct = _initCts.Token;
+        oldCts?.Cancel();
+        oldCts?.Dispose();
+
+        // Run both the old-player disposal and new-player initialization on a
+        // background thread.  LibVLC teardown (LibVLC.Dispose) is expensive and
+        // must not block the UI thread, which would delay window messaging and
+        // prevent the app from processing the next activation in time.
         Task.Run(() =>
         {
+            // Always dispose the old player even if a newer init was requested —
+            // we captured oldPlayer before the cancellation token was reset, so
+            // only this invocation owns the reference.
+            if (oldPlayer != null)
+            {
+                _playerService.DisposePlayer(oldPlayer);
+            }
+
+            if (ct.IsCancellationRequested) return;
+
             try
             {
                 var args = new List<string>();
@@ -134,6 +159,13 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     throw new InvalidOperationException("PlayerService must return a VlcMediaPlayer instance.");
                 }
 
+                if (ct.IsCancellationRequested)
+                {
+                    // A newer Initialize() call won the race; discard this player to avoid a leak.
+                    _playerService.DisposePlayer(vlcMediaPlayer);
+                    return;
+                }
+
                 VlcMediaPlayer = vlcMediaPlayer;
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
                 player.PositionChanged += OnPositionChanged;
@@ -150,7 +182,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     Messenger.Send(new FailedToInitializeNotificationMessage(ex.Message));
                 });
             }
-
         });
     }
 
