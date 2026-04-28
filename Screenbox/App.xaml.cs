@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Threading.Tasks;
@@ -145,6 +146,9 @@ sealed partial class App : Application
 
     private void ConfigureSentry()
     {
+        if (string.IsNullOrEmpty(Secrets.SentryDsn))
+            return;
+
         CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
 
         SentrySdk.Init(options =>
@@ -247,15 +251,16 @@ sealed partial class App : Application
     {
         SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
         SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
-        IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
+        var tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
+        if (!string.IsNullOrEmpty(Secrets.SentryDsn))
+        {
+            // Sentry Cloud is more reliable, so we can afford to wait a bit longer to flush events
+            // If it's a self-hosted Sentry instance, we just drop the events instead of risking delaying suspension
+            var sentryTimeout = TimeSpan.FromSeconds(Secrets.SentryDsn.Contains("sentry.io") ? 2 : 0.5);
+            tasks.Append(SentrySdk.FlushAsync(sentryTimeout));
+        }
+
         await Task.WhenAll(tasks);
-        // Fire the Sentry flush without waiting for it.  The OS terminates the process
-        // shortly after deferral.Complete(), so blocking here for up to 2 seconds would
-        // keep the dead AppInstance registration alive and allow incoming file activations
-        // to be redirected to a process that can no longer handle them.  Sentry events
-        // that do not make it out in time are acceptable data loss compared to the UX
-        // regression of the "Application cannot be opened" error on quick reopen.
-        _ = SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
         deferral.Complete();
     }
 
