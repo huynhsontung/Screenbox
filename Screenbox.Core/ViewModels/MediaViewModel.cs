@@ -432,14 +432,7 @@ public partial class MediaViewModel : ObservableRecipient
     {
         if (uri is { IsFile: true, IsLoopback: true, IsAbsoluteUri: true })
         {
-            try
-            {
-                return await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString);
         }
 
         return null;

@@ -87,6 +87,18 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         await Source.AddItemsAsync(mediaList);
     }
 
+    public async Task ExportPlaylistAsync(string playlistFileDisplayName = "M3U8")
+    {
+        if (Source == null) return;
+
+        var saveFileTypes = new Dictionary<string, IList<string>> { [playlistFileDisplayName] = [".m3u8"] };
+        StorageFile? file = await _filesService.PickSaveFileAsync(Source.Name,
+            saveFileTypes, Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
+        if (file is null) return;
+
+        await _playlistService.ExportPlaylistItemsAsync(Source.Items, file);
+    }
+
     public async Task<bool> DeletePlaylistAsync()
     {
         if (Source == null) return false;

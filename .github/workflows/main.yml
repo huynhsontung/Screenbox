@@ -71,7 +71,7 @@ jobs:
         PackageDir: C:\DeployOutput
         SENTRY_ORG: starpine
         SENTRY_PROJECT: screenbox
-        SENTRY_URL: sentry.starpine.dev
+        SENTRY_URL: https://sentry.io/
         SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       run: |

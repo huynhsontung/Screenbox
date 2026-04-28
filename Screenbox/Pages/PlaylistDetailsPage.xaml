@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -208,6 +209,15 @@
                                 Icon="{ui:SymbolIcon Symbol=Rename}"
                                 Label="{strings:Resources Key=Rename}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+
+                            <AppBarButton
+                                Command="{x:Bind ExportPlaylistCommand}"
+                                Label="{strings:Resources Key=Export}"
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
 
                             <AppBarButton
                                 Command="{x:Bind DeletePlaylistCommand}"
