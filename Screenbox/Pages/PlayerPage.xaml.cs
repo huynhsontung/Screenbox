@@ -94,11 +94,11 @@ public sealed partial class PlayerPage : Page
             case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
                 ViewModel.ControlsHidden = false;
                 PlayQueueFlyout.ShowAt(PlayQueueButton,
-                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(FlyoutPlacementMode.BottomEdgeAlignedLeft) });
+                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.BottomEdgeAlignedLeft) });
                 break;
             case VirtualKey.GamepadMenu:
                 VideoView.ContextFlyout.ShowAt(PlayerControls,
-                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
+                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
                 break;
             case VirtualKey.GamepadB when shouldHideControls:
                 ViewModel.TryHideControls(true);

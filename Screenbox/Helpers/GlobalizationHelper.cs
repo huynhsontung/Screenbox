@@ -37,7 +37,7 @@ public static class GlobalizationHelper
     /// if <see cref="IsRightToLeftLanguage"/> is <see langword="true"/>; otherwise, returns the
     /// original value.
     /// </returns>
-    public static FlyoutPlacementMode MirrorFlyoutPlacementWhenRightToLeft(FlyoutPlacementMode placement)
+    public static FlyoutPlacementMode MirrorWhenRightToLeft(this FlyoutPlacementMode placement)
     {
         if (!IsRightToLeftLanguage)
         {

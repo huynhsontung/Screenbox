@@ -94,7 +94,7 @@
                 </MenuFlyoutItem>
             </MenuFlyout>
 
-            <MenuFlyout x:Key="OpenFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
+            <MenuFlyout x:Key="OpenFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"

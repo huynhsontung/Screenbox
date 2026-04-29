@@ -19,7 +19,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
+        <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
             <MenuFlyoutItem
                 AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                 Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"

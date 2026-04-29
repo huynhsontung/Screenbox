@@ -70,7 +70,7 @@ public sealed partial class PlayerControls : UserControl
     private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
     {
         _castFlyout ??= CastControl.GetFlyout();
-        _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorFlyoutPlacementWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
+        _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
     }
 
     private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)
