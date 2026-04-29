@@ -1006,10 +1006,10 @@
     <value>新建播放列表</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>导入播放列表</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>导出</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>选中的项目</value>
