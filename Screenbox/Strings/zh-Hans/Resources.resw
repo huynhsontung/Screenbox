@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>新建播放列表</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>导入播放列表</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>选中的项目</value>
   </data>
@@ -1064,5 +1070,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>{0} 向播放列表添加 "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>您没有播放列表</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>创建您的第一个播放列表，来整理您喜爱的视频和音乐。</value>
   </data>
 </root>

@@ -353,7 +353,7 @@
     <value>Abrir ubicación del archivo</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Abrir con</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Álbum</value>
@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>Nueva lista de reproducción</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Ítem seleccionado</value>
   </data>
@@ -1021,7 +1027,7 @@
     <value>Cancelar</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Lista de reproducción sin título</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Ingrese un nombre para esta lista</value>
@@ -1058,11 +1064,17 @@
     <value>Borrar la posición de reproducción del dispositivo</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>{0} elemento añadido a la lista de reproducción "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>{0} elementos añadidos a la lista de reproducción "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>No tienes ninguna lista de reproducción</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Crea tu primera lista de reproducción para organizar tus vídeos y música favoritos.</value>
   </data>
 </root>

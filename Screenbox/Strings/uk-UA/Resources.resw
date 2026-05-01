@@ -353,7 +353,7 @@
     <value>Відкрити розташування файлу</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Відкрити за допомогою</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Альбом</value>
@@ -701,15 +701,15 @@
     <value>Субтитри додано</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Список відтворення «{0}» створено</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Список відтворення «{0}» видалено</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Список відтворення перейменовано на «{0}»</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>Новий список відтворення</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Вибраний елемент</value>
   </data>
@@ -1021,7 +1027,7 @@
     <value>Скасувати</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Список відтворення без назви</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Введіть назву цього списку відтворення</value>
@@ -1058,11 +1064,17 @@
     <value>Очистити історію позицій відтворення пристрою</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Додано {0} елемент до списку відтворення «{1}»</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Додано {0} елементів до списку відтворення «{1}»</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>У вас немає жодного списку відтворення</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Створіть свій перший список відтворення, щоб упорядкувати улюблені відео та музику.</value>
   </data>
 </root>

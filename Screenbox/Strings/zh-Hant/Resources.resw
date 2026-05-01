@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>新播放清單</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>已選取項目</value>
   </data>
@@ -1064,5 +1070,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>已將 {0} 個項目新增至播放清單 "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>You don't have any playlists</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Create your first playlist to organize your favorite videos and music.</value>
   </data>
 </root>

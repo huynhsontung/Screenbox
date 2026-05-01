@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>Playlist nou</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Importare playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exportare</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Element selectat</value>
   </data>
@@ -1064,5 +1070,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>Au fost adăugate {0} elemente la playlist-ul „{1}”</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>Nu aveți niciun playlist</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Creați-vă primul playlist pentru a vă organiza videoclipurile și muzica preferată.</value>
   </data>
 </root>

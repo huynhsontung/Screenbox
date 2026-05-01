@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>Neue Playlist</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Playlist importieren</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exportieren</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Ausgewähltes Element</value>
   </data>
@@ -1064,5 +1070,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>{0} Elemente zur Playlist "{1}" hinzugefügt</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>Sie haben keine Playlists</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Erstellen Sie Ihre erste Playlist, um Ihre Lieblingsvideos und Musik zu organisieren.</value>
   </data>
 </root>

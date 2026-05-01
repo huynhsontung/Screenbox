@@ -353,7 +353,7 @@
     <value>Otwórz lokalizację pliku</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Otwórz za pomocą</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -701,15 +701,15 @@
     <value>Dodano napisy</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Lista odtwarzania "{0}" utworzona</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Lista odtwarzania "{0}" usunięta</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Zmieniono nazwę listy odtwarzania na "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -756,7 +756,7 @@
     <value>Zaawansowane</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Prywatność</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Tryb rozszerzony</value>
@@ -997,72 +997,84 @@
     <value>Folder</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Dodaj do listy odtwarzania</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Utwórz nową listę odtwarzania</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Nowa lista odtwarzania</value>
+  </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Importuj listę odtwarzania</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Eksportuj</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Zaznaczony element</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Zaznaczone elementy</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Brak list odtwarzania</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Utwórz</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Anuluj</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Lista odtwarzania bez nazwy</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Wprowadź nazwę dla tej listy odtwarzania</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Listy odtwarzania</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Usuń</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Zmień nazwę</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Wpisz nową nazwę dla tej listy odtwarzania</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Zmień nazwę listy odtwarzania</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Usuń listę odtwarzania</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>Czy na pewno chcesz usunąć listę odtwarzania '{0}'? Nie możesz cofnąć tej czynności.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Historia pozycji odtwarzania</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to enable quick session resumption</value>
+    <value>Przechowuj historię pozycji odtwarzania na tym urządzeniu, aby umożliwić szybkie wznowienie sesji</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Wyczyść historię pozycji odtwarzania tego urządzenia</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Dodano element {0} do listy odtwarzania "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Dodano elementy {0} do listy odtwarzania "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>Nie masz żadnych list odtwarzania</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Stwórz swoją pierwszą listę odtwarzania, aby zorganizować swoje ulubione filmy i muzykę.</value>
   </data>
 </root>

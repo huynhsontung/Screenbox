@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>Senarai main baharu</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Item terpilih</value>
   </data>
@@ -1064,5 +1070,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>Added {0} items to playlist "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>You don't have any playlists</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Create your first playlist to organize your favorite videos and music.</value>
   </data>
 </root>

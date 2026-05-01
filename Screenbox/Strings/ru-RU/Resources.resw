@@ -353,7 +353,7 @@
     <value>Открыть расположение файла</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Открыть с помощью</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Альбом</value>
@@ -762,13 +762,13 @@
     <value>Расширенный режим</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Расширенный режим позволяет настроить поведение LibVLC с помощью аргументов командной строки.</value>
+    <value>Расширенный режим позволяет настроить поведение LibVLC с помощью аргументов командной строки</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Глобальные аргументы</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Аргументы командной строки, применимые ко всем воспроизводимым медиа.</value>
+    <value>Аргументы командной строки, применимые ко всем воспроизводимым медиа</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Удалить папку</value>
@@ -892,7 +892,7 @@
     <value>Импортировать визуалы</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Получите больше визуальных эффектов через приложение Lively Wallpaper или скачайте из GitHub</value>
+    <value>Получите больше визуальных эффектов через приложение Lively Wallpaper или скачайте их с GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Дата добавления</value>
@@ -955,7 +955,7 @@
     <value>Метод масштабирования видео</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>Super resolution масштабирование требует совместимое оборудование и поддержку драйверов</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>Билинейный</value>
@@ -1005,6 +1005,12 @@
   <data name="NewPlaylist" xml:space="preserve">
     <value>Новый плейлист</value>
   </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Import playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Выбранный элемент</value>
   </data>
@@ -1021,7 +1027,7 @@
     <value>Отмена</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Безымянный плейлист</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Введите название для этого плейлиста</value>
@@ -1045,7 +1051,7 @@
     <value>Удалить плейлист</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Вы уверены, что хотите удалить '{0}' плейлист ? Это действие нельзя отменить.</value>
+    <value>Вы уверены, что хотите удалить '{0}' плейлист? Это действие нельзя отменить.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1064,5 +1070,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>Добавлено {0} элементов в плейлист "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>У вас нет плейлистов</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Создайте свой первый плейлист для организации своих любимых видео и музыки.</value>
   </data>
 </root>
