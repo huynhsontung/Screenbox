@@ -317,7 +317,7 @@
     <value>主页</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>选择多个</value>
+    <value>多选</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>我们找不到任何音乐</value>
