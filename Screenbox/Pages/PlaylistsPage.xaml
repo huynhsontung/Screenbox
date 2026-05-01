@@ -13,6 +13,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:primitives="using:Windows.UI.Xaml.Controls.Primitives"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -60,7 +61,7 @@
                     Text="{strings:Resources Key=Delete}" />
             </MenuFlyout>
 
-            <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="BottomEdgeAlignedRight">
+            <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
                 <MenuFlyoutItem Command="{x:Bind ViewModel.ImportPlaylistCommand}" Text="{x:Bind strings:Resources.ImportPlaylist}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon Glyph="&#xE8B5;" MirroredWhenRightToLeft="True" />
