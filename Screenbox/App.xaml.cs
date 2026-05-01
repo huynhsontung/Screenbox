@@ -250,18 +250,28 @@ sealed partial class App : Application
     private async void OnSuspending(object sender, SuspendingEventArgs e)
     {
         SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
-        SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
-        var tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
-        if (!string.IsNullOrEmpty(Secrets.SentryDsn))
+        try
         {
-            // Sentry Cloud is more reliable, so we can afford to wait a bit longer to flush events
-            // If it's a self-hosted Sentry instance, we just drop the events instead of risking delaying suspension
-            var sentryTimeout = TimeSpan.FromSeconds(Secrets.SentryDsn.Contains("sentry.io") ? 2 : 0.5);
-            tasks.Append(SentrySdk.FlushAsync(sentryTimeout));
-        }
+            SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
+            var tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
+            if (!string.IsNullOrEmpty(Secrets.SentryDsn))
+            {
+                // Sentry Cloud is more reliable, so we can afford to wait a bit longer to flush events
+                // If it's a self-hosted Sentry instance, we just drop the events instead of risking delaying suspension
+                var sentryTimeout = TimeSpan.FromSeconds(Secrets.SentryDsn.Contains("sentry.io") ? 2 : 0.5);
+                tasks.Append(SentrySdk.FlushAsync(sentryTimeout));
+            }
 
-        await Task.WhenAll(tasks);
-        deferral.Complete();
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception)
+        {
+            // pass
+        }
+        finally
+        {
+            deferral.Complete();
+        }
     }
 
     private Frame InitRootFrame()
