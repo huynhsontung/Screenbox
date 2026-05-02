@@ -466,17 +466,25 @@ public sealed partial class PlayerPage : Page
 
     private void LayoutRoot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        var coreWindow = Window.Current.CoreWindow;
-        bool isControlKeyDown = coreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
-        bool isShiftKeyDown = coreWindow.GetKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
-        if (e.OriginalKey == VirtualKey.Space && !isControlKeyDown && !isShiftKeyDown && !e.KeyStatus.IsMenuKeyDown)
+        if (e.OriginalKey == VirtualKey.Space &&
+            !KeyboardAcceleratorHelper.IsControlKeyDown &&
+            !KeyboardAcceleratorHelper.IsShiftKeyDown &&
+            !e.KeyStatus.IsMenuKeyDown)
         {
             e.Handled = true;
-            // Only trigger once when Space is held down
-            if (!e.KeyStatus.WasKeyDown)
-            {
-                ViewModel.TogglePlayPause();
-            }
+            ViewModel.ProcessSpaceKeyDown();
+        }
+    }
+
+    private void LayoutRoot_OnPreviewKeyUp(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.OriginalKey == VirtualKey.Space &&
+            !KeyboardAcceleratorHelper.IsControlKeyDown &&
+            !KeyboardAcceleratorHelper.IsShiftKeyDown &&
+            !e.KeyStatus.IsMenuKeyDown)
+        {
+            e.Handled = true;
+            ViewModel.ProcessSpaceKeyUp();
         }
     }
 

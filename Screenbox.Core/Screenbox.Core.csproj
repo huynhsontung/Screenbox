@@ -131,8 +131,8 @@
     <Compile Include="Contexts\LibraryContext.cs" />
     <Compile Include="Contexts\PlaylistsContext.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
-    <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
+    <Compile Include="Enums\PlaybackActionKind.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
     <Compile Include="Enums\SearchSuggestionKind.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
