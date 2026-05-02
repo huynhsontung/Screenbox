@@ -25,6 +25,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <MenuFlyout x:Key="ItemFlyout">
@@ -92,6 +93,18 @@
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
                     </MenuFlyoutItem.Command>
                 </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.SelectItemCommand}"
+                    CommandParameter="{Binding}"
+                    Text="{x:Bind strings:Resources.Select}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon
+                            x:Name="SelectMenuFlyoutItemIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource SingleSelectGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <MenuFlyout x:Key="OpenFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
@@ -123,6 +136,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -167,50 +181,188 @@
         </Grid>
 
         <Grid
-            x:Name="RecentFilesPanel"
+            x:Name="RecentSubHeaderGrid"
             Grid.Row="1"
-            HorizontalAlignment="Stretch">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
+            MinHeight="48"
+            Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 x:Name="GridViewHeaderText"
-                Grid.Row="0"
-                Padding="{StaticResource ContentPagePadding}"
+                VerticalAlignment="Center"
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{strings:Resources Key=Recent}" />
-            <GridView
-                x:Name="RecentFilesGridView"
-                Grid.Row="1"
-                Margin="0,24,0,0"
-                Padding="{StaticResource GridViewContentPagePadding}"
-                ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
-                ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-                IsItemClickEnabled="True"
-                ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
-                ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
-                ItemsSource="{x:Bind ViewModel.Recent}"
-                SelectionMode="None">
-                <GridView.Resources>
-                    <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
-                </GridView.Resources>
-                <GridView.Footer>
-                    <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                </GridView.Footer>
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
-                    <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                </interactivity:Interaction.Behaviors>
-            </GridView>
+            <Grid
+                x:Name="SelectionGrid"
+                Grid.Row="0"
+                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
+                Visibility="Collapsed">
+                <Border
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
+                    Shadow="{StaticResource ElevationThemeShadow}"
+                    Translation="0,0,32" />
+                <CommandBar
+                    VerticalContentAlignment="Center"
+                    DefaultLabelPosition="Right"
+                    KeyboardAcceleratorPlacementMode="Hidden">
+                    <CommandBar.Resources>
+                        <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                        <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                        <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                        <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
+                    </CommandBar.Resources>
+                    <CommandBar.KeyboardAccelerators>
+                        <!--  When items are placed in the overflow menu, their shortcuts no longer function, so we handle them at the control level instead.  -->
+                        <KeyboardAccelerator Key="Delete" Invoked="RemoveSelectedKeyboardAccelerator_OnInvoked" />
+                    </CommandBar.KeyboardAccelerators>
+
+                    <AppBarButton
+                        Command="{x:Bind ViewModel.PlaySelectedCommand}"
+                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlayGlyph}}"
+                        Label="{x:Bind strings:Resources.Play}" />
+                    <AppBarButton
+                        Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
+                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlayAddGlyph}}"
+                        Label="{x:Bind strings:Resources.PlayNext}" />
+                    <AppBarButton
+                        Command="{x:Bind ViewModel.AddSelectedToQueueCommand}"
+                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlaylistMusicGlyph}}"
+                        Label="{x:Bind strings:Resources.AddToQueue}" />
+                    <AppBarButton Icon="Add" Label="{x:Bind strings:Resources.AddToPlaylist}">
+                        <AppBarButton.Resources>
+                            <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
+                            <x:String x:Key="AppBarButtonFlyoutGlyph">&#xE972;</x:String>
+                            <x:Double x:Key="AppBarButtonSubItemChevronFontSize">12</x:Double>
+                            <Thickness x:Key="AppBarButtonSubItemChevronLabelOnRightMargin">-7,18,12,0</Thickness>
+                        </AppBarButton.Resources>
+                        <AppBarButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind RecentFilesGridView.SelectedItems}" />
+                                </interactivity:Interaction.Behaviors>
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarButton
+                        Command="{x:Bind ViewModel.RemoveSelectedCommand}"
+                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                        Icon="Clear"
+                        KeyboardAcceleratorTextOverride="{x:Bind strings:KeyboardResources.VirtualKeyDelete}"
+                        Label="{x:Bind strings:Resources.Remove}" />
+
+                    <CommandBar.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox
+                                MinWidth="60"
+                                Margin="10,0,4,0"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                                AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
+                                Command="{StaticResource SelectDeselectAllCommand}"
+                                CommandParameter="{x:Bind RecentFilesGridView}"
+                                Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                                IsChecked="{x:Bind ViewModel.SelectionCheckState, Mode=OneWay}"
+                                IsThreeState="True"
+                                ToolTipService.ToolTip="{x:Bind ViewModel.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                            <TextBlock Padding="0,5,0,0" Text="•" />
+                            <Button
+                                Padding="4,5,4,5"
+                                VerticalAlignment="Top"
+                                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
+                                AutomationProperties.Name="{x:Bind strings:Resources.ClearSelection}"
+                                BorderThickness="0"
+                                Command="{x:Bind ViewModel.ClearSelectionCommand}"
+                                Content="{x:Bind strings:Resources.Clear}">
+                                <Button.Resources>
+                                    <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.ThemeDictionaries>
+                                            <ResourceDictionary x:Key="Default">
+                                                <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                                                <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+                                                <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
+                                                <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="Light">
+                                                <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                                                <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                                                <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+                                                <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
+                                                <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="HighContrast">
+                                                <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
+                                                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
+                                                <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorHighlightColorBrush" />
+                                                <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemColorButtonTextColorBrush" />
+                                                <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="SystemColorHighlightColorBrush" />
+                                                <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="SystemColorGrayTextColorBrush" />
+                                            </ResourceDictionary>
+                                        </ResourceDictionary.ThemeDictionaries>
+                                    </ResourceDictionary>
+                                </Button.Resources>
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="Escape" />
+                                </Button.KeyboardAccelerators>
+                            </Button>
+                        </StackPanel>
+                    </CommandBar.Content>
+                </CommandBar>
+            </Grid>
         </Grid>
+
+        <GridView
+            x:Name="RecentFilesGridView"
+            Grid.Row="2"
+            Margin="0,16,0,0"
+            Padding="{StaticResource GridViewContentPagePadding}"
+            ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
+            IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
+            ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
+            ItemsSource="{x:Bind ViewModel.Recent}"
+            KeyboardAcceleratorPlacementMode="Hidden"
+            SelectionChanged="RecentFilesGridView_OnSelectionChanged"
+            SelectionMode="Extended">
+            <GridView.Resources>
+                <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
+            </GridView.Resources>
+            <GridView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </GridView.Footer>
+            <GridView.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="A"
+                    Invoked="SelectDeselectAllKeyboardAccelerator_OnInvoked"
+                    Modifiers="Control" />
+            </GridView.KeyboardAccelerators>
+            <interactivity:Interaction.Behaviors>
+                <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </interactivity:Interaction.Behaviors>
+        </GridView>
 
         <!--  Empty recent list  -->
         <ScrollViewer
             x:Name="WelcomeViewer"
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPagePadding}"
             HorizontalScrollBarVisibility="Disabled"
@@ -270,11 +422,26 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="RecentSubHeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="WelcomeViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0,-16,0" />
                         <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="SelectionModes">
+                <VisualState x:Name="SingleSelection" />
+                <VisualState x:Name="MultipleSelection">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.EnableMultiSelect, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GridViewHeaderText.Visibility" Value="Collapsed" />
+                        <Setter Target="SelectionGrid.Visibility" Value="Visible" />
+                        <Setter Target="RecentFilesGridView.SelectionMode" Value="Multiple" />
+                        <Setter Target="RecentFilesGridView.IsItemClickEnabled" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -286,7 +453,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderOpenButton.Visibility" Value="Collapsed" />
-                        <Setter Target="RecentFilesPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="RecentSubHeaderGrid.Visibility" Value="Collapsed" />
                         <Setter Target="WelcomeViewer.Visibility" Value="Visible" />
                         <Setter Target="WelcomePanel.IsOpen" Value="True" />
                     </VisualState.Setters>
@@ -302,6 +469,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="OpenMenuFlyoutFolderItem.Icon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource FolderListMirroredGlyph}}" />
+                        <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -6,12 +6,14 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
+using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
 using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -35,13 +37,14 @@ public sealed partial class PlayQueueControl : UserControl
 
     internal CommonViewModel Common { get; }
 
-    private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
+    private readonly SelectDeselectAllCommand _selectionCommand;
 
     public PlayQueueControl()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayQueueViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+        _selectionCommand = new SelectDeselectAllCommand();
     }
 
     public async Task SmoothScrollActiveItemIntoViewAsync()
@@ -128,16 +131,13 @@ public sealed partial class PlayQueueControl : UserControl
         ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
     }
 
-    private void SelectDeselectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+    private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.HasItems)
+        if (ViewModel.HasItems && _selectionCommand.CanToggleSelection(PlaylistListView))
         {
-            if (_selectionCommand.CanToggleSelection(PlaylistListView))
-            {
-                ViewModel.EnableMultiSelect = true;
-                _selectionCommand.ToggleSelection(PlaylistListView);
-                args.Handled = true;
-            }
+            ViewModel.EnableMultiSelect = true;
+            _selectionCommand.ToggleSelection(PlaylistListView);
+            args.Handled = true;
         }
     }
 }

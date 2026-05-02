@@ -24,6 +24,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 {
     public ObservableCollection<MediaViewModel> Recent { get; }
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PlaySelectedCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
+    [NotifyCanExecuteChangedFor(nameof(AddSelectedToQueueCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
+    private int _selectionCount;
+
+    [ObservableProperty] private bool? _selectionCheckState;
+    [ObservableProperty] private bool _enableMultiSelect;
+    [ObservableProperty] private MediaViewModel? _selectedItemToAdd;
+
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
@@ -41,6 +52,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
+        SelectionCheckState = Recent.GetSelectionToggleState(SelectionCount);
 
         // Activate the view model's messenger
         IsActive = true;
@@ -229,6 +241,73 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Messenger.Send(new PlayMediaMessage(files));
     }
 
+    [RelayCommand]
+    private void SelectItem(MediaViewModel media)
+    {
+        EnableMultiSelect = true;
+        SelectedItemToAdd = media;
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelected(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        if (items.Length > 0)
+        {
+            Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false);
+        }
+
+        selectedItems.Clear();
+        ClearSelection();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelectedNext(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().Reverse().ToArray();
+        Messenger.SendPlayNext(items);
+        selectedItems.Clear();
+        ClearSelection();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void AddSelectedToQueue(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        Messenger.SendAddToQueue(items);
+        selectedItems.Clear();
+        ClearSelection();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void RemoveSelected(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var copy = selectedItems.OfType<MediaViewModel>().ToArray();
+        foreach (var item in copy)
+        {
+            Remove(item);
+        }
+
+        selectedItems.Clear();
+        ClearSelection();
+    }
+
+    [RelayCommand]
+    private void ClearSelection()
+    {
+        EnableMultiSelect = false;
+        SelectedItemToAdd = null;
+        SelectionCount = 0;
+    }
+
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
     {
         try
@@ -253,5 +332,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             LogService.Log(e);
             return null;
         }
+    }
+
+    private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
+
+    partial void OnSelectionCountChanged(int value)
+    {
+        SelectionCheckState = Recent.GetSelectionToggleState(value);
+    }
+
+    partial void OnEnableMultiSelectChanged(bool value)
+    {
+        if (!value) SelectionCount = 0;
     }
 }
