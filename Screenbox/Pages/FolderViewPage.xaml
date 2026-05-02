@@ -7,10 +7,10 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:pages="using:Screenbox.Pages"
     xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
@@ -132,9 +132,9 @@
                     <controls:CommonGridViewItem
                         Title="{x:Bind Name, Mode=OneWay}"
                         Width="{StaticResource WideGridViewItemWidth}"
-                        AutomationProperties.Name="{x:Bind pages:FolderViewPage.GetAutomationName(IsFile, Name, CaptionText, ItemCount), Mode=OneWay}"
+                        AutomationProperties.Name="{x:Bind helpers:AccessibilityHelper.GetStorageItemAccessibleName(IsFile, Name, CaptionText, ItemCount), Mode=OneWay}"
                         CanPlay="{x:Bind IsFile}"
-                        Caption="{x:Bind pages:FolderViewPage.GetCaptionText(IsFile, CaptionText, ItemCount), Mode=OneWay}"
+                        Caption="{x:Bind helpers:AccessibilityHelper.GetStorageItemCaption(IsFile, CaptionText, ItemCount), Mode=OneWay}"
                         IsPlaying="{Binding Media.IsPlaying, FallbackValue=False}"
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">

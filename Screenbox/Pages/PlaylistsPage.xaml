@@ -17,7 +17,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:viewmodels="using:Screenbox.Core.ViewModels"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -69,10 +69,11 @@
                 </MenuFlyoutItem>
             </MenuFlyout>
 
-            <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
+            <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewModels:PlaylistViewModel">
                 <controls:CommonGridViewItem
                     Title="{x:Bind Name, Mode=OneWay}"
                     Width="{StaticResource CommonGridViewItemWidth}"
+                    AutomationProperties.Name="{x:Bind helpers:AccessibilityHelper.FormatAccessibleName(Name, ItemsCount)}"
                     Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
                     IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
                     ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">

@@ -254,6 +254,7 @@
     <Compile Include="Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SplitButtonExtensions.cs" />
+    <Compile Include="Helpers\AccessibilityHelper.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
     <Compile Include="Helpers\KeyboardAcceleratorHelper.cs" />
