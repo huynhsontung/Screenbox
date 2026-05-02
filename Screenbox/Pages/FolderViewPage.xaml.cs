@@ -63,16 +63,6 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedFrom();
         }
 
-        private static string GetAutomationName(bool isFile, string name, string fileInfo, uint itemsCount)
-        {
-            return isFile
-                ? $"{Strings.Resources.File}; {name}, {fileInfo}"
-                : $"{Strings.Resources.Folder}, {name}; {Strings.Resources.ItemsCount(itemsCount)}";
-        }
-
-        private static string GetCaptionText(bool isFile, string fileInfo, uint itemCount) =>
-            isFile ? fileInfo : Strings.Resources.ItemsCount(itemCount);
-
         private void RestoreScrollVerticalOffset()
         {
             if (_scrollViewer == null) return;
