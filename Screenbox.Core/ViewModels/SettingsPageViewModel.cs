@@ -48,6 +48,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private int _selectedLanguage;
     [ObservableProperty] private bool _persistPlaybackPosition;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SnapshotSaveFolderPath))]
+    [NotifyPropertyChangedFor(nameof(HasCustomSnapshotSaveFolder))]
+    [NotifyCanExecuteChangedFor(nameof(ResetSnapshotSaveFolderCommand))]
+    private StorageFolder? _snapshotSaveFolder;
+
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
     public ObservableCollection<StorageFolder> VideoLocations { get; }
@@ -58,10 +64,17 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
 
+    /// <summary>Gets the file system path of the current custom snapshot save folder, or an empty string if using the default location.</summary>
+    public string SnapshotSaveFolderPath => _snapshotSaveFolder?.Path ?? string.Empty;
+
+    /// <summary>Gets a value indicating whether a custom snapshot save folder is configured.</summary>
+    public bool HasCustomSnapshotSaveFolder => _snapshotSaveFolder is not null;
+
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
     private readonly ILibraryService _libraryService;
     private readonly LibraryController _libraryController;
+    private readonly IFilesService _filesService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
@@ -83,13 +96,15 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         LibraryContext libraryContext,
         ILibraryService libraryService,
         LibraryController libraryController,
-        LastPositionTracker lastPositionTracker)
+        LastPositionTracker lastPositionTracker,
+        IFilesService filesService)
     {
         _settingsService = settingsService;
         _libraryContext = libraryContext;
         _libraryService = libraryService;
         _libraryController = libraryController;
         _lastPositionTracker = lastPositionTracker;
+        _filesService = filesService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
         MusicLocations = new ObservableCollection<StorageFolder>();
@@ -377,6 +392,43 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// Opens a folder picker so the user can select a custom save location for captured frames.
+    /// </summary>
+    [RelayCommand]
+    private async Task ChangeSnapshotSaveFolderAsync()
+    {
+        StorageFolder? folder = await _filesService.PickFolderAsync();
+        if (folder is null) return;
+
+        // Remove the old token from the future access list before adding the new one
+        string oldToken = _settingsService.SnapshotSaveLocationToken;
+        if (!string.IsNullOrEmpty(oldToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(oldToken))
+        {
+            StorageApplicationPermissions.FutureAccessList.Remove(oldToken);
+        }
+
+        string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder, "snapshot_folder");
+        _settingsService.SnapshotSaveLocationToken = newToken;
+        SnapshotSaveFolder = folder;
+    }
+
+    /// <summary>
+    /// Resets the snapshot save location to the default Pictures library.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasCustomSnapshotSaveFolder))]
+    private void ResetSnapshotSaveFolder()
+    {
+        string token = _settingsService.SnapshotSaveLocationToken;
+        if (!string.IsNullOrEmpty(token) && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+        {
+            StorageApplicationPermissions.FutureAccessList.Remove(token);
+        }
+
+        _settingsService.SnapshotSaveLocationToken = string.Empty;
+        SnapshotSaveFolder = null;
+    }
+
     public void OnNavigatedFrom()
     {
         if (SystemInformation.IsXbox)
@@ -429,6 +481,24 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         UpdateLibraryLocations();
         await UpdateRemovableStorageFoldersAsync();
+        await LoadSnapshotSaveFolderAsync();
+    }
+
+    private async Task LoadSnapshotSaveFolderAsync()
+    {
+        string token = _settingsService.SnapshotSaveLocationToken;
+        if (string.IsNullOrEmpty(token) || !StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            return;
+
+        try
+        {
+            SnapshotSaveFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
+        }
+        catch (Exception)
+        {
+            // Token is no longer valid; clear it from settings
+            _settingsService.SnapshotSaveLocationToken = string.Empty;
+        }
     }
 
     private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)

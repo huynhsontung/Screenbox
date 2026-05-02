@@ -33,4 +33,10 @@ public interface ISettingsService
     /// and restored between sessions.
     /// </summary>
     bool PersistPlaybackPosition { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <see cref="Windows.Storage.AccessCache.StorageApplicationPermissions"/> future access list token
+    /// for the custom snapshot save location. An empty string indicates the default Pictures library location is used.
+    /// </summary>
+    string SnapshotSaveLocationToken { get; set; }
 }

@@ -18,6 +18,7 @@ using Screenbox.Core.Services;
 using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
@@ -420,7 +421,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         if (MediaPlayer?.PlaybackState is not (MediaPlaybackState.Paused or MediaPlaybackState.Playing)) return;
         try
         {
-            StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
+            StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer, _settingsService);
             Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
         }
         catch (UnauthorizedAccessException)
@@ -433,7 +434,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
-    private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
+    private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer, ISettingsService settingsService)
     {
         if (mediaPlayer is not VlcMediaPlayer player)
         {
@@ -450,11 +451,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                 throw new Exception("VLC failed to save snapshot");
 
             StorageFile file = (await tempFolder.GetFilesAsync())[0];
-            StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
-            StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
-            StorageFolder destFolder =
-                await defaultSaveFolder.CreateFolderAsync("Screenbox",
-                    CreationCollisionOption.OpenIfExists);
+            StorageFolder destFolder = await GetSnapshotDestinationFolderAsync(settingsService);
             return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
                 NameCollisionOption.GenerateUniqueName);
         }
@@ -462,5 +459,30 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         {
             await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
+    }
+
+    /// <summary>
+    /// Resolves the destination folder for saving snapshots.
+    /// Uses the custom folder stored in <paramref name="settingsService"/> when available;
+    /// otherwise, falls back to the Pictures library's default save folder under a "Screenbox" subfolder.
+    /// </summary>
+    private static async Task<StorageFolder> GetSnapshotDestinationFolderAsync(ISettingsService settingsService)
+    {
+        string token = settingsService.SnapshotSaveLocationToken;
+        if (!string.IsNullOrEmpty(token) && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+        {
+            try
+            {
+                return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
+            }
+            catch (Exception)
+            {
+                // Token is no longer valid; fall through to the default location
+            }
+        }
+
+        StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+        StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
+        return await defaultSaveFolder.CreateFolderAsync("Screenbox", CreationCollisionOption.OpenIfExists);
     }
 }

@@ -37,6 +37,7 @@ public sealed class SettingsService : ISettingsService
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
+    private const string SnapshotSaveLocationTokenKey = "General/SnapshotSaveLocationToken";
 
     public bool UseIndexer
     {
@@ -174,6 +175,12 @@ public sealed class SettingsService : ISettingsService
     {
         get => GetValue<bool>(PrivacyPersistPlaybackPosition);
         set => SetValue(PrivacyPersistPlaybackPosition, value);
+    }
+
+    public string SnapshotSaveLocationToken
+    {
+        get => GetValue<string>(SnapshotSaveLocationTokenKey) ?? string.Empty;
+        set => SetValue(SnapshotSaveLocationTokenKey, value);
     }
 
     public SettingsService()
