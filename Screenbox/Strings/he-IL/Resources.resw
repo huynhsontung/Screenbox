@@ -1042,7 +1042,7 @@
     <value>שנה שם</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>הזן שם חדש לרשימת השמעה זו</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
     <value>Rename playlist</value>
