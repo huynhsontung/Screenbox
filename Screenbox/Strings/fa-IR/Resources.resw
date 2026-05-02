@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Add to queue</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Select all</value>
   </data>
