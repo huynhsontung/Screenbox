@@ -1006,10 +1006,10 @@
     <value>רשימת השמעה חדשה</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>יבא פלייליסטים</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>יצא</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
