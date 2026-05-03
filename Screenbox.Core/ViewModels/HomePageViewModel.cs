@@ -34,9 +34,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly Dictionary<string, string> _pathToMruMappings;
 
-    public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService,
+    public HomePageViewModel(
+        SelectionViewModel selection,
+        MediaViewModelFactory mediaFactory,
+        IFilesService filesService,
         ISettingsService settingsService)
     {
+        Selection = selection;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _settingsService = settingsService;
@@ -45,8 +49,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
 
-        Selection = new SelectionViewModel();
-        Selection.SelectionCheckState = Recent.GetSelectionToggleState(Selection.SelectionCount);
+        Selection.IsAllSelected = Recent.GetSelectionToggleState(Selection.SelectedItemCount);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
 
         // Activate the view model's messenger
@@ -73,9 +76,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SelectionViewModel.SelectionCount))
+        if (e.PropertyName == nameof(SelectionViewModel.SelectedItemCount))
         {
-            Selection.SelectionCheckState = Recent.GetSelectionToggleState(Selection.SelectionCount);
+            Selection.IsAllSelected = Recent.GetSelectionToggleState(Selection.SelectedItemCount);
             PlaySelectedCommand.NotifyCanExecuteChanged();
             PlaySelectedNextCommand.NotifyCanExecuteChanged();
             AddSelectedToQueueCommand.NotifyCanExecuteChanged();
@@ -251,8 +254,8 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     [RelayCommand]
     private void SelectItem(MediaViewModel media)
     {
-        Selection.EnableMultiSelect = true;
-        Selection.SelectedItemToAdd = media;
+        Selection.IsSelectionModeActive = true;
+        Selection.SelectedItem = media;
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -339,5 +342,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    private static bool HasSelection(IList<object>? selectedItems) => SelectionViewModel.HasSelection(selectedItems);
+    private bool HasSelection(IList<object>? selectedItems) =>
+        (selectedItems != null && selectedItems.Count > 0) || Selection.HasSelection;
 }

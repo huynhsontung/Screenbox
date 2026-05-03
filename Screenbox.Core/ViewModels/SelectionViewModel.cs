@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Screenbox.Core.ViewModels;
@@ -11,33 +10,33 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class SelectionViewModel : ObservableObject
 {
     [ObservableProperty]
-    private int _selectionCount;
+    private int _selectedItemCount;
 
     [ObservableProperty]
-    private bool? _selectionCheckState;
+    private bool? _isAllSelected;
 
     [ObservableProperty]
-    private bool _enableMultiSelect;
+    private bool _isSelectionModeActive;
 
     [ObservableProperty]
-    private object? _selectedItemToAdd;
+    private object? _selectedItem;
 
-    partial void OnSelectionCountChanged(int value)
+    partial void OnSelectedItemCountChanged(int value)
     {
         OnPropertyChanged(nameof(HasSelection));
     }
 
-    partial void OnEnableMultiSelectChanged(bool value)
+    partial void OnIsSelectionModeActiveChanged(bool value)
     {
-        if (!value) SelectionCount = 0;
+        if (!value) SelectedItemCount = 0;
     }
 
     public void ClearSelection()
     {
-        EnableMultiSelect = false;
-        SelectedItemToAdd = null;
-        SelectionCount = 0;
+        IsSelectionModeActive = false;
+        SelectedItem = null;
+        SelectedItemCount = 0;
     }
 
-    public static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
+    public bool HasSelection => SelectedItemCount > 0;
 }

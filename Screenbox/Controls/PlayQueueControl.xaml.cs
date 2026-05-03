@@ -55,12 +55,12 @@ public sealed partial class PlayQueueControl : UserControl
 
     private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel.Selection.EnableMultiSelect)
+        if (ViewModel.Selection.IsSelectionModeActive)
         {
             VisualStateManager.GoToState(this, "Multiple", true);
         }
 
-        ViewModel.Selection.SelectionCount = PlaylistListView.SelectedItems.Count;
+        ViewModel.Selection.SelectedItemCount = PlaylistListView.SelectedItems.Count;
     }
 
     internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
@@ -114,9 +114,9 @@ public sealed partial class PlayQueueControl : UserControl
 
     private void ViewModel_OnSelectionPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(PlayQueueViewModel.Selection.SelectionCount))
+        if (e.PropertyName == nameof(PlayQueueViewModel.Selection.SelectedItemCount))
         {
-            if (ViewModel.Selection.SelectionCount == 0)
+            if (ViewModel.Selection.SelectedItemCount == 0)
             {
                 PlaylistListView.SelectedItems.Clear();
             }
@@ -140,7 +140,7 @@ public sealed partial class PlayQueueControl : UserControl
     {
         if (ViewModel.HasItems && _selectionCommand.CanToggleSelection(PlaylistListView))
         {
-            ViewModel.Selection.EnableMultiSelect = true;
+            ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(PlaylistListView);
             args.Handled = true;
         }

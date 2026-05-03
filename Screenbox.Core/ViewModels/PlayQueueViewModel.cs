@@ -37,16 +37,16 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService)
+    public PlayQueueViewModel(MediaListViewModel playlist, SelectionViewModel selection, IFilesService filesService)
     {
         Playlist = playlist;
-        Selection = new SelectionViewModel();
+        Selection = selection;
         _filesService = filesService;
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
 
-        Selection.SelectionCheckState = Playlist.Items.GetSelectionToggleState(Selection.SelectionCount);
+        Selection.IsAllSelected = Playlist.Items.GetSelectionToggleState(Selection.SelectedItemCount);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
     }
 
@@ -55,36 +55,21 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         HasItems = Playlist.Items.Count > 0;
         if (!HasItems)
         {
-            Selection.EnableMultiSelect = false;
+            Selection.IsSelectionModeActive = false;
         }
     }
 
-
     private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SelectionViewModel.SelectionCount))
+        if (e.PropertyName == nameof(Selection.SelectedItemCount))
         {
-            Selection.SelectionCheckState = Playlist.Items.GetSelectionToggleState(Selection.SelectionCount);
+            Selection.IsAllSelected = Playlist.Items.GetSelectionToggleState(Selection.SelectedItemCount);
             PlaySelectedNextCommand.NotifyCanExecuteChanged();
             RemoveSelectedCommand.NotifyCanExecuteChanged();
             MoveSelectedItemUpCommand.NotifyCanExecuteChanged();
             MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
         }
     }
-
-    private static bool HasSelection(IList<object>? selectedItems) => SelectionViewModel.HasSelection(selectedItems);
-
-    private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
-        selectedItems?.Count == 1 &&
-        Playlist.Items.Count > 0 && Playlist.Items[0] != selectedItems[0];
-
-    private bool IsSelectedItemNotLast(IList<object>? selectedItems) =>
-        selectedItems?.Count == 1 &&
-        Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != selectedItems[0];
-
-    private bool IsItemNotFirst(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[0] != item;
-
-    private bool IsItemNotLast(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != item;
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void RemoveSelected(IList<object>? selectedItems)
@@ -209,4 +194,18 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
     }
 
+    private bool HasSelection(IList<object>? selectedItems) =>
+        (selectedItems != null && selectedItems.Count > 0) || Selection.HasSelection;
+
+    private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
+        selectedItems?.Count == 1 &&
+        Playlist.Items.Count > 0 && Playlist.Items[0] != selectedItems[0];
+
+    private bool IsSelectedItemNotLast(IList<object>? selectedItems) =>
+        selectedItems?.Count == 1 &&
+        Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != selectedItems[0];
+
+    private bool IsItemNotFirst(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[0] != item;
+
+    private bool IsItemNotLast(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != item;
 }

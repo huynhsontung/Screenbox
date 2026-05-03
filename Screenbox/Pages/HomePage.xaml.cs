@@ -48,16 +48,16 @@ public sealed partial class HomePage : Page
 
     private void ViewModel_OnSelectionPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(HomePageViewModel.Selection.SelectionCount))
+        if (e.PropertyName == nameof(HomePageViewModel.Selection.SelectedItemCount))
         {
-            if (ViewModel.Selection.SelectionCount == 0)
+            if (ViewModel.Selection.SelectedItemCount == 0)
             {
                 RecentFilesGridView.SelectedItems.Clear();
             }
         }
-        else if (e.PropertyName == nameof(HomePageViewModel.Selection.SelectedItemToAdd))
+        else if (e.PropertyName == nameof(HomePageViewModel.Selection.SelectedItem))
         {
-            if (ViewModel.Selection.SelectedItemToAdd is MediaViewModel item && !RecentFilesGridView.SelectedItems.Contains(item))
+            if (ViewModel.Selection.SelectedItem is MediaViewModel item && !RecentFilesGridView.SelectedItems.Contains(item))
             {
                 RecentFilesGridView.SelectedItems.Add(item);
             }
@@ -66,19 +66,19 @@ public sealed partial class HomePage : Page
 
     private void RecentFilesGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel.Selection.EnableMultiSelect)
+        if (ViewModel.Selection.IsSelectionModeActive)
         {
             VisualStateManager.GoToState(this, "MultipleSelection", true);
         }
 
-        ViewModel.Selection.SelectionCount = RecentFilesGridView.SelectedItems.Count;
+        ViewModel.Selection.SelectedItemCount = RecentFilesGridView.SelectedItems.Count;
     }
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (ViewModel.Recent.Count > 0 && _selectionCommand.CanToggleSelection(RecentFilesGridView))
         {
-            ViewModel.Selection.EnableMultiSelect = true;
+            ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(RecentFilesGridView);
             args.Handled = true;
         }
