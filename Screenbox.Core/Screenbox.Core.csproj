@@ -202,6 +202,7 @@
     <Compile Include="Messages\VisualizerChangedMessage.cs" />
     <Compile Include="Models\IMediaProperties.cs" />
     <Compile Include="Models\LanguageInfo.cs" />
+    <Compile Include="Models\CastOperationResult.cs" />
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
@@ -340,6 +341,9 @@
       <SubType>Designer</SubType>
     </PRIResource>
     <None Include="packages.lock.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Screenbox.Casting\Screenbox.Casting.csproj" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

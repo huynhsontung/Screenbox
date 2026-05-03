@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-using LibVLCSharp.Shared;
+using Screenbox.Casting.Models;
 
 namespace Screenbox.Core.Models
 {
@@ -18,25 +18,26 @@ namespace Screenbox.Core.Models
 
         public bool CanRenderAudio { get; }
 
-        internal RendererItem? Target => IsAvailable ? _item : null;
+        internal CastDevice? TargetDevice => IsAvailable ? _device : null;
 
-        private readonly RendererItem _item;
+        internal string Id => _device.Id;
 
-        internal Renderer(RendererItem item)
+        private readonly CastDevice _device;
+
+        internal Renderer(CastDevice device)
         {
-            _item = item;
-            Name = item.Name;
-            Type = item.Type;
-            IconUri = item.IconUri;
-            CanRenderVideo = item.CanRenderVideo;
-            CanRenderAudio = item.CanRenderAudio;
+            _device = device;
+            Name = device.Name;
+            Type = device.Protocol.ToString();
+            IconUri = device.IconUri;
+            CanRenderVideo = device.CanRenderVideo;
+            CanRenderAudio = device.CanRenderAudio;
             IsAvailable = true;
         }
 
         internal void Dispose()
         {
             IsAvailable = false;
-            _item.Dispose();
         }
 
         public override string ToString()
