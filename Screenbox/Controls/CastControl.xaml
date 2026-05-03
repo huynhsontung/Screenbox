@@ -54,6 +54,26 @@
             </ListView.ItemTemplate>
         </ListView>
 
+        <!--  Shown while connecting to the Chromecast device  -->
+        <StackPanel
+            x:Name="ConnectingView"
+            Grid.Row="2"
+            Margin="24,0"
+            VerticalAlignment="Center"
+            Visibility="Collapsed">
+            <muxc:ProgressRing
+                Width="32"
+                Height="32"
+                HorizontalAlignment="Center"
+                IsActive="True" />
+            <TextBlock
+                Margin="0,8,0,0"
+                HorizontalAlignment="Center"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind strings:Resources.Connecting}" />
+        </StackPanel>
+
+        <!--  Shown while actively casting  -->
         <Grid
             x:Name="CastingView"
             Grid.Row="2"
@@ -110,6 +130,18 @@
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LayoutStates">
                 <VisualState x:Name="Discovering" />
+                <VisualState x:Name="Connecting">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.CastCommand.IsRunning, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ConnectingView.Visibility" Value="Visible" />
+                        <Setter Target="TitleText.Visibility" Value="Collapsed" />
+                        <Setter Target="DiscoverProgressBar.Visibility" Value="Collapsed" />
+                        <Setter Target="RendererList.Visibility" Value="Collapsed" />
+                        <Setter Target="CastButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
                 <VisualState x:Name="Casting">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind ViewModel.IsCasting, Mode=OneWay}" />
