@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Sharpcaster;
 using Sharpcaster.Models.Media;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -15,6 +16,10 @@ namespace Screenbox.Core.Services;
 /// <summary>
 /// Implements <see cref="ICastService"/> using the SharpCaster library.
 ///
+/// <para>
+/// This service is stateless: all mutable session state is stored in the injected
+/// <see cref="CastContext"/>.  The service only contains behaviour (algorithms).
+/// </para>
 /// <para>
 /// Casting flow:
 /// <list type="number">
@@ -27,17 +32,15 @@ namespace Screenbox.Core.Services;
 /// </summary>
 public sealed class CastService : ICastService
 {
-    /// <inheritdoc/>
-    public event EventHandler? CastingEnded;
-
     /// <summary>Application ID for the Google Default Media Receiver.</summary>
     private const string DefaultMediaReceiverId = "CC1AD845";
 
+    private readonly CastContext _castContext;
     private readonly IMediaStreamingService _streamingService;
-    private ChromecastClient? _client;
 
-    public CastService(IMediaStreamingService streamingService)
+    public CastService(CastContext castContext, IMediaStreamingService streamingService)
     {
+        _castContext = castContext;
         _streamingService = streamingService;
     }
 
@@ -62,11 +65,12 @@ public sealed class CastService : ICastService
                 return false;
             }
 
-            _client = new ChromecastClient();
-            _client.Disconnected += OnClientDisconnected;
+            var client = new ChromecastClient();
+            client.Disconnected += OnClientDisconnected;
+            _castContext.Client = client;
 
-            await _client.ConnectChromecast(renderer.Target);
-            await _client.LaunchApplicationAsync(DefaultMediaReceiverId);
+            await client.ConnectChromecast(renderer.Target);
+            await client.LaunchApplicationAsync(DefaultMediaReceiverId);
 
             var media = new Media
             {
@@ -77,12 +81,12 @@ public sealed class CastService : ICastService
             };
 
             // Pass the start time so the Chromecast begins playback at the right position.
-            await _client.MediaChannel.LoadAsync(media, autoPlay: true);
+            await client.MediaChannel.LoadAsync(media, autoPlay: true);
 
             // Seek to the requested start position after the media is loaded.
             if (startPosition > TimeSpan.Zero)
             {
-                await _client.MediaChannel.SeekAsync(startPosition.TotalSeconds);
+                await client.MediaChannel.SeekAsync(startPosition.TotalSeconds);
             }
 
             return true;
@@ -101,24 +105,22 @@ public sealed class CastService : ICastService
         // Always stop the local HTTP stream regardless of client state.
         _streamingService.StopStream();
 
-        if (_client is null)
+        ChromecastClient? client = _castContext.Client;
+        if (client is null)
         {
             return;
         }
 
-        _client.Disconnected -= OnClientDisconnected;
+        client.Disconnected -= OnClientDisconnected;
+        _castContext.Client = null;
 
         try
         {
-            await _client.DisconnectAsync();
+            await client.DisconnectAsync();
         }
         catch (Exception)
         {
             // Ignore disconnect errors — the device may already be unreachable.
-        }
-        finally
-        {
-            _client = null;
         }
     }
 
@@ -128,13 +130,13 @@ public sealed class CastService : ICastService
 
     /// <summary>
     /// Raised by SharpCaster when the connection to the Chromecast is lost.
-    /// Stops the local stream and notifies subscribers via <see cref="CastingEnded"/>.
+    /// Stops the local stream and notifies subscribers via <see cref="CastContext.CastingEnded"/>.
     /// </summary>
     private void OnClientDisconnected(object sender, EventArgs e)
     {
         _streamingService.StopStream();
-        _client = null;
-        CastingEnded?.Invoke(this, EventArgs.Empty);
+        _castContext.Client = null;
+        _castContext.RaiseCastingEnded();
     }
 
     // -------------------------------------------------------------------------

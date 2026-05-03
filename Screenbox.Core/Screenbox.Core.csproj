@@ -129,6 +129,7 @@
     <Compile Include="Common\NavigationMetadata.cs" />
     <Compile Include="Contexts\CastContext.cs" />
     <Compile Include="Contexts\LibraryContext.cs" />
+    <Compile Include="Contexts\MediaStreamingContext.cs" />
     <Compile Include="Contexts\PlaylistsContext.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />

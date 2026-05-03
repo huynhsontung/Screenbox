@@ -18,12 +18,6 @@ namespace Screenbox.Core.Services;
 /// </remarks>
 public interface ICastService
 {
-    /// <summary>
-    /// Raised when the remote cast session ends unexpectedly — for example when the
-    /// Chromecast device is turned off or loses network connectivity.
-    /// </summary>
-    event EventHandler? CastingEnded;
-
     /// <summary>Creates a new <see cref="RendererWatcher"/> that discovers Chromecast devices on the local network.</summary>
     RendererWatcher CreateRendererWatcher();
 
