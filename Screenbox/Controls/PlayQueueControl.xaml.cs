@@ -55,12 +55,12 @@ public sealed partial class PlayQueueControl : UserControl
 
     private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel.EnableMultiSelect)
+        if (ViewModel.Selection.EnableMultiSelect)
         {
             VisualStateManager.GoToState(this, "Multiple", true);
         }
 
-        ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
+        ViewModel.Selection.SelectionCount = PlaylistListView.SelectedItems.Count;
     }
 
     internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
@@ -112,10 +112,15 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
-    private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void ViewModel_OnSelectionPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(PlayQueueViewModel.SelectionCount)) return;
-        if (ViewModel.SelectionCount == 0) PlaylistListView.SelectedItems.Clear();
+        if (e.PropertyName == nameof(PlayQueueViewModel.Selection.SelectionCount))
+        {
+            if (ViewModel.Selection.SelectionCount == 0)
+            {
+                PlaylistListView.SelectedItems.Clear();
+            }
+        }
     }
 
     private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)
@@ -123,19 +128,19 @@ public sealed partial class PlayQueueControl : UserControl
         UpdateLayoutState();
         GoToCurrentItem();
 
-        ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        ViewModel.Selection.PropertyChanged += ViewModel_OnSelectionPropertyChanged;
     }
 
     private void PlayQueue_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+        ViewModel.Selection.PropertyChanged -= ViewModel_OnSelectionPropertyChanged;
     }
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (ViewModel.HasItems && _selectionCommand.CanToggleSelection(PlaylistListView))
         {
-            ViewModel.EnableMultiSelect = true;
+            ViewModel.Selection.EnableMultiSelect = true;
             _selectionCommand.ToggleSelection(PlaylistListView);
             args.Handled = true;
         }

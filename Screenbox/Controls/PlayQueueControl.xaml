@@ -174,7 +174,7 @@
                 x:Name="MultiSelectToggle"
                 AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
                 AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
-                IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
+                IsChecked="{x:Bind ViewModel.Selection.EnableMultiSelect, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom"
                 XYFocusLeft="{x:Bind ClearButton}">
@@ -278,14 +278,14 @@
                             MinWidth="60"
                             Margin="10,0,4,0"
                             d:Content="11 items selected"
-                            AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                            AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectionCount), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                             Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
-                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            IsChecked="{x:Bind ViewModel.SelectionCheckState, Mode=OneWay}"
+                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectionCount), Mode=OneWay}"
+                            IsChecked="{x:Bind ViewModel.Selection.SelectionCheckState, Mode=OneWay}"
                             IsThreeState="True"
-                            ToolTipService.ToolTip="{x:Bind ViewModel.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                            ToolTipService.ToolTip="{x:Bind ViewModel.Selection.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
                         <TextBlock Padding="{x:Bind converters:ThicknessFiltersConverter.Extract(SelectionCheckBox.Padding, converters:ThicknessFilterKinds.Vertical)}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
@@ -391,7 +391,7 @@
             <VisualStateGroup x:Name="SelectionModes">
                 <VisualState x:Name="Multiple">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.EnableMultiSelect, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.Selection.EnableMultiSelect, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />

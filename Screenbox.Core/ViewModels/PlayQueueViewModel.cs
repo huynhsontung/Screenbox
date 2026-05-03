@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -20,6 +21,8 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 {
     public MediaListViewModel Playlist { get; }
 
+    public SelectionViewModel Selection { get; }
+
     public bool HasItems
     {
         get => _hasItems;
@@ -29,16 +32,6 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
     }
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
-    [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
-    [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemUpCommand))]
-    [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
-    private int _selectionCount;
-
-    [ObservableProperty] private bool? _selectionCheckState;
-    [ObservableProperty] private bool _enableMultiSelect;
-
     private bool _hasItems;
 
     private readonly IFilesService _filesService;
@@ -47,11 +40,14 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService)
     {
         Playlist = playlist;
+        Selection = new SelectionViewModel();
         _filesService = filesService;
-        SelectionCheckState = Playlist.Items.GetSelectionToggleState(SelectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
+
+        Selection.SelectionCheckState = Playlist.Items.GetSelectionToggleState(Selection.SelectionCount);
+        Selection.PropertyChanged += Selection_OnPropertyChanged;
     }
 
     private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -59,22 +55,24 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         HasItems = Playlist.Items.Count > 0;
         if (!HasItems)
         {
-            EnableMultiSelect = false;
+            Selection.EnableMultiSelect = false;
         }
     }
 
-    partial void OnSelectionCountChanged(int value)
+
+    private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        SelectionCheckState = Playlist.Items.GetSelectionToggleState(value);
+        if (e.PropertyName == nameof(SelectionViewModel.SelectionCount))
+        {
+            Selection.SelectionCheckState = Playlist.Items.GetSelectionToggleState(Selection.SelectionCount);
+            PlaySelectedNextCommand.NotifyCanExecuteChanged();
+            RemoveSelectedCommand.NotifyCanExecuteChanged();
+            MoveSelectedItemUpCommand.NotifyCanExecuteChanged();
+            MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
+        }
     }
 
-    partial void OnEnableMultiSelectChanged(bool value)
-    {
-        if (!value)
-            SelectionCount = 0;
-    }
-
-    private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
+    private static bool HasSelection(IList<object>? selectedItems) => SelectionViewModel.HasSelection(selectedItems);
 
     private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
         selectedItems?.Count == 1 &&
@@ -189,8 +187,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     [RelayCommand]
     private void ClearSelection()
     {
-        EnableMultiSelect = false;
-        SelectionCount = 0;
+        Selection.ClearSelection();
     }
 
     /// <summary>

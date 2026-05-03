@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,16 +25,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 {
     public ObservableCollection<MediaViewModel> Recent { get; }
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(PlaySelectedCommand))]
-    [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
-    [NotifyCanExecuteChangedFor(nameof(AddSelectedToQueueCommand))]
-    [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
-    private int _selectionCount;
-
-    [ObservableProperty] private bool? _selectionCheckState;
-    [ObservableProperty] private bool _enableMultiSelect;
-    [ObservableProperty] private MediaViewModel? _selectedItemToAdd;
+    public SelectionViewModel Selection { get; }
 
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
@@ -52,7 +44,10 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
-        SelectionCheckState = Recent.GetSelectionToggleState(SelectionCount);
+
+        Selection = new SelectionViewModel();
+        Selection.SelectionCheckState = Recent.GetSelectionToggleState(Selection.SelectionCount);
+        Selection.PropertyChanged += Selection_OnPropertyChanged;
 
         // Activate the view model's messenger
         IsActive = true;
@@ -74,6 +69,18 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     public async void OnLoaded()
     {
         await UpdateContentAsync();
+    }
+
+    private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectionViewModel.SelectionCount))
+        {
+            Selection.SelectionCheckState = Recent.GetSelectionToggleState(Selection.SelectionCount);
+            PlaySelectedCommand.NotifyCanExecuteChanged();
+            PlaySelectedNextCommand.NotifyCanExecuteChanged();
+            AddSelectedToQueueCommand.NotifyCanExecuteChanged();
+            RemoveSelectedCommand.NotifyCanExecuteChanged();
+        }
     }
 
     [RelayCommand]
@@ -244,8 +251,8 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     [RelayCommand]
     private void SelectItem(MediaViewModel media)
     {
-        EnableMultiSelect = true;
-        SelectedItemToAdd = media;
+        Selection.EnableMultiSelect = true;
+        Selection.SelectedItemToAdd = media;
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -303,9 +310,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     [RelayCommand]
     private void ClearSelection()
     {
-        EnableMultiSelect = false;
-        SelectedItemToAdd = null;
-        SelectionCount = 0;
+        Selection.ClearSelection();
     }
 
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
@@ -334,15 +339,5 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
-
-    partial void OnSelectionCountChanged(int value)
-    {
-        SelectionCheckState = Recent.GetSelectionToggleState(value);
-    }
-
-    partial void OnEnableMultiSelectChanged(bool value)
-    {
-        if (!value) SelectionCount = 0;
-    }
+    private static bool HasSelection(IList<object>? selectedItems) => SelectionViewModel.HasSelection(selectedItems);
 }
