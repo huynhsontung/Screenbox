@@ -1,12 +1,13 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using LibVLCSharp.Shared;
+using System.Threading.Tasks;
+using Screenbox.Casting.Contracts;
+using Screenbox.Casting.Models;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
-using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Helpers;
 
@@ -17,14 +18,15 @@ public sealed class RendererWatcher : IDisposable
 
     public bool IsStarted { get; private set; }
 
-    private readonly VlcMediaPlayer _vlcMediaPlayer;
+    private readonly ICastDeviceDiscovery _discovery;
     private readonly List<Renderer> _renderers;
-    private RendererDiscoverer? _discoverer;
+    private readonly ConcurrentDictionary<string, Renderer> _indexById;
 
-    internal RendererWatcher(VlcMediaPlayer vlcMediaPlayer)
+    internal RendererWatcher(ICastDeviceDiscovery discovery)
     {
-        _vlcMediaPlayer = vlcMediaPlayer;
+        _discovery = discovery;
         _renderers = new List<Renderer>();
+        _indexById = new ConcurrentDictionary<string, Renderer>(StringComparer.OrdinalIgnoreCase);
     }
 
     public IReadOnlyList<Renderer> GetRenderers()
@@ -36,26 +38,26 @@ public sealed class RendererWatcher : IDisposable
     {
         if (IsStarted) return true;
 
-        _discoverer = new RendererDiscoverer(_vlcMediaPlayer.LibVlc);
-        _discoverer.ItemAdded += OnItemAdded;
-        _discoverer.ItemDeleted += OnItemDeleted;
-        bool started = _discoverer.Start();
-        if (started)
+        _discovery.DeviceFound += OnDeviceFound;
+        _discovery.DeviceLost += OnDeviceLost;
+        TryAwait(_discovery.StartAsync());
+        IsStarted = true;
+
+        foreach (CastDevice device in _discovery.GetDevices())
         {
-            IsStarted = true;
+            OnDeviceFound(this, device);
         }
-        return started;
+
+        return true;
     }
 
     public void Stop()
     {
-        if (!IsStarted || _discoverer == null) return;
+        if (!IsStarted) return;
 
-        _discoverer.Stop();
-        _discoverer.ItemAdded -= OnItemAdded;
-        _discoverer.ItemDeleted -= OnItemDeleted;
-        _discoverer.Dispose();
-        _discoverer = null;
+        _discovery.DeviceFound -= OnDeviceFound;
+        _discovery.DeviceLost -= OnDeviceLost;
+        TryAwait(_discovery.StopAsync());
         IsStarted = false;
 
         foreach (Renderer renderer in _renderers)
@@ -64,6 +66,7 @@ public sealed class RendererWatcher : IDisposable
         }
 
         _renderers.Clear();
+        _indexById.Clear();
     }
 
     public void Dispose()
@@ -71,20 +74,33 @@ public sealed class RendererWatcher : IDisposable
         Stop();
     }
 
-    private void OnItemAdded(object sender, RendererDiscovererItemAddedEventArgs e)
+    private void OnDeviceFound(object? sender, CastDevice device)
     {
-        Renderer renderer = new(e.RendererItem);
+        if (_indexById.ContainsKey(device.Id)) return;
+
+        Renderer renderer = new(device);
         _renderers.Add(renderer);
+        _indexById[renderer.Id] = renderer;
         RendererFound?.Invoke(this, new RendererFoundEventArgs(renderer));
     }
 
-    private void OnItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e)
+    private void OnDeviceLost(object? sender, CastDevice device)
     {
-        Renderer? item = _renderers.FirstOrDefault(r => r.Target == e.RendererItem);
-        if (item != null)
+        if (!_indexById.TryRemove(device.Id, out Renderer? renderer)) return;
+
+        _renderers.Remove(renderer);
+        RendererLost?.Invoke(this, new RendererLostEventArgs(renderer));
+    }
+
+    private static void TryAwait(Task task)
+    {
+        try
         {
-            _renderers.Remove(item);
-            RendererLost?.Invoke(this, new RendererLostEventArgs(item));
+            task.GetAwaiter().GetResult();
+        }
+        catch
+        {
+            // Discovery failures are surfaced via empty renderer list for now.
         }
     }
 }

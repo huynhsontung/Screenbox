@@ -3,6 +3,9 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,12 +18,14 @@ public sealed class LocalMediaServer : IDisposable
 {
     private readonly HttpListener _listener;
     private readonly string _rootPrefix;
+    private readonly int _port;
 
     private CancellationTokenSource? _loopCts;
     private Task? _loopTask;
 
     public LocalMediaServer(int port = 5109)
     {
+        _port = port;
         _rootPrefix = $"http://+:{port}/cast/";
         _listener = new HttpListener();
         _listener.Prefixes.Add(_rootPrefix);
@@ -70,7 +75,24 @@ public sealed class LocalMediaServer : IDisposable
     public Uri BuildFileUri(string filePath)
     {
         string token = Uri.EscapeDataString(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(filePath)));
-        return new Uri($"http://127.0.0.1:{new Uri(_rootPrefix).Port}/cast/file/{token}");
+        string host = ResolveLanAddress() ?? "127.0.0.1";
+        return new Uri($"http://{host}:{_port}/cast/file/{token}");
+    }
+
+    /// <summary>
+    /// Infers MIME type from extension for common direct-play formats.
+    /// </summary>
+    public static string GetContentType(string filePath)
+    {
+        string extension = Path.GetExtension(filePath).ToLowerInvariant();
+        return extension switch
+        {
+            ".mp4" => "video/mp4",
+            ".m4a" => "audio/mp4",
+            ".mp3" => "audio/mpeg",
+            ".m3u8" => "application/vnd.apple.mpegurl",
+            _ => "application/octet-stream",
+        };
     }
 
     /// <summary>
@@ -133,7 +155,7 @@ public sealed class LocalMediaServer : IDisposable
                 return;
             }
 
-            context.Response.ContentType = GuessContentType(filePath);
+            context.Response.ContentType = GetContentType(filePath);
             using FileStream stream = File.OpenRead(filePath);
             context.Response.ContentLength64 = stream.Length;
             await stream.CopyToAsync(context.Response.OutputStream).ConfigureAwait(false);
@@ -148,18 +170,31 @@ public sealed class LocalMediaServer : IDisposable
     }
 
     /// <summary>
-    /// Infers MIME type from extension for common direct-play formats.
+    /// Resolves a best-effort LAN IPv4 address reachable by Chromecast devices.
     /// </summary>
-    private static string GuessContentType(string filePath)
+    private static string? ResolveLanAddress()
     {
-        string extension = Path.GetExtension(filePath).ToLowerInvariant();
-        return extension switch
+        foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
         {
-            ".mp4" => "video/mp4",
-            ".m4a" => "audio/mp4",
-            ".mp3" => "audio/mpeg",
-            ".m3u8" => "application/vnd.apple.mpegurl",
-            _ => "application/octet-stream",
-        };
+            if (networkInterface.OperationalStatus != OperationalStatus.Up ||
+                networkInterface.NetworkInterfaceType == NetworkInterfaceType.Loopback)
+            {
+                continue;
+            }
+
+            IPInterfaceProperties properties = networkInterface.GetIPProperties();
+            UnicastIPAddressInformation? address = properties.UnicastAddresses
+                .FirstOrDefault(candidate =>
+                    candidate.Address.AddressFamily == AddressFamily.InterNetwork &&
+                    !IPAddress.IsLoopback(candidate.Address) &&
+                    !candidate.Address.ToString().StartsWith("169.254.", StringComparison.Ordinal));
+
+            if (address is not null)
+            {
+                return address.Address.ToString();
+            }
+        }
+
+        return null;
     }
 }
