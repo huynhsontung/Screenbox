@@ -157,8 +157,32 @@ public sealed class LocalMediaServer : IDisposable
 
             context.Response.ContentType = GetContentType(filePath);
             using FileStream stream = File.OpenRead(filePath);
-            context.Response.ContentLength64 = stream.Length;
-            await stream.CopyToAsync(context.Response.OutputStream).ConfigureAwait(false);
+
+            context.Response.Headers[HttpResponseHeader.AcceptRanges] = "bytes";
+
+            if (TryParseRange(context.Request.Headers["Range"], stream.Length, out long start, out long end))
+            {
+                long bytesToWrite = (end - start) + 1;
+                context.Response.StatusCode = (int)HttpStatusCode.PartialContent;
+                context.Response.ContentLength64 = bytesToWrite;
+                context.Response.Headers[HttpResponseHeader.ContentRange] = $"bytes {start}-{end}/{stream.Length}";
+
+                stream.Seek(start, SeekOrigin.Begin);
+                if (!string.Equals(context.Request.HttpMethod, "HEAD", StringComparison.OrdinalIgnoreCase))
+                {
+                    await CopyRangeAsync(stream, context.Response.OutputStream, bytesToWrite).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                context.Response.ContentLength64 = stream.Length;
+                if (!string.Equals(context.Request.HttpMethod, "HEAD", StringComparison.OrdinalIgnoreCase))
+                {
+                    await stream.CopyToAsync(context.Response.OutputStream).ConfigureAwait(false);
+                }
+            }
+
             context.Response.OutputStream.Close();
             context.Response.Close();
         }
@@ -196,5 +220,91 @@ public sealed class LocalMediaServer : IDisposable
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Parses a single bytes range header in the format "bytes=start-end".
+    /// </summary>
+    private static bool TryParseRange(string? rangeHeader, long streamLength, out long start, out long end)
+    {
+        start = 0;
+        end = 0;
+
+        if (string.IsNullOrWhiteSpace(rangeHeader))
+        {
+            return false;
+        }
+
+        string parsedHeader = rangeHeader!;
+
+        if (!parsedHeader.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        string value = parsedHeader.Substring("bytes=".Length);
+        string[] parts = value.Split('-');
+        if (parts.Length != 2)
+        {
+            return false;
+        }
+
+        bool hasStart = long.TryParse(parts[0], out long parsedStart);
+        bool hasEnd = long.TryParse(parts[1], out long parsedEnd);
+
+        if (!hasStart && !hasEnd)
+        {
+            return false;
+        }
+
+        if (!hasStart)
+        {
+            long suffixLength = parsedEnd;
+            if (suffixLength <= 0)
+            {
+                return false;
+            }
+
+            start = Math.Max(streamLength - suffixLength, 0);
+            end = streamLength - 1;
+            return start <= end;
+        }
+
+        start = parsedStart;
+        end = hasEnd ? parsedEnd : streamLength - 1;
+
+        if (start < 0 || end < start || start >= streamLength)
+        {
+            return false;
+        }
+
+        if (end >= streamLength)
+        {
+            end = streamLength - 1;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Copies an exact byte count from source to destination stream.
+    /// </summary>
+    private static async Task CopyRangeAsync(Stream source, Stream destination, long bytesToWrite)
+    {
+        byte[] buffer = new byte[64 * 1024];
+        long remaining = bytesToWrite;
+
+        while (remaining > 0)
+        {
+            int requested = remaining > buffer.Length ? buffer.Length : (int)remaining;
+            int read = await source.ReadAsync(buffer, 0, requested).ConfigureAwait(false);
+            if (read <= 0)
+            {
+                break;
+            }
+
+            await destination.WriteAsync(buffer, 0, read).ConfigureAwait(false);
+            remaining -= read;
+        }
     }
 }

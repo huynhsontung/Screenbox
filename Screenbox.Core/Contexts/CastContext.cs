@@ -1,6 +1,9 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using Screenbox.Casting.Contracts;
+using Screenbox.Casting.Models;
+using Screenbox.Casting.Services;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 
@@ -13,4 +16,16 @@ public sealed partial class CastContext : ObservableObject
 
     [ObservableProperty]
     private Renderer? _activeRenderer;
+
+    [ObservableProperty]
+    private CastSessionState _sessionState;
+
+    [ObservableProperty]
+    private string? _lastError;
+
+    [ObservableProperty]
+    private ICastSession? _castSession;
+
+    [ObservableProperty]
+    private LocalMediaServer? _localMediaServer;
 }

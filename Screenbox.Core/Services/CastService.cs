@@ -1,11 +1,14 @@
 ﻿#nullable enable
 
 using System;
-using Screenbox.Casting.Models;
+using System.Threading;
+using System.Threading.Tasks;
 using Screenbox.Casting.Chromecast;
 using Screenbox.Casting.Contracts;
 using Screenbox.Casting.Discovery;
+using Screenbox.Casting.Models;
 using Screenbox.Casting.Services;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -17,15 +20,11 @@ public sealed class CastService : ICastService
 {
     private readonly ICastDeviceDiscovery _discovery;
     private readonly ICastCompatibilityAnalyzer _compatibilityAnalyzer;
-    private readonly LocalMediaServer _localMediaServer;
-
-    private ChromecastSession? _session;
 
     public CastService()
     {
         _discovery = new ChromecastMdnsDiscovery();
         _compatibilityAnalyzer = new BasicCastCompatibilityAnalyzer();
-        _localMediaServer = new LocalMediaServer();
     }
 
     public RendererWatcher CreateRendererWatcher(IMediaPlayer player)
@@ -33,55 +32,137 @@ public sealed class CastService : ICastService
         return new RendererWatcher(_discovery);
     }
 
-    public bool SetActiveRenderer(IMediaPlayer player, Renderer? renderer)
+    public async Task<CastOperationResult> SetActiveRendererAsync(CastContext context, IMediaPlayer player, Renderer? renderer, CancellationToken cancellationToken = default)
     {
         try
         {
             if (renderer is null)
             {
-                if (_session is not null)
+                if (context.CastSession is not null)
                 {
-                    _session.DisconnectAsync().GetAwaiter().GetResult();
-                    _session.DisposeAsync().GetAwaiter().GetResult();
-                    _session = null;
+                    await context.CastSession.DisconnectAsync(cancellationToken).ConfigureAwait(false);
+                    await context.CastSession.DisposeAsync().ConfigureAwait(false);
+                    context.CastSession = null;
                 }
 
-                return true;
+                if (context.LocalMediaServer is not null)
+                {
+                    await context.LocalMediaServer.StopAsync().ConfigureAwait(false);
+                    context.LocalMediaServer.Dispose();
+                    context.LocalMediaServer = null;
+                }
+
+                return new CastOperationResult(true, CastSessionState.Disconnected);
             }
 
             if (renderer.TargetDevice is null)
             {
-                return false;
+                return new CastOperationResult(false, CastSessionState.Faulted, "Renderer is unavailable.");
             }
 
-            _session?.DisconnectAsync().GetAwaiter().GetResult();
-            _session?.DisposeAsync().GetAwaiter().GetResult();
-
-            _session = new ChromecastSession(_compatibilityAnalyzer);
-            _session.ConnectAsync(renderer.TargetDevice).GetAwaiter().GetResult();
-            _session.LaunchDefaultReceiverAsync().GetAwaiter().GetResult();
-
-            if (TryCreateMediaSource(player, out CastMediaSource? source))
+            if (context.CastSession is not null)
             {
-                CastCompatibilityResult result = _session.LoadAsync(source).GetAwaiter().GetResult();
+                await context.CastSession.DisconnectAsync(cancellationToken).ConfigureAwait(false);
+                await context.CastSession.DisposeAsync().ConfigureAwait(false);
+                context.CastSession = null;
+            }
+
+            ChromecastSession session = new(_compatibilityAnalyzer);
+            context.CastSession = session;
+
+            await session.ConnectAsync(renderer.TargetDevice, cancellationToken).ConfigureAwait(false);
+            await session.LaunchDefaultReceiverAsync(cancellationToken).ConfigureAwait(false);
+
+            if (TryCreateMediaSource(context, player, out CastMediaSource? source))
+            {
+                CastCompatibilityResult result = await session.LoadAsync(source!, cancellationToken).ConfigureAwait(false);
                 if (result.Compatibility == CastCompatibility.RequiresRemuxOrTranscode)
                 {
-                    _session.DisconnectAsync().GetAwaiter().GetResult();
-                    _session.DisposeAsync().GetAwaiter().GetResult();
-                    _session = null;
-                    return false;
+                    await session.DisconnectAsync(cancellationToken).ConfigureAwait(false);
+                    await session.DisposeAsync().ConfigureAwait(false);
+                    context.CastSession = null;
+                    return new CastOperationResult(false, CastSessionState.Faulted, result.Reason);
                 }
             }
 
-            return true;
+            return new CastOperationResult(true, session.State);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return false;
+            if (context.CastSession is not null)
+            {
+                try
+                {
+                    await context.CastSession.DisconnectAsync(cancellationToken).ConfigureAwait(false);
+                    await context.CastSession.DisposeAsync().ConfigureAwait(false);
+                }
+                catch
+                {
+                    // Ignore cleanup failures after primary cast error.
+                }
+
+                context.CastSession = null;
+            }
+
+            return new CastOperationResult(false, CastSessionState.Faulted, ex.Message);
         }
     }
 
-    private bool TryCreateMediaSource(IMediaPlayer player, out CastMediaSource? source)
+    public async Task<CastOperationResult> PlayAsync(CastContext context, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (context.CastSession is null)
+            {
+                return new CastOperationResult(false, CastSessionState.Disconnected, "No active cast session.");
+            }
+
+            await context.CastSession.PlayAsync(cancellationToken).ConfigureAwait(false);
+            return new CastOperationResult(true, context.CastSession.State);
+        }
+        catch (Exception ex)
+        {
+            return new CastOperationResult(false, CastSessionState.Faulted, ex.Message);
+        }
+    }
+
+    public async Task<CastOperationResult> PauseAsync(CastContext context, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (context.CastSession is null)
+            {
+                return new CastOperationResult(false, CastSessionState.Disconnected, "No active cast session.");
+            }
+
+            await context.CastSession.PauseAsync(cancellationToken).ConfigureAwait(false);
+            return new CastOperationResult(true, context.CastSession.State);
+        }
+        catch (Exception ex)
+        {
+            return new CastOperationResult(false, CastSessionState.Faulted, ex.Message);
+        }
+    }
+
+    public async Task<CastOperationResult> StopAsync(CastContext context, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (context.CastSession is null)
+            {
+                return new CastOperationResult(false, CastSessionState.Disconnected, "No active cast session.");
+            }
+
+            await context.CastSession.StopAsync(cancellationToken).ConfigureAwait(false);
+            return new CastOperationResult(true, context.CastSession.State);
+        }
+        catch (Exception ex)
+        {
+            return new CastOperationResult(false, CastSessionState.Faulted, ex.Message);
+        }
+    }
+
+    private static bool TryCreateMediaSource(CastContext context, IMediaPlayer player, out CastMediaSource? source)
     {
         source = null;
 
@@ -110,18 +191,24 @@ public sealed class CastService : ICastService
                 return true;
 
             case IStorageFile file when !string.IsNullOrWhiteSpace(file.Path):
-                _localMediaServer.Start();
-                source = new CastMediaSource(_localMediaServer.BuildFileUri(file.Path), LocalMediaServer.GetContentType(file.Path), title);
+                EnsureLocalServer(context);
+                source = new CastMediaSource(context.LocalMediaServer!.BuildFileUri(file.Path), LocalMediaServer.GetContentType(file.Path), title);
                 return true;
 
             case string path when !string.IsNullOrWhiteSpace(path) && System.IO.File.Exists(path):
-                _localMediaServer.Start();
-                source = new CastMediaSource(_localMediaServer.BuildFileUri(path), LocalMediaServer.GetContentType(path), title);
+                EnsureLocalServer(context);
+                source = new CastMediaSource(context.LocalMediaServer!.BuildFileUri(path), LocalMediaServer.GetContentType(path), title);
                 return true;
 
             default:
                 return false;
         }
+    }
+
+    private static void EnsureLocalServer(CastContext context)
+    {
+        context.LocalMediaServer ??= new LocalMediaServer();
+        context.LocalMediaServer.Start();
     }
 
     private static string InferContentType(Uri uri)

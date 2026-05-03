@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Contexts;
@@ -69,7 +70,7 @@ public sealed partial class CastControlViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanCast))]
-    private void Cast()
+    private async Task CastAsync()
     {
         if (SelectedRenderer == null || MediaPlayer == null) return;
         SentrySdk.AddBreadcrumb("Start casting", category: "command", type: "user", data: new Dictionary<string, string>
@@ -79,24 +80,37 @@ public sealed partial class CastControlViewModel : ObservableObject
             {"canRenderAudio", SelectedRenderer.CanRenderAudio.ToString()},
             {"canRenderVideo", SelectedRenderer.CanRenderVideo.ToString()},
         });
-        if (_castService.SetActiveRenderer(MediaPlayer, SelectedRenderer))
+        CastOperationResult result = await _castService.SetActiveRendererAsync(_castContext, MediaPlayer, SelectedRenderer);
+        _castContext.SessionState = result.SessionState;
+        _castContext.LastError = result.ErrorMessage;
+
+        if (result.Succeeded)
         {
             _castContext.ActiveRenderer = SelectedRenderer;
             CastingDevice = SelectedRenderer;
             IsCasting = true;
+        }
+        else
+        {
+            _castContext.ActiveRenderer = null;
+            CastingDevice = null;
+            IsCasting = false;
         }
     }
 
     private bool CanCast() => SelectedRenderer is { IsAvailable: true };
 
     [RelayCommand]
-    private void StopCasting()
+    private async Task StopCastingAsync()
     {
         if (MediaPlayer == null) return;
         SentrySdk.AddBreadcrumb("Stop casting", category: "command", type: "user");
-        _castService.SetActiveRenderer(MediaPlayer, null);
+        CastOperationResult result = await _castService.SetActiveRendererAsync(_castContext, MediaPlayer, null);
+        _castContext.SessionState = result.SessionState;
+        _castContext.LastError = result.ErrorMessage;
         _castContext.ActiveRenderer = null;
         IsCasting = false;
+        CastingDevice = null;
         StartDiscovering();
     }
 
