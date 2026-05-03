@@ -601,7 +601,7 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.5, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
           "Sentry": "[5.16.3, )",
-          "SharpCaster": "[1.6.0, )",
+          "SharpCaster": "[2.0.0, )",
           "TagLibSharp": "[2.3.0, )",
           "protobuf-net": "[3.2.30, )"
         }

@@ -109,7 +109,7 @@
       },
       "Sharpcaster": {
         "type": "Direct",
-        "requested": "[1.6.0, )",
+        "requested": "[2.0.0, )",
         "resolved": "2.0.0",
         "contentHash": "g4lXhOG0rd7sdWzOdoI6FVdD8f5/p8cH00HcZUjDXjrJ1KulINaQZId/cAlbclWjIhXU7Y6pxLLtWXkuTc1jlw==",
         "dependencies": {
