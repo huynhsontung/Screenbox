@@ -55,6 +55,7 @@ public static class ServiceHelpers
         services.AddSingleton<PlaylistsContext>();
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
+        services.AddSingleton<MediaStreamingContext>();
 
         // Controllers
         services.AddSingleton<LibraryController>();

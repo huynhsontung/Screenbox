@@ -49,7 +49,7 @@ public sealed partial class CastControlViewModel : ObservableObject
         Renderers = new ObservableCollection<Renderer>();
 
         // React to the Chromecast going away (e.g., device turned off) while casting.
-        _castService.CastingEnded += OnCastingEnded;
+        _castContext.CastingEnded += OnCastingEnded;
     }
 
     /// <summary>

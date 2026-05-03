@@ -1,10 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
@@ -19,6 +20,10 @@ namespace Screenbox.Core.Services;
 /// on a random local port using <see cref="StreamSocketListener"/>.
 ///
 /// <para>
+/// This service is stateless: all mutable state (the active listener and current file) is
+/// stored in the injected <see cref="MediaStreamingContext"/>.
+/// </para>
+/// <para>
 /// For items whose original source is already an http/https URI the URI is returned directly
 /// without starting a local server — Chromecast can reach it on its own.
 /// </para>
@@ -28,10 +33,14 @@ namespace Screenbox.Core.Services;
 /// so that the Chromecast can seek into the stream.
 /// </para>
 /// </summary>
-public sealed class MediaStreamingService : IMediaStreamingService, IDisposable
+public sealed class MediaStreamingService : IMediaStreamingService
 {
-    private StreamSocketListener? _listener;
-    private IStorageFile? _currentFile;
+    private readonly MediaStreamingContext _context;
+
+    public MediaStreamingService(MediaStreamingContext context)
+    {
+        _context = context;
+    }
 
     /// <inheritdoc/>
     public async Task<Uri?> StartStreamAsync(PlaybackItem item)
@@ -56,31 +65,24 @@ public sealed class MediaStreamingService : IMediaStreamingService, IDisposable
 
         // Tear down any previous server instance before starting a new one.
         StopStream();
-        _currentFile = file;
+        _context.CurrentFile = file;
 
-        _listener = new StreamSocketListener();
-        _listener.ConnectionReceived += OnConnectionReceived;
+        var listener = new StreamSocketListener();
+        listener.ConnectionReceived += OnConnectionReceived;
+        _context.Listener = listener;
 
         // Bind to port 0 so the OS assigns a free port.
-        await _listener.BindServiceNameAsync("0");
+        await listener.BindServiceNameAsync("0");
 
         string localIp = GetLocalIpAddress() ?? "localhost";
-        string port = _listener.Information.LocalPort;
+        string port = listener.Information.LocalPort;
         return new Uri($"http://{localIp}:{port}/");
     }
 
     /// <inheritdoc/>
     public void StopStream()
     {
-        _listener?.Dispose();
-        _listener = null;
-        _currentFile = null;
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        StopStream();
+        _context.Dispose();
     }
 
     // -------------------------------------------------------------------------
@@ -111,7 +113,7 @@ public sealed class MediaStreamingService : IMediaStreamingService, IDisposable
                 return;
             }
 
-            if (_currentFile is null)
+            if (_context.CurrentFile is null)
             {
                 await WriteStatusLineAsync(socket.OutputStream, "404 Not Found");
                 return;
@@ -122,7 +124,7 @@ public sealed class MediaStreamingService : IMediaStreamingService, IDisposable
 
             bool headOnly = headers.StartsWith("HEAD", StringComparison.OrdinalIgnoreCase);
 
-            await ServeFileAsync(socket.OutputStream, _currentFile, rangeStart, rangeEnd, headOnly);
+            await ServeFileAsync(socket.OutputStream, _context.CurrentFile, rangeStart, rangeEnd, headOnly);
         }
         catch (Exception)
         {
