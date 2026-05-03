@@ -224,7 +224,7 @@
     <value>Adicionar à fila</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Selecionar</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Selecionar tudo</value>
