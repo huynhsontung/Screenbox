@@ -61,6 +61,8 @@ public sealed partial class SeekBarViewModel :
 
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
+    private readonly CastContext _castContext;
+    private readonly ICastService _castService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _bufferingTimer;
     private readonly DispatcherQueueTimer _seekTimer;
@@ -72,11 +74,13 @@ public sealed partial class SeekBarViewModel :
     private MediaViewModel? _currentItem;
 
     public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker,
-        PlayerContext playerContext)
+        PlayerContext playerContext, CastContext castContext, ICastService castService)
     {
         _settingsService = settingsService;
         _lastPositionTracker = lastPositionTracker;
         _playerContext = playerContext;
+        _castContext = castContext;
+        _castService = castService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _bufferingTimer = _dispatcherQueue.CreateTimer();
         _seekTimer = _dispatcherQueue.CreateTimer();
@@ -97,6 +101,10 @@ public sealed partial class SeekBarViewModel :
             MediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
             MediaPlayer.CanSeekChanged += OnCanSeekChanged;
         }
+
+        // Keep Time, Length, IsSeekable, and BufferingVisible in sync with the Chromecast
+        // device state while a cast session is active.
+        _castContext.PropertyChanged += OnCastContextPropertyChanged;
 
         // Activate the view model's messenger
         IsActive = true;
@@ -268,6 +276,24 @@ public sealed partial class SeekBarViewModel :
 
     private void SetPlayerPosition(TimeSpan position, bool debounce)
     {
+        // While casting, seek on the Chromecast device instead of the local player.
+        if (_castContext.IsCasting && _castContext.Client is { } castClient)
+        {
+            if (debounce)
+            {
+                _seekTimer.Debounce(
+                    () => _ = _castService.SeekAsync(castClient, position),
+                    TimeSpan.FromMilliseconds(200));
+            }
+            else
+            {
+                _seekTimer.Stop();
+                _ = _castService.SeekAsync(castClient, position);
+            }
+
+            return;
+        }
+
         if (!IsSeekable || MediaPlayer == null) return;
         if (debounce)
         {
@@ -325,12 +351,16 @@ public sealed partial class SeekBarViewModel :
 
     private void OnBufferingEnded(IMediaPlayer sender, object? args)
     {
+        // When casting, buffering state is driven by CastContext.CastIsBuffering instead.
+        if (_castContext.IsCasting) return;
         _bufferingTimer.Stop();
         _dispatcherQueue.TryEnqueue(() => BufferingVisible = false);
     }
 
     private void OnBufferingStarted(IMediaPlayer sender, object? args)
     {
+        // When casting, buffering state is driven by CastContext.CastIsBuffering instead.
+        if (_castContext.IsCasting) return;
         // When the player is paused, the following still triggers a buffering
         if (sender.Position == sender.NaturalDuration)
             return;
@@ -341,6 +371,8 @@ public sealed partial class SeekBarViewModel :
 
     private void OnPositionChanged(IMediaPlayer sender, object? args)
     {
+        // Do not override cast position updates with local player position while casting.
+        if (_castContext.IsCasting) return;
         if (_seekTimer.IsRunning || _timeChangeOverride) return;
         _dispatcherQueue.TryEnqueue(() =>
         {
@@ -350,6 +382,8 @@ public sealed partial class SeekBarViewModel :
 
     private void OnNaturalDurationChanged(IMediaPlayer sender, object? args)
     {
+        // Do not override cast duration with local player duration while casting.
+        if (_castContext.IsCasting) return;
         // Natural duration can fluctuate during playback
         // Do not rely on this event to detect media changes
         _dispatcherQueue.TryEnqueue(() =>
@@ -406,6 +440,67 @@ public sealed partial class SeekBarViewModel :
         else if (position > TimeSpan.FromSeconds(5))
         {
             _lastPositionTracker.RemovePosition(_currentItem.Location);
+        }
+    }
+
+    /// <summary>
+    /// Handles changes to the <see cref="CastContext"/> so that the seek bar reflects
+    /// the Chromecast device state while casting and reverts to the local player once
+    /// the session ends.
+    /// </summary>
+    private void OnCastContextPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(CastContext.IsCasting):
+                if (_castContext.IsCasting)
+                {
+                    // Casting just started — enable seeking and seed the initial position/duration.
+                    IsSeekable = true;
+                    Time = _castContext.CastPosition * 1000;
+                    if (_castContext.CastDuration > 0)
+                    {
+                        Length = _castContext.CastDuration * 1000;
+                    }
+                }
+                else
+                {
+                    // Casting ended — restore seek bar from the local player.
+                    _bufferingTimer.Stop();
+                    BufferingVisible = false;
+                    IsSeekable = MediaPlayer?.CanSeek ?? false;
+                    Time = MediaPlayer?.Position.TotalMilliseconds ?? 0;
+                    Length = MediaPlayer?.NaturalDuration.TotalMilliseconds ?? 0;
+                }
+
+                break;
+
+            case nameof(CastContext.CastPosition) when _castContext.IsCasting:
+                // Only update Time from the Chromecast when the user is not actively seeking.
+                if (!_timeChangeOverride && !_seekTimer.IsRunning)
+                {
+                    Time = _castContext.CastPosition * 1000;
+                }
+
+                break;
+
+            case nameof(CastContext.CastDuration) when _castContext.IsCasting && _castContext.CastDuration > 0:
+                Length = _castContext.CastDuration * 1000;
+                break;
+
+            case nameof(CastContext.CastIsBuffering) when _castContext.IsCasting:
+                if (_castContext.CastIsBuffering)
+                {
+                    // Only show the buffering indicator after a short delay to avoid flicker.
+                    _bufferingTimer.Debounce(() => BufferingVisible = true, TimeSpan.FromSeconds(0.5));
+                }
+                else
+                {
+                    _bufferingTimer.Stop();
+                    BufferingVisible = false;
+                }
+
+                break;
         }
     }
 }
