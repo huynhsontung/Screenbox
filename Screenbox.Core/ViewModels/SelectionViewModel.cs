@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -16,6 +18,23 @@ namespace Screenbox.Core.ViewModels;
 /// </remarks>
 public sealed partial class SelectionViewModel : ObservableObject
 {
+    /// <summary>
+    /// Gets the collection of currently selected items.
+    /// </summary>
+    /// <value>
+    /// A collection containing the selected items. The default is an empty collection.
+    /// </value>
+    public ObservableCollection<object> SelectedItems { get; }
+
+    /// <summary>
+    /// Gets a value that indicates whether there is at least one selected item.
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> if <see cref="SelectedItemCount"/> is greater than <c>0</c>;
+    /// otherwise, <see langword="false"/>.
+    /// </value>
+    public bool HasSelection => SelectedItemCount > 0;
+
     /// <summary>
     /// Gets or sets the number of selected items.
     /// </summary>
@@ -52,14 +71,11 @@ public sealed partial class SelectionViewModel : ObservableObject
     [ObservableProperty]
     private object? _selectedItem;
 
-    /// <summary>
-    /// Gets a value that indicates whether there is at least one selected item.
-    /// </summary>
-    /// <value>
-    /// <see langword="true"/> if <see cref="SelectedItemCount"/> is greater than <c>0</c>;
-    /// otherwise, <see langword="false"/>.
-    /// </value>
-    public bool HasSelection => SelectedItemCount > 0;
+    public SelectionViewModel()
+    {
+        SelectedItems = new ObservableCollection<object>();
+        SelectedItems.CollectionChanged += SelectedItems_OnCollectionChanged;
+    }
 
     partial void OnSelectedItemCountChanged(int value)
     {
@@ -82,6 +98,10 @@ public sealed partial class SelectionViewModel : ObservableObject
 
         IsSelectionModeActive = true;
         SelectedItem = item;
+        if (!SelectedItems.Contains(item))
+        {
+            SelectedItems.Add(item);
+        }
     }
 
     /// <summary>
@@ -92,5 +112,14 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         IsSelectionModeActive = false;
         SelectedItem = null;
+    }
+
+    private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        int newCount = SelectedItems.Count;
+        if (SelectedItemCount != newCount)
+        {
+            SelectedItemCount = newCount;
+        }
     }
 }

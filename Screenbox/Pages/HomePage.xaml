@@ -339,7 +339,6 @@
             ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Recent}"
             KeyboardAcceleratorPlacementMode="Hidden"
-            SelectionChanged="RecentFilesGridView_OnSelectionChanged"
             SelectionMode="Extended">
             <GridView.Resources>
                 <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
@@ -355,6 +354,7 @@
             </GridView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </interactivity:Interaction.Behaviors>
         </GridView>

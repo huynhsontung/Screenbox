@@ -53,16 +53,6 @@ public sealed partial class PlayQueueControl : UserControl
         await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
     }
 
-    private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ViewModel.Selection.IsSelectionModeActive)
-        {
-            VisualStateManager.GoToState(this, "Multiple", true);
-        }
-
-        ViewModel.Selection.SelectedItemCount = PlaylistListView.SelectedItems.Count;
-    }
-
     internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
     {
         if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
@@ -112,35 +102,10 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
-    private void ViewModel_OnSelectionPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(PlayQueueViewModel.Selection.SelectedItemCount))
-        {
-            if (ViewModel.Selection.SelectedItemCount == 0)
-            {
-                PlaylistListView.SelectedItems.Clear();
-            }
-        }
-        else if (e.PropertyName == nameof(PlayQueueViewModel.Selection.SelectedItem))
-        {
-            if (ViewModel.Selection.SelectedItem is MediaViewModel item && !PlaylistListView.SelectedItems.Contains(item))
-            {
-                PlaylistListView.SelectedItems.Add(item);
-            }
-        }
-    }
-
     private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)
     {
         UpdateLayoutState();
         GoToCurrentItem();
-
-        ViewModel.Selection.PropertyChanged += ViewModel_OnSelectionPropertyChanged;
-    }
-
-    private void PlayQueue_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        ViewModel.Selection.PropertyChanged -= ViewModel_OnSelectionPropertyChanged;
     }
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
