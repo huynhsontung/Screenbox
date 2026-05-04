@@ -62,18 +62,24 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
+    private readonly CastContext _castContext;
+    private readonly ICastService _castService;
     private Size _aspectRatio;
 
     public PlayerControlsViewModel(
         MediaListViewModel playlist,
         ISettingsService settingsService,
         IWindowService windowService,
-        PlayerContext playerContext)
+        PlayerContext playerContext,
+        CastContext castContext,
+        ICastService castService)
     {
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _windowService = windowService;
         _settingsService = settingsService;
         _playerContext = playerContext;
+        _castContext = castContext;
+        _castService = castService;
         _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
         _playbackRate = 1.0;
         _audioTimingOffset = 0.0;
@@ -90,6 +96,9 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
             MediaPlayer.ChapterChanged += OnChapterChanged;
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
+
+        // Keep IsPlaying in sync with Chromecast state while casting.
+        _castContext.PropertyChanged += OnCastContextPropertyChanged;
 
         IsActive = true;
     }
@@ -127,7 +136,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public void Receive(TogglePlayPauseMessage message)
     {
-        if (!HasActiveItem || MediaPlayer == null) return;
+        if (!HasActiveItem) return;
         if (message.ShowBadge)
         {
             PlayPauseWithBadge();
@@ -291,6 +300,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     {
         _dispatcherQueue.TryEnqueue(() =>
         {
+            // Do not overwrite cast-driven state while a session is active.
+            if (_castContext.IsCasting) return;
             IsPlaying = sender.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
         });
     }
@@ -298,6 +309,24 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private void OnChapterChanged(IMediaPlayer sender, object? args)
     {
         _dispatcherQueue.TryEnqueue(() => ChapterName = sender.Chapter?.Title);
+    }
+
+    /// <summary>
+    /// Keeps <see cref="IsPlaying"/> in sync with the Chromecast device state while casting,
+    /// and restores it from the local player state once the session ends.
+    /// </summary>
+    private void OnCastContextPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(CastContext.CastIsPlaying) when _castContext.IsCasting:
+                IsPlaying = _castContext.CastIsPlaying;
+                break;
+            case nameof(CastContext.IsCasting) when !_castContext.IsCasting:
+                // Casting ended — restore IsPlaying from local player state.
+                IsPlaying = MediaPlayer?.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
+                break;
+        }
     }
 
     private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
@@ -400,6 +429,22 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [RelayCommand(CanExecute = nameof(HasActiveItem))]
     private void PlayPause()
     {
+        // While casting, route play/pause to the Chromecast device instead of the local player.
+        // The local player remains paused for the duration of the cast session.
+        if (_castContext.IsCasting && _castContext.Client is { } castClient)
+        {
+            if (_castContext.CastIsPlaying)
+            {
+                _ = _castService.PauseAsync(castClient);
+            }
+            else
+            {
+                _ = _castService.PlayAsync(castClient);
+            }
+
+            return;
+        }
+
         if (IsPlaying)
         {
             MediaPlayer?.Pause();
