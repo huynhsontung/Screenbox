@@ -12,6 +12,7 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Sentry;
+using Sharpcaster;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
@@ -47,9 +48,6 @@ public sealed partial class CastControlViewModel : ObservableObject
         _castService = castService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Renderers = new ObservableCollection<Renderer>();
-
-        // React to the Chromecast going away (e.g., device turned off) while casting.
-        _castContext.CastingEnded += OnCastingEnded;
     }
 
     /// <summary>
@@ -60,6 +58,7 @@ public sealed partial class CastControlViewModel : ObservableObject
     public void StartDiscovering()
     {
         if (IsCasting) return;
+        if (_castContext.RendererWatcher is not null) return;
 
         var watcher = _castService.CreateRendererWatcher();
         _castContext.RendererWatcher = watcher;
@@ -111,10 +110,11 @@ public sealed partial class CastControlViewModel : ObservableObject
         // Pause local playback while the Chromecast streams independently.
         MediaPlayer.Pause();
 
-        bool success = await _castService.ConnectAndCastAsync(SelectedRenderer, item, _positionBeforeCast);
+        ChromecastClient? client = await _castService.ConnectAndCastAsync(SelectedRenderer, item, _positionBeforeCast);
 
-        if (success)
+        if (client is not null)
         {
+            AttachClient(client);
             _castContext.ActiveRenderer = SelectedRenderer;
             CastingDevice = SelectedRenderer;
             IsCasting = true;
@@ -134,17 +134,10 @@ public sealed partial class CastControlViewModel : ObservableObject
     {
         SentrySdk.AddBreadcrumb("Stop casting", category: "command", type: "user");
 
-        await _castService.StopCastingAsync();
+        ChromecastClient? client = DetachClient();
+        await _castService.StopCastingAsync(client);
 
-        _castContext.ActiveRenderer = null;
-        IsCasting = false;
-
-        // Resume local playback from where it was before casting started.
-        if (MediaPlayer is not null)
-        {
-            MediaPlayer.Position = _positionBeforeCast;
-            MediaPlayer.Play();
-        }
+        RestorePlaybackAfterCastingEnds();
 
         StartDiscovering();
     }
@@ -153,23 +146,17 @@ public sealed partial class CastControlViewModel : ObservableObject
     // Event handlers
     // -------------------------------------------------------------------------
 
-    /// <summary>
-    /// Handles unexpected cast session termination (e.g., device disconnected).
-    /// Resumes local playback and restarts discovery on the UI thread.
-    /// </summary>
-    private void OnCastingEnded(object sender, EventArgs e)
+    private void OnClientDisconnected(object sender, EventArgs e)
     {
-        _dispatcherQueue.TryEnqueue(() =>
+        _dispatcherQueue.TryEnqueue(async () =>
         {
-            _castContext.ActiveRenderer = null;
-            IsCasting = false;
+            ChromecastClient? disconnectedClient = sender as ChromecastClient;
 
-            if (MediaPlayer is not null)
-            {
-                MediaPlayer.Position = _positionBeforeCast;
-                MediaPlayer.Play();
-            }
+            // Detach handlers before stopping so repeated disconnect callbacks are ignored.
+            ChromecastClient? activeClient = DetachClient();
 
+            await _castService.StopCastingAsync(activeClient ?? disconnectedClient);
+            RestorePlaybackAfterCastingEnds();
             StartDiscovering();
         });
     }
@@ -186,6 +173,44 @@ public sealed partial class CastControlViewModel : ObservableObject
     private void RendererWatcherOnRendererFound(object sender, RendererFoundEventArgs e)
     {
         _dispatcherQueue.TryEnqueue(() => Renderers.Add(e.Renderer));
+    }
+
+    private void AttachClient(ChromecastClient client)
+    {
+        ChromecastClient? previousClient = _castContext.Client;
+        if (previousClient is not null)
+        {
+            previousClient.Disconnected -= OnClientDisconnected;
+        }
+
+        _castContext.Client = client;
+        client.Disconnected += OnClientDisconnected;
+    }
+
+    private ChromecastClient? DetachClient()
+    {
+        ChromecastClient? client = _castContext.Client;
+        if (client is not null)
+        {
+            client.Disconnected -= OnClientDisconnected;
+            _castContext.Client = null;
+        }
+
+        return client;
+    }
+
+    private void RestorePlaybackAfterCastingEnds()
+    {
+        _castContext.ActiveRenderer = null;
+        CastingDevice = null;
+        IsCasting = false;
+
+        // Resume local playback from where it was before casting started.
+        if (MediaPlayer is not null)
+        {
+            MediaPlayer.Position = _positionBeforeCast;
+            MediaPlayer.Play();
+        }
     }
 }
 

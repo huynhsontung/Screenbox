@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Sharpcaster;
 using Sharpcaster.Models.Media;
-using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -17,8 +16,9 @@ namespace Screenbox.Core.Services;
 /// Implements <see cref="ICastService"/> using the SharpCaster library.
 ///
 /// <para>
-/// This service is stateless: all mutable session state is stored in the injected
-/// <see cref="CastContext"/>.  The service only contains behaviour (algorithms).
+/// This service is transient and stateless from the app perspective. The caller owns
+/// any active <see cref="ChromecastClient"/> instance and is responsible for tracking
+/// client lifecycle between calls.
 /// </para>
 /// <para>
 /// Casting flow:
@@ -35,12 +35,10 @@ public sealed class CastService : ICastService
     /// <summary>Application ID for the Google Default Media Receiver.</summary>
     private const string DefaultMediaReceiverId = "CC1AD845";
 
-    private readonly CastContext _castContext;
     private readonly IMediaStreamingService _streamingService;
 
-    public CastService(CastContext castContext, IMediaStreamingService streamingService)
+    public CastService(IMediaStreamingService streamingService)
     {
-        _castContext = castContext;
         _streamingService = streamingService;
     }
 
@@ -51,23 +49,20 @@ public sealed class CastService : ICastService
     }
 
     /// <inheritdoc/>
-    public async Task<bool> ConnectAndCastAsync(Renderer renderer, PlaybackItem item, TimeSpan startPosition)
+    public async Task<ChromecastClient?> ConnectAndCastAsync(Renderer renderer, PlaybackItem item, TimeSpan startPosition)
     {
+        ChromecastClient? client = null;
+
         try
         {
-            // Tear down any existing session before starting a new one.
-            await StopCastingAsync();
-
             // Resolve the media URL (or start local HTTP server for local files).
             Uri? streamUrl = await _streamingService.StartStreamAsync(item);
             if (streamUrl is null)
             {
-                return false;
+                return null;
             }
 
-            var client = new ChromecastClient();
-            client.Disconnected += OnClientDisconnected;
-            _castContext.Client = client;
+            client = new ChromecastClient();
 
             await client.ConnectChromecast(renderer.Target);
             await client.LaunchApplicationAsync(DefaultMediaReceiverId);
@@ -89,30 +84,26 @@ public sealed class CastService : ICastService
                 await client.MediaChannel.SeekAsync(startPosition.TotalSeconds);
             }
 
-            return true;
+            return client;
         }
         catch (Exception)
         {
             // Clean up partially-started session on failure.
-            await StopCastingAsync();
-            return false;
+            await StopCastingAsync(client);
+            return null;
         }
     }
 
     /// <inheritdoc/>
-    public async Task StopCastingAsync()
+    public async Task StopCastingAsync(ChromecastClient? client = null)
     {
         // Always stop the local HTTP stream regardless of client state.
         _streamingService.StopStream();
 
-        ChromecastClient? client = _castContext.Client;
         if (client is null)
         {
             return;
         }
-
-        client.Disconnected -= OnClientDisconnected;
-        _castContext.Client = null;
 
         try
         {
@@ -122,21 +113,6 @@ public sealed class CastService : ICastService
         {
             // Ignore disconnect errors — the device may already be unreachable.
         }
-    }
-
-    // -------------------------------------------------------------------------
-    // Event handlers
-    // -------------------------------------------------------------------------
-
-    /// <summary>
-    /// Raised by SharpCaster when the connection to the Chromecast is lost.
-    /// Stops the local stream and notifies subscribers via <see cref="CastContext.CastingEnded"/>.
-    /// </summary>
-    private void OnClientDisconnected(object sender, EventArgs e)
-    {
-        _streamingService.StopStream();
-        _castContext.Client = null;
-        _castContext.RaiseCastingEnded();
     }
 
     // -------------------------------------------------------------------------
