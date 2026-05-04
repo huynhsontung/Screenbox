@@ -97,21 +97,71 @@ public sealed class CastService : ICastService
     /// <inheritdoc/>
     public async Task StopCastingAsync(ChromecastClient? client = null)
     {
-        // Always stop the local HTTP stream regardless of client state.
-        _streamingService.StopStream();
-
-        if (client is null)
+        if (client is not null)
         {
-            return;
+            try
+            {
+                // Signal the receiver to stop playback before closing the connection.
+                // This ensures the Chromecast device receives and acknowledges the STOP command
+                // rather than continuing playback until it loses the HTTP stream.
+                await client.MediaChannel.StopAsync();
+            }
+            catch (Exception)
+            {
+                // Ignore — the media session may already be in IDLE state or the device unreachable.
+            }
+
+            try
+            {
+                await client.DisconnectAsync();
+            }
+            catch (Exception)
+            {
+                // Ignore disconnect errors — the device may already be unreachable.
+            }
         }
 
+        // Stop the local HTTP server only after the receiver has been signalled,
+        // so it has a chance to respond to the STOP command.
+        _streamingService.StopStream();
+    }
+
+    /// <inheritdoc/>
+    public async Task PlayAsync(ChromecastClient client)
+    {
         try
         {
-            await client.DisconnectAsync();
+            await client.MediaChannel.PlayAsync();
         }
         catch (Exception)
         {
-            // Ignore disconnect errors — the device may already be unreachable.
+            // Ignore — the device may be disconnecting or the session may have ended.
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task PauseAsync(ChromecastClient client)
+    {
+        try
+        {
+            await client.MediaChannel.PauseAsync();
+        }
+        catch (Exception)
+        {
+            // Ignore — the device may be disconnecting or the session may have ended.
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task SeekAsync(ChromecastClient client, TimeSpan position)
+    {
+        try
+        {
+            await client.MediaChannel.SeekAsync(position.TotalSeconds);
+        }
+        catch (Exception)
+        {
+            // Ignore — the device may be disconnecting or the session may have ended.
         }
     }
 

@@ -40,5 +40,22 @@ public interface ICastService
     /// and stops any local HTTP stream.
     /// </summary>
     Task StopCastingAsync(ChromecastClient? client = null);
+
+    /// <summary>
+    /// Sends a play command to resume playback on the Chromecast device.
+    /// </summary>
+    Task PlayAsync(ChromecastClient client);
+
+    /// <summary>
+    /// Sends a pause command to pause playback on the Chromecast device.
+    /// </summary>
+    Task PauseAsync(ChromecastClient client);
+
+    /// <summary>
+    /// Seeks the Chromecast device to the specified position.
+    /// </summary>
+    /// <param name="client">The active cast client.</param>
+    /// <param name="position">The target playback position.</param>
+    Task SeekAsync(ChromecastClient client, TimeSpan position);
 }
 

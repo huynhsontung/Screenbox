@@ -48,6 +48,10 @@ public sealed partial class CastControlViewModel : ObservableObject
         _castService = castService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Renderers = new ObservableCollection<Renderer>();
+
+        // Subscribe to the natural-end event permanently. The handler is idempotent
+        // because it checks IsCasting before acting.
+        _castContext.CastingNaturallyEnded += OnCastingNaturallyEnded;
     }
 
     /// <summary>
@@ -116,6 +120,7 @@ public sealed partial class CastControlViewModel : ObservableObject
         {
             AttachClient(client);
             _castContext.ActiveRenderer = SelectedRenderer;
+            _castContext.IsCasting = true;
             CastingDevice = SelectedRenderer;
             IsCasting = true;
             StopDiscovering();
@@ -145,6 +150,27 @@ public sealed partial class CastControlViewModel : ObservableObject
     // -------------------------------------------------------------------------
     // Event handlers
     // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Handles the case where the Chromecast device naturally finishes playback (IDLE/FINISHED,
+    /// IDLE/ERROR, or IDLE/CANCELLED). Cleans up the cast session and restores local playback
+    /// in the same way as an explicit stop.
+    /// </summary>
+    private void OnCastingNaturallyEnded(object sender, EventArgs e)
+    {
+        // This event is already marshalled to the UI thread by CastContext.
+        // Guard against duplicate calls (e.g., if both CastingNaturallyEnded and Disconnected fire).
+        if (!IsCasting) return;
+
+        ChromecastClient? client = DetachClient();
+
+        // Fire-and-forget: the media already ended so StopAsync is a no-op on the receiver,
+        // but we still need to disconnect and stop the local HTTP server cleanly.
+        _ = _castService.StopCastingAsync(client);
+
+        RestorePlaybackAfterCastingEnds();
+        StartDiscovering();
+    }
 
     private void OnClientDisconnected(object sender, EventArgs e)
     {
@@ -201,14 +227,20 @@ public sealed partial class CastControlViewModel : ObservableObject
 
     private void RestorePlaybackAfterCastingEnds()
     {
+        _castContext.IsCasting = false;
         _castContext.ActiveRenderer = null;
         CastingDevice = null;
         IsCasting = false;
 
-        // Resume local playback from where it was before casting started.
+        // Resume local playback from the last known Chromecast position so the user
+        // can continue watching seamlessly. Fall back to the pre-cast position if no
+        // cast position has been reported yet.
         if (MediaPlayer is not null)
         {
-            MediaPlayer.Position = _positionBeforeCast;
+            double castPositionSeconds = _castContext.CastPosition;
+            MediaPlayer.Position = castPositionSeconds > 0
+                ? TimeSpan.FromSeconds(castPositionSeconds)
+                : _positionBeforeCast;
             MediaPlayer.Play();
         }
     }
