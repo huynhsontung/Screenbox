@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
@@ -20,8 +19,8 @@ namespace Screenbox.Core.Services;
 /// on a random local port using <see cref="StreamSocketListener"/>.
 ///
 /// <para>
-/// This service is stateless: all mutable state (the active listener and current file) is
-/// stored in the injected <see cref="MediaStreamingContext"/>.
+/// Runtime resources such as the active <see cref="StreamSocketListener"/> and the served file
+/// are owned by this service instance.
 /// </para>
 /// <para>
 /// For items whose original source is already an http/https URI the URI is returned directly
@@ -35,11 +34,11 @@ namespace Screenbox.Core.Services;
 /// </summary>
 public sealed class MediaStreamingService : IMediaStreamingService
 {
-    private readonly MediaStreamingContext _context;
+    private StreamSocketListener? _listener;
+    private IStorageFile? _currentFile;
 
-    public MediaStreamingService(MediaStreamingContext context)
+    public MediaStreamingService()
     {
-        _context = context;
     }
 
     /// <inheritdoc/>
@@ -48,6 +47,7 @@ public sealed class MediaStreamingService : IMediaStreamingService
         // For network URIs that Chromecast can reach directly, return them as-is.
         if (TryGetNetworkUri(item.OriginalSource, out Uri? networkUri))
         {
+            _currentFile = null;
             return networkUri;
         }
 
@@ -65,11 +65,11 @@ public sealed class MediaStreamingService : IMediaStreamingService
 
         // Tear down any previous server instance before starting a new one.
         StopStream();
-        _context.CurrentFile = file;
+        _currentFile = file;
 
         var listener = new StreamSocketListener();
         listener.ConnectionReceived += OnConnectionReceived;
-        _context.Listener = listener;
+        _listener = listener;
 
         // Bind to port 0 so the OS assigns a free port.
         await listener.BindServiceNameAsync("0");
@@ -82,7 +82,16 @@ public sealed class MediaStreamingService : IMediaStreamingService
     /// <inheritdoc/>
     public void StopStream()
     {
-        _context.Dispose();
+        StreamSocketListener? listener = _listener;
+        _listener = null;
+
+        if (listener is not null)
+        {
+            listener.ConnectionReceived -= OnConnectionReceived;
+            listener.Dispose();
+        }
+
+        _currentFile = null;
     }
 
     // -------------------------------------------------------------------------
@@ -113,7 +122,8 @@ public sealed class MediaStreamingService : IMediaStreamingService
                 return;
             }
 
-            if (_context.CurrentFile is null)
+            IStorageFile? currentFile = _currentFile;
+            if (currentFile is null)
             {
                 await WriteStatusLineAsync(socket.OutputStream, "404 Not Found");
                 return;
@@ -124,7 +134,7 @@ public sealed class MediaStreamingService : IMediaStreamingService
 
             bool headOnly = headers.StartsWith("HEAD", StringComparison.OrdinalIgnoreCase);
 
-            await ServeFileAsync(socket.OutputStream, _context.CurrentFile, rangeStart, rangeEnd, headOnly);
+            await ServeFileAsync(socket.OutputStream, currentFile, rangeStart, rangeEnd, headOnly);
         }
         catch (Exception)
         {

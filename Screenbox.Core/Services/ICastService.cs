@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
+using Sharpcaster;
 
 namespace Screenbox.Core.Services;
 
@@ -28,10 +29,16 @@ public interface ICastService
     /// <param name="renderer">The target Chromecast device.</param>
     /// <param name="item">The media to cast.</param>
     /// <param name="startPosition">The position at which playback should begin.</param>
-    /// <returns><c>true</c> if the cast was started successfully; otherwise <c>false</c>.</returns>
-    Task<bool> ConnectAndCastAsync(Renderer renderer, PlaybackItem item, TimeSpan startPosition);
+    /// <returns>
+    /// The connected <see cref="ChromecastClient"/> when casting starts successfully;
+    /// otherwise <c>null</c>.
+    /// </returns>
+    Task<ChromecastClient?> ConnectAndCastAsync(Renderer renderer, PlaybackItem item, TimeSpan startPosition);
 
-    /// <summary>Stops the active cast session, disconnects from the device, and stops any local HTTP stream.</summary>
-    Task StopCastingAsync();
+    /// <summary>
+    /// Stops the active cast session, disconnects the provided client when available,
+    /// and stops any local HTTP stream.
+    /// </summary>
+    Task StopCastingAsync(ChromecastClient? client = null);
 }
 
