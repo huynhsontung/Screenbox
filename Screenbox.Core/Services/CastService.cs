@@ -165,6 +165,32 @@ public sealed class CastService : ICastService
         }
     }
 
+    /// <inheritdoc/>
+    public async Task SetVolumeAsync(ChromecastClient client, double level)
+    {
+        try
+        {
+            await client.ReceiverChannel.SetVolume(Math.Clamp(level, 0.0, 1.0));
+        }
+        catch (Exception)
+        {
+            // Ignore — the device may be disconnecting or the session may have ended.
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task SetMuteAsync(ChromecastClient client, bool muted)
+    {
+        try
+        {
+            await client.ReceiverChannel.SetMute(muted);
+        }
+        catch (Exception)
+        {
+            // Ignore — the device may be disconnecting or the session may have ended.
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
