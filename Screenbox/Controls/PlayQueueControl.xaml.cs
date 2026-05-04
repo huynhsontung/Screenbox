@@ -121,6 +121,13 @@ public sealed partial class PlayQueueControl : UserControl
                 PlaylistListView.SelectedItems.Clear();
             }
         }
+        else if (e.PropertyName == nameof(PlayQueueViewModel.Selection.SelectedItem))
+        {
+            if (ViewModel.Selection.SelectedItem is MediaViewModel item && !PlaylistListView.SelectedItems.Contains(item))
+            {
+                PlaylistListView.SelectedItems.Add(item);
+            }
+        }
     }
 
     private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)

@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -51,6 +52,15 @@ public sealed partial class SelectionViewModel : ObservableObject
     [ObservableProperty]
     private object? _selectedItem;
 
+    /// <summary>
+    /// Gets a value that indicates whether there is at least one selected item.
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> if <see cref="SelectedItemCount"/> is greater than <c>0</c>;
+    /// otherwise, <see langword="false"/>.
+    /// </value>
+    public bool HasSelection => SelectedItemCount > 0;
+
     partial void OnSelectedItemCountChanged(int value)
     {
         OnPropertyChanged(nameof(HasSelection));
@@ -62,20 +72,25 @@ public sealed partial class SelectionViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Selects the specified item and activates selection mode.
+    /// </summary>
+    /// <param name="item">An object representing the item to select.</param>
+    [RelayCommand]
+    private void SelectItem(object? item)
+    {
+        if (item is null) return;
+
+        IsSelectionModeActive = true;
+        SelectedItem = item;
+    }
+
+    /// <summary>
     /// Clears the current selection and exits selection mode.
     /// </summary>
-    public void ClearSelection()
+    [RelayCommand]
+    private void ClearSelection()
     {
         IsSelectionModeActive = false;
         SelectedItem = null;
     }
-
-    /// <summary>
-    /// Gets a value that indicates whether there is at least one selected item.
-    /// </summary>
-    /// <value>
-    /// <see langword="true"/> if <see cref="SelectedItemCount"/> is greater than <c>0</c>;
-    /// otherwise, <see langword="false"/>.
-    /// </value>
-    public bool HasSelection => SelectedItemCount > 0;
 }

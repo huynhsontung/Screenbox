@@ -169,12 +169,6 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         Playlist.Items.Insert(index + 1, item);
     }
 
-    [RelayCommand]
-    private void ClearSelection()
-    {
-        Selection.ClearSelection();
-    }
-
     /// <summary>
     /// Opens a file picker for the user to select files to add to the play queue.
     /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.

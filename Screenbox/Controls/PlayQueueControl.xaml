@@ -97,6 +97,18 @@
                             <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
                         </MenuFlyoutItem.Command>
                     </MenuFlyoutItem>
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
+                        CommandParameter="{Binding}"
+                        Text="{x:Bind strings:Resources.Select}">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon
+                                x:Name="SelectMenuFlyoutItemIcon"
+                                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                Glyph="{StaticResource SingleSelectGlyph}" />
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </ResourceDictionary>
         </Grid.Resources>
@@ -293,7 +305,7 @@
                             extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                             AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
                             BorderThickness="0"
-                            Command="{x:Bind ViewModel.ClearSelectionCommand}"
+                            Command="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
                             Content="{strings:Resources Key=Clear}">
                             <Button.Resources>
                                 <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
@@ -436,6 +448,7 @@
                         <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
                         <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>

@@ -95,7 +95,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.SelectItemCommand}"
+                    Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
                     CommandParameter="{Binding}"
                     Text="{x:Bind strings:Resources.Select}">
                     <MenuFlyoutItem.Icon>
@@ -278,7 +278,7 @@
                                 extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                                 AutomationProperties.Name="{x:Bind strings:Resources.ClearSelection}"
                                 BorderThickness="0"
-                                Command="{x:Bind ViewModel.ClearSelectionCommand}"
+                                Command="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
                                 Content="{x:Bind strings:Resources.Clear}">
                                 <Button.Resources>
                                     <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->

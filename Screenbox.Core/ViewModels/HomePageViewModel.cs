@@ -251,13 +251,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Messenger.Send(new PlayMediaMessage(files));
     }
 
-    [RelayCommand]
-    private void SelectItem(MediaViewModel media)
-    {
-        Selection.IsSelectionModeActive = true;
-        Selection.SelectedItem = media;
-    }
-
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelected(IList<object>? selectedItems)
     {
@@ -270,7 +263,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
 
         selectedItems.Clear();
-        ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -281,7 +274,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var items = selectedItems.OfType<MediaViewModel>().Reverse().ToArray();
         Messenger.SendPlayNext(items);
         selectedItems.Clear();
-        ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -292,7 +285,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var items = selectedItems.OfType<MediaViewModel>().ToArray();
         Messenger.SendAddToQueue(items);
         selectedItems.Clear();
-        ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -307,13 +300,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
 
         selectedItems.Clear();
-        ClearSelection();
-    }
-
-    [RelayCommand]
-    private void ClearSelection()
-    {
-        Selection.ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
