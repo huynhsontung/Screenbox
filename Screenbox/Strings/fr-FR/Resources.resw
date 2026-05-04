@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Ajouter à la file d'attente</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Sélectionner</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Tout sélectionner</value>
   </data>
@@ -1009,7 +1012,7 @@
     <value>Import playlist</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exporter</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Item sélectionné</value>

@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Adicionar à fila</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Selecionar</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Selecionar tudo</value>
   </data>
@@ -1006,10 +1009,10 @@
     <value>Nova lista de reprodução</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Importar lista de reprodução</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportar</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Selected item</value>
