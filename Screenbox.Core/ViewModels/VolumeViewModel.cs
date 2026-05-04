@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -26,11 +27,20 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
         private readonly PlayerContext _playerContext;
+        private readonly CastContext _castContext;
+        private readonly ICastService _castService;
 
-        public VolumeViewModel(ISettingsService settingsService, PlayerContext playerContext)
+        // Guards against a re-entrant SetVolumeAsync/SetMuteAsync call when Volume or IsMute
+        // is updated programmatically from a Chromecast status event.
+        private bool _updatingFromCast;
+
+        public VolumeViewModel(ISettingsService settingsService, PlayerContext playerContext,
+            CastContext castContext, ICastService castService)
         {
             _settingsService = settingsService;
             _playerContext = playerContext;
+            _castContext = castContext;
+            _castService = castService;
             _volume = settingsService.PersistentVolume;
             _maxVolume = settingsService.MaxVolume;
             _isMute = _volume == 0;
@@ -41,6 +51,8 @@ namespace Screenbox.Core.ViewModels
                 MediaPlayer.VolumeChanged += OnVolumeChanged;
                 MediaPlayer.IsMutedChanged += OnIsMutedChanged;
             }
+
+            _castContext.PropertyChanged += OnCastContextPropertyChanged;
 
             // View model doesn't receive any messages
             IsActive = true;
@@ -77,6 +89,17 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnVolumeChanged(int value)
         {
+            // While casting, proxy the volume change to the Chromecast receiver.
+            if (_castContext.IsCasting && _castContext.Client is { } castClient)
+            {
+                if (!_updatingFromCast)
+                {
+                    _ = _castService.SetVolumeAsync(castClient, value / 100.0);
+                }
+
+                return;
+            }
+
             if (MediaPlayer == null) return;
             double newValue = value / 100d;
             // bool stayMute = IsMute && newValue - MediaPlayer.Volume < 0.005;
@@ -87,6 +110,17 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnIsMuteChanged(bool value)
         {
+            // While casting, proxy the mute change to the Chromecast receiver.
+            if (_castContext.IsCasting && _castContext.Client is { } castClient)
+            {
+                if (!_updatingFromCast)
+                {
+                    _ = _castService.SetMuteAsync(castClient, value);
+                }
+
+                return;
+            }
+
             if (MediaPlayer == null) return;
             MediaPlayer.IsMuted = value;
         }
@@ -105,6 +139,49 @@ namespace Screenbox.Core.ViewModels
             if (sender.IsMuted != IsMute)
             {
                 _dispatcherQueue.TryEnqueue(() => sender.IsMuted = IsMute);
+            }
+        }
+
+        /// <summary>
+        /// Handles changes to the <see cref="CastContext"/> so that the volume control reflects
+        /// the Chromecast device's receiver volume while casting and reverts to the local player
+        /// once the session ends.
+        /// </summary>
+        private void OnCastContextPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(CastContext.IsCasting):
+                    _updatingFromCast = true;
+                    if (_castContext.IsCasting)
+                    {
+                        // Casting just started — seed Volume and IsMute from the receiver's
+                        // last known state. The receiver will push a status update shortly
+                        // with the authoritative values.
+                        Volume = (int)Math.Round(_castContext.CastVolume * 100);
+                        IsMute = _castContext.CastIsMuted;
+                    }
+                    else
+                    {
+                        // Casting ended — restore volume from the local player / persisted setting.
+                        Volume = _settingsService.PersistentVolume;
+                        IsMute = Volume == 0;
+                    }
+
+                    _updatingFromCast = false;
+                    break;
+
+                case nameof(CastContext.CastVolume) when _castContext.IsCasting:
+                    _updatingFromCast = true;
+                    Volume = (int)Math.Round(_castContext.CastVolume * 100);
+                    _updatingFromCast = false;
+                    break;
+
+                case nameof(CastContext.CastIsMuted) when _castContext.IsCasting:
+                    _updatingFromCast = true;
+                    IsMute = _castContext.CastIsMuted;
+                    _updatingFromCast = false;
+                    break;
             }
         }
 

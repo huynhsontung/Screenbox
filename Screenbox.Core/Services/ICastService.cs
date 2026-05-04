@@ -57,5 +57,19 @@ public interface ICastService
     /// <param name="client">The active cast client.</param>
     /// <param name="position">The target playback position.</param>
     Task SeekAsync(ChromecastClient client, TimeSpan position);
+
+    /// <summary>
+    /// Sets the receiver volume level on the Chromecast device.
+    /// </summary>
+    /// <param name="client">The active cast client.</param>
+    /// <param name="level">Volume level between 0.0 (silent) and 1.0 (full).</param>
+    Task SetVolumeAsync(ChromecastClient client, double level);
+
+    /// <summary>
+    /// Sets the receiver mute state on the Chromecast device.
+    /// </summary>
+    /// <param name="client">The active cast client.</param>
+    /// <param name="muted">Whether the receiver should be muted.</param>
+    Task SetMuteAsync(ChromecastClient client, bool muted);
 }
 
