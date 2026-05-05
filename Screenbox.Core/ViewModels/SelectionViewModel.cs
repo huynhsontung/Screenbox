@@ -1,0 +1,151 @@
+﻿#nullable enable
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
+namespace Screenbox.Core.ViewModels;
+
+/// <summary>
+/// Provides selection state and helpers for view models that support item selection.
+/// </summary>
+/// <remarks>
+/// This view model exposes selection-related properties such as the currently selected
+/// item, whether selection mode is active, and the count of selected items. It is
+/// intended to be composed into other view models to provide a consistent selection
+/// experience across the application.
+/// </remarks>
+public sealed partial class SelectionViewModel : ObservableObject
+{
+    /// <summary>
+    /// Gets the collection of currently selected items.
+    /// </summary>
+    /// <value>
+    /// A collection containing the selected items. The default is an empty collection.
+    /// </value>
+    public ObservableCollection<object> SelectedItems { get; }
+
+    /// <summary>
+    /// Gets a value that indicates whether there is at least one selected item.
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> if <see cref="SelectedItemCount"/> is greater than <c>0</c>;
+    /// otherwise, <see langword="false"/>.
+    /// </value>
+    public bool HasSelection => SelectedItemCount > 0;
+
+    /// <summary>
+    /// Gets or sets the number of selected items.
+    /// </summary>
+    /// <value>The current count of selected items. The default is <c>0</c>.</value>
+    [ObservableProperty]
+    private int _selectedItemCount;
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether all items are selected.
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> if all items are selected; <see langword="false"/> if none
+    /// are selected; otherwise <see langword="null"/> to indicate a mixed selection.
+    /// </value>
+    [ObservableProperty]
+    private bool? _isAllSelected;
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether selection mode is active.
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> if selection mode is active; otherwise, <see langword="false"/>.
+    /// The default is <see langword="false"/>.
+    /// </value>
+    [ObservableProperty]
+    private bool _isSelectionModeActive;
+
+    /// <summary>
+    /// Gets or sets the currently selected item.
+    /// </summary>
+    /// <value>
+    /// The selected item, or <see langword="null"/> if no item is selected.
+    /// </value>
+    [ObservableProperty]
+    private object? _selectedItem;
+
+    private IReadOnlyCollection<object>? _sourceCollection;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
+    /// </summary>
+    public SelectionViewModel()
+    {
+        SelectedItems = new ObservableCollection<object>();
+        SelectedItems.CollectionChanged += SelectedItems_OnCollectionChanged;
+    }
+
+    /// <summary>
+    /// Sets the source collection for selection and updates the selection state.
+    /// </summary>
+    /// <param name="source">A collection of items to be used as the selection source.</param>
+    public void SetItemSource(IReadOnlyCollection<object>? source)
+    {
+        _sourceCollection = source;
+        UpdateIsAllSelected();
+    }
+
+    partial void OnSelectedItemCountChanged(int value)
+    {
+        OnPropertyChanged(nameof(HasSelection));
+        UpdateIsAllSelected();
+    }
+
+    partial void OnIsSelectionModeActiveChanged(bool value)
+    {
+        if (!value) SelectedItems.Clear();
+    }
+
+    /// <summary>
+    /// Selects the specified item and activates selection mode.
+    /// </summary>
+    /// <param name="item">An object representing the item to select.</param>
+    [RelayCommand]
+    private void SelectItem(object? item)
+    {
+        if (item is null) return;
+
+        IsSelectionModeActive = true;
+        SelectedItem = item;
+        if (!SelectedItems.Contains(item))
+        {
+            SelectedItems.Add(item);
+        }
+    }
+
+    /// <summary>
+    /// Clears the current selection and exits selection mode.
+    /// </summary>
+    [RelayCommand]
+    private void ClearSelection()
+    {
+        IsSelectionModeActive = false;
+        SelectedItem = null;
+    }
+
+    private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        SelectedItemCount = SelectedItems.Count;
+    }
+
+    private void UpdateIsAllSelected()
+    {
+        if (_sourceCollection is null) return;
+
+        int totalCount = _sourceCollection.Count;
+        int selectedCount = SelectedItemCount;
+        if (selectedCount < 0 || selectedCount > totalCount) return;
+
+        IsAllSelected = selectedCount == 0
+            ? false
+            : selectedCount == totalCount ? true : null;
+    }
+}

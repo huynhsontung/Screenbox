@@ -69,27 +69,4 @@ public static class CollectionExtensions
             targetDict[key].SyncItems(refDict[key]);
         }
     }
-
-    /// <summary>
-    /// Gets the tri-state selection toggle state for a collection based on the
-    /// number of selected items.
-    /// </summary>
-    /// <typeparam name="T">The type of the items in the collection.</typeparam>
-    /// <param name="source">The collection of items to evaluate.</param>
-    /// <param name="selectedCount">The number of items that are currently selected.</param>
-    /// <returns>
-    /// <see langword="true"/> if all items in <paramref name="source"/> are selected; 
-    /// <see langword="false"/> if no items are selected; otherwise, <see langword="null"/>.
-    /// </returns>
-    public static bool? GetSelectionToggleState<T>(this IReadOnlyCollection<T> source, int selectedCount)
-    {
-        if (selectedCount < 0 || selectedCount > source.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(selectedCount));
-        }
-
-        return selectedCount == 0
-            ? false
-            : selectedCount == source.Count ? true : null;
-    }
 }

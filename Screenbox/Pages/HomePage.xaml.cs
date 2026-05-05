@@ -32,53 +32,11 @@ public sealed partial class HomePage : Page
         _selectionCommand = new SelectDeselectAllCommand();
     }
 
-    protected override void OnNavigatedTo(NavigationEventArgs e)
-    {
-        base.OnNavigatedTo(e);
-
-        ViewModel.PropertyChanged += ViewModel_OnPropertyChanged;
-    }
-
-    protected override void OnNavigatedFrom(NavigationEventArgs e)
-    {
-        base.OnNavigatedFrom(e);
-
-        ViewModel.PropertyChanged -= ViewModel_OnPropertyChanged;
-    }
-
-    private void ViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(HomePageViewModel.SelectionCount))
-        {
-            if (ViewModel.SelectionCount == 0)
-            {
-                RecentFilesGridView.SelectedItems.Clear();
-            }
-        }
-        else if (e.PropertyName == nameof(HomePageViewModel.SelectedItemToAdd))
-        {
-            if (ViewModel.SelectedItemToAdd is { } item && !RecentFilesGridView.SelectedItems.Contains(item))
-            {
-                RecentFilesGridView.SelectedItems.Add(item);
-            }
-        }
-    }
-
-    private void RecentFilesGridView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ViewModel.EnableMultiSelect)
-        {
-            VisualStateManager.GoToState(this, "MultipleSelection", true);
-        }
-
-        ViewModel.SelectionCount = RecentFilesGridView.SelectedItems.Count;
-    }
-
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (ViewModel.Recent.Count > 0 && _selectionCommand.CanToggleSelection(RecentFilesGridView))
         {
-            ViewModel.EnableMultiSelect = true;
+            ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(RecentFilesGridView);
             args.Handled = true;
         }

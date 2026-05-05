@@ -95,7 +95,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.SelectItemCommand}"
+                    Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
                     CommandParameter="{Binding}"
                     Text="{x:Bind strings:Resources.Select}">
                     <MenuFlyoutItem.Icon>
@@ -263,14 +263,14 @@
                             <CheckBox
                                 MinWidth="60"
                                 Margin="10,0,4,0"
-                                AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItemCount), Mode=OneWay}"
                                 AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                                 Command="{StaticResource SelectDeselectAllCommand}"
                                 CommandParameter="{x:Bind RecentFilesGridView}"
-                                Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                                IsChecked="{x:Bind ViewModel.SelectionCheckState, Mode=OneWay}"
+                                Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItemCount), Mode=OneWay}"
+                                IsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
                                 IsThreeState="True"
-                                ToolTipService.ToolTip="{x:Bind ViewModel.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                                ToolTipService.ToolTip="{x:Bind ViewModel.Selection.IsAllSelected, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
                             <TextBlock Padding="0,5,0,0" Text="•" />
                             <Button
                                 Padding="4,5,4,5"
@@ -278,7 +278,7 @@
                                 extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                                 AutomationProperties.Name="{x:Bind strings:Resources.ClearSelection}"
                                 BorderThickness="0"
-                                Command="{x:Bind ViewModel.ClearSelectionCommand}"
+                                Command="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
                                 Content="{x:Bind strings:Resources.Clear}">
                                 <Button.Resources>
                                     <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
@@ -339,7 +339,6 @@
             ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Recent}"
             KeyboardAcceleratorPlacementMode="Hidden"
-            SelectionChanged="RecentFilesGridView_OnSelectionChanged"
             SelectionMode="Extended">
             <GridView.Resources>
                 <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
@@ -355,6 +354,7 @@
             </GridView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </interactivity:Interaction.Behaviors>
         </GridView>
@@ -435,7 +435,7 @@
                 <VisualState x:Name="SingleSelection" />
                 <VisualState x:Name="MultipleSelection">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.EnableMultiSelect, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="GridViewHeaderText.Visibility" Value="Collapsed" />

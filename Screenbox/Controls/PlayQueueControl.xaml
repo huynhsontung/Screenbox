@@ -19,7 +19,6 @@
     d:DesignHeight="752"
     d:DesignWidth="848"
     Loaded="PlayQueue_OnLoaded"
-    Unloaded="PlayQueue_OnUnloaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -96,6 +95,18 @@
                         <MenuFlyoutItem.Command>
                             <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
                         </MenuFlyoutItem.Command>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
+                        CommandParameter="{Binding}"
+                        Text="{x:Bind strings:Resources.Select}">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon
+                                x:Name="SelectMenuFlyoutItemIcon"
+                                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                Glyph="{StaticResource SingleSelectGlyph}" />
+                        </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                 </MenuFlyout>
             </ResourceDictionary>
@@ -174,7 +185,7 @@
                 x:Name="MultiSelectToggle"
                 AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
                 AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
-                IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
+                IsChecked="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom"
                 XYFocusLeft="{x:Bind ClearButton}">
@@ -278,14 +289,14 @@
                             MinWidth="60"
                             Margin="10,0,4,0"
                             d:Content="11 items selected"
-                            AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                            AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItemCount), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                             Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
-                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            IsChecked="{x:Bind ViewModel.SelectionCheckState, Mode=OneWay}"
+                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItemCount), Mode=OneWay}"
+                            IsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
                             IsThreeState="True"
-                            ToolTipService.ToolTip="{x:Bind ViewModel.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                            ToolTipService.ToolTip="{x:Bind ViewModel.Selection.IsAllSelected, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
                         <TextBlock Padding="{x:Bind converters:ThicknessFiltersConverter.Extract(SelectionCheckBox.Padding, converters:ThicknessFilterKinds.Vertical)}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
@@ -293,7 +304,7 @@
                             extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                             AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
                             BorderThickness="0"
-                            Command="{x:Bind ViewModel.ClearSelectionCommand}"
+                            Command="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
                             Content="{strings:Resources Key=Clear}">
                             <Button.Resources>
                                 <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
@@ -356,7 +367,6 @@
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             KeyboardAcceleratorPlacementMode="Hidden"
-            SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended"
             Style="{StaticResource MediaListViewStyle}">
             <ListView.Resources>
@@ -382,6 +392,7 @@
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
@@ -391,7 +402,7 @@
             <VisualStateGroup x:Name="SelectionModes">
                 <VisualState x:Name="Multiple">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.EnableMultiSelect, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
@@ -436,6 +447,7 @@
                         <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
                         <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>
