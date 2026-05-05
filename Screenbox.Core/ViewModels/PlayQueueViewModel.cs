@@ -46,7 +46,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
 
-        Selection.IsAllSelected = Playlist.Items.GetSelectionToggleState(Selection.SelectedItemCount);
+        Selection.SetItemSource(Playlist.Items);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
     }
 
@@ -63,7 +63,6 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     {
         if (e.PropertyName == nameof(Selection.SelectedItemCount))
         {
-            Selection.IsAllSelected = Playlist.Items.GetSelectionToggleState(Selection.SelectedItemCount);
             PlaySelectedNextCommand.NotifyCanExecuteChanged();
             RemoveSelectedCommand.NotifyCanExecuteChanged();
             MoveSelectedItemUpCommand.NotifyCanExecuteChanged();

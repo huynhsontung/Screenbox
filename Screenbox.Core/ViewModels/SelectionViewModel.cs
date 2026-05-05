@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -71,20 +72,36 @@ public sealed partial class SelectionViewModel : ObservableObject
     [ObservableProperty]
     private object? _selectedItem;
 
+    private IReadOnlyCollection<object>? _sourceCollection;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
+    /// </summary>
     public SelectionViewModel()
     {
         SelectedItems = new ObservableCollection<object>();
         SelectedItems.CollectionChanged += SelectedItems_OnCollectionChanged;
     }
 
+    /// <summary>
+    /// Sets the source collection for selection and updates the selection state.
+    /// </summary>
+    /// <param name="source">A collection of items to be used as the selection source.</param>
+    public void SetItemSource(IReadOnlyCollection<object>? source)
+    {
+        _sourceCollection = source;
+        UpdateIsAllSelected();
+    }
+
     partial void OnSelectedItemCountChanged(int value)
     {
         OnPropertyChanged(nameof(HasSelection));
+        UpdateIsAllSelected();
     }
 
     partial void OnIsSelectionModeActiveChanged(bool value)
     {
-        if (!value) SelectedItemCount = 0;
+        if (!value) SelectedItems.Clear();
     }
 
     /// <summary>
@@ -116,10 +133,19 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        int newCount = SelectedItems.Count;
-        if (SelectedItemCount != newCount)
-        {
-            SelectedItemCount = newCount;
-        }
+        SelectedItemCount = SelectedItems.Count;
+    }
+
+    private void UpdateIsAllSelected()
+    {
+        if (_sourceCollection is null) return;
+
+        int totalCount = _sourceCollection.Count;
+        int selectedCount = SelectedItemCount;
+        if (selectedCount < 0 || selectedCount > totalCount) return;
+
+        IsAllSelected = selectedCount == 0
+            ? false
+            : selectedCount == totalCount ? true : null;
     }
 }
