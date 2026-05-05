@@ -67,6 +67,12 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         base.OnDetaching();
 
         AssociatedObject.SelectionChanged -= ListViewBase_OnSelectionChanged;
+
+        if (SelectedItems is INotifyCollectionChanged notifyCollection)
+        {
+            notifyCollection.CollectionChanged -= OnCollectionChanged;
+        }
+
         SelectedItems = null;
     }
 
