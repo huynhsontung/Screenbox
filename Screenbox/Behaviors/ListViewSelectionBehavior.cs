@@ -59,14 +59,14 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
     {
         base.OnAttached();
 
-        AssociatedObject.SelectionChanged += OnListViewBaseSelectionChanged;
+        AssociatedObject.SelectionChanged += ListViewBase_OnSelectionChanged;
     }
 
     protected override void OnDetaching()
     {
         base.OnDetaching();
 
-        AssociatedObject.SelectionChanged -= OnListViewBaseSelectionChanged;
+        AssociatedObject.SelectionChanged -= ListViewBase_OnSelectionChanged;
         SelectedItems = null;
     }
 
@@ -76,17 +76,17 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         {
             if (e.OldValue is INotifyCollectionChanged oldValue)
             {
-                oldValue.CollectionChanged -= behavior.OnSourceCollectionChanged;
+                oldValue.CollectionChanged -= behavior.OnCollectionChanged;
             }
 
             if (e.NewValue is INotifyCollectionChanged newValue)
             {
-                newValue.CollectionChanged += behavior.OnSourceCollectionChanged;
+                newValue.CollectionChanged += behavior.OnCollectionChanged;
             }
         }
     }
 
-    private void OnListViewBaseSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ListViewBase_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_isUpdating || SelectedItems is not ObservableCollection<object> collection)
         {
@@ -107,9 +107,9 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         _isUpdating = false;
     }
 
-    private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_isUpdating || AssociatedObject.SelectedItems is null)
+        if (_isUpdating || AssociatedObject is not { } listViewBase)
         {
             return;
         }
@@ -120,20 +120,20 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
             case NotifyCollectionChangedAction.Add:
                 foreach (var item in e.NewItems)
                 {
-                    if (!AssociatedObject.SelectedItems.Contains(item))
+                    if (!listViewBase.SelectedItems.Contains(item))
                     {
-                        AssociatedObject.SelectedItems.Add(item);
+                        listViewBase.SelectedItems.Add(item);
                     }
                 }
                 break;
             case NotifyCollectionChangedAction.Remove:
                 foreach (var item in e.OldItems)
                 {
-                    AssociatedObject.SelectedItems.Remove(item);
+                    listViewBase.SelectedItems.Remove(item);
                 }
                 break;
             case NotifyCollectionChangedAction.Reset:
-                AssociatedObject.SelectedItems.Clear();
+                listViewBase.SelectedItems.Clear();
                 break;
         }
 
