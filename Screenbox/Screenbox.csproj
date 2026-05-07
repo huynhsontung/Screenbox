@@ -821,6 +821,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Screenbox.Casting\Screenbox.Casting.csproj">
+      <Project>{C2E3F1A8-7B4D-4E9C-A1F2-3D5E6B8C9A0D}</Project>
+      <Name>Screenbox.Casting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj">
       <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
       <Name>Screenbox.Core</Name>

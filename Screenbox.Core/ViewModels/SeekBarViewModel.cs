@@ -62,7 +62,6 @@ public sealed partial class SeekBarViewModel :
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
     private readonly CastContext _castContext;
-    private readonly ICastService _castService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _bufferingTimer;
     private readonly DispatcherQueueTimer _seekTimer;
@@ -74,13 +73,12 @@ public sealed partial class SeekBarViewModel :
     private MediaViewModel? _currentItem;
 
     public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker,
-        PlayerContext playerContext, CastContext castContext, ICastService castService)
+        PlayerContext playerContext, CastContext castContext)
     {
         _settingsService = settingsService;
         _lastPositionTracker = lastPositionTracker;
         _playerContext = playerContext;
         _castContext = castContext;
-        _castService = castService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _bufferingTimer = _dispatcherQueue.CreateTimer();
         _seekTimer = _dispatcherQueue.CreateTimer();
@@ -276,19 +274,19 @@ public sealed partial class SeekBarViewModel :
 
     private void SetPlayerPosition(TimeSpan position, bool debounce)
     {
-        // While casting, seek on the Chromecast device instead of the local player.
-        if (_castContext.IsCasting && _castContext.Client is { } castClient)
+        // While casting, seek on the cast session instead of the local player.
+        if (_castContext.IsCasting && _castContext.Session is { } castSession)
         {
             if (debounce)
             {
                 _seekTimer.Debounce(
-                    () => _ = _castService.SeekAsync(castClient, position),
+                    () => _ = castSession.SeekAsync(position),
                     TimeSpan.FromMilliseconds(200));
             }
             else
             {
                 _seekTimer.Stop();
-                _ = _castService.SeekAsync(castClient, position);
+                _ = castSession.SeekAsync(position);
             }
 
             return;

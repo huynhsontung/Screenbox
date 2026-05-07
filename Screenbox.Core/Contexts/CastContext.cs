@@ -2,87 +2,68 @@
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
-using Sharpcaster;
-using Sharpcaster.Models.ChromecastStatus;
-using Sharpcaster.Models.Media;
+using Screenbox.Casting.Abstractions;
 using Windows.System;
 
 namespace Screenbox.Core.Contexts;
 
 /// <summary>
-/// Shared singleton context that carries the current Chromecast cast session state.
-/// Observable properties are updated from <see cref="ChromecastClient.MediaChannel"/> status events
+/// Shared singleton context that carries the current cast session state.
+/// Observable properties are polled from the active <see cref="ICastSession"/> on a timer
 /// and propagated to any view model that depends on this context.
 /// </summary>
 public sealed partial class CastContext : ObservableObject
 {
+    /// <summary>The active cast session, or <c>null</c> when not casting.</summary>
     [ObservableProperty]
-    private RendererWatcher? _rendererWatcher;
-
-    [ObservableProperty]
-    private Renderer? _activeRenderer;
-
-    /// <summary>The active SharpCaster client for the current cast session, or <c>null</c> when not casting.</summary>
-    [ObservableProperty]
-    private ChromecastClient? _client;
+    private ICastSession? _session;
 
     /// <summary>
-    /// <c>true</c> while a Chromecast cast session is active; <c>false</c> otherwise.
-    /// Set to <c>true</c> by <c>CastControlViewModel</c> when a session starts and
-    /// back to <c>false</c> when it ends or is stopped.
+    /// <c>true</c> while a cast session is active; <c>false</c> otherwise.
     /// </summary>
     [ObservableProperty]
     private bool _isCasting;
 
-    /// <summary>Current playback position reported by the Chromecast device, in seconds.</summary>
+    /// <summary>Current playback position reported by the cast device, in seconds.</summary>
     [ObservableProperty]
     private double _castPosition;
 
     /// <summary>
-    /// Duration of the currently-loaded media on the Chromecast device, in seconds.
-    /// Remains zero until the receiver reports a valid duration.
+    /// Duration of the currently-loaded media on the cast device, in seconds.
+    /// Remains zero until the device reports a valid duration.
     /// </summary>
     [ObservableProperty]
     private double _castDuration;
 
     /// <summary>
-    /// <c>true</c> when the Chromecast device is actively playing (not paused, buffering, or idle).
+    /// <c>true</c> when the cast device is actively playing (not paused, buffering, or idle).
     /// </summary>
     [ObservableProperty]
     private bool _castIsPlaying;
 
-    /// <summary><c>true</c> when the Chromecast device is buffering media.</summary>
+    /// <summary><c>true</c> when the cast device is buffering media.</summary>
     [ObservableProperty]
     private bool _castIsBuffering;
 
     /// <summary>
-    /// The current receiver volume level reported by the Chromecast device, as a value
-    /// between 0.0 (silent) and 1.0 (full volume).
-    /// Updated from <see cref="Sharpcaster.Channels.ReceiverChannel.ReceiverStatusChanged"/>.
+    /// The current volume level reported by the cast device, between 0.0 (silent) and 1.0 (full).
     /// </summary>
     [ObservableProperty]
     private double _castVolume;
 
-    /// <summary>
-    /// <c>true</c> when the Chromecast device's receiver is muted.
-    /// Updated from <see cref="Sharpcaster.Channels.ReceiverChannel.ReceiverStatusChanged"/>.
-    /// </summary>
+    /// <summary><c>true</c> when the cast device is muted.</summary>
     [ObservableProperty]
     private bool _castIsMuted;
 
     /// <summary>
-    /// Raised when the Chromecast device transitions to the <c>IDLE</c> state with reason
-    /// <c>FINISHED</c>, <c>ERROR</c>, or <c>CANCELLED</c>, indicating that playback ended
-    /// naturally and the cast session should be cleaned up.
-    /// The event is always raised on the UI thread.
+    /// Raised when the cast device naturally finishes playback or is unexpectedly disconnected,
+    /// indicating that the cast session should be cleaned up.
+    /// Always raised on the UI thread.
     /// </summary>
     public event EventHandler? CastingNaturallyEnded;
 
-    // The dispatcher captured at construction time is always the main UI thread dispatcher
-    // because DI resolves singletons on the UI thread.
     private readonly DispatcherQueue _dispatcherQueue;
+    private DispatcherQueueTimer? _pollTimer;
 
     public CastContext()
     {
@@ -90,72 +71,70 @@ public sealed partial class CastContext : ObservableObject
     }
 
     /// <summary>
-    /// Generated partial method called whenever <see cref="Client"/> changes.
-    /// Attaches and detaches the <see cref="ChromecastClient.MediaChannel"/> status-changed
-    /// event handler so cast playback state is kept in sync.
+    /// Generated partial method called whenever <see cref="Session"/> changes.
+    /// Subscribes / unsubscribes session events and starts / stops the polling timer.
     /// </summary>
-    partial void OnClientChanged(ChromecastClient? oldValue, ChromecastClient? newValue)
+    partial void OnSessionChanged(ICastSession? oldValue, ICastSession? newValue)
     {
         if (oldValue is not null)
         {
-            oldValue.MediaChannel.StatusChanged -= OnMediaStatusChanged;
-            oldValue.ReceiverChannel.ReceiverStatusChanged -= OnReceiverStatusChanged;
+            oldValue.PlaybackEnded -= OnSessionPlaybackEnded;
+            oldValue.Disconnected -= OnSessionDisconnected;
+        }
+
+        if (_pollTimer is not null)
+        {
+            _pollTimer.Stop();
+            _pollTimer = null;
         }
 
         if (newValue is not null)
         {
-            newValue.MediaChannel.StatusChanged += OnMediaStatusChanged;
-            newValue.ReceiverChannel.ReceiverStatusChanged += OnReceiverStatusChanged;
+            newValue.PlaybackEnded += OnSessionPlaybackEnded;
+            newValue.Disconnected += OnSessionDisconnected;
+
+            // Poll session properties every 500 ms so observable properties stay in sync.
+            // Both Chromecast and DLNA sessions already update their own properties on the UI thread,
+            // so reading them here (also on the UI thread) is safe.
+            _pollTimer = _dispatcherQueue.CreateTimer();
+            _pollTimer.Interval = TimeSpan.FromMilliseconds(500);
+            _pollTimer.IsRepeating = true;
+            _pollTimer.Tick += OnPollTimerTick;
+            _pollTimer.Start();
         }
     }
 
     /// <summary>
-    /// Handles status updates pushed by the active Chromecast media channel.
-    /// Marshals all property updates onto the UI thread and raises
-    /// <see cref="CastingNaturallyEnded"/> when the receiver transitions to IDLE.
+    /// Polls the session's current state and propagates any changed values to the
+    /// observable properties so that subscribed view models are notified.
     /// </summary>
-    private void OnMediaStatusChanged(object sender, MediaStatus status)
+    private void OnPollTimerTick(DispatcherQueueTimer timer, object? args)
     {
-        _dispatcherQueue.TryEnqueue(() =>
+        ICastSession? session = _session;
+        if (session is null) return;
+
+        CastPosition = session.Position;
+        CastIsPlaying = session.IsPlaying;
+        CastIsBuffering = session.IsBuffering;
+        CastVolume = session.Volume;
+        CastIsMuted = session.IsMuted;
+
+        if (session.Duration > 0)
         {
-            CastPosition = status.CurrentTime;
-
-            // Duration is nullable; only update when a positive value is provided.
-            if (status.Media?.Duration is { } duration && duration > 0)
-            {
-                CastDuration = duration;
-            }
-
-            CastIsPlaying = status.PlayerState is PlayerStateType.Playing;
-            CastIsBuffering = status.PlayerState is PlayerStateType.Buffering;
-
-            // Detect natural playback end. IdleReason is a string in SharpCaster 3.x.
-            // Values are defined by the Google Cast protocol: FINISHED, CANCELLED, ERROR, INTERRUPTED.
-            if (status.PlayerState is PlayerStateType.Idle &&
-                status.IdleReason is "FINISHED" or "ERROR" or "CANCELLED")
-            {
-                CastingNaturallyEnded?.Invoke(this, EventArgs.Empty);
-            }
-        });
+            CastDuration = session.Duration;
+        }
     }
 
-    /// <summary>
-    /// Handles receiver status updates pushed by the active Chromecast device.
-    /// Marshals volume and mute state updates onto the UI thread.
-    /// </summary>
-    private void OnReceiverStatusChanged(object sender, ChromecastStatus status)
+    /// <summary>Handles natural playback end reported by the cast session.</summary>
+    private void OnSessionPlaybackEnded(object sender, EventArgs e)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            if (status.Volume?.Level is { } level)
-            {
-                CastVolume = level;
-            }
+        _dispatcherQueue.TryEnqueue(() => CastingNaturallyEnded?.Invoke(this, EventArgs.Empty));
+    }
 
-            if (status.Volume?.Muted is { } muted)
-            {
-                CastIsMuted = muted;
-            }
-        });
+    /// <summary>Handles unexpected disconnection from the cast device.</summary>
+    private void OnSessionDisconnected(object sender, EventArgs e)
+    {
+        _dispatcherQueue.TryEnqueue(() => CastingNaturallyEnded?.Invoke(this, EventArgs.Empty));
     }
 }
+

@@ -63,7 +63,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
     private readonly CastContext _castContext;
-    private readonly ICastService _castService;
     private Size _aspectRatio;
 
     public PlayerControlsViewModel(
@@ -71,15 +70,13 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         ISettingsService settingsService,
         IWindowService windowService,
         PlayerContext playerContext,
-        CastContext castContext,
-        ICastService castService)
+        CastContext castContext)
     {
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _windowService = windowService;
         _settingsService = settingsService;
         _playerContext = playerContext;
         _castContext = castContext;
-        _castService = castService;
         _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
         _playbackRate = 1.0;
         _audioTimingOffset = 0.0;
@@ -429,17 +426,17 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [RelayCommand(CanExecute = nameof(HasActiveItem))]
     private void PlayPause()
     {
-        // While casting, route play/pause to the Chromecast device instead of the local player.
+        // While casting, route play/pause to the cast session instead of the local player.
         // The local player remains paused for the duration of the cast session.
-        if (_castContext.IsCasting && _castContext.Client is { } castClient)
+        if (_castContext.IsCasting && _castContext.Session is { } castSession)
         {
             if (_castContext.CastIsPlaying)
             {
-                _ = _castService.PauseAsync(castClient);
+                _ = castSession.PauseAsync();
             }
             else
             {
-                _ = _castService.PlayAsync(castClient);
+                _ = castSession.PlayAsync();
             }
 
             return;

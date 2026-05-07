@@ -1,25 +1,25 @@
-﻿using Screenbox.Core.Models;
+using Screenbox.Casting.Abstractions;
 using System;
 
 namespace Screenbox.Core.Events
 {
     public sealed class RendererFoundEventArgs : EventArgs
     {
-        public Renderer Renderer { get; }
+        public ICastDevice Device { get; }
 
-        public RendererFoundEventArgs(Renderer renderer)
+        public RendererFoundEventArgs(ICastDevice device)
         {
-            Renderer = renderer;
+            Device = device;
         }
     }
 
     public sealed class RendererLostEventArgs : EventArgs
     {
-        public Renderer Renderer { get; }
+        public ICastDevice Device { get; }
 
-        public RendererLostEventArgs(Renderer renderer)
+        public RendererLostEventArgs(ICastDevice device)
         {
-            Renderer = renderer;
+            Device = device;
         }
     }
 }
