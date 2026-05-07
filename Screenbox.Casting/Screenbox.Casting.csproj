@@ -122,7 +122,8 @@
   <ItemGroup>
     <Compile Include="Abstractions\ICastDevice.cs" />
     <Compile Include="Abstractions\ICastDeviceLocator.cs" />
-    <Compile Include="Abstractions\IMediaStreamingService.cs" />
+    <Compile Include="Abstractions\ICastMediaProxy.cs" />
+    <Compile Include="Abstractions\ICastProxyHandle.cs" />
     <Compile Include="Abstractions\ICastSession.cs" />
     <Compile Include="Chromecast\ChromecastDevice.cs" />
     <Compile Include="Chromecast\ChromecastDeviceLocator.cs" />
@@ -137,7 +138,7 @@
     <Compile Include="Events\CastDeviceRemovedEventArgs.cs" />
     <Compile Include="Models\CastDeviceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\MediaStreamingService.cs" />
+    <Compile Include="Proxy\CastMediaProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
