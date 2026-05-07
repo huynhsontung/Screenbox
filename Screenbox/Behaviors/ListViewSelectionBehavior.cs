@@ -94,15 +94,19 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
 
     private void ListViewBase_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_isUpdating || SelectedItems is not ObservableCollection<object> collection)
+        if (_isUpdating || SelectedItems is not IList collection)
         {
             return;
         }
 
         _isUpdating = true;
-        collection.Clear();
 
-        foreach (var item in AssociatedObject.SelectedItems)
+        foreach (var item in e.RemovedItems)
+        {
+            collection.Remove(item);
+        }
+
+        foreach (var item in e.AddedItems)
         {
             if (!collection.Contains(item))
             {
