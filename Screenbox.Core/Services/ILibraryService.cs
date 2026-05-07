@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Screenbox.Core.Contexts;
 using Windows.Storage;
@@ -26,12 +28,12 @@ public interface ILibraryService
     /// <summary>
     /// Fetch music from the library
     /// </summary>
-    Task FetchMusicAsync(LibraryContext context, bool useCache = true);
+    Task FetchMusicAsync(LibraryContext context, bool useCache = true, IProgress<List<MediaViewModel>>? progress = default);
 
     /// <summary>
     /// Fetch videos from the library
     /// </summary>
-    Task FetchVideosAsync(LibraryContext context, bool useCache = true);
+    Task FetchVideosAsync(LibraryContext context, bool useCache = true, IProgress<List<MediaViewModel>>? progress = default);
 
     /// <summary>
     /// Remove media from the library
