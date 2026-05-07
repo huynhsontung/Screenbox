@@ -2,13 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Screenbox.Casting.Abstractions;
 using Screenbox.Casting.Chromecast;
 using Screenbox.Casting.Dlna;
 using Screenbox.Core.Playback;
-using Windows.Storage;
 
 namespace Screenbox.Core.Services;
 
@@ -46,7 +44,7 @@ public sealed class CastService : ICastService
         try
         {
             // Resolve the media URL (or start local HTTP server for local files).
-            Uri? streamUrl = await _streamingService.StartStreamAsync(item);
+            Uri? streamUrl = await _streamingService.StartStreamAsync(item.OriginalSource);
             if (streamUrl is null)
             {
                 return null;

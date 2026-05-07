@@ -230,8 +230,6 @@
     <Compile Include="Playback\VlcMediaPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CastService.cs" />
-    <Compile Include="Services\IMediaStreamingService.cs" />
-    <Compile Include="Services\MediaStreamingService.cs" />
     <Compile Include="Contexts\PlayerContext.cs" />
     <Compile Include="Services\FilesService.cs" />
     <Compile Include="Services\ICastService.cs" />
