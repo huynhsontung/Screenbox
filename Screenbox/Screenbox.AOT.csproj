@@ -37,9 +37,7 @@
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
       <Version>8.2.250402</Version>
     </PackageReference>
-    <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.250402</Version>
-    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
     </PackageReference>
@@ -65,7 +63,7 @@
       <Version>3.0.21-2505100334</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>5.15.1</Version>
+      <Version>6.5.0</Version>
     </PackageReference>
   </ItemGroup>
 
