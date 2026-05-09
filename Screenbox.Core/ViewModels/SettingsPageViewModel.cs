@@ -63,7 +63,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
 
-    public Array GestureOptions { get; }
+    public PlaybackActionKind[] GestureOptions { get; }
 
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
@@ -109,7 +109,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             .Prepend(new LanguageInfo(string.Empty, string.Empty))
             .ToList();
 
-        GestureOptions = Enum.GetValues(typeof(PlaybackActionKind));
+        GestureOptions = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
 
         if (SystemInformation.IsXbox)
         {
