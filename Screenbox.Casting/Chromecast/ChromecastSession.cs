@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Threading.Tasks;
@@ -57,14 +57,12 @@ public sealed class ChromecastSession : ICastSession
     public event EventHandler? Disconnected;
 
     private readonly ChromecastClient _client;
-    private readonly DispatcherQueue _dispatcherQueue;
     private bool _disposed;
 
     private ChromecastSession(ChromecastDevice device, ChromecastClient client)
     {
         Device = device;
         _client = client;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         _client.MediaChannel.StatusChanged += OnMediaStatusChanged;
         _client.ReceiverChannel.ReceiverStatusChanged += OnReceiverStatusChanged;
@@ -233,27 +231,24 @@ public sealed class ChromecastSession : ICastSession
     /// </summary>
     private void OnMediaStatusChanged(object sender, MediaStatus status)
     {
-        _dispatcherQueue.TryEnqueue(() =>
+        Position = status.CurrentTime;
+
+        // Duration is nullable; only update when a positive value is reported.
+        if (status.Media?.Duration is { } duration && duration > 0)
         {
-            Position = status.CurrentTime;
+            Duration = duration;
+        }
 
-            // Duration is nullable; only update when a positive value is reported.
-            if (status.Media?.Duration is { } duration && duration > 0)
-            {
-                Duration = duration;
-            }
+        IsPlaying = status.PlayerState is PlayerStateType.Playing;
+        IsBuffering = status.PlayerState is PlayerStateType.Buffering;
 
-            IsPlaying = status.PlayerState is PlayerStateType.Playing;
-            IsBuffering = status.PlayerState is PlayerStateType.Buffering;
-
-            // IdleReason is a plain string in SharpCaster 3.x.
-            // Values defined by the Cast protocol: FINISHED, CANCELLED, ERROR, INTERRUPTED.
-            if (status.PlayerState is PlayerStateType.Idle &&
-                status.IdleReason is "FINISHED" or "ERROR" or "CANCELLED")
-            {
-                PlaybackEnded?.Invoke(this, EventArgs.Empty);
-            }
-        });
+        // IdleReason is a plain string in SharpCaster 3.x.
+        // Values defined by the Cast protocol: FINISHED, CANCELLED, ERROR, INTERRUPTED.
+        if (status.PlayerState is PlayerStateType.Idle &&
+            status.IdleReason is "FINISHED" or "ERROR" or "CANCELLED")
+        {
+            PlaybackEnded?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     /// <summary>
@@ -261,18 +256,15 @@ public sealed class ChromecastSession : ICastSession
     /// </summary>
     private void OnReceiverStatusChanged(object sender, ChromecastStatus status)
     {
-        _dispatcherQueue.TryEnqueue(() =>
+        if (status.Volume?.Level is { } level)
         {
-            if (status.Volume?.Level is { } level)
-            {
-                Volume = level;
-            }
+            Volume = level;
+        }
 
-            if (status.Volume?.Muted is { } muted)
-            {
-                IsMuted = muted;
-            }
-        });
+        if (status.Volume?.Muted is { } muted)
+        {
+            IsMuted = muted;
+        }
     }
 
     /// <summary>
@@ -280,7 +272,7 @@ public sealed class ChromecastSession : ICastSession
     /// </summary>
     private void OnClientDisconnected(object sender, EventArgs e)
     {
-        _dispatcherQueue.TryEnqueue(() => Disconnected?.Invoke(this, EventArgs.Empty));
+        Disconnected?.Invoke(this, EventArgs.Empty);
     }
 
     // -------------------------------------------------------------------------

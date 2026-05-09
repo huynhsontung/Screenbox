@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Net.Http;
@@ -63,7 +63,6 @@ public sealed class DlnaSession : ICastSession
 
     private readonly DlnaAvTransportClient _avTransport;
     private readonly DlnaRenderingControlClient _renderingControl;
-    private readonly DispatcherQueue _dispatcherQueue;
     private readonly Timer _pollTimer;
     private bool _playbackStarted;
     private bool _disposed;
@@ -73,7 +72,6 @@ public sealed class DlnaSession : ICastSession
         Device = device;
         _avTransport = avTransport;
         _renderingControl = renderingControl;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _pollTimer = new Timer(OnPollTimer, null, PollInterval, PollInterval);
     }
 
@@ -196,38 +194,35 @@ public sealed class DlnaSession : ICastSession
             var posResult = posTask.Result;
             string? transportState = stateTask.Result;
 
-            _dispatcherQueue.TryEnqueue(() =>
+            if (posResult is { } pos)
             {
-                if (posResult is { } pos)
+                var (positionSecs, durationSecs) = pos;
+                Position = positionSecs;
+                if (durationSecs > 0) Duration = durationSecs;
+            }
+
+            if (transportState is not null)
+            {
+                bool wasStarted = _playbackStarted;
+
+                IsPlaying = transportState == StatePlaying;
+                IsBuffering = transportState == StateTransitioning;
+
+                // Mark that playback has actually started so we can detect when it ends.
+                if (IsPlaying) _playbackStarted = true;
+
+                // Raise PlaybackEnded when the device transitions to STOPPED after playing.
+                if (wasStarted && transportState is StateStopped or StateIdle)
                 {
-                    var (positionSecs, durationSecs) = pos;
-                    Position = positionSecs;
-                    if (durationSecs > 0) Duration = durationSecs;
+                    _playbackStarted = false;
+                    PlaybackEnded?.Invoke(this, EventArgs.Empty);
                 }
-
-                if (transportState is not null)
-                {
-                    bool wasStarted = _playbackStarted;
-
-                    IsPlaying = transportState == StatePlaying;
-                    IsBuffering = transportState == StateTransitioning;
-
-                    // Mark that playback has actually started so we can detect when it ends.
-                    if (IsPlaying) _playbackStarted = true;
-
-                    // Raise PlaybackEnded when the device transitions to STOPPED after playing.
-                    if (wasStarted && transportState is StateStopped or StateIdle)
-                    {
-                        _playbackStarted = false;
-                        PlaybackEnded?.Invoke(this, EventArgs.Empty);
-                    }
-                }
-            });
+            }
         }
         catch (Exception)
         {
             // Network failure — raise Disconnected so the app can react.
-            _dispatcherQueue.TryEnqueue(() => Disconnected?.Invoke(this, EventArgs.Empty));
+            Disconnected?.Invoke(this, EventArgs.Empty);
             Dispose();
         }
     }
