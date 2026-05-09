@@ -16,6 +16,7 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Foundation;
+using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
@@ -63,6 +64,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private double? _playbackRateBeforeHold;
     private bool _shouldSuppressNextTap;
     private bool? _isSlideHorizontal;
+    private double _rawPixelsPerViewPixel = 1.0;
 
     public PlayerElementViewModel(
         PlayerContext playerContext,
@@ -168,6 +170,17 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         _viewSize = size;
         SetCropGeometry(_aspectRatio);
+
+        try
+        {
+            var displayInfo = DisplayInformation.GetForCurrentView();
+            _rawPixelsPerViewPixel = displayInfo.RawPixelsPerViewPixel;
+        }
+        catch (Exception e)
+        {
+            _rawPixelsPerViewPixel = 1.0;
+            LogService.Log(e);
+        }
     }
 
     public void OnClick()
@@ -212,7 +225,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         if (!isHorizontal)
         {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 5 : -5, true));
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 2 : -2, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
         else
@@ -221,7 +234,9 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             {
                 _timeBeforeManipulation = VlcMediaPlayer.Position;
                 Messenger.Send(new TimeChangeOverrideMessage(true));
-                var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(delta > 0 ? -5 : 5), true)).Response.NewPosition;
+                var seekAmount = -(delta / 2);
+                seekAmount = Math.Abs(seekAmount) < 1 ? 1 : seekAmount;
+                var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(seekAmount), true)).Response.NewPosition;
                 UpdateTimeStatusMessage(newTime);
             }
         }
@@ -269,7 +284,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// </remarks>
     public void ProcessSlideGesture(Point delta, Point cumulative)
     {
-        const double HorizontalChangePerPixel = 200;
+        const double HorizontalStepAmountPerPixel = 200;
+        const double VerticalStepAmountPerPixel = 1;
 
         double absCumulativeX = Math.Abs(cumulative.X);
         double absCumulativeY = Math.Abs(cumulative.Y);
@@ -293,13 +309,13 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
         if (_isSlideHorizontal is false)
         {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-delta.Y, true));
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-(VerticalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.Y), true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
         else if (_isSlideHorizontal is true && (VlcMediaPlayer?.CanSeek ?? false))
         {
             Messenger.Send(new TimeChangeOverrideMessage(true));
-            TimeSpan timeChange = TimeSpan.FromMilliseconds(delta.X * HorizontalChangePerPixel);
+            TimeSpan timeChange = TimeSpan.FromMilliseconds(HorizontalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.X);
             TimeSpan newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
             UpdateTimeStatusMessage(newTime);
         }
