@@ -62,7 +62,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private bool _playerGestureSlideHorizontal;
     private bool _playerGesturePressAndHold;
     private double? _playbackRateBeforeHold;
-    private bool _shouldSuppressNextTap;
     private bool? _isSlideHorizontal;
     private double _rawPixelsPerViewPixel = 1.0;
 
@@ -190,17 +189,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             return;
         }
 
-        if (_shouldSuppressNextTap)
-        {
-            _shouldSuppressNextTap = false;
-            return;
-        }
-
         if (_clickTimer.IsRunning)
         {
             _clickTimer.Stop();
             return;
         }
+
         _clickTimer.Debounce(() => ProcessPlayerGesture(_playerGestureTap, GestureStepAmount), TimeSpan.FromMilliseconds(200));
     }
 
@@ -250,6 +244,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         const double SwipeThreshold = 100.0;
 
+        if (IsHolding) return;
+
         if (VlcMediaPlayer != null)
         {
             _timeBeforeManipulation = VlcMediaPlayer.Position;
@@ -286,6 +282,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         const double HorizontalStepAmountPerPixel = 200;
         const double VerticalStepAmountPerPixel = 1;
+
+        if (IsHolding) return;
 
         double absCumulativeX = Math.Abs(cumulative.X);
         double absCumulativeY = Math.Abs(cumulative.Y);
@@ -331,37 +329,32 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         const double HoldingSpeed = 2.0;
 
-        if (!_playerGesturePressAndHold || VlcMediaPlayer is null || VlcMediaPlayer.PlaybackState is MediaPlaybackState.Paused) return;
+        if (!_playerGesturePressAndHold || VlcMediaPlayer is null) return;
+        if (!IsHolding && VlcMediaPlayer.PlaybackState is MediaPlaybackState.Paused) return;
 
         switch (holdingState)
         {
-            case HoldingState.Started:
-                if (!IsHolding)
+            case HoldingState.Started when !IsHolding:
+                _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
+                // If the rate is already faster than the holding speed, set it to twice the holding speed.
+                double effectiveHoldingSpeed = VlcMediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
+                if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
                 {
-                    _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
-                    _shouldSuppressNextTap = true;
-                    // If the rate is already faster than the holding speed, set it to twice the holding speed.
-                    double effectiveHoldingSpeed = VlcMediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
-                    if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
-                    {
-                        Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
-                    }
-                    IsHolding = true;
+                    Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
+                    Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
                 }
+
+                IsHolding = true;
                 break;
-            case HoldingState.Completed:
-            case HoldingState.Canceled:
-                if (IsHolding)
+            case HoldingState.Completed when IsHolding:
+            case HoldingState.Canceled when IsHolding:
+                if (_playbackRateBeforeHold.HasValue && VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
                 {
-                    if (_playbackRateBeforeHold.HasValue && VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
-                    {
-                        Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
-                        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
-                    }
-                    _playbackRateBeforeHold = null;
-                    IsHolding = false;
+                    Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
+                    Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
                 }
+                _playbackRateBeforeHold = null;
+                IsHolding = false;
                 break;
         }
     }

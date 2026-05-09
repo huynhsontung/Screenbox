@@ -27,6 +27,7 @@ public sealed partial class PlayerElement : UserControl
     }
 
     private readonly GestureRecognizer _gestureRecognizer;
+    private bool _shouldSuppressNextClick;
 
     public event RoutedEventHandler? Click;
 
@@ -68,6 +69,12 @@ public sealed partial class PlayerElement : UserControl
     private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         if (!IsEnabled) return;
+        if (_shouldSuppressNextClick)
+        {
+            _shouldSuppressNextClick = false;
+            return;
+        }
+
         ViewModel.OnClick();
         Click?.Invoke(sender, e);
     }
@@ -81,16 +88,14 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnPointerCanceled(object sender, PointerRoutedEventArgs e)
     {
-        if (!IsEnabled) return;
-
         _gestureRecognizer.CompleteGesture();
         VideoViewButton.ReleasePointerCapture(e.Pointer);
-        e.Handled = true;
+        e.Handled = IsEnabled;
     }
 
     private void VideoViewButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        if (ViewModel.IsHolding || !IsEnabled) return;
+        if (!IsEnabled) return;
 
         _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(this));
     }
@@ -125,14 +130,14 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
     {
-        if (ViewModel.IsHolding || !IsEnabled) return;
+        if (!IsEnabled) return;
 
         ViewModel.ProcessSlideGesture(e.Delta.Translation, e.Cumulative.Translation);
     }
 
     private void VideoViewButton_OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
     {
-        if (ViewModel.IsHolding || !IsEnabled) return;
+        if (!IsEnabled) return;
 
         ViewModel.ProcessSwipeGesture(e.Cumulative.Translation);
         ViewModel.OnManipulationCompleted();
@@ -140,6 +145,9 @@ public sealed partial class PlayerElement : UserControl
 
     private void GestureRecognizer_OnHolding(GestureRecognizer sender, HoldingEventArgs args)
     {
+        if (args.PointerDeviceType is not (Windows.Devices.Input.PointerDeviceType.Touch or Windows.Devices.Input.PointerDeviceType.Pen)
+            && args.HoldingState is HoldingState.Completed or HoldingState.Canceled)
+            _shouldSuppressNextClick = true;
         ViewModel.ProcessHoldingGesture(args.HoldingState);
     }
 }
