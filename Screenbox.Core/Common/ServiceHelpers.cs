@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Casting.Abstractions;
+using Screenbox.Casting.Proxy;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Controllers;
 using Screenbox.Core.Factories;
@@ -67,7 +69,7 @@ public static class ServiceHelpers
         services.AddSingleton<ISearchService, SearchService>();
         services.AddSingleton<IWindowService, WindowService>();
         services.AddSingleton<ICastService, CastService>();
-        services.AddSingleton<IMediaStreamingService, MediaStreamingService>();
+        services.AddSingleton<ICastMediaProxy, CastMediaProxy>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();

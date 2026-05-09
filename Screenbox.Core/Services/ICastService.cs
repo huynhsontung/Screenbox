@@ -1,75 +1,52 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
+using Screenbox.Casting.Abstractions;
 using Screenbox.Core.Playback;
-using Sharpcaster;
 
 namespace Screenbox.Core.Services;
 
 /// <summary>
-/// Provides Chromecast discovery and media casting functionality.
+/// Provides protocol-agnostic media casting functionality by bridging <see cref="ICastDeviceLocator"/>
+/// implementations with the local media streaming infrastructure.
 /// </summary>
 /// <remarks>
-/// Unlike the previous LibVLC-based implementation (which routed the decoded output stream
-/// directly to a renderer), this interface hands a media URL to the Chromecast device, which
-/// then fetches and plays the content independently.
+/// The service creates one locator per supported protocol (Chromecast, DLNA) and delegates
+/// connection to the appropriate locator based on the target <see cref="ICastDevice"/>.
+/// Play/pause/seek/volume controls are on <see cref="ICastSession"/> directly.
 /// </remarks>
 public interface ICastService
 {
-    /// <summary>Creates a new <see cref="RendererWatcher"/> that discovers Chromecast devices on the local network.</summary>
-    RendererWatcher CreateRendererWatcher();
+    /// <summary>
+    /// Creates a fresh set of device locators — one for each supported casting protocol
+    /// (Chromecast and DLNA/UPnP).
+    /// </summary>
+    /// <returns>
+    /// A read-only list of <see cref="ICastDeviceLocator"/> instances, one per protocol.
+    /// The caller is responsible for starting, stopping, and disposing the locators.
+    /// </returns>
+    IReadOnlyList<ICastDeviceLocator> CreateLocators();
 
     /// <summary>
-    /// Connects to the specified renderer, resolves a streamable URL for the given playback
-    /// item, and instructs the Chromecast to start playback at <paramref name="startPosition"/>.
+    /// Resolves a streamable HTTP URL for <paramref name="item"/>, then instructs the
+    /// appropriate protocol locator to connect to <paramref name="device"/> and start playback.
     /// </summary>
-    /// <param name="renderer">The target Chromecast device.</param>
+    /// <param name="device">The target cast device.</param>
     /// <param name="item">The media to cast.</param>
     /// <param name="startPosition">The position at which playback should begin.</param>
     /// <returns>
-    /// The connected <see cref="ChromecastClient"/> when casting starts successfully;
-    /// otherwise <c>null</c>.
+    /// An <see cref="ICastSession"/> on success; <c>null</c> if the device cannot be reached
+    /// or the stream URL cannot be resolved.
     /// </returns>
-    Task<ChromecastClient?> ConnectAndCastAsync(Renderer renderer, PlaybackItem item, TimeSpan startPosition);
+    Task<ICastSession?> ConnectAndCastAsync(ICastDevice device, PlaybackItem item, TimeSpan startPosition);
 
     /// <summary>
-    /// Stops the active cast session, disconnects the provided client when available,
-    /// and stops any local HTTP stream.
+    /// Stops the active cast session, signals the remote device to stop, and tears down
+    /// any local HTTP media stream.
     /// </summary>
-    Task StopCastingAsync(ChromecastClient? client = null);
-
-    /// <summary>
-    /// Sends a play command to resume playback on the Chromecast device.
-    /// </summary>
-    Task PlayAsync(ChromecastClient client);
-
-    /// <summary>
-    /// Sends a pause command to pause playback on the Chromecast device.
-    /// </summary>
-    Task PauseAsync(ChromecastClient client);
-
-    /// <summary>
-    /// Seeks the Chromecast device to the specified position.
-    /// </summary>
-    /// <param name="client">The active cast client.</param>
-    /// <param name="position">The target playback position.</param>
-    Task SeekAsync(ChromecastClient client, TimeSpan position);
-
-    /// <summary>
-    /// Sets the receiver volume level on the Chromecast device.
-    /// </summary>
-    /// <param name="client">The active cast client.</param>
-    /// <param name="level">Volume level between 0.0 (silent) and 1.0 (full).</param>
-    Task SetVolumeAsync(ChromecastClient client, double level);
-
-    /// <summary>
-    /// Sets the receiver mute state on the Chromecast device.
-    /// </summary>
-    /// <param name="client">The active cast client.</param>
-    /// <param name="muted">Whether the receiver should be muted.</param>
-    Task SetMuteAsync(ChromecastClient client, bool muted);
+    /// <param name="session">The session to disconnect; may be <c>null</c> (no-op).</param>
+    Task DisconnectAsync(ICastSession? session = null);
 }
 

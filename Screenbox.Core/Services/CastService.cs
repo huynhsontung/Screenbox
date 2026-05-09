@@ -1,227 +1,152 @@
 ﻿#nullable enable
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Sharpcaster;
-using Sharpcaster.Models.Media;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
+using Screenbox.Casting.Abstractions;
+using Screenbox.Casting.Chromecast;
+using Screenbox.Casting.Dlna;
 using Screenbox.Core.Playback;
-using Windows.Storage;
 
 namespace Screenbox.Core.Services;
 
 /// <summary>
-/// Implements <see cref="ICastService"/> using the SharpCaster library.
+/// Implements <see cref="ICastService"/> by bridging <see cref="ChromecastDeviceLocator"/>
+/// and <see cref="DlnaDeviceLocator"/> with the local HTTP proxy infrastructure.
 ///
 /// <para>
-/// This service is transient and stateless from the app perspective. The caller owns
-/// any active <see cref="ChromecastClient"/> instance and is responsible for tracking
-/// client lifecycle between calls.
-/// </para>
-/// <para>
-/// Casting flow:
-/// <list type="number">
-///   <item>Resolve the playback item to an HTTP URL via <see cref="IMediaStreamingService"/>.</item>
-///   <item>Connect to the target <see cref="ChromecastReceiver"/> using <see cref="ChromecastClient"/>.</item>
-///   <item>Launch the Default Media Receiver application on the device.</item>
-///   <item>Send a LOAD command with the media URL, content type, and start position.</item>
-/// </list>
+/// This service is stateless with respect to the active session — callers own the
+/// <see cref="ICastSession"/> and are responsible for its lifecycle.
 /// </para>
 /// </summary>
 public sealed class CastService : ICastService
 {
-    /// <summary>Application ID for the Google Default Media Receiver.</summary>
-    private const string DefaultMediaReceiverId = "CC1AD845";
+    private readonly ICastMediaProxy _mediaProxy;
 
-    private readonly IMediaStreamingService _streamingService;
-
-    public CastService(IMediaStreamingService streamingService)
+    public CastService(ICastMediaProxy mediaProxy)
     {
-        _streamingService = streamingService;
+        _mediaProxy = mediaProxy;
     }
 
     /// <inheritdoc/>
-    public RendererWatcher CreateRendererWatcher()
+    public IReadOnlyList<ICastDeviceLocator> CreateLocators()
     {
-        return new RendererWatcher();
+        return new List<ICastDeviceLocator>
+        {
+            new ChromecastDeviceLocator(),
+            new DlnaDeviceLocator(),
+        };
     }
 
     /// <inheritdoc/>
-    public async Task<ChromecastClient?> ConnectAndCastAsync(Renderer renderer, PlaybackItem item, TimeSpan startPosition)
+    public async Task<ICastSession?> ConnectAndCastAsync(ICastDevice device, PlaybackItem item, TimeSpan startPosition)
     {
-        ChromecastClient? client = null;
-
+        ICastProxyHandle? proxyHandle = null;
         try
         {
-            // Resolve the media URL (or start local HTTP server for local files).
-            Uri? streamUrl = await _streamingService.StartStreamAsync(item);
-            if (streamUrl is null)
+            Uri? streamUrl;
+
+            if (TryGetNetworkUri(item.OriginalSource, out Uri? networkUri))
+            {
+                // Cast device can reach this URL directly — no proxy needed.
+                streamUrl = networkUri;
+            }
+            else if (item.OriginalSource is Windows.Storage.IStorageFile file)
+            {
+                proxyHandle = await _mediaProxy.StartAsync(file);
+                streamUrl = proxyHandle.Url;
+            }
+            else
             {
                 return null;
             }
 
-            client = new ChromecastClient();
+            ICastDeviceLocator locator = device.Type == Casting.Models.CastDeviceType.Dlna
+                ? new DlnaDeviceLocator()
+                : new ChromecastDeviceLocator();
 
-            await client.ConnectChromecast(renderer.Target);
-            await client.LaunchApplicationAsync(DefaultMediaReceiverId);
-
-            var media = new Media
+            ICastSession? session = await locator.ConnectAsync(device, streamUrl, startPosition).ConfigureAwait(false);
+            if (session is null)
             {
-                ContentUrl = streamUrl.ToString(),
-                ContentType = GetContentType(item),
-                // BUFFERED allows the Chromecast to seek; LIVE would disable seeking.
-                StreamType = StreamType.Buffered,
-            };
-
-            // Pass the start time so the Chromecast begins playback at the right position.
-            await client.MediaChannel.LoadAsync(media, autoPlay: true);
-
-            // Seek to the requested start position after the media is loaded.
-            if (startPosition > TimeSpan.Zero)
-            {
-                await client.MediaChannel.SeekAsync(startPosition.TotalSeconds);
+                proxyHandle?.Dispose();
+                return null;
             }
 
-            return client;
+            // Wrap so the proxy handle is automatically released when the session ends.
+            return new ProxiedCastSession(session, proxyHandle);
         }
         catch (Exception)
         {
-            // Clean up partially-started session on failure.
-            await StopCastingAsync(client);
+            proxyHandle?.Dispose();
             return null;
         }
     }
 
     /// <inheritdoc/>
-    public async Task StopCastingAsync(ChromecastClient? client = null)
+    public async Task DisconnectAsync(ICastSession? session = null)
     {
-        if (client is not null)
+        if (session is not null)
         {
-            try
-            {
-                // Signal the receiver to stop playback before closing the connection.
-                // This ensures the Chromecast device receives and acknowledges the STOP command
-                // rather than continuing playback until it loses the HTTP stream.
-                await client.MediaChannel.StopAsync();
-            }
-            catch (Exception)
-            {
-                // Ignore — the media session may already be in IDLE state or the device unreachable.
-            }
-
-            try
-            {
-                await client.DisconnectAsync();
-            }
-            catch (Exception)
-            {
-                // Ignore disconnect errors — the device may already be unreachable.
-            }
-        }
-
-        // Stop the local HTTP server only after the receiver has been signalled,
-        // so it has a chance to respond to the STOP command.
-        _streamingService.StopStream();
-    }
-
-    /// <inheritdoc/>
-    public async Task PlayAsync(ChromecastClient client)
-    {
-        try
-        {
-            await client.MediaChannel.PlayAsync();
-        }
-        catch (Exception)
-        {
-            // Ignore — the device may be disconnecting or the session may have ended.
+            try { await session.StopAsync().ConfigureAwait(false); } catch { }
+            // Dispose releases both the session resources and the proxy handle
+            // (when session is a ProxiedCastSession).
+            try { session.Dispose(); } catch { }
         }
     }
 
-    /// <inheritdoc/>
-    public async Task PauseAsync(ChromecastClient client)
+    private static bool TryGetNetworkUri(object? source, out Uri? uri)
     {
-        try
+        uri = source switch
         {
-            await client.MediaChannel.PauseAsync();
-        }
-        catch (Exception)
-        {
-            // Ignore — the device may be disconnecting or the session may have ended.
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task SeekAsync(ChromecastClient client, TimeSpan position)
-    {
-        try
-        {
-            await client.MediaChannel.SeekAsync(position.TotalSeconds);
-        }
-        catch (Exception)
-        {
-            // Ignore — the device may be disconnecting or the session may have ended.
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task SetVolumeAsync(ChromecastClient client, double level)
-    {
-        try
-        {
-            await client.ReceiverChannel.SetVolume(Math.Clamp(level, 0.0, 1.0));
-        }
-        catch (Exception)
-        {
-            // Ignore — the device may be disconnecting or the session may have ended.
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task SetMuteAsync(ChromecastClient client, bool muted)
-    {
-        try
-        {
-            await client.ReceiverChannel.SetMute(muted);
-        }
-        catch (Exception)
-        {
-            // Ignore — the device may be disconnecting or the session may have ended.
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
-
-    /// <summary>Infers the MIME content-type for a playback item from its source's file extension.</summary>
-    private static string GetContentType(PlaybackItem item)
-    {
-        string? extension = item.OriginalSource switch
-        {
-            IStorageFile file => Path.GetExtension(file.Name),
-            string path => Path.GetExtension(path),
-            Uri uri => Path.GetExtension(uri.AbsolutePath),
+            Uri u when u.Scheme is "http" or "https" => u,
+            string s when Uri.TryCreate(s, UriKind.Absolute, out Uri? parsed)
+                          && parsed.Scheme is "http" or "https" => parsed,
             _ => null
         };
 
-        return extension?.ToLowerInvariant() switch
+        return uri is not null;
+    }
+
+    // -------------------------------------------------------------------------
+    // Wraps ICastSession + ICastProxyHandle so both are disposed together
+    // -------------------------------------------------------------------------
+
+    private sealed class ProxiedCastSession : ICastSession
+    {
+        public ICastDevice Device => _inner.Device;
+        public double Position => _inner.Position;
+        public double Duration => _inner.Duration;
+        public bool IsPlaying => _inner.IsPlaying;
+        public bool IsBuffering => _inner.IsBuffering;
+        public double Volume => _inner.Volume;
+        public bool IsMuted => _inner.IsMuted;
+
+        public event EventHandler? PlaybackEnded;
+        public event EventHandler? Disconnected;
+
+        private readonly ICastSession _inner;
+        private readonly ICastProxyHandle? _proxyHandle;
+
+        internal ProxiedCastSession(ICastSession inner, ICastProxyHandle? proxyHandle)
         {
-            ".mp4" or ".m4v" => "video/mp4",
-            ".mkv" => "video/x-matroska",
-            ".webm" => "video/webm",
-            ".avi" => "video/x-msvideo",
-            ".mov" => "video/quicktime",
-            ".wmv" => "video/x-ms-wmv",
-            ".flv" => "video/x-flv",
-            ".mp3" => "audio/mpeg",
-            ".m4a" or ".aac" => "audio/aac",
-            ".flac" => "audio/flac",
-            ".wav" => "audio/wav",
-            ".ogg" or ".opus" => "audio/ogg",
-            _ => "video/mp4"
-        };
+            _inner = inner;
+            _proxyHandle = proxyHandle;
+            _inner.PlaybackEnded += (s, e) => PlaybackEnded?.Invoke(this, e);
+            _inner.Disconnected += (s, e) => Disconnected?.Invoke(this, e);
+        }
+
+        public Task PlayAsync() => _inner.PlayAsync();
+        public Task PauseAsync() => _inner.PauseAsync();
+        public Task StopAsync() => _inner.StopAsync();
+        public Task SeekAsync(TimeSpan position) => _inner.SeekAsync(position);
+        public Task SetVolumeAsync(double level) => _inner.SetVolumeAsync(level);
+        public Task SetMuteAsync(bool muted) => _inner.SetMuteAsync(muted);
+
+        public void Dispose()
+        {
+            _inner.Dispose();
+            _proxyHandle?.Dispose();
+        }
     }
 }
 

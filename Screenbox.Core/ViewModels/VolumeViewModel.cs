@@ -28,19 +28,17 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly PlayerContext _playerContext;
         private readonly CastContext _castContext;
-        private readonly ICastService _castService;
 
         // Guards against a re-entrant SetVolumeAsync/SetMuteAsync call when Volume or IsMute
-        // is updated programmatically from a Chromecast status event.
+        // is updated programmatically from a cast status event.
         private bool _updatingFromCast;
 
         public VolumeViewModel(ISettingsService settingsService, PlayerContext playerContext,
-            CastContext castContext, ICastService castService)
+            CastContext castContext)
         {
             _settingsService = settingsService;
             _playerContext = playerContext;
             _castContext = castContext;
-            _castService = castService;
             _volume = settingsService.PersistentVolume;
             _maxVolume = settingsService.MaxVolume;
             _isMute = _volume == 0;
@@ -89,12 +87,12 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnVolumeChanged(int value)
         {
-            // While casting, proxy the volume change to the Chromecast receiver.
-            if (_castContext.IsCasting && _castContext.Client is { } castClient)
+            // While casting, proxy the volume change to the cast session.
+            if (_castContext.IsCasting && _castContext.Session is { } castSession)
             {
                 if (!_updatingFromCast)
                 {
-                    _ = _castService.SetVolumeAsync(castClient, value / 100.0);
+                    _ = castSession.SetVolumeAsync(value / 100.0);
                 }
 
                 return;
@@ -110,12 +108,12 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnIsMuteChanged(bool value)
         {
-            // While casting, proxy the mute change to the Chromecast receiver.
-            if (_castContext.IsCasting && _castContext.Client is { } castClient)
+            // While casting, proxy the mute change to the cast session.
+            if (_castContext.IsCasting && _castContext.Session is { } castSession)
             {
                 if (!_updatingFromCast)
                 {
-                    _ = _castService.SetMuteAsync(castClient, value);
+                    _ = castSession.SetMuteAsync(value);
                 }
 
                 return;
