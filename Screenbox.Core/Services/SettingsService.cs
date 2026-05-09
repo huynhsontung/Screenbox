@@ -31,7 +31,9 @@ public sealed class SettingsService : ISettingsService
     private const string PersistentVolumeKey = "Values/Volume";
     private const string MaxVolumeKey = "Values/MaxVolume";
     private const string PersistentRepeatModeKey = "Values/RepeatMode";
+    private const string PersistentAudioLanguageKey = "Values/AudioLanguage";
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
+    private const string PersistentSubtitleTypePreferenceKey = "Values/SubtitleTypePreference";
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
@@ -70,10 +72,22 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PersistentVolumeKey, value);
     }
 
+    public string PersistentAudioLanguage
+    {
+        get => GetValue<string>(PersistentAudioLanguageKey) ?? string.Empty;
+        set => SetValue(PersistentAudioLanguageKey, value);
+    }
+
     public string PersistentSubtitleLanguage
     {
         get => GetValue<string>(PersistentSubtitleLanguageKey) ?? string.Empty;
         set => SetValue(PersistentSubtitleLanguageKey, value);
+    }
+
+    public int PersistentSubtitleTypePreference
+    {
+        get => GetValue<int>(PersistentSubtitleTypePreferenceKey);
+        set => SetValue(PersistentSubtitleTypePreferenceKey, value);
     }
 
     public int MaxVolume
@@ -233,6 +247,9 @@ public sealed class SettingsService : ISettingsService
         SetDefault(PlayerControlsHideDelayKey, 3);
         SetDefault(PersistentVolumeKey, 100);
         SetDefault(MaxVolumeKey, 100);
+        SetDefault(PersistentAudioLanguageKey, string.Empty);
+        SetDefault(PersistentSubtitleLanguageKey, string.Empty);
+        SetDefault(PersistentSubtitleTypePreferenceKey, 0);
         SetDefault(LibrariesUseIndexerKey, true);
         SetDefault(LibrariesSearchRemovableStorageKey, true);
         SetDefault(GeneralShowRecent, true);

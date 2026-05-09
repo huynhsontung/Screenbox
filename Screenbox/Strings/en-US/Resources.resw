@@ -992,6 +992,33 @@
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
     <value>Change the app's display language</value>
   </data>
+  <data name="SettingsAudioLanguageHeader" xml:space="preserve">
+    <value>Preferred audio language</value>
+  </data>
+  <data name="SettingsAudioLanguageDescription" xml:space="preserve">
+    <value>Select the language to prioritize when multiple audio tracks are available</value>
+  </data>
+  <data name="SettingsSubtitleLanguageHeader" xml:space="preserve">
+    <value>Preferred subtitle language</value>
+  </data>
+  <data name="SettingsSubtitleLanguageDescription" xml:space="preserve">
+    <value>Select the language to prioritize when multiple subtitle tracks are available</value>
+  </data>
+  <data name="SettingsSubtitleTypeHeader" xml:space="preserve">
+    <value>Preferred subtitle type</value>
+  </data>
+  <data name="SettingsSubtitleTypeDescription" xml:space="preserve">
+    <value>Choose whether to prioritize full subtitles or signs/songs subtitles</value>
+  </data>
+  <data name="SubtitleTypeAny" xml:space="preserve">
+    <value>Any subtitle track</value>
+  </data>
+  <data name="SubtitleTypeFull" xml:space="preserve">
+    <value>Full subtitles</value>
+  </data>
+  <data name="SubtitleTypeSignsSongs" xml:space="preserve">
+    <value>Signs / songs</value>
+  </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
     <value>Use system language</value>
   </data>
