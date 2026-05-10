@@ -95,7 +95,7 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        if (!IsEnabled) return;
+        if (!IsEnabled || ViewModel.IsHolding) return;
 
         _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(this));
     }
