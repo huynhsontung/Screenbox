@@ -300,7 +300,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <remarks>
     /// If the media is <see cref="MediaPlaybackState.Paused"/>, the hold behavior
     /// is not available. To activate the hold behavior, the space key needs to be
-    /// pressed and held down for at least 300 milliseconds.
+    /// pressed and held down for at least 500 milliseconds.
     /// </remarks>
     public void ProcessSpaceKeyDown()
     {
@@ -323,7 +323,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             }
 
             _isSpaceKeyHolding = true;
-        }, TimeSpan.FromMilliseconds(300));
+        }, TimeSpan.FromMilliseconds(500));
     }
 
     /// <summary>
