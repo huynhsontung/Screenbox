@@ -49,7 +49,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _clickTimer;
-    private readonly DispatcherQueueTimer _manipulationTimer;
+    private readonly DispatcherQueueTimer _pointerWheelTimer;
     private readonly DisplayRequestTracker _requestTracker;
     private Size _viewSize;
     private Size _aspectRatio;
@@ -78,7 +78,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         _transportControlsService = transportControlsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _clickTimer = _dispatcherQueue.CreateTimer();
-        _manipulationTimer = _dispatcherQueue.CreateTimer();
+        _pointerWheelTimer = _dispatcherQueue.CreateTimer();
         _requestTracker = new DisplayRequestTracker();
         LoadSettings();
 
@@ -224,20 +224,17 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 2 : -2, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
-        else
+        else if (VlcMediaPlayer?.CanSeek ?? false)
         {
-            if (VlcMediaPlayer?.CanSeek ?? false)
-            {
-                // Pointer wheel events can be fired in quick succession and still count as a single seek action from the user's perspective.
-                // Debounce setting the time before manipulation to calculate the culmulative change correctly.
-                _manipulationTimer.Debounce(() => _timeBeforeManipulation = VlcMediaPlayer.Position, TimeSpan.FromSeconds(1), true);
-                Messenger.Send(new TimeChangeOverrideMessage(true));
-                // For mouse wheel, each detent is 120. For touchpad, it can be a smaller value.
-                var seekAmount = -(delta / 12.0);   // Each mouse wheel detent corresponds to a 10 second seek. Touchpad has more precision.
-                seekAmount = Math.Abs(seekAmount) < 0.5 ? Math.Sign(seekAmount) * 0.5 : seekAmount;
-                var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(seekAmount), true)).Response.NewPosition;
-                UpdateTimeStatusMessage(newTime);
-            }
+            // Pointer wheel events can be fired in quick succession and still count as a single seek action from the user's perspective.
+            // Debounce setting the time before manipulation to calculate the culmulative change correctly.
+            _pointerWheelTimer.Debounce(() => _timeBeforeManipulation = VlcMediaPlayer.Position, TimeSpan.FromSeconds(1), true);
+            Messenger.Send(new TimeChangeOverrideMessage(true));
+            // For mouse wheel, each detent is 120. For touchpad, it can be a smaller value.
+            var seekAmount = -(delta / 12.0);   // Each mouse wheel detent corresponds to a 10 second seek. Touchpad has more precision.
+            seekAmount = Math.Abs(seekAmount) < 0.5 ? Math.Sign(seekAmount) * 0.5 : seekAmount;
+            var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(seekAmount), true)).Response.NewPosition;
+            UpdateTimeStatusMessage(newTime);
         }
     }
 
@@ -250,11 +247,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         const double SwipeThreshold = 100.0;
 
         if (IsHolding) return;
-
-        if (VlcMediaPlayer != null)
-        {
-            _timeBeforeManipulation = VlcMediaPlayer.Position;
-        }
 
         double absoluteCumulativeX = Math.Abs(cumulative.X);
         double absoluteCumulativeY = Math.Abs(cumulative.Y);
@@ -293,11 +285,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         double absCumulativeX = Math.Abs(cumulative.X);
         double absCumulativeY = Math.Abs(cumulative.Y);
 
-        if (VlcMediaPlayer is not null)
-        {
-            _timeBeforeManipulation = VlcMediaPlayer.Position;
-        }
-
         if (_isSlideHorizontal is null)
         {
             if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerGestureSlideVertical)
@@ -307,6 +294,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerGestureSlideHorizontal)
             {
                 _isSlideHorizontal = true;
+                if (VlcMediaPlayer != null)
+                    _timeBeforeManipulation = VlcMediaPlayer.Position;
             }
         }
 
@@ -381,6 +370,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             case PlaybackActionKind.Rewind:
                 if (VlcMediaPlayer?.CanSeek ?? false)
                 {
+                    _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
                     var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-change), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
@@ -389,6 +379,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             case PlaybackActionKind.FastForward:
                 if (VlcMediaPlayer?.CanSeek ?? false)
                 {
+                    _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
                     var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(change), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
