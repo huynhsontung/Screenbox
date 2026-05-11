@@ -49,6 +49,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _clickTimer;
+    private readonly DispatcherQueueTimer _manipulationTimer;
     private readonly DisplayRequestTracker _requestTracker;
     private Size _viewSize;
     private Size _aspectRatio;
@@ -77,6 +78,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         _transportControlsService = transportControlsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _clickTimer = _dispatcherQueue.CreateTimer();
+        _manipulationTimer = _dispatcherQueue.CreateTimer();
         _requestTracker = new DisplayRequestTracker();
         LoadSettings();
 
@@ -226,10 +228,13 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         {
             if (VlcMediaPlayer?.CanSeek ?? false)
             {
-                _timeBeforeManipulation = VlcMediaPlayer.Position;
+                // Pointer wheel events can be fired in quick succession and still count as a single seek action from the user's perspective.
+                // Debounce setting the time before manipulation to calculate the culmulative change correctly.
+                _manipulationTimer.Debounce(() => _timeBeforeManipulation = VlcMediaPlayer.Position, TimeSpan.FromSeconds(1), true);
                 Messenger.Send(new TimeChangeOverrideMessage(true));
-                var seekAmount = -(delta / 2);
-                seekAmount = Math.Abs(seekAmount) < 1 ? 1 : seekAmount;
+                // For mouse wheel, each detent is 120. For touchpad, it can be a smaller value.
+                var seekAmount = -(delta / 12.0);   // Each mouse wheel detent corresponds to a 10 second seek. Touchpad has more precision.
+                seekAmount = Math.Abs(seekAmount) < 0.5 ? Math.Sign(seekAmount) * 0.5 : seekAmount;
                 var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(seekAmount), true)).Response.NewPosition;
                 UpdateTimeStatusMessage(newTime);
             }
