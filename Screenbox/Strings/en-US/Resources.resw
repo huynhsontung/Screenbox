@@ -664,10 +664,10 @@
     <value>Gestures</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Enable slide horizontally to seek</value>
+    <value>Slide horizontally to seek</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Enable slide vertically to adjust volume</value>
+    <value>Slide vertically to adjust volume</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox Media Player</value>

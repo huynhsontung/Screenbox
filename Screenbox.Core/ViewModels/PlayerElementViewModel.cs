@@ -31,7 +31,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 {
     private const double GestureStepAmount = 5.0;
 
-    private enum SlideDirection
+    private enum SlideOrientation
     {
         None,
         Horizontal,
@@ -70,7 +70,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private bool _playerGestureSlideHorizontal;
     private bool _playerGesturePressAndHold;
     private double? _playbackRateBeforeHold;
-    private SlideDirection _slideDirection;
+    private SlideOrientation _slideOrientation;
     private double _rawPixelsPerViewPixel = 1.0;
 
     public PlayerElementViewModel(
@@ -208,7 +208,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnManipulationCompleted()
     {
-        _slideDirection = SlideDirection.None;
+        _slideOrientation = SlideOrientation.None;
         Messenger.Send(new OverrideControlsHideDelayMessage(100));
         Messenger.Send(new TimeChangeOverrideMessage(false));
     }
@@ -291,26 +291,26 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         double absCumulativeX = Math.Abs(cumulative.X);
         double absCumulativeY = Math.Abs(cumulative.Y);
 
-        if (_slideDirection is SlideDirection.None)
+        if (_slideOrientation is SlideOrientation.None)
         {
             if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerGestureSlideVertical)
             {
-                _slideDirection = SlideDirection.Vertical;
+                _slideOrientation = SlideOrientation.Vertical;
             }
             else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerGestureSlideHorizontal)
             {
-                _slideDirection = SlideDirection.Horizontal;
+                _slideOrientation = SlideOrientation.Horizontal;
                 if (VlcMediaPlayer != null)
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
             }
         }
 
-        if (_slideDirection is SlideDirection.Vertical)
+        if (_slideOrientation is SlideOrientation.Vertical)
         {
             int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-(VerticalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.Y), true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
-        else if (_slideDirection is SlideDirection.Horizontal && (VlcMediaPlayer?.CanSeek ?? false))
+        else if (_slideOrientation is SlideOrientation.Horizontal && (VlcMediaPlayer?.CanSeek ?? false))
         {
             Messenger.Send(new TimeChangeOverrideMessage(true));
             TimeSpan timeChange = TimeSpan.FromMilliseconds(HorizontalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.X);
