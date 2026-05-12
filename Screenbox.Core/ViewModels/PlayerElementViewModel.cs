@@ -31,6 +31,13 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 {
     private const double GestureStepAmount = 5.0;
 
+    private enum SlideDirection
+    {
+        None,
+        Horizontal,
+        Vertical
+    }
+
     [ObservableProperty] private bool _isHolding;
 
     public event EventHandler<EventArgs>? ClearViewRequested;
@@ -63,7 +70,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private bool _playerGestureSlideHorizontal;
     private bool _playerGesturePressAndHold;
     private double? _playbackRateBeforeHold;
-    private bool? _isSlideHorizontal;
+    private SlideDirection _slideDirection;
     private double _rawPixelsPerViewPixel = 1.0;
 
     public PlayerElementViewModel(
@@ -153,8 +160,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 player.MediaFailed += OnMediaFailed;
                 player.PlaybackItemChanged += OnPlaybackItemChanged;
 
-                if (initException != null)
-                    initException.Throw();
+                initException?.Throw();
             }
             catch (Exception ex)
             {
@@ -202,7 +208,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnManipulationCompleted()
     {
-        _isSlideHorizontal = null;
+        _slideDirection = SlideDirection.None;
         Messenger.Send(new OverrideControlsHideDelayMessage(100));
         Messenger.Send(new TimeChangeOverrideMessage(false));
     }
@@ -285,26 +291,26 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         double absCumulativeX = Math.Abs(cumulative.X);
         double absCumulativeY = Math.Abs(cumulative.Y);
 
-        if (_isSlideHorizontal is null)
+        if (_slideDirection is SlideDirection.None)
         {
             if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerGestureSlideVertical)
             {
-                _isSlideHorizontal = false;
+                _slideDirection = SlideDirection.Vertical;
             }
             else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerGestureSlideHorizontal)
             {
-                _isSlideHorizontal = true;
+                _slideDirection = SlideDirection.Horizontal;
                 if (VlcMediaPlayer != null)
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
             }
         }
 
-        if (_isSlideHorizontal is false)
+        if (_slideDirection is SlideDirection.Vertical)
         {
             int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-(VerticalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.Y), true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
-        else if (_isSlideHorizontal is true && (VlcMediaPlayer?.CanSeek ?? false))
+        else if (_slideDirection is SlideDirection.Horizontal && (VlcMediaPlayer?.CanSeek ?? false))
         {
             Messenger.Send(new TimeChangeOverrideMessage(true));
             TimeSpan timeChange = TimeSpan.FromMilliseconds(HorizontalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.X);
