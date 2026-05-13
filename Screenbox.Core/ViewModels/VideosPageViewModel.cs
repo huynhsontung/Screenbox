@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     [ObservableProperty] private bool _hasVideos;
 
     /// <summary>Gets a value indicating whether the Videos library is available, used to enable the add-folder command.</summary>
-    public bool HasLibrary => _libraryContext.VideosLibrary != null;
+    public bool HasLibrary => _libraryContext.VideosStorageLibrary != null;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -51,7 +51,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     {
         if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
             Breadcrumbs.Add(firstFolder);
-        HasVideos = _libraryContext.Videos.Count > 0;
+        HasVideos = _libraryContext.Videos.Videos.Count > 0;
         AddFolderCommand.NotifyCanExecuteChanged();
     }
 
@@ -103,7 +103,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
+            await _libraryContext.VideosStorageLibrary?.RequestAddFolderAsync();
         }
         catch (Exception e)
         {

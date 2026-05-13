@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -384,7 +384,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         if (_videosLibrary == null)
         {
-            _videosLibrary = _libraryContext.VideosLibrary;
+            _videosLibrary = _libraryContext.VideosStorageLibrary;
             if (_videosLibrary != null)
             {
                 _videosLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
@@ -393,7 +393,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         if (_musicLibrary == null)
         {
-            _musicLibrary = _libraryContext.MusicLibrary;
+            _musicLibrary = _libraryContext.MusicStorageLibrary;
             if (_musicLibrary != null)
             {
                 _musicLibrary.DefinitionChanged += LibraryOnDefinitionChanged;

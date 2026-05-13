@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -117,19 +117,19 @@ public partial class PlaylistViewModel : ObservableRecipient
         bool existing = false;
         if (Uri.TryCreate(record.Path, UriKind.Absolute, out var uri))
         {
-            if (_mediaFactory.TryGetSingleton(uri, out var existingMedia))
+            if (_mediaFactory.TryGetOrCreate(uri, out var existingMedia))
             {
                 media = existingMedia!;
                 existing = true;
             }
             else
             {
-                media = _mediaFactory.GetSingleton(uri);
+                media = _mediaFactory.GetOrCreate(uri);
             }
         }
         else
         {
-            media = _mediaFactory.GetTransient(new Uri("about:blank"));
+            media = _mediaFactory.Create(new Uri("about:blank"));
             media.IsAvailable = false;
         }
 

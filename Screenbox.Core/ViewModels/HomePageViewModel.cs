@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -131,7 +131,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
                 if (file.IsSupportedPlaylist()) continue;
                 if (i >= Recent.Count)
                 {
-                    MediaViewModel media = _mediaFactory.GetSingleton(file);
+                    MediaViewModel media = _mediaFactory.GetOrCreate(file);
                     _pathToMruMappings[media.Location] = token;
                     Recent.Add(media);
                 }
@@ -192,7 +192,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         if (existingIndex == -1)
         {
-            MediaViewModel media = _mediaFactory.GetSingleton(file);
+            MediaViewModel media = _mediaFactory.GetOrCreate(file);
             _pathToMruMappings[media.Location] = token;
             Recent.Insert(desiredIndex, media);
         }

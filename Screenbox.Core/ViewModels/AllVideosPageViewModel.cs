@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -43,7 +43,7 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient,
     public void UpdateVideos()
     {
         IsLoading = _libraryContext.IsLoadingVideos;
-        IReadOnlyList<MediaViewModel> videos = _libraryContext.Videos;
+        IReadOnlyList<MediaViewModel> videos = _libraryContext.Videos.Videos;
         if (videos.Count < 5000)
         {
             // Only sync when the number of items is low enough

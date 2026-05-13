@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
@@ -78,19 +79,20 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
     /// <inheritdoc/>
     public async Task FetchMusicAsync(bool useCache = true)
     {
-        if (_context.MusicLibrary is null || _musicQuery is null) return;
+        if (_context.MusicStorageLibrary is null || _musicQuery is null) return;
         _musicFetchCts?.Cancel();
         using CancellationTokenSource cts = new();
         _musicFetchCts = cts;
         _context.IsLoadingMusic = true;
         try
         {
-            var result = await _libraryService.FetchMusicAsync(_context.MusicLibrary, _musicQuery, useCache, cts.Token);
-            _context.Songs = result.Songs;
-            _context.Albums = result.Albums;
-            _context.Artists = result.Artists;
-            _context.UnknownAlbum = result.UnknownAlbum;
-            _context.UnknownArtist = result.UnknownArtist;
+            var progress = new Progress<MusicLibrary>(report =>
+            {
+                _context.Music = report;
+                _context.RaiseMusicLibraryContentChanged();
+            });
+            var result = await _libraryService.FetchMusicAsync(_context.MusicStorageLibrary, _musicQuery, useCache, cts.Token, progress);
+            _context.Music = result;
             _context.RaiseMusicLibraryContentChanged();
         }
         catch (OperationCanceledException)
@@ -111,15 +113,20 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
     /// <inheritdoc/>
     public async Task FetchVideosAsync(bool useCache = true)
     {
-        if (_context.VideosLibrary is null || _videosQuery is null) return;
+        if (_context.VideosStorageLibrary is null || _videosQuery is null) return;
         _videosFetchCts?.Cancel();
         using CancellationTokenSource cts = new();
         _videosFetchCts = cts;
         _context.IsLoadingVideos = true;
         try
         {
-            var videos = await _libraryService.FetchVideosAsync(_context.VideosLibrary, _videosQuery, useCache, cts.Token);
-            _context.Videos = videos;
+            var progress = new Progress<VideosLibrary>(report =>
+            {
+                _context.Videos = report;
+                _context.RaiseVideosLibraryContentChanged();
+            });
+            var result = await _libraryService.FetchVideosAsync(_context.VideosStorageLibrary, _videosQuery, useCache, cts.Token, progress);
+            _context.Videos = result;
             _context.RaiseVideosLibraryContentChanged();
         }
         catch (OperationCanceledException)
@@ -174,9 +181,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
 
     private async Task EnsureWatchingMusicAsync()
     {
-        if (_context.MusicLibrary is null)
+        if (_context.MusicStorageLibrary is null)
         {
-            _context.MusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
+            _context.MusicStorageLibrary = await _libraryService.InitializeMusicLibraryAsync();
         }
 
         if (_musicQuery is not null && ShouldUpdateQuery(_musicQuery, UseIndexer))
@@ -195,9 +202,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
 
     private async Task EnsureWatchingVideosAsync()
     {
-        if (_context.VideosLibrary is null)
+        if (_context.VideosStorageLibrary is null)
         {
-            _context.VideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
+            _context.VideosStorageLibrary = await _libraryService.InitializeVideosLibraryAsync();
         }
 
         if (_videosQuery is not null && ShouldUpdateQuery(_videosQuery, UseIndexer))

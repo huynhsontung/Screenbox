@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
         IsLoading = _libraryContext.IsLoadingMusic;
-        Songs = _libraryContext.Songs;
+        Songs = _libraryContext.Music.Songs;
 
         // Populate song groups with fetched result
         var groups = GetCurrentGrouping(_libraryContext, SortBy);
@@ -86,11 +86,11 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, MediaViewModel>> GetAlbumGrouping(LibraryContext context)
     {
-        var groups = Songs.GroupBy(m => m.Album?.Name ?? context.UnknownAlbum.Name)
+        var groups = Songs.GroupBy(m => m.Album?.Name ?? context.Music.UnknownAlbum.Name)
             .OrderBy(g => g.Key)
             .ToList();
 
-        var index = groups.FindIndex(g => g.Key == context.UnknownAlbum.Name);
+        var index = groups.FindIndex(g => g.Key == context.Music.UnknownAlbum.Name);
         if (index >= 0)
         {
             var firstGroup = groups[index];
@@ -103,11 +103,11 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, MediaViewModel>> GetArtistGrouping(LibraryContext context)
     {
-        var groups = Songs.GroupBy(m => m.MainArtist?.Name ?? context.UnknownArtist.Name)
+        var groups = Songs.GroupBy(m => m.MainArtist?.Name ?? context.Music.UnknownArtist.Name)
             .OrderBy(g => g.Key)
             .ToList();
 
-        var index = groups.FindIndex(g => g.Key == context.UnknownArtist.Name);
+        var index = groups.FindIndex(g => g.Key == context.Music.UnknownArtist.Name);
         if (index >= 0)
         {
             var firstGroup = groups[index];

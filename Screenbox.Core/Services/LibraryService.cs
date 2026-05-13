@@ -100,11 +100,12 @@ public sealed class LibraryService : ILibraryService
         return library;
     }
 
-    public async Task<MusicLibraryResult> FetchMusicAsync(
+    public async Task<MusicLibrary> FetchMusicAsync(
         StorageLibrary library,
         StorageFileQueryResult queryResult,
         bool useCache,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IProgress<MusicLibrary>? progress = null)
     {
         StorageFileQueryResult libraryQuery = queryResult;
         StorageLibraryChangeTracker? libraryChangeTracker = null;
@@ -139,10 +140,13 @@ public sealed class LibraryService : ILibraryService
             }
         }
 
+        var albumFactory = new AlbumViewModelFactory();
+        var artistFactory = new ArtistViewModelFactory();
+
         if (!hasCache)
         {
             songs = new List<MediaViewModel>();
-            await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+            await BatchFetchMusicAsync(libraryQuery, songs, albumFactory, artistFactory, cancellationToken, progress);
 
             if (SearchRemovableStorage)
             {
@@ -150,43 +154,24 @@ public sealed class LibraryService : ILibraryService
                 if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
                 {
                     libraryQuery = CreateRemovableStorageMusicQuery();
-                    await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                    await BatchFetchMusicAsync(libraryQuery, songs, albumFactory, artistFactory, cancellationToken, progress);
                 }
             }
         }
-
-        songs.ForEach(song => song.IsFromLibrary = true);
-
-        var albumFactory = new AlbumViewModelFactory();
-        var artistFactory = new ArtistViewModelFactory();
-        foreach (MediaViewModel song in songs)
+        else
         {
-            if (!song.IsFromLibrary) continue;
-            if (hasCache && song.Source is Uri)
+            // Cache path: build associations in one pass (fast, no async detail loading needed)
+            foreach (MediaViewModel song in songs)
             {
+                song.IsFromLibrary = true;
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
-            }
-            else
-            {
-                await song.LoadDetailsAsync(_filesService);
-                cancellationToken.ThrowIfCancellationRequested();
-                albumFactory.AddSong(song);
-                artistFactory.AddSong(song);
+                song.Album = albumFactory.SongsToAlbums[song];
+                song.Artists = artistFactory.SongsToArtists[song].ToArray();
             }
         }
 
-        foreach (var (song, album) in albumFactory.SongsToAlbums)
-        {
-            song.Album = album;
-        }
-
-        foreach (var (song, artists) in artistFactory.SongsToArtists)
-        {
-            song.Artists = artists.ToArray();
-        }
-
-        var result = new MusicLibraryResult(
+        var result = new MusicLibrary(
             songs,
             albumFactory.Albums,
             artistFactory.Artists,
@@ -206,11 +191,12 @@ public sealed class LibraryService : ILibraryService
         return result;
     }
 
-    public async Task<List<MediaViewModel>> FetchVideosAsync(
+    public async Task<VideosLibrary> FetchVideosAsync(
         StorageLibrary library,
         StorageFileQueryResult queryResult,
         bool useCache,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IProgress<VideosLibrary>? progress = null)
     {
         StorageFileQueryResult libraryQuery = queryResult;
         StorageLibraryChangeTracker? libraryChangeTracker = null;
@@ -248,7 +234,7 @@ public sealed class LibraryService : ILibraryService
         if (!hasCache)
         {
             videos = new List<MediaViewModel>();
-            await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+            await BatchFetchVideosAsync(libraryQuery, videos, cancellationToken, progress);
 
             if (SearchRemovableStorage)
             {
@@ -256,18 +242,15 @@ public sealed class LibraryService : ILibraryService
                 if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
                 {
                     libraryQuery = CreateRemovableStorageVideosQuery();
-                    await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                    await BatchFetchVideosAsync(libraryQuery, videos, cancellationToken, progress);
                 }
             }
         }
-
-        foreach (MediaViewModel video in videos)
+        else
         {
-            video.IsFromLibrary = true;
-            if (!hasCache)
+            foreach (MediaViewModel video in videos)
             {
-                await video.LoadDetailsAsync(_filesService);
-                cancellationToken.ThrowIfCancellationRequested();
+                video.IsFromLibrary = true;
             }
         }
 
@@ -281,7 +264,7 @@ public sealed class LibraryService : ILibraryService
             libraryChangeTracker?.Reset();
         }
 
-        return videos;
+        return new VideosLibrary(videos);
     }
 
     private static void DetachMediaRelationships(MediaViewModel media)
@@ -364,7 +347,7 @@ public sealed class LibraryService : ILibraryService
         var records = libraryCache.Records;
         List<MediaViewModel> mediaList = records.Select(record =>
         {
-            MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+            MediaViewModel media = _mediaFactory.GetOrCreate(new Uri(record.Path));
             media.IsFromLibrary = true;
             if (!media.DetailsLoaded)
             {
@@ -386,24 +369,94 @@ public sealed class LibraryService : ILibraryService
         return mediaList;
     }
 
-    private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target, CancellationToken cancellationToken)
+    private async Task BatchFetchMusicAsync(
+        StorageFileQueryResult queryResult,
+        List<MediaViewModel> target,
+        AlbumViewModelFactory albumFactory,
+        ArtistViewModelFactory artistFactory,
+        CancellationToken cancellationToken,
+        IProgress<MusicLibrary>? progress)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        DateTime lastReport = DateTime.MinValue;
         while (true)
         {
-            List<MediaViewModel> batch = await FetchMediaFromStorage(queryResult, (uint)target.Count);
-            if (batch.Count == 0) break;
-            target.AddRange(batch);
+            IReadOnlyList<StorageFile> files = await FetchFilesFromStorage(queryResult, (uint)target.Count);
+            if (files.Count == 0) break;
+
+            foreach (StorageFile file in files)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                MediaViewModel song = _mediaFactory.Create(file);
+                song.IsFromLibrary = true;
+                await song.LoadDetailsAsync(_filesService);
+                albumFactory.AddSong(song);
+                artistFactory.AddSong(song);
+                song.Album = albumFactory.SongsToAlbums[song];
+                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                target.Add(song);
+            }
+
+            if (progress != null && (DateTime.UtcNow - lastReport).TotalSeconds >= 5)
+            {
+                progress.Report(BuildMusicSnapshot(target, albumFactory, artistFactory));
+                lastReport = DateTime.UtcNow;
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
         }
     }
 
-    private async Task<List<MediaViewModel>> FetchMediaFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
+    private async Task BatchFetchVideosAsync(
+        StorageFileQueryResult queryResult,
+        List<MediaViewModel> target,
+        CancellationToken cancellationToken,
+        IProgress<VideosLibrary>? progress)
     {
-        IReadOnlyList<StorageFile> files;
+        cancellationToken.ThrowIfCancellationRequested();
+        DateTime lastReport = DateTime.MinValue;
+        while (true)
+        {
+            IReadOnlyList<StorageFile> files = await FetchFilesFromStorage(queryResult, (uint)target.Count);
+            if (files.Count == 0) break;
+
+            foreach (StorageFile file in files)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                MediaViewModel video = _mediaFactory.Create(file);
+                video.IsFromLibrary = true;
+                await video.LoadDetailsAsync(_filesService);
+                target.Add(video);
+            }
+
+            if (progress != null && (DateTime.UtcNow - lastReport).TotalSeconds >= 5)
+            {
+                progress.Report(new VideosLibrary(new List<MediaViewModel>(target)));
+                lastReport = DateTime.UtcNow;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+    }
+
+    private static MusicLibrary BuildMusicSnapshot(
+        List<MediaViewModel> songs,
+        AlbumViewModelFactory albumFactory,
+        ArtistViewModelFactory artistFactory)
+    {
+        return new MusicLibrary(
+            new List<MediaViewModel>(songs),
+            new Dictionary<string, AlbumViewModel>(albumFactory.Albums),
+            new Dictionary<string, ArtistViewModel>(artistFactory.Artists),
+            albumFactory.UnknownAlbum,
+            artistFactory.UnknownArtist);
+    }
+
+    private async Task<IReadOnlyList<StorageFile>> FetchFilesFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
+    {
         try
         {
-            files = await queryResult.GetFilesAsync(fetchIndex, batchSize);
+            return await queryResult.GetFilesAsync(fetchIndex, batchSize);
         }
         catch (Exception e)
         {
@@ -415,11 +468,8 @@ public sealed class LibraryService : ILibraryService
                 LogService.Log(e);
             }
 
-            return new List<MediaViewModel>();
+            return Array.Empty<StorageFile>();
         }
-
-        List<MediaViewModel> mediaBatch = files.Select(_mediaFactory.GetSingleton).ToList();
-        return mediaBatch;
     }
 
     private Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
@@ -463,7 +513,7 @@ public sealed class LibraryService : ILibraryService
                 case StorageLibraryChangeType.Created:
                 case StorageLibraryChangeType.MovedIntoLibrary:
                     file = (StorageFile)await change.GetStorageItemAsync();
-                    mediaList.Add(_mediaFactory.GetSingleton(file));
+                    mediaList.Add(_mediaFactory.GetOrCreate(file));
                     break;
 
                 case StorageLibraryChangeType.Deleted:
@@ -483,7 +533,7 @@ public sealed class LibraryService : ILibraryService
                     existing = mediaList.Find(s =>
                         s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
 
-                    var newMedia = _mediaFactory.GetSingleton(file);
+                    var newMedia = _mediaFactory.GetOrCreate(file);
                     if (existing != null)
                     {
                         var existingInfo = existing.MediaInfo;

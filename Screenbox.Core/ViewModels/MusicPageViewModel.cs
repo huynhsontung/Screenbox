@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     [ObservableProperty] private bool _hasContent;
 
     /// <summary>Gets a value indicating whether the Music library is available, used to enable the add-folder command.</summary>
-    public bool LibraryLoaded => _libraryContext.MusicLibrary != null;
+    public bool LibraryLoaded => _libraryContext.MusicStorageLibrary != null;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -41,7 +41,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
 
     public void UpdateSongs()
     {
-        HasContent = _libraryContext.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
+        HasContent = _libraryContext.Music.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
         AddFolderCommand.NotifyCanExecuteChanged();
     }
 
@@ -54,7 +54,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
+            await _libraryContext.MusicStorageLibrary?.RequestAddFolderAsync();
         }
         catch (Exception e)
         {

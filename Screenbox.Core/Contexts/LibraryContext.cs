@@ -1,10 +1,9 @@
 ﻿#nullable enable
 
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
-using Screenbox.Core.ViewModels;
+using Screenbox.Core.Models;
 using Windows.Storage;
 
 namespace Screenbox.Core.Contexts;
@@ -15,10 +14,10 @@ namespace Screenbox.Core.Contexts;
 public sealed partial class LibraryContext : ObservableRecipient
 {
     [ObservableProperty]
-    private StorageLibrary? _musicLibrary;
+    private StorageLibrary? _musicStorageLibrary;
 
     [ObservableProperty]
-    private StorageLibrary? _videosLibrary;
+    private StorageLibrary? _videosStorageLibrary;
 
     [ObservableProperty]
     private bool _isLoadingVideos;
@@ -27,22 +26,10 @@ public sealed partial class LibraryContext : ObservableRecipient
     private bool _isLoadingMusic;
 
     [ObservableProperty]
-    private Dictionary<string, AlbumViewModel> _albums = new();
+    private MusicLibrary _music = MusicLibrary.Empty;
 
     [ObservableProperty]
-    private Dictionary<string, ArtistViewModel> _artists = new();
-
-    [ObservableProperty]
-    private AlbumViewModel _unknownAlbum = new();
-
-    [ObservableProperty]
-    private ArtistViewModel _unknownArtist = new();
-
-    [ObservableProperty]
-    private List<MediaViewModel> _songs = new();
-
-    [ObservableProperty]
-    private List<MediaViewModel> _videos = new();
+    private VideosLibrary _videos = VideosLibrary.Empty;
 
 
     public void RaiseMusicLibraryContentChanged()
@@ -55,3 +42,4 @@ public sealed partial class LibraryContext : ObservableRecipient
         Messenger.Send(new LibraryContentChangedMessage(KnownLibraryId.Videos));
     }
 }
+

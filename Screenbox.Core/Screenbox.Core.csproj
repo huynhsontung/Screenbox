@@ -206,7 +206,7 @@
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
-    <Compile Include="Models\MusicLibraryResult.cs" />
+    <Compile Include="Models\MusicLibrary.cs" />
     <Compile Include="Models\PersistentPlaylist.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
@@ -219,6 +219,7 @@
     <Compile Include="Models\SearchSuggestionItem.cs" />
     <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
+    <Compile Include="Models\VideosLibrary.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />

@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -55,7 +55,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
         IsLoading = _libraryContext.IsLoadingMusic;
-        Songs = _libraryContext.Songs;
+        Songs = _libraryContext.Music.Songs;
 
         var groups = GetCurrentGrouping(_libraryContext, SortBy);
         if (Songs.Count < 5000)
@@ -86,9 +86,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, AlbumViewModel>> GetDefaultGrouping(LibraryContext context)
     {
-        var groups = context.Albums.Values
+        var groups = context.Music.Albums.Values
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-            .GroupBy(album => album == context.UnknownAlbum
+            .GroupBy(album => album == context.Music.UnknownAlbum
                 ? MediaGroupingHelpers.OtherGroupSymbol
                 : MediaGroupingHelpers.GetCharacterGroupLabel(album.Name))
             .ToList();
@@ -111,11 +111,11 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, AlbumViewModel>> GetArtistGrouping(LibraryContext context)
     {
-        var groups = context.Albums.Values.GroupBy(a => a.ArtistName)
+        var groups = context.Music.Albums.Values.GroupBy(a => a.ArtistName)
             .OrderBy(g => g.Key, StringComparer.CurrentCulture)
             .ToList();
 
-        var index = groups.FindIndex(g => g.Key == context.UnknownArtist.Name);
+        var index = groups.FindIndex(g => g.Key == context.Music.UnknownArtist.Name);
         if (index >= 0)
         {
             var firstGroup = groups[index];
@@ -128,7 +128,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, AlbumViewModel>> GetYearGrouping(LibraryContext context)
     {
-        var groups = context.Albums.Values.GroupBy(a =>
+        var groups = context.Music.Albums.Values.GroupBy(a =>
                 a.Year > 0
                     ? a.Year.ToString()
                     : MediaGroupingHelpers.OtherGroupSymbol)
@@ -139,7 +139,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, AlbumViewModel>> GetDateAddedGrouping(LibraryContext context)
     {
-        var groups = context.Albums.Values.GroupBy(a => a.DateAdded.Date)
+        var groups = context.Music.Albums.Values.GroupBy(a => a.DateAdded.Date)
             .OrderByDescending(g => g.Key)
             .Select(g =>
                 new ListGrouping<string, AlbumViewModel>(

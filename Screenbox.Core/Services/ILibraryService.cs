@@ -1,12 +1,11 @@
 ﻿#nullable enable
 
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
 using Windows.Storage;
 using Windows.Storage.Search;
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services;
 
@@ -28,24 +27,26 @@ public interface ILibraryService
     Task<StorageLibrary> InitializeVideosLibraryAsync();
 
     /// <summary>
-    /// Fetch music from the library. Returns a <see cref="MusicLibraryResult"/> that the caller
-    /// should apply to the library context.
+    /// Fetch music from the library. Returns a <see cref="MusicLibrary"/> that the caller
+    /// should apply to the library context. Intermediate results are reported via <paramref name="progress"/>.
     /// </summary>
-    Task<MusicLibraryResult> FetchMusicAsync(
+    Task<MusicLibrary> FetchMusicAsync(
         StorageLibrary library,
         StorageFileQueryResult queryResult,
         bool useCache,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        IProgress<MusicLibrary>? progress = null);
 
     /// <summary>
-    /// Fetch videos from the library. Returns the resulting list that the caller
-    /// should apply to the library context.
+    /// Fetch videos from the library. Returns a <see cref="VideosLibrary"/> that the caller
+    /// should apply to the library context. Intermediate results are reported via <paramref name="progress"/>.
     /// </summary>
-    Task<List<MediaViewModel>> FetchVideosAsync(
+    Task<VideosLibrary> FetchVideosAsync(
         StorageLibrary library,
         StorageFileQueryResult queryResult,
         bool useCache,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        IProgress<VideosLibrary>? progress = null);
 
     /// <summary>
     /// Creates a query for the user's music library.
@@ -57,3 +58,4 @@ public interface ILibraryService
     /// </summary>
     StorageFileQueryResult CreateVideosLibraryQuery(bool useIndexer);
 }
+

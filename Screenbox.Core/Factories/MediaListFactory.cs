@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ public sealed class MediaListFactory : IMediaListFactory
                     break;
 
                 case StorageFile storageFile when storageFile.IsSupported():
-                    var vm = _mediaFactory.GetSingleton(storageFile);
+                    var vm = _mediaFactory.GetOrCreate(storageFile);
                     if (playNext != null && storageFile.IsEqual(playNext))
                         next = vm;
 
@@ -107,7 +107,7 @@ public sealed class MediaListFactory : IMediaListFactory
                 return new NextMediaList(m3uItems[0], m3uItems);
         }
 
-        var media = _mediaFactory.GetSingleton(file);
+        var media = _mediaFactory.GetOrCreate(file);
         if (file.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(media, cancellationToken) is { Count: > 0 } items)
         {
             media = items[0];
@@ -131,7 +131,7 @@ public sealed class MediaListFactory : IMediaListFactory
             }
         }
 
-        var media = _mediaFactory.GetTransient(uri);
+        var media = _mediaFactory.Create(uri);
         if (await ParseSubMediaRecursiveAsync(media, cancellationToken) is { Count: > 0 } playlist)
         {
             media = playlist[0];
@@ -237,15 +237,15 @@ public sealed class MediaListFactory : IMediaListFactory
                 // Local file URI — prefer StorageFile for richer metadata support.
                 if (localFile != null)
                 {
-                    if (!_mediaFactory.TryGetSingleton(localFile, out vm))
+                    if (!_mediaFactory.TryGetOrCreate(localFile, out vm))
                     {
-                        vm = _mediaFactory.GetSingleton(localFile);
+                        vm = _mediaFactory.GetOrCreate(localFile);
                         ApplyExtInf(vm, extInfTitle, extInfDuration);
                     }
                 }
-                else if (!_mediaFactory.TryGetSingleton(uri, out vm))
+                else if (!_mediaFactory.TryGetOrCreate(uri, out vm))
                 {
-                    vm = _mediaFactory.GetSingleton(uri);
+                    vm = _mediaFactory.GetOrCreate(uri);
                     ApplyExtInf(vm, extInfTitle, extInfDuration);
                 }
             }
@@ -336,7 +336,7 @@ public sealed class MediaListFactory : IMediaListFactory
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var subItems = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
+            var subItems = media.SubItems.Select(item => _mediaFactory.Create(item));
             return subItems.ToList();
         }
         catch (OperationCanceledException)

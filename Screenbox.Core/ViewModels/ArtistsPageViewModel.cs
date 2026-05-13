@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
     public void FetchArtists()
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
-        Songs = _libraryContext.Songs;
+        Songs = _libraryContext.Music.Songs;
 
         var groupings = GetDefaultGrouping(_libraryContext);
         GroupedArtists.SyncObservableGroups(groupings);
@@ -66,9 +66,9 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, ArtistViewModel>> GetDefaultGrouping(LibraryContext context)
     {
-        var groups = context.Artists.Values
+        var groups = context.Music.Artists.Values
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-            .GroupBy(artist => artist == context.UnknownArtist
+            .GroupBy(artist => artist == context.Music.UnknownArtist
                 ? MediaGroupingHelpers.OtherGroupSymbol
                 : MediaGroupingHelpers.GetCharacterGroupLabel(artist.Name))
             .ToList();
