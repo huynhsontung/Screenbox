@@ -199,7 +199,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 **Media Management Services**
 - **`IFilesService`**: File system operations and media discovery
-- **`ILibraryService`**: Stateless operations for fetching and managing libraries
+- **`ILibraryService`**: Stateless operations for fetching and managing libraries. `FetchMusicAsync` returns a `MusicLibrary` and accepts an optional `IProgress<MusicLibrary>` for incremental batch updates; `FetchVideosAsync` works analogously with `VideosLibrary`.
 - **`ISearchService`**: Content search and filtering functionality
 
 **Playback and Streaming Services**
@@ -228,7 +228,7 @@ Architectural rules for contexts:
 Available contexts:
 - **`PlayerContext`**: Holds the current `IMediaPlayer` instance, allowing components to observe player state changes
 - **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
-- **`LibraryContext`**: Holds library state including the current libraries, loading flags, cancellation tokens, query results, and media collections
+- **`LibraryContext`**: Holds library state including the `StorageLibrary` handles (`MusicStorageLibrary`, `VideosStorageLibrary`), loading flags, and the current `MusicLibrary` and `VideosLibrary` container objects. Written atomically by `LibraryCoordinator` after each fetch batch or on completion.
 - **`PlaylistsContext`**: Holds the application-wide collection of user playlists
 
 #### Stateful Coordinators
@@ -242,7 +242,7 @@ Architectural rules for coordinators:
 - **Implement**: `IDisposable` to clean up watchers/timers
 
 Available coordinators:
-- **`ILibraryCoordinator` / `LibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Updates `LibraryContext` and triggers `ILibraryService` fetch operations when the file system changes.
+- **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
 
 #### Helper Classes
 
@@ -276,6 +276,8 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 - **`MusicInfo.cs`**: Audio metadata and music library information
 
 #### Application State Models  
+- **`MusicLibrary.cs`**: Immutable snapshot of the music library — `Songs`, `Albums`, `Artists`, `UnknownAlbum`, and `UnknownArtist`. Replaced by a new instance whenever the library is refreshed, so all relationships stay consistent. Has a static `Empty` instance used as the initial `LibraryContext.Music` value.
+- **`VideosLibrary.cs`**: Immutable snapshot of the video library — `Videos` list. Same replacement model as `MusicLibrary`.
 - **`PersistentMediaRecord.cs`**: Saved playback state and resume positions
 - **`PersistentStorageLibrary.cs`**: Library folder persistence
 
@@ -291,7 +293,7 @@ The following table summarizes the allowed dependency directions between layers:
 | **ViewModels** | Services (via interface), Contexts, Factories | Coordinators (except at startup boundaries) |
 | **Contexts** | Models, Playback abstractions | Services, Coordinators, ViewModels |
 | **Coordinators** | Services (via interface), Contexts | ViewModels |
-| **Services** | Other Services (via interface), Models, Playback | ViewModels, Contexts (only written to, never read in constructor) |
+| **Services** | Other Services (via interface), Models, Playback | ViewModels, Contexts |
 | **Models / Playback** | (no application dependencies) | All layers above |
 
 ### DI and Factory Patterns
@@ -301,7 +303,7 @@ The following table summarizes the allowed dependency directions between layers:
 
 ### Stateless vs Stateful
 
-- **Stateless services** (e.g., `LibraryService`, `CastService`): execute operations and write results into a supplied context, but do not own long-lived observable state.
+- **Stateless services** (e.g., `LibraryService`, `CastService`): execute operations and **return data** to the caller. They do not own long-lived observable state, and must not read from or write to a `Context` directly. Results are returned as plain models (e.g., `MusicLibrary`) and applied to the context by the coordinator.
 - **Stateful coordinators** (e.g., `LibraryCoordinator`): own watchers/timers and manage subscriptions/lifetimes. Register as singletons and implement `IDisposable`.
 - **Stateful services** (e.g., `LastPositionTracker`): own in-memory state but no platform subscriptions. Prefer a service interface; register as singletons.
 
