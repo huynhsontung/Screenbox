@@ -224,7 +224,7 @@
     <value>Додати у чергу</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Вибрати</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Обрати все</value>
@@ -997,46 +997,46 @@
     <value>Тека</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Натиснути</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>Провести вгору</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>Провести вниз</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>Провести вліво</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>Провести вправо</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Натисніть і утримуйте, щоб збільшити швидкість відтворення</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>Немає</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>Відтворити/Пауза</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>Перемотати</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>Перемотати вперед</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>Зменшити гучність</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>Збільшити гучність</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>Зменшити швидкість</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>Збільшити швидкість</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Додати до списку відтворення</value>
@@ -1048,10 +1048,10 @@
     <value>Новий список відтворення</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Імпортувати список відтворення</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Експортувати</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Вибраний елемент</value>
