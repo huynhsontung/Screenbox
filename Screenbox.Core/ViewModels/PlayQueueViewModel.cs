@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -187,8 +186,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
     }
 
-    private bool HasSelection(IList<object>? selectedItems) =>
-        (selectedItems != null && selectedItems.Count > 0) || Selection.HasSelection;
+    private bool HasSelection() => Selection.SelectedItems.Count > 0;
 
     private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
         selectedItems?.Count == 1 &&

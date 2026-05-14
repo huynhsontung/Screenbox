@@ -28,15 +28,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     public ObservableCollection<object> SelectedItems { get; }
 
     /// <summary>
-    /// Gets a value that indicates whether there is at least one selected item.
-    /// </summary>
-    /// <value>
-    /// <see langword="true"/> if <see cref="SelectedItemCount"/> is greater than <c>0</c>;
-    /// otherwise, <see langword="false"/>.
-    /// </value>
-    public bool HasSelection => SelectedItemCount > 0;
-
-    /// <summary>
     /// Gets or sets the number of selected items.
     /// </summary>
     /// <value>The current count of selected items. The default is <c>0</c>.</value>
@@ -95,13 +86,7 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     partial void OnSelectedItemCountChanged(int value)
     {
-        OnPropertyChanged(nameof(HasSelection));
         UpdateIsAllSelected();
-    }
-
-    partial void OnIsSelectionModeActiveChanged(bool value)
-    {
-        if (!value) SelectedItems.Clear();
     }
 
     /// <summary>
@@ -129,6 +114,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         IsSelectionModeActive = false;
         SelectedItem = null;
+        SelectedItems.Clear();
     }
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

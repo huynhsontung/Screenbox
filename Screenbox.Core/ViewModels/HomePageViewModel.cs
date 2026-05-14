@@ -328,6 +328,5 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    private bool HasSelection(IList<object>? selectedItems) =>
-        (selectedItems != null && selectedItems.Count > 0) || Selection.HasSelection;
+    private bool HasSelection() => Selection.SelectedItems.Count > 0;
 }

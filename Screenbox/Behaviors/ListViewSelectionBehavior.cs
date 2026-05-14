@@ -100,21 +100,25 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         }
 
         _isUpdating = true;
-
-        foreach (var item in e.RemovedItems)
+        try
         {
-            collection.Remove(item);
-        }
-
-        foreach (var item in e.AddedItems)
-        {
-            if (!collection.Contains(item))
+            foreach (var item in e.RemovedItems)
             {
-                collection.Add(item);
+                collection.Remove(item);
+            }
+
+            foreach (var item in e.AddedItems)
+            {
+                if (!collection.Contains(item))
+                {
+                    collection.Add(item);
+                }
             }
         }
-
-        _isUpdating = false;
+        finally
+        {
+            _isUpdating = false;
+        }
     }
 
     private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -125,28 +129,49 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         }
 
         _isUpdating = true;
-        switch (e.Action)
+        try
         {
-            case NotifyCollectionChangedAction.Add:
-                foreach (var item in e.NewItems)
-                {
-                    if (!listViewBase.SelectedItems.Contains(item))
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
                     {
-                        listViewBase.SelectedItems.Add(item);
+                        if (!listViewBase.SelectedItems.Contains(item))
+                        {
+                            listViewBase.SelectedItems.Add(item);
+                        }
                     }
-                }
-                break;
-            case NotifyCollectionChangedAction.Remove:
-                foreach (var item in e.OldItems)
-                {
-                    listViewBase.SelectedItems.Remove(item);
-                }
-                break;
-            case NotifyCollectionChangedAction.Reset:
-                listViewBase.SelectedItems.Clear();
-                break;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        listViewBase.SelectedItems.Remove(item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (var oldItem in e.OldItems)
+                    {
+                        listViewBase.SelectedItems.Remove(oldItem);
+                    }
+                    foreach (var newItem in e.NewItems)
+                    {
+                        if (!listViewBase.SelectedItems.Contains(newItem))
+                        {
+                            listViewBase.SelectedItems.Add(newItem);
+                        }
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    // Move doesn't affect selection state, items stay selected if they were previously.
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    listViewBase.SelectedItems.Clear();
+                    break;
+            }
         }
-
-        _isUpdating = false;
+        finally
+        {
+            _isUpdating = false;
+        }
     }
 }
