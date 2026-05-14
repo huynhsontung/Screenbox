@@ -667,10 +667,10 @@
     <value>Gestos</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Deslizar horizontalmente para buscar</value>
+    <value>Deslize horizontalmente para buscar</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Deslizar verticalmente para ajustar o volume</value>
+    <value>Deslize verticalmente para alterar o volume</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Leitor multimédia Screenbox</value>
@@ -997,46 +997,46 @@
     <value>Pasta</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Tocar</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>Percorrer para cima</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>Percorrer para baixo</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>Percorrer para a esquerda</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>Percorrer para a direita</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Ativar premir sem soltar para aumentar a velocidade de reprodução</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>Nada</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>Reproduzir/colocar em pausa</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>Rebobinar</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>Avançar rapidamente</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>Diminuir o volume</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>Aumentar o volume</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>Diminuir a velocidade</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>Aumentar a velocidade</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adicionar à lista de reprodução</value>
