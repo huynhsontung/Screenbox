@@ -33,14 +33,14 @@
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
-                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Name, Type)}" Orientation="Horizontal">
+            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestion">
+                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Type, Text)}" Orientation="Horizontal">
                     <FontIcon
                         Margin="0,0,8,0"
                         FontSize="{StaticResource StandardIconFontSize}"
                         Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
                         Visibility="{x:Bind converters:SearchSuggestionConverter.GetGlyphVisibility(Type)}" />
-                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Name, Type)}" />
+                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Type, Text)}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -204,7 +204,7 @@
                     QueryIcon="Find"
                     QuerySubmitted="NavViewSearchBox_OnQuerySubmitted"
                     SuggestionChosen="NavViewSearchBox_OnSuggestionChosen"
-                    Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
+                    Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextChanged="NavViewSearchBox_OnTextChanged"
                     UpdateTextOnSelect="False">
                     <AutoSuggestBox.KeyboardAccelerators>

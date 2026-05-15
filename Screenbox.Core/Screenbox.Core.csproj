@@ -134,7 +134,7 @@
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlaybackActionKind.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
-    <Compile Include="Enums\SearchSuggestionKind.cs" />
+    <Compile Include="Enums\SearchSuggestionType.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />
     <Compile Include="Events\FolderViewNavigationEventArgs.cs" />
@@ -214,7 +214,7 @@
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
     <Compile Include="Models\PersistentMediaRecord.cs" />
-    <Compile Include="Models\SearchSuggestionItem.cs" />
+    <Compile Include="Models\SearchSuggestion.cs" />
     <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
