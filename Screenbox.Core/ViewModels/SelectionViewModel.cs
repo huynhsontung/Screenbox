@@ -28,13 +28,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     public ObservableCollection<object> SelectedItems { get; }
 
     /// <summary>
-    /// Gets or sets the number of selected items.
-    /// </summary>
-    /// <value>The current count of selected items. The default is <c>0</c>.</value>
-    [ObservableProperty]
-    private int _selectedItemCount;
-
-    /// <summary>
     /// Gets or sets a value that indicates whether all items are selected.
     /// </summary>
     /// <value>
@@ -69,14 +62,9 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// Sets the source collection for selection and updates the selection state.
     /// </summary>
     /// <param name="source">A collection of items to be used as the selection source.</param>
-    public void SetItemSource(IReadOnlyCollection<object>? source)
+    public void SetItemsSource(IReadOnlyCollection<object>? source)
     {
         _sourceCollection = source;
-        RefreshSelectionState();
-    }
-
-    partial void OnSelectedItemCountChanged(int value)
-    {
         RefreshSelectionState();
     }
 
@@ -108,7 +96,7 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        SelectedItemCount = SelectedItems.Count;
+        RefreshSelectionState();
     }
 
     private void RefreshSelectionState()
@@ -116,7 +104,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         if (_sourceCollection is null) return;
 
         int totalCount = _sourceCollection.Count;
-        int selectedCount = SelectedItemCount;
+        int selectedCount = SelectedItems.Count;
         if (selectedCount < 0 || selectedCount > totalCount) return;
 
         IsAllSelected = selectedCount == 0

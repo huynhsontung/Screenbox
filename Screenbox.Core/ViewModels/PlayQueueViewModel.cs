@@ -45,7 +45,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
 
-        Selection.SetItemSource(Playlist.Items);
+        Selection.SetItemsSource(Playlist.Items);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
     }
 
@@ -60,7 +60,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
 
     private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Selection.SelectedItemCount))
+        if (e.PropertyName == nameof(Selection.IsAllSelected))
         {
             PlaySelectedNextCommand.NotifyCanExecuteChanged();
             RemoveSelectedCommand.NotifyCanExecuteChanged();

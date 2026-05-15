@@ -263,11 +263,11 @@
                             <CheckBox
                                 MinWidth="60"
                                 Margin="10,0,4,0"
-                                AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItemCount), Mode=OneWay}"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
                                 AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                                 Command="{StaticResource SelectDeselectAllCommand}"
                                 CommandParameter="{x:Bind RecentFilesGridView}"
-                                Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItemCount), Mode=OneWay}"
+                                Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
                                 IsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
                                 IsThreeState="True"
                                 ToolTipService.ToolTip="{x:Bind ViewModel.Selection.IsAllSelected, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />

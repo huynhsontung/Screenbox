@@ -49,7 +49,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
 
-        Selection.SetItemSource(Recent);
+        Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
 
         // Activate the view model's messenger
@@ -76,7 +76,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SelectionViewModel.SelectedItemCount))
+        if (e.PropertyName == nameof(SelectionViewModel.IsAllSelected))
         {
             PlaySelectedCommand.NotifyCanExecuteChanged();
             PlaySelectedNextCommand.NotifyCanExecuteChanged();
