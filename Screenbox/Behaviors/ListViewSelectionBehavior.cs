@@ -45,7 +45,7 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
     /// </summary>
     /// <value>
     /// An <see cref="IEnumerable"/> collection that reflects the selected items.
-    /// The default is <see langword="null"/>
+    /// The default is <see langword="null"/>.
     /// </value>
     public IEnumerable? SelectedItems
     {
@@ -68,12 +68,10 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
 
         AssociatedObject.SelectionChanged -= ListViewBase_OnSelectionChanged;
 
-        if (SelectedItems is INotifyCollectionChanged notifyCollection)
+        if (SelectedItems is INotifyCollectionChanged oldCollection)
         {
-            notifyCollection.CollectionChanged -= OnCollectionChanged;
+            oldCollection.CollectionChanged -= OnCollectionChanged;
         }
-
-        SelectedItems = null;
     }
 
     private static void OnSelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

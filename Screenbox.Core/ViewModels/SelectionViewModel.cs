@@ -54,15 +54,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSelectionModeActive;
 
-    /// <summary>
-    /// Gets or sets the currently selected item.
-    /// </summary>
-    /// <value>
-    /// The selected item, or <see langword="null"/> if no item is selected.
-    /// </value>
-    [ObservableProperty]
-    private object? _selectedItem;
-
     private IReadOnlyCollection<object>? _sourceCollection;
 
     /// <summary>
@@ -81,12 +72,12 @@ public sealed partial class SelectionViewModel : ObservableObject
     public void SetItemSource(IReadOnlyCollection<object>? source)
     {
         _sourceCollection = source;
-        UpdateIsAllSelected();
+        RefreshSelectionState();
     }
 
     partial void OnSelectedItemCountChanged(int value)
     {
-        UpdateIsAllSelected();
+        RefreshSelectionState();
     }
 
     /// <summary>
@@ -99,7 +90,6 @@ public sealed partial class SelectionViewModel : ObservableObject
         if (item is null) return;
 
         IsSelectionModeActive = true;
-        SelectedItem = item;
         if (!SelectedItems.Contains(item))
         {
             SelectedItems.Add(item);
@@ -113,7 +103,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     private void ClearSelection()
     {
         IsSelectionModeActive = false;
-        SelectedItem = null;
         SelectedItems.Clear();
     }
 
@@ -122,7 +111,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         SelectedItemCount = SelectedItems.Count;
     }
 
-    private void UpdateIsAllSelected()
+    private void RefreshSelectionState()
     {
         if (_sourceCollection is null) return;
 
