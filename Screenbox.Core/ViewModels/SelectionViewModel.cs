@@ -32,10 +32,11 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     /// <value>
     /// <see langword="true"/> if all items are selected; <see langword="false"/> if none
-    /// are selected; otherwise <see langword="null"/> to indicate a mixed selection.
+    /// are selected; otherwise, <see langword="null"/> to indicate a mixed selection.
+    /// The default is <see langword="false"/>.
     /// </value>
     [ObservableProperty]
-    private bool? _isAllSelected;
+    private bool? _isAllSelected = false;
 
     /// <summary>
     /// Gets or sets a value that indicates whether selection mode is active.
@@ -64,8 +65,17 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// <param name="source">A collection of items to be used as the selection source.</param>
     public void SetItemsSource(IReadOnlyCollection<object>? source)
     {
+        if (_sourceCollection is INotifyCollectionChanged oldCollection)
+        {
+            oldCollection.CollectionChanged -= SourceCollection_OnCollectionChanged;
+        }
+
         _sourceCollection = source;
-        RefreshSelectionState();
+
+        if (_sourceCollection is INotifyCollectionChanged newCollection)
+        {
+            newCollection.CollectionChanged += SourceCollection_OnCollectionChanged;
+        }
     }
 
     /// <summary>
@@ -96,6 +106,13 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        RefreshSelectionState();
+    }
+
+    private void SourceCollection_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        // Refresh the selection state to ensure it accurately reflects the current collection
+        // (e.g., when removing the last unselected item).
         RefreshSelectionState();
     }
 
