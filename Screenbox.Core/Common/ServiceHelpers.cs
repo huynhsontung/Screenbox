@@ -67,6 +67,7 @@ public static class ServiceHelpers
         services.AddSingleton<ISearchService, SearchService>();
         services.AddSingleton<IWindowService, WindowService>();
         services.AddSingleton<ICastService, CastService>();
+        services.AddSingleton<IMediaStreamingService, MediaStreamingService>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
