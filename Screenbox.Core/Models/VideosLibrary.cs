@@ -1,8 +1,6 @@
-#nullable enable
+﻿#nullable enable
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Models;
@@ -21,11 +19,4 @@ public sealed class VideosLibrary
     }
 
     public IReadOnlyList<MediaViewModel> Videos { get; }
-
-    /// <summary>Returns the first video whose <see cref="MediaViewModel.Location"/> matches <paramref name="location"/>.</summary>
-    public MediaViewModel? FindByLocation(string location)
-    {
-        return Videos.FirstOrDefault(vm =>
-            vm.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
-    }
 }

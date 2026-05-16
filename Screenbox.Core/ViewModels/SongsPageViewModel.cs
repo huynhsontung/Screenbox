@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -8,17 +8,17 @@ using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
 
@@ -39,9 +39,8 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Music) return;
         _dispatcherQueue.TryEnqueue(FetchSongs);
     }
 

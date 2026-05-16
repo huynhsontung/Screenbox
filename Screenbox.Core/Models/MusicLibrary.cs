@@ -39,11 +39,4 @@ public sealed class MusicLibrary
     public IReadOnlyDictionary<string, ArtistViewModel> Artists { get; }
     public AlbumViewModel UnknownAlbum { get; }
     public ArtistViewModel UnknownArtist { get; }
-
-    /// <summary>Returns the first song whose <see cref="MediaViewModel.Location"/> matches <paramref name="location"/>.</summary>
-    public MediaViewModel? FindByLocation(string location)
-    {
-        return Songs.FirstOrDefault(vm =>
-            vm.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
-    }
 }

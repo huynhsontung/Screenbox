@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Contexts;
@@ -68,8 +69,8 @@ public sealed class MediaViewModelFactory
     public MediaViewModel GetOrCreate(StorageFile file)
     {
         string location = file.Path;
-        var existing = _libraryContext.Music.FindByLocation(location)
-                       ?? _libraryContext.Videos.FindByLocation(location);
+        var existing = FindByLocation(_libraryContext.Music.Songs, location)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (existing != null)
         {
             if (existing.Source is not IStorageFile)
@@ -87,16 +88,16 @@ public sealed class MediaViewModelFactory
     public MediaViewModel GetOrCreate(Uri uri)
     {
         string location = uri.OriginalString;
-        var existing = _libraryContext.Music.FindByLocation(location)
-                       ?? _libraryContext.Videos.FindByLocation(location);
+        var existing = FindByLocation(_libraryContext.Music.Songs, location)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
         return existing ?? new MediaViewModel(_playerContext, _playerService, uri);
     }
 
     public bool TryGetOrCreate(StorageFile file, out MediaViewModel? mediaViewModel)
     {
         string location = file.Path;
-        mediaViewModel = _libraryContext.Music.FindByLocation(location)
-                         ?? _libraryContext.Videos.FindByLocation(location);
+        mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
+                         ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (mediaViewModel == null)
         {
             mediaViewModel = new MediaViewModel(_playerContext, _playerService, file);
@@ -109,8 +110,8 @@ public sealed class MediaViewModelFactory
     public bool TryGetOrCreate(Uri uri, out MediaViewModel? mediaViewModel)
     {
         string location = uri.OriginalString;
-        mediaViewModel = _libraryContext.Music.FindByLocation(location)
-                         ?? _libraryContext.Videos.FindByLocation(location);
+        mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
+                         ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (mediaViewModel == null)
         {
             mediaViewModel = new MediaViewModel(_playerContext, _playerService, uri);
@@ -118,6 +119,12 @@ public sealed class MediaViewModelFactory
         }
 
         return true;
+    }
+
+    private static MediaViewModel? FindByLocation(IReadOnlyList<MediaViewModel> mediaList, string location)
+    {
+        return mediaList.FirstOrDefault(vm =>
+            vm.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
     }
 }
 

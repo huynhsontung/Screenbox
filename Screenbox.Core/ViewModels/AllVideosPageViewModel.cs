@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class AllVideosPageViewModel : ObservableRecipient,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<VideosLibrary>>
 {
     [ObservableProperty] private bool _isLoading;
 
@@ -34,9 +34,8 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<VideosLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Videos) return;
         _dispatcherQueue.TryEnqueue(UpdateVideos);
     }
 

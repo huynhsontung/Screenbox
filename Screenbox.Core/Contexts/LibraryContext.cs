@@ -1,8 +1,6 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Windows.Storage;
 
@@ -26,20 +24,11 @@ public sealed partial class LibraryContext : ObservableRecipient
     private bool _isLoadingMusic;
 
     [ObservableProperty]
+    [NotifyPropertyChangedRecipients]
     private MusicLibrary _music = MusicLibrary.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedRecipients]
     private VideosLibrary _videos = VideosLibrary.Empty;
-
-
-    public void RaiseMusicLibraryContentChanged()
-    {
-        Messenger.Send(new LibraryContentChangedMessage(KnownLibraryId.Music));
-    }
-
-    public void RaiseVideosLibraryContentChanged()
-    {
-        Messenger.Send(new LibraryContentChangedMessage(KnownLibraryId.Videos));
-    }
 }
 

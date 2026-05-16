@@ -89,11 +89,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             var progress = new Progress<MusicLibrary>(report =>
             {
                 _context.Music = report;
-                _context.RaiseMusicLibraryContentChanged();
             });
             var result = await _libraryService.FetchMusicAsync(_context.MusicStorageLibrary, _musicQuery, useCache, cts.Token, progress);
             _context.Music = result;
-            _context.RaiseMusicLibraryContentChanged();
         }
         catch (OperationCanceledException)
         {
@@ -123,11 +121,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             var progress = new Progress<VideosLibrary>(report =>
             {
                 _context.Videos = report;
-                _context.RaiseVideosLibraryContentChanged();
             });
             var result = await _libraryService.FetchVideosAsync(_context.VideosStorageLibrary, _videosQuery, useCache, cts.Token, progress);
             _context.Videos = result;
-            _context.RaiseVideosLibraryContentChanged();
         }
         catch (OperationCanceledException)
         {
