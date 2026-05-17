@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -232,17 +231,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SortByFlyout.Placement" Value="BottomEdgeAlignedLeft" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name="SystemEffectsStates">
-                <VisualState x:Name="AnimationsEnabled">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AlbumGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
