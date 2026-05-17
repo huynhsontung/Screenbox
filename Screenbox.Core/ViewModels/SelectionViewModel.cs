@@ -12,10 +12,10 @@ namespace Screenbox.Core.ViewModels;
 /// Provides selection state and helpers for view models that support item selection.
 /// </summary>
 /// <remarks>
-/// This view model exposes selection-related properties such as the currently selected
-/// item, whether selection mode is active, and the count of selected items. It is
-/// intended to be composed into other view models to provide a consistent selection
-/// experience across the application.
+/// This view model exposes selection-related properties such as the set of selected
+/// items, whether selection mode is active, and the selection state for a collection
+/// of items. It is intended to be composed into other view models to provide a
+/// consistent selection experience across the application.
 /// </remarks>
 public sealed partial class SelectionViewModel : ObservableObject
 {
