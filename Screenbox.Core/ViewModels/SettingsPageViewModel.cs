@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -259,13 +259,18 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _settingsService.UseIndexer = value;
         Messenger.Send(new SettingsChangedMessage(nameof(UseIndexer), typeof(SettingsPageViewModel)));
 
-        try
+        _dispatcherQueue.TryEnqueue(RefreshWatchersAsync);
+
+        async void RefreshWatchersAsync()
         {
-            _ = _libraryCoordinator.RefreshWatchersAsync();
-        }
-        catch (Exception)
-        {
-            // pass
+            try
+            {
+                await _libraryCoordinator.RefreshWatchersAsync();
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+            }
         }
     }
 

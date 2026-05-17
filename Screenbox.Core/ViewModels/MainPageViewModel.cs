@@ -254,7 +254,15 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
 
         List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync(), FetchPlaylistsAsync() };
-        await Task.WhenAll(tasks);
+
+        try
+        {
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
     }
 
     private async Task FetchMusicLibraryAsync()

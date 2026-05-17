@@ -225,9 +225,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             {
                 await FetchMusicAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 
@@ -242,9 +242,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             {
                 await FetchVideosAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 
@@ -262,9 +262,9 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
                 await FetchVideosAsync();
                 await FetchMusicAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 
