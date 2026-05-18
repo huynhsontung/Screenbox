@@ -15,6 +15,7 @@
     xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:templates="using:Screenbox.Templates"
     xmlns:triggers="using:Screenbox.Triggers"
     xmlns:ui="using:CommunityToolkit.WinUI"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
@@ -33,16 +34,21 @@
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
-                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Name, Type)}" Orientation="Horizontal">
-                    <FontIcon
-                        Margin="0,0,8,0"
-                        FontSize="{StaticResource StandardIconFontSize}"
-                        Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
-                        Visibility="{x:Bind converters:SearchSuggestionConverter.GetGlyphVisibility(Type)}" />
-                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Name, Type)}" />
-                </StackPanel>
-            </DataTemplate>
+            <templates:SearchSuggestionTemplateSelector x:Key="SearchSuggestionTemplateSelector">
+                <templates:SearchSuggestionTemplateSelector.ItemTemplate>
+                    <DataTemplate x:DataType="models:SearchSuggestion">
+                        <StackPanel AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForSearchSuggestion(Type, Text)}" Orientation="Horizontal">
+                            <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}" />
+                            <TextBlock Margin="8,0,0,0" Text="{x:Bind Text}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </templates:SearchSuggestionTemplateSelector.ItemTemplate>
+                <templates:SearchSuggestionTemplateSelector.EmptyTemplate>
+                    <DataTemplate x:DataType="models:SearchSuggestion">
+                        <TextBlock Text="{x:Bind strings:Resources.SearchNoResults(Text)}" />
+                    </DataTemplate>
+                </templates:SearchSuggestionTemplateSelector.EmptyTemplate>
+            </templates:SearchSuggestionTemplateSelector>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -197,14 +203,14 @@
                     AccessKey="{strings:KeyboardResources Key=NavigationPaneAutoSuggestButtonKey}"
                     AccessKeyInvoked="NavViewSearchBox_OnAccessKeyInvoked"
                     AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
-                    ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
+                    ItemTemplateSelector="{StaticResource SearchSuggestionTemplateSelector}"
                     ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=OneWay}"
                     KeyTipPlacementMode="Right"
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
                     QuerySubmitted="NavViewSearchBox_OnQuerySubmitted"
                     SuggestionChosen="NavViewSearchBox_OnSuggestionChosen"
-                    Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
+                    Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextChanged="NavViewSearchBox_OnTextChanged"
                     UpdateTextOnSelect="False">
                     <AutoSuggestBox.KeyboardAccelerators>

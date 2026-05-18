@@ -51,7 +51,13 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly IPlaylistService _playlistService;
     private readonly IPlaylistViewModelFactory _playlistFactory;
 
-    public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
+    /// <summary>
+    /// Gets the collection of search suggestions for the current search query.
+    /// </summary>
+    /// <value>
+    /// A collection of <see cref="SearchSuggestion"/> objects representing suggestions for the search box.
+    /// </value>
+    public ObservableCollection<SearchSuggestion> SearchSuggestions { get; }
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
@@ -66,6 +72,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _playlistFactory = playlistFactory;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
+        SearchSuggestions = new ObservableCollection<SearchSuggestion>();
+
         IsActive = true;
     }
 
@@ -147,26 +155,51 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         Messenger.Send(new DragDropMessage(data));
     }
 
-    public void UpdateSearchSuggestions(string queryText)
+    /// <summary>
+    /// Updates the <see cref="SearchSuggestions"/> collection based on the specified
+    /// search query text.
+    /// </summary>
+    /// <param name="text">A search query string used to filter suggestions.</param>
+    public void UpdateSearchSuggestions(string text)
     {
-        string searchQuery = queryText.Trim();
-        SearchSuggestions.Clear();
-        if (searchQuery.Length > 0)
+        if (string.IsNullOrWhiteSpace(text))
         {
-            var result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
-            var suggestions = GetSuggestItems(result, searchQuery);
+            SearchSuggestions.Clear();
+            return;
+        }
 
-            if (suggestions.Count != 0)
+        string queryText = text.Trim();
+        var result = _searchService.SearchLocalLibrary(_libraryContext, queryText);
+        var newSuggestions = GetSuggestItems(result, queryText).ToList();
+
+        // If there are no suggestions, show a single 'None' entry.
+        if (newSuggestions.Count == 0)
+        {
+            newSuggestions.Add(new SearchSuggestion(SearchSuggestionType.None, queryText));
+        }
+
+        // Update the collection in-place to avoid unnecessary UI updates.
+        for (int i = 0; i < newSuggestions.Count; i++)
+        {
+            if (i < SearchSuggestions.Count)
             {
-                foreach (var suggestion in suggestions)
+                var newItem = newSuggestions[i];
+                var oldItem = SearchSuggestions[i];
+                if (!oldItem.Equals(newItem))
                 {
-                    SearchSuggestions.Add(suggestion);
+                    SearchSuggestions[i] = newItem;
                 }
             }
             else
             {
-                SearchSuggestions.Add(new SearchSuggestionItem(searchQuery, null, SearchSuggestionKind.None));
+                SearchSuggestions.Add(newSuggestions[i]);
             }
+        }
+
+        // Remove any extra old suggestions that are no longer present.
+        while (SearchSuggestions.Count > newSuggestions.Count)
+        {
+            SearchSuggestions.RemoveAt(SearchSuggestions.Count - 1);
         }
     }
 
@@ -180,9 +213,9 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
     }
 
-    public void SelectSuggestion(SearchSuggestionItem? chosenSuggestion)
+    public void SelectSuggestion(SearchSuggestion chosenSuggestion)
     {
-        if (chosenSuggestion?.Data == null) return;
+        if (chosenSuggestion.Data is null) return;
 
         switch (chosenSuggestion.Data)
         {
@@ -198,25 +231,25 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
     }
 
-    private IReadOnlyList<SearchSuggestionItem> GetSuggestItems(SearchResult result, string searchQuery)
+    private IReadOnlyList<SearchSuggestion> GetSuggestItems(SearchResult result, string searchQuery)
     {
-        if (!result.HasItems) return Array.Empty<SearchSuggestionItem>();
+        if (!result.HasItems) return Array.Empty<SearchSuggestion>();
 
-        IEnumerable<SearchSuggestionItem> songs = result.Songs
+        IEnumerable<SearchSuggestion> songs = result.Songs
             .Take(MaxSuggestionsPerCategory)
-            .Select(s => new SearchSuggestionItem(s.Name, s, SearchSuggestionKind.Song));
-        IEnumerable<SearchSuggestionItem> videos = result.Videos
+            .Select(s => new SearchSuggestion(SearchSuggestionType.Song, s.Name, s));
+        IEnumerable<SearchSuggestion> videos = result.Videos
             .Take(MaxSuggestionsPerCategory)
-            .Select(v => new SearchSuggestionItem(v.Name, v, SearchSuggestionKind.Video));
-        IEnumerable<SearchSuggestionItem> artists = result.Artists
+            .Select(v => new SearchSuggestion(SearchSuggestionType.Video, v.Name, v));
+        IEnumerable<SearchSuggestion> artists = result.Artists
             .Take(MaxSuggestionsPerCategory)
-            .Select(a => new SearchSuggestionItem(a.Name, a, SearchSuggestionKind.Artist));
-        IEnumerable<SearchSuggestionItem> albums = result.Albums
+            .Select(a => new SearchSuggestion(SearchSuggestionType.Artist, a.Name, a));
+        IEnumerable<SearchSuggestion> albums = result.Albums
             .Take(MaxSuggestionsPerCategory)
-            .Select(a => new SearchSuggestionItem(a.Name, a, SearchSuggestionKind.Album));
-        IEnumerable<(double, SearchSuggestionItem)> searchResults = songs
+            .Select(a => new SearchSuggestion(SearchSuggestionType.Album, a.Name, a));
+        IEnumerable<(double, SearchSuggestion)> searchResults = songs
             .Concat(videos).Concat(artists).Concat(albums)
-            .Select(item => (GetRanking(item.Name, searchQuery), item))
+            .Select(item => (GetRanking(item.Text, searchQuery), item))
             .OrderBy(t => t.Item1)
             .Take(MaxTotalSuggestions);
 
