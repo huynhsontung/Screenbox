@@ -33,7 +33,7 @@ public sealed partial class PlayQueueControl : UserControl
         set => SetValue(IsFlyoutProperty, value);
     }
 
-    internal PlayQueueViewModel ViewModel => (PlayQueueViewModel)DataContext;
+    internal PlayQueuePanelViewModel ViewModel => (PlayQueuePanelViewModel)DataContext;
 
     internal CommonViewModel Common { get; }
 
@@ -42,15 +42,15 @@ public sealed partial class PlayQueueControl : UserControl
     public PlayQueueControl()
     {
         this.InitializeComponent();
-        DataContext = Ioc.Default.GetRequiredService<PlayQueueViewModel>();
+        DataContext = Ioc.Default.GetRequiredService<PlayQueuePanelViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         _selectionCommand = new SelectDeselectAllCommand();
     }
 
     public async Task SmoothScrollActiveItemIntoViewAsync()
     {
-        if (ViewModel.Playlist.CurrentItem == null || !ViewModel.HasItems) return;
-        await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
+        if (ViewModel.Queue.CurrentItem is null || !ViewModel.HasItems) return;
+        await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Queue.CurrentItem, ScrollItemPlacement.Center);
     }
 
     internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
@@ -61,7 +61,7 @@ public sealed partial class PlayQueueControl : UserControl
         if (items?.Count > 0)
         {
             int insertIndex = PlaylistListView.GetDropIndex(e);
-            await ViewModel.Playlist.EnqueueAsync(items, insertIndex);
+            await ViewModel.EnqueueDroppedItemsAsync(items, insertIndex);
         }
     }
 
@@ -95,10 +95,10 @@ public sealed partial class PlayQueueControl : UserControl
 
     private void GoToCurrentItem()
     {
-        if (ViewModel.Playlist.CurrentItem != null)
+        if (ViewModel.Queue.CurrentItem is not null)
         {
-            PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
-            (PlaylistListView.ContainerFromItem(ViewModel.Playlist.CurrentItem) as Control)?.Focus(FocusState.Programmatic);
+            PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Queue.CurrentItem, ScrollItemPlacement.Center);
+            (PlaylistListView.ContainerFromItem(ViewModel.Queue.CurrentItem) as Control)?.Focus(FocusState.Programmatic);
         }
     }
 
