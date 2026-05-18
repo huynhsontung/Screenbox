@@ -39,6 +39,7 @@ public static class ServiceHelpers
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<PlaylistsPageViewModel>();
+        services.AddTransient<SelectionViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist

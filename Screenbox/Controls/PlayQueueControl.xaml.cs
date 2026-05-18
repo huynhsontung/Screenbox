@@ -53,16 +53,6 @@ public sealed partial class PlayQueueControl : UserControl
         await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
     }
 
-    private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ViewModel.EnableMultiSelect)
-        {
-            VisualStateManager.GoToState(this, "Multiple", true);
-        }
-
-        ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
-    }
-
     internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
     {
         if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
@@ -112,30 +102,17 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
-    private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(PlayQueueViewModel.SelectionCount)) return;
-        if (ViewModel.SelectionCount == 0) PlaylistListView.SelectedItems.Clear();
-    }
-
     private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)
     {
         UpdateLayoutState();
         GoToCurrentItem();
-
-        ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-    }
-
-    private void PlayQueue_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
     }
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         if (ViewModel.HasItems && _selectionCommand.CanToggleSelection(PlaylistListView))
         {
-            ViewModel.EnableMultiSelect = true;
+            ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(PlaylistListView);
             args.Handled = true;
         }
