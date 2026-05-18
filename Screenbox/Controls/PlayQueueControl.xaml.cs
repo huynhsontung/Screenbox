@@ -77,11 +77,6 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
-    private void CommandBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        UpdateLayoutState();
-    }
-
     private void UpdateLayoutState()
     {
         if (IsFlyout)
@@ -90,7 +85,7 @@ public sealed partial class PlayQueueControl : UserControl
             return;
         }
 
-        VisualStateManager.GoToState(this, SelectionCommandBar.ActualWidth <= 620 ? "Compact" : "Normal", true);
+        VisualStateManager.GoToState(this, SelectionBar.ActualWidth <= 620 ? "Compact" : "Normal", true);
     }
 
     private void GoToCurrentItem()
