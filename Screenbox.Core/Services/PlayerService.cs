@@ -15,6 +15,7 @@ public sealed class PlayerService : IPlayerService
 {
     private readonly IVlcDialogService _vlcDialogService;
     private readonly bool _useFal;
+    private readonly Dictionary<string, int> _tokenReferences = new();
 
     public PlayerService(IVlcDialogService vlcDialogService)
     {
@@ -108,9 +109,7 @@ public sealed class PlayerService : IPlayerService
             return CreateMedia(player, uri, options);
         }
 
-        string token = _useFal
-            ? StorageApplicationPermissions.FutureAccessList.Add(file, "media")
-            : SharedStorageAccessManager.AddFile(file);
+        string token = IncrementRefCount(file);
         string mrl = "winrt://" + token;
         return new Media(player.LibVlc, mrl, FromType.FromLocation, options);
     }
@@ -128,6 +127,44 @@ public sealed class PlayerService : IPlayerService
             string token = mrl.Substring(8);
             try
             {
+                DecrementRefCount(token);
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+            }
+        }
+
+        media.Dispose();
+    }
+
+    private string IncrementRefCount(IStorageFile file)
+    {
+        string token = _useFal
+            ? StorageApplicationPermissions.FutureAccessList.Add(file, "media")
+            : SharedStorageAccessManager.AddFile(file);
+
+        lock (_tokenReferences)
+        {
+            if (_tokenReferences.TryGetValue(token, out int refCount))
+                _tokenReferences[token] = refCount + 1;
+            else
+                _tokenReferences[token] = 1;
+        }
+
+        return token;
+    }
+
+    private void DecrementRefCount(string token)
+    {
+        lock (_tokenReferences)
+        {
+            if (_tokenReferences.TryGetValue(token, out int refCount) && refCount > 1)
+                _tokenReferences[token] = refCount - 1;
+            else
+            {
+                _tokenReferences.Remove(token);
+
                 if (_useFal)
                 {
                     StorageApplicationPermissions.FutureAccessList.Remove(token);
@@ -137,13 +174,7 @@ public sealed class PlayerService : IPlayerService
                     SharedStorageAccessManager.RemoveFile(token);
                 }
             }
-            catch (Exception)
-            {
-                LogService.Log($"Failed to remove access token {token}");
-            }
         }
-
-        media.Dispose();
     }
 
     private LibVLC InitializeLibVlc(string[] swapChainOptions)
