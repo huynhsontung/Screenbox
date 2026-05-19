@@ -31,4 +31,6 @@ public interface IFilesService
     public Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName);
     public Task<T> LoadFromDiskAsync<T>(StorageFile file);
     public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
+
+    public Task<bool> TryDeleteFileAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default);
 }
