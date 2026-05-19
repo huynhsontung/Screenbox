@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
@@ -121,8 +120,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         // Wire transport controls buttons to commands.
         _transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
         _transportControlsService.TransportControls.AutoRepeatModeChangeRequested += TransportControlsOnAutoRepeatModeChangeRequested;
-        NextCommand.CanExecuteChanged += (_, _) => _transportControlsService.TransportControls.IsNextEnabled = CanNext();
-        PreviousCommand.CanExecuteChanged += (_, _) => _transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
 
         if (MediaPlayer is not null)
         {
@@ -340,45 +337,30 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         Messenger.Send(new RepeatModeChangedMessage(value));
         _transportControlsService.TransportControls.AutoRepeatMode = value;
         _settingsService.PersistentRepeatMode = value;
-        NextCommand.NotifyCanExecuteChanged();
-        PreviousCommand.NotifyCanExecuteChanged();
+        RaiseCanNavigateChanged();
     }
 
     #endregion
 
-    #region Commands
+    #region Public Methods (Navigation)
 
     /// <inheritdoc/>
-    [RelayCommand]
-    private void PlaySingle(MediaViewModel vm)
-    {
-        if (MediaPlayer is null)
-        {
-            _delayPlay = vm;
-            return;
-        }
-
-        SetCurrentItem(vm);
-        MediaPlayer.PlaybackItem = vm.Item.Value;
-        MediaPlayer.Play();
-    }
+    public event EventHandler? CanNavigateChanged;
 
     /// <inheritdoc/>
-    [RelayCommand]
-    private void Clear()
-    {
-        ClearQueue();
-        SetCurrentItem(null);
-    }
-
-    private bool CanNext()
+    public bool CanNext()
     {
         return _playbackControlService.CanNext(_playlist, _context.RepeatMode, hasNeighbor: _neighboringFilesQuery is not null);
     }
 
     /// <inheritdoc/>
-    [RelayCommand(CanExecute = nameof(CanNext))]
-    private async Task NextAsync()
+    public bool CanPrevious()
+    {
+        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode, hasNeighbor: _neighboringFilesQuery is not null);
+    }
+
+    /// <inheritdoc/>
+    public async Task NextAsync()
     {
         var playlist = _playlist;
         var result = playlist.Items.Count == 1 && _neighboringFilesQuery is not null
@@ -397,14 +379,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
     }
 
-    private bool CanPrevious()
-    {
-        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode, hasNeighbor: _neighboringFilesQuery is not null);
-    }
-
     /// <inheritdoc/>
-    [RelayCommand(CanExecute = nameof(CanPrevious))]
-    private async Task PreviousAsync()
+    public async Task PreviousAsync()
     {
         if (MediaPlayer is null) return;
 
@@ -441,6 +417,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             // At the beginning of the queue with no repeat — restart the current track.
             _dispatcherQueue.TryEnqueue(SetPositionToStart);
         }
+    }
+
+    /// <inheritdoc/>
+    public void Clear()
+    {
+        ClearQueue();
+        SetCurrentItem(null);
     }
 
     #endregion
@@ -499,6 +482,30 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #region Private Methods
 
+    private void PlaySingle(MediaViewModel vm)
+    {
+        if (MediaPlayer is null)
+        {
+            _delayPlay = vm;
+            return;
+        }
+
+        SetCurrentItem(vm);
+        MediaPlayer.PlaybackItem = vm.Item.Value;
+        MediaPlayer.Play();
+    }
+
+    /// <summary>
+    /// Updates transport controls navigation state and notifies subscribers that
+    /// <see cref="CanNext"/> or <see cref="CanPrevious"/> may have changed.
+    /// </summary>
+    private void RaiseCanNavigateChanged()
+    {
+        _transportControlsService.TransportControls.IsNextEnabled = CanNext();
+        _transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
+        CanNavigateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>
     /// Sets <see cref="PlayQueueContext.CurrentItem"/> and applies all associated side effects:
     /// updating the media player's playback item, resetting the previous item's state,
@@ -550,8 +557,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             : null);
 
         Messenger.Send(new QueueCurrentItemChangedMessage(value, _neighboringFilesQuery));
-        NextCommand.NotifyCanExecuteChanged();
-        PreviousCommand.NotifyCanExecuteChanged();
+        RaiseCanNavigateChanged();
 
         await Task.WhenAll(
             _settingsService.ShowRecent ? AddToRecent(value?.Source) : Task.CompletedTask,
@@ -640,8 +646,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             }
 
             SetCurrentItem(playlist.CurrentItem);
-            NextCommand.NotifyCanExecuteChanged();
-            PreviousCommand.NotifyCanExecuteChanged();
+            RaiseCanNavigateChanged();
         }
         finally
         {
@@ -850,8 +855,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             ? _context.Items.IndexOf(_context.CurrentItem)
             : -1;
         _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
-        NextCommand.NotifyCanExecuteChanged();
-        PreviousCommand.NotifyCanExecuteChanged();
+        RaiseCanNavigateChanged();
 
         if (_context.Items.Count <= 1)
         {

@@ -33,9 +33,6 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     public SelectionViewModel Selection { get; }
 
-    /// <summary>Clears the entire play queue. Delegated to <see cref="IPlayQueueCoordinator"/>.</summary>
-    public IRelayCommand ClearCommand => _coordinator.ClearCommand;
-
     public bool HasItems
     {
         get => _hasItems;
@@ -85,6 +82,9 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
             MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
         }
     }
+
+    [RelayCommand]
+    private void Clear() => _coordinator.Clear();
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void RemoveSelected(IList<object>? selectedItems)

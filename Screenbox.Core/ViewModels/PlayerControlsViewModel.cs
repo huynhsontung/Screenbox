@@ -36,12 +36,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     /// </summary>
     public PlayQueueContext PlayQueue { get; }
 
-    /// <summary>Advances to the next item in the play queue.</summary>
-    public IAsyncRelayCommand NextCommand => _coordinator.NextCommand;
-
-    /// <summary>Returns to the previous item or restarts the current track.</summary>
-    public IAsyncRelayCommand PreviousCommand => _coordinator.PreviousCommand;
-
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
     [ObservableProperty] private bool _isPlaying;
@@ -97,6 +91,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _playerShowChapters = settingsService.PlayerShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
+        _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
 
         if (MediaPlayer != null)
         {
@@ -334,6 +329,22 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                 throw new ArgumentOutOfRangeException();
         }
     }
+
+    private void OnCoordinatorCanNavigateChanged(object? sender, EventArgs e)
+    {
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoNext))]
+    private async Task Next() => await _coordinator.NextAsync();
+
+    [RelayCommand(CanExecute = nameof(CanGoPrevious))]
+    private async Task Previous() => await _coordinator.PreviousAsync();
+
+    private bool CanGoNext() => _coordinator.CanNext();
+
+    private bool CanGoPrevious() => _coordinator.CanPrevious();
 
     [RelayCommand]
     private void ResetMediaPlayback()

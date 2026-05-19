@@ -1,8 +1,8 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
 
@@ -25,23 +25,35 @@ namespace Screenbox.Core.Coordinators;
 public interface IPlayQueueCoordinator
 {
     /// <summary>
+    /// Raised when the result of <see cref="CanNext"/> or <see cref="CanPrevious"/> changes.
+    /// ViewModels should subscribe to keep their own navigation command states in sync.
+    /// </summary>
+    event EventHandler? CanNavigateChanged;
+
+    /// <summary>
+    /// Returns whether navigating to the next item is currently possible.
+    /// </summary>
+    bool CanNext();
+
+    /// <summary>
+    /// Returns whether navigating to the previous item is currently possible.
+    /// </summary>
+    bool CanPrevious();
+
+    /// <summary>
     /// Advances to the next item in the play queue.
     /// Handles neighboring-file navigation when the queue contains a single item.
     /// </summary>
-    IAsyncRelayCommand NextCommand { get; }
+    Task NextAsync();
 
     /// <summary>
     /// Returns to the previous item in the play queue.
     /// If the current position is more than 5 seconds in, restarts the current item instead.
     /// </summary>
-    IAsyncRelayCommand PreviousCommand { get; }
-
-    /// <summary>Starts playback of the specified item from within the existing queue.</summary>
-    /// <param name="item">The item to play.</param>
-    IRelayCommand<MediaViewModel> PlaySingleCommand { get; }
+    Task PreviousAsync();
 
     /// <summary>Clears the play queue and stops playback.</summary>
-    IRelayCommand ClearCommand { get; }
+    void Clear();
 
     /// <summary>
     /// Appends or inserts the given storage items into the play queue.
