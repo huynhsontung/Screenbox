@@ -27,7 +27,7 @@ Screenbox is built on top of [LibVLCSharp](https://github.com/videolan/libvlcsha
   <img alt="Screenshot of the Screenbox home page." src="/assets/images/docs/PC-HeroHomePage-Dark.png?raw=true" width="1248">
 </picture>
 
-![Screenshot of the Screenbox video player](/assets/images/docs/PC-HeroPlayerPageVideo_Dark.png)
+![Screenshot of the Screenbox video player](/assets/images/docs/PC-HeroPlayerPageVideo_Dark.png) 
 
 Some notable features:
 
