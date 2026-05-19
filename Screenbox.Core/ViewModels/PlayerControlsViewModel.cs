@@ -11,7 +11,6 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
@@ -28,7 +27,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<SettingsChangedMessage>,
     IRecipient<TogglePlayPauseMessage>,
     IRecipient<ChangePlaybackRateRequestMessage>,
-    IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
+    IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
+    IRecipient<PropertyChangedMessage<WindowViewMode>>
 {
     /// <summary>
     /// The observable play queue state. Bind to this for <c>Items</c>,
@@ -82,7 +82,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _playerContext = playerContext;
         _coordinator = coordinator;
-        _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
         _playbackRate = 1.0;
         _audioTimingOffset = 0.0;
         _subtitleTimingOffset = 0.0;
@@ -309,9 +308,10 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() => ChapterName = sender.Chapter?.Title);
     }
 
-    private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
+    public void Receive(PropertyChangedMessage<WindowViewMode> message)
     {
-        switch (e.NewValue)
+        if (message.Sender is not WindowContext) return;
+        switch (message.NewValue)
         {
             case WindowViewMode.Default:
                 IsFullscreen = false;
