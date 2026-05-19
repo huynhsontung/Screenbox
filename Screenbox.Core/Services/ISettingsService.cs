@@ -11,7 +11,9 @@ public interface ISettingsService
     bool PlayerShowChapters { get; set; }
     int PlayerControlsHideDelay { get; set; }
     int PersistentVolume { get; set; }
+    string PersistentAudioLanguage { get; set; }
     string PersistentSubtitleLanguage { get; set; }
+    int PersistentSubtitleTypePreference { get; set; }
     bool ShowRecent { get; set; }
     ThemeOption Theme { get; set; }
     bool EnqueueAllFilesInFolder { get; set; }

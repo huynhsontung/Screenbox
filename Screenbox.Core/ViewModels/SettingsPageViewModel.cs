@@ -51,6 +51,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private string _globalArguments;
     [ObservableProperty] private bool _isRelaunchRequired;
     [ObservableProperty] private int _selectedLanguage;
+    [ObservableProperty] private int _preferredAudioLanguage;
+    [ObservableProperty] private int _preferredSubtitleLanguage;
+    [ObservableProperty] private int _preferredSubtitleType;
     [ObservableProperty] private bool _persistPlaybackPosition;
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
@@ -140,6 +143,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _useMultipleInstances = _settingsService.UseMultipleInstances;
         _videoUpscaling = (int)_settingsService.VideoUpscale;
         _globalArguments = _settingsService.GlobalArguments;
+        _preferredAudioLanguage = GetLanguageIndex(_settingsService.PersistentAudioLanguage);
+        _preferredSubtitleLanguage = GetLanguageIndex(_settingsService.PersistentSubtitleLanguage);
+        _preferredSubtitleType = Math.Clamp(_settingsService.PersistentSubtitleTypePreference, 0, 2);
         int maxVolume = _settingsService.MaxVolume;
         _volumeBoost = maxVolume switch
         {
@@ -351,6 +357,21 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         _settingsService.PersistPlaybackPosition = value;
         Messenger.Send(new SettingsChangedMessage(nameof(PersistPlaybackPosition), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPreferredAudioLanguageChanged(int value)
+    {
+        _settingsService.PersistentAudioLanguage = GetLanguageTagFromIndex(value);
+    }
+
+    partial void OnPreferredSubtitleLanguageChanged(int value)
+    {
+        _settingsService.PersistentSubtitleLanguage = GetLanguageTagFromIndex(value);
+    }
+
+    partial void OnPreferredSubtitleTypeChanged(int value)
+    {
+        _settingsService.PersistentSubtitleTypePreference = Math.Clamp(value, 0, 2);
     }
 
     [RelayCommand]
@@ -566,5 +587,30 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         // Combine everything
         IsRelaunchRequired = upscalingChanged || languageChanged || whenOn || whenOff || whenOnAndChanged;
+    }
+
+    private int GetLanguageIndex(string persistentLanguage)
+    {
+        string languageTag = persistentLanguage
+            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => x.Trim())
+            .FirstOrDefault() ?? string.Empty;
+        if (string.IsNullOrEmpty(languageTag)) return 0;
+
+        int index = AvailableLanguages.FindIndex(x =>
+            x.LanguageTag.Equals(languageTag, StringComparison.OrdinalIgnoreCase) ||
+            x.LanguageTag.StartsWith($"{languageTag}-", StringComparison.OrdinalIgnoreCase) ||
+            languageTag.StartsWith($"{x.LanguageTag}-", StringComparison.OrdinalIgnoreCase));
+        return index >= 0 ? index : 0;
+    }
+
+    private string GetLanguageTagFromIndex(int index)
+    {
+        if (index <= 0 || index >= AvailableLanguages.Count)
+        {
+            return string.Empty;
+        }
+
+        return AvailableLanguages[index].LanguageTag;
     }
 }

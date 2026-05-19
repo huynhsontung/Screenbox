@@ -117,36 +117,63 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             }
         }
 
-        TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _settingsService.PersistentSubtitleLanguage);
+        if (media.Item.Value is { } updatedPlaybackItem)
+        {
+            TrySetAudioFromLanguage(updatedPlaybackItem.AudioTracks, _settingsService.PersistentAudioLanguage);
+        }
+
+        TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _settingsService.PersistentSubtitleLanguage,
+            _settingsService.PersistentSubtitleTypePreference);
     }
 
-    private static void TrySetSubtitleFromLanguage(PlaybackSubtitleTrackList subtitleTrackList, string persistentLanguage)
+    private static void TrySetSubtitleFromLanguage(PlaybackSubtitleTrackList subtitleTrackList, string persistentLanguage, int subtitleTypePreference = 0)
     {
         // Check persistent subtitle value to try and select a subtitle
-        if (!string.IsNullOrEmpty(persistentLanguage))
+        if (string.IsNullOrEmpty(persistentLanguage))
         {
-            // If there is only one subtitle then select it
-            if (subtitleTrackList.Count == 1)
-            {
-                subtitleTrackList.SelectedIndex = 0;
-                return;
-            }
+            return;
+        }
 
-            // Try to select the subtitle with the same language as the persistent value
-            var langPreferences = persistentLanguage.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            foreach (string language in langPreferences)
+        // If there is only one subtitle then select it
+        if (subtitleTrackList.Count == 1)
+        {
+            subtitleTrackList.SelectedIndex = 0;
+            return;
+        }
+
+        // Try to select the subtitle with the same language as the persistent value
+        var languagePreferences = persistentLanguage.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        int? firstMatch = null;
+        int? signSongMatch = null;
+        int? fullMatch = null;
+        foreach (string language in languagePreferences)
+        {
+            for (int i = 0; i < subtitleTrackList.Count; i++)
             {
-                for (int i = 0; i < subtitleTrackList.Count; i++)
+                var subtitleTrack = subtitleTrackList[i];
+                if (!IsLanguageMatch(subtitleTrack, language)) continue;
+                firstMatch ??= i;
+                if (IsSignsAndSongsSubtitle(subtitleTrack))
                 {
-                    var subtitleTrack = subtitleTrackList[i];
-                    // Try to match language tag first, then language name
-                    if (language == subtitleTrack.LanguageTag || language.Equals(subtitleTrack.Language, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        subtitleTrackList.SelectedIndex = i;
-                        break;
-                    }
+                    signSongMatch ??= i;
+                }
+                else
+                {
+                    fullMatch ??= i;
                 }
             }
+        }
+
+        int? selectedIndex = subtitleTypePreference switch
+        {
+            2 => signSongMatch ?? firstMatch,
+            1 => fullMatch ?? firstMatch,
+            _ => firstMatch
+        };
+
+        if (selectedIndex is int value)
+        {
+            subtitleTrackList.SelectedIndex = value;
         }
     }
 
@@ -242,15 +269,25 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         else if (value < SubtitleTracks.Count)
         {
             var subtitle = ItemSubtitleTrackList[value];
+            string preferredLanguage = LanguageHelper.GetPreferredLanguage();
+            preferredLanguage = preferredLanguage.Length >= 2 ? preferredLanguage.Substring(0, 2) : preferredLanguage;
             _settingsService.PersistentSubtitleLanguage =
-                $"{subtitle.LanguageTag},{subtitle.Language},{LanguageHelper.GetPreferredLanguage().Substring(0, 2)}";
+                $"{subtitle.LanguageTag},{subtitle.Language},{preferredLanguage}";
         }
     }
 
     partial void OnAudioTrackIndexChanged(int value)
     {
         if (ItemAudioTrackList != null && value >= 0 && value < ItemAudioTrackList.Count)
+        {
             ItemAudioTrackList.SelectedIndex = value;
+            if (!_flyoutOpened) return;
+            var audioTrack = ItemAudioTrackList[value];
+            string preferredLanguage = LanguageHelper.GetPreferredLanguage();
+            preferredLanguage = preferredLanguage.Length >= 2 ? preferredLanguage.Substring(0, 2) : preferredLanguage;
+            _settingsService.PersistentAudioLanguage =
+                $"{audioTrack.LanguageTag},{audioTrack.Language},{preferredLanguage}";
+        }
     }
 
     partial void OnVideoTrackIndexChanged(int value)
@@ -319,5 +356,49 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         if (ItemSubtitleTrackList == null) return;
         var trackLabels = ItemSubtitleTrackList.Select(track => track.Label).ToList();
         SubtitleTracks.SyncItems(trackLabels);
+    }
+
+    private static void TrySetAudioFromLanguage(PlaybackAudioTrackList audioTrackList, string persistentLanguage)
+    {
+        if (string.IsNullOrEmpty(persistentLanguage))
+        {
+            return;
+        }
+
+        var languagePreferences = persistentLanguage.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        foreach (string language in languagePreferences)
+        {
+            for (int i = 0; i < audioTrackList.Count; i++)
+            {
+                var audioTrack = audioTrackList[i];
+                if (!IsLanguageMatch(audioTrack, language)) continue;
+                audioTrackList.SelectedIndex = i;
+                return;
+            }
+        }
+    }
+
+    private static bool IsLanguageMatch(MediaTrack track, string language)
+    {
+        language = language.Trim();
+        if (string.IsNullOrEmpty(language))
+        {
+            return false;
+        }
+
+        if (track.LanguageTag.Equals(language, StringComparison.OrdinalIgnoreCase) ||
+            track.Language.Equals(language, StringComparison.CurrentCultureIgnoreCase))
+        {
+            return true;
+        }
+
+        return track.LanguageTag.StartsWith($"{language}-", StringComparison.OrdinalIgnoreCase) ||
+               language.StartsWith($"{track.LanguageTag}-", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSignsAndSongsSubtitle(SubtitleTrack subtitleTrack)
+    {
+        string label = subtitleTrack.Label.ToLowerInvariant();
+        return label.Contains("sign") || label.Contains("song") || label.Contains("lyric") || label.Contains("forced");
     }
 }
