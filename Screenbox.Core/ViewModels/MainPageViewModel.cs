@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -97,7 +97,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         // All Gamepad keys are in the range of [195, 218]
         if ((int)key < 195 || (int)key > 218) return false;
-        Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
+        Playlist playlist = Messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty) return false;
 
         int? volumeChange = null;

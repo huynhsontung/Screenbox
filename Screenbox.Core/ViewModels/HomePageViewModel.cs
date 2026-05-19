@@ -21,7 +21,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class HomePageViewModel : ObservableRecipient,
-    IRecipient<PlaylistCurrentItemChangedMessage>
+    IRecipient<QueueCurrentItemChangedMessage>
 {
     public ObservableCollection<MediaViewModel> Recent { get; }
 
@@ -56,7 +56,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IsActive = true;
     }
 
-    public void Receive(PlaylistCurrentItemChangedMessage message)
+    public void Receive(QueueCurrentItemChangedMessage message)
     {
         if (_settingsService.ShowRecent)
         {

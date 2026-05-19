@@ -130,7 +130,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
-                    CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
+                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE7AC;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
@@ -138,7 +138,7 @@
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemPropertiesKey}"
                     Command="{StaticResource ShowPropertiesCommand}"
-                    CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
+                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.Properties}">
@@ -311,7 +311,7 @@
 
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemAdvancedKey}"
-                    CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
+                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{strings:Resources Key=SetPlaybackOptions}"
@@ -410,7 +410,7 @@
                     extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                     AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
                     AutomationProperties.Name="{x:Bind PreviousButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
-                    Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
+                    Command="{x:Bind ViewModel.PreviousCommand}"
                     CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                     Style="{StaticResource PlayerButtonStyle}">
                     <FontIcon Glyph="&#xE892;" />
@@ -424,7 +424,7 @@
                     extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
                     AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
                     AutomationProperties.Name="{x:Bind NextButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
-                    Command="{x:Bind ViewModel.Playlist.NextCommand}"
+                    Command="{x:Bind ViewModel.NextCommand}"
                     CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                     Style="{StaticResource PlayerButtonStyle}">
                     <FontIcon Glyph="&#xE893;" />
@@ -479,13 +479,13 @@
             <ToggleButton
                 x:Name="ShuffleButton"
                 Margin="0,0,4,0"
-                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.PlayQueue.ShuffleMode), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerShuffleKey}"
                 AutomationProperties.Name="{x:Bind ShuffleButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
-                IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
+                IsChecked="{x:Bind ViewModel.PlayQueue.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToShuffleGlyph(ViewModel.Playlist.ShuffleMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToShuffleGlyph(ViewModel.PlayQueue.ShuffleMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -494,14 +494,14 @@
             <ToggleButton
                 x:Name="RepeatButton"
                 Margin="0,0,4,0"
-                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.PlayQueue.RepeatMode), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerRepeatKey}"
                 AutomationProperties.Name="{x:Bind RepeatButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
-                IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
+                IsChecked="{x:Bind ViewModel.PlayQueue.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToRepeatGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToRepeatGlyph(ViewModel.PlayQueue.RepeatMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
