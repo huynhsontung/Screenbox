@@ -51,7 +51,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     {
         if (Source == null || item == null) return;
         var playlist = new Playlist(item, Source.Items);
-        Messenger.Send(new QueuePlaylistMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(playlist, true));
     }
 
     [RelayCommand(CanExecute = nameof(NotEmpty))]
@@ -61,7 +61,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         Random rnd = new();
         List<MediaViewModel> shuffledList = playlist.Items.OrderBy(_ => rnd.Next()).ToList();
         var shuffledPlaylist = new Playlist(0, shuffledList);
-        Messenger.Send(new QueuePlaylistMessage(shuffledPlaylist, true));
+        Messenger.Send(new SetQueueMessage(shuffledPlaylist, true));
     }
 
     [RelayCommand(CanExecute = nameof(NotNull))]

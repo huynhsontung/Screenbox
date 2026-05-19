@@ -163,7 +163,7 @@
     <Compile Include="Messages\ChangePlaybackRateRequestMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
-    <Compile Include="Messages\ClearPlaylistMessage.cs" />
+    <Compile Include="Messages\ClearQueueMessage.cs" />
     <Compile Include="Messages\CloseNotificationMessage.cs" />
     <Compile Include="Messages\CriticalErrorMessage.cs" />
     <Compile Include="Messages\DragDropMessage.cs" />
@@ -179,13 +179,13 @@
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
     <Compile Include="Messages\PlayFilesMessage.cs" />
     <Compile Include="Messages\PlaylistCreatedNotificationMessage.cs" />
-    <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />
     <Compile Include="Messages\PlaylistDeletedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistItemsAddedNotificationMessage.cs" />
     <Compile Include="Messages\PlaylistRenamedNotificationMessage.cs" />
-    <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
-    <Compile Include="Messages\QueuePlaylistMessage.cs" />
+    <Compile Include="Messages\QueueCurrentItemChangedMessage.cs" />
+    <Compile Include="Messages\QueueRequestMessage.cs" />
+    <Compile Include="Messages\SetQueueMessage.cs" />
     <Compile Include="Messages\RaiseLibraryAccessDeniedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseResumePositionNotificationMessage.cs" />

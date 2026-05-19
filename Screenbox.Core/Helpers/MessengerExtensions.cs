@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -22,12 +22,12 @@ internal static class MessengerExtensions
         }
 
         var playlist = new Playlist(media, queue);
-        messenger.Send(new QueuePlaylistMessage(playlist, true));
+        messenger.Send(new SetQueueMessage(playlist, true));
     }
 
     public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
     {
-        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+        Playlist playlist = messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty)
         {
             // Play the item on its own
@@ -38,7 +38,7 @@ internal static class MessengerExtensions
             // Clone to prevent queuing duplications
             MediaViewModel clone = new(media);
             playlist.Items.Insert(Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count), clone);
-            messenger.Send(new QueuePlaylistMessage(playlist, false));
+            messenger.Send(new SetQueueMessage(playlist, false));
         }
     }
 
@@ -46,12 +46,12 @@ internal static class MessengerExtensions
     {
         if (items.Count == 0) return;
 
-        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+        Playlist playlist = messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty)
         {
             // Queue all items and play the first one
             var updatedPlaylist = new Playlist(0, items);
-            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, true));
+            messenger.Send(new SetQueueMessage(updatedPlaylist, true));
         }
         else
         {
@@ -66,13 +66,13 @@ internal static class MessengerExtensions
                 playlist.Items.Insert(insertIndex + i, clones[i]);
             }
 
-            messenger.Send(new QueuePlaylistMessage(playlist, false));
+            messenger.Send(new SetQueueMessage(playlist, false));
         }
     }
 
     public static void SendAddToQueue(this IMessenger messenger, MediaViewModel media)
     {
-        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+        Playlist playlist = messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty)
         {
             // Play the item on its own
@@ -83,7 +83,7 @@ internal static class MessengerExtensions
             // Clone to prevent queuing duplications
             MediaViewModel clone = new(media);
             playlist.Items.Add(clone);
-            messenger.Send(new QueuePlaylistMessage(playlist, false));
+            messenger.Send(new SetQueueMessage(playlist, false));
         }
     }
 
@@ -91,12 +91,12 @@ internal static class MessengerExtensions
     {
         if (items.Count == 0) return;
 
-        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+        Playlist playlist = messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty)
         {
             // Queue all items and play the first one
             var updatedPlaylist = new Playlist(0, items);
-            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, true));
+            messenger.Send(new SetQueueMessage(updatedPlaylist, true));
         }
         else
         {
@@ -109,7 +109,7 @@ internal static class MessengerExtensions
                 playlist.Items.Add(clone);
             }
 
-            messenger.Send(new QueuePlaylistMessage(playlist, false));
+            messenger.Send(new SetQueueMessage(playlist, false));
         }
     }
 

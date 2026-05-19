@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using Windows.Storage.Search;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
-    IRecipient<PlaylistCurrentItemChangedMessage>
+    IRecipient<QueueCurrentItemChangedMessage>
 {
     public ObservableCollection<string> SubtitleTracks { get; }
 
@@ -81,7 +81,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     /// <summary>
     /// Try load a subtitle in the same directory with the same name
     /// </summary>
-    public async void Receive(PlaylistCurrentItemChangedMessage message)
+    public async void Receive(QueueCurrentItemChangedMessage message)
     {
         _cts?.Cancel();
         if (MediaPlayer is not VlcMediaPlayer player) return;

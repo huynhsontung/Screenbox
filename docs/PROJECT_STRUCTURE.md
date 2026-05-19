@@ -244,7 +244,7 @@ Architectural rules for coordinators:
 
 Available coordinators:
 - **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
-- **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `PlayFilesMessage`, `QueuePlaylistMessage`, `ClearPlaylistMessage`, and `PlaylistRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Manages neighboring-file auto-enqueue when a single file is opened. Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations.
+- **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `PlayFilesMessage`, `SetQueueMessage`, `ClearQueueMessage`, and `QueueRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Manages neighboring-file auto-enqueue when a single file is opened. Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations.
 
 #### Helper Classes
 
