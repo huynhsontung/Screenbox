@@ -33,7 +33,6 @@ namespace Screenbox.Core.Services
             Log(e.FormattedLog, "LibVLC");
         }
 
-        [Conditional("DEBUG")]
         private static void TrackError(Exception e)
         {
             if (e.Data.Count > 0)

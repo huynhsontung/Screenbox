@@ -27,6 +27,7 @@
                     </ResourceDictionary.ThemeDictionaries>
 
                     <!--  Commands  -->
+                    <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
                     <commands:OpenWithCommand x:Key="OpenWithCommand" />
 
@@ -149,6 +150,7 @@
                     </DataTemplate>
                 </ResourceDictionary>
 
+                <ResourceDictionary Source="ms-appx:///Controls/ContentUnavailableView/ContentUnavailableView.xaml" />
                 <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Icon.xaml" />

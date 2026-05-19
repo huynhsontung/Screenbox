@@ -130,10 +130,9 @@
     <Compile Include="Contexts\CastContext.cs" />
     <Compile Include="Contexts\LibraryContext.cs" />
     <Compile Include="Contexts\PlaylistsContext.cs" />
-    <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
-    <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
+    <Compile Include="Enums\PlaybackActionKind.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
     <Compile Include="Enums\SearchSuggestionKind.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
@@ -150,16 +149,15 @@
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
-    <Compile Include="Controllers\LastPositionTracker.cs" />
+    <Compile Include="Services\ILastPositionTracker.cs" />
+    <Compile Include="Services\LastPositionTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
-    <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\RendererWatcher.cs" />
     <Compile Include="Helpers\StreamAbstraction.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
-    <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangePlaybackRateRequestMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
@@ -174,7 +172,6 @@
     <Compile Include="Messages\FailedToLoadSubtitleNotificationMessage.cs" />
     <Compile Include="Messages\FailedToOpenFilesNotificationMessage.cs" />
     <Compile Include="Messages\FailedToSaveFrameNotificationMessage.cs" />
-    <Compile Include="Messages\LibraryContentChangedMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
@@ -202,15 +199,13 @@
     <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
+    <Compile Include="Messages\VisualizerChangedMessage.cs" />
     <Compile Include="Models\IMediaProperties.cs" />
     <Compile Include="Models\LanguageInfo.cs" />
-    <Compile Include="Models\LivelyInfoModel.cs" />
-    <Compile Include="Models\LivelyMusicModel.cs" />
-    <Compile Include="Models\LivelyPlaybackStateModel.cs" />
-    <Compile Include="Models\LivelyWallpaperModel.cs" />
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
+    <Compile Include="Models\MusicLibrary.cs" />
     <Compile Include="Models\PersistentPlaylist.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
@@ -223,6 +218,7 @@
     <Compile Include="Models\SearchSuggestionItem.cs" />
     <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
+    <Compile Include="Models\VideosLibrary.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
@@ -243,8 +239,9 @@
     <Compile Include="Services\ICastService.cs" />
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
-    <Compile Include="Services\ILivelyWallpaperService.cs" />
     <Compile Include="Factories\IMediaListFactory.cs" />
+    <Compile Include="Factories\IPlaylistViewModelFactory.cs" />
+    <Compile Include="Factories\PlaylistViewModelFactory.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
     <Compile Include="Services\IPlayerService.cs" />
@@ -254,9 +251,9 @@
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\IWindowService.cs" />
-    <Compile Include="Controllers\LibraryController.cs" />
+    <Compile Include="Coordinators\ILibraryCoordinator.cs" />
+    <Compile Include="Coordinators\LibraryCoordinator.cs" />
     <Compile Include="Services\LibraryService.cs" />
-    <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Factories\MediaListFactory.cs" />
     <Compile Include="Services\NavigationService.cs" />
@@ -284,8 +281,6 @@
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
-    <Compile Include="ViewModels\LivelyWallpaperPlayerViewModel.cs" />
-    <Compile Include="ViewModels\LivelyWallpaperSelectorViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MediaListViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
@@ -301,6 +296,7 @@
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
     <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
+    <Compile Include="ViewModels\SelectionViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\SongSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SongsPageViewModel.cs" />
@@ -335,9 +331,6 @@
     <PackageReference Include="LibVLCSharp">
       <Version>3.7.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.7</Version>
-    </PackageReference>
     <PackageReference Include="protobuf-net">
       <Version>3.2.30</Version>
     </PackageReference>
@@ -352,7 +345,6 @@
     <PRIResource Include="Helpers\LanguageCodes.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-    <None Include="packages.lock.json" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

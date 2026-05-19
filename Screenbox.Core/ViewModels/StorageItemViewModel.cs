@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -41,7 +41,7 @@ namespace Screenbox.Core.ViewModels
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
-                Media = mediaFactory.GetSingleton(file);
+                Media = mediaFactory.GetOrCreate(file);
                 Name = Media.Name;
                 Path = Media.Location;
             }

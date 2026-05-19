@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Thêm vào hàng đợi</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Lựa chọn</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Chọn tất cả</value>
   </data>
@@ -353,7 +356,7 @@
     <value>Mở vị trí tệp</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Mở với</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Kéo theo chiều dọc để điều chỉnh âm lượng</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Nhấn vào bất cứ đâu để phát hoặc tạm dừng</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Trình Phát Phương Tiện Screenbox</value>
   </data>
@@ -701,15 +701,15 @@
     <value>Đã thêm phụ đề</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Danh sách phát "{0}" đã được tạo</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Danh sách phát "{0}" đã được xóa</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Danh sách phát đã đổi tên thành "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -756,7 +756,7 @@
     <value>Nâng cao</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Riêng tư</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Chế độ nâng cao</value>
@@ -996,73 +996,127 @@
   <data name="Folder" xml:space="preserve">
     <value>Thư mục</value>
   </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>Tap</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>Swipe up</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>Swipe down</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>Swipe left</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>Swipe right</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Enable press and hold to increase playback speed</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>Nothing</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Play/pause</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>Rewind</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>Fast forward</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>Decrease volume</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>Increase volume</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>Decrease speed</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>Increase speed</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Thêm vào danh sách phát</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Tạo danh sách phát mới</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Danh sách phát mới</value>
+  </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Nhập danh sách phát</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Xuất</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Mục đã chọn</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Các mục đã chọn</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Không có danh sách nhạc</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Tạo</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Hủy</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Danh sách phát không có tiêu đề</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Nhập tên cho danh sách phát</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Danh sách phát</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Xóa</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Đổi tên</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Nhập tên mới cho danh sách phát này</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Đổi tên danh sách phát</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Xóa các danh sách phát</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>Bạn có chắc chắn muốn xóa danh sách phát '{0}' không? Bạn không thể hoàn tác thao tác này.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Lịch sử vị trí phát lại</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to enable quick session resumption</value>
+    <value>Lưu lịch sử vị trí phát lại trên thiết bị này để có thể nhanh chóng tiếp tục phiên phát</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Xóa lịch sử vị trí phát lại của thiết bị</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Đã thêm mục {0} vào danh sách phát "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Đã thêm {0} mục vào danh sách phát "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>Bạn không có danh sách phát nào</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Hãy tạo danh sách phát đầu tiên để sắp xếp các video và nhạc yêu thích của bạn.</value>
   </data>
 </root>

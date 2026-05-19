@@ -9,12 +9,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
-using Screenbox.Core.Services;
 using Windows.Storage;
 
-namespace Screenbox.Core.Controllers;
+namespace Screenbox.Core.Services;
 
-public sealed class LastPositionTracker : ObservableRecipient,
+public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTracker,
     IRecipient<SuspendingMessage>
 {
     private const int Capacity = 64;

@@ -1,0 +1,147 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls">
+
+    <x:Double x:Key="ContentUnavailableViewMaxWidth">688</x:Double>
+
+    <Thickness x:Key="ContentUnavailableViewContentMargin">0,0,16,0</Thickness>
+    <Thickness x:Key="ContentUnavailableViewTitleMargin">0,0,0,8</Thickness>
+    <Thickness x:Key="ContentUnavailableViewMessageMargin">0,0,0,12</Thickness>
+
+    <Style BasedOn="{StaticResource DefaultContentUnavailableViewStyle}" TargetType="controls:ContentUnavailableView" />
+
+    <Style x:Key="DefaultContentUnavailableViewStyle" TargetType="controls:ContentUnavailableView">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{ThemeResource ContentUnavailableViewMaxWidth}" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ContentUnavailableView">
+                    <Grid
+                        x:Name="RootGrid"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                        Background="{TemplateBinding Background}"
+                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Grid.Column="0"
+                            Margin="{StaticResource ContentUnavailableViewContentMargin}"
+                            x:DeferLoadStrategy="Lazy"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Visibility="Collapsed" />
+
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock
+                                x:Name="TitleTextBlock"
+                                Grid.Row="0"
+                                Margin="{ThemeResource ContentUnavailableViewTitleMargin}"
+                                Style="{StaticResource TitleTextBlockStyle}"
+                                Text="{TemplateBinding Title}"
+                                Visibility="Collapsed" />
+
+                            <TextBlock
+                                x:Name="MessageTextBlock"
+                                Grid.Row="1"
+                                Margin="{ThemeResource ContentUnavailableViewMessageMargin}"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Style="{StaticResource BodyTextBlockStyle}"
+                                Text="{TemplateBinding Message}"
+                                Visibility="Collapsed" />
+
+                            <ContentPresenter
+                                x:Name="ActionContentPresenter"
+                                Grid.Row="2"
+                                x:DeferLoadStrategy="Lazy"
+                                Content="{TemplateBinding ActionContent}"
+                                Visibility="Collapsed">
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{StaticResource DefaultHyperlinkButtonStyle}" TargetType="HyperlinkButton">
+                                        <Style.Setters>
+                                            <Setter Property="Margin" Value="{StaticResource InfoBarHyperlinkButtonMargin}" />
+                                        </Style.Setters>
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="VisibilityGroup">
+                                <VisualState x:Name="ContentUnavailableViewVisible" />
+
+                                <VisualState x:Name="ContentUnavailableViewCollapsed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="ContentGroup">
+                                <VisualState x:Name="ContentCollapsed" />
+
+                                <VisualState x:Name="ContentVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="TitleGroup">
+                                <VisualState x:Name="TitleTextBlockCollapsed" />
+
+                                <VisualState x:Name="TitleTextBlockVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="TitleTextBlock.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="MessageGroup">
+                                <VisualState x:Name="MessageTextBlockCollapsed" />
+
+                                <VisualState x:Name="MessageTextBlockVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="MessageTextBlock.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="ActionContentGroup">
+                                <VisualState x:Name="ActionContentCollapsed" />
+
+                                <VisualState x:Name="ActionContentVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="ActionContentPresenter.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

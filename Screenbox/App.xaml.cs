@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
+using Screenbox.Lively;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
@@ -102,16 +104,11 @@ sealed partial class App : Application
     {
         ServiceCollection services = new();
         ServiceHelpers.PopulateCoreServices(services);
+        services.AddLivelyWallpaperServices();
 
         // View models
         services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
         services.AddTransient<Screenbox.ViewModels.PropertyViewModel>();
-        services.AddTransient<LivelyWallpaperSelectorViewModel>(provider =>
-            new LivelyWallpaperSelectorViewModel(
-                provider.GetRequiredService<ILivelyWallpaperService>(),
-                provider.GetRequiredService<IFilesService>(),
-                provider.GetRequiredService<ISettingsService>(),
-                Strings.Resources.Default, "ms-appx:///Assets/DefaultAudioVisual.png"));
 
         // Services
         services.AddSingleton<IVlcDialogService, VlcDialogService>();
@@ -149,6 +146,9 @@ sealed partial class App : Application
 
     private void ConfigureSentry()
     {
+        if (string.IsNullOrEmpty(Secrets.SentryDsn))
+            return;
+
         CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
 
         SentrySdk.Init(options =>
@@ -250,11 +250,28 @@ sealed partial class App : Application
     private async void OnSuspending(object sender, SuspendingEventArgs e)
     {
         SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
-        SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
-        IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
-        await Task.WhenAll(tasks);
-        await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
-        deferral.Complete();
+        try
+        {
+            SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
+            var tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
+            if (!string.IsNullOrEmpty(Secrets.SentryDsn))
+            {
+                // Sentry Cloud is more reliable, so we can afford to wait a bit longer to flush events
+                // If it's a self-hosted Sentry instance, we just drop the events instead of risking delaying suspension
+                var sentryTimeout = TimeSpan.FromSeconds(Secrets.SentryDsn.Contains("sentry.io") ? 2 : 0.5);
+                tasks.Append(SentrySdk.FlushAsync(sentryTimeout));
+            }
+
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception)
+        {
+            // pass
+        }
+        finally
+        {
+            deferral.Complete();
+        }
     }
 
     private Frame InitRootFrame()

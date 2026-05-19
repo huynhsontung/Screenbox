@@ -239,7 +239,7 @@
     <comment>Display name for the file type ".ogv"</comment>
   </data>
   <data name="FileDisplayNameOggMedia" xml:space="preserve">
-    <value>Ogg Media File</value>
+    <value>Ogg медиа файл</value>
     <comment>Display name for the file type ".ogm"</comment>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">

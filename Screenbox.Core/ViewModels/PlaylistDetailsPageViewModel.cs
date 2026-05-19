@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -80,11 +80,23 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
         if (files == null || files.Count == 0) return;
 
-        var mediaList = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetSingleton).ToList();
+        var mediaList = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetOrCreate).ToList();
         if (mediaList.Count == 0) return;
 
         await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
         await Source.AddItemsAsync(mediaList);
+    }
+
+    public async Task ExportPlaylistAsync(string playlistFileDisplayName = "M3U8")
+    {
+        if (Source == null) return;
+
+        var saveFileTypes = new Dictionary<string, IList<string>> { [playlistFileDisplayName] = [".m3u8"] };
+        StorageFile? file = await _filesService.PickSaveFileAsync(Source.Name,
+            saveFileTypes, Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
+        if (file is null) return;
+
+        await _playlistService.ExportPlaylistItemsAsync(Source.Items, file);
     }
 
     public async Task<bool> DeletePlaylistAsync()

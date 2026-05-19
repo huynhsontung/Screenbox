@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -11,6 +12,7 @@ using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.Storage.Streams;
 
 namespace Screenbox.Core.Services;
 
@@ -149,7 +151,7 @@ public sealed class PlaylistService : IPlaylistService
     public async Task<IReadOnlyList<PersistentPlaylist>> ListPlaylistsAsync()
     {
         StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(PlaylistsFolderName, CreationCollisionOption.OpenIfExists);
-        var files = await playlistsFolder.GetFilesAsync();
+        var files = await playlistsFolder.GetFilesAsync(CommonFileQuery.OrderBySearchRank);
         var playlists = new List<PersistentPlaylist>();
         foreach (var file in files)
         {
@@ -230,5 +232,31 @@ public sealed class PlaylistService : IPlaylistService
 
         playlist.LastUpdated = DateTimeOffset.Now;
         await SavePlaylistAsync(playlist);
+    }
+
+    public async Task<IReadOnlyList<MediaViewModel>> ImportPlaylistItemsAsync(StorageFile file)
+    {
+        if (file is null) throw new ArgumentNullException(nameof(file));
+        var mediaList = await _mediaListFactory.ParseMediaListAsync(file);
+        return mediaList.Items;
+    }
+
+    public async Task ExportPlaylistItemsAsync(IReadOnlyList<MediaViewModel> items, StorageFile file)
+    {
+        var lines = new List<string>((items.Count * 2) + 1)
+        {
+            "#EXTM3U"
+        };
+
+        foreach (MediaViewModel item in items.Where(x => x.Location.Length > 0 && x.Location != "about:blank"))
+        {
+            int durationSeconds = item.Duration > TimeSpan.Zero ? (int)Math.Round(item.Duration.TotalSeconds) : -1;
+            string title = item.Name;
+            string path = Uri.TryCreate(item.Location, UriKind.Absolute, out var uri) ? uri.AbsoluteUri : item.Location;
+            lines.Add($"#EXTINF:{durationSeconds},{title}");
+            lines.Add(path);
+        }
+
+        await FileIO.WriteLinesAsync(file, lines, UnicodeEncoding.Utf8);
     }
 }

@@ -4,10 +4,11 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using Screenbox.Dialogs;
 using Screenbox.Core.ViewModels;
-using Windows.UI.Xaml;
+using Screenbox.Dialogs;
+using Screenbox.Strings;
 using Windows.UI.Xaml.Controls;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,7 +29,7 @@ public sealed partial class PlaylistsPage : Page
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 
-    private async void HeaderCreateButton_OnClick(object sender, RoutedEventArgs e)
+    private async void HeaderCreateButton_OnClick(muxc.SplitButton sender, muxc.SplitButtonClickEventArgs args)
     {
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(playlistName))
@@ -55,5 +56,11 @@ public sealed partial class PlaylistsPage : Page
         var result = await deleteConfirmation.ShowAsync();
         if (result == ContentDialogResult.Primary)
             await ViewModel.DeletePlaylistAsync(playlist);
+    }
+
+    [RelayCommand]
+    private async Task ExportPlaylistAsync(PlaylistViewModel playlist)
+    {
+        await ViewModel.ExportPlaylistAsync(playlist, ManifestResources.FileDisplayNameM3U8);
     }
 }

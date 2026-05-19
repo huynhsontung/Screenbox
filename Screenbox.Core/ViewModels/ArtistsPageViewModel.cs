@@ -1,19 +1,21 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
@@ -32,9 +34,8 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Music) return;
         _dispatcherQueue.TryEnqueue(FetchArtists);
     }
 
@@ -46,7 +47,7 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
     public void FetchArtists()
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
-        Songs = _libraryContext.Songs;
+        Songs = _libraryContext.Music.Songs;
 
         var groupings = GetDefaultGrouping(_libraryContext);
         GroupedArtists.SyncObservableGroups(groupings);
@@ -64,17 +65,16 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, ArtistViewModel>> GetDefaultGrouping(LibraryContext context)
     {
-        var groups = context.Artists.Values
+        var groups = context.Music.Artists.Values
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-            .GroupBy(artist => artist == context.UnknownArtist
+            .GroupBy(artist => artist == context.Music.UnknownArtist
                 ? MediaGroupingHelpers.OtherGroupSymbol
-                : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name))
+                : MediaGroupingHelpers.GetCharacterGroupLabel(artist.Name))
             .ToList();
 
         var sortedGroup = new List<IGrouping<string, ArtistViewModel>>();
-        foreach (char header in MediaGroupingHelpers.GroupHeaders)
+        foreach (string groupHeader in MediaGroupingHelpers.CharacterGroupLabels)
         {
-            string groupHeader = header.ToString();
             if (groups.Find(g => g.Key == groupHeader) is { } group)
             {
                 sortedGroup.Add(group);
@@ -90,7 +90,7 @@ public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
 
     private void PopulateGroups()
     {
-        foreach (string key in MediaGroupingHelpers.GroupHeaders.Select(letter => letter.ToString()))
+        foreach (string key in MediaGroupingHelpers.CharacterGroupLabels)
         {
             GroupedArtists.AddGroup(key);
         }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -101,45 +100,174 @@ public sealed class LibraryService : ILibraryService
         return library;
     }
 
-    public async Task FetchMusicAsync(LibraryContext context, bool useCache = true)
+    public async Task<MusicLibrary> FetchMusicAsync(
+        StorageLibrary library,
+        StorageFileQueryResult queryResult,
+        bool useCache,
+        CancellationToken cancellationToken,
+        IProgress<MusicLibrary>? progress = null)
     {
-        context.MusicFetchCts?.Cancel();
-        using CancellationTokenSource cts = new();
-        context.MusicFetchCts = cts;
-        try
+        StorageFileQueryResult libraryQuery = queryResult;
+        StorageLibraryChangeTracker? libraryChangeTracker = null;
+        StorageLibraryChangeReader? changeReader = null;
+
+        useCache = useCache && !SystemInformation.IsXbox;
+        bool hasCache = false;
+
+        List<MediaViewModel> songs = new();
+        if (useCache)
         {
-            await FetchMusicCancelableAsync(context, useCache, cts.Token);
+            var libraryCache = await LoadStorageLibraryCacheAsync(SongsCacheFileName);
+            if (libraryCache?.Records.Count > 0)
+            {
+                songs = GetMediaFromCache(libraryCache);
+                hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, library);
+
+                if (hasCache)
+                {
+                    try
+                    {
+                        libraryChangeTracker = library.ChangeTracker;
+                        libraryChangeTracker.Enable();
+                        changeReader = libraryChangeTracker.GetChangeReader();
+                        hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
+                    }
+                    catch (Exception e)
+                    {
+                        LogService.Log($"Failed to resolve change from library tracker\n{e}");
+                    }
+                }
+            }
         }
-        catch (OperationCanceledException)
+
+        var albumFactory = new AlbumViewModelFactory();
+        var artistFactory = new ArtistViewModelFactory();
+
+        if (!hasCache)
         {
-            // ignored
+            songs = new List<MediaViewModel>();
+            await BatchFetchMusicAsync(libraryQuery, songs, albumFactory, artistFactory, cancellationToken, progress);
+
+            if (SearchRemovableStorage)
+            {
+                var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+                {
+                    libraryQuery = CreateRemovableStorageMusicQuery();
+                    await BatchFetchMusicAsync(libraryQuery, songs, albumFactory, artistFactory, cancellationToken, progress);
+                }
+            }
         }
-        finally
+        else
         {
-            context.MusicFetchCts = null;
+            // Cache path: build associations in one pass (fast, no async detail loading needed)
+            foreach (MediaViewModel song in songs)
+            {
+                song.IsFromLibrary = true;
+                albumFactory.AddSong(song);
+                artistFactory.AddSong(song);
+                song.Album = albumFactory.SongsToAlbums[song];
+                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+            }
         }
+
+        var result = new MusicLibrary(
+            songs,
+            albumFactory.Albums,
+            artistFactory.Artists,
+            albumFactory.UnknownAlbum,
+            artistFactory.UnknownArtist);
+
+        await CacheSongsAsync(library, songs, cancellationToken);
+        if (hasCache && changeReader != null)
+        {
+            await changeReader.AcceptChangesAsync();
+        }
+        else
+        {
+            libraryChangeTracker?.Reset();
+        }
+
+        return result;
     }
 
-    public async Task FetchVideosAsync(LibraryContext context, bool useCache = true)
+    public async Task<VideosLibrary> FetchVideosAsync(
+        StorageLibrary library,
+        StorageFileQueryResult queryResult,
+        bool useCache,
+        CancellationToken cancellationToken,
+        IProgress<VideosLibrary>? progress = null)
     {
-        context.VideosFetchCts?.Cancel();
-        using CancellationTokenSource cts = new();
-        context.VideosFetchCts = cts;
-        try
+        StorageFileQueryResult libraryQuery = queryResult;
+        StorageLibraryChangeTracker? libraryChangeTracker = null;
+        StorageLibraryChangeReader? changeReader = null;
+
+        useCache = useCache && !SystemInformation.IsXbox;
+        bool hasCache = false;
+
+        List<MediaViewModel> videos = new();
+        if (useCache)
         {
-            await FetchVideosCancelableAsync(context, useCache, cts.Token);
+            var libraryCache = await LoadStorageLibraryCacheAsync(VideoCacheFileName);
+            if (libraryCache?.Records.Count > 0)
+            {
+                videos = GetMediaFromCache(libraryCache);
+                hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, library);
+
+                if (hasCache)
+                {
+                    try
+                    {
+                        libraryChangeTracker = library.ChangeTracker;
+                        libraryChangeTracker.Enable();
+                        changeReader = libraryChangeTracker.GetChangeReader();
+                        hasCache = await TryResolveLibraryChangeAsync(videos, changeReader);
+                    }
+                    catch (Exception e)
+                    {
+                        LogService.Log($"Failed to resolve change from library tracker\n{e}");
+                    }
+                }
+            }
         }
-        catch (OperationCanceledException)
+
+        if (!hasCache)
         {
-            // ignored
+            videos = new List<MediaViewModel>();
+            await BatchFetchVideosAsync(libraryQuery, videos, cancellationToken, progress);
+
+            if (SearchRemovableStorage)
+            {
+                var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+                {
+                    libraryQuery = CreateRemovableStorageVideosQuery();
+                    await BatchFetchVideosAsync(libraryQuery, videos, cancellationToken, progress);
+                }
+            }
         }
-        finally
+        else
         {
-            context.VideosFetchCts = null;
+            foreach (MediaViewModel video in videos)
+            {
+                video.IsFromLibrary = true;
+            }
         }
+
+        await CacheVideosAsync(library, videos, cancellationToken);
+        if (hasCache && changeReader != null)
+        {
+            await changeReader.AcceptChangesAsync();
+        }
+        else
+        {
+            libraryChangeTracker?.Reset();
+        }
+
+        return new VideosLibrary(videos);
     }
 
-    public void RemoveMedia(LibraryContext context, MediaViewModel media)
+    private static void DetachMediaRelationships(MediaViewModel media)
     {
         if (media.Album != null)
         {
@@ -153,18 +281,12 @@ public sealed class LibraryService : ILibraryService
         }
 
         media.Artists = Array.Empty<ArtistViewModel>();
-        var songs = context.Songs.ToList();
-        songs.Remove(media);
-        context.Songs = songs;
-        var videos = context.Videos.ToList();
-        videos.Remove(media);
-        context.Videos = videos;
     }
 
-    private async Task CacheSongsAsync(LibraryContext context, CancellationToken cancellationToken)
+    private async Task CacheSongsAsync(StorageLibrary library, List<MediaViewModel> songs, CancellationToken cancellationToken)
     {
-        var folderPaths = context.MusicLibrary!.Folders.Select(f => f.Path).ToList();
-        var records = context.Songs.Select(song =>
+        var folderPaths = library.Folders.Select(f => f.Path).ToList();
+        var records = songs.Select(song =>
             new PersistentMediaRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
         var libraryCache = new PersistentStorageLibrary
         {
@@ -182,10 +304,10 @@ public sealed class LibraryService : ILibraryService
         }
     }
 
-    private async Task CacheVideosAsync(LibraryContext context, CancellationToken cancellationToken)
+    private async Task CacheVideosAsync(StorageLibrary library, List<MediaViewModel> videos, CancellationToken cancellationToken)
     {
-        var folderPaths = context.VideosLibrary!.Folders.Select(f => f.Path).ToList();
-        List<PersistentMediaRecord> records = context.Videos.Select(video =>
+        var folderPaths = library.Folders.Select(f => f.Path).ToList();
+        List<PersistentMediaRecord> records = videos.Select(video =>
             new PersistentMediaRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
         var libraryCache = new PersistentStorageLibrary()
         {
@@ -225,7 +347,7 @@ public sealed class LibraryService : ILibraryService
         var records = libraryCache.Records;
         List<MediaViewModel> mediaList = records.Select(record =>
         {
-            MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+            MediaViewModel media = _mediaFactory.GetOrCreate(new Uri(record.Path));
             media.IsFromLibrary = true;
             if (!media.DetailsLoaded)
             {
@@ -247,271 +369,94 @@ public sealed class LibraryService : ILibraryService
         return mediaList;
     }
 
-    private async Task FetchMusicCancelableAsync(LibraryContext context, bool useCache, CancellationToken cancellationToken)
-    {
-        if (context.MusicLibrary == null || context.MusicLibraryQueryResult == null) return;
-        context.IsLoadingMusic = true;
-        StorageFileQueryResult libraryQuery = context.MusicLibraryQueryResult;
-        StorageLibraryChangeTracker? libraryChangeTracker = null;
-        StorageLibraryChangeReader? changeReader = null;
-        try
-        {
-            useCache = useCache && !SystemInformation.IsXbox;   // Don't use cache on Xbox
-            bool hasCache = false;
-
-            List<MediaViewModel> songs = new();
-            if (useCache)
-            {
-                var libraryCache = await LoadStorageLibraryCacheAsync(SongsCacheFileName);
-                if (libraryCache?.Records.Count > 0)
-                {
-                    songs = GetMediaFromCache(libraryCache);
-                    hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, context.MusicLibrary);
-
-                    // Update cache with changes from library tracker. Invalidate cache if needed.
-                    if (hasCache)
-                    {
-                        try
-                        {
-                            libraryChangeTracker = context.MusicLibrary.ChangeTracker;
-                            libraryChangeTracker.Enable();
-                            changeReader = libraryChangeTracker.GetChangeReader();
-                            hasCache = await TryResolveLibraryChangeAsync(context, songs, changeReader);
-                        }
-                        catch (Exception e)
-                        {
-                            LogService.Log($"Failed to resolve change from library tracker\n{e}");
-                        }
-                    }
-                }
-            }
-
-            // Recrawl the library if there is no cache or cache is invalidated
-            if (!hasCache)
-            {
-                songs = new List<MediaViewModel>();
-                context.Songs = songs;
-                await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
-
-                // Search removable storage if the system is Xbox
-                if (SearchRemovableStorage)
-                {
-                    var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
-                    if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
-                    {
-                        libraryQuery = CreateRemovableStorageMusicQuery();
-                        await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
-                    }
-                }
-            }
-
-            // After async operation we need to check the context still have the same reference
-            if (songs != context.Songs)
-            {
-                // Ensure only songs not in the library has IsFromLibrary = false
-                foreach (var song in context.Songs)
-                {
-                    song.IsFromLibrary = false;
-                }
-            }
-
-            songs.ForEach(song => song.IsFromLibrary = true);
-            CleanOutdatedSongs(context);
-
-            // Populate Album and Artists for each song
-            var albumFactory = new AlbumViewModelFactory();
-            var artistFactory = new ArtistViewModelFactory();
-            foreach (MediaViewModel song in songs)
-            {
-                if (!song.IsFromLibrary) continue;
-                // A cached song always has a URI as source
-                if (hasCache && song.Source is Uri)
-                {
-                    albumFactory.AddSong(song);
-                    artistFactory.AddSong(song);
-                }
-                else
-                {
-                    await song.LoadDetailsAsync(_filesService);
-                    cancellationToken.ThrowIfCancellationRequested();
-                    albumFactory.AddSong(song);
-                    artistFactory.AddSong(song);
-                }
-            }
-
-            UpdateMusicLibraryContext(context, songs, albumFactory, artistFactory);
-            await CacheSongsAsync(context, cancellationToken);
-            if (hasCache && changeReader != null)
-            {
-                await changeReader.AcceptChangesAsync();
-            }
-            else
-            {
-                libraryChangeTracker?.Reset();
-            }
-        }
-        finally
-        {
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                context.IsLoadingMusic = false;
-            }
-        }
-    }
-
-    private static void UpdateMusicLibraryContext(LibraryContext context, List<MediaViewModel> songs,
-        AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
-    {
-        context.Songs = songs;
-        context.Albums = albumFactory.Albums;
-        context.UnknownAlbum = albumFactory.UnknownAlbum;
-        foreach (var (song, album) in albumFactory.SongsToAlbums)
-        {
-            song.Album = album;
-        }
-
-        context.Artists = artistFactory.Artists;
-        context.UnknownArtist = artistFactory.UnknownArtist;
-        foreach (var (song, artists) in artistFactory.SongsToArtists)
-        {
-            song.Artists = artists.ToArray();
-        }
-
-        context.RaiseMusicLibraryContentChanged();
-    }
-
-    private async Task FetchVideosCancelableAsync(LibraryContext context, bool useCache, CancellationToken cancellationToken)
-    {
-        if (context.VideosLibrary == null || context.VideosLibraryQueryResult == null) return;
-        StorageFileQueryResult libraryQuery = context.VideosLibraryQueryResult;
-        context.IsLoadingVideos = true;
-        StorageLibraryChangeTracker? libraryChangeTracker = null;
-        StorageLibraryChangeReader? changeReader = null;
-
-        try
-        {
-            useCache = useCache && !SystemInformation.IsXbox;   // Don't use cache on Xbox
-            bool hasCache = false;
-
-            List<MediaViewModel> videos = new();
-            if (useCache)
-            {
-                var libraryCache = await LoadStorageLibraryCacheAsync(VideoCacheFileName);
-                if (libraryCache?.Records.Count > 0)
-                {
-                    videos = GetMediaFromCache(libraryCache);
-                    hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, context.VideosLibrary);
-
-                    // Update cache with changes from library tracker. Invalidate cache if needed.
-                    if (hasCache)
-                    {
-                        try
-                        {
-                            libraryChangeTracker = context.VideosLibrary.ChangeTracker;
-                            libraryChangeTracker.Enable();
-                            changeReader = libraryChangeTracker.GetChangeReader();
-                            hasCache = await TryResolveLibraryChangeAsync(context, videos, changeReader);
-                        }
-                        catch (Exception e)
-                        {
-                            LogService.Log($"Failed to resolve change from library tracker\n{e}");
-                        }
-                    }
-                }
-            }
-
-            // Recrawl the library if there is no cache or cache is invalidated
-            if (!hasCache)
-            {
-                context.Videos = videos;
-                videos.Clear();
-                await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
-
-                // Search removable storage if the system is Xbox
-                if (SearchRemovableStorage)
-                {
-                    var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
-                    if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
-                    {
-                        libraryQuery = CreateRemovableStorageVideosQuery();
-                        await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
-                    }
-                }
-            }
-
-            foreach (MediaViewModel video in videos)
-            {
-                video.IsFromLibrary = true;
-                if (!hasCache)
-                {
-                    await video.LoadDetailsAsync(_filesService);
-                    cancellationToken.ThrowIfCancellationRequested();
-                }
-            }
-
-            context.Videos = videos;
-            context.RaiseVideosLibraryContentChanged();
-            await CacheVideosAsync(context, cancellationToken);
-            if (hasCache && changeReader != null)
-            {
-                await changeReader.AcceptChangesAsync();
-            }
-            else
-            {
-                libraryChangeTracker?.Reset();
-            }
-        }
-        finally
-        {
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                context.IsLoadingVideos = false;
-            }
-        }
-    }
-
-    private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target, CancellationToken cancellationToken)
+    private async Task BatchFetchMusicAsync(
+        StorageFileQueryResult queryResult,
+        List<MediaViewModel> target,
+        AlbumViewModelFactory albumFactory,
+        ArtistViewModelFactory artistFactory,
+        CancellationToken cancellationToken,
+        IProgress<MusicLibrary>? progress)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        DateTime lastReport = DateTime.MinValue;
         while (true)
         {
-            List<MediaViewModel> batch = await FetchMediaFromStorage(queryResult, (uint)target.Count);
-            if (batch.Count == 0) break;
-            target.AddRange(batch);
+            IReadOnlyList<StorageFile> files = await FetchFilesFromStorage(queryResult, (uint)target.Count);
+            if (files.Count == 0) break;
+
+            foreach (StorageFile file in files)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                MediaViewModel song = _mediaFactory.Create(file);
+                song.IsFromLibrary = true;
+                await song.LoadDetailsAsync(_filesService);
+                albumFactory.AddSong(song);
+                artistFactory.AddSong(song);
+                song.Album = albumFactory.SongsToAlbums[song];
+                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                target.Add(song);
+            }
+
+            if (progress != null && (DateTime.UtcNow - lastReport).TotalSeconds >= 5)
+            {
+                progress.Report(BuildMusicSnapshot(target, albumFactory, artistFactory));
+                lastReport = DateTime.UtcNow;
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
         }
     }
 
-    /// <summary>
-    /// Clean up songs that are no longer from the library
-    /// </summary>
-    private void CleanOutdatedSongs(LibraryContext context)
+    private async Task BatchFetchVideosAsync(
+        StorageFileQueryResult queryResult,
+        List<MediaViewModel> target,
+        CancellationToken cancellationToken,
+        IProgress<VideosLibrary>? progress)
     {
-        List<MediaViewModel> outdatedSongs = context.Songs.Where(song => !song.IsFromLibrary).ToList();
-        foreach (MediaViewModel song in outdatedSongs)
+        cancellationToken.ThrowIfCancellationRequested();
+        DateTime lastReport = DateTime.MinValue;
+        while (true)
         {
-            if (song.Album != null)
+            IReadOnlyList<StorageFile> files = await FetchFilesFromStorage(queryResult, (uint)target.Count);
+            if (files.Count == 0) break;
+
+            foreach (StorageFile file in files)
             {
-                song.Album.RelatedSongs.Remove(song);
-                song.Album = null;
+                cancellationToken.ThrowIfCancellationRequested();
+                MediaViewModel video = _mediaFactory.Create(file);
+                video.IsFromLibrary = true;
+                await video.LoadDetailsAsync(_filesService);
+                target.Add(video);
             }
 
-            foreach (ArtistViewModel artist in song.Artists)
+            if (progress != null && (DateTime.UtcNow - lastReport).TotalSeconds >= 5)
             {
-                artist.RelatedSongs.Remove(song);
+                progress.Report(new VideosLibrary(new List<MediaViewModel>(target)));
+                lastReport = DateTime.UtcNow;
             }
 
-            song.Artists = Array.Empty<ArtistViewModel>();
-            song.Clean();
+            cancellationToken.ThrowIfCancellationRequested();
         }
     }
 
-    private async Task<List<MediaViewModel>> FetchMediaFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
+    private static MusicLibrary BuildMusicSnapshot(
+        List<MediaViewModel> songs,
+        AlbumViewModelFactory albumFactory,
+        ArtistViewModelFactory artistFactory)
     {
-        IReadOnlyList<StorageFile> files;
+        return new MusicLibrary(
+            new List<MediaViewModel>(songs),
+            new Dictionary<string, AlbumViewModel>(albumFactory.Albums),
+            new Dictionary<string, ArtistViewModel>(artistFactory.Artists),
+            albumFactory.UnknownAlbum,
+            artistFactory.UnknownArtist);
+    }
+
+    private async Task<IReadOnlyList<StorageFile>> FetchFilesFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
+    {
         try
         {
-            files = await queryResult.GetFilesAsync(fetchIndex, batchSize);
+            return await queryResult.GetFilesAsync(fetchIndex, batchSize);
         }
         catch (Exception e)
         {
@@ -523,14 +468,11 @@ public sealed class LibraryService : ILibraryService
                 LogService.Log(e);
             }
 
-            return new List<MediaViewModel>();
+            return Array.Empty<StorageFile>();
         }
-
-        List<MediaViewModel> mediaBatch = files.Select(_mediaFactory.GetSingleton).ToList();
-        return mediaBatch;
     }
 
-    private Task<bool> TryResolveLibraryChangeAsync(LibraryContext context, List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+    private Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
     {
         if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibraryChangeReader",
                 "GetLastChangeId"))
@@ -543,18 +485,18 @@ public sealed class LibraryService : ILibraryService
 
             if (changeId > 0)
             {
-                return TryResolveLibraryBatchChangeAsync(context, mediaList, changeReader);
+                return TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
             }
         }
         else
         {
-            return TryResolveLibraryBatchChangeAsync(context, mediaList, changeReader);
+            return TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
         }
 
         return Task.FromResult(true);
     }
 
-    private async Task<bool> TryResolveLibraryBatchChangeAsync(LibraryContext context, List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+    private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
     {
         var changeBatch = await changeReader.ReadBatchAsync();
         foreach (StorageLibraryChange change in changeBatch)
@@ -571,7 +513,7 @@ public sealed class LibraryService : ILibraryService
                 case StorageLibraryChangeType.Created:
                 case StorageLibraryChangeType.MovedIntoLibrary:
                     file = (StorageFile)await change.GetStorageItemAsync();
-                    mediaList.Add(_mediaFactory.GetSingleton(file));
+                    mediaList.Add(_mediaFactory.GetOrCreate(file));
                     break;
 
                 case StorageLibraryChangeType.Deleted:
@@ -580,7 +522,7 @@ public sealed class LibraryService : ILibraryService
                         s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
                     if (existing != null)
                     {
-                        RemoveMedia(context, existing);
+                        DetachMediaRelationships(existing);
                         mediaList.Remove(existing);
                     }
 
@@ -591,11 +533,11 @@ public sealed class LibraryService : ILibraryService
                     existing = mediaList.Find(s =>
                         s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
 
-                    var newMedia = _mediaFactory.GetSingleton(file);
+                    var newMedia = _mediaFactory.GetOrCreate(file);
                     if (existing != null)
                     {
                         var existingInfo = existing.MediaInfo;
-                        RemoveMedia(context, existing);
+                        DetachMediaRelationships(existing);
                         mediaList.Remove(existing);
                         newMedia.MediaInfo = existingInfo;
                     }

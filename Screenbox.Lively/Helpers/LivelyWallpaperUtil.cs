@@ -1,8 +1,8 @@
 ﻿using System.IO.Compression;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Models;
+using Screenbox.Lively.Enums;
+using Screenbox.Lively.Models;
 
-namespace Screenbox.Core.Helpers;
+namespace Screenbox.Lively.Helpers;
 
 // Copyright (c) Dani John
 // Licensed under the GNU General Public License v3.0.

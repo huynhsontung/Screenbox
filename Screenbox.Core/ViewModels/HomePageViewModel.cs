@@ -1,8 +1,9 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,7 +25,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 {
     public ObservableCollection<MediaViewModel> Recent { get; }
 
-    public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0 && _settingsService.ShowRecent;
+    public SelectionViewModel Selection { get; }
 
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
@@ -33,9 +34,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly Dictionary<string, string> _pathToMruMappings;
 
-    public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService,
+    public HomePageViewModel(
+        SelectionViewModel selection,
+        MediaViewModelFactory mediaFactory,
+        IFilesService filesService,
         ISettingsService settingsService)
     {
+        Selection = selection;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _settingsService = settingsService;
@@ -43,6 +48,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
+
+        Selection.SetItemsSource(Recent);
+        Selection.PropertyChanged += Selection_OnPropertyChanged;
 
         // Activate the view model's messenger
         IsActive = true;
@@ -64,6 +72,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     public async void OnLoaded()
     {
         await UpdateContentAsync();
+    }
+
+    private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectionViewModel.IsAllSelected))
+        {
+            PlaySelectedCommand.NotifyCanExecuteChanged();
+            PlaySelectedNextCommand.NotifyCanExecuteChanged();
+            AddSelectedToQueueCommand.NotifyCanExecuteChanged();
+            RemoveSelectedCommand.NotifyCanExecuteChanged();
+        }
     }
 
     [RelayCommand]
@@ -121,7 +140,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
                 if (file.IsSupportedPlaylist()) continue;
                 if (i >= Recent.Count)
                 {
-                    MediaViewModel media = _mediaFactory.GetSingleton(file);
+                    MediaViewModel media = _mediaFactory.GetOrCreate(file);
                     _pathToMruMappings[media.Location] = token;
                     Recent.Add(media);
                 }
@@ -182,7 +201,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         if (existingIndex == -1)
         {
-            MediaViewModel media = _mediaFactory.GetSingleton(file);
+            MediaViewModel media = _mediaFactory.GetOrCreate(file);
             _pathToMruMappings[media.Location] = token;
             Recent.Insert(desiredIndex, media);
         }
@@ -231,6 +250,58 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Messenger.Send(new PlayMediaMessage(files));
     }
 
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelected(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        if (items.Length > 0)
+        {
+            Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false);
+        }
+
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelectedNext(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().Reverse().ToArray();
+        Messenger.SendPlayNext(items);
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void AddSelectedToQueue(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        Messenger.SendAddToQueue(items);
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void RemoveSelected(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var copy = selectedItems.OfType<MediaViewModel>().ToArray();
+        foreach (var item in copy)
+        {
+            Remove(item);
+        }
+
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
     {
         try
@@ -256,4 +327,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             return null;
         }
     }
+
+    private bool HasSelection() => Selection.SelectedItems.Count > 0;
 }

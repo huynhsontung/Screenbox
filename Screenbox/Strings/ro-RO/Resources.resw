@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Adăugare la coadă</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Selectare</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Selectați tot</value>
   </data>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Trageți vertical pentru a ajusta volumul</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Atingeți oriunde pentru a reda sau a întrerupe</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox Media Player</value>
   </data>
@@ -996,6 +996,48 @@
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>Atingere</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>Glisare în sus</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>Glisare în jos</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>Glisare spre stânga</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>Glisare spre dreapta</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Activați apăsare și menținere pentru a crește viteza de redare</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>Nimic</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Redare/pauză</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>Derulare înapoi</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>Rapid înainte</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>Scădere volum</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>Mărire volum</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>Reducere viteză</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>Mărire viteză</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adăugare la playlist</value>
   </data>
@@ -1004,6 +1046,12 @@
   </data>
   <data name="NewPlaylist" xml:space="preserve">
     <value>Playlist nou</value>
+  </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Importare playlist</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exportare</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Element selectat</value>
@@ -1064,5 +1112,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>Au fost adăugate {0} elemente la playlist-ul „{1}”</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>Nu aveți niciun playlist</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Creați-vă primul playlist pentru a vă organiza videoclipurile și muzica preferată.</value>
   </data>
 </root>

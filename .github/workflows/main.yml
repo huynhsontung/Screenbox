@@ -13,12 +13,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '6.x'
+        dotnet-version: '10.x'
     
     - name: Restore dotnet tools
       run: dotnet tool restore
@@ -35,21 +35,17 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
 
-    - uses: actions/cache@v4
+    - uses: actions/cache@v5
       with:
         path: ~\.nuget\packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
 
     - name: Fetch Gomplate
-      uses: dsaltares/fetch-gh-release-asset@1.1.2
-      with:
-        repo: hairyhenderson/gomplate
-        version: tags/v3.11.3
-        file: gomplate_windows-amd64-slim.exe
-        target: gomplate.exe
-        token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release download v5.0.0 --repo hairyhenderson/gomplate --pattern 'gomplate_*amd64.exe' --output .\gomplate.exe
 
     - name: Render secrets
       env:
@@ -75,7 +71,7 @@ jobs:
         PackageDir: C:\DeployOutput
         SENTRY_ORG: starpine
         SENTRY_PROJECT: screenbox
-        SENTRY_URL: sentry.starpine.dev
+        SENTRY_URL: https://sentry.io/
         SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       run: |
@@ -88,9 +84,7 @@ jobs:
                         "-p:SentrySetCommits=true"
         }
         msbuild Screenbox.sln `
-          -v:d `
           -p:RestoreConfigFile=nuget.config `
-          -p:RestoreLockedMode=true `
           -p:Configuration=Release `
           -p:Platform=x64 `
           -p:AppxBundle=Always `
@@ -101,7 +95,7 @@ jobs:
           -restore
     
     - name: Create store-upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: github.ref_type == 'tag'
       with:
         name: store-upload
@@ -110,7 +104,7 @@ jobs:
           C:\DeployOutput\*.appxupload
 
     - name: Create sideload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Screenbox-sideload
         path: |
@@ -121,7 +115,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Screenbox-sideload
         path: C:\Download\
@@ -142,10 +136,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Download package
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Screenbox-sideload
         path: download/
@@ -154,7 +148,7 @@ jobs:
       run: zip -r sideload.zip download/
 
     - name: Generate GitHub Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         draft: true
         generate_release_notes: true

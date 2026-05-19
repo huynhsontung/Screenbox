@@ -5,16 +5,18 @@
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Extensions"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:primitives="using:Windows.UI.Xaml.Controls.Primitives"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:viewmodels="using:Screenbox.Core.ViewModels"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -44,16 +46,33 @@
                     Icon="{ui:SymbolIcon Symbol=Rename}"
                     Text="{strings:Resources Key=Rename}" />
                 <MenuFlyoutItem
+                    Command="{x:Bind ExportPlaylistCommand}"
+                    CommandParameter="{Binding}"
+                    Text="{strings:Resources Key=Export}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
                     Command="{x:Bind DeletePlaylistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{strings:Resources Key=Delete}" />
             </MenuFlyout>
 
-            <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewmodels:PlaylistViewModel">
+            <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
+                <MenuFlyoutItem Command="{x:Bind ViewModel.ImportPlaylistCommand}" Text="{x:Bind strings:Resources.ImportPlaylist}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="&#xE8B5;" MirroredWhenRightToLeft="True" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+            </MenuFlyout>
+
+            <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewModels:PlaylistViewModel">
                 <controls:CommonGridViewItem
                     Title="{x:Bind Name, Mode=OneWay}"
                     Width="{StaticResource CommonGridViewItemWidth}"
+                    AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, ItemsCount)}"
                     Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
                     IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
                     ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
@@ -94,12 +113,14 @@
                 Text="{strings:Resources Key=Playlists}"
                 TextWrapping="NoWrap" />
 
-            <Button
+            <muxc:SplitButton
                 x:Name="HeaderCreateButton"
                 Grid.Column="1"
                 VerticalAlignment="Top"
+                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                 AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
-                Click="HeaderCreateButton_OnClick">
+                Click="HeaderCreateButton_OnClick"
+                Flyout="{StaticResource CreatePlaylistFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
                     <TextBlock
@@ -107,7 +128,10 @@
                         Margin="8,0,0,0"
                         Text="{strings:Resources Key=NewPlaylist}" />
                 </StackPanel>
-            </Button>
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:SplitButtonXYNavigationBehavior />
+                </interactivity:Interaction.Behaviors>
+            </muxc:SplitButton>
         </Grid>
 
         <GridView
@@ -132,6 +156,48 @@
             </interactivity:Interaction.Behaviors>
         </GridView>
 
+        <!--  Empty playlists  -->
+        <ScrollViewer
+            x:Name="NoPlaylistsViewer"
+            Grid.Row="2"
+            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+            Padding="{StaticResource ContentPagePadding}"
+            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollMode="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="Collapsed">
+            <controls:ContentUnavailableView
+                x:Name="NoPlaylistsPanel"
+                Title="{x:Bind strings:Resources.NoPlaylistsPanelHeader}"
+                IsOpen="False"
+                Message="{x:Bind strings:Resources.NoPlaylistsPanelSubtext}">
+                <FontIcon
+                    x:Name="NoPlaylistsPanelIcon"
+                    Margin="0,0,16,0"
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    FontSize="{StaticResource NoContentPanelIconFontSize}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Glyph="{StaticResource PlaylistOffGlyph}" />
+                <controls:ContentUnavailableView.ActionContent>
+                    <muxc:SplitButton
+                        AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
+                        AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
+                        Click="HeaderCreateButton_OnClick"
+                        Flyout="{StaticResource CreatePlaylistFlyout}"
+                        Style="{StaticResource AccentSplitButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=NewPlaylist}" />
+                        </StackPanel>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:SplitButtonXYNavigationBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </muxc:SplitButton>
+                </controls:ContentUnavailableView.ActionContent>
+            </controls:ContentUnavailableView>
+        </ScrollViewer>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
@@ -149,13 +215,16 @@
                 </VisualState>
             </VisualStateGroup>
 
-            <VisualStateGroup x:Name="SystemEffectsStates">
-                <VisualState x:Name="AnimationsEnabled">
+            <VisualStateGroup x:Name="ContentStates">
+                <VisualState x:Name="PlaylistsEmpty">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
+                        <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Playlists, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="PlaylistsGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
+                        <Setter Target="HeaderCreateButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlaylistsGridView.Visibility" Value="Collapsed" />
+                        <Setter Target="NoPlaylistsViewer.Visibility" Value="Visible" />
+                        <Setter Target="NoPlaylistsPanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

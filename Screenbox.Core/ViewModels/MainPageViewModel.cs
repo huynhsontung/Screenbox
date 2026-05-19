@@ -6,12 +6,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Controllers;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -46,24 +46,24 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
     private readonly LibraryContext _libraryContext;
-    private readonly ILibraryService _libraryService;
-    private readonly LibraryController _libraryController;
+    private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
+    private readonly IPlaylistViewModelFactory _playlistFactory;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        LibraryContext libraryContext, ILibraryService libraryService, LibraryController libraryController,
-        PlaylistsContext playlistsContext, IPlaylistService playlistService)
+        LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
+        PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory)
     {
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryContext = libraryContext;
-        _libraryService = libraryService;
-        _libraryController = libraryController;
+        _libraryCoordinator = libraryCoordinator;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
+        _playlistFactory = playlistFactory;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
         IsActive = true;
@@ -246,7 +246,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryController.EnsureWatchingAsync();
+            await _libraryCoordinator.EnsureWatchingAsync();
         }
         catch (Exception)
         {
@@ -254,14 +254,22 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
 
         List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync(), FetchPlaylistsAsync() };
-        await Task.WhenAll(tasks);
+
+        try
+        {
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
     }
 
     private async Task FetchMusicLibraryAsync()
     {
         try
         {
-            await _libraryService.FetchMusicAsync(_libraryContext);
+            await _libraryCoordinator.FetchMusicAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -278,7 +286,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryService.FetchVideosAsync(_libraryContext);
+            await _libraryCoordinator.FetchVideosAsync();
         }
         catch (UnauthorizedAccessException)
         {
@@ -302,7 +310,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             _playlistsContext.Playlists.Clear();
             foreach (var p in loaded)
             {
-                var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+                var playlist = _playlistFactory.Create();
                 try
                 {
                     playlist.Load(p);

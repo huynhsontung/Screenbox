@@ -1,4 +1,4 @@
-﻿namespace Screenbox.Core.Models;
+﻿namespace Screenbox.Lively.Models;
 
 // Copyright (c) Dani John
 // Licensed under the GNU General Public License v3.0.

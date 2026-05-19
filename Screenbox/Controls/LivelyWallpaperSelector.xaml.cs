@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core.ViewModels;
+using Screenbox.Lively.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

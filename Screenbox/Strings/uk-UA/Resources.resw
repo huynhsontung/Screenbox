@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Додати у чергу</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Вибрати</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Обрати все</value>
   </data>
@@ -353,7 +356,7 @@
     <value>Відкрити розташування файлу</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Відкрити за допомогою</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Альбом</value>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Вертикальне проведення для регулювання гучності</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Натискання будь-де для відтворення чи зупинки</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Медіапрогравач Screenbox</value>
   </data>
@@ -701,15 +701,15 @@
     <value>Субтитри додано</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Список відтворення «{0}» створено</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Список відтворення «{0}» видалено</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Список відтворення перейменовано на «{0}»</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -996,6 +996,48 @@
   <data name="Folder" xml:space="preserve">
     <value>Тека</value>
   </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>Натиснути</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>Провести вгору</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>Провести вниз</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>Провести вліво</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>Провести вправо</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Натисніть і утримуйте, щоб збільшити швидкість відтворення</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>Немає</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Відтворити/Пауза</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>Перемотати</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>Перемотати вперед</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>Зменшити гучність</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>Збільшити гучність</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>Зменшити швидкість</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>Збільшити швидкість</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Додати до списку відтворення</value>
   </data>
@@ -1004,6 +1046,12 @@
   </data>
   <data name="NewPlaylist" xml:space="preserve">
     <value>Новий список відтворення</value>
+  </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>Імпортувати список відтворення</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Експортувати</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Вибраний елемент</value>
@@ -1021,7 +1069,7 @@
     <value>Скасувати</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Список відтворення без назви</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
     <value>Введіть назву цього списку відтворення</value>
@@ -1058,11 +1106,17 @@
     <value>Очистити історію позицій відтворення пристрою</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Додано {0} елемент до списку відтворення «{1}»</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Додано {0} елементів до списку відтворення «{1}»</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>У вас немає жодного списку відтворення</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>Створіть свій перший список відтворення, щоб упорядкувати улюблені відео та музику.</value>
   </data>
 </root>

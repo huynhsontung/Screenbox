@@ -1,43 +1,63 @@
 ﻿using System;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Helpers;
 
 /// <summary>
-/// Provides <see langword="static"/> helper methods for converting a <see cref="KeyboardAccelerator"/> and its components
-/// into a localized string that is suitable for display to the user.
+/// Provides <see langword="static"/> helper methods for working with keyboard accelerators
+/// and related key information.
 /// </summary>
 public static class KeyboardAcceleratorHelper
 {
     /// <summary>The Equals (=) and Plus (+) key or button for any country/region (VK_OEM_PLUS).</summary>
     /// <remarks>
-    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
-    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
-    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
+    /// When used on an <b>AppBarButton</b>, <b>AppBarToggleButton</b>, <b>MenuFlyoutItem</b>
+    /// and derived controls, the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyboardAcceleratorPlacementMode</c> to
+    /// <see cref="KeyboardAcceleratorPlacementMode.Hidden"/> to prevent crashes.
     /// </remarks>
-    public const VirtualKey Plus = (VirtualKey)0xBB;
+    public const VirtualKey OemPlus = (VirtualKey)0xBB;
+
     /// <summary>The Comma (,) and Less Than (&lt;) key or button for any country/region (VK_OEM_COMMA).</summary>
     /// <remarks>
-    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
-    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
-    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
+    /// When used on an <b>AppBarButton</b>, <b>AppBarToggleButton</b>, <b>MenuFlyoutItem</b>
+    /// and derived controls, the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyboardAcceleratorPlacementMode</c> to
+    /// <see cref="KeyboardAcceleratorPlacementMode.Hidden"/> to prevent crashes.
     /// </remarks>
-    public const VirtualKey Comma = (VirtualKey)0xBC;
+    public const VirtualKey OemComma = (VirtualKey)0xBC;
+
     /// <summary>The Dash (-) and Underscore (_) key or button for any country/region (VK_OEM_MINUS).</summary>
     /// <remarks>
-    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
-    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
-    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
+    /// When used on an <b>AppBarButton</b>, <b>AppBarToggleButton</b>, <b>MenuFlyoutItem</b>
+    /// and derived controls, the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyboardAcceleratorPlacementMode</c> to
+    /// <see cref="KeyboardAcceleratorPlacementMode.Hidden"/> to prevent crashes.
     /// </remarks>
-    public const VirtualKey Minus = (VirtualKey)0xBD;
+    public const VirtualKey OemMinus = (VirtualKey)0xBD;
+
     /// <summary>The Period (.) and Greater Than (&gt;) key or button for any country/region (VK_OEM_PERIOD).</summary>
     /// <remarks>
-    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
-    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
-    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
+    /// When used on an <b>AppBarButton</b>, <b>AppBarToggleButton</b>, <b>MenuFlyoutItem</b>
+    /// and derived controls, the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyboardAcceleratorPlacementMode</c> to
+    /// <see cref="KeyboardAcceleratorPlacementMode.Hidden"/> to prevent crashes.
     /// </remarks>
-    public const VirtualKey Period = (VirtualKey)0xBE;
+    public const VirtualKey OemPeriod = (VirtualKey)0xBE;
+
+    /// <summary>
+    /// Gets a value that indicates whether the Control key is currently pressed down.
+    /// </summary>
+    /// <value><see langword="true"/> if the control key is pressed down; otherwise, <see langword="false"/>.</value>
+    public static bool IsControlKeyDown => GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+
+    /// <summary>
+    /// Gets a value that indicates whether the Shift key is currently pressed down.
+    /// </summary>
+    /// <value><see langword="true"/> if the shift key is pressed down; otherwise, <see langword="false"/>.</value>
+    public static bool IsShiftKeyDown => GetKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
 
     /// <summary>
     /// Converts the value of the specified <see cref="KeyboardAccelerator"/> to its equivalent
@@ -196,5 +216,11 @@ public static class KeyboardAcceleratorHelper
             VirtualKeyModifiers.Windows => Strings.KeyboardResources.VirtualKeyModifiersWindows,
             _ => string.Empty
         };
+    }
+
+    private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
+    {
+        var window = CoreWindow.GetForCurrentThread();
+        return window is null ? CoreVirtualKeyStates.None : window.GetKeyState(key);
     }
 }

@@ -2,9 +2,10 @@
     x:Class="Screenbox.Controls.LivelyWallpaperSelector"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:Screenbox.Core.Models"
+    xmlns:models="using:Screenbox.Lively.Models"
     xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="300"
@@ -62,10 +63,11 @@
                     <Grid
                         Width="112"
                         Height="96"
+                        AutomationProperties.Name="{x:Bind converters:DefaultStringConverter.GetValueOrDefault(Model.Title)}"
                         FlowDirection="LeftToRight"
-                        ToolTipService.ToolTip="{x:Bind Model.Title, FallbackValue={x:Null}}">
+                        ToolTipService.ToolTip="{x:Bind converters:DefaultStringConverter.GetValueOrDefault(Model.Title)}">
                         <Grid.Background>
-                            <ImageBrush ImageSource="{Binding PreviewPath, FallbackValue={x:Null}}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{x:Bind PreviewPath, FallbackValue={x:Null}}" Stretch="UniformToFill" />
                         </Grid.Background>
                         <Grid.ContextFlyout>
                             <MenuFlyout>

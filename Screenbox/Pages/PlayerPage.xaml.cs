@@ -100,7 +100,6 @@ public sealed partial class PlayerPage : Page
             return;
         }
 
-        bool handled = true;
         bool shouldHideControls = ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default };
 
         switch (e.Key)
@@ -108,21 +107,19 @@ public sealed partial class PlayerPage : Page
             case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
                 ViewModel.ControlsHidden = false;
                 PlayQueueFlyout.ShowAt(PlayQueueButton,
-                    new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.BottomEdgeAlignedRight : FlyoutPlacementMode.BottomEdgeAlignedLeft });
+                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.BottomEdgeAlignedLeft) });
                 break;
             case VirtualKey.GamepadMenu:
                 VideoView.ContextFlyout.ShowAt(PlayerControls,
-                    new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
+                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
                 break;
             case VirtualKey.GamepadB when shouldHideControls:
-                handled = ViewModel.TryHideControls();
+                ViewModel.TryHideControls(true);
                 break;
             default:
                 base.OnKeyDown(e);
                 return;
         }
-
-        e.Handled = handled;
     }
 
     private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -482,17 +479,25 @@ public sealed partial class PlayerPage : Page
 
     private void LayoutRoot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        var coreWindow = Window.Current.CoreWindow;
-        bool isControlKeyDown = coreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
-        bool isShiftKeyDown = coreWindow.GetKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
-        if (e.OriginalKey == VirtualKey.Space && !isControlKeyDown && !isShiftKeyDown && !e.KeyStatus.IsMenuKeyDown)
+        if (e.OriginalKey == VirtualKey.Space &&
+            !KeyboardAcceleratorHelper.IsControlKeyDown &&
+            !KeyboardAcceleratorHelper.IsShiftKeyDown &&
+            !e.KeyStatus.IsMenuKeyDown)
         {
             e.Handled = true;
-            // Only trigger once when Space is held down
-            if (!e.KeyStatus.WasKeyDown)
-            {
-                ViewModel.TogglePlayPause();
-            }
+            ViewModel.ProcessSpaceKeyDown();
+        }
+    }
+
+    private void LayoutRoot_OnPreviewKeyUp(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.OriginalKey == VirtualKey.Space &&
+            !KeyboardAcceleratorHelper.IsControlKeyDown &&
+            !KeyboardAcceleratorHelper.IsShiftKeyDown &&
+            !e.KeyStatus.IsMenuKeyDown)
+        {
+            e.Handled = true;
+            ViewModel.ProcessSpaceKeyUp();
         }
     }
 
@@ -569,12 +574,19 @@ public sealed partial class PlayerPage : Page
         args.Handled = await TryDeleteCurrentMediaFileAsync(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
     }
 
-    private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    private void EscapeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.ViewMode == WindowViewMode.Default)
+        switch (ViewModel.ViewMode)
         {
-            ViewModel.TryHideControls();
-            args.Handled = true;
+            case WindowViewMode.Compact:
+            case WindowViewMode.FullScreen:
+                ViewModel.GoBack();
+                args.Handled = true;
+                break;
+            case WindowViewMode.Default:
+                ViewModel.TryHideControls();
+                args.Handled = true;
+                break;
         }
     }
 }

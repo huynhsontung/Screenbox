@@ -7,11 +7,11 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
+using Screenbox.Lively.Helpers;
+using Screenbox.Lively.Models;
 using Windows.Storage;
 
-namespace Screenbox.Core.Services;
+namespace Screenbox.Lively.Services;
 
 // Copyright (c) Dani John
 // Licensed under the GNU General Public License v3.0.

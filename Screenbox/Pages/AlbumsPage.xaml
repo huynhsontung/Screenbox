@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -224,13 +224,13 @@
                 </VisualState>
             </VisualStateGroup>
 
-            <VisualStateGroup x:Name="SystemEffectsStates">
-                <VisualState x:Name="AnimationsEnabled">
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="RightToLeft">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind Common.AnimationsEnabled, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AlbumGridView.(ctAnimations:ItemsReorderAnimation.Duration)" Value="{StaticResource ControlNormalAnimationDuration}" />
+                        <Setter Target="SortByFlyout.Placement" Value="BottomEdgeAlignedLeft" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

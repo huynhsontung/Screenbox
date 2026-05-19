@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -581,7 +581,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         switch (value)
         {
             case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
-                var fileMedia = _mediaFactory.GetSingleton(file);
+                var fileMedia = _mediaFactory.GetOrCreate(file);
                 CreatePlaylistAndPlay(fileMedia);
                 result = await _mediaListFactory.ParseMediaListAsync(file);
                 break;
@@ -591,13 +591,13 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
                 break;
 
             case StorageFile file:
-                var fileMedia0 = _mediaFactory.GetSingleton(file);
+                var fileMedia0 = _mediaFactory.GetOrCreate(file);
                 CreatePlaylistAndPlay(fileMedia0);
                 result = await _mediaListFactory.ParseMediaListAsync(file);
                 break;
 
             case Uri uri:
-                var uriMedia = _mediaFactory.GetTransient(uri);
+                var uriMedia = _mediaFactory.Create(uri);
                 CreatePlaylistAndPlay(uriMedia);
                 result = await _mediaListFactory.ParseMediaListAsync(uri);
                 break;

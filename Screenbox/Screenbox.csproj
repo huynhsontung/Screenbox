@@ -146,6 +146,7 @@
     <Compile Include="Behaviors\GroupingOverviewBehavior.cs" />
     <Compile Include="Behaviors\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Behaviors\ListViewContextRequestedEventArgs.cs" />
+    <Compile Include="Behaviors\ListViewSelectionBehavior.cs" />
     <Compile Include="Behaviors\MediaListViewItemBehavior.cs" />
     <Compile Include="Behaviors\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Behaviors\SettingsExpanderXYNavigationBehavior.cs" />
@@ -185,6 +186,9 @@
     </Compile>
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
     <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.Properties.cs" />
+    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableViewAutomationPeer.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -253,6 +257,7 @@
     <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
+    <Compile Include="Helpers\ItemLabelHelper.cs" />
     <Compile Include="Helpers\KeyboardAcceleratorHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
@@ -459,7 +464,6 @@
     <Content Include="Assets\Visualizers\Music Tunnel\styles\style.css" />
     <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
     <None Include="Package.StoreAssociation.xml" />
-    <None Include="packages.lock.json" />
     <None Include="InvalidXamlResources.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="Secrets.cs.template" />
@@ -575,6 +579,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MediaListViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentUnavailableView\ContentUnavailableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -818,6 +826,10 @@
     <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj">
       <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
       <Name>Screenbox.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Screenbox.Lively\Screenbox.Lively.csproj">
+      <Project>{9b443f29-bff0-45b7-8a84-ee88cd5ae405}</Project>
+      <Name>Screenbox.Lively</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -12,15 +12,18 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
+using Screenbox.Lively.Helpers;
+using Screenbox.Lively.Models;
+using Screenbox.Lively.Services;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 
-namespace Screenbox.Core.ViewModels;
+namespace Screenbox.Lively.ViewModels;
 
 public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,

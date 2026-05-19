@@ -19,89 +19,8 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!--  Library-is-empty content  -->
-        <Grid
-            x:Name="HeaderGrid"
-            Grid.Row="0"
-            MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource ContentPagePadding}"
-            Visibility="Collapsed">
-            <TextBlock Style="{StaticResource TitleMediumTextBlockStyle}" Text="{strings:Resources Key=Music}" />
-        </Grid>
-
-        <Grid
-            x:Name="NoMusicPanel"
-            Grid.Row="1"
-            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource ContentPagePadding}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            ColumnSpacing="32"
-            Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.ChildrenTransitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition />
-                </TransitionCollection>
-            </Grid.ChildrenTransitions>
-
-            <FontIcon
-                x:Name="NoMusicPanelIcon"
-                Grid.Column="0"
-                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                FontSize="{StaticResource NoContentPanelIconFontSize}"
-                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="{StaticResource AudioOffGlyph}" />
-
-            <StackPanel
-                Grid.Column="1"
-                MaxWidth="420"
-                VerticalAlignment="Center"
-                Orientation="Vertical">
-                <TextBlock
-                    Margin="0,0,0,4"
-                    Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{strings:Resources Key=NoMusicPanelHeader}" />
-
-                <TextBlock
-                    Margin="{StaticResource BottomMediumMargin}"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{strings:Resources Key=NoMusicPanelSubtext}"
-                    TextWrapping="Wrap" />
-
-                <Button
-                    AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
-                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
-                    Command="{x:Bind ViewModel.AddFolderCommand}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
-                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon
-                            x:Name="NoMusicPanelAddFolderButtonIcon"
-                            Margin="{StaticResource IconButtonStandardIconMargin}"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource NewFolderGlyph}" />
-                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-        </Grid>
-
-        <!--  Library content  -->
         <muxc:NavigationView
             x:Name="LibraryNavView"
-            Grid.Row="0"
-            Grid.RowSpan="2"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
             PaneDisplayMode="Top"
@@ -125,18 +44,21 @@
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
+                    x:Name="SongsMenuItem"
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemSongsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Songs}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="songs" />
                 <muxc:NavigationViewItem
+                    x:Name="AlbumsMenuItem"
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemAlbumsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Albums}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="albums" />
                 <muxc:NavigationViewItem
+                    x:Name="ArtistsMenuItem"
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemArtistsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Artists}"
@@ -172,6 +94,47 @@
 
             <Grid Margin="{StaticResource TopLargeMargin}">
                 <Frame x:Name="ContentFrame" Navigated="ContentFrame_OnNavigated" />
+                <!--  Empty library  -->
+                <ScrollViewer
+                    x:Name="NoMusicViewer"
+                    Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+                    Padding="{StaticResource ContentPagePadding}"
+                    HorizontalScrollBarVisibility="Disabled"
+                    HorizontalScrollMode="Disabled"
+                    VerticalScrollBarVisibility="Auto"
+                    Visibility="Collapsed">
+                    <controls:ContentUnavailableView
+                        x:Name="NoMusicPanel"
+                        Title="{x:Bind strings:Resources.NoMusicPanelHeader}"
+                        IsOpen="False"
+                        Message="{x:Bind strings:Resources.NoMusicPanelSubtext}">
+                        <FontIcon
+                            x:Name="NoMusicPanelIcon"
+                            Margin="0,0,16,0"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            FontSize="{StaticResource NoContentPanelIconFontSize}"
+                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                            Glyph="{StaticResource AudioOffGlyph}" />
+                        <controls:ContentUnavailableView.ActionContent>
+                            <Button
+                                AccessKey="{x:Bind strings:KeyboardResources.CommandAddFolderKey}"
+                                AutomationProperties.Name="{x:Bind strings:Resources.AddFolder}"
+                                Command="{x:Bind ViewModel.AddFolderCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                ToolTipService.ToolTip="{x:Bind strings:Resources.AddMusicFolderToolTip}"
+                                Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon
+                                        x:Name="NoMusicPanelAddFolderButtonIcon"
+                                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                        Glyph="{StaticResource NewFolderGlyph}" />
+                                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
+                                </StackPanel>
+                            </Button>
+                        </controls:ContentUnavailableView.ActionContent>
+                    </controls:ContentUnavailableView>
+                </ScrollViewer>
             </Grid>
         </muxc:NavigationView>
 
@@ -180,12 +143,16 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="NoMusic">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.HasContent, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.HasContent, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Visibility" Value="Visible" />
-                        <Setter Target="NoMusicPanel.Visibility" Value="Visible" />
-                        <Setter Target="LibraryNavView.Visibility" Value="Collapsed" />
+                        <Setter Target="SongsMenuItem.Visibility" Value="Collapsed" />
+                        <Setter Target="AlbumsMenuItem.Visibility" Value="Collapsed" />
+                        <Setter Target="ArtistsMenuItem.Visibility" Value="Collapsed" />
+                        <Setter Target="HeaderAddFolderButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ContentFrame.Visibility" Value="Collapsed" />
+                        <Setter Target="NoMusicViewer.Visibility" Value="Visible" />
+                        <Setter Target="NoMusicPanel.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -198,13 +165,12 @@
                         <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="NoMusicPanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="NoMusicPanel.ColumnSpacing" Value="16" />
-                        <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
-                        <Setter Target="HeaderNavView.Margin" Value="16,0" />
+                        <Setter Target="HeaderNavView.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="NoMusicViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoMusicPanelIcon.Margin" Value="0,0,0,0" />
+                        <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

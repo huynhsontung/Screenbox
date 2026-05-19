@@ -223,6 +223,9 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>添加到队列</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>全选</value>
   </data>
@@ -317,7 +320,7 @@
     <value>主页</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>选择多个</value>
+    <value>多选</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>我们找不到任何音乐</value>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>垂直拖动以调节音量</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>点击任意位置进行播放或暂停</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox 媒体播放器</value>
   </data>
@@ -996,6 +996,48 @@
   <data name="Folder" xml:space="preserve">
     <value>文件夹</value>
   </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>Tap</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>Swipe up</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>Swipe down</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>Swipe left</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>Swipe right</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Enable press and hold to increase playback speed</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>Nothing</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Play/pause</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>Rewind</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>Fast forward</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>Decrease volume</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>Increase volume</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>Decrease speed</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>Increase speed</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>添加到播放列表</value>
   </data>
@@ -1004,6 +1046,12 @@
   </data>
   <data name="NewPlaylist" xml:space="preserve">
     <value>新建播放列表</value>
+  </data>
+  <data name="ImportPlaylist" xml:space="preserve">
+    <value>导入播放列表</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>选中的项目</value>
@@ -1064,5 +1112,11 @@
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
     <value>{0} 向播放列表添加 "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
+  </data>
+  <data name="NoPlaylistsPanelHeader" xml:space="preserve">
+    <value>您没有播放列表</value>
+  </data>
+  <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
+    <value>创建您的第一个播放列表，来整理您喜爱的视频和音乐。</value>
   </data>
 </root>

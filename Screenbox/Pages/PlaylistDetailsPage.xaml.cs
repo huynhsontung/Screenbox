@@ -8,9 +8,10 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
-using Screenbox.Dialogs;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
+using Screenbox.Dialogs;
+using Screenbox.Strings;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -227,5 +228,11 @@ public sealed partial class PlaylistDetailsPage : Page
                 Frame.GoBack();
             }
         }
+    }
+
+    [RelayCommand]
+    private async Task ExportPlaylistAsync()
+    {
+        await ViewModel.ExportPlaylistAsync(ManifestResources.FileDisplayNameM3U8);
     }
 }

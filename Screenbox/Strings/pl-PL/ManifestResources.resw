@@ -143,11 +143,11 @@
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>Audio AIFF</value>
+    <value>Dźwięk AIFF</value>
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>Skompresowany dźwięk AIFF</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
@@ -239,7 +239,7 @@
     <comment>Display name for the file type ".ogv"</comment>
   </data>
   <data name="FileDisplayNameOggMedia" xml:space="preserve">
-    <value>Ogg Media File</value>
+    <value>Plik Ogg</value>
     <comment>Display name for the file type ".ogm"</comment>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">

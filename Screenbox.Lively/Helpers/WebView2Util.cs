@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Windows.System;
 
-namespace Screenbox.Core.Helpers;
+namespace Screenbox.Lively.Helpers;
 
 // Copyright (c) Dani John
 // Licensed under the GNU General Public License v3.0.

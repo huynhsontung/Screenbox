@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -40,7 +39,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<ShowPlayPauseBadgeMessage>,
     IRecipient<OverrideControlsHideDelayMessage>,
     IRecipient<DragDropMessage>,
-    IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
+    IRecipient<VisualizerChangedMessage>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
 {
     private const VirtualKey VK_OEM_PLUS = (VirtualKey)0xBB;
@@ -62,6 +61,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
+    [NotifyPropertyChangedFor(nameof(IsPlayerVisibilityVisible))]
     private PlayerVisibilityState _playerVisibility;
 
     [ObservableProperty]
@@ -72,6 +72,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public Func<double, string>? GetVolumeChangeStatusMessage { get; set; }
 
+    public bool IsPlayerVisibilityVisible => PlayerVisibility is PlayerVisibilityState.Visible;
+
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly DispatcherQueue _dispatcherQueue;
@@ -79,6 +81,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _controlsVisibilityTimer;
     private readonly DispatcherQueueTimer _statusMessageTimer;
     private readonly DispatcherQueueTimer _playPauseBadgeTimer;
+    private readonly DispatcherQueueTimer _spaceKeyHoldTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
     private readonly IFilesService _filesService;
@@ -86,6 +89,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private bool _visibilityOverride;
     private bool _resizeNext;
     private DateTimeOffset _lastUpdated;
+    private bool _isSpaceKeyHolding;
+    private double? _playbackRateBeforeHold;
 
     public PlayerPageViewModel(IWindowService windowService,
         ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext)
@@ -99,6 +104,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
         _statusMessageTimer = _dispatcherQueue.CreateTimer();
         _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
+        _spaceKeyHoldTimer = _dispatcherQueue.CreateTimer();
         _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         _playerVisibility = PlayerVisibilityState.Hidden;
         _lastUpdated = DateTimeOffset.MinValue;
@@ -121,10 +127,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         await OnDropAsync(message.Data);
     }
 
-    public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
+    public void Receive(VisualizerChangedMessage message)
     {
-        if (message.NewValue == null) return;
-        ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.NewValue.Path);
+        if (message.Path is null) return;
+        ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.Path);
     }
 
     public void Receive(TogglePlayerVisibilityMessage message)
@@ -178,13 +184,13 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             StatusMessage = message.Value;
-            if (message.Value == null)
+            if (message.Value is null || message.Duration == System.Threading.Timeout.InfiniteTimeSpan)
             {
                 _statusMessageTimer.Stop();
                 return;
             }
 
-            _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
+            _statusMessageTimer.Debounce(() => StatusMessage = null, message.Duration);
         });
     }
 
@@ -275,7 +281,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool OnPlayerClick()
     {
-        if (!ControlsHidden) return !_settingsService.PlayerTapGesture && TryHideControls(true);
+        if (!ControlsHidden) return (_settingsService.PlayerGestureTap == PlaybackActionKind.None) && TryHideControls(true);
         ControlsHidden = false;
         DelayHideControls();
         return true;
@@ -290,9 +296,66 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         DelayHideControls();
     }
 
-    public void TogglePlayPause()
+    /// <summary>
+    /// Initiates the space key hold behavior, temporarily accelerating playback
+    /// rate while the key is pressed.
+    /// </summary>
+    /// <remarks>
+    /// If the media is <see cref="MediaPlaybackState.Paused"/>, the hold behavior
+    /// is not available. To activate the hold behavior, the space key needs to be
+    /// pressed and held down for at least 500 milliseconds.
+    /// </remarks>
+    public void ProcessSpaceKeyDown()
     {
-        Messenger.Send(new TogglePlayPauseMessage(true));
+        const double HoldingSpeed = 2.0;
+
+        if (!_settingsService.PlayerGesturePressAndHold ||
+            _isSpaceKeyHolding ||
+            MediaPlayer is null || MediaPlayer.PlaybackState is MediaPlaybackState.Paused)
+            return;
+
+        _spaceKeyHoldTimer.Debounce(() =>
+        {
+            _playbackRateBeforeHold = MediaPlayer.PlaybackRate;
+            // If the rate is already faster than the holding speed, set it to twice the holding speed.
+            double effectiveHoldingSpeed = MediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
+            if (MediaPlayer.PlaybackRate != effectiveHoldingSpeed)
+            {
+                Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
+            }
+
+            _isSpaceKeyHolding = true;
+        }, TimeSpan.FromMilliseconds(500));
+    }
+
+    /// <summary>
+    /// Interprets the release of the space key to either toggle playback or revert
+    /// to the original playback rate.
+    /// </summary>
+    /// <remarks>
+    /// If the space key is pressed and released quickly, toggles playback state;
+    /// if held, restores the original playback rate.
+    /// </remarks>
+    public void ProcessSpaceKeyUp()
+    {
+        _spaceKeyHoldTimer.Stop();
+
+        if (!_isSpaceKeyHolding)
+        {
+            Messenger.Send(new TogglePlayPauseMessage(true));
+        }
+        else
+        {
+            if (_playbackRateBeforeHold.HasValue && MediaPlayer is not null && MediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
+            {
+                Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
+            }
+
+            _playbackRateBeforeHold = null;
+            _isSpaceKeyHolding = false;
+        }
     }
 
     /// <summary>
@@ -491,7 +554,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
 
         double rate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(MediaPlayer.PlaybackRate + rateDelta, 0.25, 4)));
-        Messenger.Send(new UpdateStatusMessage($"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×"));
+        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(rate)));
         return true;
     }
 

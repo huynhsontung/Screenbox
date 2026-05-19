@@ -1,4 +1,4 @@
-﻿namespace Screenbox.Core.Enums;
+﻿namespace Screenbox.Lively.Enums;
 
 // Copyright (c) Dani John
 // Licensed under the GNU General Public License v3.0.

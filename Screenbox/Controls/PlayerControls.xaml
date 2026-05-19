@@ -568,7 +568,6 @@
                     MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" Modifiers="Control" />
-                    <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
             </Button>
             <!--  Fullscreen  -->
@@ -587,7 +586,6 @@
                     MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
-                    <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
             </Button>
             <!--  More  -->

@@ -16,26 +16,36 @@ public sealed class MediaViewModelFactory
 {
     private readonly IPlayerService _playerService;
     private readonly PlayerContext _playerContext;
-    private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
-    private int _referencesCleanUpThreshold = 1000;
+    private readonly LibraryContext _libraryContext;
 
-    public MediaViewModelFactory(IPlayerService playerService, PlayerContext playerContext)
+    public MediaViewModelFactory(IPlayerService playerService, PlayerContext playerContext, LibraryContext libraryContext)
     {
         _playerService = playerService;
         _playerContext = playerContext;
+        _libraryContext = libraryContext;
     }
 
-    public MediaViewModel GetTransient(StorageFile file)
+    /// <summary>
+    /// Always creates a new <see cref="MediaViewModel"/> without any lookup.
+    /// Use this when building a library snapshot.
+    /// </summary>
+    public MediaViewModel Create(StorageFile file)
     {
         return new MediaViewModel(_playerContext, _playerService, file);
     }
 
-    public MediaViewModel GetTransient(Uri uri)
+    /// <summary>
+    /// Always creates a new <see cref="MediaViewModel"/> without any lookup.
+    /// </summary>
+    public MediaViewModel Create(Uri uri)
     {
         return new MediaViewModel(_playerContext, _playerService, uri);
     }
 
-    public MediaViewModel GetTransient(Media media)
+    /// <summary>
+    /// Always creates a new <see cref="MediaViewModel"/> without any lookup.
+    /// </summary>
+    public MediaViewModel Create(Media media)
     {
         if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
             return new MediaViewModel(_playerContext, _playerService, media);
@@ -52,86 +62,69 @@ public sealed class MediaViewModelFactory
         return vm;
     }
 
-    public MediaViewModel GetSingleton(StorageFile file)
+    /// <summary>
+    /// Returns an existing <see cref="MediaViewModel"/> from the current library state if found,
+    /// otherwise creates a new one. Callers in the library service should use <see cref="Create"/> instead.
+    /// </summary>
+    public MediaViewModel GetOrCreate(StorageFile file)
     {
-        string id = file.Path;
-        if (TryGetSingleton(id, out MediaViewModel? instance) && instance != null)
+        string location = file.Path;
+        var existing = FindByLocation(_libraryContext.Music.Songs, location)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
+        if (existing != null)
         {
-            // Prefer storage file source
-            if (instance.Source is not IStorageFile)
-            {
-                instance.UpdateSource(file);
-            }
-
-            return instance;
+            if (existing.Source is not IStorageFile)
+                existing.UpdateSource(file);
+            return existing;
         }
 
+        return new MediaViewModel(_playerContext, _playerService, file);
+    }
 
-        // No existing reference, create new instance
-        instance = new MediaViewModel(_playerContext, _playerService, file);
-        if (!string.IsNullOrEmpty(id))
+    /// <summary>
+    /// Returns an existing <see cref="MediaViewModel"/> from the current library state if found,
+    /// otherwise creates a new one.
+    /// </summary>
+    public MediaViewModel GetOrCreate(Uri uri)
+    {
+        string location = uri.OriginalString;
+        var existing = FindByLocation(_libraryContext.Music.Songs, location)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
+        return existing ?? new MediaViewModel(_playerContext, _playerService, uri);
+    }
+
+    public bool TryGetOrCreate(StorageFile file, out MediaViewModel? mediaViewModel)
+    {
+        string location = file.Path;
+        mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
+                         ?? FindByLocation(_libraryContext.Videos.Videos, location);
+        if (mediaViewModel == null)
         {
-            _references[id] = new WeakReference<MediaViewModel>(instance);
-            CleanUpStaleReferences();
+            mediaViewModel = new MediaViewModel(_playerContext, _playerService, file);
+            return false;
         }
 
-        return instance;
+        return true;
     }
 
-    public MediaViewModel GetSingleton(Uri uri)
+    public bool TryGetOrCreate(Uri uri, out MediaViewModel? mediaViewModel)
     {
-        string id = uri.OriginalString;
-        if (TryGetSingleton(id, out MediaViewModel? instance) && instance != null)
-            return instance;
-
-        // No existing reference, create new instance
-        instance = new MediaViewModel(_playerContext, _playerService, uri);
-        if (!string.IsNullOrEmpty(id))
+        string location = uri.OriginalString;
+        mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
+                         ?? FindByLocation(_libraryContext.Videos.Videos, location);
+        if (mediaViewModel == null)
         {
-            _references[id] = new WeakReference<MediaViewModel>(instance);
-            CleanUpStaleReferences();
+            mediaViewModel = new MediaViewModel(_playerContext, _playerService, uri);
+            return false;
         }
 
-        return instance;
+        return true;
     }
 
-    public bool TryGetSingleton(StorageFile file, out MediaViewModel? mediaViewModel)
+    private static MediaViewModel? FindByLocation(IReadOnlyList<MediaViewModel> mediaList, string location)
     {
-        string id = file.Path;
-        return TryGetSingleton(id, out mediaViewModel);
-    }
-
-    public bool TryGetSingleton(Uri uri, out MediaViewModel? mediaViewModel)
-    {
-        string id = uri.OriginalString;
-        return TryGetSingleton(id, out mediaViewModel);
-    }
-
-    private bool TryGetSingleton(string id, out MediaViewModel? mediaViewModel)
-    {
-        mediaViewModel = null;
-        if (!string.IsNullOrWhiteSpace(id) &&
-            _references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
-            reference.TryGetTarget(out MediaViewModel instance))
-        {
-            mediaViewModel = instance;
-            return true;
-        }
-
-        return false;
-    }
-
-    private void CleanUpStaleReferences()
-    {
-        if (_references.Count < _referencesCleanUpThreshold) return;
-        string[] keysToRemove = _references
-            .Where(pair => !pair.Value.TryGetTarget(out MediaViewModel _))
-            .Select(pair => pair.Key).ToArray();
-        foreach (string key in keysToRemove)
-        {
-            _references.Remove(key);
-        }
-
-        _referencesCleanUpThreshold = Math.Max(_references.Count * 2, _referencesCleanUpThreshold);
+        return mediaList.FirstOrDefault(vm =>
+            vm.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
     }
 }
+

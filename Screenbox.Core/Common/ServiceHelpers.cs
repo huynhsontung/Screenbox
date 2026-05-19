@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Controllers;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
@@ -36,11 +36,10 @@ public static class ServiceHelpers
         services.AddTransient<AllVideosPageViewModel>();
         services.AddTransient<MusicPageViewModel>();
         services.AddTransient<SearchResultPageViewModel>();
-        services.AddTransient<LivelyWallpaperPlayerViewModel>();
-        services.AddTransient<LivelyWallpaperSelectorViewModel>();
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<PlaylistsPageViewModel>();
+        services.AddTransient<SelectionViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist
@@ -51,6 +50,7 @@ public static class ServiceHelpers
         services.AddTransient<ArtistViewModelFactory>();
         services.AddTransient<AlbumViewModelFactory>();
         services.AddSingleton<IMediaListFactory, MediaListFactory>();
+        services.AddSingleton<IPlaylistViewModelFactory, PlaylistViewModelFactory>();
 
         // Contexts
         services.AddSingleton<PlayerContext>();
@@ -58,9 +58,9 @@ public static class ServiceHelpers
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
 
-        // Controllers
-        services.AddSingleton<LibraryController>();
-        services.AddSingleton<LastPositionTracker>();
+        // Coordinators
+        services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
+        services.AddSingleton<ILastPositionTracker, LastPositionTracker>();
 
         // Services
         services.AddSingleton<IPlayerService, PlayerService>();
@@ -71,7 +71,6 @@ public static class ServiceHelpers
         services.AddSingleton<ICastService, CastService>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
-        services.AddSingleton<ILivelyWallpaperService, LivelyWallpaperService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
         services.AddSingleton<IPlaylistService, PlaylistService>();
     }
