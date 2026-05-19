@@ -130,6 +130,7 @@
     <Compile Include="Contexts\CastContext.cs" />
     <Compile Include="Contexts\LibraryContext.cs" />
     <Compile Include="Contexts\PlaylistsContext.cs" />
+    <Compile Include="Contexts\WindowContext.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlaybackActionKind.cs" />

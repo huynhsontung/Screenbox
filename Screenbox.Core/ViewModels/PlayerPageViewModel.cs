@@ -11,7 +11,6 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -40,7 +39,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<OverrideControlsHideDelayMessage>,
     IRecipient<DragDropMessage>,
     IRecipient<VisualizerChangedMessage>,
-    IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+    IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
+    IRecipient<PropertyChangedMessage<WindowViewMode>>
 {
     private const VirtualKey VK_OEM_PLUS = (VirtualKey)0xBB;
     private const VirtualKey VK_OEM_COMMA = (VirtualKey)0xBC;
@@ -58,6 +58,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
     [ObservableProperty] private MediaViewModel? _media;
     [ObservableProperty] private bool _showVisualizer;
+
+    /// <summary>
+    /// Set to <see langword="true"/> by the view model to signal the view to close the play queue flyout.
+    /// The view should reset this to <see langword="false"/> after closing the flyout.
+    /// </summary>
+    [ObservableProperty] private bool _shouldClosePlayQueueFlyout;
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
@@ -93,7 +99,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private double? _playbackRateBeforeHold;
 
     public PlayerPageViewModel(IWindowService windowService,
-        ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext)
+        ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext,
+        INavigationService navigationService)
     {
         _windowService = windowService;
         _settingsService = settingsService;
@@ -110,7 +117,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _lastUpdated = DateTimeOffset.MinValue;
 
         FocusManager.GotFocus += FocusManagerOnFocusChanged;
-        _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
+
+        // Subscribe here so navigation-triggered player dismissal is handled in the ViewModel
+        // rather than in page code-behind, keeping UI logic out of the view layer.
+        navigationService.Navigated += OnNavigationServiceNavigated;
 
         if (MediaPlayer != null)
         {
@@ -151,12 +161,17 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         NavigationViewDisplayMode = message.NewValue;
     }
 
-    private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
+    public void Receive(PropertyChangedMessage<WindowViewMode> message)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            ViewMode = e.NewValue;
-        });
+        if (message.Sender is not WindowContext) return;
+        _dispatcherQueue.TryEnqueue(() => ViewMode = message.NewValue);
+    }
+
+    private void OnNavigationServiceNavigated(object sender, EventArgs e)
+    {
+        if (PlayerVisibility != PlayerVisibilityState.Visible) return;
+        GoBack();
+        ShouldClosePlayQueueFlyout = true;
     }
 
     public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
