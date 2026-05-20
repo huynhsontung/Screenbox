@@ -27,6 +27,8 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class SettingsPageViewModel : ObservableRecipient
 {
     [ObservableProperty] private int _playerAutoResize;
+    [ObservableProperty] private int _playerRewindStep;
+    [ObservableProperty] private int _playerFastForwardStep;
     [ObservableProperty] private PlaybackActionKind _playerGestureTap;
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeUp;
     [ObservableProperty] private PlaybackActionKind _playerGestureSwipeDown;
@@ -61,9 +63,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public List<LanguageInfo> AvailableLanguages { get; }
 
-    public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
+    public IReadOnlyList<int> PlayerSeekStepOptions { get; } = new[] { 5, 10, 15, 20, 30 };
 
-    public PlaybackActionKind[] GestureOptions { get; }
+    public IReadOnlyList<int> PlayerControlsHideDelayOptions { get; } = new[] { 1, 2, 3, 4, 5 };
+
+    public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
 
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
@@ -106,8 +110,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             .Prepend(new LanguageInfo(string.Empty, string.Empty))
             .ToList();
 
-        GestureOptions = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
-
         if (SystemInformation.IsXbox)
         {
             _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
@@ -118,6 +120,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         // Load values
         _playerAutoResize = (int)_settingsService.PlayerAutoResize;
+        _playerRewindStep = _settingsService.PlayerRewindStep;
+        _playerFastForwardStep = _settingsService.PlayerFastForwardStep;
         _playerGestureTap = _settingsService.PlayerGestureTap;
         _playerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
         _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
@@ -186,6 +190,18 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         _settingsService.PlayerAutoResize = (PlayerAutoResizeOption)value;
         Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerRewindStepChanged(int value)
+    {
+        _settingsService.PlayerRewindStep = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerRewindStep), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnPlayerFastForwardStepChanged(int value)
+    {
+        _settingsService.PlayerFastForwardStep = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(PlayerFastForwardStep), typeof(SettingsPageViewModel)));
     }
 
     partial void OnPlayerGestureTapChanged(PlaybackActionKind value)

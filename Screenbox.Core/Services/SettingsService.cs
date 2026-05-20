@@ -35,6 +35,8 @@ public sealed class SettingsService : ISettingsService
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
+    private const string PlayerRewindStepKey = "Player/RewindStep";
+    private const string PlayerFastForwardStepKey = "Player/FastForwardStep";
     private const string PlayerGestureTapKey = "Player/Gesture/Tap";
     private const string PlayerGestureSwipeUpKey = "Player/Gesture/SwipeUp";
     private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
@@ -164,6 +166,18 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PrivacyPersistPlaybackPosition, value);
     }
 
+    public int PlayerRewindStep
+    {
+        get => GetValue<int>(PlayerRewindStepKey);
+        set => SetValue(PlayerRewindStepKey, value);
+    }
+
+    public int PlayerFastForwardStep
+    {
+        get => GetValue<int>(PlayerFastForwardStepKey);
+        set => SetValue(PlayerFastForwardStepKey, value);
+    }
+
     public PlaybackActionKind PlayerGestureTap
     {
         get => (PlaybackActionKind)GetValue<int>(PlayerGestureTapKey);
@@ -229,6 +243,8 @@ public sealed class SettingsService : ISettingsService
         SetDefault(GlobalArgumentsKey, string.Empty);
         SetDefault(PlayerShowChaptersKey, true);
         SetDefault(PrivacyPersistPlaybackPosition, true);
+        SetDefault(PlayerRewindStepKey, 5);
+        SetDefault(PlayerFastForwardStepKey, 5);
         SetDefault(PlayerGestureTapKey, (int)PlaybackActionKind.PlayPause);
         SetDefault(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.IncreaseVolume);
         SetDefault(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.DecreaseVolume);
