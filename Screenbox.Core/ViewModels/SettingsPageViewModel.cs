@@ -63,11 +63,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public List<LanguageInfo> AvailableLanguages { get; }
 
-    public int[] PlayerSeekStepOptions { get; }
+    public IReadOnlyList<int> PlayerSeekStepOptions { get; } = new[] { 5, 10, 15, 20, 30 };
 
-    public int[] PlayerControlsHideDelayOptions { get; }
+    public IReadOnlyList<int> PlayerControlsHideDelayOptions { get; } = new[] { 1, 2, 3, 4, 5 };
 
-    public PlaybackActionKind[] GestureOptions { get; }
+    public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
 
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
@@ -112,10 +112,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
             .Prepend(new LanguageInfo(string.Empty, string.Empty))
             .ToList();
-
-        PlayerSeekStepOptions = new int[] { 5, 10, 15, 20, 30 };
-        PlayerControlsHideDelayOptions = new int[] { 1, 2, 3, 4, 5 };
-        GestureOptions = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
 
         if (SystemInformation.IsXbox)
         {
