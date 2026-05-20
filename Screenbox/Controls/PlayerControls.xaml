@@ -356,12 +356,17 @@
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Click="DeleteMediaFileMenuFlyoutItem_OnClick"
-                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Icon="Delete"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.Delete}">
-                    <MenuFlyoutItem.Icon>
-                        <SymbolIcon Foreground="{ThemeResource SystemFillColorCriticalBrush}" Symbol="Delete" />
-                    </MenuFlyoutItem.Icon>
+                    <MenuFlyoutItem.Resources>
+                        <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                    </MenuFlyoutItem.Resources>
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Delete" />
                     </MenuFlyoutItem.KeyboardAccelerators>
