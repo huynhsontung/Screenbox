@@ -10,21 +10,6 @@ using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
 
-/// <summary>
-/// Represents the outcome of a delete attempt.
-/// </summary>
-public readonly struct FileDeleteResult
-{
-    public bool Success { get; }
-    public string? Reason { get; }
-
-    public FileDeleteResult(bool success, string? reason)
-    {
-        Success = success;
-        Reason = reason;
-    }
-}
-
 public interface IFilesService
 {
     public Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null);
@@ -48,5 +33,4 @@ public interface IFilesService
     public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
 
     public Task<bool> TryDeleteFileAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default);
-    public Task<FileDeleteResult> TryDeleteFileWithReasonAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default);
 }

@@ -187,24 +187,14 @@ public sealed class FilesService : IFilesService
 
     public async Task<bool> TryDeleteFileAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default)
     {
-        FileDeleteResult result = await TryDeleteFileWithReasonAsync(file, deleteOption);
-        return result.Success;
-    }
-
-    /// <summary>
-    /// Attempts to delete a file and returns the failure reason when available.
-    /// </summary>
-    public async Task<FileDeleteResult> TryDeleteFileWithReasonAsync(StorageFile file, StorageDeleteOption deleteOption = StorageDeleteOption.Default)
-    {
         try
         {
             await file.DeleteAsync(deleteOption);
-            return new FileDeleteResult(true, null);
+            return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            LogService.Log(e);
-            return new FileDeleteResult(false, e.Message);
+            return false;
         }
     }
 
