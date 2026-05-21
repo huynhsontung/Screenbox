@@ -36,7 +36,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// The default is <see langword="false"/>.
     /// </value>
     [ObservableProperty]
-    private bool? _isAllSelected = false;
+    public partial bool? IsAllSelected { get; set; } = false;
 
     /// <summary>
     /// Gets or sets a value that indicates whether selection mode is active.
@@ -46,7 +46,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// The default is <see langword="false"/>.
     /// </value>
     [ObservableProperty]
-    private bool _isSelectionModeActive;
+    public partial bool IsSelectionModeActive { get; set; }
 
     private IReadOnlyCollection<object>? _sourceCollection;
 

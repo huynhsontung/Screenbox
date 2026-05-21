@@ -33,28 +33,38 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
-    [ObservableProperty] private bool _isPlaying;
-    [ObservableProperty] private bool _isFullscreen;
-    [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
-    [ObservableProperty] private string? _chapterName;
-    [ObservableProperty] private double _playbackRate;
-    [ObservableProperty] private double _audioTimingOffset;
-    [ObservableProperty] private double _subtitleTimingOffset;
-    [ObservableProperty] private bool _isAdvancedModeActive;
-    [ObservableProperty] private bool _isMinimal;
-    [ObservableProperty] private bool _playerShowChapters;
+    [ObservableProperty]
+    public partial bool IsPlaying { get; set; }
+    [ObservableProperty]
+    public partial bool IsFullscreen { get; set; }
+    [ObservableProperty]
+    public partial string? TitleName { get; set; }  // TODO: Handle VLC title name
+    [ObservableProperty]
+    public partial string? ChapterName { get; set; }
+    [ObservableProperty]
+    public partial double PlaybackRate { get; set; }
+    [ObservableProperty]
+    public partial double AudioTimingOffset { get; set; }
+    [ObservableProperty]
+    public partial double SubtitleTimingOffset { get; set; }
+    [ObservableProperty]
+    public partial bool IsAdvancedModeActive { get; set; }
+    [ObservableProperty]
+    public partial bool IsMinimal { get; set; }
+    [ObservableProperty]
+    public partial bool PlayerShowChapters { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShouldBeAdaptive))]
-    private bool _isCompact;
+    public partial bool IsCompact { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
-    private bool _hasVideo;
+    public partial bool HasVideo { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
-    private bool _hasActiveItem;
+    public partial bool HasActiveItem { get; set; }
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
@@ -75,12 +85,12 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _playerContext = playerContext;
         _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-        _playbackRate = 1.0;
-        _audioTimingOffset = 0.0;
-        _subtitleTimingOffset = 0.0;
-        _isAdvancedModeActive = settingsService.AdvancedMode;
-        _isMinimal = true;
-        _playerShowChapters = settingsService.PlayerShowChapters;
+        PlaybackRate = 1.0;
+        AudioTimingOffset = 0.0;
+        SubtitleTimingOffset = 0.0;
+        IsAdvancedModeActive = settingsService.AdvancedMode;
+        IsMinimal = true;
+        PlayerShowChapters = settingsService.PlayerShowChapters;
         Playlist = playlist;
         Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 

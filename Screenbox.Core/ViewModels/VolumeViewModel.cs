@@ -17,9 +17,12 @@ namespace Screenbox.Core.ViewModels
         IRecipient<SettingsChangedMessage>,
         IRecipient<PropertyChangedMessage<IMediaPlayer?>>
     {
-        [ObservableProperty] private int _maxVolume;
-        [ObservableProperty] private int _volume;
-        [ObservableProperty] private bool _isMute;
+        [ObservableProperty]
+        public partial int MaxVolume { get; set; }
+        [ObservableProperty]
+        public partial int Volume { get; set; }
+        [ObservableProperty]
+        public partial bool IsMute { get; set; }
 
         private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
@@ -31,9 +34,9 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService = settingsService;
             _playerContext = playerContext;
-            _volume = settingsService.PersistentVolume;
-            _maxVolume = settingsService.MaxVolume;
-            _isMute = _volume == 0;
+            Volume = settingsService.PersistentVolume;
+            MaxVolume = settingsService.MaxVolume;
+            IsMute = Volume == 0;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             if (MediaPlayer != null)

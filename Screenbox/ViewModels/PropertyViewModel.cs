@@ -25,7 +25,7 @@ public sealed partial class PropertyViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(OpenFileLocationCommand))]
-    private bool _canNavigateToFile;
+    public partial bool CanNavigateToFile { get; set; }
 
     private readonly IFilesService _filesService;
     private StorageFile? _mediaFile;

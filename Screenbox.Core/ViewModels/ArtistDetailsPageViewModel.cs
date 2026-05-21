@@ -17,11 +17,11 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalDuration))]
     [NotifyPropertyChangedFor(nameof(SongsCount))]
-    private ArtistViewModel? _source;
+    public partial ArtistViewModel? Source { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AlbumsCount))]
-    private List<IGrouping<AlbumViewModel?, MediaViewModel>> _albums;
+    public partial List<IGrouping<AlbumViewModel?, MediaViewModel>> Albums { get; set; }
 
     public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.RelatedSongs) : TimeSpan.Zero;
 
@@ -33,7 +33,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 
     public ArtistDetailsPageViewModel()
     {
-        _albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
+        Albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
     }
 
     public void OnNavigatedTo(object? parameter)

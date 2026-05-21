@@ -42,7 +42,8 @@ public sealed partial class AlbumViewModel : ObservableRecipient
 
     public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
-    [ObservableProperty] private bool _isPlaying;
+    [ObservableProperty]
+    public partial bool IsPlaying { get; set; }
 
     private readonly string _albumArtist;
     private string _songArtist;

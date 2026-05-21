@@ -12,23 +12,22 @@ namespace Screenbox.Core.Contexts;
 public sealed partial class LibraryContext : ObservableRecipient
 {
     [ObservableProperty]
-    private StorageLibrary? _musicStorageLibrary;
+    public partial StorageLibrary? MusicStorageLibrary { get; set; }
 
     [ObservableProperty]
-    private StorageLibrary? _videosStorageLibrary;
+    public partial StorageLibrary? VideosStorageLibrary { get; set; }
 
     [ObservableProperty]
-    private bool _isLoadingVideos;
+    public partial bool IsLoadingVideos { get; set; }
 
     [ObservableProperty]
-    private bool _isLoadingMusic;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    private MusicLibrary _music = MusicLibrary.Empty;
+    public partial bool IsLoadingMusic { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
-    private VideosLibrary _videos = VideosLibrary.Empty;
+    public partial MusicLibrary Music { get; set; } = MusicLibrary.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedRecipients]
+    public partial VideosLibrary Videos { get; set; } = VideosLibrary.Empty;
 }
-
