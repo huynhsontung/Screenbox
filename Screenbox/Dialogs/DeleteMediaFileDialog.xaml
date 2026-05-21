@@ -56,8 +56,5 @@
 
     <StackPanel Spacing="12">
         <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind strings:Resources.DeleteMediaFileConfirmation(MediaName)}" />
-        <CheckBox
-            x:Name="SkipWarningCheckBox"
-            Content="{strings:Resources Key=DeleteMediaFileSkipWarning}" />
     </StackPanel>
 </ContentDialog>

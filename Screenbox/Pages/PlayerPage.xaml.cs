@@ -34,22 +34,12 @@ namespace Screenbox.Pages;
 /// </summary>
 public sealed partial class PlayerPage : Page
 {
-    private const string SkipDeleteMediaFileWarningSettingKey = "SkipDeleteMediaFileWarning";
-
     internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
     private int _deleteDialogOpen;
-
-    private static bool SkipDeleteMediaFileWarning
-    {
-        get => ApplicationData.Current.LocalSettings.Values.TryGetValue(SkipDeleteMediaFileWarningSettingKey, out object value)
-            && value is bool enabled
-            && enabled;
-        set => ApplicationData.Current.LocalSettings.Values[SkipDeleteMediaFileWarningSettingKey] = value;
-    }
 
     public PlayerPage()
     {
@@ -556,16 +546,11 @@ public sealed partial class PlayerPage : Page
                 return false;
             }
 
-            if (!SkipDeleteMediaFileWarning)
+            var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
+            var result = await deleteConfirmation.ShowAsync();
+            if (result != ContentDialogResult.Primary)
             {
-                var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
-                var result = await deleteConfirmation.ShowAsync();
-                if (result != ContentDialogResult.Primary)
-                {
-                    return true;
-                }
-
-                SkipDeleteMediaFileWarning = deleteConfirmation.SkipWarning;
+                return true;
             }
 
             return ViewModel.ProcessDeleteKeyDown(key, modifiers);
