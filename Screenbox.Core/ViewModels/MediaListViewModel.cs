@@ -643,14 +643,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             return Fail();
         }
 
-        // i know previously we talked over this, but I was testing around the flow and think that moving onto the next video (instead of having nothing happen) is optimal for user experience
-        int deleteIndex = Items.IndexOf(mediaToDelete);
-        MediaViewModel? nextItem = deleteIndex >= 0 && deleteIndex < Items.Count - 1
-            ? Items[deleteIndex + 1]
-            : deleteIndex > 0
-                ? Items[deleteIndex - 1]
-                : null;
-
         // Stop playback first to release the file handle before deleting.
         try
         {
@@ -670,18 +662,13 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (!await _filesService.TryDeleteFileAsync(file)) return Fail();
 
-        Items.Remove(mediaToDelete);
-        mediaToDelete.Clean();
-
-        if (nextItem != null)
-        {
-            PlaySingle(nextItem);
-        }
-        else
+        if (ReferenceEquals(CurrentItem, mediaToDelete))
         {
             CurrentItem = null;
         }
 
+        Items.Remove(mediaToDelete);
+        mediaToDelete.Clean();
         Messenger.Send(new MediaFileDeletedNotificationMessage(deletedName));
         return true;
     }
