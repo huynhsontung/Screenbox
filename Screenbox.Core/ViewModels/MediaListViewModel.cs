@@ -659,11 +659,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             file = writableFile;
         }
 
-        if (ReferenceEquals(CurrentItem, mediaToDelete))
-        {
-            CurrentItem = null;
-        }
-
         // Stop the playback first before deleting.
         try
         {
@@ -681,9 +676,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             return Fail();
         }
 
-        mediaToDelete.Clean();
-
-        await Task.Delay(500);
+        await Task.Delay(250);
 
         if (!string.IsNullOrEmpty(file.Path))
         {
@@ -691,18 +684,23 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             try
             {
                 System.IO.FileAttributes attributes = File.GetAttributes(file.Path);
-                LogService.Log($"Pre-delete attributes (System.IO). Path='{file.Path}', Attributes='{attributes}'");
+                LogService.Log($"Pre-delete attributes. Path='{file.Path}', Attributes='{attributes}'");
                 if (attributes.HasFlag(System.IO.FileAttributes.ReadOnly))
                 {
-                    File.SetAttributes(file.Path, attributes & ~System.IO.FileAttributes.ReadOnly);
+                    System.IO.FileAttributes updatedAttributes = attributes & ~System.IO.FileAttributes.ReadOnly;
+                    File.SetAttributes(file.Path, updatedAttributes);
                     System.IO.FileAttributes refreshedAttributes = File.GetAttributes(file.Path);
-                    LogService.Log($"Post-clear attributes (System.IO). Path='{file.Path}', Attributes='{refreshedAttributes}'");
+                    LogService.Log($"Post-clear attributes. Path='{file.Path}', Attributes='{refreshedAttributes}'");
+                    if (refreshedAttributes.HasFlag(System.IO.FileAttributes.ReadOnly))
+                    {
+                        LogService.Log($"ReadOnly attribute still set. Path='{file.Path}'");
+                    }
                 }
             }
             catch (Exception e)
             {
                 LogService.Log(e);
-                LogService.Log($"Failed to clear ReadOnly attribute (System.IO). Path='{file.Path}', Error='{e.Message}'");
+                LogService.Log($"Failed to clear ReadOnly attribute. Path='{file.Path}', Error='{e.Message}'");
             }
 
             if (await FilesHelpers.TryGetFileFromPathAsync(file.Path) is { } refreshedFile)
@@ -711,11 +709,18 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             }
         }
 
+        mediaToDelete.Clean();
+
         FileDeleteResult deleteResult = await _filesService.TryDeleteFileWithReasonAsync(file);
         if (!deleteResult.Success)
         {
             LogService.Log($"Delete failed. Path='{file.Path}', Provider='{file.Provider?.Id}', Attributes='{file.Attributes}', Reason='{deleteResult.Reason}'");
             return Fail(deleteResult.Reason);
+        }
+
+        if (ReferenceEquals(CurrentItem, mediaToDelete))
+        {
+            CurrentItem = null;
         }
 
         Items.Remove(mediaToDelete);
