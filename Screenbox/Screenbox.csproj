@@ -233,6 +233,9 @@
     <Compile Include="Dialogs\CreatePlaylistDialog.xaml.cs">
       <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DeleteMediaFileDialog.xaml.cs">
+      <DependentUpon>DeleteMediaFileDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DeletePlaylistDialog.xaml.cs">
       <DependentUpon>DeletePlaylistDialog.xaml</DependentUpon>
     </Compile>
@@ -627,6 +630,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\CreatePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DeleteMediaFileDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

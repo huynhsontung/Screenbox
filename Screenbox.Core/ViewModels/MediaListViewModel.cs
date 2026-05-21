@@ -36,6 +36,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     IRecipient<QueuePlaylistMessage>,
     IRecipient<ClearPlaylistMessage>,
     IRecipient<PlaylistRequestMessage>,
+    IRecipient<DeleteCurrentMediaFileRequestMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
     // UI-bindable properties
@@ -181,6 +182,11 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     public void Receive(PlaylistRequestMessage message)
     {
         message.Reply(new Playlist(_playlist));
+    }
+
+    public void Receive(DeleteCurrentMediaFileRequestMessage message)
+    {
+        message.Reply(DeleteCurrentMediaFileAsync());
     }
 
     public async void Receive(PlayMediaMessage message)
@@ -618,6 +624,62 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
         LoadFromPlaylist(playlist);
         PlaySingle(nextItem);
+    }
+
+    private async Task<bool> DeleteCurrentMediaFileAsync()
+    {
+        bool Fail(string? reason = null)
+        {
+            Messenger.Send(new FailedToDeleteMediaFileNotificationMessage(reason));
+            return false;
+        }
+
+        if (CurrentItem is not { } mediaToDelete) return Fail();
+        string deletedName = mediaToDelete.Name;
+
+        StorageFile? file = mediaToDelete.Source as StorageFile;
+        if (file == null && mediaToDelete.Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
+        {
+            try
+            {
+                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+            }
+            catch (Exception)
+            {
+                return Fail();
+            }
+        }
+
+        if (file == null) return Fail();
+
+        // Stop playback first to release the file handle before deleting.
+        try
+        {
+            if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+            {
+                vlcMediaPlayer.VlcPlayer.Stop();
+            }
+            else
+            {
+                MediaPlayer?.Pause();
+            }
+        }
+        catch (Exception)
+        {
+            return Fail();
+        }
+
+        if (!await _filesService.TryDeleteFileAsync(file)) return Fail();
+
+        if (ReferenceEquals(CurrentItem, mediaToDelete))
+        {
+            CurrentItem = null;
+        }
+
+        Items.Remove(mediaToDelete);
+        mediaToDelete.Clean();
+        Messenger.Send(new MediaFileDeletedNotificationMessage(deletedName));
+        return true;
     }
 
     #endregion

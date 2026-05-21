@@ -26,6 +26,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<SubtitleAddedNotificationMessage>,
     IRecipient<ErrorMessage>,
     IRecipient<FailedToSaveFrameNotificationMessage>,
+    IRecipient<FailedToDeleteMediaFileNotificationMessage>,
     IRecipient<FailedToLoadSubtitleNotificationMessage>,
     IRecipient<FailedToOpenFilesNotificationMessage>,
     IRecipient<FailedToAddFolderNotificationMessage>,
@@ -33,7 +34,8 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<PlaylistCreatedNotificationMessage>,
     IRecipient<PlaylistDeletedNotificationMessage>,
     IRecipient<PlaylistRenamedNotificationMessage>,
-    IRecipient<PlaylistItemsAddedNotificationMessage>
+    IRecipient<PlaylistItemsAddedNotificationMessage>,
+    IRecipient<MediaFileDeletedNotificationMessage>
 {
     [ObservableProperty] private NotificationLevel _severity;
 
@@ -224,6 +226,14 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     }
 
     /// <summary>
+    /// Handles a notification that deleting a media file failed.
+    /// </summary>
+    public void Receive(FailedToDeleteMediaFileNotificationMessage message)
+    {
+        ShowErrorNotification(Resources.FailedToDeleteMediaFileNotificationTitle, message.Reason);
+    }
+
+    /// <summary>
     /// Handles a notification that loading a subtitle file failed.
     /// </summary>
     public void Receive(FailedToLoadSubtitleNotificationMessage message)
@@ -282,6 +292,14 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     public void Receive(PlaylistItemsAddedNotificationMessage message)
     {
         ShowSuccessNotification(Resources.PlaylistItemsAddedNotificationTitle(message.ItemCount, message.PlaylistName), null);
+    }
+
+    /// <summary>
+    /// Handles a notification that a media file was deleted.
+    /// </summary>
+    public void Receive(MediaFileDeletedNotificationMessage message)
+    {
+        ShowSuccessNotification(Resources.MediaFileDeletedNotificationTitle(message.FileName), null);
     }
 
     private void ShowSuccessNotification(string? title, string? message)

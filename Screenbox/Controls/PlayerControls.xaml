@@ -353,6 +353,24 @@
                         <KeyboardAccelerator Key="F11" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Click="DeleteMediaFileMenuFlyoutItem_OnClick"
+                    Icon="Delete"
+                    IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.Delete}">
+                    <MenuFlyoutItem.Resources>
+                        <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                        <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                    </MenuFlyoutItem.Resources>
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Delete" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>
     </UserControl.Resources>
