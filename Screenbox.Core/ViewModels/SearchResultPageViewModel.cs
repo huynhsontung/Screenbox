@@ -25,14 +25,22 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<MediaViewModel> Songs { get; }
         public ObservableCollection<MediaViewModel> Videos { get; }
 
-        [ObservableProperty] private bool _showArtists;
-        [ObservableProperty] private bool _showAlbums;
-        [ObservableProperty] private bool _showSongs;
-        [ObservableProperty] private bool _showVideos;
-        [ObservableProperty] private bool _hasMoreArtists;
-        [ObservableProperty] private bool _hasMoreAlbums;
-        [ObservableProperty] private bool _hasMoreSongs;
-        [ObservableProperty] private bool _hasMoreVideos;
+        [ObservableProperty]
+        public partial bool ShowArtists { get; set; }
+        [ObservableProperty]
+        public partial bool ShowAlbums { get; set; }
+        [ObservableProperty]
+        public partial bool ShowSongs { get; set; }
+        [ObservableProperty]
+        public partial bool ShowVideos { get; set; }
+        [ObservableProperty]
+        public partial bool HasMoreArtists { get; set; }
+        [ObservableProperty]
+        public partial bool HasMoreAlbums { get; set; }
+        [ObservableProperty]
+        public partial bool HasMoreSongs { get; set; }
+        [ObservableProperty]
+        public partial bool HasMoreVideos { get; set; }
 
         private readonly INavigationService _navigationService;
 

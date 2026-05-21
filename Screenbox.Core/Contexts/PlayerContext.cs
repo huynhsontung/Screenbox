@@ -9,5 +9,5 @@ public sealed partial class PlayerContext : ObservableRecipient
 {
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
-    private IMediaPlayer? _mediaPlayer;
+    public partial IMediaPlayer? MediaPlayer { get; set; }
 }

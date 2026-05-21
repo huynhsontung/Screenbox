@@ -47,26 +47,37 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private const VirtualKey VK_OEM_MINUS = (VirtualKey)0xBD;
     private const VirtualKey VK_OEM_PERIOD = (VirtualKey)0xBE;
 
-    [ObservableProperty] private bool _controlsHidden;
-    [ObservableProperty] private string? _statusMessage;
-    [ObservableProperty] private bool _isPlaying;
-    [ObservableProperty] private bool _isPlayingBadge;
-    [ObservableProperty] private bool _isOpening;
-    [ObservableProperty] private bool _audioOnly;
-    [ObservableProperty] private bool _showPlayPauseBadge;
-    [ObservableProperty] private WindowViewMode _viewMode;
-    [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
-    [ObservableProperty] private MediaViewModel? _media;
-    [ObservableProperty] private bool _showVisualizer;
+    [ObservableProperty]
+    public partial bool ControlsHidden { get; set; }
+    [ObservableProperty]
+    public partial string? StatusMessage { get; set; }
+    [ObservableProperty]
+    public partial bool IsPlaying { get; set; }
+    [ObservableProperty]
+    public partial bool IsPlayingBadge { get; set; }
+    [ObservableProperty]
+    public partial bool IsOpening { get; set; }
+    [ObservableProperty]
+    public partial bool AudioOnly { get; set; }
+    [ObservableProperty]
+    public partial bool ShowPlayPauseBadge { get; set; }
+    [ObservableProperty]
+    public partial WindowViewMode ViewMode { get; set; }
+    [ObservableProperty]
+    public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
+    [ObservableProperty]
+    public partial MediaViewModel? Media { get; set; }
+    [ObservableProperty]
+    public partial bool ShowVisualizer { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
     [NotifyPropertyChangedFor(nameof(IsPlayerVisibilityVisible))]
-    private PlayerVisibilityState _playerVisibility;
+    public partial PlayerVisibilityState PlayerVisibility { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
-    private MediaPlaybackState _playbackState;
+    public partial MediaPlaybackState PlaybackState { get; set; }
 
     public bool SeekBarPointerInteracting { get; set; }
 
@@ -105,8 +116,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _statusMessageTimer = _dispatcherQueue.CreateTimer();
         _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
         _spaceKeyHoldTimer = _dispatcherQueue.CreateTimer();
-        _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
-        _playerVisibility = PlayerVisibilityState.Hidden;
+        NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+        PlayerVisibility = PlayerVisibilityState.Hidden;
         _lastUpdated = DateTimeOffset.MinValue;
 
         FocusManager.GotFocus += FocusManagerOnFocusChanged;

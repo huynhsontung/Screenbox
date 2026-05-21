@@ -23,7 +23,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
 
     [ObservableProperty]
-    private string _sortBy = string.Empty;
+    public partial string SortBy { get; set; } = string.Empty;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
