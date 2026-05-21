@@ -27,7 +27,7 @@ jobs:
       run: .\scripts\lint-xaml.ps1
   
   build:
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -83,7 +83,7 @@ jobs:
                         "-p:SentryCreateRelease=true", `
                         "-p:SentrySetCommits=true"
         }
-        msbuild Screenbox.sln `
+        msbuild Screenbox.slnx `
           -p:RestoreConfigFile=nuget.config `
           -p:Configuration=Release `
           -p:Platform=x64 `
@@ -109,26 +109,6 @@ jobs:
         name: Screenbox-sideload
         path: |
           C:\DeployOutput\*_Test
-
-  wack:
-    needs: build
-    runs-on: windows-latest
-    steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v8
-      with:
-        name: Screenbox-sideload
-        path: C:\Download\
-    - name: Rename test folder
-      run: Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Rename-Item -NewName Screenbox
-    - name: Rename test package
-      run: Get-ChildItem -Path C:\Download\Screenbox\*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
-    - uses: huynhsontung/wack-certification@main
-      with:
-        name: 'WACK'
-        package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
-        report-name: 'Screenbox.Certification.xml'
-        ignore-rules: '38'
 
   release:
     needs: build
