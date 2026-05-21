@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -652,8 +652,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (file == null) return Fail();
 
-        PlaybackNavigationResult? navigationResult = await GetNextAfterDeleteAsync();
-
         // Stop playback first to release the file handle before deleting.
         try
         {
@@ -680,24 +678,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         Items.Remove(mediaToDelete);
         mediaToDelete.Clean();
-
-        if (navigationResult is { } result)
-        {
-            if (result.UpdatedPlaylist is { } updatedPlaylist) LoadFromPlaylist(updatedPlaylist);
-            PlaySingle(result.NextItem);
-        }
-
         Messenger.Send(new MediaFileDeletedNotificationMessage(deletedName));
         return true;
-
-        async Task<PlaybackNavigationResult?> GetNextAfterDeleteAsync()
-        {
-            var playlist = _playlist;
-            var nextResult = playlist.Items.Count == 1 && _neighboringFilesQuery != null
-                ? await _playbackControlService.GetNeighboringNextAsync(playlist, _neighboringFilesQuery)
-                : _playbackControlService.GetNext(playlist, RepeatMode);
-            return nextResult is { NextItem: var nextItem } && ReferenceEquals(nextItem, mediaToDelete) ? null : nextResult;
-        }
     }
 
     #endregion
