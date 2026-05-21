@@ -41,6 +41,7 @@ public sealed partial class PlayerPage : Page
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
+    private int _deleteDialogOpen;
 
     private static bool SkipDeleteMediaFileWarning
     {
@@ -543,24 +544,36 @@ public sealed partial class PlayerPage : Page
 
     private async Task<bool> TryDeleteCurrentMediaFileAsync(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (ViewModel.Media == null)
+        if (Interlocked.Exchange(ref _deleteDialogOpen, 1) == 1)
         {
-            return false;
+            return true;
         }
 
-        if (!SkipDeleteMediaFileWarning)
+        try
         {
-            var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
-            var result = await deleteConfirmation.ShowAsync();
-            if (result != ContentDialogResult.Primary)
+            if (ViewModel.Media is null)
             {
-                return true;
+                return false;
             }
 
-            SkipDeleteMediaFileWarning = deleteConfirmation.SkipWarning;
-        }
+            if (!SkipDeleteMediaFileWarning)
+            {
+                var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
+                var result = await deleteConfirmation.ShowAsync();
+                if (result != ContentDialogResult.Primary)
+                {
+                    return true;
+                }
 
-        return ViewModel.ProcessDeleteKeyDown(key, modifiers);
+                SkipDeleteMediaFileWarning = deleteConfirmation.SkipWarning;
+            }
+
+            return ViewModel.ProcessDeleteKeyDown(key, modifiers);
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _deleteDialogOpen, 0);
+        }
     }
 
     private async void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
