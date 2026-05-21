@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -652,7 +652,13 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (file == null) return Fail();
 
-        // Stop playback first to release the file handle before deleting.
+        if (!string.IsNullOrEmpty(file.Path)
+            && await FilesHelpers.TryGetFileFromPathAsync(file.Path) is { } writableFile)
+        {
+            file = writableFile;
+        }
+
+        // Stop the playback first before deleting
         try
         {
             if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
@@ -668,6 +674,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         {
             return Fail();
         }
+
+        mediaToDelete.Clean();
 
         if (!await _filesService.TryDeleteFileAsync(file)) return Fail();
 
