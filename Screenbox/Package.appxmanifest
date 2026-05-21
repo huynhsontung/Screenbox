@@ -33,8 +33,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Screenbox.App"
-      desktop4:SupportsMultipleInstances="true">
+      EntryPoint="Screenbox.App">
       <uap:VisualElements
         DisplayName="[Debug] Screenbox"
         Square150x150Logo="Assets\Square150x150Logo.png"
