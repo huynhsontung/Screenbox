@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -638,10 +638,19 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         string deletedName = mediaToDelete.Name;
 
         StorageFile? file = mediaToDelete.Source as StorageFile;
-
-        if (file is null) {
-            return Fail();
+        if (file == null && mediaToDelete.Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
+        {
+            try
+            {
+                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+            }
+            catch (Exception)
+            {
+                return Fail();
+            }
         }
+
+        if (file == null) return Fail();
 
         // Stop playback first to release the file handle before deleting.
         try

@@ -541,12 +541,19 @@ public sealed partial class PlayerPage : Page
 
         try
         {
-            if (ViewModel.Media is null) return false;
+            if (ViewModel.Media is null)
+            {
+                return false;
+            }
 
             var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
-            return await deleteConfirmation.ShowAsync() == ContentDialogResult.Primary
-                ? ViewModel.ProcessDeleteKeyDown(key, modifiers)
-                : true;
+            var result = await deleteConfirmation.ShowAsync();
+            if (result != ContentDialogResult.Primary)
+            {
+                return true;
+            }
+
+            return ViewModel.ProcessDeleteKeyDown(key, modifiers);
         }
         finally
         {
