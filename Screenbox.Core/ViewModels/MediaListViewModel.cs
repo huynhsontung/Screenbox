@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -658,7 +659,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             file = writableFile;
         }
 
-        // Stop the playback first before deleting
+        // Stop the playback first before deleting.
         try
         {
             if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
@@ -675,9 +676,47 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             return Fail();
         }
 
+        await Task.Delay(250);
+
+        if (!string.IsNullOrEmpty(file.Path))
+        {
+            // 5.21.2026 was running into trouble sometimes, deleting a video due to a read error. Trying to log it here.
+            try
+            {
+                System.IO.FileAttributes attributes = File.GetAttributes(file.Path);
+                LogService.Log($"Pre-delete attributes. Path='{file.Path}', Attributes='{attributes}'");
+                if (attributes.HasFlag(System.IO.FileAttributes.ReadOnly))
+                {
+                    System.IO.FileAttributes updatedAttributes = attributes & ~System.IO.FileAttributes.ReadOnly;
+                    File.SetAttributes(file.Path, updatedAttributes);
+                    System.IO.FileAttributes refreshedAttributes = File.GetAttributes(file.Path);
+                    LogService.Log($"Post-clear attributes. Path='{file.Path}', Attributes='{refreshedAttributes}'");
+                    if (refreshedAttributes.HasFlag(System.IO.FileAttributes.ReadOnly))
+                    {
+                        LogService.Log($"ReadOnly attribute still set. Path='{file.Path}'");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+                LogService.Log($"Failed to clear ReadOnly attribute. Path='{file.Path}', Error='{e.Message}'");
+            }
+
+            if (await FilesHelpers.TryGetFileFromPathAsync(file.Path) is { } refreshedFile)
+            {
+                file = refreshedFile;
+            }
+        }
+
         mediaToDelete.Clean();
 
-        if (!await _filesService.TryDeleteFileAsync(file)) return Fail();
+        FileDeleteResult deleteResult = await _filesService.TryDeleteFileWithReasonAsync(file);
+        if (!deleteResult.Success)
+        {
+            LogService.Log($"Delete failed. Path='{file.Path}', Provider='{file.Provider?.Id}', Attributes='{file.Attributes}', Reason='{deleteResult.Reason}'");
+            return Fail(deleteResult.Reason);
+        }
 
         if (ReferenceEquals(CurrentItem, mediaToDelete))
         {
