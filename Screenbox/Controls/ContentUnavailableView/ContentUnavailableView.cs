@@ -110,21 +110,7 @@ public sealed partial class ContentUnavailableView : ContentControl
         {
             if (FrameworkElementAutomationPeer.FromElement(this) is ContentUnavailableViewAutomationPeer peer)
             {
-                string notificationString;
-                if (!string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message))
-                {
-                    notificationString = $"{Title}; {Message}";
-                }
-                else if (!string.IsNullOrWhiteSpace(Title))
-                {
-                    notificationString = Title;
-                }
-                else
-                {
-                    notificationString = Message ?? string.Empty;
-                }
-
-                peer.RaiseIsOpen(notificationString);
+                peer.RaiseIsOpen(GetNotificationString());
             }
 
             VisualStateManager.GoToState(this, ContentUnavailableViewVisibleStateName, false);
@@ -171,5 +157,21 @@ public sealed partial class ContentUnavailableView : ContentControl
             : ActionContentCollapsedStateName;
 
         VisualStateManager.GoToState(this, stateName, true);
+    }
+
+    private string GetNotificationString()
+    {
+        if (!string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(Message))
+        {
+            return $"{Title}; {Message}";
+        }
+        else if (!string.IsNullOrWhiteSpace(Title))
+        {
+            return Title!;
+        }
+        else
+        {
+            return Message ?? string.Empty;
+        }
     }
 }
