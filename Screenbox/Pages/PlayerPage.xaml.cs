@@ -132,7 +132,7 @@ public sealed partial class PlayerPage : Page
 
         if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
         {
-            PlayerTitleBar.SetDragRegion();
+            PlayerTitleBar.RefreshDragRegion();
             // Focus can fail if player is file activated
             // Controls are disabled by default until playback is ready
             PlayerControls.FocusFirstButton();
@@ -229,7 +229,7 @@ public sealed partial class PlayerPage : Page
                     case PlayerVisibilityState.Visible:
                         VisualStateManager.GoToState(this, "NoPreview", true);
                         VisualStateManager.GoToState(this, "Normal", true);
-                        PlayerTitleBar.SetDragRegion();
+                        PlayerTitleBar.RefreshDragRegion();
                         break;
                     case PlayerVisibilityState.Minimal:
                         VisualStateManager.GoToState(this, "MiniPlayer", true);

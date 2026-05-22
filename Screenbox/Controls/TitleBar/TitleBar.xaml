@@ -165,6 +165,7 @@
                             x:DeferLoadStrategy="Lazy"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                             ContentTransitions="{TemplateBinding ContentTransitions}"
                             Visibility="Collapsed" />
 
