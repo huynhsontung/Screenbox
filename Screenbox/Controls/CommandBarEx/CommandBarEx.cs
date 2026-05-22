@@ -70,8 +70,8 @@ public sealed class CommandBarEx : CommandBar
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        Unloaded -= OnUnloaded;
         _expandButton = null;
+        Unloaded -= OnUnloaded;
     }
 
     private void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
