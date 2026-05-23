@@ -267,7 +267,11 @@ public sealed partial class PlayerPage : Page
                 UpdateContentState();
                 break;
             case nameof(PlayerPageViewModel.ShouldClosePlayQueueFlyout) when ViewModel.ShouldClosePlayQueueFlyout:
-                PlayQueueFlyout.Hide();
+                if (PlayQueueFlyout.IsOpen)
+                {
+                    PlayQueueFlyout.Hide();
+                }
+
                 ViewModel.ShouldClosePlayQueueFlyout = false;
                 break;
         }
