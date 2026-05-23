@@ -26,18 +26,19 @@ using NavigationViewPaneClosingEventArgs = Microsoft.UI.Xaml.Controls.Navigation
 namespace Screenbox.Controls;
 
 /// <summary>
-/// Represents a custom navigation view that extends the functionality of the <see cref="NavigationView"/> control.
+/// Represents a custom navigation view that extends the functionality of the
+/// <see cref="NavigationView"/> control.
 /// </summary>
 /// <remarks>
-/// <para>The <see cref="NavigationViewEx"/> provides additional features such customizable access keys,
-/// keyboard accelerators, and styles for the buttons that are built-in to NavigationView.</para>
-/// It also supports rendering an overlay with configurable z-order and a <see cref="UIElement"/> as its content,
-/// while allowing the navigation pane and main content visibility to be changed independently of the overlay.
+/// The <see cref="NavigationViewEx"/> provides additional features, such as customizable access keys,
+/// keyboard accelerators, and built-in buttons styling. It also supports rendering an overlay with
+/// configurable z-order and custom content, while allowing the navigation pane and main content
+/// visibility to be changed independently of the overlay.
 /// <para>Key features include:</para>
 /// <list type="bullet">
-/// <item><description><b>Overlay:</b> Display custom content above the main content without obscuring the pane. The layer order can be changed.</description></item>
-/// <item><description><b>Styling:</b> Apply custom styles to built-in buttons.</description></item>
-/// <item><description><b>Accessibility:</b> Configure built-in buttons access keys and keyboard accelerators.</description></item>
+/// <item><description><b>Overlay:</b> Display custom content above the main content without obscuring the pane. The layer order can be customized.</description></item>
+/// <item><description><b>Styling:</b> Change the style of the built-in buttons.</description></item>
+/// <item><description><b>Accessibility:</b> Assign access keys and keyboard accelerators to each built-in button individually.</description></item>
 /// <item><description><b>Motion:</b> Fluid animations for content when visibility changes.</description></item>
 /// </list>
 /// </remarks>
@@ -46,7 +47,7 @@ namespace Screenbox.Controls;
 /// including some of its new capabilities.
 /// <code lang="xml"><![CDATA[
 /// <local:NavigationViewEx BackButtonAccessKey="B"
-///                         CloseButtonStyle="{StaticResource AccentButtonStyle}"
+///                         CloseButtonStyle="{StaticResource CustomButtonStyle}"
 ///                         OverlayZIndex="2">
 ///     <local:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
 ///         <KeyboardAccelerator Key="T" Modifiers="Control" />
@@ -123,95 +124,6 @@ public sealed partial class NavigationViewEx : NavigationView
         _splitView = (SplitView?)GetTemplateChild(RootSplitViewName);
         _contentGrid = (Grid?)GetTemplateChild(ContentGridName);
 
-        if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
-        {
-            if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
-            {
-                paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
-            }
-
-            if (PaneToggleButtonKeyboardAccelerators != null)
-            {
-                var defaultKeyboardAccelerator = new KeyboardAccelerator
-                {
-                    Key = VirtualKey.Back,
-                    Modifiers = VirtualKeyModifiers.Windows
-                };
-
-                // Remove the default (Windows + Back) key combination and restore it after the user-defined keyboard accelerators.
-                // https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/NavigationView/NavigationView.cpp#L407-L413
-                paneToggleButton.KeyboardAccelerators.Clear();
-
-                foreach (var item in PaneToggleButtonKeyboardAccelerators)
-                {
-                    paneToggleButton.KeyboardAccelerators.Add(item);
-                }
-
-                paneToggleButton.KeyboardAccelerators.Add(defaultKeyboardAccelerator);
-            }
-        }
-
-        if (GetTemplateChild(SearchButtonName) is Button paneSearchButton)
-        {
-            _paneSearchButton = paneSearchButton;
-
-            UpdatePaneSearchButtonStyle();
-
-            if (!string.IsNullOrEmpty(PaneSearchButtonAccessKey))
-            {
-                paneSearchButton.AccessKey = PaneSearchButtonAccessKey;
-            }
-
-            if (PaneSearchButtonKeyboardAccelerators != null)
-            {
-                foreach (var item in PaneSearchButtonKeyboardAccelerators)
-                {
-                    paneSearchButton.KeyboardAccelerators.Add(item);
-                    // TODO: Consolidate and add the same shortcuts to AutoSuggestBox.
-                }
-            }
-        }
-
-        if (GetTemplateChild(NavViewBackButton) is Button backButton)
-        {
-            _backButton = backButton;
-
-            UpdateBackButtonStyle();
-
-            if (!string.IsNullOrEmpty(BackButtonAccessKey))
-            {
-                backButton.AccessKey = BackButtonAccessKey;
-            }
-
-            if (BackButtonKeyboardAccelerators != null)
-            {
-                foreach (var item in BackButtonKeyboardAccelerators)
-                {
-                    backButton.KeyboardAccelerators.Add(item);
-                }
-            }
-        }
-
-        if (GetTemplateChild(NavViewCloseButton) is Button closeButton)
-        {
-            _closeButton = closeButton;
-
-            UpdateCloseButtonStyle();
-
-            if (!string.IsNullOrEmpty(CloseButtonAccessKey))
-            {
-                closeButton.AccessKey = CloseButtonAccessKey;
-            }
-
-            if (CloseButtonKeyboardAccelerators != null)
-            {
-                foreach (var item in CloseButtonKeyboardAccelerators)
-                {
-                    closeButton.KeyboardAccelerators.Add(item);
-                }
-            }
-        }
-
         if (GetTemplateChild(PaneContentGridName) is Grid paneContentGrid)
         {
             _paneContentGrid = paneContentGrid;
@@ -238,6 +150,10 @@ public sealed partial class NavigationViewEx : NavigationView
         LoadOverlay();
         UpdateOverlayLayout();
         UpdateContentVisibility();
+        UpdatePaneToggleButton();
+        UpdatePaneSearchButton();
+        UpdateBackButton();
+        UpdateCloseButton();
     }
 
     protected override void OnKeyDown(KeyRoutedEventArgs e)
@@ -245,9 +161,9 @@ public sealed partial class NavigationViewEx : NavigationView
         if (ContentVisibility == Visibility.Visible)
         {
             // Invoke the search experience with the gamepad Y button.
-            // https://learn.microsoft.com/en-us/windows/apps/design/devices/designing-for-tv#search-experience
-            // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#accelerator-support
-            if (e.Key == VirtualKey.GamepadY && _paneSearchButton != null)
+            // https://learn.microsoft.com/en-us/previous-versions/windows/uwp/xbox-apps/designing-for-tv#search-experience
+            // https://learn.microsoft.com/en-us/windows/uwp/ui-input/gamepad-and-remote-interactions#accelerator-support
+            if (e.Key == VirtualKey.GamepadY && _paneSearchButton is not null)
             {
                 if (!IsPaneOpen)
                 {
@@ -267,12 +183,13 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (Overlay != null && _splitView?.FindDescendant<Grid>() is { } splitViewGrid)
+        if (Overlay is not null && _splitView?.FindDescendant<Grid>() is { } splitViewGrid)
         {
             splitViewGrid.Children.Add(_overlayRoot);
         }
 
-        if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name.Equals(NavViewSettingsItem, StringComparison.Ordinal)) is { } settingsItem)
+        if (IsSettingsVisible &&
+            _splitView?.FindDescendant<NavigationViewItem>(s => s.Name.Equals(NavViewSettingsItem, StringComparison.Ordinal)) is { } settingsItem)
         {
             if (!string.IsNullOrEmpty(SettingsItemAccessKey))
             {
@@ -295,7 +212,7 @@ public sealed partial class NavigationViewEx : NavigationView
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
 
-        if (_overlayChildRectangle != null)
+        if (_overlayChildRectangle is not null)
         {
             _overlayChildRectangle.Tapped -= OverlayLightDismissLayer_OnTapped;
         }
@@ -349,11 +266,6 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             UpdateOverlayZIndex();
         }
-        else if (property == ContentVisibilityProperty)
-        {
-            UpdateContentVisibility();
-            UpdateOverlayLayout();
-        }
         else if (property == BackButtonStyleProperty)
         {
             UpdateBackButtonStyle();
@@ -363,26 +275,22 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             UpdatePaneSearchButtonStyle();
         }
-        else if (property == ContentTranslationDirectionProperty)
-        {
-            UpdateContentGridAnimations();
-        }
     }
 
     private void UpdateContentVisibility()
     {
-        if (_paneToggleButtonGrid != null)
+        if (_paneToggleButtonGrid is not null)
         {
             _paneToggleButtonGrid.Visibility = ContentVisibility;
         }
 
-        if (_contentGrid != null)
+        if (_contentGrid is not null)
         {
             _contentGrid.Visibility = ContentVisibility;
             UpdateContentGridAnimations();
         }
 
-        if (_paneContentGrid != null)
+        if (_paneContentGrid is not null)
         {
             _paneContentGrid.Visibility = ContentVisibility;
         }
@@ -390,9 +298,9 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void LoadOverlay()
     {
-        if (Overlay == null) return;
+        if (Overlay is null) return;
 
-        if (_overlayRoot == null)
+        if (_overlayRoot is null)
         {
             var overlayRoot = new Grid { Name = "OverlayRoot" };
             Grid.SetColumnSpan(overlayRoot, 2);
@@ -413,7 +321,7 @@ public sealed partial class NavigationViewEx : NavigationView
             _overlayChildRectangle = rect;
         }
 
-        if (_overlayChildBorder != null)
+        if (_overlayChildBorder is not null)
         {
             _overlayChildBorder.Child = Overlay;
         }
@@ -425,15 +333,14 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateOverlayZIndex()
     {
-        if (_overlayRoot != null)
-        {
-            Canvas.SetZIndex(_overlayRoot, OverlayZIndex);
-        }
+        if (_overlayRoot is null) return;
+
+        Canvas.SetZIndex(_overlayRoot, OverlayZIndex);
     }
 
     private void UpdateOverlayLayout()
     {
-        if (_overlayRoot == null) return;
+        if (_overlayRoot is null) return;
 
         // Mirror SplitView content area and light-dismiss visual behavior.
         if (ContentVisibility == Visibility.Collapsed)
@@ -464,7 +371,7 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateOverlayLightDismissLayerFill()
     {
-        if (_overlayChildRectangle != null &&
+        if (_overlayChildRectangle is not null &&
             _splitView?.FindDescendant<Rectangle>(r => r.Name.Equals("LightDismissLayer", StringComparison.Ordinal)) is { } contentRootRect)
         {
             // We use the ContentGrid LightDismissLayer rectangle fill to avoid tracking
@@ -475,20 +382,120 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateOverlayLightDismissLayerVisibility()
     {
-        if (_overlayChildRectangle != null)
-        {
-            bool showLightDismissLayer =
-                (DisplayMode != NavigationViewDisplayMode.Expanded) &&
-                IsPaneOpen &&
-                (ContentVisibility == Visibility.Visible);
+        if (_overlayChildRectangle is null) return;
 
-            _overlayChildRectangle.Visibility = showLightDismissLayer ? Visibility.Visible : Visibility.Collapsed;
+        bool showLightDismissLayer =
+            (DisplayMode != NavigationViewDisplayMode.Expanded) &&
+            IsPaneOpen &&
+            (ContentVisibility == Visibility.Visible);
+
+        _overlayChildRectangle.Visibility = showLightDismissLayer ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void UpdatePaneToggleButton()
+    {
+        if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
+        {
+            if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
+            {
+                paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
+            }
+
+            if (PaneToggleButtonKeyboardAccelerators != null)
+            {
+                var defaultKeyboardAccelerator = new KeyboardAccelerator
+                {
+                    Key = VirtualKey.Back,
+                    Modifiers = VirtualKeyModifiers.Windows
+                };
+
+                // Remove the default (Windows + Back) key combination and reinstate it after our keyboard accelerators.
+                // https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/NavigationView/NavigationView.cpp#L407-L413
+                paneToggleButton.KeyboardAccelerators.Clear();
+
+                foreach (var item in PaneToggleButtonKeyboardAccelerators)
+                {
+                    paneToggleButton.KeyboardAccelerators.Add(item);
+                }
+
+                paneToggleButton.KeyboardAccelerators.Add(defaultKeyboardAccelerator);
+            }
+        }
+    }
+
+    private void UpdatePaneSearchButton()
+    {
+        if (GetTemplateChild(SearchButtonName) is Button paneSearchButton)
+        {
+            _paneSearchButton = paneSearchButton;
+
+            UpdatePaneSearchButtonStyle();
+
+            if (!string.IsNullOrEmpty(PaneSearchButtonAccessKey))
+            {
+                paneSearchButton.AccessKey = PaneSearchButtonAccessKey;
+            }
+
+            if (PaneSearchButtonKeyboardAccelerators != null)
+            {
+                foreach (var item in PaneSearchButtonKeyboardAccelerators)
+                {
+                    paneSearchButton.KeyboardAccelerators.Add(item);
+                    // TODO: Consolidate and add the same shortcuts to AutoSuggestBox.
+                }
+            }
+        }
+    }
+
+    private void UpdateBackButton()
+    {
+        if (GetTemplateChild(NavViewBackButton) is Button backButton)
+        {
+            _backButton = backButton;
+
+            UpdateBackButtonStyle();
+
+            if (!string.IsNullOrEmpty(BackButtonAccessKey))
+            {
+                backButton.AccessKey = BackButtonAccessKey;
+            }
+
+            if (BackButtonKeyboardAccelerators != null)
+            {
+                foreach (var item in BackButtonKeyboardAccelerators)
+                {
+                    backButton.KeyboardAccelerators.Add(item);
+                }
+            }
+        }
+    }
+
+    private void UpdateCloseButton()
+    {
+        if (GetTemplateChild(NavViewCloseButton) is Button closeButton)
+        {
+            _closeButton = closeButton;
+
+            UpdateCloseButtonStyle();
+
+            if (!string.IsNullOrEmpty(CloseButtonAccessKey))
+            {
+                closeButton.AccessKey = CloseButtonAccessKey;
+            }
+
+            if (CloseButtonKeyboardAccelerators != null)
+            {
+                foreach (var item in CloseButtonKeyboardAccelerators)
+                {
+                    closeButton.KeyboardAccelerators.Add(item);
+                }
+            }
         }
     }
 
     private void UpdateBackButtonStyle()
     {
-        if (_backButton != null && BackButtonStyle != null)
+        if (_backButton is not null && BackButtonStyle != null)
         {
             _backButton.Style = BackButtonStyle;
         }
@@ -496,7 +503,7 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdateCloseButtonStyle()
     {
-        if (_closeButton != null && BackButtonStyle != null)
+        if (_closeButton is not null && BackButtonStyle != null)
         {
             _closeButton.Style = BackButtonStyle;
         }
@@ -504,7 +511,7 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private void UpdatePaneSearchButtonStyle()
     {
-        if (_paneSearchButton != null && PaneSearchButtonStyle != null)
+        if (_paneSearchButton is not null && PaneSearchButtonStyle != null)
         {
             _paneSearchButton.Style = PaneSearchButtonStyle;
         }
@@ -512,7 +519,7 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private string GetContentGridAnimationOffset(AnimationDirection? direction, bool isEntrance)
     {
-        if (_contentGrid == null)
+        if (_contentGrid is null)
         {
             return "0,0,0";
         }
@@ -560,7 +567,7 @@ public sealed partial class NavigationViewEx : NavigationView
         _contentShowAnimationSet = showAnimationSet;
         _contentHideAnimationSet = hideAnimationSet;
 
-        if (_contentGrid != null)
+        if (_contentGrid is not null)
         {
             Implicit.SetShowAnimations(_contentGrid, _contentShowAnimationSet);
             Implicit.SetHideAnimations(_contentGrid, _contentHideAnimationSet);
