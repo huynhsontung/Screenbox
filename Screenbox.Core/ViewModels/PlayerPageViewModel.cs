@@ -120,7 +120,16 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
         // Subscribe here so navigation-triggered player dismissal is handled in the ViewModel
         // rather than in page code-behind, keeping UI logic out of the view layer.
-        navigationService.Navigated += OnNavigationServiceNavigated;
+        // Use a weak-reference forwarding handler so the navigation service does not retain
+        // this transient view model via a strong event subscription.
+        WeakReference<PlayerPageViewModel> weakThis = new(this);
+        navigationService.Navigated += (sender, args) =>
+        {
+            if (weakThis.TryGetTarget(out PlayerPageViewModel? viewModel))
+            {
+                viewModel.OnNavigationServiceNavigated(sender, args);
+            }
+        };
 
         if (MediaPlayer != null)
         {
