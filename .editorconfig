@@ -6,6 +6,7 @@ root = true
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+charset = utf-8
 
 # Solution files
 [*.sln]
@@ -34,7 +35,6 @@ indent_size = 2
 
 # XML user interface files
 [*.xaml]
-charset = utf-8-bom
 indent_size = 4
 
 # Data serialization files
@@ -53,9 +53,6 @@ indent_size = 2
 [*.cs]
 
 #### Core EditorConfig Options ####
-
-# Encoding
-charset = utf-8-bom
 
 # Indentation and spacing
 indent_size = 4
