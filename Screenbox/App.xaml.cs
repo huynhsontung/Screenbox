@@ -45,7 +45,7 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
-        ConfigureAppCenter();
+        // ConfigureAppCenter();
         ConfigureSentry();
         InitializeComponent();
 
@@ -71,7 +71,6 @@ sealed partial class App : Application
     }
 
     [SecurityCritical]
-    [HandleProcessCorruptedStateExceptions]
     private void CoreApplication_UnhandledErrorDetected(object sender, UnhandledErrorDetectedEventArgs e)
     {
         try
@@ -150,7 +149,7 @@ sealed partial class App : Application
         if (string.IsNullOrEmpty(Secrets.SentryDsn))
             return;
 
-        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+        //CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
 
         SentrySdk.Init(options =>
         {
