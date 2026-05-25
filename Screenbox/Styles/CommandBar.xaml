@@ -42,19 +42,6 @@
             Duration="{StaticResource ControlFasterAnimationDuration}" />
     </ctAnimations:ImplicitAnimationSet>
 
-    <ctAnimations:ImplicitAnimationSet x:Key="MoreButtonEntranceImplicitAnimation">
-        <ctAnimations:TranslationAnimation
-            EasingMode="EaseOut"
-            From="48,0,0"
-            To="0,0,0"
-            Duration="{StaticResource ControlNormalAnimationDuration}" />
-        <ctAnimations:OpacityAnimation
-            EasingType="Linear"
-            From="0"
-            To="1"
-            Duration="{StaticResource ControlFasterAnimationDuration}" />
-    </ctAnimations:ImplicitAnimationSet>
-
     <Style BasedOn="{StaticResource DefaultCommandBarStyle}" TargetType="controls:CommandBarEx" />
 
     <!--  AppBarButton styled to resemble the default button. For optimal results, apply this style together with the adjusted margin values.  -->
@@ -891,7 +878,6 @@
         <!--<Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />-->
         <!--<Setter Property="FocusVisualMargin" Value="-3" />-->
         <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
-        <Setter Property="ctAnimations:Implicit.ShowAnimations" Value="{StaticResource MoreButtonEntranceImplicitAnimation}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
