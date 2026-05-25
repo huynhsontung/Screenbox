@@ -36,9 +36,31 @@ public sealed class PlaylistService : IPlaylistService
         var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
         if (result?.Items.Count > 0)
-            return playlist.CurrentItem != null
-                ? new Playlist(playlist.CurrentItem, result.Items, playlist)
-                : new Playlist(result.Items, playlist);
+        {
+            var currentItem = playlist.CurrentItem;
+            if (currentItem != null)
+            {
+                // Replace the matching item (by location) with the existing CurrentItem to preserve
+                // VM identity. Without this, GetOrCreate creates a new VM for the same file that is a
+                // different object reference. Playlist uses IndexOf (reference equality) to find
+                // CurrentItem in the new list; if it fails, CurrentIndex becomes -1, which causes
+                // LoadFromPlaylist to set PlaybackItem to null and call VlcPlayer.Stop() on the UI
+                // thread, freezing the app.
+                int matchIndex = result.Items.FindIndex(vm =>
+                    vm.Location.Equals(currentItem.Location, StringComparison.OrdinalIgnoreCase));
+                if (matchIndex >= 0)
+                {
+                    result.Items[matchIndex] = currentItem;
+                    return new Playlist(currentItem, result.Items, playlist);
+                }
+
+                // Current item not found in neighboring files (edge case).
+                // Return the playlist unchanged to avoid losing the current position.
+                return playlist;
+            }
+
+            return new Playlist(result.Items, playlist);
+        }
 
         return playlist;
     }
