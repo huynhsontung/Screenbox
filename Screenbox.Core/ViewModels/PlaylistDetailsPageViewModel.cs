@@ -50,7 +50,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private void Play(MediaViewModel? item)
     {
         if (Source == null || item == null) return;
-        var playlist = new Playlist(item, Source.Items);
+        var playlist = new Playlist(Source.Items.IndexOf(item), Source.Items);
         Messenger.Send(new QueuePlaylistMessage(playlist, true));
     }
 

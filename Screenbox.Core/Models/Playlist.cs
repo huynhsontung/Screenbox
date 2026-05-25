@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using Screenbox.Core.ViewModels;
@@ -29,12 +29,6 @@ public class Playlist
         : this(items, reference)
     {
         CurrentIndex = currentIndex;
-    }
-
-    public Playlist(MediaViewModel currentItem, IReadOnlyList<MediaViewModel> items, Playlist? reference = null)
-        : this(items, reference)
-    {
-        CurrentIndex = Items.IndexOf(currentItem);
     }
 
     public Playlist(Playlist reference) : this(reference.Items, reference)

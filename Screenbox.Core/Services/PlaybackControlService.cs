@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Threading.Tasks;
 using Screenbox.Core.Factories;
@@ -49,7 +49,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (nextFile != null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(nextFile);
-                var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
+                var newPlaylist = new Playlist(0, result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
         }
@@ -88,7 +88,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (previousFile != null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(previousFile);
-                var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
+                var newPlaylist = new Playlist(result.Items.IndexOf(result.NextItem), result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
         }

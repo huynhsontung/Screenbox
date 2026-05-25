@@ -611,7 +611,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (result != null)
         {
-            var playlist = new Playlist(result.NextItem, result.Items);
+            var playlist = new Playlist(result.Items.IndexOf(result.NextItem), result.Items);
             LoadFromPlaylist(playlist);
             PlaySingle(result.NextItem);
         }
@@ -619,7 +619,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private void CreatePlaylistAndPlay(MediaViewModel nextItem)
     {
-        var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
+        var playlist = new Playlist(0, new List<MediaViewModel> { nextItem });
         LoadFromPlaylist(playlist);
         PlaySingle(nextItem);
     }
