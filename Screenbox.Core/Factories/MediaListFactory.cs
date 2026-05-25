@@ -81,7 +81,7 @@ public sealed class MediaListFactory : IMediaListFactory
         {
             var m3uItems = await ParseM3uAsync(m3uFile, cancellationToken);
             if (m3uItems.Count > 0)
-                return new NextMediaList(m3uItems[0], m3uItems);
+                return new NextMediaList(m3uItems);
         }
 
         // The ordering of the conditional terms below is important
@@ -94,7 +94,7 @@ public sealed class MediaListFactory : IMediaListFactory
             return new NextMediaList(media);
         }
 
-        return new NextMediaList(playlist[0], playlist);
+        return new NextMediaList(playlist);
     }
 
     public async Task<NextMediaList> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default)
@@ -104,14 +104,13 @@ public sealed class MediaListFactory : IMediaListFactory
             // Parse M3U/M3U8 playlists directly without creating a LibVLC Media object.
             var m3uItems = await ParseM3uAsync(file, cancellationToken);
             if (m3uItems.Count > 0)
-                return new NextMediaList(m3uItems[0], m3uItems);
+                return new NextMediaList(m3uItems);
         }
 
         var media = _mediaFactory.GetOrCreate(file);
         if (file.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(media, cancellationToken) is { Count: > 0 } items)
         {
-            media = items[0];
-            return new NextMediaList(media, items);
+            return new NextMediaList(items);
         }
 
         return new NextMediaList(media);
@@ -127,15 +126,14 @@ public sealed class MediaListFactory : IMediaListFactory
             {
                 var m3uItems = await ParseM3uAsync(file, cancellationToken);
                 if (m3uItems.Count > 0)
-                    return new NextMediaList(m3uItems[0], m3uItems);
+                    return new NextMediaList(m3uItems);
             }
         }
 
         var media = _mediaFactory.Create(uri);
         if (await ParseSubMediaRecursiveAsync(media, cancellationToken) is { Count: > 0 } playlist)
         {
-            media = playlist[0];
-            return new NextMediaList(media, playlist);
+            return new NextMediaList(playlist);
         }
 
         return new NextMediaList(media);

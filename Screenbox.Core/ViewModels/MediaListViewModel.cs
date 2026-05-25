@@ -577,10 +577,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
                 var fileMedia = _mediaFactory.GetOrCreate(file);
                 CreatePlaylistAndPlay(fileMedia);
-                // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
-                // same object reference. Calling ParseMediaListAsync(file) would create a second VM
-                // via GetOrCreate, making result.NextItem a different instance from fileMedia.
-                // That mismatch would cause LoadFromPlaylist to restart playback unnecessarily.
                 result = await _mediaListFactory.ParseMediaListAsync(fileMedia);
                 break;
 

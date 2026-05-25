@@ -88,7 +88,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (previousFile != null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(previousFile);
-                var newPlaylist = new Playlist(result.Items.IndexOf(result.NextItem), result.Items, playlist);
+                var newPlaylist = new Playlist(0, result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
         }
