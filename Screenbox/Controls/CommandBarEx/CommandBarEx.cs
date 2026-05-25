@@ -70,7 +70,10 @@ public sealed class CommandBarEx : CommandBar
 
             var buttonVisual = ElementCompositionPreview.GetElementVisual(expandButton);
             var compositor = buttonVisual.Compositor;
-            CreateImplicitAnimations(compositor);
+            var animationGroup = CreateShowAnimationGroup(compositor);
+            ElementCompositionPreview.SetIsTranslationEnabled(expandButton, true);
+            ElementCompositionPreview.SetImplicitShowAnimation(expandButton, animationGroup);
+
             UpdateMoreButtonStyle();
         }
     }
@@ -97,13 +100,16 @@ public sealed class CommandBarEx : CommandBar
         }
     }
 
-    private void CreateImplicitAnimations(Compositor compositor)
+    /// <summary>
+    /// Creates an animation group that combines translation and opacity animations
+    /// for the "see more" show implicit animation.
+    /// </summary>
+    /// <param name="compositor">The compositor used to create the animations.</param>
+    /// <returns>A composition animation group containing the show animations.</returns>
+    private static CompositionAnimationGroup CreateShowAnimationGroup(Compositor compositor)
     {
-        if (_expandButton is null) return;
-
-        ElementCompositionPreview.SetIsTranslationEnabled(_expandButton, true);
-
         var easeOutEasingFunction = compositor.CreateCubicBezierEasingFunction(new Vector2(0.1f, 0.9f), new Vector2(0.2f, 1f));
+        var linearEasingFunction = compositor.CreateLinearEasingFunction();
 
         var translationAnimation = compositor.CreateVector3KeyFrameAnimation();
         translationAnimation.InsertKeyFrame(0f, new Vector3(48f, 0f, 0f));
@@ -113,14 +119,14 @@ public sealed class CommandBarEx : CommandBar
 
         var opacityAnimation = compositor.CreateScalarKeyFrameAnimation();
         opacityAnimation.InsertKeyFrame(0f, 0f);
-        opacityAnimation.InsertKeyFrame(1f, 1f, compositor.CreateLinearEasingFunction());
+        opacityAnimation.InsertKeyFrame(1f, 1f, linearEasingFunction);
         opacityAnimation.Duration = TimeSpan.FromMilliseconds(167);
         opacityAnimation.Target = "Opacity";
 
-        var animationGroup = compositor.CreateAnimationGroup();
-        animationGroup.Add(translationAnimation);
-        animationGroup.Add(opacityAnimation);
+        var showAnimationGroup = compositor.CreateAnimationGroup();
+        showAnimationGroup.Add(translationAnimation);
+        showAnimationGroup.Add(opacityAnimation);
 
-        ElementCompositionPreview.SetImplicitShowAnimation(_expandButton, animationGroup);
+        return showAnimationGroup;
     }
 }
