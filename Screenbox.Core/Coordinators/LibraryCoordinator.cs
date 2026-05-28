@@ -1,22 +1,24 @@
 ﻿#nullable enable
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
 
-namespace Screenbox.Core.Controllers;
+namespace Screenbox.Core.Coordinators;
 
 /// <summary>
 /// Stateful coordinator that owns library watchers/timers and invokes <see cref="ILibraryService"/> operations.
 /// </summary>
-public sealed class LibraryController : IDisposable
+public sealed class LibraryCoordinator : ILibraryCoordinator
 {
     private readonly LibraryContext _context;
     private readonly ILibraryService _libraryService;
@@ -30,11 +32,13 @@ public sealed class LibraryController : IDisposable
 
     private StorageFileQueryResult? _musicQuery;
     private StorageFileQueryResult? _videosQuery;
+    private CancellationTokenSource? _musicFetchCts;
+    private CancellationTokenSource? _videosFetchCts;
 
     private bool UseIndexer => _settingsService.UseIndexer;
     private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
 
-    public LibraryController(LibraryContext context, ILibraryService libraryService, ISettingsService settingsService)
+    public LibraryCoordinator(LibraryContext context, ILibraryService libraryService, ISettingsService settingsService)
     {
         _context = context;
         _libraryService = libraryService;
@@ -53,9 +57,7 @@ public sealed class LibraryController : IDisposable
         }
     }
 
-    /// <summary>
-    /// Ensures query watchers are created and attached to the current context.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task EnsureWatchingAsync()
     {
         await EnsureWatchingMusicAsync();
@@ -67,13 +69,75 @@ public sealed class LibraryController : IDisposable
         }
     }
 
-    /// <summary>
-    /// Recreates query watchers if settings (eg indexer usage) changed.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task RefreshWatchersAsync()
     {
         StopWatching();
         await EnsureWatchingAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task FetchMusicAsync(bool useCache = true)
+    {
+        if (_context.MusicStorageLibrary is null || _musicQuery is null) return;
+        _musicFetchCts?.Cancel();
+        using CancellationTokenSource cts = new();
+        _musicFetchCts = cts;
+        _context.IsLoadingMusic = true;
+        try
+        {
+            var progress = new Progress<MusicLibrary>(report =>
+            {
+                _context.Music = report;
+            });
+            var result = await _libraryService.FetchMusicAsync(_context.MusicStorageLibrary, _musicQuery, useCache, cts.Token, progress);
+            _context.Music = result;
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
+        }
+        finally
+        {
+            if (!cts.Token.IsCancellationRequested)
+            {
+                _context.IsLoadingMusic = false;
+            }
+
+            _musicFetchCts = null;
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task FetchVideosAsync(bool useCache = true)
+    {
+        if (_context.VideosStorageLibrary is null || _videosQuery is null) return;
+        _videosFetchCts?.Cancel();
+        using CancellationTokenSource cts = new();
+        _videosFetchCts = cts;
+        _context.IsLoadingVideos = true;
+        try
+        {
+            var progress = new Progress<VideosLibrary>(report =>
+            {
+                _context.Videos = report;
+            });
+            var result = await _libraryService.FetchVideosAsync(_context.VideosStorageLibrary, _videosQuery, useCache, cts.Token, progress);
+            _context.Videos = result;
+        }
+        catch (OperationCanceledException)
+        {
+            // ignored
+        }
+        finally
+        {
+            if (!cts.Token.IsCancellationRequested)
+            {
+                _context.IsLoadingVideos = false;
+            }
+
+            _videosFetchCts = null;
+        }
     }
 
     public void Dispose()
@@ -113,9 +177,9 @@ public sealed class LibraryController : IDisposable
 
     private async Task EnsureWatchingMusicAsync()
     {
-        if (_context.MusicLibrary is null)
+        if (_context.MusicStorageLibrary is null)
         {
-            _context.MusicLibrary = await _libraryService.InitializeMusicLibraryAsync();
+            _context.MusicStorageLibrary = await _libraryService.InitializeMusicLibraryAsync();
         }
 
         if (_musicQuery is not null && ShouldUpdateQuery(_musicQuery, UseIndexer))
@@ -130,15 +194,13 @@ public sealed class LibraryController : IDisposable
             _musicQuery = _libraryService.CreateMusicLibraryQuery(UseIndexer);
             _musicQuery.ContentsChanged += OnMusicQueryContentsChanged;
         }
-
-        _context.MusicLibraryQueryResult = _musicQuery;
     }
 
     private async Task EnsureWatchingVideosAsync()
     {
-        if (_context.VideosLibrary is null)
+        if (_context.VideosStorageLibrary is null)
         {
-            _context.VideosLibrary = await _libraryService.InitializeVideosLibraryAsync();
+            _context.VideosStorageLibrary = await _libraryService.InitializeVideosLibraryAsync();
         }
 
         if (_videosQuery is not null && ShouldUpdateQuery(_videosQuery, UseIndexer))
@@ -153,8 +215,6 @@ public sealed class LibraryController : IDisposable
             _videosQuery = _libraryService.CreateVideosLibraryQuery(UseIndexer);
             _videosQuery.ContentsChanged += OnVideosQueryContentsChanged;
         }
-
-        _context.VideosLibraryQueryResult = _videosQuery;
     }
 
     private void OnMusicQueryContentsChanged(object sender, object args)
@@ -163,11 +223,11 @@ public sealed class LibraryController : IDisposable
         {
             try
             {
-                await _libraryService.FetchMusicAsync(_context);
+                await FetchMusicAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 
@@ -180,11 +240,11 @@ public sealed class LibraryController : IDisposable
         {
             try
             {
-                await _libraryService.FetchVideosAsync(_context);
+                await FetchVideosAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 
@@ -199,12 +259,12 @@ public sealed class LibraryController : IDisposable
         {
             try
             {
-                await _libraryService.FetchVideosAsync(_context);
-                await _libraryService.FetchMusicAsync(_context);
+                await FetchVideosAsync();
+                await FetchMusicAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 

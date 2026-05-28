@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -222,6 +222,9 @@
   </data>
   <data name="AddToQueue" xml:space="preserve">
     <value>Adicionar a fila</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Selecionar</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Selecionar todos</value>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Deslize verticalmente para ajustar o volume</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Toque em qualquer lugar para reproduzir ou pausar</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Reprodutor de Multimídia Screenbox</value>
   </data>
@@ -996,6 +996,48 @@
   <data name="Folder" xml:space="preserve">
     <value>Pasta</value>
   </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>Toque</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>Deslizar para cima</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>Deslizar para baixo</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>Deslizar para esquerda</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>Deslizar para direita</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Ativar toque e segure para aumentar a velocidade da reprodução</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>Nenhuma</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Reproduzir/pausa</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>Retroceder</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>Avançar rápido</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>Diminuir volume</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>Aumentar volume</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>Diminuir velocidade</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>Aumentar velocidade</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adicionar à playlist</value>
   </data>
@@ -1006,10 +1048,10 @@
     <value>Nova playlist</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Importar playlist</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportar</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Item selecionado</value>
@@ -1072,9 +1114,9 @@
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>Você não possui nenhuma playlist</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>Crie sua primeira playlist para organizar seus vídeos e músicas favoritas.</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -222,6 +222,9 @@
   </data>
   <data name="AddToQueue" xml:space="preserve">
     <value>添加到队列</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>选择</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>全选</value>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>垂直拖动以调节音量</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>点击任意位置进行播放或暂停</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox 媒体播放器</value>
   </data>
@@ -995,6 +995,48 @@
   </data>
   <data name="Folder" xml:space="preserve">
     <value>文件夹</value>
+  </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>点击</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>向上滑动</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>向下滑动</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>向左滑动</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>向右滑动</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>开启长按加速播放</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>播放/暂停</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>后退</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>快进</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>减小音量</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>增大音量</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>减速</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>加速</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>添加到播放列表</value>

@@ -8,17 +8,17 @@ using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
 
@@ -39,9 +39,8 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Music) return;
         _dispatcherQueue.TryEnqueue(FetchSongs);
     }
 
@@ -54,7 +53,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
         IsLoading = _libraryContext.IsLoadingMusic;
-        Songs = _libraryContext.Songs;
+        Songs = _libraryContext.Music.Songs;
 
         // Populate song groups with fetched result
         var groups = GetCurrentGrouping(_libraryContext, SortBy);
@@ -86,11 +85,11 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, MediaViewModel>> GetAlbumGrouping(LibraryContext context)
     {
-        var groups = Songs.GroupBy(m => m.Album?.Name ?? context.UnknownAlbum.Name)
+        var groups = Songs.GroupBy(m => m.Album?.Name ?? context.Music.UnknownAlbum.Name)
             .OrderBy(g => g.Key)
             .ToList();
 
-        var index = groups.FindIndex(g => g.Key == context.UnknownAlbum.Name);
+        var index = groups.FindIndex(g => g.Key == context.Music.UnknownAlbum.Name);
         if (index >= 0)
         {
             var firstGroup = groups[index];
@@ -103,11 +102,11 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, MediaViewModel>> GetArtistGrouping(LibraryContext context)
     {
-        var groups = Songs.GroupBy(m => m.MainArtist?.Name ?? context.UnknownArtist.Name)
+        var groups = Songs.GroupBy(m => m.MainArtist?.Name ?? context.Music.UnknownArtist.Name)
             .OrderBy(g => g.Key)
             .ToList();
 
-        var index = groups.FindIndex(g => g.Key == context.UnknownArtist.Name);
+        var index = groups.FindIndex(g => g.Key == context.Music.UnknownArtist.Name);
         if (index >= 0)
         {
             var firstGroup = groups[index];

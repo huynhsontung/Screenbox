@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
@@ -19,14 +20,14 @@ using Windows.UI.Xaml.Navigation;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class VideosPageViewModel : ObservableRecipient,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<VideosLibrary>>
 {
     public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
     [ObservableProperty] private bool _hasVideos;
 
     /// <summary>Gets a value indicating whether the Videos library is available, used to enable the add-folder command.</summary>
-    public bool HasLibrary => _libraryContext.VideosLibrary != null;
+    public bool HasLibrary => _libraryContext.VideosStorageLibrary != null;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -41,9 +42,8 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<VideosLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Videos) return;
         _dispatcherQueue.TryEnqueue(UpdateVideos);
     }
 
@@ -51,7 +51,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     {
         if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
             Breadcrumbs.Add(firstFolder);
-        HasVideos = _libraryContext.Videos.Count > 0;
+        HasVideos = _libraryContext.Videos.Videos.Count > 0;
         AddFolderCommand.NotifyCanExecuteChanged();
     }
 
@@ -103,7 +103,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryContext.VideosLibrary?.RequestAddFolderAsync();
+            await _libraryContext.VideosStorageLibrary?.RequestAddFolderAsync();
         }
         catch (Exception e)
         {

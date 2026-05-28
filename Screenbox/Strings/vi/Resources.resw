@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -222,6 +222,9 @@
   </data>
   <data name="AddToQueue" xml:space="preserve">
     <value>Thêm vào hàng đợi</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Lựa chọn</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Chọn tất cả</value>
@@ -669,9 +672,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Kéo theo chiều dọc để điều chỉnh âm lượng</value>
   </data>
-  <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Nhấn vào bất cứ đâu để phát hoặc tạm dừng</value>
-  </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Trình Phát Phương Tiện Screenbox</value>
   </data>
@@ -996,6 +996,48 @@
   <data name="Folder" xml:space="preserve">
     <value>Thư mục</value>
   </data>
+  <data name="SettingsGestureTapHeader" xml:space="preserve">
+    <value>Tap</value>
+  </data>
+  <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
+    <value>Vuốt lên</value>
+  </data>
+  <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
+    <value>Vuốt xuống</value>
+  </data>
+  <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
+    <value>Vuốt sang trái</value>
+  </data>
+  <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
+    <value>Vuốt sang phải</value>
+  </data>
+  <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
+    <value>Enable press and hold to increase playback speed</value>
+  </data>
+  <data name="PlaybackActionKindNone" xml:space="preserve">
+    <value>Không có gì</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Phát/tạm dừng</value>
+  </data>
+  <data name="Rewind" xml:space="preserve">
+    <value>Tua lại</value>
+  </data>
+  <data name="FastForward" xml:space="preserve">
+    <value>Chuyển tiếp nhanh</value>
+  </data>
+  <data name="DecreaseVolume" xml:space="preserve">
+    <value>Giảm âm lượng</value>
+  </data>
+  <data name="IncreaseVolume" xml:space="preserve">
+    <value>Tăng âm lượng</value>
+  </data>
+  <data name="DecreaseRate" xml:space="preserve">
+    <value>Giảm tốc độ</value>
+  </data>
+  <data name="IncreaseRate" xml:space="preserve">
+    <value>Tăng tốc độ</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Thêm vào danh sách phát</value>
   </data>
@@ -1006,10 +1048,10 @@
     <value>Danh sách phát mới</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Nhập danh sách phát</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Xuất</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Mục đã chọn</value>
@@ -1072,9 +1114,9 @@
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>Bạn không có danh sách phát nào</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>Hãy tạo danh sách phát đầu tiên để sắp xếp các video và nhạc yêu thích của bạn.</value>
   </data>
 </root>

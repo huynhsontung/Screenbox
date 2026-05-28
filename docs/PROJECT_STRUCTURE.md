@@ -18,6 +18,7 @@ This document provides a comprehensive overview of the Screenbox project's archi
   - [Services Architecture](#services-architecture)
   - [Media Playback Engine](#media-playback-engine)
   - [Data Models and Persistence](#data-models-and-persistence)
+- [🏛️ Architecture Rules](#️-architecture-rules)
 - [🛠️ Technology Stack](#️-technology-stack)
 - [📋 Development Guidelines](#-development-guidelines)
 
@@ -97,7 +98,7 @@ Screenbox implements numerous custom controls for specialized functionality:
 
 ### Data Binding
 
-Screenbox uses [data binding](https://learn.microsoft.com/en-us/windows/uwp/data-binding/data-binding-quickstart) extensively to create dynamic, responsive UI components. The application primarily uses the [x:Bind](https://learn.microsoft.com/en-us/windows/uwp/xaml-platform/x-bind-markup-extension) markup extension for performance benefits over the legacy [Binding](https://learn.microsoft.com/en-us/windows/uwp/xaml-platform/binding-markup-extension) syntax.
+Screenbox uses [data binding](https://learn.microsoft.com/en-us/windows/uwp/data-binding/data-binding-quickstart) extensively to create dynamic, responsive UI components. The application primarily uses the [x:Bind](https://learn.microsoft.com/en-us/windows/apps/develop/platform/xaml/x-bind-markup-extension) markup extension for performance benefits over the legacy [Binding](https://learn.microsoft.com/en-us/windows/apps/develop/platform/xaml/binding-markup-extension) syntax.
 
 Example of x:Bind usage in media display:
 ```xml
@@ -144,6 +145,12 @@ The ViewModel layer is contained in the Screenbox.Core project and serves as the
 - **`VideosPageViewModel.cs`**: Video library browsing
 - **`MusicPageViewModel.cs`**: Music library organization
 - **`SearchResultPageViewModel.cs`**: Search functionality and results
+
+### Observable Domain Entities
+
+Some ViewModels — specifically `MediaViewModel`, `AlbumViewModel`, and `ArtistViewModel` — serve a dual role: they are MVVM observables **and** the effective domain entities for media items. This is a deliberate pragmatic choice for UWP MVVM: the application domain is inherently observable (tracks must notify when metadata loads, albums notify when thumbnails change), so the domain model and the observable layer naturally coincide.
+
+As a result, these classes appear throughout the codebase in all layers — including `LibraryContext`, `PlaylistsContext`, and `SearchResult` — without violating the intended architecture. They should be thought of as *observable domain entities* rather than pure presentation objects, and should never contain XAML or UI framework references.
 
 ### PropertyChanged Events
 
@@ -192,13 +199,16 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 **Media Management Services**
 - **`IFilesService`**: File system operations and media discovery
-- **`ILibraryService`**: Stateless operations for fetching and managing libraries
+- **`ILibraryService`**: Stateless operations for fetching and managing libraries. `FetchMusicAsync` returns a `MusicLibrary` and accepts an optional `IProgress<MusicLibrary>` for incremental batch updates; `FetchVideosAsync` works analogously with `VideosLibrary`.
 - **`ISearchService`**: Content search and filtering functionality
 
 **Playback and Streaming Services**
 - **`IPlayerService`**: Media player initialization and playback item management
 - **`ICastService`**: Stateless casting operations for renderer creation and configuration
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
+
+**Persistence Services**
+- **`ILastPositionTracker`**: Tracks and persists the last playback position for each media item, enabling resume-from-position functionality. Handles the `SuspendingMessage` to flush state to disk on app suspension.
 
 **System Integration Services**
 - **`ISettingsService`**: Application configuration persistence
@@ -207,22 +217,32 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 #### Application Contexts
 
-Contexts provide observable state management that can be shared across services and components:
+Contexts are **observable application state holders** shared across services and ViewModels. They represent the current runtime state of a domain area and act as the single source of truth for that state within the app.
 
-- **`PlayerContext`**: Holds the current media player instance, allowing components to observe player state changes
+Architectural rules for contexts:
+- **Written by**: Services and coordinators (as a side effect of use-case execution)
+- **Read/observed by**: ViewModels (via data binding and property-changed events)
+- **Must not**: Call services or coordinators back (no circular dependencies)
+- **May contain**: Messenger helper methods that broadcast state change events
+
+Available contexts:
+- **`PlayerContext`**: Holds the current `IMediaPlayer` instance, allowing components to observe player state changes
 - **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
-- **`LibraryContext`**: Holds library state including the current libraries, loading flags, cancellation tokens, query results, and media collections
+- **`LibraryContext`**: Holds library state including the `StorageLibrary` handles (`MusicStorageLibrary`, `VideosStorageLibrary`), loading flags, and the current `MusicLibrary` and `VideosLibrary` container objects. Written atomically by `LibraryCoordinator` after each fetch batch or on completion.
+- **`PlaylistsContext`**: Holds the application-wide collection of user playlists
 
 #### Stateful Coordinators
 
-Some platform APIs (file system watchers, timers, device watchers) require stateful ownership to reliably subscribe/unsubscribe and to avoid duplicating watchers across views.
+Some platform APIs (file system watchers, timers, device watchers) require stateful ownership to reliably subscribe/unsubscribe and to avoid duplicating watchers across views. Coordinators own these long-lived resources and orchestrate service calls in response to platform events.
 
-- **`LibraryController`**: Stateful coordinator that owns library queries, `ContentsChanged` watchers, debounce timers, and Xbox removable-storage device watchers. It updates `LibraryContext` with owned query results and triggers `ILibraryService` fetch operations.
+Architectural rules for coordinators:
+- **Depend on**: Services and contexts (never on ViewModels)
+- **Consumed by**: ViewModels at initialization boundaries (to start lifecycle)
+- **Must expose**: An interface (`ILibraryCoordinator`, etc.) for testability
+- **Implement**: `IDisposable` to clean up watchers/timers
 
-#### Stateless vs stateful decision
-
-- **Stateless services** (example: `LibraryService`, `CastService`): execute operations and write results into a supplied context, but do not own long-lived observable state.
-- **Stateful coordinators** (example: `LibraryController`): own watchers/timers and manage subscriptions/lifetimes.
+Available coordinators:
+- **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
 
 #### Helper Classes
 
@@ -230,11 +250,6 @@ Helper classes provide focused utilities and lightweight wrappers for specific f
 
 - **`RendererWatcher`**: Lightweight wrapper around VLC's RendererDiscoverer for network renderer discovery, exposing events for renderer found/lost notifications and maintaining a list of available renderers
 - **`DisplayRequestTracker`**: Manages display sleep prevention during media playback
-- **`LastPositionTracker`**: Tracks and persists media playback positions for resume functionality
-
-#### UI-Specific Services (Screenbox Project)
-- **`ResourceService.cs`**: Localization and resource string management
-- **`NavigationService.cs`**: Page navigation and routing
 
 ### Media Playback Engine
 
@@ -261,8 +276,36 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 - **`MusicInfo.cs`**: Audio metadata and music library information
 
 #### Application State Models  
+- **`MusicLibrary.cs`**: Immutable snapshot of the music library — `Songs`, `Albums`, `Artists`, `UnknownAlbum`, and `UnknownArtist`. Replaced by a new instance whenever the library is refreshed, so all relationships stay consistent. Has a static `Empty` instance used as the initial `LibraryContext.Music` value.
+- **`VideosLibrary.cs`**: Immutable snapshot of the video library — `Videos` list. Same replacement model as `MusicLibrary`.
 - **`PersistentMediaRecord.cs`**: Saved playback state and resume positions
 - **`PersistentStorageLibrary.cs`**: Library folder persistence
+
+## 🏛️ Architecture Rules
+
+### Dependency Flow
+
+The following table summarizes the allowed dependency directions between layers:
+
+| Layer | May depend on | Must not depend on |
+|---|---|---|
+| **View** (XAML + code-behind) | ViewModels, Contexts (read-only via DI) | Services, Coordinators directly |
+| **ViewModels** | Services (via interface), Contexts, Factories | Coordinators (except at startup boundaries) |
+| **Contexts** | Models, Playback abstractions | Services, Coordinators, ViewModels |
+| **Coordinators** | Services (via interface), Contexts | ViewModels |
+| **Services** | Other Services (via interface), Models, Playback | ViewModels, Contexts |
+| **Models / Playback** | (no application dependencies) | All layers above |
+
+### DI and Factory Patterns
+
+- All services and coordinators must be registered against their **interface**, not their concrete type.
+- Use constructor injection exclusively. The service locator pattern (`Ioc.Default.GetRequiredService<T>()`) is acceptable only in View code-behind for resolving ViewModels into page `DataContext`. It must not be used inside ViewModels, Services, or Coordinators.
+
+### Stateless vs Stateful
+
+- **Stateless services** (e.g., `LibraryService`, `CastService`): execute operations and **return data** to the caller. They do not own long-lived observable state, and must not read from or write to a `Context` directly. Results are returned as plain models (e.g., `MusicLibrary`) and applied to the context by the coordinator.
+- **Stateful coordinators** (e.g., `LibraryCoordinator`): own watchers/timers and manage subscriptions/lifetimes. Register as singletons and implement `IDisposable`.
+- **Stateful services** (e.g., `LastPositionTracker`): own in-memory state but no platform subscriptions. Prefer a service interface; register as singletons.
 
 ## 🛠️ Technology Stack
 
@@ -360,3 +403,4 @@ For detailed build configuration, see [UWP packaging documentation](https://lear
 - [Accessibility Guidelines for UWP Apps](https://learn.microsoft.com/en-us/windows/uwp/accessibility/accessibility)
 
 This structure enables maintainable, scalable development while supporting the rich feature set of a modern media player application.
+

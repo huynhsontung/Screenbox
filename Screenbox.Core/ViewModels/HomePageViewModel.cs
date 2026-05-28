@@ -1,8 +1,9 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,16 +25,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 {
     public ObservableCollection<MediaViewModel> Recent { get; }
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(PlaySelectedCommand))]
-    [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
-    [NotifyCanExecuteChangedFor(nameof(AddSelectedToQueueCommand))]
-    [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
-    private int _selectionCount;
-
-    [ObservableProperty] private bool? _selectionCheckState;
-    [ObservableProperty] private bool _enableMultiSelect;
-    [ObservableProperty] private MediaViewModel? _selectedItemToAdd;
+    public SelectionViewModel Selection { get; }
 
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
@@ -42,9 +34,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly Dictionary<string, string> _pathToMruMappings;
 
-    public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService,
+    public HomePageViewModel(
+        SelectionViewModel selection,
+        MediaViewModelFactory mediaFactory,
+        IFilesService filesService,
         ISettingsService settingsService)
     {
+        Selection = selection;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _settingsService = settingsService;
@@ -52,7 +48,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
         Recent = new ObservableCollection<MediaViewModel>();
-        SelectionCheckState = Recent.GetSelectionToggleState(SelectionCount);
+
+        Selection.SetItemsSource(Recent);
+        Selection.PropertyChanged += Selection_OnPropertyChanged;
 
         // Activate the view model's messenger
         IsActive = true;
@@ -74,6 +72,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     public async void OnLoaded()
     {
         await UpdateContentAsync();
+    }
+
+    private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectionViewModel.IsAllSelected))
+        {
+            PlaySelectedCommand.NotifyCanExecuteChanged();
+            PlaySelectedNextCommand.NotifyCanExecuteChanged();
+            AddSelectedToQueueCommand.NotifyCanExecuteChanged();
+            RemoveSelectedCommand.NotifyCanExecuteChanged();
+        }
     }
 
     [RelayCommand]
@@ -131,7 +140,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
                 if (file.IsSupportedPlaylist()) continue;
                 if (i >= Recent.Count)
                 {
-                    MediaViewModel media = _mediaFactory.GetSingleton(file);
+                    MediaViewModel media = _mediaFactory.GetOrCreate(file);
                     _pathToMruMappings[media.Location] = token;
                     Recent.Add(media);
                 }
@@ -171,9 +180,37 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         // Load media details for the remaining items
         if (!loadMediaDetails) return;
-        IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAsync(_filesService));
-        loadingTasks = Recent.Select(x => x.LoadThumbnailAsync()).Concat(loadingTasks);
+        IEnumerable<Task> loadingTasks = Recent.Select(x => SafeLoadDetailsAsync(x));
+        loadingTasks = Recent.Select(x => SafeLoadThumbnailAsync(x)).Concat(loadingTasks);
         await Task.WhenAll(loadingTasks);
+    }
+
+    private async Task SafeLoadDetailsAsync(MediaViewModel media)
+    {
+        try
+        {
+            await media.LoadDetailsAsync(_filesService);
+        }
+        catch (Exception e)
+        {
+            // The underlying StorageFile (e.g. from MRU) may be in a bad state and
+            // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
+            LogService.Log(e);
+        }
+    }
+
+    private static async Task SafeLoadThumbnailAsync(MediaViewModel media)
+    {
+        try
+        {
+            await media.LoadThumbnailAsync();
+        }
+        catch (Exception e)
+        {
+            // The underlying StorageFile (e.g. from MRU) may be in a bad state and
+            // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
+            LogService.Log(e);
+        }
     }
 
     private void MoveOrInsert(StorageFile file, string token, int desiredIndex)
@@ -183,16 +220,26 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         int existingIndex = -1;
         for (int j = desiredIndex + 1; j < Recent.Count; j++)
         {
-            if (Recent[j].Source is StorageFile existingFile && file.IsEqual(existingFile))
+            if (Recent[j].Source is not StorageFile existingFile) continue;
+            try
             {
-                existingIndex = j;
-                break;
+                if (file.IsEqual(existingFile))
+                {
+                    existingIndex = j;
+                    break;
+                }
+            }
+            catch (Exception)
+            {
+                // StorageFile.IsEqual() can throw when the underlying MRU item is in
+                // a bad state (e.g. ArgumentException "Falscher Parameter." or
+                // "Element not found." HRESULT 0x80070490). Treat as not equal.
             }
         }
 
         if (existingIndex == -1)
         {
-            MediaViewModel media = _mediaFactory.GetSingleton(file);
+            MediaViewModel media = _mediaFactory.GetOrCreate(file);
             _pathToMruMappings[media.Location] = token;
             Recent.Insert(desiredIndex, media);
         }
@@ -241,13 +288,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Messenger.Send(new PlayMediaMessage(files));
     }
 
-    [RelayCommand]
-    private void SelectItem(MediaViewModel media)
-    {
-        EnableMultiSelect = true;
-        SelectedItemToAdd = media;
-    }
-
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelected(IList<object>? selectedItems)
     {
@@ -260,7 +300,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
 
         selectedItems.Clear();
-        ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -271,7 +311,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var items = selectedItems.OfType<MediaViewModel>().Reverse().ToArray();
         Messenger.SendPlayNext(items);
         selectedItems.Clear();
-        ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -282,7 +322,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var items = selectedItems.OfType<MediaViewModel>().ToArray();
         Messenger.SendAddToQueue(items);
         selectedItems.Clear();
-        ClearSelection();
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -297,15 +337,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
 
         selectedItems.Clear();
-        ClearSelection();
-    }
-
-    [RelayCommand]
-    private void ClearSelection()
-    {
-        EnableMultiSelect = false;
-        SelectedItemToAdd = null;
-        SelectionCount = 0;
+        Selection.ClearSelectionCommand.Execute(null);
     }
 
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
@@ -334,15 +366,5 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
-
-    partial void OnSelectionCountChanged(int value)
-    {
-        SelectionCheckState = Recent.GetSelectionToggleState(value);
-    }
-
-    partial void OnEnableMultiSelectChanged(bool value)
-    {
-        if (!value) SelectionCount = 0;
-    }
+    private bool HasSelection() => Selection.SelectedItems.Count > 0;
 }

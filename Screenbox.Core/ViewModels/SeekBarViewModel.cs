@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Controllers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -65,13 +64,13 @@ public sealed partial class SeekBarViewModel :
     private readonly DispatcherQueueTimer _bufferingTimer;
     private readonly DispatcherQueueTimer _seekTimer;
     private readonly DispatcherQueueTimer _originalPositionTimer;
-    private readonly LastPositionTracker _lastPositionTracker;
+    private readonly ILastPositionTracker _lastPositionTracker;
     private TimeSpan _originalPosition;
     private TimeSpan _lastTrackedPosition;
     private bool _timeChangeOverride;
     private MediaViewModel? _currentItem;
 
-    public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker,
+    public SeekBarViewModel(ISettingsService settingsService, ILastPositionTracker lastPositionTracker,
         PlayerContext playerContext)
     {
         _settingsService = settingsService;

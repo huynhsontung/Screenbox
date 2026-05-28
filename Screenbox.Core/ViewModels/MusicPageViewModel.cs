@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Windows.Storage;
+using Screenbox.Core.Models;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class MusicPageViewModel : ObservableRecipient,
-    IRecipient<LibraryContentChangedMessage>
+    IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     [ObservableProperty] private bool _hasContent;
 
     /// <summary>Gets a value indicating whether the Music library is available, used to enable the add-folder command.</summary>
-    public bool LibraryLoaded => _libraryContext.MusicLibrary != null;
+    public bool LibraryLoaded => _libraryContext.MusicStorageLibrary != null;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -33,15 +33,14 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         IsActive = true;
     }
 
-    public void Receive(LibraryContentChangedMessage message)
+    public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (message.LibraryId != KnownLibraryId.Music) return;
         _dispatcherQueue.TryEnqueue(UpdateSongs);
     }
 
     public void UpdateSongs()
     {
-        HasContent = _libraryContext.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
+        HasContent = _libraryContext.Music.Songs.Count > 0 || _libraryContext.IsLoadingMusic;
         AddFolderCommand.NotifyCanExecuteChanged();
     }
 
@@ -54,7 +53,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     {
         try
         {
-            await _libraryContext.MusicLibrary?.RequestAddFolderAsync();
+            await _libraryContext.MusicStorageLibrary?.RequestAddFolderAsync();
         }
         catch (Exception e)
         {
