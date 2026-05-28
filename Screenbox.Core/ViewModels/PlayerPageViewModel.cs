@@ -412,8 +412,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// The seek duration is determined by the following modifier keys:
     /// <list type="bullet">
     /// <item><term><see cref="VirtualKeyModifiers.None"/></term><description>Seek using the default interval.</description></item>
-    /// <item><term><see cref="VirtualKeyModifiers.Control"/></term><description>Seek using Double (<c>2×</c>) the configured interval.</description></item>
-    /// <item><term><see cref="VirtualKeyModifiers.Shift"/></term><description>Seek using One-fifth (<c>1/5</c>) of the configured interval.</description></item>
+    /// <item><term><see cref="VirtualKeyModifiers.Control"/></term><description>Seek using double (<c>2×</c>) the configured interval.</description></item>
+    /// <item><term><see cref="VirtualKeyModifiers.Shift"/></term><description>Seek using one-fifth (<c>1/5</c>) of the configured interval.</description></item>
     /// </list>
     /// </remarks>
     /// <param name="key">A value of the enumeration that specifies the key that was pressed.</param>
@@ -438,7 +438,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             _ => 0,
         };
 
-        Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(seekAmount * modifierFactor));
+        double seekSeconds = seekAmount * modifierFactor;
+        if (seekSeconds == 0) return;
+
+        Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(seekSeconds));
     }
 
     /// <summary>
