@@ -55,7 +55,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="SpeedSlider"
-                        Header="{strings:Resources Key=CustomPlaybackSpeed}"
+                        Header="{x:Bind strings:Resources.CustomPlaybackSpeed}"
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
                         Minimum="0"
@@ -72,7 +72,7 @@
                     <TextBox
                         x:Name="AspectRatioTextBox"
                         AutomationProperties.Name="Custom aspect ratio TextBox"
-                        Header="{strings:Resources Key=CustomAspectRatio}"
+                        Header="{x:Bind strings:Resources.CustomAspectRatio}"
                         PlaceholderText="16:9"
                         TextChanged="AspectRatioTextBox_OnTextChanged" />
                 </StackPanel>
@@ -86,7 +86,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="SubtitleTimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
+                        Header="{x:Bind strings:Resources.TimingOffset}"
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
@@ -105,7 +105,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="AudioTimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
+                        Header="{x:Bind strings:Resources.TimingOffset}"
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
@@ -123,7 +123,7 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderOpenGlyph}}"
                     KeyTipPlacementMode="Left"
-                    Text="{strings:Resources Key=OpenFiles}">
+                    Text="{x:Bind strings:Resources.OpenFiles}">
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="O" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -223,7 +223,7 @@
                         x:Name="CustomPlaybackSpeedMenuItem"
                         Click="CustomSpeedMenuItem_OnClick"
                         GroupName="SpeedGroup"
-                        Text="{strings:Resources Key=Custom}" />
+                        Text="{x:Bind strings:Resources.Custom}" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemSaveSnapshotKey}"
@@ -253,19 +253,19 @@
                     AccessKey="{strings:KeyboardResources Key=MenuItemAspectRatioKey}"
                     Icon="{ui:FontIcon Glyph=&#xE799;}"
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
-                    Text="{strings:Resources Key=AspectRatio}">
+                    Text="{x:Bind strings:Resources.AspectRatio}">
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetAspectRatioCommand}"
                         CommandParameter="Fit"
                         GroupName="AspectRatioGroup"
                         IsChecked="True"
                         Tag="0:0"
-                        Text="{strings:Resources Key=Fit}" />
+                        Text="{x:Bind strings:Resources.Fit}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetAspectRatioCommand}"
                         CommandParameter="Fill"
                         GroupName="AspectRatioGroup"
-                        Text="{strings:Resources Key=Fill}" />
+                        Text="{x:Bind strings:Resources.Fill}" />
                     <MenuFlyoutSeparator />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetAspectRatioCommand}"
@@ -301,7 +301,7 @@
                         x:Name="CustomAspectRatioMenuItem"
                         Click="CustomAspectRatioMenuItem_OnClick"
                         GroupName="AspectRatioGroup"
-                        Text="{strings:Resources Key=Custom}" />
+                        Text="{x:Bind strings:Resources.Custom}" />
                 </MenuFlyoutSubItem>
                 <!--<MenuFlyoutSubItem
                     Icon="{ui:FontIcon Glyph=&#xE714;}"
@@ -314,7 +314,7 @@
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind ViewModel.IsAdvancedModeActive, Mode=OneWay}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.ResetMediaPlaybackCommand}" />
@@ -584,7 +584,7 @@
                 IsAccessKeyScope="True"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=More}">
+                ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                 <FontIcon Glyph="&#xE712;" />
             </Button>
         </StackPanel>

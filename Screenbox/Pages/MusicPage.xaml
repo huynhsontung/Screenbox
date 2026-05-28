@@ -40,28 +40,28 @@
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
                     Style="{StaticResource TitleMediumTextBlockStyle}"
-                    Text="{strings:Resources Key=Music}" />
+                    Text="{x:Bind strings:Resources.Music}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     x:Name="SongsMenuItem"
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemSongsKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=Songs}"
+                    Content="{x:Bind strings:Resources.Songs}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="songs" />
                 <muxc:NavigationViewItem
                     x:Name="AlbumsMenuItem"
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemAlbumsKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=Albums}"
+                    Content="{x:Bind strings:Resources.Albums}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="albums" />
                 <muxc:NavigationViewItem
                     x:Name="ArtistsMenuItem"
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemArtistsKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=Artists}"
+                    Content="{x:Bind strings:Resources.Artists}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="artists" />
             </muxc:NavigationView.MenuItems>
@@ -71,9 +71,9 @@
                     Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
                     AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
-                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
@@ -84,7 +84,7 @@
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
-                            Text="{strings:Resources Key=AddFolder}" />
+                            Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </muxc:NavigationView.PaneFooter>

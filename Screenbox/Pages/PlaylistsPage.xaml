@@ -26,29 +26,29 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{x:Bind strings:Resources.Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{x:Bind strings:Resources.AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind RenamePlaylistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Rename}"
-                    Text="{strings:Resources Key=Rename}" />
+                    Text="{x:Bind strings:Resources.Rename}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ExportPlaylistCommand}"
                     CommandParameter="{Binding}"
-                    Text="{strings:Resources Key=Export}">
+                    Text="{x:Bind strings:Resources.Export}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
                     </MenuFlyoutItem.Icon>
@@ -57,7 +57,7 @@
                     Command="{x:Bind DeletePlaylistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
-                    Text="{strings:Resources Key=Delete}" />
+                    Text="{x:Bind strings:Resources.Delete}" />
             </MenuFlyout>
 
             <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
@@ -110,7 +110,7 @@
                 x:Name="HeaderText"
                 Grid.Column="0"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=Playlists}"
+                Text="{x:Bind strings:Resources.Playlists}"
                 TextWrapping="NoWrap" />
 
             <muxc:SplitButton
@@ -126,7 +126,7 @@
                     <TextBlock
                         x:Name="HeaderCreateButtonText"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=NewPlaylist}" />
+                        Text="{x:Bind strings:Resources.NewPlaylist}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
                     <behaviors:SplitButtonXYNavigationBehavior />
@@ -188,7 +188,7 @@
                         Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=NewPlaylist}" />
+                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:SplitButtonXYNavigationBehavior />

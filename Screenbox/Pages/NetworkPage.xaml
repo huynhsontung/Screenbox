@@ -12,7 +12,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{strings:Resources Key=Network}" />
+        <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{x:Bind strings:Resources.Network}" />
     </Page.Resources>
 
     <Grid>

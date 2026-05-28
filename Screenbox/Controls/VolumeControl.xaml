@@ -78,7 +78,7 @@
             VerticalAlignment="Center"
             d:Value="60"
             AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
-            AutomationProperties.Name="{strings:Resources Key=VolumeSliderTooltip}"
+            AutomationProperties.Name="{x:Bind strings:Resources.VolumeSliderTooltip}"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
             PointerWheelChanged="VolumeSlider_OnPointerWheelChanged"

@@ -70,7 +70,7 @@
                                 x:Name="AlbumTitle"
                                 MaxLines="2"
                                 Style="{StaticResource BodyStrongTextBlockStyle}"
-                                Text="{Binding Key.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}">
+                                Text="{Binding Key.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={x:Bind strings:Resources.UnknownAlbum}}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:OverflowTextToolTipBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -120,24 +120,24 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{x:Bind strings:Resources.Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{x:Bind strings:Resources.AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutSubItem
                     x:Name="AddToPlaylistSubMenu"
                     Icon="{ui:SymbolIcon Symbol=Add}"
-                    Text="{strings:Resources Key=AddToPlaylist}" />
+                    Text="{x:Bind strings:Resources.AddToPlaylist}" />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{Binding}"
@@ -147,18 +147,18 @@
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding Album}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{x:Bind strings:Resources.ShowAlbum}"
                     Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -256,7 +256,7 @@
                         Margin="0,12,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{strings:Resources Key=Artist}"
+                        Text="{x:Bind strings:Resources.Artist}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
@@ -289,7 +289,7 @@
                                 Command="{x:Bind ViewModel.PlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
-                                Label="{strings:Resources Key=Play}"
+                                Label="{x:Bind strings:Resources.Play}"
                                 Style="{StaticResource AccentButtonAppBarButtonStyle}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:AutoFocusBehavior />
@@ -302,7 +302,7 @@
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
-                                Label="{strings:Resources Key=ShuffleAndPlay}"
+                                Label="{x:Bind strings:Resources.ShuffleAndPlay}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
                         </controls:CommandBarEx>
                     </Grid>

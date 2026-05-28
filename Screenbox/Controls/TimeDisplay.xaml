@@ -19,14 +19,14 @@
                 d:Text="43:21"
                 Style="{x:Bind TextBlockStyle, Mode=OneWay}"
                 Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}"
-                ToolTipService.ToolTip="{strings:Resources Key=TimeElapsed}"
+                ToolTipService.ToolTip="{x:Bind strings:Resources.TimeElapsed}"
                 Typography.NumeralAlignment="Tabular" />
             <TextBlock
                 x:Name="RemainingText"
                 d:Text="-58:39"
                 Style="{x:Bind TextBlockStyle, Mode=OneWay}"
                 Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}"
-                ToolTipService.ToolTip="{strings:Resources Key=TimeRemaining}"
+                ToolTipService.ToolTip="{x:Bind strings:Resources.TimeRemaining}"
                 Typography.NumeralAlignment="Tabular"
                 Visibility="Collapsed" />
             <TextBlock
@@ -37,7 +37,7 @@
                 d:Text="1:23:45"
                 Style="{x:Bind TextBlockStyle, Mode=OneWay}"
                 Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}"
-                ToolTipService.ToolTip="{strings:Resources Key=TimeLength}"
+                ToolTipService.ToolTip="{x:Bind strings:Resources.TimeLength}"
                 Typography.NumeralAlignment="Tabular" />
         </StackPanel>
 

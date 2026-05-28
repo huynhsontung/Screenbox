@@ -43,18 +43,18 @@
                     Command="{Binding PlayAlbumNextCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{Binding AddAlbumToQueueCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{x:Bind strings:Resources.AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}" />
+                    Text="{x:Bind strings:Resources.ShowAlbum}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -74,7 +74,7 @@
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
             AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
-            AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+            AutomationProperties.Name="{x:Bind strings:Resources.ShuffleAndPlay}"
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
             <StackPanel Orientation="Horizontal">
@@ -83,7 +83,7 @@
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     Glyph="{StaticResource ShuffleGlyph}"
                     MirroredWhenRightToLeft="True" />
-                <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+                <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
             </StackPanel>
         </Button>
 
@@ -104,30 +104,30 @@
                         GroupName="SortOrder"
                         IsChecked="True"
                         Tag="title"
-                        Text="{strings:Resources Key=PropertyTitle}" />
+                        Text="{x:Bind strings:Resources.PropertyTitle}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="artist"
                         GroupName="SortOrder"
                         Tag="artist"
-                        Text="{strings:Resources Key=Artist}" />
+                        Text="{x:Bind strings:Resources.Artist}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="year"
                         GroupName="SortOrder"
                         Tag="year"
-                        Text="{strings:Resources Key=ReleasedYear}" />
+                        Text="{x:Bind strings:Resources.ReleasedYear}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="dateAdded"
                         GroupName="SortOrder"
                         Tag="dateAdded"
-                        Text="{strings:Resources Key=DateAdded}" />
+                        Text="{x:Bind strings:Resources.DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">
                 <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
-                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock x:Name="SortByText"><Run Text="{x:Bind strings:Resources.SortBy}" /><Run Text=":&#160;" /></TextBlock>
                 <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
             </StackPanel>
         </muxc:DropDownButton>
