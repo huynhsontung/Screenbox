@@ -406,59 +406,42 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <remarks>
     /// The following keys determine the seek direction:
     /// <list type="bullet">
-    /// <item><description><see cref="VirtualKey.Right"/> (when player is visible) or <see cref="VirtualKey.L"/>: Seek forward.</description></item>
-    /// <item><description><see cref="VirtualKey.Left"/> (when player is visible) or <see cref="VirtualKey.J"/>: Seek backward.</description></item>
+    /// <item><term><see cref="VirtualKey.Right"/> (when player is visible) or <see cref="VirtualKey.L"/></term><description>Seek forward.</description></item>
+    /// <item><term><see cref="VirtualKey.Left"/> (when player is visible) or <see cref="VirtualKey.J"/></term><description>Seek backward.</description></item>
     /// </list>
     /// The seek duration is determined by the following modifier keys:
     /// <list type="bullet">
-    /// <item><description><see cref="VirtualKeyModifiers.Control"/>: Seek by 10 seconds.</description></item>
-    /// <item><description><see cref="VirtualKeyModifiers.Shift"/>: Seek by 1 second.</description></item>
-    /// <item><description><see cref="VirtualKeyModifiers.None"/>: Seek by 5 seconds.</description></item>
+    /// <item><term><see cref="VirtualKeyModifiers.None"/></term><description>Seek using the default interval.</description></item>
+    /// <item><term><see cref="VirtualKeyModifiers.Control"/></term><description>Seek using double (<c>2×</c>) the configured interval.</description></item>
+    /// <item><term><see cref="VirtualKeyModifiers.Shift"/></term><description>Seek using one-fifth (<c>1/5</c>) of the configured interval.</description></item>
     /// </list>
     /// </remarks>
-    /// <param name="key">The key that was pressed.</param>
-    /// <param name="modifiers">The modifier keys held during the key press.</param>
-    /// <returns><see langword="true"/> if a seek operation was performed; otherwise, <see langword="false"/>.</returns>
-    public bool ProcessSeekKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
+    /// <param name="key">A value of the enumeration that specifies the key that was pressed.</param>
+    /// <param name="modifiers">A bitwise combination of the enumeration values that specifies the modifier keys held during the key press.</param>
+    public void ProcessSeekKeyDown(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (MediaPlayer == null) return false;
+        if (MediaPlayer is null) return;
+
         bool playerVisible = PlayerVisibility == PlayerVisibilityState.Visible;
-        long seekAmount = 0;
-        int direction;
-        switch (key)
+        int seekAmount = key switch
         {
-            case VirtualKey.Left when playerVisible:
-            case VirtualKey.J:
-                direction = -1;
-                break;
-            case VirtualKey.Right when playerVisible:
-            case VirtualKey.L:
-                direction = 1;
-                break;
-            default:
-                return false;
-        }
+            VirtualKey.J or VirtualKey.Left when playerVisible => -_settingsService.PlayerRewindStep,
+            VirtualKey.L or VirtualKey.Right when playerVisible => _settingsService.PlayerFastForwardStep,
+            _ => 0,
+        };
 
-        switch (modifiers)
+        double modifierFactor = modifiers switch
         {
-            case VirtualKeyModifiers.Control:
-                seekAmount = 10000;
-                break;
-            case VirtualKeyModifiers.Shift:
-                seekAmount = 1000;
-                break;
-            case VirtualKeyModifiers.None:
-                seekAmount = 5000;
-                break;
-        }
+            VirtualKeyModifiers.None => 1,
+            VirtualKeyModifiers.Control => 2,
+            VirtualKeyModifiers.Shift => 0.2,
+            _ => 0,
+        };
 
-        seekAmount *= direction;
-        if (seekAmount != 0)
-        {
-            Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(seekAmount));
-        }
+        double seekSeconds = seekAmount * modifierFactor;
+        if (seekSeconds == 0) return;
 
-        return true;
+        Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(seekSeconds));
     }
 
     /// <summary>

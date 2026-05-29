@@ -97,6 +97,10 @@
             <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromName((x:String))}" />
         </DataTemplate>
 
+        <DataTemplate x:Key="IntegerToSecondsCountResourceStringTemplate" x:DataType="x:Int32">
+            <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
+        </DataTemplate>
+
         <DataTemplate x:Key="PlaybackActionKindToResourceStringTemplate" x:DataType="enums:PlaybackActionKind">
             <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((enums:PlaybackActionKind))}" />
         </DataTemplate>
@@ -374,6 +378,40 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsRewindDescription}"
+                    Header="{x:Bind strings:Resources.Rewind}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xED3C;}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRewindDescription}"
+                        ItemTemplate="{StaticResource IntegerToSecondsCountResourceStringTemplate}"
+                        ItemsSource="{x:Bind ViewModel.PlayerSeekStepOptions}"
+                        SelectedItem="{x:Bind ViewModel.PlayerRewindStep, Mode=TwoWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsFastForwardDescription}"
+                    Header="{x:Bind strings:Resources.FastForward}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xED3D;}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsFastForwardDescription}"
+                        ItemTemplate="{StaticResource IntegerToSecondsCountResourceStringTemplate}"
+                        ItemsSource="{x:Bind ViewModel.PlayerSeekStepOptions}"
+                        SelectedItem="{x:Bind ViewModel.PlayerFastForwardStep, Mode=TwoWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.SettingsOnScreenControlsDescription}"
@@ -390,13 +428,9 @@
                             <ComboBox
                                 MinWidth="150"
                                 AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}"
+                                ItemTemplate="{StaticResource IntegerToSecondsCountResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.PlayerControlsHideDelayOptions, Mode=OneWay}"
                                 SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="x:Int32">
-                                        <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>

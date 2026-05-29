@@ -28,6 +28,9 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     IRecipient<NavigationViewDisplayModeRequestMessage>,
     IRecipient<CriticalErrorMessage>
 {
+    private const int TriggerSeekMultiplier = 4;
+    private const int VolumeAdjustmentStep = 2;
+
     private const int MaxSuggestionsPerCategory = 6;
     private const int MaxTotalSuggestions = 10;
     private const double IndexWeightFactor = 0.1;
@@ -43,6 +46,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     [NotifyPropertyChangedRecipients]
     private NavigationViewDisplayMode _navigationViewDisplayMode;
 
+    private readonly ISettingsService _settingsService;
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
     private readonly LibraryContext _libraryContext;
@@ -53,10 +57,11 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
-    public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
+    public MainPageViewModel(ISettingsService settingsService, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
         PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory)
     {
+        _settingsService = settingsService;
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryContext = libraryContext;
@@ -93,35 +98,40 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
     }
 
-    public bool ProcessGamepadKeyDown(VirtualKey key)
+    public void ProcessGamepadKeyDown(VirtualKey key)
     {
         // All Gamepad keys are in the range of [195, 218]
-        if ((int)key < 195 || (int)key > 218) return false;
-        Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
-        if (playlist.IsEmpty) return false;
+        if ((int)key < 195 || (int)key > 218) return;
 
-        int? volumeChange = null;
+        Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
+        if (playlist.IsEmpty) return;
+
+        int rewindStep = _settingsService.PlayerRewindStep;
+        int fastForwardStep = _settingsService.PlayerFastForwardStep;
+
         switch (key)
         {
             case VirtualKey.GamepadRightThumbstickLeft:
             case VirtualKey.GamepadLeftShoulder:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-5000));
+                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(-rewindStep));
                 break;
             case VirtualKey.GamepadRightThumbstickRight:
             case VirtualKey.GamepadRightShoulder:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(5000));
+                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(fastForwardStep));
                 break;
             case VirtualKey.GamepadLeftTrigger when PlayerVisible:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-30_000));
+                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(-rewindStep * TriggerSeekMultiplier));
                 break;
             case VirtualKey.GamepadRightTrigger when PlayerVisible:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(30_000));
+                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(fastForwardStep * TriggerSeekMultiplier));
                 break;
             case VirtualKey.GamepadRightThumbstickUp:
-                volumeChange = 2;
+                int volumeUp = Messenger.Send(new ChangeVolumeRequestMessage(VolumeAdjustmentStep, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
                 break;
             case VirtualKey.GamepadRightThumbstickDown:
-                volumeChange = -2;
+                int volumeDown = Messenger.Send(new ChangeVolumeRequestMessage(-VolumeAdjustmentStep, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volumeDown));
                 break;
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));
@@ -130,16 +140,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                 Messenger.Send(new TogglePlayerVisibilityMessage());
                 break;
             default:
-                return false;
+                return;
         }
-
-        if (volumeChange.HasValue)
-        {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange.Value, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume));
-        }
-
-        return true;
     }
 
     public void OnDrop(DataPackageView data)
