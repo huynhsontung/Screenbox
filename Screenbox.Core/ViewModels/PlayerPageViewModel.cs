@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -425,8 +425,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         bool playerVisible = PlayerVisibility == PlayerVisibilityState.Visible;
         int seekAmount = key switch
         {
-            VirtualKey.J or VirtualKey.Left when playerVisible => -_settingsService.PlayerRewindStep,
-            VirtualKey.L or VirtualKey.Right when playerVisible => _settingsService.PlayerFastForwardStep,
+            VirtualKey.Left when playerVisible => -_settingsService.PlayerRewindStep,
+            VirtualKey.Right when playerVisible => _settingsService.PlayerFastForwardStep,
+            VirtualKey.J => -_settingsService.PlayerRewindStep,
+            VirtualKey.L => _settingsService.PlayerFastForwardStep,
             _ => 0,
         };
 
