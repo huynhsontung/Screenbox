@@ -172,20 +172,18 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         var result = _searchService.SearchLocalLibrary(_libraryContext, queryText);
         var newSuggestions = GetSuggestItems(result, queryText).ToList();
 
-        // If there are no suggestions, show a single 'None' entry.
         if (newSuggestions.Count == 0)
         {
             newSuggestions.Add(new SearchSuggestion(SearchSuggestionType.None, queryText));
         }
 
-        // Update the collection in-place to avoid unnecessary UI updates.
         for (int i = 0; i < newSuggestions.Count; i++)
         {
             if (i < SearchSuggestions.Count)
             {
                 var newItem = newSuggestions[i];
                 var oldItem = SearchSuggestions[i];
-                if (!oldItem.Equals(newItem))
+                if (!Equals(oldItem, newItem))
                 {
                     SearchSuggestions[i] = newItem;
                 }
@@ -196,10 +194,9 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             }
         }
 
-        // Remove any extra old suggestions that are no longer present.
-        while (SearchSuggestions.Count > newSuggestions.Count)
+        for (int i = SearchSuggestions.Count - 1; i >= newSuggestions.Count; i--)
         {
-            SearchSuggestions.RemoveAt(SearchSuggestions.Count - 1);
+            SearchSuggestions.RemoveAt(i);
         }
     }
 
