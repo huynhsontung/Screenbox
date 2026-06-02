@@ -3,7 +3,7 @@ name: Crowdin Sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '42 */4 * * *'
 
 permissions:
   contents: write
@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Crowdin Sync
         uses: crowdin/github-action@v2
