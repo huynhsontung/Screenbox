@@ -26,7 +26,7 @@ jobs:
           upload_translations: false
           download_translations: true
           localization_branch_name: l10n_crowdin
-          crowdin_branch_name: main
+          # crowdin_branch_name: main
           create_pull_request: true
           pull_request_title: 'l10n: New Crowdin updates'
           pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
