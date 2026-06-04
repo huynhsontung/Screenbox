@@ -224,16 +224,16 @@
     <value>キューに追加</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>選択</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>すべて選択</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>すべての項目を選択</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>全て選択解除</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>選択内容をクリア</value>
@@ -278,7 +278,7 @@
     <value>動画のビューを復元する</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>イマーシブビューを最小化する</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>キャスト</value>
@@ -335,7 +335,7 @@
     <value>検索</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>動画・曲・アルバムなどを検索</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>設定</value>
@@ -356,7 +356,7 @@
     <value>フォルダの場所を開く</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>別のプログラムから開く</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>アルバム</value>
@@ -461,7 +461,7 @@
     <value>アーティスト</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>曲</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>曲</value>
@@ -470,7 +470,7 @@
     <value>再生するファイルをブラウズする</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>他の方法でメディアを開く</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>ファイルを追加</value>
@@ -479,7 +479,7 @@
     <value>再生キューに追加するファイルをブラウズする</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>他の方法でファイルを追加する</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>ミュージックライブラリにフォルダを追加します</value>
@@ -631,7 +631,7 @@
     <value>最近使った項目を表示</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Show controls when paused</value>
+    <value>再生停止時にコントロールパネルを表示する</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>動画の参照場所</value>
@@ -657,11 +657,17 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>最大音量を 100% 以上にすることを許可する</value>
   </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>巻き戻し時にスキップされた時間</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>早送り時にスキップされた時間</value>
+  </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>スクリーン上のコントロールパネル設定</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>コントロールパネルの自動非表示の動作を調整します</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>ジェスチャー</value>
@@ -701,15 +707,15 @@
     <value>字幕を追加しました</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>プレイリスト "{0}" が作成されました</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>プレイリスト "{0}" が削除されました</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>プレイリストの名前が "{0}" に変更されました</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -719,7 +725,7 @@
     <value>互換性のあるレンダラーが利用できません。デバイスでDirect3D 11が利用可能であることを確認してください。</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>この問題と修正についての詳細はこちらをご覧ください</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>ファイルを開けませんでした</value>
@@ -756,7 +762,7 @@
     <value>詳細設定</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>プライバシー</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>アドバンストモード</value>
@@ -792,7 +798,7 @@
     <value>ライセンス</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>サードパーティ製ソフトウェアに関する謝辞 (クレジット表記)</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>翻訳に協力する</value>
@@ -852,7 +858,7 @@
     <value>並び替え</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value/>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -862,19 +868,19 @@
     <value>リリース年</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>オーディオビジュアル</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Lively Wallpaperで取得</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>GitHubでテーマをダウンロード</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>オーディオテーマ設定</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>テーマ</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>ファイル参照</value>
@@ -883,7 +889,7 @@
     <value>デフォルト</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>オーディオを再生したときの背景テーマを選択</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Powered by Lively Wallpaper</value>
@@ -892,10 +898,10 @@
     <value>画像をインポート</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Lively WallpapaerアプリかGitHubからさらにビジュアルを取得</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>追加日</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>メディア</value>
@@ -919,13 +925,13 @@
     <value>アーティストを表示</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>視覚情報の読み込みに失敗しました</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>1つのファイルを開いたとき、同じフォルダ内のすべてのファイルを自動的に再生キューに追加する</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>フォルダ内のすべてのファイルをキューに追加する</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
     <value>システム設定を使用する</value>
@@ -937,7 +943,7 @@
     <value>ライト</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>アプリ全体のテーマカラーを変更する</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
     <value>アプリ テーマ</value>
@@ -946,31 +952,31 @@
     <value>個人用設定</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume previous session</value>
+    <value>常に前回の再生から再開する</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Automatically resume media playback from last stopped position when opening a file</value>
+    <value>ファイルを開いたときに自動的に前回中断した位置から再開する</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>動画再生のアップスケーリング手法</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>バイリニア補間</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>ポイント</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>超解像</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Show chapter name when available</value>
+    <value>チャプターが利用可能な際にチャプター名を表示する</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>無操作になってから操作パネルが非表示なるまでの時間</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
     <value>{0} 秒</value>
@@ -984,139 +990,140 @@
     <value>アプリの言語</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>アプリの表示言語を変更する</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>システムの言語を使用する</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>"{0}"個のアイテム</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>フォルダー</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>タップ</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>上にスワイプ</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>下にスワイプ</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>左にスワイプ</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>右にスワイプ</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>再生時に画面を長押しして再生速度を早くする</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>何もしない</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>再生/停止</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>巻き戻す</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>早送り</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>音量を下げる</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>音量を上げる</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>再生速度を下げる</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>再生速度を上げる</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>プレイリストに追加</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>新しくプレイリストを作成</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>新規プレイリスト</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>プレイリストを読み込む</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>書き出す</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>選択した項目</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>選択した項目</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>プレイリスト無し</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>作成</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>キャンセル</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>名称未設定のプレイリスト</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>プレイリストの名前を入力してください</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>プレイリスト</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>削除</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>名前を変更</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>新しいプレイリストの名前を入力してください</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>プレイリスト名の変更</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>プレイリストを削除</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>プレイリスト '{0}' を削除してもよろしいですか？
+この操作は取り消せません。</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>再生中断時の再生位置の履歴を残す</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to enable quick session resumption</value>
+    <value>中断した際の再生位置を保存し、次回開いたときに中断したタイミングから再生できるようにする</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>デバイスの中断位置を削除する</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>プレイリスト "{1}" に {0}個のアイテムが追加されました</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>プレイリスト "{1}" に {0}個のアイテムが追加されました</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>プレイリストが存在しません</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>初めてのプレイリストを作成して、あなたの好きな動画と音楽を整理しましょう</value>
   </data>
 </root>

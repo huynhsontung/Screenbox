@@ -140,7 +140,7 @@
     <value>프레임 저장 실패</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>재생된 시간</value>
+    <value>재생 시간</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
     <value>남은 시간</value>
@@ -195,7 +195,7 @@
     <value>재생</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>일시중지</value>
+    <value>일시정지</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>더 보기</value>
@@ -224,7 +224,7 @@
     <value>대기열에 추가</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>선택</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>모두 선택</value>
@@ -281,16 +281,16 @@
     <value>몰입형 보기 최소화</value>
   </data>
   <data name="Cast" xml:space="preserve">
-    <value>전송</value>
+    <value>캐스트</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>전송 중지</value>
+    <value>캐스트 중지</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>전송 중</value>
+    <value>캐스트 중</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>기기로 전송</value>
+    <value>기기로 캐스트</value>
   </data>
   <data name="Disable" xml:space="preserve">
     <value>비활성화</value>
@@ -356,7 +356,7 @@
     <value>파일 위치 열기</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>다음으로 열기</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>앨범</value>
@@ -516,7 +516,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>재생시간 {0}</value>
+    <value>{0} 재생 시간</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
@@ -631,7 +631,7 @@
     <value>최근 표시</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>일시 중지 시 컨트롤 표시</value>
+    <value>일시정지 시 컨트롤 표시</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>동영상 라이브러리 위치</value>
@@ -656,6 +656,12 @@
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>최대 볼륨을 100% 이상으로 허용합니다</value>
+  </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>되감기할 때 뒤로 건너뛴 시간</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>빨리감기할 때 앞으로 건너뛴 시간</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>화면 내 컨트롤</value>
@@ -997,46 +1003,46 @@
     <value>폴더</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>탭</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>위로 스와이프</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>아래로 스와이프</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>왼쪽으로 스와이프</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>오른쪽으로 스와이프</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>길게 눌러 재생 속도 증가 활성화</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>없음</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>재생/일시정지</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>되감기</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>빨리감기</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>볼륨 감소</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>볼륨 증가</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>속도 줄이기</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>속도 올리기</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>재생목록에 추가</value>
@@ -1048,10 +1054,10 @@
     <value>새 재생목록</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>재생목록 가져오기</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>내보내기</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>선택된 항목</value>
@@ -1115,9 +1121,9 @@
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>재생목록이 없습니다</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>좋아하는 비디오와 음악을 정리하려면 첫 번째 재생목록을 만드세요.</value>
   </data>
 </root>
