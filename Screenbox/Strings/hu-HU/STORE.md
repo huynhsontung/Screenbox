@@ -1,16 +1,14 @@
 <!-- Markdown version of store listing for localization. -->
-
 <!-- Feel free to adapt or modify key points if necessary. -->
-
 ## Screenbox Média Lejátszó
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**A Screenbox egy modern média lejátszó minden eszközödre, széleskörű fájlformátum támogatással.**
 
 ### Leírás
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+A Screenbox egy modern média lejátszó ami arra törekszik hogy új nézőpontot adjon a klasszikus alkalmazáshoz. Letisztult és intuitív kezelőfelületet kínál ami alkalmazkodik a rendszer képességeihez. Úgy lett tervezve hogy többféle Windows eszközön és Xbox konzolon is problémamentesen működjön, a Screenbox egy gyors, kicsi de mégis robosztus lejátszó.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+A program széleskörűen támogatja a különböző fájlformátumokat és kodekeket. Majdnem minden média formátumot támogat bármilyen kiegészítő nélkül. A LibVLC hajtja így a Screenbox kombinálja a VLC média lejátszó legjobb tulajdonságait és a modern Windows app minden képességét. A haladó lejátszási opciók elérhetőek a VLC parancssori változóit használva.
 
 ### Funkciók
 

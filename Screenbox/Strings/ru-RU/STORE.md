@@ -1,16 +1,14 @@
 <!-- Markdown version of store listing for localization. -->
-
 <!-- Feel free to adapt or modify key points if necessary. -->
-
 ## Мультимедийный плеер Screenbox
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox — это современный мультимедийный проигрыватель для всех ваших устройств с поддержкой широкого диапазона форматов файлов.**
 
 ### Описание
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox — это современный медиа плеер, который стремится создать свежий и новый вид классического приложения. Screenbox предоставляет элегантный и интуитивно понятный пользовательский интерфейс, который может адаптироваться под возможности вашей системы. Screenbox предназначен для бесшовного использования широкого спектра устройств Windows и консолей Xbox, является быстрым, легким и мощным.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox поддерживает большинство распространённых форматов и кодеков, что обеспечивает возможность воспроизведения практически любого медиафайла без необходимости сторонних дополнений. Не важно, транслируете ли вы онлайн контент или проигрываете локальные файлы, Screenbox поможет справиться с вашими задачами. Работая на LibVLC, Screenbox сочетает в себе все лучшее из медиа плеера VLC и возможности современного приложения Windows. Расширенные настройки воспроизведения доступны с использованием аргументов командной строки VLC.
 
 ### Возможности
 

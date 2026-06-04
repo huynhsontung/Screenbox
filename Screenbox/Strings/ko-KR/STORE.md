@@ -1,16 +1,14 @@
 <!-- Markdown version of store listing for localization. -->
-
 <!-- Feel free to adapt or modify key points if necessary. -->
-
 ## Screenbox 미디어 플레이어
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox는 모든 기기에서 다양한 파일 형식을 지원하는 현대적인 미디어 플레이어입니다.**
 
 ### 상세 정보
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox는 기존 미디어 플레이어에 현대적인 감각과 새로운 해석을 더한 플레이어입니다. 시스템 환경에 맞춰 최적화되는 매끄럽고 직관적인 사용자 인터페이스를 제공합니다. 다양한 Windows 기기와 Xbox 콘솔에서 끊김 없는 경험을 제공하도록 설계된 Screenbox는 빠르고 가벼우면서도 강력한 성능을 자랑합니다.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox는 다양한 파일 형식과 코덱을 폭넓게 지원하여, 추가 애드온 없이 거의 모든 종류의 미디어를 재생할 수 있습니다. LibVLC 기반으로 구동되는 Screenbox는 VLC 미디어 플레이어의 강력한 기능과 최신 Windows 앱 플랫폼의 이점을 결합했습니다. 또한 VLC 명령줄 인수를 활용한 고급 재생 옵션을 제공하여, 세부적인 재생 제어가 필요한 사용자에게도 유연한 설정을 지원합니다.
 
 ### 특징
 
