@@ -1,14 +1,16 @@
 <!-- Markdown version of store listing for localization. -->
+
 <!-- Feel free to adapt or modify key points if necessary. -->
+
 ## Screenbox Medya Oynatıcı
 
-**Screenbox, çok çeşitli dosya formatlarını destekleyen, tüm cihazlarınız için modern bir medya oynatıcısıdır.**
+**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
 
 ### Açıklama
 
-Screenbox, klasik uygulamaya yepyeni bir bakış açısı getirmeye çalışan modern bir medya oynatıcısıdır. Sisteminizin yeteneklerine uyum sağlayabilecek şık ve sezgisel bir kullanıcı arayüzü sunar. Çok çeşitli Windows cihazları ve Xbox konsollarında kusursuz bir deneyim için tasarlanan Screenbox hızlı, hafif ve güçlüdür.
+Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
 
-Screenbox çok çeşitli dosya formatlarını ve codec bileşenlerini destekler. Ek eklentilere gerek kalmadan hemen hemen tüm medya türlerini oynatın. LibVLC tarafından desteklenen Screenbox, VLC medya oynatıcısının en iyi özelliklerini ve modern Windows uygulaması yeteneklerini birleştirir. Gelişmiş oynatma seçenekleri, VLC komut satırı değişkenleri kullanılarak kullanılabilir.
+Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
 
 ### Özellikler
 

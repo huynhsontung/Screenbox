@@ -1,14 +1,16 @@
 <!-- Markdown version of store listing for localization. -->
+
 <!-- Feel free to adapt or modify key points if necessary. -->
+
 ## Screenbox මාධ්‍ය ධාවකය
 
-**Screenbox යනු පුළුල් පරාසයක ගොනු ආකෘති සඳහා සහය ඇති ඔබගේ සියලු උපාංග සඳහා නවීන මාධ්‍ය ධාවකයකි.**
+**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
 
 ### විස්තරය
 
-Screenbox යනු නවීන මාධ්‍ය වාදකයක් වන අතර එය සම්භාව්‍ය යෙදුමට නැවුම් නව මුහුණුවරක් ගෙන ඒමට උත්සාහ කරයි. එය ඔබගේ පද්ධතියේ හැකියාවන්ට අනුවර්තනය විය හැකි සිනිඳු සහ අවබෝධාත්මක පරිශීලක අතුරු මුහුණතක් ලබා දෙයි. පුළුල් පරාසයක Windows උපාංග සහ Xbox කොන්සෝල හරහා බාධාවකින් තොර අත්දැකීමක් සඳහා නිර්මාණය කර ඇති Screenbox වේගවත්, සැහැල්ලු සහ බලවත් වේ.
+Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
 
-Screenbox පුළුල් පරාසයක ගොනු ආකෘති සහ කෝඩෙක් සඳහා සහය දක්වයි. අමතර ඇඩෝන නොමැතිව ඕනෑම මාධ්‍ය වර්ගයක් පාහේ වාදනය කරන්න. LibVLC මගින් බල ගැන්වෙන, Screenbox හොඳම VLC මාධ්‍ය වාදක සහ නවීන Windows යෙදුම් හැකියාවන් ඒකාබද්ධ කරයි. VLC විධාන රේඛා තර්ක භාවිතයෙන් උසස් නැවත ධාවනය විකල්ප තිබේ.
+Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
 
 ### විශේෂාංග
 
