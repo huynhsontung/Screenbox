@@ -658,10 +658,10 @@
     <value>Дозволити максимальній гучності бути більшою за 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Час, на який відмотується відео при перемотуванні назад</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Час, на який відмотується відео при перемотуванні вперед</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Керування на екрані</value>
