@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -656,6 +656,12 @@
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Allow the maximum volume to go above 100%</value>
+  </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>The amount of time skipped backward when you rewind</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>The amount of time skipped forward when you fast forward</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>On-screen controls</value>

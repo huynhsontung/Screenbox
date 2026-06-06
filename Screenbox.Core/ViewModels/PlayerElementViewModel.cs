@@ -63,6 +63,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private Size _viewSize;
     private Size _aspectRatio;
     private TimeSpan _timeBeforeManipulation;
+    private int _playerRewindStep;
+    private int _playerFastForwardStep;
     private PlaybackActionKind _playerGestureTap;
     private PlaybackActionKind _playerGestureSwipeUp;
     private PlaybackActionKind _playerGestureSwipeDown;
@@ -409,7 +411,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 {
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
-                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-change), true)).Response.NewPosition;
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-_playerRewindStep), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
                 }
                 break;
@@ -418,7 +420,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 {
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
-                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(change), true)).Response.NewPosition;
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(_playerFastForwardStep), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
                 }
                 break;
@@ -526,6 +528,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private void LoadSettings()
     {
+        _playerRewindStep = _settingsService.PlayerRewindStep;
+        _playerFastForwardStep = _settingsService.PlayerFastForwardStep;
         _playerGestureTap = _settingsService.PlayerGestureTap;
         _playerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
         _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;

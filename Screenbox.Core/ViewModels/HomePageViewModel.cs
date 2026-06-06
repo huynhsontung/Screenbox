@@ -180,9 +180,37 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         // Load media details for the remaining items
         if (!loadMediaDetails) return;
-        IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAsync(_filesService));
-        loadingTasks = Recent.Select(x => x.LoadThumbnailAsync()).Concat(loadingTasks);
+        IEnumerable<Task> loadingTasks = Recent.Select(x => SafeLoadDetailsAsync(x));
+        loadingTasks = Recent.Select(x => SafeLoadThumbnailAsync(x)).Concat(loadingTasks);
         await Task.WhenAll(loadingTasks);
+    }
+
+    private async Task SafeLoadDetailsAsync(MediaViewModel media)
+    {
+        try
+        {
+            await media.LoadDetailsAsync(_filesService);
+        }
+        catch (Exception e)
+        {
+            // The underlying StorageFile (e.g. from MRU) may be in a bad state and
+            // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
+            LogService.Log(e);
+        }
+    }
+
+    private static async Task SafeLoadThumbnailAsync(MediaViewModel media)
+    {
+        try
+        {
+            await media.LoadThumbnailAsync();
+        }
+        catch (Exception e)
+        {
+            // The underlying StorageFile (e.g. from MRU) may be in a bad state and
+            // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
+            LogService.Log(e);
+        }
     }
 
     private void MoveOrInsert(StorageFile file, string token, int desiredIndex)
@@ -192,10 +220,20 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         int existingIndex = -1;
         for (int j = desiredIndex + 1; j < Recent.Count; j++)
         {
-            if (Recent[j].Source is StorageFile existingFile && file.IsEqual(existingFile))
+            if (Recent[j].Source is not StorageFile existingFile) continue;
+            try
             {
-                existingIndex = j;
-                break;
+                if (file.IsEqual(existingFile))
+                {
+                    existingIndex = j;
+                    break;
+                }
+            }
+            catch (Exception)
+            {
+                // StorageFile.IsEqual() can throw when the underlying MRU item is in
+                // a bad state (e.g. ArgumentException "Falscher Parameter." or
+                // "Element not found." HRESULT 0x80070490). Treat as not equal.
             }
         }
 

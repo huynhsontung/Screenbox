@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
@@ -125,6 +125,7 @@ public sealed partial class PlayerElement : UserControl
         var pointer = e.GetCurrentPoint(VideoViewButton);
         var properties = pointer.Properties;
         ViewModel.ProcessPointerWheelInput(properties.MouseWheelDelta, properties.IsHorizontalMouseWheel);
+        ViewModel.OnManipulationCompleted();
         e.Handled = true;
     }
 

@@ -32,6 +32,18 @@ public interface ISettingsService
     bool PersistPlaybackPosition { get; set; }
 
     /// <summary>
+    /// Gets or sets the rewind step duration in seconds for the media player.
+    /// </summary>
+    /// <value>The duration in seconds to rewind the playback. The default is <c>5</c> seconds.</value>
+    int PlayerRewindStep { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fast forward step duration in seconds for the media player.
+    /// </summary>
+    /// <value>The duration in seconds to fast forward the playback. The default is <c>5</c> seconds.</value>
+    int PlayerFastForwardStep { get; set; }
+
+    /// <summary>
     /// Gets or sets the media command invoked by a tap gesture.
     /// </summary>
     /// <value>

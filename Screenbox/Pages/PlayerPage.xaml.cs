@@ -495,7 +495,8 @@ public sealed partial class PlayerPage : Page
 
     private void SeekKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        args.Handled = ViewModel.ProcessSeekKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        ViewModel.ProcessSeekKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        args.Handled = true;
     }
 
     private void FrameSteppingKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

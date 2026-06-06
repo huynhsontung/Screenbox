@@ -73,7 +73,7 @@ namespace Screenbox.Pages
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
-            e.Handled = ViewModel.ProcessGamepadKeyDown(e.Key);
+            ViewModel.ProcessGamepadKeyDown(e.Key);
             base.OnKeyDown(e);
         }
 
@@ -313,17 +313,17 @@ namespace Screenbox.Pages
         private void NavViewSearchBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             // Update the text box when navigating through the suggestion list using the keyboard.
-            if (args.SelectedItem is SearchSuggestionItem suggestion)
+            if (args.SelectedItem is SearchSuggestion suggestion)
             {
                 // We set sender.Text directly instead of ViewModel.SearchQuery
                 // to avoid triggering TextChanged event.
-                sender.Text = suggestion.Name;
+                sender.Text = suggestion.Text;
             }
         }
 
         private void NavViewSearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion is SearchSuggestionItem suggestion)
+            if (args.ChosenSuggestion is SearchSuggestion suggestion)
             {
                 ViewModel.SelectSuggestion(suggestion);
             }

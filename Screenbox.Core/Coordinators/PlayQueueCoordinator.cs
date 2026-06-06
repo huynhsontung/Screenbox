@@ -713,7 +713,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
                 var fileMedia = _mediaFactory.GetOrCreate(file);
                 CreateQueueAndPlay(fileMedia);
-                result = await _mediaListFactory.ParseMediaListAsync(file);
+                // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
+                // same object reference. Calling ParseMediaListAsync(file) would create a second VM
+                // via GetOrCreate, making result.NextItem a different instance from fileMedia.
+                // That mismatch would cause LoadFromPlaylist to restart playback unnecessarily.
+                result = await _mediaListFactory.ParseMediaListAsync(fileMedia);
                 break;
 
             case IReadOnlyList<IStorageItem> items:
@@ -723,13 +727,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             case StorageFile file:
                 var fileMedia0 = _mediaFactory.GetOrCreate(file);
                 CreateQueueAndPlay(fileMedia0);
-                result = await _mediaListFactory.ParseMediaListAsync(file);
+                result = await _mediaListFactory.ParseMediaListAsync(fileMedia0);
                 break;
 
             case Uri uri:
                 var uriMedia = _mediaFactory.Create(uri);
                 CreateQueueAndPlay(uriMedia);
-                result = await _mediaListFactory.ParseMediaListAsync(uri);
+                result = await _mediaListFactory.ParseMediaListAsync(uriMedia);
                 break;
 
             case MediaViewModel media:

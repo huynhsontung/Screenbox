@@ -169,16 +169,16 @@ public static partial class GlyphConverter
     /// <summary>
     /// Gets the search suggestion glyph code base on the suggestion category.
     /// </summary>
-    /// <param name="value">A <see cref="SearchSuggestionKind"/> enumeration indicating the type of search suggestion.</param>
+    /// <param name="value">A value indicating the type of search suggestion.</param>
     /// <returns>
-    /// <b>Audio</b> glyph code <see cref="string"/> if <paramref name="value"/> is <see cref="SearchSuggestionKind.Song"/>,
-    /// <b>MusicAlbum</b> glyph code for <see cref="SearchSuggestionKind.Album"/>,
-    /// <b>Contact</b> glyph code for <see cref="SearchSuggestionKind.Artist"/>,
-    /// <b>Movies</b> glyph code for <see cref="SearchSuggestionKind.Video"/>,
-    /// or <b>MusicInfo</b> glyph code for <see cref="SearchSuggestionKind.Playlist"/>;
+    /// <b>Audio</b> glyph code <see cref="string"/> if <paramref name="value"/> is <see cref="SearchSuggestionType.Song"/>,
+    /// <b>MusicAlbum</b> glyph code for <see cref="SearchSuggestionType.Album"/>,
+    /// <b>Contact</b> glyph code for <see cref="SearchSuggestionType.Artist"/>,
+    /// <b>Movies</b> glyph code for <see cref="SearchSuggestionType.Video"/>,
+    /// or <b>MusicInfo</b> glyph code for <see cref="SearchSuggestionType.Playlist"/>;
     /// otherwise, a empty string.
     /// </returns>
-    public static string ToSearchSuggestionGlyph(SearchSuggestionKind? value)
+    public static string ToSearchSuggestionGlyph(SearchSuggestionType value)
     {
         const string ContactGlyph = "\uE77B";
         const string MoviesGlyph = "\uE8B2";
@@ -188,11 +188,11 @@ public static partial class GlyphConverter
 
         return value switch
         {
-            SearchSuggestionKind.Song => AudioGlyph,
-            SearchSuggestionKind.Album => MusicAlbumGlyph,
-            SearchSuggestionKind.Artist => ContactGlyph,
-            SearchSuggestionKind.Video => MoviesGlyph,
-            SearchSuggestionKind.Playlist => MusicInfoGlyph,
+            SearchSuggestionType.Song => AudioGlyph,
+            SearchSuggestionType.Album => MusicAlbumGlyph,
+            SearchSuggestionType.Artist => ContactGlyph,
+            SearchSuggestionType.Video => MoviesGlyph,
+            SearchSuggestionType.Playlist => MusicInfoGlyph,
             _ => string.Empty,
         };
     }
