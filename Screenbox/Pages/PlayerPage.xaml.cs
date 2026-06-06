@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.ApplicationModel.DataTransfer;
@@ -50,16 +49,6 @@ public sealed partial class PlayerPage : Page
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         AlbumArtImage.RegisterPropertyChangedCallback(ImageBrush.ImageSourceProperty, AlbumArtImageOnSourceChanged);
         LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
-
-        INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
-        navigationService.Navigated += NavigationServiceOnNavigated;
-    }
-    private void NavigationServiceOnNavigated(object sender, EventArgs e)
-    {
-        if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
-        ViewModel.GoBack();
-        if (PlayQueueFlyout.IsOpen)
-            PlayQueueFlyout.Hide();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -276,6 +265,14 @@ public sealed partial class PlayerPage : Page
                 }
 
                 UpdateContentState();
+                break;
+            case nameof(PlayerPageViewModel.ShouldClosePlayQueueFlyout) when ViewModel.ShouldClosePlayQueueFlyout:
+                if (PlayQueueFlyout.IsOpen)
+                {
+                    PlayQueueFlyout.Hide();
+                }
+
+                ViewModel.ShouldClosePlayQueueFlyout = false;
                 break;
         }
     }

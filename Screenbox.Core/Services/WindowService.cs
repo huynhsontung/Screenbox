@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Events;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -15,35 +15,22 @@ namespace Screenbox.Core.Services
 {
     public sealed class WindowService : IWindowService
     {
-        public event EventHandler<ViewModeChangedEventArgs>? ViewModeChanged;
+        public WindowViewMode ViewMode => _windowContext.ViewMode;
 
-        public WindowViewMode ViewMode
-        {
-            get => _viewMode;
-            private set
-            {
-                WindowViewMode oldValue = _viewMode;
-                if (oldValue != value)
-                {
-                    _viewMode = value;
-                    ViewModeChanged?.Invoke(this, new ViewModeChangedEventArgs(value, oldValue));
-                }
-            }
-        }
-
+        private readonly WindowContext _windowContext;
         private CoreCursor? _cursor;
-        private WindowViewMode _viewMode;
 
-        public WindowService()
+        public WindowService(WindowContext windowContext)
         {
+            _windowContext = windowContext;
             Window.Current.SizeChanged += OnWindowSizeChanged;
         }
 
         private void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
-            if (ViewMode == WindowViewMode.FullScreen && !view.IsFullScreenMode)
-                ViewMode = WindowViewMode.Default;
+            if (_windowContext.ViewMode == WindowViewMode.FullScreen && !view.IsFullScreenMode)
+                _windowContext.ViewMode = WindowViewMode.Default;
         }
 
         public bool TryEnterFullScreen()
@@ -51,7 +38,7 @@ namespace Screenbox.Core.Services
             ApplicationView? view = ApplicationView.GetForCurrentView();
             if (view.TryEnterFullScreenMode())
             {
-                ViewMode = WindowViewMode.FullScreen;
+                _windowContext.ViewMode = WindowViewMode.FullScreen;
                 return true;
             }
 
@@ -62,8 +49,8 @@ namespace Screenbox.Core.Services
         {
             ApplicationView? view = ApplicationView.GetForCurrentView();
             view?.ExitFullScreenMode();
-            if (ViewMode == WindowViewMode.FullScreen)
-                ViewMode = WindowViewMode.Default;
+            if (_windowContext.ViewMode == WindowViewMode.FullScreen)
+                _windowContext.ViewMode = WindowViewMode.Default;
         }
 
         public async Task<bool> TryExitCompactLayoutAsync()
@@ -71,8 +58,8 @@ namespace Screenbox.Core.Services
             ApplicationView? view = ApplicationView.GetForCurrentView();
             if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
             {
-                if (ViewMode == WindowViewMode.Compact)
-                    ViewMode = WindowViewMode.Default;
+                if (_windowContext.ViewMode == WindowViewMode.Compact)
+                    _windowContext.ViewMode = WindowViewMode.Default;
                 return true;
             }
 
@@ -91,7 +78,7 @@ namespace Screenbox.Core.Services
 
             if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
             {
-                ViewMode = WindowViewMode.Compact;
+                _windowContext.ViewMode = WindowViewMode.Compact;
                 return true;
             }
 
@@ -168,3 +155,4 @@ namespace Screenbox.Core.Services
         }
     }
 }
+

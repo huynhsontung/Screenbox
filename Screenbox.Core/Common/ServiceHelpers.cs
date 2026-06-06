@@ -57,6 +57,7 @@ public static class ServiceHelpers
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
         services.AddSingleton<PlayQueueContext>();
+        services.AddSingleton<WindowContext>();
 
         // Coordinators
         services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
