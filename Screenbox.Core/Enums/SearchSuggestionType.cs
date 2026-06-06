@@ -1,6 +1,9 @@
 ﻿namespace Screenbox.Core.Enums;
 
-public enum SearchSuggestionKind
+/// <summary>
+/// Defines constants that specify the type of a search suggestion.
+/// </summary>
+public enum SearchSuggestionType
 {
     None,
     Song,
