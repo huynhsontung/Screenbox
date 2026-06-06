@@ -31,8 +31,10 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 {
     public event EventHandler? TrackUpdateRequested;
 
-    [ObservableProperty] private LivelyWallpaperModel? _source;
-    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty]
+    public partial LivelyWallpaperModel? Source { get; set; }
+    [ObservableProperty]
+    public partial bool IsLoading { get; set; }
 
     private MediaViewModel? Media
     {

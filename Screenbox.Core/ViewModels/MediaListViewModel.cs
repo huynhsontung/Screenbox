@@ -41,19 +41,21 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     // UI-bindable properties
     public ObservableCollection<MediaViewModel> Items { get; }
 
-    [ObservableProperty] private bool _shuffleMode;
+    [ObservableProperty]
+    public partial bool ShuffleMode { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(NextCommand))]
     [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
-    private MediaPlaybackAutoRepeatMode _repeatMode;
+    public partial MediaPlaybackAutoRepeatMode RepeatMode { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(NextCommand))]
     [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
-    private MediaViewModel? _currentItem;
+    public partial MediaViewModel? CurrentItem { get; set; }
 
-    [ObservableProperty] private int _currentIndex;
+    [ObservableProperty]
+    public partial int CurrentIndex { get; set; }
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
@@ -102,8 +104,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         // Initialize state
         _playlist = new Playlist();
-        _repeatMode = settingsService.PersistentRepeatMode;
-        _currentIndex = -1;
+        RepeatMode = settingsService.PersistentRepeatMode;
+        CurrentIndex = -1;
 
         // Setup transport controls
         _transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;

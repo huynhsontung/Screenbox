@@ -24,8 +24,10 @@ namespace Screenbox.Core.ViewModels
 
         public bool IsFile { get; }
 
-        [ObservableProperty] private string _captionText;
-        [ObservableProperty] private uint _itemCount;
+        [ObservableProperty]
+        public partial string CaptionText { get; set; }
+        [ObservableProperty]
+        public partial uint ItemCount { get; set; }
 
         private readonly IFilesService _filesService;
 
@@ -35,7 +37,7 @@ namespace Screenbox.Core.ViewModels
         {
             _filesService = filesService;
             StorageItem = storageItem;
-            _captionText = string.Empty;
+            CaptionText = string.Empty;
             DateCreated = storageItem.DateCreated;
 
             if (storageItem is StorageFile file)
