@@ -94,7 +94,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
     private bool _resizeNext;
-    private DateTimeOffset _lastUpdated;
     private bool _isSpaceKeyHolding;
     private double? _playbackRateBeforeHold;
 
@@ -114,22 +113,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _spaceKeyHoldTimer = _dispatcherQueue.CreateTimer();
         _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         _playerVisibility = PlayerVisibilityState.Hidden;
-        _lastUpdated = DateTimeOffset.MinValue;
 
+        // Strong reference handlers. No need to unsubscribe since PlayerPageViewModel has the same lifetime as the app.
         FocusManager.GotFocus += FocusManagerOnFocusChanged;
-
-        // Subscribe here so navigation-triggered player dismissal is handled in the ViewModel
-        // rather than in page code-behind, keeping UI logic out of the view layer.
-        // Use a weak-reference forwarding handler so the navigation service does not retain
-        // this transient view model via a strong event subscription.
-        WeakReference<PlayerPageViewModel> weakThis = new(this);
-        navigationService.Navigated += (sender, args) =>
-        {
-            if (weakThis.TryGetTarget(out PlayerPageViewModel? viewModel))
-            {
-                viewModel.OnNavigationServiceNavigated(sender, args);
-            }
-        };
+        navigationService.Navigated += OnNavigationServiceNavigated;
 
         if (MediaPlayer != null)
         {
