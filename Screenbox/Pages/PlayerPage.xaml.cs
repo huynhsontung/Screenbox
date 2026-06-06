@@ -3,15 +3,18 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
+using Screenbox.Dialogs;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -36,6 +39,7 @@ public sealed partial class PlayerPage : Page
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
+    private int _deleteDialogOpen;
 
     public PlayerPage()
     {
@@ -522,6 +526,51 @@ public sealed partial class PlayerPage : Page
     private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
+    }
+
+    private async void PlayerControls_OnDeleteMediaFileRequested(object sender, RoutedEventArgs e)
+    {
+        await TryDeleteCurrentMediaFileAsync(VirtualKey.Delete, VirtualKeyModifiers.None);
+    }
+
+    private async Task<bool> TryDeleteCurrentMediaFileAsync(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (Interlocked.Exchange(ref _deleteDialogOpen, 1) == 1)
+        {
+            return true;
+        }
+
+        try
+        {
+            if (ViewModel.Media is null)
+            {
+                return false;
+            }
+
+            var deleteConfirmation = new DeleteMediaFileDialog(ViewModel.Media.Name);
+            var result = await deleteConfirmation.ShowAsync();
+            if (result != ContentDialogResult.Primary)
+            {
+                return true;
+            }
+
+            return ViewModel.ProcessDeleteKeyDown(key, modifiers);
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _deleteDialogOpen, 0);
+        }
+    }
+
+    private async void DeleteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (FocusManager.GetFocusedElement() is TextBox)
+        {
+            args.Handled = false;
+            return;
+        }
+
+        args.Handled = await TryDeleteCurrentMediaFileAsync(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
     }
 
     private void EscapeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
