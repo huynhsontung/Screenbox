@@ -658,10 +658,10 @@
     <value>Cho phép âm lượng tối đa vượt quá 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Lượng thời gian bị tua lùi khi bạn tua lại</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Lượng thời gian bị bỏ qua khi bạn tua nhanh</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Điều khiển trên màn hình</value>
@@ -1003,7 +1003,7 @@
     <value>Thư mục</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Vỗ nhẹ</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
     <value>Vuốt lên</value>
@@ -1018,7 +1018,7 @@
     <value>Vuốt sang phải</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Bật nhấn và giữ để tăng tốc độ phát lại</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
     <value>Không có gì</value>
