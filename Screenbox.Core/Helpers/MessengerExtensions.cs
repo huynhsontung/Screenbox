@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,17 @@ internal static class MessengerExtensions
             return;
         }
 
-        var playlist = new Playlist(media, queue);
+        int index = -1;
+        for (int i = 0; i < queue.Count; i++)
+        {
+            if (queue[i] == media)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        var playlist = new Playlist(index, queue);
         messenger.Send(new QueuePlaylistMessage(playlist, true));
     }
 
