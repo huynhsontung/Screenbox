@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -68,7 +68,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     private void Play(PlaylistViewModel playlistVm)
     {
         var playlist = playlistVm.ToPlaylist();
-        Messenger.Send(new QueuePlaylistMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(playlist, true));
     }
 
     [RelayCommand(CanExecute = nameof(NotEmpty))]

@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.ComponentModel;
@@ -27,7 +27,7 @@ namespace Screenbox.Lively.ViewModels;
 
 public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
-    IRecipient<PlaylistCurrentItemChangedMessage>
+    IRecipient<QueueCurrentItemChangedMessage>
 {
     public event EventHandler? TrackUpdateRequested;
 
@@ -70,7 +70,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
         Source = message.NewValue;
     }
 
-    public void Receive(PlaylistCurrentItemChangedMessage message)
+    public void Receive(QueueCurrentItemChangedMessage message)
     {
         Media = message.Value;
         TrackUpdateRequested?.Invoke(this, EventArgs.Empty);
@@ -243,7 +243,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     private void LoadMedia()
     {
-        Playlist reply = Messenger.Send(new PlaylistRequestMessage());
+        Playlist reply = Messenger.Send(new QueueRequestMessage());
         Media = reply.CurrentItem;
     }
 

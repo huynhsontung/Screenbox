@@ -26,7 +26,7 @@ public static class ServiceHelpers
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<PlayQueuePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
-        services.AddTransient<PlayQueueViewModel>();
+        services.AddTransient<PlayQueuePanelViewModel>();
         services.AddTransient<AlbumDetailsPageViewModel>();
         services.AddTransient<ArtistDetailsPageViewModel>();
         services.AddTransient<PlaylistDetailsPageViewModel>();
@@ -42,7 +42,6 @@ public static class ServiceHelpers
         services.AddTransient<SelectionViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
-        services.AddSingleton<MediaListViewModel>(); // Global playlist
 
         // Factories
         services.AddSingleton<MediaViewModelFactory>();
@@ -57,9 +56,11 @@ public static class ServiceHelpers
         services.AddSingleton<PlaylistsContext>();
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
+        services.AddSingleton<PlayQueueContext>();
 
         // Coordinators
         services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
+        services.AddSingleton<IPlayQueueCoordinator, PlayQueueCoordinator>();
         services.AddSingleton<ILastPositionTracker, LastPositionTracker>();
 
         // Services

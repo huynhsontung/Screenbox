@@ -135,7 +135,7 @@ The ViewModel layer is contained in the Screenbox.Core project and serves as the
 - **`SettingsPageViewModel.cs`**: Application configuration management
 
 #### Content Management ViewModels
-- **`MediaListViewModel.cs`**: Global playlist and media queue management
+- **`PlayQueuePanelViewModel.cs`**: ViewModel for the play queue panel/flyout — handles item selection, reordering, and adding files or URLs to the queue
 - **`CommonViewModel.cs`**: Shared state across multiple pages
 - **`MediaViewModel.cs`**: Individual media item representation
 - **`PlaylistViewModel.cs`**: Playlist-specific functionality
@@ -230,6 +230,7 @@ Available contexts:
 - **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
 - **`LibraryContext`**: Holds library state including the `StorageLibrary` handles (`MusicStorageLibrary`, `VideosStorageLibrary`), loading flags, and the current `MusicLibrary` and `VideosLibrary` container objects. Written atomically by `LibraryCoordinator` after each fetch batch or on completion.
 - **`PlaylistsContext`**: Holds the application-wide collection of user playlists
+- **`PlayQueueContext`**: Holds the global play queue state — `Items` (the ordered `ObservableCollection<MediaViewModel>`), `CurrentItem`, `CurrentIndex`, `ShuffleMode`, and `RepeatMode`. Written exclusively by `PlayQueueCoordinator`; observed by any ViewModel that needs play queue state.
 
 #### Stateful Coordinators
 
@@ -243,6 +244,7 @@ Architectural rules for coordinators:
 
 Available coordinators:
 - **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
+- **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `PlayFilesMessage`, `SetQueueMessage`, `ClearQueueMessage`, and `QueueRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Manages neighboring-file auto-enqueue when a single file is opened. Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations.
 
 #### Helper Classes
 

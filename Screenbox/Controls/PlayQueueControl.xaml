@@ -33,7 +33,7 @@
                         <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
                     </interactivity:Interaction.Behaviors>
                     <MenuFlyoutItem
-                        Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
+                        Command="{x:Bind ViewModel.PlaySingleCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayGlyph}}"
@@ -93,7 +93,7 @@
                         Text="{strings:Resources Key=SetPlaybackOptions}"
                         Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                         <MenuFlyoutItem.Command>
-                            <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
+                            <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlaySingleCommand}" />
                         </MenuFlyoutItem.Command>
                     </MenuFlyoutItem>
                     <MenuFlyoutSeparator />
@@ -144,7 +144,7 @@
                 Margin="0,0,8,0"
                 AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
                 AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
-                Command="{x:Bind ViewModel.Playlist.ClearCommand}"
+                Command="{x:Bind ViewModel.ClearCommand}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom">
                 <StackPanel Orientation="Horizontal">
@@ -168,7 +168,7 @@
                 <muxc:DropDownButton.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <interactivity:Interaction.Behaviors>
-                            <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind ViewModel.Playlist.Items}" />
+                            <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind ViewModel.Queue.Items}" />
                         </interactivity:Interaction.Behaviors>
                     </MenuFlyout>
                 </muxc:DropDownButton.Flyout>
@@ -365,7 +365,7 @@
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             IsItemClickEnabled="True"
-            ItemsSource="{x:Bind ViewModel.Playlist.Items}"
+            ItemsSource="{x:Bind ViewModel.Queue.Items}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionMode="Extended"
             Style="{StaticResource MediaListViewStyle}">

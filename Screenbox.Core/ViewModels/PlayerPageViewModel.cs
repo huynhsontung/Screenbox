@@ -35,7 +35,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     IRecipient<UpdateVolumeStatusMessage>,
     IRecipient<TogglePlayerVisibilityMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
-    IRecipient<PlaylistCurrentItemChangedMessage>,
+    IRecipient<QueueCurrentItemChangedMessage>,
     IRecipient<ShowPlayPauseBadgeMessage>,
     IRecipient<OverrideControlsHideDelayMessage>,
     IRecipient<DragDropMessage>,
@@ -215,7 +215,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         Messenger.Send(new UpdateStatusMessage(message));
     }
 
-    public async void Receive(PlaylistCurrentItemChangedMessage message)
+    public async void Receive(QueueCurrentItemChangedMessage message)
     {
         MediaViewModel? current = message.Value;
         _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
@@ -674,7 +674,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 _windowService.TryExitCompactLayoutAsync();
                 break;
             case WindowViewMode.Default:
-                Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
+                Playlist playlist = Messenger.Send(new QueueRequestMessage());
                 bool hasItemsInQueue = playlist.Items.Count > 0;
                 PlayerVisibility = hasItemsInQueue ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Hidden;
                 break;

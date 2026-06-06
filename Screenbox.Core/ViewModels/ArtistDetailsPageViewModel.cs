@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -80,7 +80,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
         Random rnd = new();
         List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
         var playlist = new Models.Playlist(0, shuffledList);
-        Messenger.Send(new QueuePlaylistMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(playlist, true));
     }
 
     private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)

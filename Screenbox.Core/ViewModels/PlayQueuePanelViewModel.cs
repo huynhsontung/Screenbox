@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -16,42 +18,54 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class PlayQueueViewModel : ObservableRecipient
+/// <summary>
+/// ViewModel for the play queue panel / flyout UI.
+/// Handles item selection, reordering, and adding files or URLs to the queue.
+/// </summary>
+/// <remarks>
+/// Queue state (items, current item) is provided by <see cref="PlayQueueContext"/>.
+/// Mutations (remove, insert, enqueue) are delegated to <see cref="IPlayQueueCoordinator"/>.
+/// </remarks>
+public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 {
-    public MediaListViewModel Playlist { get; }
+    /// <summary>The observable play queue state for data binding.</summary>
+    public PlayQueueContext Queue { get; }
 
     public SelectionViewModel Selection { get; }
 
     public bool HasItems
     {
         get => _hasItems;
-        private set
-        {
-            SetProperty(ref _hasItems, value);
-        }
+        private set => SetProperty(ref _hasItems, value);
     }
 
     private bool _hasItems;
 
+    private readonly IPlayQueueCoordinator _coordinator;
     private readonly IFilesService _filesService;
     private readonly DispatcherQueue _dispatcherQueue;
 
-    public PlayQueueViewModel(MediaListViewModel playlist, SelectionViewModel selection, IFilesService filesService)
+    public PlayQueuePanelViewModel(
+        PlayQueueContext queue,
+        IPlayQueueCoordinator coordinator,
+        SelectionViewModel selection,
+        IFilesService filesService)
     {
-        Playlist = playlist;
+        Queue = queue;
+        _coordinator = coordinator;
         Selection = selection;
         _filesService = filesService;
-        _hasItems = playlist.Items.Count > 0;
+        _hasItems = queue.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
+        Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
-        Selection.SetItemsSource(Playlist.Items);
+        Selection.SetItemsSource(Queue.Items);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
     }
 
     private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        HasItems = Playlist.Items.Count > 0;
+        HasItems = Queue.Items.Count > 0;
         if (!HasItems)
         {
             Selection.IsSelectionModeActive = false;
@@ -69,10 +83,13 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
     }
 
+    [RelayCommand]
+    private void Clear() => _coordinator.Clear();
+
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void RemoveSelected(IList<object>? selectedItems)
     {
-        if (selectedItems == null) return;
+        if (selectedItems is null) return;
         List<object> copy = selectedItems.ToList();
         selectedItems.Clear();
         foreach (MediaViewModel item in copy)
@@ -84,18 +101,13 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     [RelayCommand]
     private void Remove(MediaViewModel item)
     {
-        if (Playlist.CurrentItem == item)
-        {
-            Playlist.CurrentItem = null;
-        }
-
-        Playlist.Items.Remove(item);
+        _coordinator.Remove(item);
     }
 
     [RelayCommand]
     private void PlaySingle(MediaViewModel media)
     {
-        if (Playlist.CurrentItem == media && (media.IsPlaying ?? false))
+        if (Queue.CurrentItem == media && (media.IsPlaying ?? false))
         {
             Messenger.Send(new TogglePlayPauseMessage(false));
         }
@@ -108,7 +120,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelectedNext(IList<object>? selectedItems)
     {
-        if (selectedItems == null) return;
+        if (selectedItems is null) return;
         List<object> reverse = selectedItems.Reverse().ToList();
         selectedItems.Clear();
         foreach (MediaViewModel item in reverse)
@@ -120,7 +132,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     [RelayCommand]
     private void PlayNext(MediaViewModel item)
     {
-        Playlist.Items.Insert(Playlist.CurrentIndex + 1, new MediaViewModel(item));
+        _coordinator.InsertNext(item);
     }
 
     [RelayCommand(CanExecute = nameof(IsSelectedItemNotFirst))]
@@ -130,19 +142,19 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         MediaViewModel item = (MediaViewModel)selectedItems[0];
         MoveItemUp(item);
 
-        // Selected items will be empty after move
-        // Delay adding the items back to selected so the items have the chance to update first
-        // If this order is not followed, the whole listview will reload
+        // Re-select the item after the move. Delaying ensures the ListView has
+        // processed the collection change before we add back the selection;
+        // doing it synchronously would cause the entire list to reload.
         _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
     private void MoveItemUp(MediaViewModel item)
     {
-        int index = Playlist.Items.IndexOf(item);
+        int index = Queue.Items.IndexOf(item);
         if (index <= 0) return;
-        Playlist.Items.RemoveAt(index);
-        Playlist.Items.Insert(index - 1, item);
+        Queue.Items.RemoveAt(index);
+        Queue.Items.Insert(index - 1, item);
     }
 
     [RelayCommand(CanExecute = nameof(IsSelectedItemNotLast))]
@@ -152,19 +164,17 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         MediaViewModel item = (MediaViewModel)selectedItems[0];
         MoveItemDown(item);
 
-        // Selected items will be empty after move
-        // Delay adding the items back to selected so the items have the chance to update first
-        // If this order is not followed, the whole listview will reload
+        // Re-select the item after the move. Same reasoning as MoveSelectedItemUp.
         _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotLast))]
     private void MoveItemDown(MediaViewModel item)
     {
-        int index = Playlist.Items.IndexOf(item);
-        if (index == -1 || index >= Playlist.Items.Count - 1) return;
-        Playlist.Items.RemoveAt(index);
-        Playlist.Items.Insert(index + 1, item);
+        int index = Queue.Items.IndexOf(item);
+        if (index == -1 || index >= Queue.Items.Count - 1) return;
+        Queue.Items.RemoveAt(index);
+        Queue.Items.Insert(index + 1, item);
     }
 
     /// <summary>
@@ -177,8 +187,8 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         try
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return;
-            await Playlist.EnqueueAsync(files);
+            if (files is null || files.Count == 0) return;
+            await _coordinator.EnqueueAsync(files);
         }
         catch (Exception e)
         {
@@ -186,17 +196,23 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// Enqueues storage items dropped onto the queue at the specified position.
+    /// </summary>
+    public Task EnqueueDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex) =>
+        _coordinator.EnqueueAsync(items, insertIndex);
+
     private bool HasSelection() => Selection.SelectedItems.Count > 0;
 
     private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
         selectedItems?.Count == 1 &&
-        Playlist.Items.Count > 0 && Playlist.Items[0] != selectedItems[0];
+        Queue.Items.Count > 0 && Queue.Items[0] != selectedItems[0];
 
     private bool IsSelectedItemNotLast(IList<object>? selectedItems) =>
         selectedItems?.Count == 1 &&
-        Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != selectedItems[0];
+        Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != selectedItems[0];
 
-    private bool IsItemNotFirst(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[0] != item;
+    private bool IsItemNotFirst(MediaViewModel item) => Queue.Items.Count > 0 && Queue.Items[0] != item;
 
-    private bool IsItemNotLast(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != item;
+    private bool IsItemNotLast(MediaViewModel item) => Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != item;
 }

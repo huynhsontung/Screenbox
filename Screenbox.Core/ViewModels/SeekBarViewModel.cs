@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.ObjectModel;
@@ -28,7 +28,7 @@ public sealed partial class SeekBarViewModel :
     IRecipient<TimeChangeOverrideMessage>,
     IRecipient<ChangeTimeRequestMessage>,
     IRecipient<PlayerControlsVisibilityChangedMessage>,
-    IRecipient<PlaylistCurrentItemChangedMessage>,
+    IRecipient<QueueCurrentItemChangedMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
@@ -101,7 +101,7 @@ public sealed partial class SeekBarViewModel :
         IsActive = true;
     }
 
-    public void Receive(PlaylistCurrentItemChangedMessage message)
+    public void Receive(QueueCurrentItemChangedMessage message)
     {
         _lastTrackedPosition = TimeSpan.Zero;
         _currentItem = message.Value;

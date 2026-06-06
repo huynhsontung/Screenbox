@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,6 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
         Random rnd = new();
         List<MediaViewModel> shuffledList = Songs.OrderBy(_ => rnd.Next()).ToList();
         var playlist = new Models.Playlist(0, shuffledList);
-        Messenger.Send(new QueuePlaylistMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(playlist, true));
     }
 }

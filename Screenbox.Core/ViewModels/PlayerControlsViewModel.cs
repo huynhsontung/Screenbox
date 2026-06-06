@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -29,7 +30,11 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<ChangePlaybackRateRequestMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
 {
-    public MediaListViewModel Playlist { get; }
+    /// <summary>
+    /// The observable play queue state. Bind to this for <c>Items</c>,
+    /// <c>CurrentItem</c>, <c>ShuffleMode</c>, and <c>RepeatMode</c>.
+    /// </summary>
+    public PlayQueueContext PlayQueue { get; }
 
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
@@ -62,10 +67,12 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
+    private readonly IPlayQueueCoordinator _coordinator;
     private Size _aspectRatio;
 
     public PlayerControlsViewModel(
-        MediaListViewModel playlist,
+        PlayQueueContext playQueue,
+        IPlayQueueCoordinator coordinator,
         ISettingsService settingsService,
         IWindowService windowService,
         PlayerContext playerContext)
@@ -74,6 +81,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _windowService = windowService;
         _settingsService = settingsService;
         _playerContext = playerContext;
+        _coordinator = coordinator;
         _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
         _playbackRate = 1.0;
         _audioTimingOffset = 0.0;
@@ -81,8 +89,9 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _isAdvancedModeActive = settingsService.AdvancedMode;
         _isMinimal = true;
         _playerShowChapters = settingsService.PlayerShowChapters;
-        Playlist = playlist;
-        Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
+        PlayQueue = playQueue;
+        PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
+        _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
 
         if (MediaPlayer != null)
         {
@@ -270,12 +279,12 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
-    private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void PlayQueueOnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
-            case nameof(MediaListViewModel.CurrentItem):
-                HasActiveItem = Playlist.CurrentItem != null;
+            case nameof(PlayQueueContext.CurrentItem):
+                HasActiveItem = PlayQueue.CurrentItem is not null;
                 SubtitleTimingOffset = 0;
                 AudioTimingOffset = 0;
                 break;
@@ -321,14 +330,28 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
+    private void OnCoordinatorCanNavigateChanged(object? sender, EventArgs e)
+    {
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanGoNext))]
+    private async Task Next() => await _coordinator.NextAsync();
+
+    [RelayCommand(CanExecute = nameof(CanGoPrevious))]
+    private async Task Previous() => await _coordinator.PreviousAsync();
+
+    private bool CanGoNext() => _coordinator.CanNext();
+
+    private bool CanGoPrevious() => _coordinator.CanPrevious();
+
     [RelayCommand]
     private void ResetMediaPlayback()
     {
-        if (MediaPlayer == null) return;
+        if (MediaPlayer is null) return;
         TimeSpan pos = MediaPlayer.Position;
-        MediaViewModel? item = Playlist.CurrentItem;
-        Playlist.CurrentItem = null;
-        Playlist.CurrentItem = item;
+        _coordinator.ResetCurrentItem();
         _dispatcherQueue.TryEnqueue(() =>
         {
             MediaPlayer.Play();
