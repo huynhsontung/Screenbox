@@ -217,14 +217,32 @@ public sealed class FilesService : IFilesService
                     return new MediaInfo(basicProperties, musicProperties);
             }
         }
+        catch (Exception e) when (IsExpectedStoragePropertiesHResult(e.HResult))
+        {
+            // Expected transient WinRT failures while querying StorageFile properties:
+            //   0x800706BA RPC_S_SERVER_UNAVAILABLE - the RPC server is unavailable.
+            //   0x8000000E E_ILLEGAL_METHOD_CALL    - file's property provider isn't ready
+            //                                         (file became unavailable after IsAvailable,
+            //                                          app suspended, or item disposed).
+            //   0x80070490 ERROR_NOT_FOUND          - element not found.
+            // These are already handled by returning a default MediaInfo; don't report to Sentry.
+        }
         catch (Exception e)
         {
-            // System.Exception: The RPC server is unavailable.
-            if (e.HResult != unchecked((int)0x800706BA))
-                LogService.Log(e);
+            LogService.Log(e);
         }
 
         return new MediaInfo(mediaType);
+    }
+
+    private static bool IsExpectedStoragePropertiesHResult(int hresult)
+    {
+        const int RPC_S_SERVER_UNAVAILABLE = unchecked((int)0x800706BA);
+        const int E_ILLEGAL_METHOD_CALL = unchecked((int)0x8000000E);
+        const int ERROR_NOT_FOUND = unchecked((int)0x80070490);
+        return hresult == RPC_S_SERVER_UNAVAILABLE
+               || hresult == E_ILLEGAL_METHOD_CALL
+               || hresult == ERROR_NOT_FOUND;
     }
 
     private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)
