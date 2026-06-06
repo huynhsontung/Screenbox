@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
@@ -434,8 +434,8 @@
 
     <Style BasedOn="{StaticResource DefaultSplitButtonStyle}" TargetType="muxc:SplitButton" />
 
-    <!--  SplitButton according to the Windows UI design guidelines  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/SplitButton/SplitButton.xaml  -->
+    <!--  SplitButton according to the Windows UI design guidelines.  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/SplitButton/SplitButton.xaml  -->
     <Style x:Key="DefaultSplitButtonStyle" TargetType="muxc:SplitButton">
         <!--<Setter Property="Background" Value="{ThemeResource SplitButtonBackground}" />-->
         <!--<Setter Property="Foreground" Value="{ThemeResource SplitButtonForeground}" />-->
@@ -527,7 +527,7 @@
                             <ColumnDefinition x:Name="SecondaryButtonColumn" Width="{ThemeResource SplitButtonSecondaryButtonSize}" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Add border thickness and corner radius to prevent the background from overlapping the border  -->
+                        <!--  Change: BorderThickness and CornerRadius added to prevent the Background from overlapping the border.  -->
                         <Grid
                             x:Name="PrimaryBackgroundGrid"
                             Grid.ColumnSpan="2"
@@ -535,26 +535,26 @@
                             contract7Present:CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                             Background="{TemplateBinding Background}"
                             BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}">
-                            <!--  Add brush transition to match the default button  -->
+                            <!--  Change: BrushTransition added to align with the default button.  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Grid.BackgroundTransition>
                         </Grid>
 
-                        <!--  Add border thickness to prevent the background from overlapping the border  -->
+                        <!--  Change: BorderThickness added to prevent the Background from overlapping the border.  -->
                         <Grid
                             x:Name="DividerBackgroundGrid"
                             Grid.Column="1"
                             Width="1"
                             Background="{ThemeResource SplitButtonBorderBrushDivider}"
                             BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalThicknessFiltersConverter}}">
-                            <!--  Add a brush transition to match the default button  -->
+                            <!--  Change: BrushTransition added to align with the default button.  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Grid.BackgroundTransition>
                         </Grid>
 
-                        <!--  Add border thickness and corner radius to prevent the background from overlapping the border  -->
+                        <!--  Change: BorderThickness and CornerRadius added to prevent the Background from overlapping the border.  -->
                         <Grid
                             x:Name="SecondaryBackgroundGrid"
                             Grid.Column="2"
@@ -562,13 +562,13 @@
                             contract7Present:CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                             Background="{TemplateBinding Background}"
                             BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}">
-                            <!--  Add a brush transition to match the default button  -->
+                            <!--  Change: BrushTransition added to align with the default button.  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Grid.BackgroundTransition>
                         </Grid>
 
-                        <!--  Override border thickness to match the height of the default button  -->
+                        <!--  Change: BorderThickness modified to align with the default button dimensions.  -->
                         <Button
                             x:Name="PrimaryButton"
                             Grid.Column="0"
@@ -670,7 +670,7 @@
                                         <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundPointerOver}" />
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundPointerOver}" />
                                         <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackground}" />
-                                        <!--  Add a border to match default button style in high contrast  -->
+                                        <!--  Change: BorderBrush added to align with the default button high contrast visuals.  -->
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -680,7 +680,7 @@
                                         <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundPressed}" />
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundPressed}" />
                                         <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackground}" />
-                                        <!--  Add a unique border to each part  -->
+                                        <!--  Change: BorderBrush added to each part for unique visuals.  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPressed}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ControlFillColorTransparentBrush}" />
@@ -691,10 +691,10 @@
                                     <VisualState.Setters>
                                         <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackground}" />
                                         <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundPointerOver}" />
-                                        <!--  Brush not in use  -->
+                                        <!--  Change: BorderBrush commented out because it was unused.  -->
                                         <!--<Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundPointerOver}" />
-                                        <!--  Add a border to match default button style in high contrast  -->
+                                        <!--  Change: BorderBrush added to align with the default button high contrast visuals.  -->
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -704,7 +704,7 @@
                                         <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackground}" />
                                         <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundPressed}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondaryPressed}" />
-                                        <!--  Add a unique border to each part  -->
+                                        <!--  Change: BorderBrush added to each part for unique visuals.  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPressed}" />
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ControlFillColorTransparentBrush}" />
@@ -721,7 +721,7 @@
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundChecked}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundChecked}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -737,7 +737,7 @@
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPressed}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -753,7 +753,7 @@
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPressed}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -769,7 +769,7 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="{ThemeResource ToggleButtonCheckedStateBackgroundSizing}" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundChecked}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -785,7 +785,7 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="{ThemeResource ToggleButtonCheckedStateBackgroundSizing}" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundChecked}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -801,7 +801,7 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="{ThemeResource ToggleButtonCheckedStateBackgroundSizing}" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPointerOver}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -817,7 +817,7 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="{ThemeResource ToggleButtonCheckedStateBackgroundSizing}" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushCheckedDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness removed on each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="0" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="0" />
                                     </VisualState.Setters>
@@ -841,8 +841,8 @@
         </Setter>
     </Style>
 
-    <!--  Accent SplitButton, swapped non-checked brushes with checked brushes, and increased the focus visual margin  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/SplitButton/SplitButton.xaml  -->
+    <!--  Accent SplitButton, swapped non-checked brushes with checked brushes, and increased the focus visual margin.  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/SplitButton/SplitButton.xaml  -->
     <Style x:Key="AccentSplitButtonStyle" TargetType="muxc:SplitButton">
         <Setter Property="Background" Value="{ThemeResource SplitButtonBackgroundChecked}" />
         <Setter Property="Foreground" Value="{ThemeResource SplitButtonForegroundChecked}" />
@@ -934,46 +934,46 @@
                             <ColumnDefinition x:Name="SecondaryButtonColumn" Width="{ThemeResource SplitButtonSecondaryButtonSize}" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Add corner radius to prevent the background from overlapping the border when in checked states  -->
+                        <!--  Change: CornerRadius added to prevent the Background from overlapping the border in the Checked... visual states.  -->
                         <Grid
                             x:Name="PrimaryBackgroundGrid"
                             Grid.ColumnSpan="2"
                             contract7NotPresent:CornerRadius="{Binding Source={ThemeResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                             contract7Present:CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                             Background="{TemplateBinding Background}">
-                            <!--  Add a brush transition to match the accent button  -->
+                            <!--  Change: BrushTransition added to align with the default button.  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Grid.BackgroundTransition>
                         </Grid>
 
-                        <!--  Add border thickness to prevent the background from overlapping the border  -->
+                        <!--  Change: BorderThickness added to prevent the Background from overlapping the border.  -->
                         <Grid
                             x:Name="DividerBackgroundGrid"
                             Grid.Column="1"
                             Width="1"
                             Background="{ThemeResource SplitButtonBorderBrushCheckedDivider}"
                             BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalThicknessFiltersConverter}}">
-                            <!--  Add a brush transition to match the accent button  -->
+                            <!--  Change: BrushTransition added to align with the default button.  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Grid.BackgroundTransition>
                         </Grid>
 
-                        <!--  Add corner radius to prevent the background from overlapping the border when in checked states  -->
+                        <!--  Change: CornerRadius added to prevent the Background from overlapping the border in the Checked... visual states.  -->
                         <Grid
                             x:Name="SecondaryBackgroundGrid"
                             Grid.Column="2"
                             contract7NotPresent:CornerRadius="{Binding Source={ThemeResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                             contract7Present:CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                             Background="{TemplateBinding Background}">
-                            <!--  Add a brush transition to match the accent button  -->
+                            <!--  Change: BrushTransition added to align with the default button.  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Grid.BackgroundTransition>
                         </Grid>
 
-                        <!--  Override border thickness to match the height of the accent button  -->
+                        <!--  Change: BorderThickness modified to align with the accent button dimensions.  -->
                         <Button
                             x:Name="PrimaryButton"
                             Grid.Column="0"
@@ -1091,7 +1091,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="PrimaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundChecked}" />
                                         <Setter Target="SecondaryBackgroundGrid.Background" Value="{ThemeResource SplitButtonBackgroundCheckedPointerOver}" />
-                                        <!--  Brush not in use  -->
+                                        <!--  Change: BorderBrush commented out because it was unused.  -->
                                         <!--<Setter Target="SecondaryButton.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushCheckedPointerOver}" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundCheckedPointerOver}" />
                                     </VisualState.Setters>
@@ -1115,7 +1115,7 @@
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForeground}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondary}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
@@ -1131,7 +1131,7 @@
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundPressed}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondaryPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
@@ -1147,7 +1147,7 @@
                                         <Setter Target="PrimaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundPressed}" />
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondaryPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
@@ -1163,9 +1163,9 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="InnerBorderEdge" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondary}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Add a border to match default button style in high contrast  -->
+                                        <!--  Change: BorderBrush added to align with the default button high contrast visuals.  -->
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
@@ -1181,11 +1181,11 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="InnerBorderEdge" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondary}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Add a unique border to each part  -->
+                                        <!--  Change: BorderBrush added to each part for unique visuals.  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPressed}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ControlFillColorTransparentBrush}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
@@ -1201,9 +1201,9 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="InnerBorderEdge" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundPointerOver}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Add a border to match default button style in high contrast  -->
+                                        <!--  Change: BorderBrush added to align with the default button high contrast visuals.  -->
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
@@ -1219,11 +1219,11 @@
                                         <!--<contract7Present:Setter Target="SecondaryBackgroundGrid.BackgroundSizing" Value="InnerBorderEdge" />-->
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondaryPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
-                                        <!--  Add a unique border to each part  -->
+                                        <!--  Change: BorderBrush added to each part for unique visuals.  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPressed}" />
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ControlFillColorTransparentBrush}" />
-                                        <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
+                                        <!--  Change: BorderThickness added to each part to work around a BackgroundSizing issue (microsoft/microsoft-ui-xaml#6885).  -->
                                         <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndLeftThicknessFiltersConverter}}" />
                                         <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalAndRightThicknessFiltersConverter}}" />
                                     </VisualState.Setters>
