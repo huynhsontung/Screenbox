@@ -5,15 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="{strings:Resources Key=OpenUrl}"
-    CloseButtonText="{strings:Resources Key=Close}"
+    Title="{strings:ResourcesProxy Key=OpenUrl}"
+    CloseButtonText="{strings:ResourcesProxy Key=Close}"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="{x:Bind CanOpen(UrlBox.Text), Mode=OneWay}"
-    PrimaryButtonText="{strings:Resources Key=Open}"
+    PrimaryButtonText="{strings:ResourcesProxy Key=Open}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <Grid>
-        <TextBox x:Name="UrlBox" PlaceholderText="{strings:Resources Key=OpenUrlPlaceholder}" />
+        <TextBox x:Name="UrlBox" PlaceholderText="{strings:ResourcesProxy Key=OpenUrlPlaceholder}" />
     </Grid>
 </ContentDialog>

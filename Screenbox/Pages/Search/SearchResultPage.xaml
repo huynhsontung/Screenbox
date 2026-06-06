@@ -27,19 +27,19 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{strings:ResourcesProxy Key=Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{strings:ResourcesProxy Key=PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{strings:ResourcesProxy Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
@@ -50,24 +50,24 @@
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{strings:ResourcesProxy Key=Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding Album}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{strings:ResourcesProxy Key=ShowAlbum}"
                     Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{Binding MainArtist}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}"
+                    Text="{strings:ResourcesProxy Key=ShowArtist}"
                     Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{strings:ResourcesProxy Key=SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -119,11 +119,11 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{strings:Resources Key=Artists}" />
+                            Text="{strings:ResourcesProxy Key=Artists}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
                             Command="{x:Bind ViewModel.SeeAllArtistsCommand}"
-                            Content="{strings:Resources Key=SeeAll}"
+                            Content="{strings:ResourcesProxy Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreArtists, Mode=OneWay}" />
                     </Grid>
                     <GridView
@@ -149,11 +149,11 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{strings:Resources Key=Albums}" />
+                            Text="{strings:ResourcesProxy Key=Albums}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
                             Command="{x:Bind ViewModel.SeeAllAlbumsCommand}"
-                            Content="{strings:Resources Key=SeeAll}"
+                            Content="{strings:ResourcesProxy Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreAlbums, Mode=OneWay}" />
                     </Grid>
                     <GridView
@@ -183,11 +183,11 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{strings:Resources Key=Songs}" />
+                            Text="{strings:ResourcesProxy Key=Songs}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
                             Command="{x:Bind ViewModel.SeeAllSongsCommand}"
-                            Content="{strings:Resources Key=SeeAll}"
+                            Content="{strings:ResourcesProxy Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreSongs, Mode=OneWay}" />
                     </Grid>
                     <ListView
@@ -222,11 +222,11 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{strings:Resources Key=Videos}" />
+                            Text="{strings:ResourcesProxy Key=Videos}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
                             Command="{x:Bind ViewModel.SeeAllVideosCommand}"
-                            Content="{strings:Resources Key=SeeAll}"
+                            Content="{strings:ResourcesProxy Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreVideos, Mode=OneWay}" />
                     </Grid>
                     <GridView

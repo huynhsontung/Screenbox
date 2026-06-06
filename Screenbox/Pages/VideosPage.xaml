@@ -49,21 +49,21 @@
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
                     Style="{StaticResource TitleMediumTextBlockStyle}"
-                    Text="{strings:Resources Key=Videos}" />
+                    Text="{strings:ResourcesProxy Key=Videos}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     x:Name="FoldersMenuItem"
-                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemFoldersKey}"
+                    AccessKey="{strings:KeyboardResourcesProxy Key=TopNavigationItemFoldersKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=VideoFolders}"
+                    Content="{strings:ResourcesProxy Key=VideoFolders}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="folders" />
                 <muxc:NavigationViewItem
                     x:Name="AllVideosMenuItem"
-                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemVideosKey}"
+                    AccessKey="{strings:KeyboardResourcesProxy Key=TopNavigationItemVideosKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=AllVideos}"
+                    Content="{strings:ResourcesProxy Key=AllVideos}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="all" />
             </muxc:NavigationView.MenuItems>
@@ -72,10 +72,10 @@
                     x:Name="HeaderAddFolderButton"
                     Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
-                    AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
-                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                    AccessKey="{strings:KeyboardResourcesProxy Key=CommandAddFolderKey}"
+                    AutomationProperties.Name="{strings:ResourcesProxy Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
+                    ToolTipService.ToolTip="{strings:ResourcesProxy Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
@@ -86,7 +86,7 @@
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
-                            Text="{strings:Resources Key=AddFolder}" />
+                            Text="{strings:ResourcesProxy Key=AddFolder}" />
                     </StackPanel>
                 </Button>
             </muxc:NavigationView.PaneFooter>

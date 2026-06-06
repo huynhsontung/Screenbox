@@ -70,7 +70,7 @@
                                 x:Name="AlbumTitle"
                                 MaxLines="2"
                                 Style="{StaticResource BodyStrongTextBlockStyle}"
-                                Text="{Binding Key.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}">
+                                Text="{Binding Key.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownAlbum}}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:OverflowTextToolTipBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -120,24 +120,24 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{strings:ResourcesProxy Key=Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{strings:ResourcesProxy Key=PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{strings:ResourcesProxy Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutSubItem
                     x:Name="AddToPlaylistSubMenu"
                     Icon="{ui:SymbolIcon Symbol=Add}"
-                    Text="{strings:Resources Key=AddToPlaylist}" />
+                    Text="{strings:ResourcesProxy Key=AddToPlaylist}" />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{Binding}"
@@ -147,18 +147,18 @@
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{strings:ResourcesProxy Key=Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding Album}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{strings:ResourcesProxy Key=ShowAlbum}"
                     Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{strings:ResourcesProxy Key=SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -256,7 +256,7 @@
                         Margin="0,12,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{strings:Resources Key=Artist}"
+                        Text="{strings:ResourcesProxy Key=Artist}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
@@ -285,11 +285,11 @@
                             </controls:CommandBarEx.Resources>
 
                             <AppBarButton
-                                AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
+                                AccessKey="{strings:KeyboardResourcesProxy Key=CommandPlayKey}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
-                                Label="{strings:Resources Key=Play}"
+                                Label="{strings:ResourcesProxy Key=Play}"
                                 Style="{StaticResource AccentButtonAppBarButtonStyle}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:AutoFocusBehavior />
@@ -297,12 +297,12 @@
                             </AppBarButton>
 
                             <AppBarButton
-                                AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
+                                AccessKey="{strings:KeyboardResourcesProxy Key=CommandShuffleAndPlayKey}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
-                                Label="{strings:Resources Key=ShuffleAndPlay}"
+                                Label="{strings:ResourcesProxy Key=ShuffleAndPlay}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
                         </controls:CommandBarEx>
                     </Grid>

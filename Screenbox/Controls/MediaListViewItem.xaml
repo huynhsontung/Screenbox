@@ -44,7 +44,7 @@
             AutoPlay="False"
             IsHitTestVisible="False"
             Source="{StaticResource AnimatedPlayingVisualSource}"
-            ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
+            ToolTipService.ToolTip="{strings:ResourcesProxy Key=IsPlaying}"
             Visibility="Collapsed" />
 
         <TextBlock
@@ -108,7 +108,7 @@
             <TextBlock
                 x:Name="ArtistText"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding MainArtist.Name, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:Resources Key=UnknownArtist}}"
+                Text="{Binding MainArtist.Name, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownArtist}}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -129,7 +129,7 @@
             <TextBlock
                 x:Name="AlbumText"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Album.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}"
+                Text="{Binding Album.Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownAlbum}}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -144,7 +144,7 @@
             VerticalAlignment="Center"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}, FallbackValue={strings:Resources Key=UnknownGenre}}"
+            Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownGenre}}"
             TextWrapping="NoWrap"
             Visibility="Collapsed">
             <interactivity:Interaction.Behaviors>

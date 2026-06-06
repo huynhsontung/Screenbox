@@ -28,24 +28,24 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{strings:ResourcesProxy Key=Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{strings:ResourcesProxy Key=PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{strings:ResourcesProxy Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutSubItem
                     x:Name="AddToPlaylistSubMenu"
                     Icon="{ui:SymbolIcon Symbol=Add}"
-                    Text="{strings:Resources Key=AddToPlaylist}" />
+                    Text="{strings:ResourcesProxy Key=AddToPlaylist}" />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{Binding Media}"
@@ -55,12 +55,12 @@
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding Media}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{strings:ResourcesProxy Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{strings:ResourcesProxy Key=SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -99,7 +99,7 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="{strings:KeyboardResources Key=CommandBreadcrumbBarKey}"
+            AccessKey="{strings:KeyboardResourcesProxy Key=CommandBreadcrumbBarKey}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}"

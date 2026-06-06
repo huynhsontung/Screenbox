@@ -5,10 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="{strings:Resources Key=RenamePlaylist}"
-    CloseButtonText="{strings:Resources Key=Cancel}"
+    Title="{strings:ResourcesProxy Key=RenamePlaylist}"
+    CloseButtonText="{strings:ResourcesProxy Key=Cancel}"
     DefaultButton="Primary"
-    PrimaryButtonText="{strings:Resources Key=Rename}"
+    PrimaryButtonText="{strings:ResourcesProxy Key=Rename}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 

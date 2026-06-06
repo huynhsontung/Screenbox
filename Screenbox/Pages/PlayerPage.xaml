@@ -349,8 +349,8 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
-            AccessKey="{strings:KeyboardResources Key=PlayerRestoreKey}"
-            AutomationProperties.Name="{strings:Resources Key=RestoreView}"
+            AccessKey="{strings:KeyboardResourcesProxy Key=PlayerRestoreKey}"
+            AutomationProperties.Name="{strings:ResourcesProxy Key=RestoreView}"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             KeyTipPlacementMode="Center"
             Visibility="Collapsed">
@@ -385,7 +385,7 @@
                 </muxc:AnimatedIcon.FallbackIconSource>
             </muxc:AnimatedIcon>
             <ToolTipService.ToolTip>
-                <ToolTip Content="{strings:Resources Key=RestoreView}" PlacementRect="0,6,162,90" />
+                <ToolTip Content="{strings:ResourcesProxy Key=RestoreView}" PlacementRect="0,6,162,90" />
             </ToolTipService.ToolTip>
         </Button>
 

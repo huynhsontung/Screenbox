@@ -67,7 +67,7 @@
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{strings:Resources Key=Audio}"
+                        Text="{strings:ResourcesProxy Key=Audio}"
                         TextWrapping="NoWrap" />
                     <HyperlinkButton
                         Grid.Column="1"
@@ -76,7 +76,7 @@
                         Command="{x:Bind ShowAudioOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
-                            Text="{strings:Resources Key=Options}"
+                            Text="{strings:ResourcesProxy Key=Options}"
                             TextWrapping="NoWrap" />
                     </HyperlinkButton>
                 </Grid>
@@ -123,7 +123,7 @@
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{strings:Resources Key=Subtitles}"
+                        Text="{strings:ResourcesProxy Key=Subtitles}"
                         TextWrapping="NoWrap" />
                     <HyperlinkButton
                         Grid.Column="1"
@@ -132,7 +132,7 @@
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
-                            Text="{strings:Resources Key=Options}"
+                            Text="{strings:ResourcesProxy Key=Options}"
                             TextWrapping="NoWrap" />
                     </HyperlinkButton>
                 </Grid>
@@ -146,7 +146,7 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Left"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                    Content="{strings:Resources Key=AddSubtitle}"
+                    Content="{strings:ResourcesProxy Key=AddSubtitle}"
                     Style="{StaticResource SubtleButtonStyle}">
                     <Button.Resources>
                         <ResourceDictionary>
@@ -166,7 +166,7 @@
                 </Button>
             </ListView.Footer>
             <d:ListView.Items>
-                <ListViewItem Content="{strings:Resources Key=Disable}" />
+                <ListViewItem Content="{strings:ResourcesProxy Key=Disable}" />
                 <ListViewItem Content="English" IsSelected="True" />
                 <ListViewItem Content="French (Français)" />
                 <ListViewItem Content="Spanish (Latin America) (Castellano)" />

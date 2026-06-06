@@ -63,7 +63,7 @@ applyTo: '**/*.xaml'
 <Button
     x:Name="PlayPauseButton"
     extensions:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
-    AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
+    AccessKey="{strings:KeyboardResourcesProxy Key=PlayerPlayPauseKey}"
     AutomationProperties.Name="{x:Bind PlayPauseButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
     Command="{x:Bind ViewModel.PlayPauseCommand}"
     Style="{StaticResource PlayerButtonStyle}">

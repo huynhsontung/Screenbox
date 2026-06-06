@@ -67,11 +67,11 @@
                         TrueValue="True" />
                     <ctConverters:BoolToObjectConverter
                         x:Key="BoolToPlayPauseTextConverter"
-                        FalseValue="{strings:Resources Key=Play}"
-                        TrueValue="{strings:Resources Key=Pause}" />
-                    <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
-                    <converters:DefaultStringConverter x:Key="ArtistTextConverter" Default="{strings:Resources Key=UnknownArtist}" />
-                    <converters:DefaultStringConverter x:Key="AlbumTextConverter" Default="{strings:Resources Key=UnknownAlbum}" />
+                        FalseValue="{strings:ResourcesProxy Key=Play}"
+                        TrueValue="{strings:ResourcesProxy Key=Pause}" />
+                    <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:ResourcesProxy Key=UnknownGenre}" />
+                    <converters:DefaultStringConverter x:Key="ArtistTextConverter" Default="{strings:ResourcesProxy Key=UnknownArtist}" />
+                    <converters:DefaultStringConverter x:Key="AlbumTextConverter" Default="{strings:ResourcesProxy Key=UnknownAlbum}" />
 
                     <!--  Font sizes  -->
                     <x:Double x:Key="TopNavigationViewItemFontSize">18</x:Double>

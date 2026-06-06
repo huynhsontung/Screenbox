@@ -12,7 +12,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{strings:Resources Key=Network}" />
+        <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{strings:ResourcesProxy Key=Network}" />
     </Page.Resources>
 
     <Grid>
@@ -35,7 +35,7 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="{strings:KeyboardResources Key=CommandBreadcrumbBarKey}"
+            AccessKey="{strings:KeyboardResourcesProxy Key=CommandBreadcrumbBarKey}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
             KeyTipPlacementMode="Right" />

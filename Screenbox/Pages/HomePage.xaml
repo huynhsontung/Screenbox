@@ -38,24 +38,24 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{strings:ResourcesProxy Key=Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{strings:ResourcesProxy Key=PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{strings:ResourcesProxy Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutSubItem
                     x:Name="AddToPlaylistSubMenu"
                     Icon="{ui:SymbolIcon Symbol=Add}"
-                    Text="{strings:Resources Key=AddToPlaylist}" />
+                    Text="{strings:ResourcesProxy Key=AddToPlaylist}" />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{Binding}"
@@ -65,29 +65,29 @@
                     Command="{x:Bind ViewModel.RemoveCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Clear}"
-                    Text="{strings:Resources Key=Remove}" />
+                    Text="{strings:ResourcesProxy Key=Remove}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{strings:ResourcesProxy Key=Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding Album}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{strings:ResourcesProxy Key=ShowAlbum}"
                     Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{Binding MainArtist}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}"
+                    Text="{strings:ResourcesProxy Key=ShowArtist}"
                     Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{strings:ResourcesProxy Key=SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -109,23 +109,23 @@
 
             <MenuFlyout x:Key="OpenFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
+                    AccessKey="{strings:KeyboardResourcesProxy Key=MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderOpenGlyph}}"
-                    Text="{strings:Resources Key=OpenFiles}" />
+                    Text="{strings:ResourcesProxy Key=OpenFiles}" />
                 <MenuFlyoutItem
                     x:Name="OpenMenuFlyoutFolderItem"
-                    AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
+                    AccessKey="{strings:KeyboardResourcesProxy Key=MenuItemFolderKey}"
                     Command="{x:Bind ViewModel.OpenFolderCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderListGlyph}}"
-                    Text="{strings:Resources Key=OpenFolder}" />
+                    Text="{strings:ResourcesProxy Key=OpenFolder}" />
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
+                    AccessKey="{strings:KeyboardResourcesProxy Key=MenuItemUrlKey}"
                     Icon="{ui:SymbolIcon Symbol=Globe}"
                     KeyTipPlacementMode="Left"
-                    Text="{strings:Resources Key=OpenUrl}">
+                    Text="{strings:ResourcesProxy Key=OpenUrl}">
                     <MenuFlyoutItem.Command>
                         <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
                     </MenuFlyoutItem.Command>
@@ -150,16 +150,16 @@
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=Home}" />
+                Text="{strings:ResourcesProxy Key=Home}" />
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=OpenFilesToolTip}"
-                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=OpenFilesSecondaryToolTip}"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
+                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:ResourcesProxy Key=OpenFilesToolTip}"
+                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResourcesProxy Key=CommandMoreOptionsKey}"
+                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:ResourcesProxy Key=OpenFilesSecondaryToolTip}"
+                AccessKey="{strings:KeyboardResourcesProxy Key=CommandAddOpenFilesKey}"
+                AutomationProperties.HelpText="{strings:ResourcesProxy Key=OpenFilesToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderOpenButtonText.Text}"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}">
@@ -171,7 +171,7 @@
                     <TextBlock
                         x:Name="HeaderOpenButtonText"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=OpenFiles}" />
+                        Text="{strings:ResourcesProxy Key=OpenFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
                     <behaviors:SplitButtonXYNavigationBehavior />
@@ -190,7 +190,7 @@
                 VerticalAlignment="Center"
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{strings:Resources Key=Recent}" />
+                Text="{strings:ResourcesProxy Key=Recent}" />
             <Grid
                 x:Name="SelectionGrid"
                 Grid.Row="0"

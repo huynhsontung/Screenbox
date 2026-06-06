@@ -50,7 +50,7 @@
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{strings:ResourcesProxy Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"

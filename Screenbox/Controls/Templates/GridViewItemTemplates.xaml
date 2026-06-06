@@ -6,9 +6,9 @@
 
     <DataTemplate x:Key="AlbumGridViewItemTemplate">
         <controls:CommonGridViewItem
-            Title="{Binding Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}"
+            Title="{Binding Name, Converter={StaticResource AlbumTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownAlbum}}"
             Width="{StaticResource CommonGridViewItemWidth}"
-            Caption="{Binding ArtistName, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:Resources Key=UnknownAlbum}}"
+            Caption="{Binding ArtistName, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownAlbum}}"
             IsPlaying="{Binding IsPlaying}"
             PlayCommand="{Binding PlayAlbumCommand}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
@@ -21,7 +21,7 @@
 
     <DataTemplate x:Key="ArtistGridViewItemTemplate">
         <controls:CommonGridViewItem
-            Title="{Binding Name, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:Resources Key=UnknownArtist}}"
+            Title="{Binding Name, Converter={StaticResource ArtistTextConverter}, FallbackValue={strings:ResourcesProxy Key=UnknownArtist}}"
             Width="{StaticResource CommonGridViewItemWidth}"
             CornerRadius="{StaticResource CircularCornerRadius}"
             HorizontalTextAlignment="Center"

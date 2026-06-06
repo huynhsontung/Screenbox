@@ -21,23 +21,23 @@
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
             <MenuFlyoutItem
-                AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
+                AccessKey="{strings:KeyboardResourcesProxy Key=MenuItemFileKey}"
                 Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderOpenGlyph}}"
-                Text="{strings:Resources Key=AddFiles}" />
+                Text="{strings:ResourcesProxy Key=AddFiles}" />
             <MenuFlyoutItem
                 x:Name="AddToPlayQueueMenuFlyoutFolderItem"
-                AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
+                AccessKey="{strings:KeyboardResourcesProxy Key=MenuItemFolderKey}"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderListGlyph}}"
-                Text="{strings:Resources Key=AddFolder}" />
+                Text="{strings:ResourcesProxy Key=AddFolder}" />
             <MenuFlyoutItem
-                AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
+                AccessKey="{strings:KeyboardResourcesProxy Key=MenuItemUrlKey}"
                 Icon="{ui:SymbolIcon Symbol=Globe}"
                 KeyTipPlacementMode="Left"
-                Text="{strings:Resources Key=AddUrl}">
+                Text="{strings:ResourcesProxy Key=AddUrl}">
                 <MenuFlyoutItem.Command>
                     <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.AddUrlCommand}" />
                 </MenuFlyoutItem.Command>
@@ -70,7 +70,7 @@
             <TextBlock
                 Grid.Column="0"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=PlayQueue}"
+                Text="{strings:ResourcesProxy Key=PlayQueue}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -81,11 +81,11 @@
                 x:Name="HeaderAddButton"
                 Grid.Column="1"
                 VerticalAlignment="Top"
-                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
+                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:ResourcesProxy Key=AddFilesToPlayQueueToolTip}"
+                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResourcesProxy Key=CommandMoreOptionsKey}"
+                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:ResourcesProxy Key=AddFilesToPlayQueueSecondaryToolTip}"
+                AccessKey="{strings:KeyboardResourcesProxy Key=CommandAddOpenFilesKey}"
+                AutomationProperties.HelpText="{strings:ResourcesProxy Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderAddButtonText.Text}"
                 Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}">
@@ -97,7 +97,7 @@
                     <TextBlock
                         x:Name="HeaderAddButtonText"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=AddFiles}" />
+                        Text="{strings:ResourcesProxy Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
                     <behaviors:SplitButtonXYNavigationBehavior />
