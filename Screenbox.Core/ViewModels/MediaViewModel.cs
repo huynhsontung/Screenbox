@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -194,6 +194,11 @@ public partial class MediaViewModel : ObservableRecipient
         }
 
         return item;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name}; {Caption}";
     }
 
     public void SetOptions(string options)

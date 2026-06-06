@@ -1,5 +1,6 @@
-﻿#nullable enable
+#nullable enable
 
+using System;
 using Screenbox.Core.Enums;
 
 namespace Screenbox.Helpers;
@@ -10,6 +11,11 @@ namespace Screenbox.Helpers;
 /// </summary>
 public static class ItemLabelHelper
 {
+    public static string GetAccessibleNameForItem(string title, string subtitle)
+    {
+        return $"{title}; {subtitle}";
+    }
+
     public static string GetAccessibleNameForItem(string title, double count)
     {
         string caption = Strings.Resources.ItemsCount(count);

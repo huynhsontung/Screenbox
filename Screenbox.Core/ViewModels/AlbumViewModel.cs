@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -71,11 +71,6 @@ public sealed partial class AlbumViewModel : ObservableRecipient
             await RelatedSongs[0].LoadThumbnailAsync();
             UpdateProperties();
         }
-    }
-
-    public override string ToString()
-    {
-        return $"{Name};{ArtistName}";
     }
 
     private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

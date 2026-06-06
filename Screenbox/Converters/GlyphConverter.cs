@@ -1,7 +1,12 @@
-﻿using System;
+using System;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.Media;
+using Windows.Storage;
+
+using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
 namespace Screenbox.Converters;
 
@@ -10,6 +15,9 @@ namespace Screenbox.Converters;
 /// </summary>
 public static partial class GlyphConverter
 {
+    private const string MoviesGlyph = "\uE8B2";
+    private const string AudioGlyph = "\uE8D6";
+
     /// <summary>
     /// Gets the shuffle glyph code based on a boolean condition.
     /// </summary>
@@ -181,8 +189,6 @@ public static partial class GlyphConverter
     public static string ToSearchSuggestionGlyph(SearchSuggestionType value)
     {
         const string ContactGlyph = "\uE77B";
-        const string MoviesGlyph = "\uE8B2";
-        const string AudioGlyph = "\uE8D6";
         const string MusicInfoGlyph = "\uE90B";
         const string MusicAlbumGlyph = "\uE93C";
 
@@ -194,6 +200,65 @@ public static partial class GlyphConverter
             SearchSuggestionType.Video => MoviesGlyph,
             SearchSuggestionType.Playlist => MusicInfoGlyph,
             _ => string.Empty,
+        };
+    }
+
+    /// <summary>
+    /// Gets the media glyph code based on the storage item type.
+    /// </summary>
+    /// <param name="item">A <see cref="IStorageItem"/> representing a file or folder.</param>
+    /// <returns>
+    /// A glyph code representing the storage item type (folder, file, audio, or video).
+    /// </returns>
+    public static string ToStorageItemGlyph(IStorageItem item)
+    {
+        const string FolderGlyph = "\uE8B7";
+        const string DocumentGlyph = "\uE8A5";
+
+        return item switch
+        {
+            IStorageFile file when file.IsSupportedVideo() => MoviesGlyph,
+            IStorageFile file when file.IsSupportedAudio() => AudioGlyph,
+            IStorageFile => DocumentGlyph,
+            _ => FolderGlyph,
+        };
+    }
+
+    /// <summary>
+    /// Gets the media glyph code based on the media playback type.
+    /// </summary>
+    /// <param name="type">A value indicating the media type.</param>
+    /// <returns>
+    /// A glyph code representing the media type (music, video, image, or media).
+    /// </returns>
+    public static string ToMediaTypeGlyph(MediaPlaybackType type)
+    {
+        const string PhotoGlyph = "\uE91B";
+        const string MediaGlyph = "\uEA69";
+
+        return type switch
+        {
+            MediaPlaybackType.Music => AudioGlyph,
+            MediaPlaybackType.Video => MoviesGlyph,
+            MediaPlaybackType.Image => PhotoGlyph,
+            _ => MediaGlyph,
+        };
+    }
+
+    /// <summary>
+    /// Gets the media glyph code based on the media view model.
+    /// </summary>
+    /// <param name="mediaViewModel">The media view model to convert.</param>
+    /// <returns>A glyph code representing the media type.</returns>
+    public static string ToMediaGlyph(MediaViewModel mediaViewModel)
+    {
+        const string GlobeGlyph = "\uE774";
+
+        return mediaViewModel switch
+        {
+            { Source: StorageFile file } => ToStorageItemGlyph(file),
+            { IsFromLibrary: true } => ToMediaTypeGlyph(mediaViewModel.MediaType),
+            _ => GlobeGlyph,
         };
     }
 }

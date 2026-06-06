@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -32,11 +32,6 @@ public sealed partial class ArtistViewModel : ObservableRecipient
     public ArtistViewModel(string artist) : this()
     {
         Name = artist;
-    }
-
-    public override string ToString()
-    {
-        return Name;
     }
 
     private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

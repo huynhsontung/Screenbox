@@ -1,10 +1,11 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.FolderViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -138,7 +139,7 @@
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">
                         <controls:CommonGridViewItem.PlaceholderIconSource>
-                            <FontIconSource FontSize="{StaticResource WideGridItemPlaceholderIconFontSize}" Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
+                            <FontIconSource FontSize="{StaticResource WideGridItemPlaceholderIconFontSize}" Glyph="{x:Bind converters:GlyphConverter.ToStorageItemGlyph(StorageItem)}" />
                         </controls:CommonGridViewItem.PlaceholderIconSource>
                     </controls:CommonGridViewItem>
                 </DataTemplate>
