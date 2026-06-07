@@ -1,24 +1,18 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Screenbox.Controls">
+    xmlns:local="using:Screenbox.Controls">
 
-    <x:Double x:Key="ContentUnavailableViewMaxWidth">688</x:Double>
+    <Style BasedOn="{StaticResource DefaultContentUnavailableViewStyle}" TargetType="local:ContentUnavailableView" />
 
-    <Thickness x:Key="ContentUnavailableViewContentMargin">0,0,16,0</Thickness>
-    <Thickness x:Key="ContentUnavailableViewTitleMargin">0,0,0,8</Thickness>
-    <Thickness x:Key="ContentUnavailableViewMessageMargin">0,0,0,12</Thickness>
-
-    <Style BasedOn="{StaticResource DefaultContentUnavailableViewStyle}" TargetType="controls:ContentUnavailableView" />
-
-    <Style x:Key="DefaultContentUnavailableViewStyle" TargetType="controls:ContentUnavailableView">
+    <Style x:Key="DefaultContentUnavailableViewStyle" TargetType="local:ContentUnavailableView">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="MaxWidth" Value="{ThemeResource ContentUnavailableViewMaxWidth}" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controls:ContentUnavailableView">
+                <ControlTemplate TargetType="local:ContentUnavailableView">
                     <Grid
                         x:Name="RootGrid"
                         Padding="{TemplateBinding Padding}"

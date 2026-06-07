@@ -151,7 +151,9 @@
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="ms-appx:///Controls/ContentUnavailableView/ContentUnavailableView.xaml" />
+                <ResourceDictionary Source="ms-appx:///Controls/ContentUnavailableView/ContentUnavailableView_themeresources.xaml" />
                 <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.xaml" />
+                <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar_themeresources.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/Icon.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/ItemContainer.xaml" />
