@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using Windows.ApplicationModel.Core;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -418,21 +417,14 @@ public sealed partial class TitleBar : ContentControl
         // set by another TitleBar instance that is currently active.
         if (_applicationViewTitleBar is null || Visibility == Visibility.Collapsed) return;
 
-        _applicationViewTitleBar.ButtonBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundBrush);
-        _applicationViewTitleBar.ButtonHoverBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundPointerOverBrush);
-        _applicationViewTitleBar.ButtonPressedBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundPressedBrush);
-        _applicationViewTitleBar.ButtonInactiveBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundInactiveBrush);
+        _applicationViewTitleBar.ButtonBackgroundColor = (CaptionButtonBackgroundBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonHoverBackgroundColor = (CaptionButtonBackgroundPointerOverBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonPressedBackgroundColor = (CaptionButtonBackgroundPressedBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonInactiveBackgroundColor = (CaptionButtonBackgroundInactiveBrush as SolidColorBrush)?.Color;
 
-        _applicationViewTitleBar.ButtonForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundBrush);
-        _applicationViewTitleBar.ButtonHoverForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundPointerOverBrush);
-        _applicationViewTitleBar.ButtonPressedForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundPressedBrush);
-        _applicationViewTitleBar.ButtonInactiveForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundInactiveBrush);
-    }
-
-    private static Color? GetNullableColorFromBrush(Brush brush)
-    {
-        return brush is not SolidColorBrush solidColorBrush
-            ? null
-            : solidColorBrush.Color;
+        _applicationViewTitleBar.ButtonForegroundColor = (CaptionButtonForegroundBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonHoverForegroundColor = (CaptionButtonForegroundPointerOverBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonPressedForegroundColor = (CaptionButtonForegroundPressedBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonInactiveForegroundColor = (CaptionButtonForegroundInactiveBrush as SolidColorBrush)?.Color;
     }
 }
