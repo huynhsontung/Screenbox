@@ -269,7 +269,7 @@ public sealed class PlaylistService : IPlaylistService
 
         foreach (MediaViewModel item in items)
         {
-            if (string.IsNullOrWhiteSpace(item.Location) || item.Location == "about:blank")
+            if (string.IsNullOrWhiteSpace(item.Location) || string.Equals(item.Location, "about:blank", StringComparison.Ordinal))
                 continue;
 
             int durationSeconds = item.Duration > TimeSpan.Zero
