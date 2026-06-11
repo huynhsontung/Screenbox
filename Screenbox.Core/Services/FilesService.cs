@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ProtoBuf;
 using Screenbox.Core.Enums;
@@ -22,6 +23,12 @@ namespace Screenbox.Core.Services;
 
 public sealed class FilesService : IFilesService
 {
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+    {
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() },
+    };
+
     public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
     {
         try
@@ -132,8 +139,7 @@ public sealed class FilesService : IFilesService
     {
         if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            byte[] json = JsonSerializer.SerializeToUtf8Bytes(source, options);
+            byte[] json = JsonSerializer.SerializeToUtf8Bytes(source, _jsonSerializerOptions);
             await FileIO.WriteBytesAsync(file, json);
         }
         else
@@ -157,7 +163,7 @@ public sealed class FilesService : IFilesService
         if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
         {
             string json = await FileIO.ReadTextAsync(file);
-            return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize JSON");
+            return JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions) ?? throw new InvalidOperationException("Failed to deserialize JSON");
         }
 
         using var readStream = await file.OpenReadAsync();
