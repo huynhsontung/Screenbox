@@ -1,8 +1,8 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -12,7 +12,6 @@ using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
-using Windows.Storage.Streams;
 
 namespace Screenbox.Core.Services;
 
@@ -265,20 +264,28 @@ public sealed class PlaylistService : IPlaylistService
 
     public async Task ExportPlaylistItemsAsync(IReadOnlyList<MediaViewModel> items, StorageFile file)
     {
-        var lines = new List<string>((items.Count * 2) + 1)
-        {
-            "#EXTM3U"
-        };
+        var sb = new StringBuilder();
+        sb.AppendLine("#EXTM3U");
 
-        foreach (MediaViewModel item in items.Where(x => x.Location.Length > 0 && x.Location != "about:blank"))
+        foreach (MediaViewModel item in items)
         {
-            int durationSeconds = item.Duration > TimeSpan.Zero ? (int)Math.Round(item.Duration.TotalSeconds) : -1;
+            if (string.IsNullOrWhiteSpace(item.Location) || item.Location == "about:blank")
+                continue;
+
+            int durationSeconds = item.Duration > TimeSpan.Zero
+                ? (int)Math.Round(item.Duration.TotalSeconds)
+                : -1;
+
             string title = item.Name;
-            string path = Uri.TryCreate(item.Location, UriKind.Absolute, out var uri) ? uri.AbsoluteUri : item.Location;
-            lines.Add($"#EXTINF:{durationSeconds},{title}");
-            lines.Add(path);
+            string path = Uri.TryCreate(item.Location, UriKind.Absolute, out var uri)
+                ? uri.AbsoluteUri
+                : item.Location;
+
+            sb.AppendLine($"#EXTINF:{durationSeconds},{title}")
+              .AppendLine(path);
         }
 
-        await FileIO.WriteLinesAsync(file, lines, UnicodeEncoding.Utf8);
+        byte[] bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        await FileIO.WriteBytesAsync(file, bytes);
     }
 }
