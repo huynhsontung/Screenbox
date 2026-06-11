@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -132,8 +132,9 @@ public sealed class FilesService : IFilesService
     {
         if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
         {
-            var json = JsonSerializer.Serialize(source);
-            await FileIO.WriteTextAsync(file, json);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            byte[] json = JsonSerializer.SerializeToUtf8Bytes(source, options);
+            await FileIO.WriteBytesAsync(file, json);
         }
         else
         {
