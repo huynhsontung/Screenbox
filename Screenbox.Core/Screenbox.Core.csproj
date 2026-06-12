@@ -151,8 +151,8 @@
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
-    <Compile Include="Services\ILastPositionTracker.cs" />
-    <Compile Include="Services\LastPositionTracker.cs" />
+    <Compile Include="Services\IPlaybackProgressTracker.cs" />
+    <Compile Include="Services\PlaybackProgressTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="Models\IMediaProperties.cs" />
     <Compile Include="Models\LanguageInfo.cs" />
     <Compile Include="Models\MediaInfo.cs" />
-    <Compile Include="Models\MediaLastPosition.cs" />
+    <Compile Include="Models\MediaPlaybackProgress.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibrary.cs" />
     <Compile Include="Models\PersistentPlaylist.cs" />
