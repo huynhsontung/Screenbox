@@ -96,7 +96,7 @@ namespace Screenbox.Pages
             ViewModel.NavigationViewDisplayMode = (Windows.UI.Xaml.Controls.NavigationViewDisplayMode)NavView.DisplayMode;
             if (!ViewModel.PlayerVisible)
             {
-                AppTitleBar.SetDragRegion();
+                AppTitleBar.RefreshDragRegion();
                 NavView.SelectedItem = NavView.MenuItems[0];
                 _ = ViewModel.FetchLibraries();
             }
@@ -108,7 +108,7 @@ namespace Screenbox.Pages
             {
                 if (!ViewModel.PlayerVisible)
                 {
-                    AppTitleBar.SetDragRegion();
+                    AppTitleBar.RefreshDragRegion();
                     if (ContentFrame.Content == null)
                     {
                         NavView.SelectedItem = NavView.MenuItems[0];
@@ -117,7 +117,7 @@ namespace Screenbox.Pages
                 }
 
                 UpdateNavigationViewState(NavView.DisplayMode, NavView.IsPaneOpen);
-                AppTitleBar.SetCaptionButtonColor(); // We invoke it as late as possible to ensure the title bar is visible.
+                AppTitleBar.RefreshCaptionButtonColors(); // We invoke it as late as possible to ensure the title bar is visible.
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using Windows.ApplicationModel.Core;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -91,10 +90,11 @@ public sealed partial class TitleBar : ContentControl
     private const string FooterCollapsedStateName = "FooterCollapsed";
     private const string FooterVisibleStateName = "FooterVisible";
 
-    private CoreApplicationViewTitleBar? _coreTitleBar;
-    private Window? _window;
+    private readonly long _flowDirectionCallbackToken;
 
-    private long _flowDirectionCallbackToken;
+    private CoreApplicationViewTitleBar? _coreTitleBar;
+    private ApplicationViewTitleBar? _applicationViewTitleBar;
+    private Window? _window;
 
     private ColumnDefinition? _leftPaddingColumn;
     private ColumnDefinition? _rightPaddingColumn;
@@ -106,8 +106,28 @@ public sealed partial class TitleBar : ContentControl
     public TitleBar()
     {
         DefaultStyleKey = typeof(TitleBar);
-        Loaded += OnLoaded;
         Unloaded += OnUnloaded;
+
+        if (CoreApplication.GetCurrentView().TitleBar is { } coreTitleBar)
+        {
+            _coreTitleBar = coreTitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_OnLayoutMetricsChanged;
+            //coreTitleBar.IsVisibleChanged += CoreTitleBar_OnIsVisibleChanged;
+        }
+
+        if (ApplicationView.GetForCurrentView().TitleBar is { } titleBar)
+        {
+            _applicationViewTitleBar = titleBar;
+        }
+
+        if (Window.Current is { } window)
+        {
+            _window = window;
+            window.Activated += Window_OnActivated;
+        }
+
+        _flowDirectionCallbackToken = RegisterPropertyChangedCallback(FlowDirectionProperty, OnFlowDirectionChanged);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer()
@@ -123,8 +143,8 @@ public sealed partial class TitleBar : ContentControl
         _rightPaddingColumn = (ColumnDefinition?)GetTemplateChild(RightPaddingColumnName);
         _dragRegion = (Grid?)GetTemplateChild(DragRegionName);
 
-        SetDragRegion();
-        UpdateCaptionButtonColor();
+        UpdateDragRegion();
+        UpdateCaptionButtonColors();
         //UpdateVisibility();
         UpdateHeight();
         UpdatePadding();
@@ -135,65 +155,81 @@ public sealed partial class TitleBar : ContentControl
         UpdateFooter();
     }
 
+    protected override void OnContentChanged(object oldContent, object newContent)
+    {
+        base.OnContentChanged(oldContent, newContent);
+        UpdateContent();
+    }
+
+    protected override void OnContentTemplateChanged(DataTemplate oldContentTemplate, DataTemplate newContentTemplate)
+    {
+        base.OnContentTemplateChanged(oldContentTemplate, newContentTemplate);
+        UpdateContent();
+    }
+
+    protected override void OnContentTemplateSelectorChanged(DataTemplateSelector oldContentTemplateSelector, DataTemplateSelector newContentTemplateSelector)
+    {
+        base.OnContentTemplateSelectorChanged(oldContentTemplateSelector, newContentTemplateSelector);
+        UpdateContent();
+    }
+
     /// <summary>
-    /// Resets the title bar to its default appearance.
+    /// Resets the current title bar back to the default settings for the window.
     /// </summary>
-    public void ResetTitleBar()
+    public void ResetToDefault()
     {
         _window?.SetTitleBar(null);
-        if (_coreTitleBar != null)
+        if (_coreTitleBar is not null)
+        {
             _coreTitleBar.ExtendViewIntoTitleBar = false;
+        }
+
+        if (_applicationViewTitleBar is not null)
+        {
+            _applicationViewTitleBar.ButtonBackgroundColor = null;
+            _applicationViewTitleBar.ButtonForegroundColor = null;
+            _applicationViewTitleBar.ButtonHoverBackgroundColor = null;
+            _applicationViewTitleBar.ButtonHoverForegroundColor = null;
+            _applicationViewTitleBar.ButtonPressedBackgroundColor = null;
+            _applicationViewTitleBar.ButtonPressedForegroundColor = null;
+            _applicationViewTitleBar.ButtonInactiveBackgroundColor = null;
+            _applicationViewTitleBar.ButtonInactiveForegroundColor = null;
+        }
     }
 
     /// <summary>
-    /// Sets the drag region for the window title bar.
+    /// Forces a refresh of the drag region for the window.
     /// </summary>
-    public void SetDragRegion()
+    public void RefreshDragRegion()
     {
-        if (_window is null) return;
-
-        if (_dragRegion is not null)
-        {
-            _window.SetTitleBar(_dragRegion);
-        }
-        else
-        {
-            _window.SetTitleBar(null);
-        }
+        UpdateDragRegion();
     }
 
-    public void SetCaptionButtonColor()
+    /// <summary>
+    /// Forces a refresh of the system caption button colors for the window.
+    /// </summary>
+    public void RefreshCaptionButtonColors()
     {
-        UpdateCaptionButtonColor();
-    }
-
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        if (CoreApplication.GetCurrentView() is { } coreApplicationView)
-        {
-            _coreTitleBar = coreApplicationView.TitleBar;
-            _coreTitleBar.ExtendViewIntoTitleBar = true;
-            _coreTitleBar.LayoutMetricsChanged += CoreTitleBar_OnLayoutMetricsChanged;
-            //_coreTitleBar.IsVisibleChanged += CoreTitleBar_OnIsVisibleChanged;
-        }
-
-        _window = Window.Current;
-        if (_window != null)
-            _window.Activated += Window_OnActivated;
-
-        _flowDirectionCallbackToken = RegisterPropertyChangedCallback(FlowDirectionProperty, OnFlowDirectionChanged);
+        UpdateCaptionButtonColors();
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        if (_coreTitleBar != null)
+        ResetToDefault();
+
+        if (_coreTitleBar is not null)
         {
             _coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_OnLayoutMetricsChanged;
             //_coreTitleBar.IsVisibleChanged -= CoreTitleBar_OnIsVisibleChanged;
             _coreTitleBar = null;
         }
 
-        if (_window != null)
+        if (_applicationViewTitleBar is not null)
+        {
+            _applicationViewTitleBar = null;
+        }
+
+        if (_window is not null)
         {
             _window.Activated -= Window_OnActivated;
             _window = null;
@@ -229,11 +265,7 @@ public sealed partial class TitleBar : ContentControl
     {
         var property = args.Property;
 
-        if (property == HeightModeProperty)
-        {
-            UpdateHeight();
-        }
-        else if (property == HeaderProperty || property == HeaderTemplateProperty)
+        if (property == HeaderProperty || property == HeaderTemplateProperty)
         {
             UpdateHeader();
         }
@@ -244,10 +276,6 @@ public sealed partial class TitleBar : ContentControl
         else if (property == TitleProperty)
         {
             UpdateTitle();
-        }
-        else if (property == ContentProperty)
-        {
-            UpdateContent();
         }
         else if (property == FooterProperty || property == FooterTemplateProperty)
         {
@@ -262,7 +290,7 @@ public sealed partial class TitleBar : ContentControl
             || property == CaptionButtonForegroundPressedBrushProperty
             || property == CaptionButtonForegroundInactiveBrushProperty)
         {
-            UpdateCaptionButtonColor();
+            UpdateCaptionButtonColors();
         }
     }
 
@@ -273,15 +301,28 @@ public sealed partial class TitleBar : ContentControl
 
     //private void UpdateVisibility()
     //{
-    //    if (CoreApplication.GetCurrentView() is { } coreApplicationView)
-    //    {
-    //        string stateName = coreApplicationView.TitleBar.IsVisible
-    //            ? TitleBarVisibleStateName
-    //            : TitleBarCollapsedStateName;
+    //    if (_coreTitleBar is null) return;
 
-    //        VisualStateManager.GoToState(this, stateName, false);
-    //    }
+    //    string stateName = _coreTitleBar.IsVisible
+    //        ? TitleBarVisibleStateName
+    //        : TitleBarCollapsedStateName;
+
+    //    VisualStateManager.GoToState(this, stateName, false);
     //}
+
+    private void UpdateDragRegion()
+    {
+        if (_window is null) return;
+
+        if (_dragRegion is not null)
+        {
+            _window.SetTitleBar(_dragRegion);
+        }
+        else
+        {
+            _window.SetTitleBar(null);
+        }
+    }
 
     private void UpdateHeight()
     {
@@ -300,10 +341,10 @@ public sealed partial class TitleBar : ContentControl
         double trailingInset = _coreTitleBar.SystemOverlayRightInset;
         bool isRtl = FlowDirection is FlowDirection.RightToLeft;
 
-        if (_leftPaddingColumn != null)
+        if (_leftPaddingColumn is not null)
             _leftPaddingColumn.Width = new GridLength(isRtl ? trailingInset : leadingInset);
 
-        if (_rightPaddingColumn != null)
+        if (_rightPaddingColumn is not null)
             _rightPaddingColumn.Width = new GridLength(isRtl ? leadingInset : trailingInset);
     }
 
@@ -370,28 +411,20 @@ public sealed partial class TitleBar : ContentControl
         //UpdateHeight();
     }
 
-    private void UpdateCaptionButtonColor()
+    private void UpdateCaptionButtonColors()
     {
-        // Avoid updating when not visible to prevent the Player page title bar colors
-        // from being overwritten by the Main page title bar colors.
-        var titleBar = ApplicationView.GetForCurrentView()?.TitleBar;
-        if (titleBar is null || Visibility is Visibility.Collapsed) return;
+        // Skip updates when not visible to prevent overwriting colors
+        // set by another TitleBar instance that is currently active.
+        if (_applicationViewTitleBar is null || Visibility == Visibility.Collapsed) return;
 
-        titleBar.ButtonBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundBrush);
-        titleBar.ButtonHoverBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundPointerOverBrush);
-        titleBar.ButtonPressedBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundPressedBrush);
-        titleBar.ButtonInactiveBackgroundColor = GetNullableColorFromBrush(CaptionButtonBackgroundInactiveBrush);
+        _applicationViewTitleBar.ButtonBackgroundColor = (CaptionButtonBackgroundBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonHoverBackgroundColor = (CaptionButtonBackgroundPointerOverBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonPressedBackgroundColor = (CaptionButtonBackgroundPressedBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonInactiveBackgroundColor = (CaptionButtonBackgroundInactiveBrush as SolidColorBrush)?.Color;
 
-        titleBar.ButtonForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundBrush);
-        titleBar.ButtonHoverForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundPointerOverBrush);
-        titleBar.ButtonPressedForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundPressedBrush);
-        titleBar.ButtonInactiveForegroundColor = GetNullableColorFromBrush(CaptionButtonForegroundInactiveBrush);
-    }
-
-    private static Color? GetNullableColorFromBrush(Brush brush)
-    {
-        return brush is not SolidColorBrush solidColorBrush
-            ? null
-            : solidColorBrush.Color;
+        _applicationViewTitleBar.ButtonForegroundColor = (CaptionButtonForegroundBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonHoverForegroundColor = (CaptionButtonForegroundPointerOverBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonPressedForegroundColor = (CaptionButtonForegroundPressedBrush as SolidColorBrush)?.Color;
+        _applicationViewTitleBar.ButtonInactiveForegroundColor = (CaptionButtonForegroundInactiveBrush as SolidColorBrush)?.Color;
     }
 }

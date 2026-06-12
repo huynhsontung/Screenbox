@@ -17,15 +17,18 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="Overlay"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty OverlayProperty = DependencyProperty.Register(
-        nameof(Overlay), typeof(UIElement), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(Overlay),
+        typeof(UIElement),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the content to be displayed as an overlay.
+    /// Gets or sets the contents of the overlay.
     /// </summary>
-    /// <value>An element that contains the overlay's content. The default is <see langword="null"/>.</value>
+    /// <value>The content of the overlay. The default is <see langword="null"/>.</value>
     /// <remarks>
-    /// By default, the overlay appears between the <see cref="SplitView"/> pane
-    /// and the content area, the order can be adjusted with the <see cref="OverlayZIndex"/>
+    /// The overlay appears between the navigation pane and the main content,
+    /// the order can be adjusted with the <see cref="OverlayZIndex"/>
     /// property.</remarks>
     public UIElement? Overlay
     {
@@ -37,7 +40,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="OverlayZIndex"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty OverlayZIndexProperty = DependencyProperty.Register(
-        nameof(OverlayZIndex), typeof(int), typeof(NavigationViewEx), new PropertyMetadata(0, OnPropertyChanged));
+        nameof(OverlayZIndex),
+        typeof(int),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(0, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the Z-order of the <see cref="Overlay"/>, relative to other
@@ -58,7 +64,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="ContentVisibility"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContentVisibilityProperty = DependencyProperty.Register(
-        nameof(ContentVisibility), typeof(Visibility), typeof(NavigationViewEx), new PropertyMetadata(Visibility.Visible, OnPropertyChanged));
+        nameof(ContentVisibility),
+        typeof(Visibility),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(Visibility.Visible, OnContentVisibilityPropertyChanged));
 
     /// <summary>
     /// Gets or sets the visibility of everything except the overlay element.
@@ -74,7 +83,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="BackButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(BackButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(BackButtonAccessKey),
+        typeof(string),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the back button.
@@ -90,7 +102,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="BackButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(BackButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(BackButtonKeyboardAccelerators),
+        typeof(IList<KeyboardAccelerator>),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the back button.
@@ -106,7 +121,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="BackButtonStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonStyleProperty = DependencyProperty.Register(
-        nameof(BackButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(BackButtonStyle),
+        typeof(Style),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the back button.
@@ -122,7 +140,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="CloseButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty CloseButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(CloseButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(CloseButtonAccessKey),
+        typeof(string),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the close button.
@@ -138,7 +159,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="CloseButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty CloseButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(CloseButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(CloseButtonKeyboardAccelerators),
+        typeof(IList<KeyboardAccelerator>),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the close button.
@@ -154,7 +178,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneToggleButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneToggleButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(PaneToggleButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(PaneToggleButtonAccessKey),
+        typeof(string),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the menu toggle button.
@@ -170,7 +197,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneToggleButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneToggleButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(PaneToggleButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(PaneToggleButtonKeyboardAccelerators),
+        typeof(IList<KeyboardAccelerator>),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the menu toggle button.
@@ -186,7 +216,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneSearchButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(PaneSearchButtonAccessKey),
+        typeof(string),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the search button.
@@ -202,7 +235,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneSearchButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(PaneSearchButtonKeyboardAccelerators),
+        typeof(IList<KeyboardAccelerator>),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the search button.
@@ -218,7 +254,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="PaneSearchButtonStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonStyleProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(PaneSearchButtonStyle),
+        typeof(Style),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the search button.
@@ -234,7 +273,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="SettingsItemAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemAccessKeyProperty = DependencyProperty.Register(
-        nameof(SettingsItemAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(SettingsItemAccessKey),
+        typeof(string),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the settings navigation view item.
@@ -250,7 +292,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="SettingsItemKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(null));
+        nameof(SettingsItemKeyboardAccelerators),
+        typeof(IList<KeyboardAccelerator>),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the settings
@@ -267,7 +312,10 @@ public sealed partial class NavigationViewEx
     /// Identifies the <see cref="ContentTranslationDirection"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContentTranslationDirectionProperty = DependencyProperty.Register(
-        nameof(ContentTranslationDirection), typeof(AnimationDirection?), typeof(NavigationViewEx), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(ContentTranslationDirection),
+        typeof(AnimationDirection?),
+        typeof(NavigationViewEx),
+        new PropertyMetadata(null, OnContentTranslationDirectionPropertyChanged));
 
     /// <summary>
     /// Gets or sets a value that determines which direction the content grid should
@@ -282,9 +330,27 @@ public sealed partial class NavigationViewEx
 
     private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is NavigationViewEx owner)
+        var navigationViewEx = (NavigationViewEx)d;
+        navigationViewEx.OnPropertyChanged(e);
+    }
+
+    private static void OnContentVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if ((Visibility)e.NewValue != (Visibility)e.OldValue)
         {
-            owner.OnPropertyChanged(e);
+            var navigationViewEx = (NavigationViewEx)d;
+            navigationViewEx.UpdateContentVisibility();
+            navigationViewEx.UpdateOverlayLayout();
+            navigationViewEx.InvalidateArrange();
+        }
+    }
+
+    private static void OnContentTranslationDirectionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if ((AnimationDirection?)e.NewValue != (AnimationDirection?)e.OldValue)
+        {
+            var navigationViewEx = (NavigationViewEx)d;
+            navigationViewEx.UpdateContentGridAnimations();
         }
     }
 }

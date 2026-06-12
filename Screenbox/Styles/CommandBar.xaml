@@ -871,8 +871,8 @@
         </Setter>
     </Style>
 
-    <!--  Ellipsis button styled to resemble the default button rather than the appbar button, added a background transition and sizing along with an implicit show animation. To allow overriding, margin is set as a ThemeResource  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/CommandBar_themeresources.xaml  -->
+    <!--  Ellipsis button styled to resemble the default button rather than the appbar button.  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/CommonStyles/CommandBar_themeresources.xaml  -->
     <Style x:Key="EllipsisDefaultButtonStyle" TargetType="Button">
         <!--<Setter Property="Background" Value="{ThemeResource AppBarButtonBackground}" />-->
         <Setter Property="BackgroundSizing" Value="InnerBorderEdge" />
@@ -896,6 +896,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid Background="Transparent">
+                        <!--  Change: Margin modified to ThemeResource to enable customization.  -->
+                        <!--  Change: BackgroundSizing added to align with the default button.  -->
                         <ContentPresenter
                             x:Name="ContentPresenter"
                             Margin="{ThemeResource AppBarEllipsisButtonInnerBorderMargin}"
@@ -911,6 +913,7 @@
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             ContentTransitions="{TemplateBinding ContentTransitions}"
                             Control.IsTemplateFocusTarget="True">
+                            <!--  Change: BackgroundTransition added to align with the default button.  -->
                             <contract7Present:ContentPresenter.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:ContentPresenter.BackgroundTransition>
@@ -921,45 +924,33 @@
                                 <VisualState x:Name="Normal" />
 
                                 <VisualState x:Name="PointerOver">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <!--  Change: Background, Foreground, and BorderBrush modified to align with the default button.  -->
+                                    <!--  Change: VisualState Storyboard replaced with Setters for property transitions.  -->
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource ButtonBackgroundPointerOver}" />
+                                        <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonBorderBrushPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPointerOver}" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <!--  Change: Background, Foreground, and BorderBrush modified to align with the default button.  -->
+                                    <!--  Change: VisualState Storyboard replaced with Setters for property transitions.  -->
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource ButtonBackgroundPressed}" />
+                                        <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonBorderBrushPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPressed}" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <!--  Change: Background, Foreground, and BorderBrush modified to align with the default button.  -->
+                                    <!--  Change: VisualState Storyboard replaced with Setters for property transitions.  -->
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource ButtonBackgroundDisabled}" />
+                                        <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ButtonBorderBrushDisabled}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundDisabled}" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>

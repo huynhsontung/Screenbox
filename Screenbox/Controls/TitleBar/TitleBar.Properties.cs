@@ -16,7 +16,7 @@ public sealed partial class TitleBar
         nameof(HeightMode),
         typeof(TitleBarHeightMode),
         typeof(TitleBar),
-        new PropertyMetadata(TitleBarHeightMode.Standard, OnPropertyChanged));
+        new PropertyMetadata(TitleBarHeightMode.Standard, OnHeightModePropertyChanged));
 
     /// <summary>
     /// Gets or sets a value that indicates the preferred height of the title bar.
@@ -375,9 +375,18 @@ public sealed partial class TitleBar
 
     #endregion
 
-    private static void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    private static void OnHeightModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (TitleBar)sender;
-        owner.OnPropertyChanged(args);
+        if ((TitleBarHeightMode)e.NewValue != (TitleBarHeightMode)e.OldValue)
+        {
+            var titleBar = (TitleBar)d;
+            titleBar.UpdateHeight();
+        }
+    }
+
+    private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var titleBar = (TitleBar)d;
+        titleBar.OnPropertyChanged(e);
     }
 }
