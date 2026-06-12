@@ -13,7 +13,7 @@ using Windows.Storage;
 
 namespace Screenbox.Core.Services;
 
-public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTracker,
+public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProgressTracker,
     IRecipient<SuspendingMessage>
 {
     private const int Capacity = 64;
@@ -24,11 +24,11 @@ public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTrac
     public DateTimeOffset LastUpdated { get; private set; }
 
     private readonly IFilesService _filesService;
-    private List<MediaLastPosition> _lastPositions = new(Capacity + 1);
-    private MediaLastPosition? _updateCache;
+    private List<MediaPlaybackProgress> _progressList = new(Capacity + 1);
+    private MediaPlaybackProgress? _updateCache;
     private string? _removeCache;
 
-    public LastPositionTracker(IFilesService filesService)
+    public PlaybackProgressTracker(IFilesService filesService)
     {
         _filesService = filesService;
 
@@ -40,35 +40,35 @@ public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTrac
         message.Reply(SaveToDiskAsync());
     }
 
-    public void UpdateLastPosition(string location, TimeSpan position)
+    public void UpdateProgress(string location, TimeSpan position)
     {
         LastUpdated = DateTimeOffset.Now;
         _removeCache = null;
-        MediaLastPosition? item = _updateCache;
+        MediaPlaybackProgress? item = _updateCache;
         if (item?.Location == location)
         {
             item.Position = position;
-            if (_lastPositions.FirstOrDefault() != item)
+            if (_progressList.FirstOrDefault() != item)
             {
-                int index = _lastPositions.IndexOf(item);
+                int index = _progressList.IndexOf(item);
                 if (index >= 0)
                 {
-                    _lastPositions.RemoveAt(index);
+                    _progressList.RemoveAt(index);
                 }
 
-                _lastPositions.Insert(0, item);
+                _progressList.Insert(0, item);
             }
         }
         else
         {
-            item = _lastPositions.Find(x => x.Location == location);
+            item = _progressList.Find(x => x.Location == location);
             if (item == null)
             {
-                item = new MediaLastPosition(location, position);
-                _lastPositions.Insert(0, item);
-                if (_lastPositions.Count > Capacity)
+                item = new MediaPlaybackProgress(location, position);
+                _progressList.Insert(0, item);
+                if (_progressList.Count > Capacity)
                 {
-                    _lastPositions.RemoveAt(Capacity);
+                    _progressList.RemoveAt(Capacity);
                 }
             }
             else
@@ -82,21 +82,21 @@ public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTrac
 
     public TimeSpan GetPosition(string location)
     {
-        return _lastPositions.Find(x => x.Location == location)?.Position ?? TimeSpan.Zero;
+        return _progressList.Find(x => x.Location == location)?.Position ?? TimeSpan.Zero;
     }
 
     public void RemovePosition(string location)
     {
         LastUpdated = DateTimeOffset.Now;
         if (_removeCache == location) return;
-        _lastPositions.RemoveAll(x => x.Location == location);
+        _progressList.RemoveAll(x => x.Location == location);
         _removeCache = location;
     }
 
     public void ClearAll()
     {
         LastUpdated = DateTimeOffset.Now;
-        _lastPositions.Clear();
+        _progressList.Clear();
         _updateCache = null;
         _removeCache = null;
     }
@@ -105,7 +105,7 @@ public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTrac
     {
         try
         {
-            await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions);
+            await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _progressList);
         }
         catch (FileLoadException)
         {
@@ -117,10 +117,10 @@ public sealed class LastPositionTracker : ObservableRecipient, ILastPositionTrac
     {
         try
         {
-            List<MediaLastPosition> lastPositions =
-                await _filesService.LoadFromDiskAsync<List<MediaLastPosition>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
-            lastPositions.Capacity = Capacity;
-            _lastPositions = lastPositions;
+            List<MediaPlaybackProgress> progressList =
+                await _filesService.LoadFromDiskAsync<List<MediaPlaybackProgress>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
+            progressList.Capacity = Capacity;
+            _progressList = progressList;
             LastUpdated = DateTimeOffset.UtcNow;
         }
         catch (FileNotFoundException)

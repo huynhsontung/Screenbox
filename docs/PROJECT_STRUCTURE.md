@@ -208,7 +208,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
 
 **Persistence Services**
-- **`ILastPositionTracker`**: Tracks and persists the last playback position for each media item, enabling resume-from-position functionality. Handles the `SuspendingMessage` to flush state to disk on app suspension.
+- **`IPlaybackProgressTracker`**: Tracks and persists the playback progress for each media item, enabling resume-from-position functionality. Handles the `SuspendingMessage` to flush state to disk on app suspension.
 
 **System Integration Services**
 - **`ISettingsService`**: Application configuration persistence
@@ -307,7 +307,7 @@ The following table summarizes the allowed dependency directions between layers:
 
 - **Stateless services** (e.g., `LibraryService`, `CastService`): execute operations and **return data** to the caller. They do not own long-lived observable state, and must not read from or write to a `Context` directly. Results are returned as plain models (e.g., `MusicLibrary`) and applied to the context by the coordinator.
 - **Stateful coordinators** (e.g., `LibraryCoordinator`): own watchers/timers and manage subscriptions/lifetimes. Register as singletons and implement `IDisposable`.
-- **Stateful services** (e.g., `LastPositionTracker`): own in-memory state but no platform subscriptions. Prefer a service interface; register as singletons.
+- **Stateful services** (e.g., `PlaybackProgressTracker`): own in-memory state but no platform subscriptions. Prefer a service interface; register as singletons.
 
 ## 🛠️ Technology Stack
 

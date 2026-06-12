@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 namespace Screenbox.Core.Services;
 
 /// <summary>
-/// Tracks and persists the last playback position for each media item,
+/// Tracks and persists the playback progress for each media item,
 /// enabling resume-from-position functionality.
 /// </summary>
-public interface ILastPositionTracker
+public interface IPlaybackProgressTracker
 {
     /// <summary>
-    /// Gets a value indicating whether position data has been loaded from disk.
+    /// Gets a value indicating whether progress data has been loaded from disk.
     /// </summary>
     bool IsLoaded { get; }
 
     /// <summary>
-    /// Gets the timestamp of the most recent position update or clear operation.
+    /// Gets the timestamp of the most recent progress update or clear operation.
     /// </summary>
     DateTimeOffset LastUpdated { get; }
 
     /// <summary>
-    /// Records or updates the last playback position for the given media location.
+    /// Records or updates the playback progress for the given media location.
     /// </summary>
-    void UpdateLastPosition(string location, TimeSpan position);
+    void UpdateProgress(string location, TimeSpan position);
 
     /// <summary>
     /// Returns the last recorded position for the given media location, or <see cref="TimeSpan.Zero"/> if none.
