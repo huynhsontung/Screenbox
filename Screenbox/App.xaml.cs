@@ -27,6 +27,7 @@ using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -205,6 +206,7 @@ sealed partial class App : Application
 
         Frame rootFrame = InitRootFrame();
         LibVLCSharp.Shared.Core.Initialize();
+        _ = StartupInitAsync();
 
         if (e.PrelaunchActivated) return;
         CoreApplication.EnablePrelaunch(true);
@@ -271,6 +273,60 @@ sealed partial class App : Application
         finally
         {
             deferral.Complete();
+        }
+    }
+
+    private static async Task StartupInitAsync()
+    {
+        var dbService = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IDatabaseService>();
+        try
+        {
+            await dbService.InitializeAsync();
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
+
+        // Delete stale Protobuf/JSON files left over from before the SQLite migration.
+        // Failures are non-fatal; the app continues normally without them.
+        await DeleteLegacyFilesAsync();
+    }
+
+    private static async Task DeleteLegacyFilesAsync()
+    {
+        try
+        {
+            StorageFolder local = ApplicationData.Current.LocalFolder;
+            StorageFolder temp = ApplicationData.Current.TemporaryFolder;
+
+            foreach (string name in new[] { "songs.bin", "videos.bin" })
+            {
+                try
+                {
+                    IStorageItem? item = await local.TryGetItemAsync(name);
+                    if (item != null) await item.DeleteAsync();
+                }
+                catch (Exception) { /* non-fatal */ }
+            }
+
+            try
+            {
+                IStorageItem? item = await temp.TryGetItemAsync("last_positions.bin");
+                if (item != null) await item.DeleteAsync();
+            }
+            catch (Exception) { /* non-fatal */ }
+
+            try
+            {
+                IStorageItem? playlistsFolder = await local.TryGetItemAsync("Playlists");
+                if (playlistsFolder != null) await playlistsFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+            catch (Exception) { /* non-fatal */ }
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
         }
     }
 
