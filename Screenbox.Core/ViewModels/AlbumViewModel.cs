@@ -98,7 +98,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient
     {
         if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
         {
-            IsPlaying = media.IsPlaying ?? false;
+            IsPlaying = media.IsPlaying;
         }
 
         if (RelatedSongs.Count > 0 && ReferenceEquals(RelatedSongs[0], sender))

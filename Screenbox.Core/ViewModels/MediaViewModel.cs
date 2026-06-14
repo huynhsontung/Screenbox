@@ -93,7 +93,7 @@ public partial class MediaViewModel : ObservableRecipient
     private ArtistViewModel[] _artists;
 
     [ObservableProperty]
-    private bool? _isPlaying;
+    private bool _isPlaying;
 
     private WeakReference<BitmapImage>? _thumbnailRef;
 

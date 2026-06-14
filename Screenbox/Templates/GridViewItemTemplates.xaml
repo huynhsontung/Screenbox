@@ -47,7 +47,7 @@
             Width="{StaticResource CommonGridViewItemWidth}"
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, Caption)}"
             Caption="{x:Bind Caption}"
-            IsPlaying="{Binding IsPlaying}"
+            IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
@@ -62,7 +62,7 @@
             Width="{StaticResource WideGridViewItemWidth}"
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, DurationText)}"
             Caption="{x:Bind DurationText}"
-            IsPlaying="{Binding IsPlaying}"
+            IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>

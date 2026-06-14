@@ -231,7 +231,7 @@ public sealed partial class SeekBarViewModel :
         if (lastPosition <= TimeSpan.Zero) return;
         if (_settingsService.RestorePlaybackPosition)
         {
-            if (media.IsPlaying ?? false)
+            if (media.IsPlaying)
             {
                 _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => SetPlayerPosition(lastPosition, false));
                 _lastTrackedPosition = TimeSpan.Zero;

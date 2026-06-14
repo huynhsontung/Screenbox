@@ -57,7 +57,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient
     {
         if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
         {
-            IsPlaying = media.IsPlaying ?? false;
+            IsPlaying = media.IsPlaying;
         }
     }
 

@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -107,7 +107,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     [RelayCommand]
     private void PlaySingle(MediaViewModel media)
     {
-        if (Queue.CurrentItem == media && (media.IsPlaying ?? false))
+        if (Queue.CurrentItem == media && media.IsPlaying)
         {
             Messenger.Send(new TogglePlayPauseMessage(false));
         }
