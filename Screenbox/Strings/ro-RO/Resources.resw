@@ -658,10 +658,10 @@
     <value>Permite volumului maxim să depășească 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Timpul sărit înapoi când derulați înapoi</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Timpul sărit înainte când derulați rapid înainte</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Comenzi pe ecran</value>
