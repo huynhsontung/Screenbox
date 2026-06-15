@@ -1,9 +1,8 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -60,7 +59,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
         Selection.SetItemsSource(Queue.Items);
-        Selection.PropertyChanged += Selection_OnPropertyChanged;
+        Selection.SelectedItemsChanged += Selection_SelectedItemsChanged;
     }
 
     private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -72,15 +71,12 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         }
     }
 
-    private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void Selection_SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Selection.IsAllSelected))
-        {
-            PlaySelectedNextCommand.NotifyCanExecuteChanged();
-            RemoveSelectedCommand.NotifyCanExecuteChanged();
-            MoveSelectedItemUpCommand.NotifyCanExecuteChanged();
-            MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
-        }
+        PlaySelectedNextCommand.NotifyCanExecuteChanged();
+        RemoveSelectedCommand.NotifyCanExecuteChanged();
+        MoveSelectedItemUpCommand.NotifyCanExecuteChanged();
+        MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -204,13 +200,13 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private bool HasSelection() => Selection.SelectedItems.Count > 0;
 
-    private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
-        selectedItems?.Count == 1 &&
-        Queue.Items.Count > 0 && Queue.Items[0] != selectedItems[0];
+    private bool IsSelectedItemNotFirst() =>
+        Selection.SelectedItems.Count == 1 &&
+        Queue.Items.Count > 0 && Queue.Items[0] != Selection.SelectedItems[0];
 
-    private bool IsSelectedItemNotLast(IList<object>? selectedItems) =>
-        selectedItems?.Count == 1 &&
-        Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != selectedItems[0];
+    private bool IsSelectedItemNotLast() =>
+        Selection.SelectedItems.Count == 1 &&
+        Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != Selection.SelectedItems[0];
 
     private bool IsItemNotFirst(MediaViewModel item) => Queue.Items.Count > 0 && Queue.Items[0] != item;
 

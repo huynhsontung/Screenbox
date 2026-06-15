@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,6 +49,9 @@ public sealed partial class SelectionViewModel : ObservableObject
     private bool _isSelectionModeActive;
 
     private IReadOnlyCollection<object>? _sourceCollection;
+
+    /// <inheritdoc cref="ObservableCollection{T}.CollectionChanged"/>
+    public event NotifyCollectionChangedEventHandler? SelectedItemsChanged;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
@@ -106,6 +109,7 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        SelectedItemsChanged?.Invoke(sender, e);
         RefreshSelectionState();
     }
 
