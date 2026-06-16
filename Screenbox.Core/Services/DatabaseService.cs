@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
@@ -11,8 +12,8 @@ namespace Screenbox.Core.Services;
 /// <summary>
 /// Implements <see cref="IDatabaseService"/> using a single SQLite file stored in
 /// <see cref="ApplicationData.LocalFolder"/>.
-/// The database is treated as a disposable cache: if corruption is detected the file is
-/// deleted and the schema is recreated from scratch with no data.
+/// Schema drift is recovered per table where possible so playlist data can be preserved.
+/// The database file is deleted only as a last-resort recovery path.
 /// </summary>
 public sealed class DatabaseService : IDatabaseService
 {
@@ -74,27 +75,47 @@ public sealed class DatabaseService : IDatabaseService
 
         try
         {
-            CreateSchema();
+            EnsureSchema();
         }
-        catch (SqliteException ex)
+        catch (Exception ex) when (ex is SqliteException or IOException)
         {
-            // Database file is corrupted. Remove it and start fresh.
-            LogService.Log($"Database corrupted; recreating.\n{ex}");
-            _connectionString = null;
-            TryDeleteDatabase(dbPath);
-            _connectionString = connectionString;
-            CreateSchema();
+            // Last resort: if recovery cannot succeed, recreate the database file.
+            LogService.Log($"Database schema recovery failed; recreating database file.\n{ex}");
+            RecreateDatabaseFile(dbPath, connectionString);
         }
     }
 
-    private void CreateSchema()
+    private void EnsureSchema()
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
-        // WAL mode is a database-level, persistent setting that allows concurrent reads
-        // while a write is in progress.
         ExecuteNonQuery(connection, "PRAGMA journal_mode=WAL;");
+        ExecuteNonQuery(connection, "PRAGMA foreign_keys=OFF;");
+
+        using var transaction = connection.BeginTransaction();
+        EnsureReplaceableTable(connection, "library_folders", CreateLibraryFoldersSql, "id", "path", "media_type");
+        EnsureReplaceableTable(connection, "media_records", CreateMediaRecordsSql,
+            "path", "title", "media_type", "date_added", "duration_ticks", "year",
+            "artist", "album", "album_artist", "composers", "genre", "track_number", "bitrate",
+            "subtitle", "producers", "writers", "width", "height", "video_bitrate");
+        EnsureReplaceableTable(connection, "playback_progress", CreatePlaybackProgressSql, "location", "position_ticks");
+        EnsurePlaylistsTable(connection);
+        EnsurePlaylistItemsTable(connection);
+        transaction.Commit();
+        ExecuteNonQuery(connection, "PRAGMA foreign_keys=ON;");
+    }
+
+    private void RecreateDatabaseFile(string dbPath, string connectionString)
+    {
+        _connectionString = null;
+        TryDeleteDatabase(dbPath);
+        _connectionString = connectionString;
+
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+        ExecuteNonQuery(connection, "PRAGMA journal_mode=WAL;");
+        ExecuteNonQuery(connection, "PRAGMA foreign_keys=OFF;");
 
         using var transaction = connection.BeginTransaction();
         ExecuteNonQuery(connection, CreateLibraryFoldersSql);
@@ -103,6 +124,117 @@ public sealed class DatabaseService : IDatabaseService
         ExecuteNonQuery(connection, CreatePlaylistsSql);
         ExecuteNonQuery(connection, CreatePlaylistItemsSql);
         transaction.Commit();
+        ExecuteNonQuery(connection, "PRAGMA foreign_keys=ON;");
+    }
+
+    private static void EnsureReplaceableTable(SqliteConnection connection, string tableName, string createSql, params string[] expectedColumns)
+    {
+        HashSet<string> actualColumns = ReadTableColumns(connection, tableName);
+        if (actualColumns.Count is 0)
+        {
+            ExecuteNonQuery(connection, createSql);
+            return;
+        }
+
+        if (HasSchemaDrift(actualColumns, expectedColumns))
+        {
+            ExecuteNonQuery(connection, $"DROP TABLE IF EXISTS {tableName};");
+            ExecuteNonQuery(connection, createSql);
+        }
+    }
+
+    private static void EnsurePlaylistsTable(SqliteConnection connection)
+    {
+        HashSet<string> actualColumns = ReadTableColumns(connection, "playlists");
+        string[] expectedColumns = ["id", "display_name", "last_updated"];
+        if (actualColumns.Count is 0)
+        {
+            ExecuteNonQuery(connection, CreatePlaylistsSql);
+            return;
+        }
+
+        if (!HasSchemaDrift(actualColumns, expectedColumns))
+        {
+            return;
+        }
+
+        ExecuteNonQuery(connection, "DROP TABLE IF EXISTS playlists_new;");
+        ExecuteNonQuery(connection, CreatePlaylistsMigrationSql);
+
+        string idProjection = actualColumns.Contains("id") ? "id" : "lower(hex(randomblob(16)))";
+        string nameProjection = actualColumns.Contains("display_name") ? "display_name" : "''";
+        string nowTicks = DateTimeOffset.UtcNow.UtcTicks.ToString();
+        string updatedProjection = actualColumns.Contains("last_updated") ? "last_updated" : nowTicks;
+        ExecuteNonQuery(connection, $"""
+            INSERT OR REPLACE INTO playlists_new (id, display_name, last_updated)
+            SELECT {idProjection}, {nameProjection}, {updatedProjection}
+            FROM playlists
+            WHERE {idProjection} IS NOT NULL;
+            """);
+
+        ExecuteNonQuery(connection, "DROP TABLE playlists;");
+        ExecuteNonQuery(connection, "ALTER TABLE playlists_new RENAME TO playlists;");
+    }
+
+    private static void EnsurePlaylistItemsTable(SqliteConnection connection)
+    {
+        HashSet<string> actualColumns = ReadTableColumns(connection, "playlist_items");
+        string[] expectedColumns = ["id", "playlist_id", "path", "sort_order"];
+        if (actualColumns.Count is 0)
+        {
+            ExecuteNonQuery(connection, CreatePlaylistItemsSql);
+            return;
+        }
+
+        if (!HasSchemaDrift(actualColumns, expectedColumns))
+        {
+            return;
+        }
+
+        ExecuteNonQuery(connection, "DROP TABLE IF EXISTS playlist_items_new;");
+        ExecuteNonQuery(connection, CreatePlaylistItemsMigrationSql);
+
+        string playlistIdProjection = actualColumns.Contains("playlist_id") ? "playlist_id" : "NULL";
+        string pathProjection = actualColumns.Contains("path") ? "path" : "NULL";
+        string sortOrderProjection = actualColumns.Contains("sort_order")
+            ? "sort_order"
+            : actualColumns.Contains("id") ? "id" : "rowid";
+
+        ExecuteNonQuery(connection, $"""
+            INSERT INTO playlist_items_new (playlist_id, path, sort_order)
+            SELECT {playlistIdProjection}, {pathProjection}, {sortOrderProjection}
+            FROM playlist_items
+            WHERE {playlistIdProjection} IS NOT NULL
+              AND {pathProjection} IS NOT NULL
+              AND EXISTS (
+                  SELECT 1
+                  FROM playlists
+                  WHERE playlists.id = {playlistIdProjection}
+              );
+            """);
+
+        ExecuteNonQuery(connection, "DROP TABLE playlist_items;");
+        ExecuteNonQuery(connection, "ALTER TABLE playlist_items_new RENAME TO playlist_items;");
+    }
+
+    private static HashSet<string> ReadTableColumns(SqliteConnection connection, string tableName)
+    {
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = $"PRAGMA table_info({tableName});";
+        using var reader = cmd.ExecuteReader();
+
+        var columns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        while (reader.Read())
+        {
+            columns.Add(reader.GetString(1));
+        }
+
+        return columns;
+    }
+
+    private static bool HasSchemaDrift(HashSet<string> actualColumns, params string[] expectedColumns)
+    {
+        return !actualColumns.SetEquals(expectedColumns);
     }
 
     private static void ExecuteNonQuery(SqliteConnection connection, string sql)
@@ -189,30 +321,31 @@ public sealed class DatabaseService : IDatabaseService
         """;
 
     /// <summary>
-    /// Items belonging to a playlist.  A snapshot of media metadata is embedded at insertion time
-    /// so that playlist items display correctly even when the source file has moved.
+    /// Items belonging to a playlist. Only path and order are stored; metadata comes from
+    /// <c>media_records</c> at query time.
     /// </summary>
     private const string CreatePlaylistItemsSql = """
         CREATE TABLE IF NOT EXISTS playlist_items (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             playlist_id TEXT    NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
             path        TEXT    NOT NULL,
-            title       TEXT,
-            media_type  INTEGER,
-            date_added  INTEGER,
-            duration_ticks INTEGER,
-            year        INTEGER,
-            -- music columns
-            artist      TEXT,
-            album       TEXT,
-            album_artist TEXT,
-            composers   TEXT,
-            genre       TEXT,
-            track_number INTEGER,
-            -- video columns
-            subtitle    TEXT,
-            producers   TEXT,
-            writers     TEXT,
+            sort_order  INTEGER NOT NULL
+        );
+        """;
+
+    private const string CreatePlaylistsMigrationSql = """
+        CREATE TABLE playlists_new (
+            id           TEXT PRIMARY KEY,
+            display_name TEXT    NOT NULL,
+            last_updated INTEGER NOT NULL
+        );
+        """;
+
+    private const string CreatePlaylistItemsMigrationSql = """
+        CREATE TABLE playlist_items_new (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            playlist_id TEXT    NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
+            path        TEXT    NOT NULL,
             sort_order  INTEGER NOT NULL
         );
         """;

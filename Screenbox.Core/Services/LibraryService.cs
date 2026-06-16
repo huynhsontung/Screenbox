@@ -118,7 +118,9 @@ public sealed class LibraryService : ILibraryService
         List<MediaViewModel> songs = new();
         if (useCache)
         {
-            var (folderPaths, rawRecords) = await LoadRawMusicCacheAsync(cancellationToken);
+            RawCacheLoadResultDto cacheResult = await LoadRawMusicCacheAsync(cancellationToken);
+            List<string> folderPaths = cacheResult.FolderPaths;
+            List<RawMediaRecordDto> rawRecords = cacheResult.Records;
             if (rawRecords.Count > 0)
             {
                 songs = CreateSongsFromRawRecords(rawRecords);
@@ -209,7 +211,9 @@ public sealed class LibraryService : ILibraryService
         List<MediaViewModel> videos = new();
         if (useCache)
         {
-            var (folderPaths, rawRecords) = await LoadRawVideoCacheAsync(cancellationToken);
+            RawCacheLoadResultDto cacheResult = await LoadRawVideoCacheAsync(cancellationToken);
+            List<string> folderPaths = cacheResult.FolderPaths;
+            List<RawMediaRecordDto> rawRecords = cacheResult.Records;
             if (rawRecords.Count > 0)
             {
                 videos = CreateVideosFromRawRecords(rawRecords);
@@ -284,47 +288,21 @@ public sealed class LibraryService : ILibraryService
         media.Artists = Array.Empty<ArtistViewModel>();
     }
 
-    /// <summary>Raw data record used to transport media metadata from the SQLite background thread to the UI thread.</summary>
-    private readonly struct RawMediaRecord
-    {
-        public string Path { get; init; }
-        public string Title { get; init; }
-        public MediaPlaybackType MediaType { get; init; }
-        public long DateAddedTicks { get; init; }
-        public long DurationTicks { get; init; }
-        public uint Year { get; init; }
-        // Music-specific
-        public string Artist { get; init; }
-        public string Album { get; init; }
-        public string AlbumArtist { get; init; }
-        public string Composers { get; init; }
-        public string Genre { get; init; }
-        public uint TrackNumber { get; init; }
-        public uint Bitrate { get; init; }
-        // Video-specific
-        public string Subtitle { get; init; }
-        public string Producers { get; init; }
-        public string Writers { get; init; }
-        public uint Width { get; init; }
-        public uint Height { get; init; }
-        public uint VideoBitrate { get; init; }
-    }
-
     /// <summary>Reads raw music metadata from the SQLite cache. Runs on a background thread.</summary>
-    private async Task<(List<string> FolderPaths, List<RawMediaRecord> Records)> LoadRawMusicCacheAsync(
+    private async Task<RawCacheLoadResultDto> LoadRawMusicCacheAsync(
         CancellationToken cancellationToken)
     {
         return await Task.Run(() => LoadRawCacheFromDatabase(MediaPlaybackType.Music), cancellationToken);
     }
 
     /// <summary>Reads raw video metadata from the SQLite cache. Runs on a background thread.</summary>
-    private async Task<(List<string> FolderPaths, List<RawMediaRecord> Records)> LoadRawVideoCacheAsync(
+    private async Task<RawCacheLoadResultDto> LoadRawVideoCacheAsync(
         CancellationToken cancellationToken)
     {
         return await Task.Run(() => LoadRawCacheFromDatabase(MediaPlaybackType.Video), cancellationToken);
     }
 
-    private (List<string> FolderPaths, List<RawMediaRecord> Records) LoadRawCacheFromDatabase(
+    private RawCacheLoadResultDto LoadRawCacheFromDatabase(
         MediaPlaybackType mediaType)
     {
         try
@@ -351,7 +329,7 @@ public sealed class LibraryService : ILibraryService
                 WHERE media_type = @mt;
                 """;
 
-            var records = new List<RawMediaRecord>();
+            var records = new List<RawMediaRecordDto>();
             using (var cmd = connection.CreateCommand())
             {
                 cmd.CommandText = recordSql;
@@ -363,18 +341,22 @@ public sealed class LibraryService : ILibraryService
                 }
             }
 
-            return (folderPaths, records);
+            return new RawCacheLoadResultDto
+            {
+                FolderPaths = folderPaths,
+                Records = records,
+            };
         }
         catch (Exception e)
         {
             LogService.Log($"Failed to load library cache from database\n{e}");
-            return (new List<string>(), new List<RawMediaRecord>());
+            return new RawCacheLoadResultDto();
         }
     }
 
-    private static RawMediaRecord ReadRawRecord(SqliteDataReader reader)
+    private static RawMediaRecordDto ReadRawRecord(SqliteDataReader reader)
     {
-        return new RawMediaRecord
+        return new RawMediaRecordDto
         {
             Path = reader.GetString(0),
             Title = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
@@ -403,7 +385,7 @@ public sealed class LibraryService : ILibraryService
     /// Must be called on the UI thread so that <see cref="MediaViewModelFactory"/> has safe access
     /// to the existing library context collections.
     /// </summary>
-    private List<MediaViewModel> CreateSongsFromRawRecords(List<RawMediaRecord> records)
+    private List<MediaViewModel> CreateSongsFromRawRecords(List<RawMediaRecordDto> records)
     {
         var result = new List<MediaViewModel>(records.Count);
         foreach (var record in records)
@@ -452,7 +434,7 @@ public sealed class LibraryService : ILibraryService
     /// Converts raw video records from the database into <see cref="MediaViewModel"/> instances.
     /// Must be called on the UI thread.
     /// </summary>
-    private List<MediaViewModel> CreateVideosFromRawRecords(List<RawMediaRecord> records)
+    private List<MediaViewModel> CreateVideosFromRawRecords(List<RawMediaRecordDto> records)
     {
         var result = new List<MediaViewModel>(records.Count);
         foreach (var record in records)
@@ -499,12 +481,13 @@ public sealed class LibraryService : ILibraryService
     private async Task CacheSongsAsync(StorageLibrary library, List<MediaViewModel> songs, CancellationToken cancellationToken)
     {
         var folderPaths = library.Folders.Select(f => f.Path).ToList();
-        var snapshot = songs.Select(s => (
-            Path: s.Location,
-            Title: s.Name,
-            DateAdded: s.DateAdded,
-            Info: s.MediaInfo.MusicProperties
-        )).ToList();
+        var snapshot = songs.Select(s => new MusicCacheRecordDto
+        {
+            Path = s.Location,
+            Title = s.Name,
+            DateAdded = s.DateAdded,
+            Info = s.MediaInfo.MusicProperties,
+        }).ToList();
 
         cancellationToken.ThrowIfCancellationRequested();
         try
@@ -519,14 +502,14 @@ public sealed class LibraryService : ILibraryService
 
     private void WriteMusicCacheToDatabase(
         List<string> folderPaths,
-        List<(string Path, string Title, DateTimeOffset DateAdded, MusicInfo Info)> records)
+        List<MusicCacheRecordDto> records)
     {
         using var connection = _databaseService.CreateConnection();
         using var transaction = connection.BeginTransaction();
 
         // Replace all music folder paths
         ExecuteNonQuery(connection, "DELETE FROM library_folders WHERE media_type = @mt;",
-            ("@mt", (object)(int)MediaPlaybackType.Music));
+            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Music });
 
         using (var cmd = connection.CreateCommand())
         {
@@ -567,20 +550,20 @@ public sealed class LibraryService : ILibraryService
             var pTrack = p.Add("@trackNumber", SqliteType.Integer);
             var pBitrate = p.Add("@bitrate", SqliteType.Integer);
 
-            foreach (var (path, title, dateAdded, info) in records)
+            foreach (MusicCacheRecordDto record in records)
             {
-                pPath.Value = path;
-                pTitle.Value = title;
-                pDateAdded.Value = dateAdded.UtcDateTime.Ticks;
-                pDuration.Value = info.Duration.Ticks;
-                pYear.Value = (long)info.Year;
-                pArtist.Value = info.Artist;
-                pAlbum.Value = info.Album;
-                pAlbumArtist.Value = info.AlbumArtist;
-                pComposers.Value = info.Composers;
-                pGenre.Value = info.Genre;
-                pTrack.Value = (long)info.TrackNumber;
-                pBitrate.Value = (long)info.Bitrate;
+                pPath.Value = record.Path;
+                pTitle.Value = record.Title;
+                pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
+                pDuration.Value = record.Info.Duration.Ticks;
+                pYear.Value = (long)record.Info.Year;
+                pArtist.Value = record.Info.Artist;
+                pAlbum.Value = record.Info.Album;
+                pAlbumArtist.Value = record.Info.AlbumArtist;
+                pComposers.Value = record.Info.Composers;
+                pGenre.Value = record.Info.Genre;
+                pTrack.Value = (long)record.Info.TrackNumber;
+                pBitrate.Value = (long)record.Info.Bitrate;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -591,12 +574,13 @@ public sealed class LibraryService : ILibraryService
     private async Task CacheVideosAsync(StorageLibrary library, List<MediaViewModel> videos, CancellationToken cancellationToken)
     {
         var folderPaths = library.Folders.Select(f => f.Path).ToList();
-        var snapshot = videos.Select(v => (
-            Path: v.Location,
-            Title: v.Name,
-            DateAdded: v.DateAdded,
-            Info: v.MediaInfo.VideoProperties
-        )).ToList();
+        var snapshot = videos.Select(v => new VideoCacheRecordDto
+        {
+            Path = v.Location,
+            Title = v.Name,
+            DateAdded = v.DateAdded,
+            Info = v.MediaInfo.VideoProperties,
+        }).ToList();
 
         cancellationToken.ThrowIfCancellationRequested();
         try
@@ -611,14 +595,14 @@ public sealed class LibraryService : ILibraryService
 
     private void WriteVideoCacheToDatabase(
         List<string> folderPaths,
-        List<(string Path, string Title, DateTimeOffset DateAdded, VideoInfo Info)> records)
+        List<VideoCacheRecordDto> records)
     {
         using var connection = _databaseService.CreateConnection();
         using var transaction = connection.BeginTransaction();
 
         // Replace all video folder paths
         ExecuteNonQuery(connection, "DELETE FROM library_folders WHERE media_type = @mt;",
-            ("@mt", (object)(int)MediaPlaybackType.Video));
+            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Video });
 
         using (var cmd = connection.CreateCommand())
         {
@@ -658,19 +642,19 @@ public sealed class LibraryService : ILibraryService
             var pHeight = p.Add("@height", SqliteType.Integer);
             var pVideoBitrate = p.Add("@videoBitrate", SqliteType.Integer);
 
-            foreach (var (path, title, dateAdded, info) in records)
+            foreach (VideoCacheRecordDto record in records)
             {
-                pPath.Value = path;
-                pTitle.Value = title;
-                pDateAdded.Value = dateAdded.UtcDateTime.Ticks;
-                pDuration.Value = info.Duration.Ticks;
-                pYear.Value = (long)info.Year;
-                pSubtitle.Value = info.Subtitle;
-                pProducers.Value = info.Producers;
-                pWriters.Value = info.Writers;
-                pWidth.Value = (long)info.Width;
-                pHeight.Value = (long)info.Height;
-                pVideoBitrate.Value = (long)info.Bitrate;
+                pPath.Value = record.Path;
+                pTitle.Value = record.Title;
+                pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
+                pDuration.Value = record.Info.Duration.Ticks;
+                pYear.Value = (long)record.Info.Year;
+                pSubtitle.Value = record.Info.Subtitle;
+                pProducers.Value = record.Info.Producers;
+                pWriters.Value = record.Info.Writers;
+                pWidth.Value = (long)record.Info.Width;
+                pHeight.Value = (long)record.Info.Height;
+                pVideoBitrate.Value = (long)record.Info.Bitrate;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -678,13 +662,13 @@ public sealed class LibraryService : ILibraryService
         transaction.Commit();
     }
 
-    private static void ExecuteNonQuery(SqliteConnection connection, string sql, params (string Name, object Value)[] parameters)
+    private static void ExecuteNonQuery(SqliteConnection connection, string sql, params SqlParameterDto[] parameters)
     {
         using var cmd = connection.CreateCommand();
         cmd.CommandText = sql;
-        foreach (var (name, value) in parameters)
+        foreach (SqlParameterDto parameter in parameters)
         {
-            cmd.Parameters.AddWithValue(name, value);
+            cmd.Parameters.AddWithValue(parameter.Name, parameter.Value);
         }
 
         cmd.ExecuteNonQuery();

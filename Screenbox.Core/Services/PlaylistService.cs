@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -311,82 +312,21 @@ public sealed class PlaylistService : IPlaylistService
         {
             cmd.CommandText = """
                 INSERT INTO playlist_items
-                    (playlist_id, path, title, media_type, date_added, duration_ticks, year,
-                     artist, album, album_artist, composers, genre, track_number,
-                     subtitle, producers, writers, sort_order)
+                    (playlist_id, path, sort_order)
                 VALUES
-                    (@pid, @path, @title, @mt, @dateAdded, @dur, @year,
-                     @artist, @album, @albumArtist, @composers, @genre, @track,
-                     @subtitle, @producers, @writers, @order);
+                    (@pid, @path, @order);
                 """;
 
             var p = cmd.Parameters;
             p.AddWithValue("@pid", playlist.Id);
             var pPath = p.Add("@path", SqliteType.Text);
-            var pTitle = p.Add("@title", SqliteType.Text);
-            var pMt = p.Add("@mt", SqliteType.Integer);
-            var pDateAdded = p.Add("@dateAdded", SqliteType.Integer);
-            var pDur = p.Add("@dur", SqliteType.Integer);
-            var pYear = p.Add("@year", SqliteType.Integer);
-            var pArtist = p.Add("@artist", SqliteType.Text);
-            var pAlbum = p.Add("@album", SqliteType.Text);
-            var pAlbumArtist = p.Add("@albumArtist", SqliteType.Text);
-            var pComposers = p.Add("@composers", SqliteType.Text);
-            var pGenre = p.Add("@genre", SqliteType.Text);
-            var pTrack = p.Add("@track", SqliteType.Integer);
-            var pSubtitle = p.Add("@subtitle", SqliteType.Text);
-            var pProducers = p.Add("@producers", SqliteType.Text);
-            var pWriters = p.Add("@writers", SqliteType.Text);
             var pOrder = p.Add("@order", SqliteType.Integer);
 
             for (int i = 0; i < playlist.Items.Count; i++)
             {
                 PersistentMediaRecord item = playlist.Items[i];
                 pPath.Value = item.Path;
-                pTitle.Value = item.Title ?? (object)DBNull.Value;
-                pMt.Value = (int)item.MediaType;
-                pDateAdded.Value = item.DateAdded != default ? (object)item.DateAdded.Ticks : DBNull.Value;
-                pDur.Value = item.Duration.Ticks;
-                pYear.Value = (long)item.Year;
                 pOrder.Value = i;
-
-                if (item.Properties is MusicInfo music)
-                {
-                    pArtist.Value = music.Artist;
-                    pAlbum.Value = music.Album;
-                    pAlbumArtist.Value = music.AlbumArtist;
-                    pComposers.Value = music.Composers;
-                    pGenre.Value = music.Genre;
-                    pTrack.Value = (long)music.TrackNumber;
-                    pSubtitle.Value = (object)DBNull.Value;
-                    pProducers.Value = (object)DBNull.Value;
-                    pWriters.Value = (object)DBNull.Value;
-                }
-                else if (item.Properties is VideoInfo video)
-                {
-                    pArtist.Value = (object)DBNull.Value;
-                    pAlbum.Value = (object)DBNull.Value;
-                    pAlbumArtist.Value = (object)DBNull.Value;
-                    pComposers.Value = (object)DBNull.Value;
-                    pGenre.Value = (object)DBNull.Value;
-                    pTrack.Value = (object)DBNull.Value;
-                    pSubtitle.Value = video.Subtitle;
-                    pProducers.Value = video.Producers;
-                    pWriters.Value = video.Writers;
-                }
-                else
-                {
-                    pArtist.Value = (object)DBNull.Value;
-                    pAlbum.Value = (object)DBNull.Value;
-                    pAlbumArtist.Value = (object)DBNull.Value;
-                    pComposers.Value = (object)DBNull.Value;
-                    pGenre.Value = (object)DBNull.Value;
-                    pTrack.Value = (object)DBNull.Value;
-                    pSubtitle.Value = (object)DBNull.Value;
-                    pProducers.Value = (object)DBNull.Value;
-                    pWriters.Value = (object)DBNull.Value;
-                }
-
                 cmd.ExecuteNonQuery();
             }
         }
@@ -455,12 +395,14 @@ public sealed class PlaylistService : IPlaylistService
     {
         using var cmd = connection.CreateCommand();
         cmd.CommandText = """
-            SELECT path, title, media_type, date_added, duration_ticks, year,
-                   artist, album, album_artist, composers, genre, track_number,
-                   subtitle, producers, writers
-            FROM playlist_items
-            WHERE playlist_id = @pid
-            ORDER BY sort_order;
+            SELECT pi.path,
+                   mr.title, mr.media_type, mr.date_added, mr.duration_ticks, mr.year,
+                   mr.artist, mr.album, mr.album_artist, mr.composers, mr.genre, mr.track_number,
+                   mr.subtitle, mr.producers, mr.writers
+            FROM playlist_items pi
+            LEFT JOIN media_records mr ON mr.path = pi.path
+            WHERE pi.playlist_id = @pid
+            ORDER BY pi.sort_order, pi.id;
             """;
         cmd.Parameters.AddWithValue("@pid", playlistId);
 
@@ -469,8 +411,14 @@ public sealed class PlaylistService : IPlaylistService
         while (reader.Read())
         {
             string path = reader.GetString(0);
-            string title = reader.IsDBNull(1) ? string.Empty : reader.GetString(1);
-            var mediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? 0 : reader.GetInt32(2));
+            string fallbackTitle = Path.GetFileName(path);
+            if (string.IsNullOrWhiteSpace(fallbackTitle))
+            {
+                fallbackTitle = path;
+            }
+
+            string title = reader.IsDBNull(1) ? fallbackTitle : reader.GetString(1);
+            var mediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(2));
             DateTime dateAdded = reader.IsDBNull(3) ? default : new DateTime(reader.GetInt64(3), DateTimeKind.Utc);
             long durationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4);
             uint year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5);
