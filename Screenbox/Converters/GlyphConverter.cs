@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
@@ -250,7 +252,7 @@ public static partial class GlyphConverter
     /// </summary>
     /// <param name="mediaViewModel">The media view model to convert.</param>
     /// <returns>A glyph code representing the media type.</returns>
-    public static string ToMediaGlyph(MediaViewModel mediaViewModel)
+    public static string ToMediaGlyph(MediaViewModel? mediaViewModel)
     {
         const string GlobeGlyph = "\uE774";
 

@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Windows.Input;
@@ -31,8 +31,11 @@ public sealed partial class MediaListViewItem : UserControl
     public bool IsIconVisible { get; set; }
 
     private bool _firstPlay = true;
+    private bool _contextInitialized;
 
     private CommonViewModel Common { get; }
+
+    private MediaViewModel? ViewModel => DataContext as MediaViewModel;
 
     public MediaListViewItem()
     {
@@ -46,21 +49,28 @@ public sealed partial class MediaListViewItem : UserControl
 
     private void UpdatePlayButtonsAutomationName(bool isPlaying)
     {
-        var media = DataContext as MediaViewModel;
         string playPauseText = isPlaying ? Strings.Resources.Pause : Strings.Resources.Play;
 
-        AutomationProperties.SetName(PlayButton, $"{playPauseText} {media?.Name}");
+        AutomationProperties.SetName(PlayButton, $"{playPauseText} {ViewModel?.Name}");
     }
 
     private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
-        _firstPlay = true;
-        var media = DataContext as MediaViewModel;
-        AdaptiveLayoutBehavior.Override = media?.MediaType != MediaPlaybackType.Music ? 0 : -1;
+        if (!_contextInitialized && args.NewValue != null)
+        {
+            // x:Bind bindings update before DataContext is updated. Manually trigger an update is
+            // necessary as ViewModel property doesn't have property changed event.
+            // TODO: Investigate this delay binding issue and find a better solution.
+            Bindings.Update();
+            _contextInitialized = true;
+        }
 
-        UpdatePlayButtonsAutomationName(media?.IsPlaying ?? false);
-        AutomationProperties.SetName(ArtistButton, $"{Strings.Resources.Artist}: {media?.MainArtist?.Name}");
-        AutomationProperties.SetName(AlbumButton, $"{Strings.Resources.Albums}: {media?.Album?.Name}");
+        _firstPlay = true;
+        AdaptiveLayoutBehavior.Override = ViewModel?.MediaType != MediaPlaybackType.Music ? 0 : -1;
+
+        UpdatePlayButtonsAutomationName(ViewModel?.IsPlaying ?? false);
+        AutomationProperties.SetName(ArtistButton, $"{Strings.Resources.Artist}: {ViewModel?.MainArtist?.Name}");
+        AutomationProperties.SetName(AlbumButton, $"{Strings.Resources.Albums}: {ViewModel?.Album?.Name}");
     }
 
     private async void PlayingStatesOnCurrentStateChanged(object sender, VisualStateChangedEventArgs e)
