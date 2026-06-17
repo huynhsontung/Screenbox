@@ -366,6 +366,20 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     }
 
     [RelayCommand]
+    private void SeekBackward10()
+    {
+        if (!HasActiveItem || MediaPlayer == null) return;
+        Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-10), true, false));
+    }
+
+    [RelayCommand]
+    private void SeekForward30()
+    {
+        if (!HasActiveItem || MediaPlayer == null) return;
+        Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(30), true, false));
+    }
+
+    [RelayCommand]
     private void SetAspectRatio(string aspect)
     {
         switch (aspect)
