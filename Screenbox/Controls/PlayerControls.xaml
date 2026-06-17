@@ -403,6 +403,27 @@
                     <KeyboardAccelerator Key="Space" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
                 </Button.KeyboardAccelerators>
             </Button>
+            <!--  Seek backward 10s / forward 30s  -->
+            <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
+                <Button
+                    x:Name="SeekBackward10Button"
+                    Margin="0,0,4,0"
+                    extensions:AcceleratorService.ToolTip="10秒戻る"
+                    AutomationProperties.Name="{x:Bind SeekBackward10Button.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
+                    Command="{x:Bind ViewModel.SeekBackward10Command}"
+                    Style="{StaticResource PlayerButtonStyle}">
+                    <FontIcon Glyph="&#xEB9E;" />
+                </Button>
+                <Button
+                    x:Name="SeekForward30Button"
+                    Margin="0,0,4,0"
+                    extensions:AcceleratorService.ToolTip="30秒進む"
+                    AutomationProperties.Name="{x:Bind SeekForward30Button.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
+                    Command="{x:Bind ViewModel.SeekForward30Command}"
+                    Style="{StaticResource PlayerButtonStyle}">
+                    <FontIcon Glyph="&#xEB9D;" />
+                </Button>
+            </StackPanel>
             <!--  Previous/Next  -->
             <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
                 <Button
