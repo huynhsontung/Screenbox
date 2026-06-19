@@ -1,9 +1,10 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -77,7 +78,7 @@ public sealed partial class SelectionBarControl : UserControl
 
     #endregion
 
-    #region Play Next Button properties
+    #region PlayNext Button properties
 
     /// <summary>
     /// Identifies the <see cref="PlayNextButtonCommand"/> dependency property.
@@ -100,7 +101,7 @@ public sealed partial class SelectionBarControl : UserControl
 
     #endregion
 
-    #region Add To Queue Button properties
+    #region AddToQueue Button properties
 
     /// <summary>
     /// Identifies the <see cref="AddToQueueButtonCommand"/> dependency property.
@@ -143,7 +144,7 @@ public sealed partial class SelectionBarControl : UserControl
 
     #endregion
 
-    #region Remove properties
+    #region Remove Button properties
 
     /// <summary>
     /// Identifies the <see cref="RemoveButtonCommand"/> dependency property.
@@ -269,7 +270,7 @@ public sealed partial class SelectionBarControl : UserControl
 
     #endregion
 
-    #region Close Properties
+    #region Close Button Properties
 
     /// <summary>
     /// Identifies the <see cref="CloseButtonCommand"/> dependency property.
@@ -329,7 +330,23 @@ public sealed partial class SelectionBarControl : UserControl
         //SecondaryCommands = new ObservableCollection<ICommandBarElement>();
         //SecondaryCommands.CollectionChanged += SecondaryCommands_OnCollectionChanged;
 
-        UpdateToolTipsForDefaultLabelPosition();
+        UpdateToolTips();
+    }
+
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        switch (e.OriginalKey)
+        {
+            case VirtualKey.GamepadB:
+                if (CloseButtonCommand is { } closeCmd)
+                {
+                    closeCmd.Execute(null);
+                    e.Handled = true;
+                }
+                break;
+        }
+
+        base.OnKeyDown(e);
     }
 
     private static void OnDefaultLabelPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -337,7 +354,7 @@ public sealed partial class SelectionBarControl : UserControl
         var control = (SelectionBarControl)d;
         if ((CommandBarDefaultLabelPosition)e.NewValue != (CommandBarDefaultLabelPosition)e.OldValue)
         {
-            control.UpdateToolTipsForDefaultLabelPosition();
+            control.UpdateToolTips();
         }
     }
 
@@ -403,7 +420,7 @@ public sealed partial class SelectionBarControl : UserControl
         }
     }
 
-    private void UpdateToolTipsForDefaultLabelPosition()
+    private void UpdateToolTips()
     {
         if (DefaultLabelPosition == CommandBarDefaultLabelPosition.Collapsed)
         {
