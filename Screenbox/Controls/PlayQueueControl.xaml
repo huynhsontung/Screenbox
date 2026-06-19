@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.PlayQueueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -203,8 +203,8 @@
 
             <controls:SelectionBarControl
                 x:Name="SelectionBar"
-                ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
-                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
+                ctAnimations:Implicit.HideAnimations="{StaticResource SelectionBarExitImplicitAnimation}"
+                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"
                 CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
                 CheckBoxCommandParameter="{x:Bind PlaylistListView}"
                 CheckBoxIsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
