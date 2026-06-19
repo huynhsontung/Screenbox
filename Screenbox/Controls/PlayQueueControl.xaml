@@ -294,9 +294,23 @@
 
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
-                <VisualState x:Name="Compact" />
 
                 <VisualState x:Name="Minimal">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ShouldUseMinimalState(Common.NavigationViewDisplayMode, IsFlyout), Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Target="ClearButton.(ToolTipService.ToolTip)" Value="{x:Bind ClearButtonLabel.Text}" />
+                        <Setter Target="ClearButtonLabel.Visibility" Value="Collapsed" />-->
+                        <Setter Target="AddToPlaylistButton.(ToolTipService.ToolTip)" Value="{x:Bind AddToPlaylistButtonLabel.Text}" />
+                        <Setter Target="AddToPlaylistButtonLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
+                        <Setter Target="MultiSelectToggleLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="SelectionBar.DefaultLabelPosition" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="MinimalFlyout">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind IsFlyout, Mode=OneWay}" />
                     </VisualState.StateTriggers>

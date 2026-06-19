@@ -1,8 +1,7 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
@@ -77,17 +76,6 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
-    private void UpdateLayoutState()
-    {
-        if (IsFlyout)
-        {
-            VisualStateManager.GoToState(this, "Minimal", true);
-            return;
-        }
-
-        VisualStateManager.GoToState(this, SelectionBar.ActualWidth <= 620 ? "Compact" : "Normal", true);
-    }
-
     private void GoToCurrentItem()
     {
         if (ViewModel.Queue.CurrentItem is not null)
@@ -99,7 +87,6 @@ public sealed partial class PlayQueueControl : UserControl
 
     private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)
     {
-        UpdateLayoutState();
         GoToCurrentItem();
     }
 
@@ -111,5 +98,10 @@ public sealed partial class PlayQueueControl : UserControl
             _selectionCommand.ToggleSelection(PlaylistListView);
             args.Handled = true;
         }
+    }
+
+    private bool ShouldUseMinimalState(NavigationViewDisplayMode displayMode, bool isFlyout)
+    {
+        return (displayMode == NavigationViewDisplayMode.Minimal) && !isFlyout;
     }
 }
