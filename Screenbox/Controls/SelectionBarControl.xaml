@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.SelectionBarControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -53,7 +53,7 @@
                         Content="{x:Bind CheckBoxText, Mode=OneWay}"
                         IsChecked="{x:Bind CheckBoxIsChecked, Mode=TwoWay}"
                         IsThreeState="True"
-                        ToolTipService.ToolTip="{x:Bind CheckBoxIsChecked, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                        ToolTipService.ToolTip="{x:Bind CheckBoxIsChecked, Converter={StaticResource CheckBoxToSelectionToolTipConverter}, Mode=OneWay}" />
                     <TextBlock Padding="4,5,0,0" Text="•" />
                     <Button
                         MinHeight="{StaticResource CheckBoxHeight}"
@@ -65,7 +65,7 @@
                         Command="{x:Bind CloseButtonCommand}"
                         Content="{x:Bind strings:Resources.Clear}">
                         <Button.Resources>
-                            <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
+                            <!--  Override the style of the button to match a hyperlink, except for the hover foreground to provide better feedback.  -->
                             <ResourceDictionary>
                                 <ResourceDictionary.ThemeDictionaries>
                                     <ResourceDictionary x:Key="Default">
