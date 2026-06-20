@@ -63,7 +63,7 @@
         <FontIcon
             x:Name="ItemMediaTypeIcon"
             Grid.Column="1"
-            Glyph="{x:Bind converters:GlyphConverter.ToMediaGlyph(ViewModel)}"
+            Glyph="{x:Bind converters:GlyphConverter.ToMediaGlyph(ViewModel), Mode=OneWay}"
             IsHitTestVisible="False"
             Visibility="{x:Bind IsIconVisible}" />
 
@@ -75,7 +75,7 @@
             Padding="0"
             contract14Present:AutomationProperties.AutomationControlType="Button"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
-            CommandParameter="{x:Bind ViewModel}"
+            CommandParameter="{x:Bind ViewModel, Mode=OneWay}"
             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
             ToolTipService.ToolTip="{x:Bind ViewModel.IsPlaying, Mode=OneWay, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">

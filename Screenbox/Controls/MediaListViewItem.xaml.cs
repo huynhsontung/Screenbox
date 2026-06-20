@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Enums;
@@ -13,8 +14,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls;
 
-public sealed partial class MediaListViewItem : UserControl
+public sealed partial class MediaListViewItem : UserControl, INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
         nameof(PlayCommand), typeof(ICommand), typeof(MediaListViewItem), new PropertyMetadata(default(ICommand)));
 
@@ -31,7 +34,6 @@ public sealed partial class MediaListViewItem : UserControl
     public bool IsIconVisible { get; set; }
 
     private bool _firstPlay = true;
-    private bool _contextInitialized;
 
     private CommonViewModel Common { get; }
 
@@ -56,14 +58,7 @@ public sealed partial class MediaListViewItem : UserControl
 
     private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
-        if (!_contextInitialized && args.NewValue != null)
-        {
-            // x:Bind bindings update before DataContext is updated. Manually trigger an update is
-            // necessary as ViewModel property doesn't have property changed event.
-            // TODO: Investigate this delay binding issue and find a better solution.
-            Bindings.Update();
-            _contextInitialized = true;
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
 
         _firstPlay = true;
         AdaptiveLayoutBehavior.Override = ViewModel?.MediaType != MediaPlaybackType.Music ? 0 : -1;
