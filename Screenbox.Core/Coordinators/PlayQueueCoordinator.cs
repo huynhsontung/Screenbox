@@ -795,7 +795,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void OnEndReached(IMediaPlayer sender, object? args)
     {
-        _dispatcherQueue.TryEnqueue(() =>
+        _dispatcherQueue.TryEnqueue(async () =>
         {
             var playlist = _playlist;
             var result = _playbackControlService.HandleMediaEnded(playlist, _context.RepeatMode);
@@ -813,6 +813,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 // Track repeat — restart from the beginning.
                 sender.Position = TimeSpan.Zero;
+            }
+            else if (CanNext())
+            {
+                await NextAsync();
             }
         });
     }
