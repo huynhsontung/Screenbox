@@ -87,9 +87,9 @@
             Grid.Column="2"
             Margin="8,0,0,0"
             VerticalAlignment="Center"
-            Style="{StaticResource CaptionTextBlockStyle}"
+            FontSize="{StaticResource CaptionTextBlockFontSize}"
             Text="{x:Bind ViewModel.Name, Mode=OneWay}"
-            TextWrapping="NoWrap">
+            TextTrimming="CharacterEllipsis">
             <interactivity:Interaction.Behaviors>
                 <behaviors:OverflowTextToolTipBehavior />
             </interactivity:Interaction.Behaviors>
@@ -106,10 +106,9 @@
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
             <TextBlock
-                x:Name="ArtistText"
-                Style="{StaticResource CaptionTextBlockStyle}"
+                FontSize="{StaticResource CaptionTextBlockFontSize}"
                 Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.MainArtist.Name, strings:Resources.UnknownArtist), Mode=OneWay}"
-                TextWrapping="NoWrap">
+                TextTrimming="CharacterEllipsis">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
@@ -127,10 +126,9 @@
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
             <TextBlock
-                x:Name="AlbumText"
-                Style="{StaticResource CaptionTextBlockStyle}"
+                FontSize="{StaticResource CaptionTextBlockFontSize}"
                 Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.Album.Name, strings:Resources.UnknownAlbum), Mode=OneWay}"
-                TextWrapping="NoWrap">
+                TextTrimming="CharacterEllipsis">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
@@ -142,10 +140,10 @@
             Grid.Column="5"
             Margin="2,0"
             VerticalAlignment="Center"
+            FontSize="{StaticResource CaptionTextBlockFontSize}"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
-            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.MediaInfo.MusicProperties.Genre, strings:Resources.UnknownGenre), Mode=OneWay}"
-            TextWrapping="NoWrap"
+            TextTrimming="CharacterEllipsis"
             Visibility="Collapsed">
             <interactivity:Interaction.Behaviors>
                 <behaviors:OverflowTextToolTipBehavior />
@@ -158,10 +156,10 @@
             Margin="0,0,12,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
+            FontSize="{StaticResource CaptionTextBlockFontSize}"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
-            Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind ViewModel.DurationText, Mode=OneWay}"
-            TextWrapping="NoWrap" />
+            TextTrimming="CharacterEllipsis" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ActivityStates">
