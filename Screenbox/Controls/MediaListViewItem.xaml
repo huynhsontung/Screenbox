@@ -108,7 +108,7 @@
             <TextBlock
                 x:Name="ArtistText"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{x:Bind ViewModel.MainArtist.Name, Mode=OneWay, Converter={StaticResource ArtistTextConverter}, FallbackValue=''}"
+                Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.MainArtist.Name, strings:Resources.UnknownArtist), Mode=OneWay}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -129,7 +129,7 @@
             <TextBlock
                 x:Name="AlbumText"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{x:Bind ViewModel.Album.Name, Mode=OneWay, Converter={StaticResource AlbumTextConverter}, FallbackValue=''}"
+                Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.Album.Name, strings:Resources.UnknownAlbum), Mode=OneWay}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -144,7 +144,7 @@
             VerticalAlignment="Center"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind ViewModel.MediaInfo.MusicProperties.Genre, Mode=OneWay, Converter={StaticResource GenreTextConverter}, FallbackValue=''}"
+            Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.MediaInfo.MusicProperties.Genre, strings:Resources.UnknownGenre), Mode=OneWay}"
             TextWrapping="NoWrap"
             Visibility="Collapsed">
             <interactivity:Interaction.Behaviors>
