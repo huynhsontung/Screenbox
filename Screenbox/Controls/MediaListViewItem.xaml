@@ -79,7 +79,7 @@
             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
             ToolTipService.ToolTip="{x:Bind ViewModel.IsPlaying, Mode=OneWay, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">
-            <FontIcon Glyph="{x:Bind ViewModel.IsPlaying, Mode=OneWay, Converter={StaticResource PlayPauseGlyphConverter}}" />
+            <FontIcon Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
         </HyperlinkButton>
 
         <TextBlock
