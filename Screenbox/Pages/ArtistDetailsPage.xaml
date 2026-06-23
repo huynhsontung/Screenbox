@@ -65,8 +65,8 @@
 
                     <StackPanel Grid.Column="1">
                         <TextBlock
-                            FontWeight="SemiBold"
                             FontSize="{StaticResource BodyTextBlockFontSize}"
+                            FontWeight="SemiBold"
                             Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(Key.(viewModels:AlbumViewModel.Name), strings:Resources.UnknownAlbum)}"
                             TextTrimming="CharacterEllipsis">
                             <interactivity:Interaction.Behaviors>
