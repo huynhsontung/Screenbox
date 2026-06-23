@@ -58,12 +58,6 @@
                         EmptyValue="Collapsed"
                         NotEmptyValue="Visible" />
                     <ctConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
-                    <ctConverters:DoubleToObjectConverter
-                        x:Key="DoubleToBoolConverter"
-                        FalseValue="False"
-                        GreaterThan="0"
-                        NullValue="False"
-                        TrueValue="True" />
                     <ctConverters:BoolToObjectConverter
                         x:Key="BoolToPlayPauseTextConverter"
                         FalseValue="{strings:Resources Key=Play}"
@@ -128,23 +122,6 @@
                         <Setter Property="FontSize" Value="{StaticResource TitleMediumTextBlockFontSize}" />
                         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
                     </Style>
-
-                    <!--  Semantic zoom group-level style  -->
-                    <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
-                        <Button
-                            MinWidth="{StaticResource GridViewHeaderItemMinHeight}"
-                            MinHeight="{StaticResource GridViewHeaderItemMinHeight}"
-                            HorizontalAlignment="Stretch"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
-                            ClickMode="Hover"
-                            IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
-                            <TextBlock
-                                Style="{StaticResource SubtitleTextBlockStyle}"
-                                Text="{Binding Group.Key}"
-                                TextWrapping="NoWrap" />
-                        </Button>
-                    </DataTemplate>
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="ms-appx:///Controls/ContentUnavailableView/ContentUnavailableView.xaml" />
