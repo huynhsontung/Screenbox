@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -12,20 +13,23 @@ using Screenbox.Core.Messages;
 
 namespace Screenbox.Core.ViewModels;
 
+/// <summary>
+/// Represents the view model for the artist details page.
+/// </summary>
 public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 {
+    /// <summary>
+    /// Gets the albums grouped with their related media items.
+    /// </summary>
+    /// <value>The grouped collection of albums and associated songs.</value>
+    public ObservableGroupedCollection<AlbumViewModel, MediaViewModel> GroupedAlbums { get; }
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalDuration))]
     [NotifyPropertyChangedFor(nameof(SongsCount))]
     private ArtistViewModel? _source;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AlbumsCount))]
-    private List<IGrouping<AlbumViewModel?, MediaViewModel>> _albums;
-
     public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.RelatedSongs) : TimeSpan.Zero;
-
-    public int AlbumsCount => Albums.Count;
 
     public int SongsCount => Source?.RelatedSongs.Count ?? 0;
 
@@ -33,7 +37,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 
     public ArtistDetailsPageViewModel()
     {
-        _albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
+        GroupedAlbums = new ObservableGroupedCollection<AlbumViewModel, MediaViewModel>();
     }
 
     public void OnNavigatedTo(object? parameter)
@@ -48,19 +52,23 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 
     async partial void OnSourceChanged(ArtistViewModel? value)
     {
-        if (value == null)
+        if (value is null)
         {
-            Albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
+            GroupedAlbums.Clear();
             return;
         }
 
-        Albums = value.RelatedSongs
+        List<IGrouping<AlbumViewModel, MediaViewModel>> albumGroups = value.RelatedSongs
             .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
             .ThenBy(m => m.Name, StringComparer.CurrentCulture)
             .GroupBy(m => m.Album)
-            .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
+            .OrderByDescending(g => g.Key?.Year ?? 0)
+            .ToList();
 
-        IEnumerable<Task> loadingTasks = Albums.Where(g => g.Key is { AlbumArt: null })
+        GroupedAlbums.SyncObservableGroups(albumGroups);
+
+        IEnumerable<Task> loadingTasks = albumGroups
+            .Where(g => g.Key is { AlbumArt: null })
             .Select(g => g.Key?.LoadAlbumArtAsync())
             .OfType<Task>();
         await Task.WhenAll(loadingTasks);
@@ -69,7 +77,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     [RelayCommand]
     private void Play(MediaViewModel? media)
     {
-        _itemList ??= Albums.SelectMany(g => g).ToList();
+        _itemList ??= GroupedAlbums.SelectMany<IGrouping<AlbumViewModel, MediaViewModel>, MediaViewModel>(g => g).ToList();
         Messenger.SendQueueAndPlay(media ?? _itemList[0], _itemList);
     }
 
