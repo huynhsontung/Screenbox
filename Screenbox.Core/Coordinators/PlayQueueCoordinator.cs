@@ -522,7 +522,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         if (_context.CurrentItem is not null)
         {
             _context.CurrentItem.IsMediaActive = false;
-            _context.CurrentItem.IsPlaying = null;
+            _context.CurrentItem.IsPlaying = false;
         }
 
         _settingContextFromCoordinator = true;

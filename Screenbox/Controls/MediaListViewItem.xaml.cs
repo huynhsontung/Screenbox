@@ -1,6 +1,7 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Enums;
@@ -13,8 +14,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls;
 
-public sealed partial class MediaListViewItem : UserControl
+public sealed partial class MediaListViewItem : UserControl, INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
         nameof(PlayCommand), typeof(ICommand), typeof(MediaListViewItem), new PropertyMetadata(default(ICommand)));
 
@@ -34,6 +37,8 @@ public sealed partial class MediaListViewItem : UserControl
 
     private CommonViewModel Common { get; }
 
+    private MediaViewModel? ViewModel => DataContext as MediaViewModel;
+
     public MediaListViewItem()
     {
         this.InitializeComponent();
@@ -46,21 +51,21 @@ public sealed partial class MediaListViewItem : UserControl
 
     private void UpdatePlayButtonsAutomationName(bool isPlaying)
     {
-        var media = DataContext as MediaViewModel;
         string playPauseText = isPlaying ? Strings.Resources.Pause : Strings.Resources.Play;
 
-        AutomationProperties.SetName(PlayButton, $"{playPauseText} {media?.Name}");
+        AutomationProperties.SetName(PlayButton, $"{playPauseText} {ViewModel?.Name}");
     }
 
     private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
-        _firstPlay = true;
-        var media = DataContext as MediaViewModel;
-        AdaptiveLayoutBehavior.Override = media?.MediaType != MediaPlaybackType.Music ? 0 : -1;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
 
-        UpdatePlayButtonsAutomationName(media?.IsPlaying ?? false);
-        AutomationProperties.SetName(ArtistButton, $"{Strings.Resources.Artist}: {media?.MainArtist?.Name}");
-        AutomationProperties.SetName(AlbumButton, $"{Strings.Resources.Albums}: {media?.Album?.Name}");
+        _firstPlay = true;
+        AdaptiveLayoutBehavior.Override = ViewModel?.MediaType != MediaPlaybackType.Music ? 0 : -1;
+
+        UpdatePlayButtonsAutomationName(ViewModel?.IsPlaying ?? false);
+        AutomationProperties.SetName(ArtistButton, $"{Strings.Resources.Artist}: {ViewModel?.MainArtist?.Name}");
+        AutomationProperties.SetName(AlbumButton, $"{Strings.Resources.Albums}: {ViewModel?.Album?.Name}");
     }
 
     private async void PlayingStatesOnCurrentStateChanged(object sender, VisualStateChangedEventArgs e)

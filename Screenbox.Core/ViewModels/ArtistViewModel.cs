@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -34,11 +34,6 @@ public sealed partial class ArtistViewModel : ObservableRecipient
         Name = artist;
     }
 
-    public override string ToString()
-    {
-        return Name;
-    }
-
     private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.OldItems != null)
@@ -62,7 +57,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient
     {
         if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
         {
-            IsPlaying = media.IsPlaying ?? false;
+            IsPlaying = media.IsPlaying;
         }
     }
 

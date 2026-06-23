@@ -1,8 +1,9 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.CommonGridViewItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -40,21 +41,22 @@
             </Border>
         </Grid>
 
-        <Grid
+        <Border
             x:Name="IsPlayingIcon"
             Grid.Row="0"
+            Width="40"
+            Height="40"
             Margin="8"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            BackgroundSizing="OuterBorderEdge"
+            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+            BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+            CornerRadius="{StaticResource CircularCornerRadius}"
             Visibility="{x:Bind IsPlaying, Mode=OneWay}">
-            <Ellipse
-                Width="40"
-                Height="40"
-                Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                Stroke="{ThemeResource ControlElevationBorderBrush}"
-                StrokeThickness="0.8" />
             <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PauseGlyph}" />
-        </Grid>
+        </Border>
         <Button
             x:Name="PlayButton"
             Grid.Row="0"
@@ -70,35 +72,27 @@
             Opacity="0"
             Style="{StaticResource AccentButtonStyle}"
             Visibility="{x:Bind CanPlay, Mode=OneWay}">
-            <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
+            <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(IsPlaying), Mode=OneWay}" />
         </Button>
 
         <!--
             This simulates the maximum amount of vertical space the text can occupy.
             Otherwise, on certain conditions, making the text larger can cause it to be cut off.
         -->
-        <StackPanel Grid.Row="1" Padding="4,0">
+        <StackPanel
+            Grid.Row="1"
+            Padding="4,0"
+            IsHitTestVisible="False"
+            Opacity="0">
             <TextBlock
                 AutomationProperties.AccessibilityView="Raw"
                 FontSize="{StaticResource BodyTextBlockFontSize}"
-                IsHitTestVisible="False"
                 LineHeight="20"
-                Opacity="0">
-                <LineBreak />
-            </TextBlock>
-            <TextBlock
-                AutomationProperties.AccessibilityView="Raw"
-                FontSize="{StaticResource CaptionTextBlockFontSize}"
-                IsHitTestVisible="False"
-                Opacity="0" />
+                Text="&#x0A;" />
+            <TextBlock AutomationProperties.AccessibilityView="Raw" FontSize="{StaticResource CaptionTextBlockFontSize}" />
         </StackPanel>
 
-        <Grid Grid.Row="1" Padding="4,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
+        <StackPanel Grid.Row="1" Padding="4,0">
             <TextBlock
                 x:Name="TitleText"
                 HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
@@ -110,7 +104,6 @@
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
-
             <TextBlock
                 x:Name="CaptionText"
                 Grid.Row="1"
@@ -123,15 +116,15 @@
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
-        </Grid>
+        </StackPanel>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                     <VisualState.Setters>
+                        <Setter Target="IsPlayingIcon.Visibility" Value="Collapsed" />
                         <Setter Target="PlayButton.Opacity" Value="1" />
-                        <Setter Target="IsPlayingIcon.Opacity" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

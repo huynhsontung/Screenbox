@@ -222,7 +222,6 @@
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\GlyphConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
-    <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
@@ -331,6 +330,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\VlcDialogService.cs" />
+    <Compile Include="Templates\GridViewItemTemplates.xaml.cs">
+      <DependentUpon>GridViewItemTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Templates\SearchSuggestionTemplateSelector.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />

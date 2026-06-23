@@ -1,4 +1,4 @@
-﻿<Application
+<Application
     x:Class="Screenbox.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -34,7 +34,6 @@
                     <!--  Converters  -->
                     <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
-                    <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
                     <converters:CheckBoxToToolTipConverter x:Key="CheckBoxToToolTipConverter" />
                     <!--<converters:ThicknessFiltersConverter x:Key="LeftThicknessFiltersConverter" Filters="Left" />-->
@@ -69,8 +68,6 @@
                         x:Key="BoolToPlayPauseTextConverter"
                         FalseValue="{strings:Resources Key=Play}"
                         TrueValue="{strings:Resources Key=Pause}" />
-                    <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
-                    <converters:DefaultStringConverter x:Key="ArtistTextConverter" Default="{strings:Resources Key=UnknownArtist}" />
                     <converters:DefaultStringConverter x:Key="AlbumTextConverter" Default="{strings:Resources Key=UnknownAlbum}" />
 
                     <!--  Font sizes  -->
