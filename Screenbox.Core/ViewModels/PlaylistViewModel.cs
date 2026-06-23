@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
@@ -36,12 +37,14 @@ public partial class PlaylistViewModel : ObservableRecipient
     private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueue _dispatcherQueue;
+    private readonly DispatcherQueueTimer _playlistSaveTimer;
 
     public PlaylistViewModel(IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
     {
         _playlistService = playlistService;
         _mediaFactory = mediaFactory;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _playlistSaveTimer = _dispatcherQueue.CreateTimer();
 
         Items.CollectionChanged += Items_CollectionChanged;
     }
@@ -54,7 +57,7 @@ public partial class PlaylistViewModel : ObservableRecipient
         // reorder operation sends Remove/Add actions instead of a Move action.
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            _ = UpdatePlaylistAsync();
+            _playlistSaveTimer.Debounce(() => UpdatePlaylist(), TimeSpan.FromMilliseconds(100));
         }
     }
 
@@ -184,7 +187,7 @@ public partial class PlaylistViewModel : ObservableRecipient
         return media;
     }
 
-    private async Task UpdatePlaylistAsync()
+    private void UpdatePlaylist()
     {
         if (_dispatcherQueue.HasThreadAccess)
         {
