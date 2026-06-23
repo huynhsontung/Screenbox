@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -505,6 +505,9 @@
     <PRIResource Include="Strings\ja-JP\KeyboardResources.resw" />
     <PRIResource Include="Strings\ja-JP\ManifestResources.resw" />
     <PRIResource Include="Strings\ja-JP\Resources.resw" />
+    <PRIResource Include="Strings\ko-KR\KeyboardResources.resw" />
+    <PRIResource Include="Strings\ko-KR\ManifestResources.resw" />
+    <PRIResource Include="Strings\ko-KR\Resources.resw" />
     <PRIResource Include="Strings\ms-MY\KeyboardResources.resw" />
     <PRIResource Include="Strings\ms-MY\ManifestResources.resw" />
     <PRIResource Include="Strings\ms-MY\Resources.resw" />
