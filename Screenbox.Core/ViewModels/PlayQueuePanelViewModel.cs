@@ -59,7 +59,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
         Selection.SetItemsSource(Queue.Items);
-        Selection.SelectedItemsChanged += Selection_SelectedItemsChanged;
+        Selection.SelectedItems.CollectionChanged += Selection_SelectedItemsChanged;
     }
 
     private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -50,9 +50,6 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private IReadOnlyCollection<object>? _sourceCollection;
 
-    /// <inheritdoc cref="ObservableCollection{T}.CollectionChanged"/>
-    public event NotifyCollectionChangedEventHandler? SelectedItemsChanged;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
     /// </summary>
@@ -109,7 +106,6 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        SelectedItemsChanged?.Invoke(sender, e);
         RefreshSelectionState();
     }
 
