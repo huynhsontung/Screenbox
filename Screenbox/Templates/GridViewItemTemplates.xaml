@@ -43,10 +43,10 @@
 
     <DataTemplate x:Key="MediaGridViewItemTemplate" x:DataType="viewModels:MediaViewModel">
         <controls:CommonGridViewItem
-            Title="{x:Bind Name}"
+            Title="{x:Bind Name, Mode=OneWay}"
             Width="{StaticResource CommonGridViewItemWidth}"
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, Caption)}"
-            Caption="{x:Bind Caption}"
+            Caption="{x:Bind Caption, Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
