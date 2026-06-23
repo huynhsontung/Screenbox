@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 
@@ -33,10 +34,13 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 
     public int SongsCount => Source?.RelatedSongs.Count ?? 0;
 
+    private readonly LibraryContext _libraryContext;
+
     private List<MediaViewModel>? _itemList;
 
-    public ArtistDetailsPageViewModel()
+    public ArtistDetailsPageViewModel(LibraryContext libraryContext)
     {
+        _libraryContext = libraryContext;
         GroupedAlbums = new ObservableGroupedCollection<AlbumViewModel, MediaViewModel>();
     }
 
@@ -61,7 +65,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
         List<IGrouping<AlbumViewModel, MediaViewModel>> albumGroups = value.RelatedSongs
             .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
             .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-            .GroupBy(m => m.Album)
+            .GroupBy(m => m.Album ?? _libraryContext.Music.UnknownAlbum)
             .OrderByDescending(g => g.Key?.Year ?? 0)
             .ToList();
 
@@ -77,7 +81,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     [RelayCommand]
     private void Play(MediaViewModel? media)
     {
-        _itemList ??= GroupedAlbums.SelectMany<IGrouping<AlbumViewModel, MediaViewModel>, MediaViewModel>(g => g).ToList();
+        _itemList ??= GroupedAlbums.SelectMany<IGrouping<AlbumViewModel, MediaViewModel>, MediaViewModel>(static g => g).ToList();
         Messenger.SendQueueAndPlay(media ?? _itemList[0], _itemList);
     }
 
