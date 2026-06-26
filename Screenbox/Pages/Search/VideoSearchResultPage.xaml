@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.VideoSearchResultPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:templates="using:Screenbox.Templates"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
@@ -18,7 +19,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Templates/GridViewItemTemplates.xaml" />
+                <templates:GridViewItemTemplates />
             </ResourceDictionary.MergedDictionaries>
 
             <MenuFlyout x:Name="ItemFlyout">

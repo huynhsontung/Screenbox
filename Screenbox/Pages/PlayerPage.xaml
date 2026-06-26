@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.PlayerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -334,7 +334,7 @@
                         x:Name="AlbumArtGlyph"
                         FontSize="80"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue=&#xEA69;}" />
+                        Glyph="{x:Bind converters:GlyphConverter.ToMediaGlyph(ViewModel.Media), Mode=OneWay}" />
                 </Border>
             </Grid>
         </ctc:ConstrainedBox>

@@ -1,0 +1,40 @@
+<ResourceDictionary
+    x:Class="Screenbox.Templates.GroupedViewTemplates"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
+    xmlns:collections="using:CommunityToolkit.Mvvm.Collections"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Screenbox.Templates">
+
+    <!--  ListViewBase Header  -->
+    <DataTemplate x:Key="GroupHeaderTemplate" x:DataType="collections:IReadOnlyObservableGroup">
+        <TextBlock
+            FontWeight="SemiBold"
+            Text="{x:Bind (x:String)Key}"
+            TextTrimming="CharacterEllipsis">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
+    </DataTemplate>
+
+    <!--  SemanticZoom ZoomedOutView  -->
+    <DataTemplate x:Key="GroupOverviewLetterItemTemplate" x:DataType="ICollectionViewGroup">
+        <Button
+            MinWidth="{StaticResource GridViewHeaderItemMinHeight}"
+            MinHeight="{StaticResource GridViewHeaderItemMinHeight}"
+            HorizontalAlignment="Stretch"
+            ClickMode="Hover"
+            FontSize="{StaticResource SubtitleTextBlockFontSize}"
+            FontWeight="SemiBold"
+            IsEnabled="{x:Bind local:GroupedViewTemplates.IsIntegerNormal(Group.(collections:IReadOnlyObservableGroup.Count)), Mode=OneWay}"
+            Style="{StaticResource SubtleButtonStyle}">
+            <TextBlock Text="{x:Bind (x:String)((collections:IReadOnlyObservableGroup)Group).Key}" TextTrimming="CharacterEllipsis">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+        </Button>
+    </DataTemplate>
+</ResourceDictionary>

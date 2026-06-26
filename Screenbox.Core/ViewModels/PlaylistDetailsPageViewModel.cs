@@ -23,12 +23,18 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
+    private readonly IMediaListFactory _mediaListFactory;
     private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
+    public PlaylistDetailsPageViewModel(
+        IFilesService filesService,
+        IPlaylistService playlistService,
+        IMediaListFactory mediaListFactory,
+        MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
         _playlistService = playlistService;
+        _mediaListFactory = mediaListFactory;
         _mediaFactory = mediaFactory;
     }
 
@@ -85,6 +91,17 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
         await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
         await Source.AddItemsAsync(mediaList);
+    }
+
+    public async Task AddDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex)
+    {
+        if (Source is null) return;
+
+        var mediaList = await _mediaListFactory.TryParseMediaListAsync(items);
+        if (mediaList?.Items.Count > 0)
+        {
+            await Source.AddItemsAtIndexAsync(mediaList.Items, insertIndex);
+        }
     }
 
     public async Task ExportPlaylistAsync(string playlistFileDisplayName = "M3U8")

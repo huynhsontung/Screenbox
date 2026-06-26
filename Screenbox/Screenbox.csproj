@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -224,7 +224,6 @@
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\GlyphConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
-    <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\NullableBooleanToSelectionToolTipConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
@@ -334,6 +333,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\VlcDialogService.cs" />
+    <Compile Include="Templates\GridViewItemTemplates.xaml.cs">
+      <DependentUpon>GridViewItemTemplates.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\GroupedViewTemplates.xaml.cs">
+      <DependentUpon>GroupedViewTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Templates\SearchSuggestionTemplateSelector.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
@@ -508,6 +513,9 @@
     <PRIResource Include="Strings\ja-JP\KeyboardResources.resw" />
     <PRIResource Include="Strings\ja-JP\ManifestResources.resw" />
     <PRIResource Include="Strings\ja-JP\Resources.resw" />
+    <PRIResource Include="Strings\ko-KR\KeyboardResources.resw" />
+    <PRIResource Include="Strings\ko-KR\ManifestResources.resw" />
+    <PRIResource Include="Strings\ko-KR\Resources.resw" />
     <PRIResource Include="Strings\ms-MY\KeyboardResources.resw" />
     <PRIResource Include="Strings\ms-MY\ManifestResources.resw" />
     <PRIResource Include="Strings\ms-MY\Resources.resw" />
@@ -786,6 +794,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\GridViewItemTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\GroupedViewTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

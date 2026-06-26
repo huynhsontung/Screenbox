@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.AlbumsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:templates="using:Screenbox.Templates"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
@@ -18,20 +19,14 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Templates/GridViewItemTemplates.xaml" />
+                <templates:GridViewItemTemplates />
+                <templates:GroupedViewTemplates />
             </ResourceDictionary.MergedDictionaries>
 
             <CollectionViewSource
                 x:Name="AlbumsSource"
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
-
-            <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Text="{Binding Key}"
-                    TextTrimming="CharacterEllipsis" />
-            </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
                 <MenuFlyoutItem Command="{Binding PlayAlbumCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">

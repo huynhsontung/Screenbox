@@ -1,14 +1,14 @@
-﻿#nullable enable
+#nullable enable
 
+using System;
+using System.ComponentModel;
+using System.Numerics;
+using System.Text;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Numerics;
-using System.Text;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Composition;
@@ -243,7 +243,7 @@ namespace Screenbox.Pages
             return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
         }
 
-        private static string GetSubtext(uint? year, int songsCount, TimeSpan duration)
+        private string GetSubtext(uint? year, int songsCount, TimeSpan duration)
         {
             string songsCountText = Strings.Resources.SongsCount(songsCount);
             string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
