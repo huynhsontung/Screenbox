@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,10 @@ using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
+using Screenbox.Extensions;
 using Screenbox.Strings;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -83,6 +86,33 @@ public sealed partial class PlaylistDetailsPage : Page
         ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
 
         CreateHeaderAnimation(_props, scrollingProperties.Translation.Y);
+    }
+
+    private void ItemList_OnDragOver(object sender, DragEventArgs e)
+    {
+        e.Handled = true;
+        e.AcceptedOperation = e.DataView.Contains(StandardDataFormats.StorageItems)
+            ? DataPackageOperation.Copy
+            : DataPackageOperation.None;
+
+        if (e.DragUIOverride != null)
+        {
+            e.DragUIOverride.Caption = Strings.Resources.AddToPlaylist;
+        }
+    }
+
+    private async void ItemList_OnDrop(object sender, DragEventArgs e)
+    {
+        if (e.DataView.Contains(StandardDataFormats.StorageItems))
+        {
+            e.Handled = true;
+            IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+            if (items?.Count > 0)
+            {
+                int insertIndex = ItemList.GetDropIndex(e);
+                await ViewModel.AddDroppedItemsAsync(items, insertIndex);
+            }
+        }
     }
 
     private void CreateHeaderAnimation(CompositionPropertySet propSet, ScalarNode scrollVerticalOffset)

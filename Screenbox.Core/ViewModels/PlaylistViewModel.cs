@@ -3,16 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -33,18 +36,29 @@ public partial class PlaylistViewModel : ObservableRecipient
 
     private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
+    private readonly DispatcherQueue _dispatcherQueue;
+    private readonly DispatcherQueueTimer _playlistSaveTimer;
 
     public PlaylistViewModel(IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
     {
         _playlistService = playlistService;
         _mediaFactory = mediaFactory;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _playlistSaveTimer = _dispatcherQueue.CreateTimer();
 
         Items.CollectionChanged += Items_CollectionChanged;
     }
 
-    private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
+
+        // Ensures the playlist is up to date when items are reordered, as the ListViewBase
+        // reorder operation sends Remove/Add actions instead of a Move action.
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            _playlistSaveTimer.Debounce(() => UpdatePlaylist(), TimeSpan.FromMilliseconds(100));
+        }
     }
 
     public Playlist ToPlaylist()
@@ -91,7 +105,28 @@ public partial class PlaylistViewModel : ObservableRecipient
             Items.Add(Items.Contains(item) ? new MediaViewModel(item) : item);
         }
 
-        await SaveAsync();
+        //await SaveAsync();
+        Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
+    }
+
+    public async Task AddItemsAtIndexAsync(IReadOnlyList<MediaViewModel> items, int insertIndex = -1)
+    {
+        if (items.Count == 0) return;
+
+        foreach (var item in items)
+        {
+            if (insertIndex < 0 || insertIndex >= Items.Count)
+            {
+                Items.Add(Items.Contains(item) ? new MediaViewModel(item) : item);
+            }
+            else
+            {
+                Items.Insert(insertIndex, Items.Contains(item) ? new MediaViewModel(item) : item);
+                insertIndex++;
+            }
+        }
+
+        //await SaveAsync();
         Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
     }
 
@@ -150,5 +185,23 @@ public partial class PlaylistViewModel : ObservableRecipient
         }
 
         return media;
+    }
+
+    private void UpdatePlaylist()
+    {
+        if (_dispatcherQueue.HasThreadAccess)
+        {
+            _dispatcherQueue.TryEnqueue(async () =>
+            {
+                try
+                {
+                    await SaveAsync();
+                }
+                catch (Exception ex)
+                {
+                    LogService.Log(ex);
+                }
+            });
+        }
     }
 }
