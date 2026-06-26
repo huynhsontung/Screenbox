@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -15,10 +16,12 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class PlayQueuePageViewModel : ObservableRecipient
     {
         private readonly IFilesService _filesService;
+        private readonly IPlayQueueCoordinator _coordinator;
 
-        public PlayQueuePageViewModel(IFilesService filesService)
+        public PlayQueuePageViewModel(IFilesService filesService, IPlayQueueCoordinator coordinator)
         {
             _filesService = filesService;
+            _coordinator = coordinator;
         }
 
         [RelayCommand]
@@ -40,13 +43,12 @@ namespace Screenbox.Core.ViewModels
                 StorageFolder? folder = await _filesService.PickFolderAsync();
                 if (folder == null) return;
                 IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
-                Messenger.Send(new PlayFilesMessage(items));
+                await _coordinator.EnqueueAsync(items);
             }
             catch (Exception e)
             {
                 Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
             }
         }
-
     }
 }
