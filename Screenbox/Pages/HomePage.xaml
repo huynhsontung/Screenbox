@@ -192,140 +192,20 @@
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{strings:Resources Key=Recent}" />
-            <Grid
-                x:Name="SelectionGrid"
-                Grid.Row="0"
-                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
-                Visibility="Collapsed">
-                <Border
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
-                    CornerRadius="{StaticResource OverlayCornerRadius}"
-                    Shadow="{StaticResource ElevationThemeShadow}"
-                    Translation="0,0,32" />
-                <CommandBar
-                    VerticalContentAlignment="Center"
-                    DefaultLabelPosition="Right"
-                    KeyboardAcceleratorPlacementMode="Hidden">
-                    <CommandBar.Resources>
-                        <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                        <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
-                        <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
-                        <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
-                    </CommandBar.Resources>
-                    <CommandBar.KeyboardAccelerators>
-                        <!--  When items are placed in the overflow menu, their shortcuts no longer function, so we handle them at the control level instead.  -->
-                        <KeyboardAccelerator Key="Delete" Invoked="RemoveSelectedKeyboardAccelerator_OnInvoked" />
-                    </CommandBar.KeyboardAccelerators>
-
-                    <AppBarButton
-                        Command="{x:Bind ViewModel.PlaySelectedCommand}"
-                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
-                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                           Glyph={StaticResource PlayGlyph}}"
-                        Label="{x:Bind strings:Resources.Play}" />
-                    <AppBarButton
-                        Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
-                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
-                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                           Glyph={StaticResource PlayAddGlyph}}"
-                        Label="{x:Bind strings:Resources.PlayNext}" />
-                    <AppBarButton
-                        Command="{x:Bind ViewModel.AddSelectedToQueueCommand}"
-                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
-                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                           Glyph={StaticResource PlaylistMusicGlyph}}"
-                        Label="{x:Bind strings:Resources.AddToQueue}" />
-                    <AppBarButton Icon="Add" Label="{x:Bind strings:Resources.AddToPlaylist}">
-                        <AppBarButton.Resources>
-                            <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
-                            <x:String x:Key="AppBarButtonFlyoutGlyph">&#xE972;</x:String>
-                            <x:Double x:Key="AppBarButtonSubItemChevronFontSize">12</x:Double>
-                            <Thickness x:Key="AppBarButtonSubItemChevronLabelOnRightMargin">-7,18,12,0</Thickness>
-                        </AppBarButton.Resources>
-                        <AppBarButton.Flyout>
-                            <MenuFlyout Placement="Bottom">
-                                <interactivity:Interaction.Behaviors>
-                                    <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind RecentFilesGridView.SelectedItems}" />
-                                </interactivity:Interaction.Behaviors>
-                            </MenuFlyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
-                    <AppBarButton
-                        Command="{x:Bind ViewModel.RemoveSelectedCommand}"
-                        CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
-                        Icon="Clear"
-                        KeyboardAcceleratorTextOverride="{x:Bind strings:KeyboardResources.VirtualKeyDelete}"
-                        Label="{x:Bind strings:Resources.Remove}" />
-
-                    <CommandBar.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox
-                                MinWidth="60"
-                                Margin="10,0,4,0"
-                                AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
-                                AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
-                                Command="{StaticResource SelectDeselectAllCommand}"
-                                CommandParameter="{x:Bind RecentFilesGridView}"
-                                Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
-                                IsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
-                                IsThreeState="True"
-                                ToolTipService.ToolTip="{x:Bind ViewModel.Selection.IsAllSelected, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
-                            <TextBlock Padding="0,5,0,0" Text="•" />
-                            <Button
-                                Padding="4,5,4,5"
-                                VerticalAlignment="Top"
-                                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
-                                AutomationProperties.Name="{x:Bind strings:Resources.ClearSelection}"
-                                BorderThickness="0"
-                                Command="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
-                                Content="{x:Bind strings:Resources.Clear}">
-                                <Button.Resources>
-                                    <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
-                                    <ResourceDictionary>
-                                        <ResourceDictionary.ThemeDictionaries>
-                                            <ResourceDictionary x:Key="Default">
-                                                <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                                                <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
-                                                <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
-                                                <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
-                                            </ResourceDictionary>
-                                            <ResourceDictionary x:Key="Light">
-                                                <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
-                                                <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                                                <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
-                                                <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
-                                                <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
-                                            </ResourceDictionary>
-                                            <ResourceDictionary x:Key="HighContrast">
-                                                <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
-                                                <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
-                                                <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorHighlightColorBrush" />
-                                                <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemColorButtonTextColorBrush" />
-                                                <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="SystemColorHighlightColorBrush" />
-                                                <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="SystemColorGrayTextColorBrush" />
-                                            </ResourceDictionary>
-                                        </ResourceDictionary.ThemeDictionaries>
-                                    </ResourceDictionary>
-                                </Button.Resources>
-                                <Button.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="Escape" />
-                                </Button.KeyboardAccelerators>
-                            </Button>
-                        </StackPanel>
-                    </CommandBar.Content>
-                </CommandBar>
-            </Grid>
+            <controls:SelectionBarControl
+                x:Name="SelectionBar"
+                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"
+                AddToQueueButtonCommand="{x:Bind ViewModel.AddSelectedToQueueCommand}"
+                CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
+                CheckBoxCommandParameter="{x:Bind RecentFilesGridView}"
+                CheckBoxIsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
+                CheckBoxText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
+                CloseButtonCommand="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
+                CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                PlayButtonCommand="{x:Bind ViewModel.PlaySelectedCommand}"
+                PlayNextButtonCommand="{x:Bind ViewModel.PlaySelectedNextCommand}"
+                RemoveButtonCommand="{x:Bind ViewModel.RemoveSelectedCommand}"
+                Visibility="Collapsed" />
         </Grid>
 
         <GridView
@@ -440,7 +320,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="GridViewHeaderText.Visibility" Value="Collapsed" />
-                        <Setter Target="SelectionGrid.Visibility" Value="Visible" />
+                        <Setter Target="SelectionBar.Visibility" Value="Visible" />
                         <Setter Target="RecentFilesGridView.SelectionMode" Value="Multiple" />
                         <Setter Target="RecentFilesGridView.IsItemClickEnabled" Value="False" />
                     </VisualState.Setters>

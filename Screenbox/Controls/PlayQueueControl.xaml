@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.PlayQueueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -112,250 +112,130 @@
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="48" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel
-            x:Name="ActionButtonRow"
-            Grid.Row="0"
-            Margin="0,8,0,8"
-            Padding="{x:Bind Padding, Mode=OneWay}"
-            KeyTipPlacementMode="Bottom"
-            Orientation="Horizontal">
-            <Button
-                x:Name="AddFilesButton"
-                Margin="0,0,8,0"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                AutomationProperties.Name="{strings:Resources Key=AddFiles}"
-                Command="{x:Bind ViewModel.AddFilesCommand}"
-                Visibility="Collapsed">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        Margin="{StaticResource IconButtonStandardIconMargin}"
-                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                        Glyph="{StaticResource FolderOpenGlyph}" />
-                    <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
-                </StackPanel>
-            </Button>
-
-            <Button
-                x:Name="ClearButton"
-                Margin="0,0,8,0"
-                AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
-                AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
-                Command="{x:Bind ViewModel.ClearCommand}"
-                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
-                KeyTipPlacementMode="Bottom">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        Margin="{StaticResource IconButtonStandardIconMargin}"
-                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                        Glyph="{StaticResource DeleteGlyph}" />
-                    <TextBlock
-                        x:Name="ClearButtonLabel"
-                        Margin="8,0,0,0"
-                        Text="{strings:Resources Key=Clear}" />
-                </StackPanel>
-            </Button>
-
-            <muxc:DropDownButton
-                x:Name="AddToPlaylistButton"
-                Margin="0,0,8,0"
-                AutomationProperties.Name="{x:Bind AddToPlaylistButtonLabel.Text}"
-                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
-                KeyTipPlacementMode="Bottom">
-                <muxc:DropDownButton.Flyout>
-                    <MenuFlyout Placement="Bottom">
-                        <interactivity:Interaction.Behaviors>
-                            <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind ViewModel.Queue.Items}" />
-                        </interactivity:Interaction.Behaviors>
-                    </MenuFlyout>
-                </muxc:DropDownButton.Flyout>
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                    <TextBlock
-                        x:Name="AddToPlaylistButtonLabel"
-                        Margin="8,0,0,0"
-                        Text="{strings:Resources Key=AddToPlaylist}" />
-                </StackPanel>
-            </muxc:DropDownButton>
-
-            <ToggleButton
-                x:Name="MultiSelectToggle"
-                AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
-                AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
-                IsChecked="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=TwoWay}"
-                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
-                KeyTipPlacementMode="Bottom"
-                XYFocusLeft="{x:Bind ClearButton}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        x:Name="MultiSelectToggleIcon"
-                        Margin="{StaticResource IconButtonStandardIconMargin}"
-                        Glyph="&#xE762;" />
-                    <TextBlock
-                        x:Name="MultiSelectToggleLabel"
-                        Margin="8,0,0,0"
-                        Text="{strings:Resources Key=Multiselect}" />
-                </StackPanel>
-            </ToggleButton>
-        </StackPanel>
-
         <Grid
-            x:Name="SelectionCommandRow"
-            Grid.Row="0"
-            Margin="{x:Bind Padding, Mode=OneWay}"
-            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
-            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
-            Visibility="Collapsed">
-            <Border
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
-                CornerRadius="{StaticResource OverlayCornerRadius}"
-                Shadow="{StaticResource ElevationThemeShadow}"
-                Translation="0,0,32" />
-            <CommandBar
-                x:Name="SelectionCommandBar"
-                VerticalContentAlignment="Center"
-                DefaultLabelPosition="Right"
-                SizeChanged="CommandBar_OnSizeChanged">
-                <CommandBar.Resources>
-                    <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                    <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
-                    <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
-                    <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource BottomLargeMargin}"
+            Padding="{x:Bind Padding, Mode=OneWay}"
+            KeyTipPlacementMode="Bottom">
+            <StackPanel
+                x:Name="ActionButtonPanel"
+                Padding="0,8,0,8"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="AddFilesButton"
+                    Margin="0,0,8,0"
+                    AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
+                    AutomationProperties.Name="{strings:Resources Key=AddFiles}"
+                    Command="{x:Bind ViewModel.AddFilesCommand}"
+                    Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource FolderOpenGlyph}" />
+                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
+                    </StackPanel>
+                </Button>
 
-                    <!--  Reduce the width of the AppBarButton to 40 pixels when it is collapsed  -->
-                    <Style BasedOn="{StaticResource DefaultAppBarButtonStyle}" TargetType="AppBarButton">
-                        <Setter Property="Width" Value="44" />
-                    </Style>
-                </CommandBar.Resources>
+                <Button
+                    x:Name="ClearButton"
+                    Margin="0,0,8,0"
+                    AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
+                    AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
+                    Command="{x:Bind ViewModel.ClearCommand}"
+                    IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource DeleteGlyph}" />
+                        <TextBlock
+                            x:Name="ClearButtonLabel"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=Clear}" />
+                    </StackPanel>
+                </Button>
 
-                <AppBarButton
-                    x:Name="PlayNextButton"
-                    Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
-                    Label="{strings:Resources Key=PlayNext}" />
-                <AppBarButton
-                    x:Name="AddToPlaylistSelectionButton"
-                    Icon="Add"
-                    Label="{strings:Resources Key=AddToPlaylist}">
-                    <AppBarButton.Resources>
-                        <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
-                        <x:String x:Key="AppBarButtonFlyoutGlyph">&#xE972;</x:String>
-                        <x:Double x:Key="AppBarButtonSubItemChevronFontSize">12</x:Double>
-                        <Thickness x:Key="AppBarButtonSubItemChevronMargin">-8,18,8,0</Thickness>
-                        <Thickness x:Key="AppBarButtonSubItemChevronLabelOnRightMargin">-7,18,12,0</Thickness>
-                    </AppBarButton.Resources>
-                    <AppBarButton.Flyout>
+                <muxc:DropDownButton
+                    x:Name="AddToPlaylistButton"
+                    Margin="0,0,8,0"
+                    AutomationProperties.Name="{x:Bind AddToPlaylistButtonLabel.Text}"
+                    IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
+                    <muxc:DropDownButton.Flyout>
                         <MenuFlyout Placement="Bottom">
                             <interactivity:Interaction.Behaviors>
-                                <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind PlaylistListView.SelectedItems}" />
+                                <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind ViewModel.Queue.Items}" />
                             </interactivity:Interaction.Behaviors>
                         </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarButton
-                    x:Name="RemoveSelectedButton"
-                    Command="{x:Bind ViewModel.RemoveSelectedCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Icon="{ui:FontIcon Glyph=&#xE894;}"
-                    Label="{strings:Resources Key=Remove}">
-                    <AppBarButton.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="Delete" />
-                    </AppBarButton.KeyboardAccelerators>
-                </AppBarButton>
-                <AppBarButton
-                    x:Name="MoveUpButton"
-                    Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Icon="{ui:FontIcon Glyph=&#xE74A;}"
-                    Label="{strings:Resources Key=MoveUp}" />
-                <AppBarButton
-                    x:Name="MoveDownButton"
-                    Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Icon="{ui:FontIcon Glyph=&#xE74B;}"
-                    Label="{strings:Resources Key=MoveDown}" />
-
-                <CommandBar.Content>
+                    </muxc:DropDownButton.Flyout>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox
-                            x:Name="SelectionCheckBox"
-                            MinWidth="60"
-                            Margin="10,0,4,0"
-                            d:Content="11 items selected"
-                            AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
-                            AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
-                            Command="{StaticResource SelectDeselectAllCommand}"
-                            CommandParameter="{x:Bind Path=PlaylistListView}"
-                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
-                            IsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
-                            IsThreeState="True"
-                            ToolTipService.ToolTip="{x:Bind ViewModel.Selection.IsAllSelected, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
-                        <TextBlock Padding="{x:Bind converters:ThicknessFiltersConverter.Extract(SelectionCheckBox.Padding, converters:ThicknessFilterKinds.Vertical)}" Text="•" />
-                        <Button
-                            Padding="4,5,4,5"
-                            VerticalAlignment="Top"
-                            extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
-                            AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
-                            BorderThickness="0"
-                            Command="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
-                            Content="{strings:Resources Key=Clear}">
-                            <Button.Resources>
-                                <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
-                                <ResourceDictionary>
-                                    <ResourceDictionary.ThemeDictionaries>
-                                        <ResourceDictionary x:Key="Default">
-                                            <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
-                                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
-                                            <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
-                                        </ResourceDictionary>
-                                        <ResourceDictionary x:Key="Light">
-                                            <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
-                                            <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
-                                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
-                                            <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
-                                        </ResourceDictionary>
-                                        <ResourceDictionary x:Key="HighContrast">
-                                            <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
-                                            <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
-                                            <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorHighlightColorBrush" />
-                                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemColorButtonTextColorBrush" />
-                                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="SystemColorHighlightColorBrush" />
-                                            <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="SystemColorGrayTextColorBrush" />
-                                        </ResourceDictionary>
-                                    </ResourceDictionary.ThemeDictionaries>
-                                </ResourceDictionary>
-                            </Button.Resources>
-                            <Button.KeyboardAccelerators>
-                                <KeyboardAccelerator Key="Escape" />
-                            </Button.KeyboardAccelerators>
-                        </Button>
+                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                        <TextBlock
+                            x:Name="AddToPlaylistButtonLabel"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=AddToPlaylist}" />
                     </StackPanel>
-                </CommandBar.Content>
-            </CommandBar>
+                </muxc:DropDownButton>
+
+                <ToggleButton
+                    x:Name="MultiSelectToggle"
+                    AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
+                    AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
+                    IsChecked="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=TwoWay}"
+                    IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
+                    XYFocusLeft="{x:Bind ClearButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon
+                            x:Name="MultiSelectToggleIcon"
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            Glyph="&#xE762;" />
+                        <TextBlock
+                            x:Name="MultiSelectToggleLabel"
+                            Margin="8,0,0,0"
+                            Text="{strings:Resources Key=Multiselect}" />
+                    </StackPanel>
+                </ToggleButton>
+            </StackPanel>
+
+            <controls:SelectionBarControl
+                x:Name="SelectionBar"
+                ctAnimations:Implicit.HideAnimations="{StaticResource SelectionBarExitImplicitAnimation}"
+                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"
+                CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
+                CheckBoxCommandParameter="{x:Bind PlaylistListView}"
+                CheckBoxIsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
+                CheckBoxText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
+                CloseButtonCommand="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
+                CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                IsAddToQueueButtonVisible="False"
+                IsPlayButtonVisible="False"
+                PlayNextButtonCommand="{x:Bind ViewModel.PlaySelectedNextCommand}"
+                RemoveButtonCommand="{x:Bind ViewModel.RemoveSelectedCommand}"
+                Visibility="Collapsed">
+                <controls:SelectionBarControl.AdditionalCommands>
+                    <AppBarButton
+                        x:Name="MoveUpButton"
+                        Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
+                        CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                        Icon="{ui:FontIcon Glyph=&#xE74A;}"
+                        Label="{x:Bind strings:Resources.MoveUp}" />
+                    <AppBarButton
+                        x:Name="MoveDownButton"
+                        Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
+                        CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                        Icon="{ui:FontIcon Glyph=&#xE74B;}"
+                        Label="{x:Bind strings:Resources.MoveDown}" />
+                </controls:SelectionBarControl.AdditionalCommands>
+            </controls:SelectionBarControl>
         </Grid>
 
         <ListView
             x:Name="PlaylistListView"
             Grid.Row="1"
-            Margin="{StaticResource TopMediumMargin}"
             Padding="{x:Bind Padding, Mode=OneWay}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -405,8 +285,8 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
-                        <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />
+                        <Setter Target="ActionButtonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="SelectionBar.Visibility" Value="Visible" />
                         <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
                     </VisualState.Setters>
                 </VisualState>
@@ -414,9 +294,23 @@
 
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
-                <VisualState x:Name="Compact" />
 
                 <VisualState x:Name="Minimal">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ShouldUseMinimalState(Common.NavigationViewDisplayMode, IsFlyout), Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Target="ClearButton.(ToolTipService.ToolTip)" Value="{x:Bind ClearButtonLabel.Text}" />
+                        <Setter Target="ClearButtonLabel.Visibility" Value="Collapsed" />-->
+                        <Setter Target="AddToPlaylistButton.(ToolTipService.ToolTip)" Value="{x:Bind AddToPlaylistButtonLabel.Text}" />
+                        <Setter Target="AddToPlaylistButtonLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
+                        <Setter Target="MultiSelectToggleLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="SelectionBar.DefaultLabelPosition" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="MinimalFlyout">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind IsFlyout, Mode=OneWay}" />
                     </VisualState.StateTriggers>
@@ -428,11 +322,7 @@
                         <Setter Target="AddToPlaylistButtonLabel.Visibility" Value="Collapsed" />
                         <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
                         <Setter Target="MultiSelectToggleLabel.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="PlayNextButton.(ToolTipService.ToolTip)" Value="{x:Bind PlayNextButton.Label}" />
-                        <Setter Target="AddToPlaylistSelectionButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="AddToPlaylistSelectionButton.(ToolTipService.ToolTip)" Value="{x:Bind AddToPlaylistSelectionButton.Label}" />
-                        <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="SelectionBar.DefaultLabelPosition" Value="Collapsed" />
                         <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
                         <Setter Target="Footer.Visibility" Value="Collapsed" />
                     </VisualState.Setters>

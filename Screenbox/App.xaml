@@ -34,8 +34,8 @@
                     <!--  Converters  -->
                     <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
+                    <converters:NullableBooleanToSelectionToolTipConverter x:Key="CheckBoxToSelectionToolTipConverter" />
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
-                    <converters:CheckBoxToToolTipConverter x:Key="CheckBoxToToolTipConverter" />
                     <!--<converters:ThicknessFiltersConverter x:Key="LeftThicknessFiltersConverter" Filters="Left" />-->
                     <!--<converters:ThicknessFiltersConverter x:Key="TopThicknessFiltersConverter" Filters="Top" />-->
                     <!--<converters:ThicknessFiltersConverter x:Key="RightThicknessFiltersConverter" Filters="Right" />-->
