@@ -333,6 +333,9 @@
     <Compile Include="Templates\GridViewItemTemplates.xaml.cs">
       <DependentUpon>GridViewItemTemplates.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Templates\GroupedViewTemplates.xaml.cs">
+      <DependentUpon>GroupedViewTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Templates\SearchSuggestionTemplateSelector.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
@@ -784,6 +787,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\GridViewItemTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\GroupedViewTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

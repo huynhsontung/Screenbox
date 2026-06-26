@@ -17,16 +17,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:GridViewItemTemplates />
+                <templates:GroupedViewTemplates />
             </ResourceDictionary.MergedDictionaries>
 
             <CollectionViewSource
                 x:Name="ArtistsSource"
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedArtists}" />
-
-            <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock FontWeight="SemiBold" Text="{Binding Key}" />
-            </DataTemplate>
 
             <MenuFlyout x:Key="ArtistFlyout">
                 <MenuFlyoutItem Command="{Binding PlayArtistCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">

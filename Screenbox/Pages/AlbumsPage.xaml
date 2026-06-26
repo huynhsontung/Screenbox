@@ -20,19 +20,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:GridViewItemTemplates />
+                <templates:GroupedViewTemplates />
             </ResourceDictionary.MergedDictionaries>
 
             <CollectionViewSource
                 x:Name="AlbumsSource"
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
-
-            <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Text="{Binding Key}"
-                    TextTrimming="CharacterEllipsis" />
-            </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
                 <MenuFlyoutItem Command="{Binding PlayAlbumCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
