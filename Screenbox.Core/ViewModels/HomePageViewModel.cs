@@ -191,10 +191,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         {
             await media.LoadDetailsAsync(_filesService);
         }
-        catch (Exception e)
+        catch (ArgumentException)
         {
             // The underlying StorageFile (e.g. from MRU) may be in a bad state and
             // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
+        }
+        catch (Exception e)
+        {
             LogService.Log(e);
         }
     }
@@ -205,10 +208,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         {
             await media.LoadThumbnailAsync();
         }
-        catch (Exception e)
+        catch (ArgumentException)
         {
             // The underlying StorageFile (e.g. from MRU) may be in a bad state and
             // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
+        }
+        catch (Exception e)
+        {
             LogService.Log(e);
         }
     }
