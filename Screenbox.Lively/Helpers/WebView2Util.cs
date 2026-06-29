@@ -47,6 +47,11 @@ public static class WebView2Util
     // Ref: https://stackoverflow.com/questions/62835549/equivalent-of-webbrowser-invokescriptstring-object-in-webview2
     public static async Task<string> ExecuteScriptFunctionAsync(this WebView2 webView, string functionName, params object[] parameters)
     {
+        if (webView.CoreWebView2 == null)
+        {
+            return string.Empty;
+        }
+
         var script = new StringBuilder();
         script.Append(functionName);
         script.Append("(");
