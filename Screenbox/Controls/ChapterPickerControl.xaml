@@ -1,0 +1,70 @@
+<UserControl
+    x:Class="Screenbox.Controls.ChapterPickerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:Screenbox.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mediaCore="using:Windows.Media.Core"
+    xmlns:strings="using:Screenbox.Strings"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    d:DesignHeight="224"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid Width="224">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            MinHeight="{StaticResource ListViewItemMinHeight}"
+            BorderBrush="{ThemeResource SystemControlForegroundTransparentBrush}"
+            BorderThickness="0,0,0,1">
+            <TextBlock
+                Padding="16,0,0,0"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="Chapters"
+                TextWrapping="NoWrap" />
+        </Grid>
+
+        <ListView
+            x:Name="ChapterList"
+            Grid.Row="1"
+            MaxHeight="400"
+            ui:ListViewExtensions.Command="{x:Bind ChapterSelectedCommand}"
+            IsItemClickEnabled="True"
+            ItemContainerTransitions="{x:Null}"
+            ItemsSource="{x:Bind ChaptersSource}"
+            Loaded="ChapterList_OnLoaded"
+            SelectedItem="{x:Bind SelectedChapter, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="mediaCore:ChapterCue">
+                    <Grid AutomationProperties.Name="{x:Bind Title}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="{x:Bind Title}" />
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Padding="4,2,0,0"
+                            FontSize="{StaticResource CaptionTextBlockFontSize}"
+                            Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
+                            Text="{x:Bind core:Humanizer.ToDuration(StartTime)}"
+                            Typography.NumeralAlignment="Tabular" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

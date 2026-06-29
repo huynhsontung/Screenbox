@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.ComponentModel;
@@ -11,11 +11,13 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Foundation;
+using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
@@ -42,6 +44,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [ObservableProperty] private bool _isFullscreen;
     [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
     [ObservableProperty] private string? _chapterName;
+    [ObservableProperty] private ChapterCue? _currentChapterCue;
     [ObservableProperty] private double _playbackRate;
     [ObservableProperty] private double _audioTimingOffset;
     [ObservableProperty] private double _subtitleTimingOffset;
@@ -303,9 +306,13 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         });
     }
 
-    private void OnChapterChanged(IMediaPlayer sender, object? args)
+    private void OnChapterChanged(IMediaPlayer sender, ValueChangedEventArgs<ChapterCue?> args)
     {
-        _dispatcherQueue.TryEnqueue(() => ChapterName = sender.Chapter?.Title);
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            ChapterName = sender.Chapter?.Title;
+            CurrentChapterCue = args.NewValue;
+        });
     }
 
     public void Receive(PropertyChangedMessage<WindowViewMode> message)
@@ -431,6 +438,14 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         {
             MediaPlayer?.Play();
         }
+    }
+
+    [RelayCommand(CanExecute = nameof(HasActiveItem))]
+    private void NavigateToChapter(ChapterCue? chapter)
+    {
+        if (chapter is null || MediaPlayer is null) return;
+
+        MediaPlayer.Position = chapter.StartTime;
     }
 
     /// <summary>

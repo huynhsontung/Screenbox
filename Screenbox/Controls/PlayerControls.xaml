@@ -443,12 +443,32 @@
                 MinWidth="0"
                 Margin="8,0,0,2"
                 VerticalAlignment="Center"
-                ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
                 FontSize="{StaticResource BodyTextBlockFontSize}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
-                ShowChapterName="{x:Bind ViewModel.PlayerShowChapters, Mode=OneWay}"
-                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
-                TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
+                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
+            <TextBlock
+                Margin="4,0,0,2"
+                VerticalAlignment="Center"
+                Text="•"
+                Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}" />
+            <Button
+                x:Name="ChapterButton"
+                Height="40"
+                Padding="4,0,4,2"
+                BorderThickness="0"
+                Content="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                Style="{StaticResource SubtleButtonStyle}"
+                Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
+                <Button.Flyout>
+                    <Flyout FlyoutPresenterStyle="{StaticResource FlyoutPresenterMenuFlyoutStyle}" ShouldConstrainToRootBounds="True">
+                        <controls:ChapterPickerControl
+                            ChapterSelectedCommand="{x:Bind ViewModel.NavigateToChapterCommand}"
+                            ChaptersSource="{x:Bind SeekBar.ViewModel.Chapters}"
+                            SelectedChapter="{x:Bind ViewModel.CurrentChapterCue, Mode=TwoWay}" />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
         </StackPanel>
         <!--  Secondary Panel  -->
         <StackPanel
@@ -655,7 +675,9 @@
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="TimeDisplay.Margin" Value="4,0,0,0" />
-                        <Setter Target="TimeDisplay.FontSize" Value="13" />
+                        <Setter Target="TimeDisplay.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
+                        <Setter Target="ChapterButton.Height" Value="36" />
+                        <Setter Target="ChapterButton.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
                         <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
@@ -675,6 +697,7 @@
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="ChapterButton.Height" Value="36" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeControl.VolumeToggleButtonStyle" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="ShuffleButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
