@@ -657,6 +657,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Permitir que o volume máximo ultrapasse 100%</value>
   </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>The amount of time skipped backward when you rewind</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>The amount of time skipped forward when you fast forward</value>
+  </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Controles na tela</value>
   </data>

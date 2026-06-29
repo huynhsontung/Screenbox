@@ -224,7 +224,7 @@
     <value>已新增至佇列</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>選取</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>全選</value>
@@ -320,7 +320,7 @@
     <value>首頁</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>選取多項</value>
+    <value>多选</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>找不到任何音樂</value>
@@ -656,6 +656,12 @@
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>允許最大音量超過 100%</value>
+  </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>後退時跳過的時間</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>快進時跳過的時間</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>螢幕控制</value>
@@ -997,46 +1003,46 @@
     <value>資料夾</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>點擊</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>向上滑動</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>向下滑動</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>向左滑動</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>向右滑動</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>開啓長按加速播放</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>無</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>播放/暫停</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>後退</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>快進</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>減小音量</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>增加音量</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>降低速度</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>增加速度</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>加入播放清單</value>
@@ -1048,10 +1054,10 @@
     <value>新播放清單</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>導入播放清單</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>導出</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>已選取項目</value>
@@ -1114,9 +1120,9 @@
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>您沒有播放清單</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>創建您的第一個播放清單，來整理您喜愛的視頻和音樂。</value>
   </data>
 </root>

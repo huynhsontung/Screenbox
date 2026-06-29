@@ -224,7 +224,7 @@
     <value>إضافة إلى قائمة الانتظار</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>اختر</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>تحديد الكل</value>
@@ -356,7 +356,7 @@
     <value>فتح موقع الملف</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>افتح ب‍استخدام</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>ألبوم</value>
@@ -461,7 +461,7 @@
     <value>الفنانون</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>الأغنية</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>الأغاني</value>
@@ -657,11 +657,17 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>السماح بالحد الأقصى للصوت أن يتجاوز 100%</value>
   </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>مقدار الوقت الذي يتم تخطيه للوراء عند الإرجاع</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>مقدار الوقت الذي يتم تخطيه للأمام عند التقديم السريع</value>
+  </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>عناصر التحكم على الشاشة</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>اختر العناصر التي يمكن أن تظهر في عناصر التحكم، و ضبط سلوك الإخفاء التلقائي</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>إيماءات</value>
@@ -701,15 +707,15 @@
     <value>تم اضافة الترجمة</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>قائمة التشغيل{0}" تم إنشاؤها</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>قائمة التشغيل{0} تم حذفها</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>تمت إعادة تسمية قائمة التشغيل إلى "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -756,7 +762,7 @@
     <value>متقدم</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>الخصوصيّة</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>الوضع المتقدم</value>
@@ -852,7 +858,7 @@
     <value>ترتيب حسب</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>الترتيب حسب {0} خيار محدد</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -970,14 +976,14 @@
     <value>عرض اسم الفصل عندما يكون متاحًا</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>إلغاء عناصر التحكم بعد مرور هذا الوقت</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} ثانية</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} ثوان</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
@@ -990,133 +996,133 @@
     <value>استخدم لغة النظام</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>لا توجد نتائج لـ "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>المجلّد</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>زر Tap</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>السحب للأعلى</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>السحب للأسفل</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>السحب لليسار</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>السحب لليمين</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>تفعيل الضغط المستمر لزيادة سرعة التشغيل</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>لا يوجد شيء</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>تشغيل/إيقاف مؤقت</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>الرجوع للوراء</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>تقدم سريع</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>خفض مستوى الصوت</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>زيادة مستوى الصوت</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>تقليل السرعة</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>زيادة السرعة</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>إضافة إلى قائمة التشغيل</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>إنشاء قائمة تشغيل جديدة</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>قائمة تشغيل جديدة</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>استيراد قائمة التشغيل</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>تصدير</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>العنصر المحدد</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>العناصر المحددة</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>لا توجد قوائم تشغيل</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>إنشاء</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>إلغاء</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>قائمة تشغيل بدون عنوان</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>أدخل اسماً لقائمة التشغيل هذه</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>قوائم التشغيل</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>إحذف</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>إعادة تسمية</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>أدخل اسماً جديد لقائمة التشغيل هذه</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>إعادة تسمية قائمة التشغيل</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>احذف قائمة التشغيل</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>هل أنت متأكد من أنك تريد حذف قائمة التشغيل{0}؟ لا يمكنك التراجع عن هذا الإجراء.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>سجل موضع التشغيل</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to enable quick session resumption</value>
+    <value>حفظ تاريخ موضع التشغيل على هذا الجهاز لتمكين الاستئناف السريع للجلسة</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>مسح سجل موضع التشغيل للجهاز</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>إضافة عنصر {0} إلى قائمة التشغيل"{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>إضافة عناصر {0} إلى قائمة التشغيل"{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>ليس لديك أي قوائم تشغيل</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>قم بإنشاء قائمة التشغيل الأولى الخاصة بك لتنظيم الفيديوهات والموسيقى المفضلة لديك.</value>
   </data>
 </root>
