@@ -1,17 +1,8 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
 using Screenbox.Core.Enums;
 
 namespace Screenbox.Core.Models;
-
-internal sealed class RawCacheLoadResultDto
-{
-    public List<string> FolderPaths { get; set; } = new();
-
-    public List<RawMediaRecordDto> Records { get; set; } = new();
-}
 
 internal sealed class RawMediaRecordDto
 {
@@ -52,33 +43,4 @@ internal sealed class RawMediaRecordDto
     public uint Height { get; set; }
 
     public uint VideoBitrate { get; set; }
-}
-
-internal sealed class MusicCacheRecordDto
-{
-    public string Path { get; set; } = string.Empty;
-
-    public string Title { get; set; } = string.Empty;
-
-    public DateTimeOffset DateAdded { get; set; }
-
-    public MusicInfo Info { get; set; } = new();
-}
-
-internal sealed class VideoCacheRecordDto
-{
-    public string Path { get; set; } = string.Empty;
-
-    public string Title { get; set; } = string.Empty;
-
-    public DateTimeOffset DateAdded { get; set; }
-
-    public VideoInfo Info { get; set; } = new();
-}
-
-internal sealed class SqlParameterDto
-{
-    public string Name { get; set; } = string.Empty;
-
-    public object Value { get; set; } = DBNull.Value;
 }
