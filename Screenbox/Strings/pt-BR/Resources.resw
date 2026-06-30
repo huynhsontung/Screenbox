@@ -658,10 +658,10 @@
     <value>Permitir que o volume máximo ultrapasse 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Tempo retrocedido ao retroceder rapidamente</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Tempo avançado ao avançar rapidamente</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Controles na tela</value>
@@ -1126,6 +1126,6 @@
     <value>Crie sua primeira playlist para organizar seus vídeos e músicas favoritas.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>NãNão há itens nesta playlist.</value>
   </data>
 </root>
