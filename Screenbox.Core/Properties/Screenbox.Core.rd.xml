@@ -29,5 +29,12 @@
 
   	<!-- add directives for your library here -->
 
+    <Namespace Name="ProtoBuf.Serializers" Dynamic="Required Public" />
+
+    <Type Name="ProtoBuf.Internal.Level300DefaultSerializer" Dynamic="Required All" />
+    <Type Name="ProtoBuf.Internal.Level300FixedSerializer" Dynamic="Required All" />
+
+    <Type Name="CommunityToolkit.Mvvm.Messaging.IMessengerExtensions" Dynamic="Required All" />
+
   </Library>
 </Directives>
