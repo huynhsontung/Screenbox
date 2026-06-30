@@ -1,7 +1,9 @@
 ﻿#nullable enable
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Services;
 
@@ -18,12 +20,31 @@ public interface IDatabaseService
     Task InitializeAsync();
 
     /// <summary>
-    /// Opens and returns a new <see cref="SqliteConnection"/> to the database.
-    /// The caller is responsible for disposing the returned connection.
+    /// Reads cached library folders and media records for the requested media type.
     /// </summary>
-    /// <remarks>
-    /// <see cref="InitializeAsync"/> must be called before the first use of this method.
-    /// Each connection has foreign-key enforcement enabled automatically.
-    /// </remarks>
-    SqliteConnection CreateConnection();
+    Task<RawCacheLoadResultDto> LoadLibraryCacheAsync(MediaPlaybackType mediaType);
+
+    /// <summary>Saves the complete cached music snapshot to the database.</summary>
+    Task SaveMusicCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<MusicCacheRecordDto> records);
+
+    /// <summary>Saves the complete cached video snapshot to the database.</summary>
+    Task SaveVideoCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<VideoCacheRecordDto> records);
+
+    /// <summary>Replaces playback progress rows with the provided snapshot.</summary>
+    Task ReplacePlaybackProgressAsync(IReadOnlyList<MediaPlaybackProgress> snapshot);
+
+    /// <summary>Loads all playback progress entries.</summary>
+    Task<List<MediaPlaybackProgress>> LoadPlaybackProgressAsync();
+
+    /// <summary>Persists a playlist and its items.</summary>
+    Task SavePlaylistAsync(PersistentPlaylist playlist);
+
+    /// <summary>Loads a playlist and its items, or null when not found.</summary>
+    Task<PersistentPlaylist?> LoadPlaylistAsync(string id);
+
+    /// <summary>Lists all playlists with their items.</summary>
+    Task<List<PersistentPlaylist>> ListPlaylistsAsync();
+
+    /// <summary>Deletes a playlist and cascades to its items.</summary>
+    Task DeletePlaylistAsync(string id);
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -292,60 +291,10 @@ public sealed class LibraryService : ILibraryService
     private async Task<RawCacheLoadResultDto> LoadRawMusicCacheAsync(
         CancellationToken cancellationToken)
     {
-        return await Task.Run(() => LoadRawCacheFromDatabase(MediaPlaybackType.Music), cancellationToken);
-    }
-
-    /// <summary>Reads raw video metadata from the SQLite cache. Runs on a background thread.</summary>
-    private async Task<RawCacheLoadResultDto> LoadRawVideoCacheAsync(
-        CancellationToken cancellationToken)
-    {
-        return await Task.Run(() => LoadRawCacheFromDatabase(MediaPlaybackType.Video), cancellationToken);
-    }
-
-    private RawCacheLoadResultDto LoadRawCacheFromDatabase(
-        MediaPlaybackType mediaType)
-    {
+        cancellationToken.ThrowIfCancellationRequested();
         try
         {
-            using var connection = _databaseService.CreateConnection();
-
-            var folderPaths = new List<string>();
-            using (var cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = "SELECT path FROM library_folders WHERE media_type = @mt;";
-                cmd.Parameters.AddWithValue("@mt", (int)mediaType);
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    folderPaths.Add(reader.GetString(0));
-                }
-            }
-
-            const string recordSql = """
-                SELECT path, title, media_type, date_added, duration_ticks, year,
-                       artist, album, album_artist, composers, genre, track_number, bitrate,
-                       subtitle, producers, writers, width, height, video_bitrate
-                FROM media_records
-                WHERE media_type = @mt;
-                """;
-
-            var records = new List<RawMediaRecordDto>();
-            using (var cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = recordSql;
-                cmd.Parameters.AddWithValue("@mt", (int)mediaType);
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    records.Add(ReadRawRecord(reader));
-                }
-            }
-
-            return new RawCacheLoadResultDto
-            {
-                FolderPaths = folderPaths,
-                Records = records,
-            };
+            return await _databaseService.LoadLibraryCacheAsync(MediaPlaybackType.Music);
         }
         catch (Exception e)
         {
@@ -354,30 +303,20 @@ public sealed class LibraryService : ILibraryService
         }
     }
 
-    private static RawMediaRecordDto ReadRawRecord(SqliteDataReader reader)
+    /// <summary>Reads raw video metadata from the SQLite cache. Runs on a background thread.</summary>
+    private async Task<RawCacheLoadResultDto> LoadRawVideoCacheAsync(
+        CancellationToken cancellationToken)
     {
-        return new RawMediaRecordDto
+        cancellationToken.ThrowIfCancellationRequested();
+        try
         {
-            Path = reader.GetString(0),
-            Title = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
-            MediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? 0 : reader.GetInt32(2)),
-            DateAddedTicks = reader.IsDBNull(3) ? 0L : reader.GetInt64(3),
-            DurationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4),
-            Year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5),
-            Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
-            Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
-            AlbumArtist = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
-            Composers = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
-            Genre = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
-            TrackNumber = reader.IsDBNull(11) ? 0u : (uint)reader.GetInt64(11),
-            Bitrate = reader.IsDBNull(12) ? 0u : (uint)reader.GetInt64(12),
-            Subtitle = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
-            Producers = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
-            Writers = reader.IsDBNull(15) ? string.Empty : reader.GetString(15),
-            Width = reader.IsDBNull(16) ? 0u : (uint)reader.GetInt64(16),
-            Height = reader.IsDBNull(17) ? 0u : (uint)reader.GetInt64(17),
-            VideoBitrate = reader.IsDBNull(18) ? 0u : (uint)reader.GetInt64(18),
-        };
+            return await _databaseService.LoadLibraryCacheAsync(MediaPlaybackType.Video);
+        }
+        catch (Exception e)
+        {
+            LogService.Log($"Failed to load library cache from database\n{e}");
+            return new RawCacheLoadResultDto();
+        }
     }
 
     /// <summary>
@@ -492,83 +431,12 @@ public sealed class LibraryService : ILibraryService
         cancellationToken.ThrowIfCancellationRequested();
         try
         {
-            await Task.Run(() => WriteMusicCacheToDatabase(folderPaths, snapshot), cancellationToken);
+            await _databaseService.SaveMusicCacheAsync(folderPaths, snapshot);
         }
         catch (Exception e) when (e is not OperationCanceledException)
         {
             LogService.Log($"Failed to write music cache to database\n{e}");
         }
-    }
-
-    private void WriteMusicCacheToDatabase(
-        List<string> folderPaths,
-        List<MusicCacheRecordDto> records)
-    {
-        using var connection = _databaseService.CreateConnection();
-        using var transaction = connection.BeginTransaction();
-
-        // Replace all music folder paths
-        ExecuteNonQuery(connection, "DELETE FROM library_folders WHERE media_type = @mt;",
-            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Music });
-
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = "INSERT OR IGNORE INTO library_folders (path, media_type) VALUES (@path, @mt);";
-            var pathParam = cmd.Parameters.Add("@path", SqliteType.Text);
-            cmd.Parameters.AddWithValue("@mt", (int)MediaPlaybackType.Music);
-            foreach (string path in folderPaths)
-            {
-                pathParam.Value = path;
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        // Upsert all music media records
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = """
-                INSERT OR REPLACE INTO media_records
-                    (path, title, media_type, date_added, duration_ticks, year,
-                     artist, album, album_artist, composers, genre, track_number, bitrate)
-                VALUES
-                    (@path, @title, @mt, @dateAdded, @durationTicks, @year,
-                     @artist, @album, @albumArtist, @composers, @genre, @trackNumber, @bitrate);
-                """;
-
-            var p = cmd.Parameters;
-            var pPath = p.Add("@path", SqliteType.Text);
-            var pTitle = p.Add("@title", SqliteType.Text);
-            p.AddWithValue("@mt", (int)MediaPlaybackType.Music);
-            var pDateAdded = p.Add("@dateAdded", SqliteType.Integer);
-            var pDuration = p.Add("@durationTicks", SqliteType.Integer);
-            var pYear = p.Add("@year", SqliteType.Integer);
-            var pArtist = p.Add("@artist", SqliteType.Text);
-            var pAlbum = p.Add("@album", SqliteType.Text);
-            var pAlbumArtist = p.Add("@albumArtist", SqliteType.Text);
-            var pComposers = p.Add("@composers", SqliteType.Text);
-            var pGenre = p.Add("@genre", SqliteType.Text);
-            var pTrack = p.Add("@trackNumber", SqliteType.Integer);
-            var pBitrate = p.Add("@bitrate", SqliteType.Integer);
-
-            foreach (MusicCacheRecordDto record in records)
-            {
-                pPath.Value = record.Path;
-                pTitle.Value = record.Title;
-                pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
-                pDuration.Value = record.Info.Duration.Ticks;
-                pYear.Value = (long)record.Info.Year;
-                pArtist.Value = record.Info.Artist;
-                pAlbum.Value = record.Info.Album;
-                pAlbumArtist.Value = record.Info.AlbumArtist;
-                pComposers.Value = record.Info.Composers;
-                pGenre.Value = record.Info.Genre;
-                pTrack.Value = (long)record.Info.TrackNumber;
-                pBitrate.Value = (long)record.Info.Bitrate;
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        transaction.Commit();
     }
 
     private async Task CacheVideosAsync(StorageLibrary library, List<MediaViewModel> videos, CancellationToken cancellationToken)
@@ -585,93 +453,12 @@ public sealed class LibraryService : ILibraryService
         cancellationToken.ThrowIfCancellationRequested();
         try
         {
-            await Task.Run(() => WriteVideoCacheToDatabase(folderPaths, snapshot), cancellationToken);
+            await _databaseService.SaveVideoCacheAsync(folderPaths, snapshot);
         }
         catch (Exception e) when (e is not OperationCanceledException)
         {
             LogService.Log($"Failed to write video cache to database\n{e}");
         }
-    }
-
-    private void WriteVideoCacheToDatabase(
-        List<string> folderPaths,
-        List<VideoCacheRecordDto> records)
-    {
-        using var connection = _databaseService.CreateConnection();
-        using var transaction = connection.BeginTransaction();
-
-        // Replace all video folder paths
-        ExecuteNonQuery(connection, "DELETE FROM library_folders WHERE media_type = @mt;",
-            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Video });
-
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = "INSERT OR IGNORE INTO library_folders (path, media_type) VALUES (@path, @mt);";
-            var pathParam = cmd.Parameters.Add("@path", SqliteType.Text);
-            cmd.Parameters.AddWithValue("@mt", (int)MediaPlaybackType.Video);
-            foreach (string path in folderPaths)
-            {
-                pathParam.Value = path;
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        // Upsert all video media records
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = """
-                INSERT OR REPLACE INTO media_records
-                    (path, title, media_type, date_added, duration_ticks, year,
-                     subtitle, producers, writers, width, height, video_bitrate)
-                VALUES
-                    (@path, @title, @mt, @dateAdded, @durationTicks, @year,
-                     @subtitle, @producers, @writers, @width, @height, @videoBitrate);
-                """;
-
-            var p = cmd.Parameters;
-            var pPath = p.Add("@path", SqliteType.Text);
-            var pTitle = p.Add("@title", SqliteType.Text);
-            p.AddWithValue("@mt", (int)MediaPlaybackType.Video);
-            var pDateAdded = p.Add("@dateAdded", SqliteType.Integer);
-            var pDuration = p.Add("@durationTicks", SqliteType.Integer);
-            var pYear = p.Add("@year", SqliteType.Integer);
-            var pSubtitle = p.Add("@subtitle", SqliteType.Text);
-            var pProducers = p.Add("@producers", SqliteType.Text);
-            var pWriters = p.Add("@writers", SqliteType.Text);
-            var pWidth = p.Add("@width", SqliteType.Integer);
-            var pHeight = p.Add("@height", SqliteType.Integer);
-            var pVideoBitrate = p.Add("@videoBitrate", SqliteType.Integer);
-
-            foreach (VideoCacheRecordDto record in records)
-            {
-                pPath.Value = record.Path;
-                pTitle.Value = record.Title;
-                pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
-                pDuration.Value = record.Info.Duration.Ticks;
-                pYear.Value = (long)record.Info.Year;
-                pSubtitle.Value = record.Info.Subtitle;
-                pProducers.Value = record.Info.Producers;
-                pWriters.Value = record.Info.Writers;
-                pWidth.Value = (long)record.Info.Width;
-                pHeight.Value = (long)record.Info.Height;
-                pVideoBitrate.Value = (long)record.Info.Bitrate;
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        transaction.Commit();
-    }
-
-    private static void ExecuteNonQuery(SqliteConnection connection, string sql, params SqlParameterDto[] parameters)
-    {
-        using var cmd = connection.CreateCommand();
-        cmd.CommandText = sql;
-        foreach (SqlParameterDto parameter in parameters)
-        {
-            cmd.Parameters.AddWithValue(parameter.Name, parameter.Value);
-        }
-
-        cmd.ExecuteNonQuery();
     }
 
     private async Task BatchFetchMusicAsync(

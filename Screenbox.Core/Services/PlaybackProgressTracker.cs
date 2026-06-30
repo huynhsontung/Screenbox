@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Data.Sqlite;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 
@@ -109,7 +108,7 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
         var snapshot = new List<MediaPlaybackProgress>(_progressList);
         try
         {
-            await Task.Run(() => WriteProgressToDatabase(snapshot));
+            await _databaseService.ReplacePlaybackProgressAsync(snapshot);
         }
         catch (Exception e)
         {
@@ -124,7 +123,7 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
     {
         try
         {
-            List<MediaPlaybackProgress> loaded = await Task.Run(ReadProgressFromDatabase);
+            List<MediaPlaybackProgress> loaded = await _databaseService.LoadPlaybackProgressAsync();
             loaded.Capacity = Capacity;
             _progressList = loaded;
             LastUpdated = DateTimeOffset.UtcNow;
@@ -136,55 +135,4 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Private helpers
-    // -------------------------------------------------------------------------
-
-    private void WriteProgressToDatabase(List<MediaPlaybackProgress> snapshot)
-    {
-        using var connection = _databaseService.CreateConnection();
-        using var transaction = connection.BeginTransaction();
-
-        // Full replace: delete all rows then re-insert the current snapshot.
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = "DELETE FROM playback_progress;";
-            cmd.ExecuteNonQuery();
-        }
-
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = "INSERT INTO playback_progress (location, position_ticks) VALUES (@loc, @ticks);";
-            var pLoc = cmd.Parameters.Add("@loc", SqliteType.Text);
-            var pTicks = cmd.Parameters.Add("@ticks", SqliteType.Integer);
-
-            foreach (MediaPlaybackProgress item in snapshot)
-            {
-                pLoc.Value = item.Location;
-                pTicks.Value = item.Position.Ticks;
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        transaction.Commit();
-    }
-
-    private List<MediaPlaybackProgress> ReadProgressFromDatabase()
-    {
-        using var connection = _databaseService.CreateConnection();
-        using var cmd = connection.CreateCommand();
-        cmd.CommandText = "SELECT location, position_ticks FROM playback_progress;";
-
-        var result = new List<MediaPlaybackProgress>(Capacity);
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            string location = reader.GetString(0);
-            long ticks = reader.GetInt64(1);
-            result.Add(new MediaPlaybackProgress(location, new TimeSpan(ticks)));
-        }
-
-        return result;
-    }
 }
-

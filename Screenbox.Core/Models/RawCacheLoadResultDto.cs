@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Screenbox.Core.Models;
 
-internal sealed class RawCacheLoadResultDto
+public sealed class RawCacheLoadResultDto
 {
     public List<string> FolderPaths { get; set; } = new();
 

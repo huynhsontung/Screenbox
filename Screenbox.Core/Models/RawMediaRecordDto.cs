@@ -4,7 +4,7 @@ using Screenbox.Core.Enums;
 
 namespace Screenbox.Core.Models;
 
-internal sealed class RawMediaRecordDto
+public sealed class RawMediaRecordDto
 {
     public string Path { get; set; } = string.Empty;
 

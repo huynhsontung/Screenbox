@@ -4,7 +4,7 @@ using System;
 
 namespace Screenbox.Core.Models;
 
-internal sealed class VideoCacheRecordDto
+public sealed class VideoCacheRecordDto
 {
     public string Path { get; set; } = string.Empty;
 

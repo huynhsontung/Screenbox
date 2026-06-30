@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Windows.Storage;
 
@@ -36,7 +37,336 @@ public sealed class DatabaseService : IDatabaseService
     }
 
     /// <inheritdoc/>
-    public SqliteConnection CreateConnection()
+    public async Task<RawCacheLoadResultDto> LoadLibraryCacheAsync(MediaPlaybackType mediaType)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+
+        var folderPaths = new List<string>();
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "SELECT path FROM library_folders WHERE media_type = @mt;";
+            cmd.Parameters.AddWithValue("@mt", (int)mediaType);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                folderPaths.Add(reader.GetString(0));
+            }
+        }
+
+        var records = new List<RawMediaRecordDto>();
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = SelectMediaRecordsByTypeSql;
+            cmd.Parameters.AddWithValue("@mt", (int)mediaType);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                records.Add(ReadRawRecord(reader));
+            }
+        }
+
+        return new RawCacheLoadResultDto
+        {
+            FolderPaths = folderPaths,
+            Records = records,
+        };
+    }
+
+    /// <inheritdoc/>
+    public async Task SaveMusicCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<MusicCacheRecordDto> records)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        using var transaction = connection.BeginTransaction();
+
+        ExecuteNonQuery(connection, "DELETE FROM library_folders WHERE media_type = @mt;",
+            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Music });
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "INSERT OR IGNORE INTO library_folders (path, media_type) VALUES (@path, @mt);";
+            var pathParam = cmd.Parameters.Add("@path", SqliteType.Text);
+            cmd.Parameters.AddWithValue("@mt", (int)MediaPlaybackType.Music);
+            foreach (string path in folderPaths)
+            {
+                pathParam.Value = path;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = UpsertMusicMediaRecordSql;
+
+            var p = cmd.Parameters;
+            var pPath = p.Add("@path", SqliteType.Text);
+            var pTitle = p.Add("@title", SqliteType.Text);
+            p.AddWithValue("@mt", (int)MediaPlaybackType.Music);
+            var pDateAdded = p.Add("@dateAdded", SqliteType.Integer);
+            var pDuration = p.Add("@durationTicks", SqliteType.Integer);
+            var pYear = p.Add("@year", SqliteType.Integer);
+            var pArtist = p.Add("@artist", SqliteType.Text);
+            var pAlbum = p.Add("@album", SqliteType.Text);
+            var pAlbumArtist = p.Add("@albumArtist", SqliteType.Text);
+            var pComposers = p.Add("@composers", SqliteType.Text);
+            var pGenre = p.Add("@genre", SqliteType.Text);
+            var pTrack = p.Add("@trackNumber", SqliteType.Integer);
+            var pBitrate = p.Add("@bitrate", SqliteType.Integer);
+
+            foreach (MusicCacheRecordDto record in records)
+            {
+                pPath.Value = record.Path;
+                pTitle.Value = record.Title;
+                pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
+                pDuration.Value = record.Info.Duration.Ticks;
+                pYear.Value = (long)record.Info.Year;
+                pArtist.Value = record.Info.Artist;
+                pAlbum.Value = record.Info.Album;
+                pAlbumArtist.Value = record.Info.AlbumArtist;
+                pComposers.Value = record.Info.Composers;
+                pGenre.Value = record.Info.Genre;
+                pTrack.Value = (long)record.Info.TrackNumber;
+                pBitrate.Value = (long)record.Info.Bitrate;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        transaction.Commit();
+    }
+
+    /// <inheritdoc/>
+    public async Task SaveVideoCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<VideoCacheRecordDto> records)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        using var transaction = connection.BeginTransaction();
+
+        ExecuteNonQuery(connection, "DELETE FROM library_folders WHERE media_type = @mt;",
+            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Video });
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "INSERT OR IGNORE INTO library_folders (path, media_type) VALUES (@path, @mt);";
+            var pathParam = cmd.Parameters.Add("@path", SqliteType.Text);
+            cmd.Parameters.AddWithValue("@mt", (int)MediaPlaybackType.Video);
+            foreach (string path in folderPaths)
+            {
+                pathParam.Value = path;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = UpsertVideoMediaRecordSql;
+
+            var p = cmd.Parameters;
+            var pPath = p.Add("@path", SqliteType.Text);
+            var pTitle = p.Add("@title", SqliteType.Text);
+            p.AddWithValue("@mt", (int)MediaPlaybackType.Video);
+            var pDateAdded = p.Add("@dateAdded", SqliteType.Integer);
+            var pDuration = p.Add("@durationTicks", SqliteType.Integer);
+            var pYear = p.Add("@year", SqliteType.Integer);
+            var pSubtitle = p.Add("@subtitle", SqliteType.Text);
+            var pProducers = p.Add("@producers", SqliteType.Text);
+            var pWriters = p.Add("@writers", SqliteType.Text);
+            var pWidth = p.Add("@width", SqliteType.Integer);
+            var pHeight = p.Add("@height", SqliteType.Integer);
+            var pVideoBitrate = p.Add("@videoBitrate", SqliteType.Integer);
+
+            foreach (VideoCacheRecordDto record in records)
+            {
+                pPath.Value = record.Path;
+                pTitle.Value = record.Title;
+                pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
+                pDuration.Value = record.Info.Duration.Ticks;
+                pYear.Value = (long)record.Info.Year;
+                pSubtitle.Value = record.Info.Subtitle;
+                pProducers.Value = record.Info.Producers;
+                pWriters.Value = record.Info.Writers;
+                pWidth.Value = (long)record.Info.Width;
+                pHeight.Value = (long)record.Info.Height;
+                pVideoBitrate.Value = (long)record.Info.Bitrate;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        transaction.Commit();
+    }
+
+    /// <inheritdoc/>
+    public async Task ReplacePlaybackProgressAsync(IReadOnlyList<MediaPlaybackProgress> snapshot)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        using var transaction = connection.BeginTransaction();
+
+        ExecuteNonQuery(connection, "DELETE FROM playback_progress;");
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "INSERT INTO playback_progress (location, position_ticks) VALUES (@loc, @ticks);";
+            var pLoc = cmd.Parameters.Add("@loc", SqliteType.Text);
+            var pTicks = cmd.Parameters.Add("@ticks", SqliteType.Integer);
+
+            foreach (MediaPlaybackProgress item in snapshot)
+            {
+                pLoc.Value = item.Location;
+                pTicks.Value = item.Position.Ticks;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        transaction.Commit();
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<MediaPlaybackProgress>> LoadPlaybackProgressAsync()
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = "SELECT location, position_ticks FROM playback_progress;";
+
+        var result = new List<MediaPlaybackProgress>();
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            string location = reader.GetString(0);
+            long ticks = reader.GetInt64(1);
+            result.Add(new MediaPlaybackProgress(location, new TimeSpan(ticks)));
+        }
+
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public async Task SavePlaylistAsync(PersistentPlaylist playlist)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        using var transaction = connection.BeginTransaction();
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = """
+                INSERT OR REPLACE INTO playlists (id, display_name, last_updated)
+                VALUES (@id, @name, @updated);
+                """;
+            cmd.Parameters.AddWithValue("@id", playlist.Id);
+            cmd.Parameters.AddWithValue("@name", playlist.DisplayName);
+            cmd.Parameters.AddWithValue("@updated", playlist.LastUpdated.UtcTicks);
+            cmd.ExecuteNonQuery();
+        }
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "DELETE FROM playlist_items WHERE playlist_id = @id;";
+            cmd.Parameters.AddWithValue("@id", playlist.Id);
+            cmd.ExecuteNonQuery();
+        }
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = """
+                INSERT INTO playlist_items
+                    (playlist_id, path, sort_order)
+                VALUES
+                    (@pid, @path, @order);
+                """;
+
+            var p = cmd.Parameters;
+            p.AddWithValue("@pid", playlist.Id);
+            var pPath = p.Add("@path", SqliteType.Text);
+            var pOrder = p.Add("@order", SqliteType.Integer);
+
+            for (int i = 0; i < playlist.Items.Count; i++)
+            {
+                PersistentMediaRecord item = playlist.Items[i];
+                pPath.Value = item.Path;
+                pOrder.Value = i;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        transaction.Commit();
+    }
+
+    /// <inheritdoc/>
+    public async Task<PersistentPlaylist?> LoadPlaylistAsync(string id)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        PersistentPlaylist? playlist = null;
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "SELECT id, display_name, last_updated FROM playlists WHERE id = @id;";
+            cmd.Parameters.AddWithValue("@id", id);
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                playlist = new PersistentPlaylist
+                {
+                    Id = reader.GetString(0),
+                    DisplayName = reader.GetString(1),
+                    LastUpdated = new DateTimeOffset(reader.GetInt64(2), TimeSpan.Zero),
+                };
+            }
+        }
+
+        if (playlist is null)
+        {
+            return null;
+        }
+
+        playlist.Items = ReadPlaylistItems(connection, id);
+        return playlist;
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<PersistentPlaylist>> ListPlaylistsAsync()
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+
+        var playlists = new List<PersistentPlaylist>();
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "SELECT id, display_name, last_updated FROM playlists ORDER BY last_updated DESC;";
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                playlists.Add(new PersistentPlaylist
+                {
+                    Id = reader.GetString(0),
+                    DisplayName = reader.GetString(1),
+                    LastUpdated = new DateTimeOffset(reader.GetInt64(2), TimeSpan.Zero),
+                });
+            }
+        }
+
+        foreach (PersistentPlaylist playlist in playlists)
+        {
+            playlist.Items = ReadPlaylistItems(connection, playlist.Id);
+        }
+
+        return playlists;
+    }
+
+    /// <inheritdoc/>
+    public async Task DeletePlaylistAsync(string id)
+    {
+        await EnsureInitializedAsync();
+        using var connection = CreateConnection();
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = "DELETE FROM playlists WHERE id = @id;";
+        cmd.Parameters.AddWithValue("@id", id);
+        cmd.ExecuteNonQuery();
+    }
+
+    private SqliteConnection CreateConnection()
     {
         if (_connectionString is null)
         {
@@ -90,7 +420,7 @@ public sealed class DatabaseService : IDatabaseService
         catch (Exception ex) when (ex is SqliteException or IOException)
         {
             // Last resort: if recovery cannot succeed, recreate the database file.
-            LogService.Log($"Database schema recovery failed; recreating database file.\n{ex}");
+            LogService.Log(ex);
             await RecreateDatabaseFileAsync(dbPath, connectionString);
         }
     }
@@ -392,6 +722,111 @@ public sealed class DatabaseService : IDatabaseService
         cmd.ExecuteNonQuery();
     }
 
+    private static void ExecuteNonQuery(SqliteConnection connection, string sql, params SqlParameterDto[] parameters)
+    {
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = sql;
+        foreach (SqlParameterDto parameter in parameters)
+        {
+            cmd.Parameters.AddWithValue(parameter.Name, parameter.Value);
+        }
+
+        cmd.ExecuteNonQuery();
+    }
+
+    private static RawMediaRecordDto ReadRawRecord(SqliteDataReader reader)
+    {
+        return new RawMediaRecordDto
+        {
+            Path = reader.GetString(0),
+            Title = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
+            MediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? 0 : reader.GetInt32(2)),
+            DateAddedTicks = reader.IsDBNull(3) ? 0L : reader.GetInt64(3),
+            DurationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4),
+            Year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5),
+            Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
+            Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
+            AlbumArtist = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
+            Composers = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
+            Genre = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
+            TrackNumber = reader.IsDBNull(11) ? 0u : (uint)reader.GetInt64(11),
+            Bitrate = reader.IsDBNull(12) ? 0u : (uint)reader.GetInt64(12),
+            Subtitle = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+            Producers = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+            Writers = reader.IsDBNull(15) ? string.Empty : reader.GetString(15),
+            Width = reader.IsDBNull(16) ? 0u : (uint)reader.GetInt64(16),
+            Height = reader.IsDBNull(17) ? 0u : (uint)reader.GetInt64(17),
+            VideoBitrate = reader.IsDBNull(18) ? 0u : (uint)reader.GetInt64(18),
+        };
+    }
+
+    private static List<PersistentMediaRecord> ReadPlaylistItems(SqliteConnection connection, string playlistId)
+    {
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = SelectPlaylistItemsWithMetadataSql;
+        cmd.Parameters.AddWithValue("@pid", playlistId);
+
+        var items = new List<PersistentMediaRecord>();
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            string path = reader.GetString(0);
+            string fallbackTitle = Path.GetFileName(path);
+            if (string.IsNullOrWhiteSpace(fallbackTitle))
+            {
+                fallbackTitle = path;
+            }
+
+            string title = reader.IsDBNull(1) ? fallbackTitle : reader.GetString(1);
+            var mediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(2));
+            DateTime dateAdded = reader.IsDBNull(3) ? default : new DateTime(reader.GetInt64(3), DateTimeKind.Utc);
+            long durationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4);
+            uint year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5);
+
+            IMediaProperties properties;
+            if (mediaType == MediaPlaybackType.Music)
+            {
+                properties = new MusicInfo
+                {
+                    Title = title,
+                    Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
+                    Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
+                    AlbumArtist = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
+                    Composers = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
+                    Genre = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
+                    TrackNumber = reader.IsDBNull(11) ? 0u : (uint)reader.GetInt64(11),
+                    Year = year,
+                    Duration = new TimeSpan(durationTicks),
+                };
+            }
+            else
+            {
+                properties = new VideoInfo
+                {
+                    Title = title,
+                    Subtitle = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                    Producers = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+                    Writers = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+                    Year = year,
+                    Duration = new TimeSpan(durationTicks),
+                };
+            }
+
+            items.Add(new PersistentMediaRecord
+            {
+                Title = title,
+                Path = path,
+                MediaType = mediaType,
+                DateAdded = dateAdded,
+                Duration = new TimeSpan(durationTicks),
+                Year = year,
+                Properties = properties,
+            });
+        }
+
+        return items;
+    }
+
     private static async Task TryDeleteDatabaseAsync(string dbPath)
     {
         // Also remove WAL and shared-memory sidecar files.
@@ -489,6 +924,43 @@ public sealed class DatabaseService : IDatabaseService
             path        TEXT    NOT NULL,
             sort_order  INTEGER NOT NULL
         );
+        """;
+
+    private const string SelectMediaRecordsByTypeSql = """
+        SELECT path, title, media_type, date_added, duration_ticks, year,
+               artist, album, album_artist, composers, genre, track_number, bitrate,
+               subtitle, producers, writers, width, height, video_bitrate
+        FROM media_records
+        WHERE media_type = @mt;
+        """;
+
+    private const string UpsertMusicMediaRecordSql = """
+        INSERT OR REPLACE INTO media_records
+            (path, title, media_type, date_added, duration_ticks, year,
+             artist, album, album_artist, composers, genre, track_number, bitrate)
+        VALUES
+            (@path, @title, @mt, @dateAdded, @durationTicks, @year,
+             @artist, @album, @albumArtist, @composers, @genre, @trackNumber, @bitrate);
+        """;
+
+    private const string UpsertVideoMediaRecordSql = """
+        INSERT OR REPLACE INTO media_records
+            (path, title, media_type, date_added, duration_ticks, year,
+             subtitle, producers, writers, width, height, video_bitrate)
+        VALUES
+            (@path, @title, @mt, @dateAdded, @durationTicks, @year,
+             @subtitle, @producers, @writers, @width, @height, @videoBitrate);
+        """;
+
+    private const string SelectPlaylistItemsWithMetadataSql = """
+        SELECT pi.path,
+               mr.title, mr.media_type, mr.date_added, mr.duration_ticks, mr.year,
+               mr.artist, mr.album, mr.album_artist, mr.composers, mr.genre, mr.track_number,
+               mr.subtitle, mr.producers, mr.writers
+        FROM playlist_items pi
+        LEFT JOIN media_records mr ON mr.path = pi.path
+        WHERE pi.playlist_id = @pid
+        ORDER BY pi.sort_order, pi.id;
         """;
 
 }
