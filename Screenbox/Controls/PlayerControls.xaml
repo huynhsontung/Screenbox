@@ -2,6 +2,7 @@
     x:Class="Screenbox.Controls.PlayerControls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
@@ -454,9 +455,8 @@
             <Button
                 x:Name="ChapterButton"
                 Height="40"
-                Padding="4,0,4,2"
+                Padding="4,0,4,0"
                 BorderThickness="0"
-                Content="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource SubtleButtonStyle}"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
@@ -475,6 +475,18 @@
                             SelectedChapter="{x:Bind ViewModel.CurrentChapterCue, Mode=TwoWay}" />
                     </Flyout>
                 </Button.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0,0,2,2" Text="{x:Bind ViewModel.ChapterName, Mode=OneWay}" />
+                    <muxc:AnimatedIcon Width="12" Height="12">
+                        <animatedVisuals:AnimatedChevronDownSmallVisualSource />
+                        <muxc:AnimatedIcon.FallbackIconSource>
+                            <muxc:FontIconSource FontSize="12" Glyph="&#xE974;" />
+                        </muxc:AnimatedIcon.FallbackIconSource>
+                        <muxc:AnimatedIcon.RenderTransform>
+                            <RotateTransform Angle="-90" />
+                        </muxc:AnimatedIcon.RenderTransform>
+                    </muxc:AnimatedIcon>
+                </StackPanel>
             </Button>
         </StackPanel>
         <!--  Secondary Panel  -->
