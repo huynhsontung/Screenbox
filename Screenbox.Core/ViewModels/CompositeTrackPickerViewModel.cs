@@ -192,31 +192,38 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         }
         else
         {
-            // Fallback to creating a new query with subtitle filter
-
-            // STRATEGY A: Strict "Skeleton" Match
-            // "Iron.Man.2008" -> "Iron*Man*2008*"
-            string strictPattern = string.Join("*", tokens) + "*";
-
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+            try
             {
-                ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
-            };
+                // Fallback to creating a new query with subtitle filter
 
-            var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
-            if (query != null)
-            {
-                subtitles = await query.GetFilesAsync(0, 50);
+                // STRATEGY A: Strict "Skeleton" Match
+                // "Iron.Man.2008" -> "Iron*Man*2008*"
+                string strictPattern = string.Join("*", tokens) + "*";
 
-                // STRATEGY B: Fallback (Partial Tokens Match)
-                // If "Iron*Man*2008*" fails, try "Iron*Man*"
-                if (subtitles.Count == 0 && tokens.Length > 1)
+                QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
                 {
-                    string fallbackPattern = string.Join("*", tokens.Take(Math.Min(tokens.Length - 1, 3))) + "*";
-                    options.ApplicationSearchFilter = $"System.FileName:~\"{fallbackPattern}\"";
-                    query.ApplyNewQueryOptions(options);
+                    ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
+                };
+
+                var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
+                if (query != null)
+                {
                     subtitles = await query.GetFilesAsync(0, 50);
+
+                    // STRATEGY B: Fallback (Partial Tokens Match)
+                    // If "Iron*Man*2008*" fails, try "Iron*Man*"
+                    if (subtitles.Count == 0 && tokens.Length > 1)
+                    {
+                        string fallbackPattern = string.Join("*", tokens.Take(Math.Min(tokens.Length - 1, 3))) + "*";
+                        options.ApplicationSearchFilter = $"System.FileName:~\"{fallbackPattern}\"";
+                        query.ApplyNewQueryOptions(options);
+                        subtitles = await query.GetFilesAsync(0, 50);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
             }
         }
 
