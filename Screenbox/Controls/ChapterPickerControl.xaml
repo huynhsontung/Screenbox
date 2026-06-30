@@ -53,7 +53,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="{x:Bind Title}" />
+                        <TextBlock Grid.Column="0" Text="{x:Bind Title.TrimStart()}" />
 
                         <TextBlock
                             Grid.Column="1"
