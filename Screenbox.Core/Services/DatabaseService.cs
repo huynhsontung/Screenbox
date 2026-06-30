@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
@@ -26,19 +27,21 @@ public sealed class DatabaseService : IDatabaseService
 
     private string? _connectionString;
     private readonly object _initLock = new();
+    private Task? _initializationTask;
 
     /// <inheritdoc/>
     public async Task InitializeAsync()
     {
-        // Off-load the synchronous file/SQLite work from the calling (UI) thread.
-        await Task.Run(EnsureInitialized);
+        await EnsureInitializedAsync();
     }
 
     /// <inheritdoc/>
     public SqliteConnection CreateConnection()
     {
-        // Lazily initialize so callers that skip InitializeAsync still work.
-        EnsureInitialized();
+        if (_connectionString is null)
+        {
+            throw new InvalidOperationException("DatabaseService is not initialized. Call InitializeAsync before creating connections.");
+        }
 
         var connection = new SqliteConnection(_connectionString);
         connection.Open();
@@ -55,18 +58,20 @@ public sealed class DatabaseService : IDatabaseService
     // Private helpers
     // -------------------------------------------------------------------------
 
-    private void EnsureInitialized()
+    private async Task EnsureInitializedAsync()
     {
-        if (_connectionString is not null) return;
+        Task? initializationTask;
 
         lock (_initLock)
         {
-            if (_connectionString is not null) return;
-            InitializeCore();
+            _initializationTask ??= InitializeCoreAsync();
+            initializationTask = _initializationTask;
         }
+
+        await initializationTask;
     }
 
-    private void InitializeCore()
+    private async Task InitializeCoreAsync()
     {
         string dbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, DbFileName);
         string connectionString = new SqliteConnectionStringBuilder
@@ -80,17 +85,17 @@ public sealed class DatabaseService : IDatabaseService
 
         try
         {
-            EnsureSchema();
+            await EnsureSchemaAsync();
         }
         catch (Exception ex) when (ex is SqliteException or IOException)
         {
             // Last resort: if recovery cannot succeed, recreate the database file.
             LogService.Log($"Database schema recovery failed; recreating database file.\n{ex}");
-            RecreateDatabaseFile(dbPath, connectionString);
+            await RecreateDatabaseFileAsync(dbPath, connectionString);
         }
     }
 
-    private void EnsureSchema()
+    private async Task EnsureSchemaAsync()
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
@@ -108,20 +113,20 @@ public sealed class DatabaseService : IDatabaseService
         EnsureReplaceableTable(connection, "playback_progress", CreatePlaybackProgressSql, "location", "position_ticks");
         EnsurePlaylistsTable(connection);
         EnsurePlaylistItemsTable(connection);
-        migrationComplete = TryImportLegacyPlaylists(connection);
+        migrationComplete = await TryImportLegacyPlaylistsAsync(connection);
         transaction.Commit();
         ExecuteNonQuery(connection, "PRAGMA foreign_keys=ON;");
 
         if (migrationComplete)
         {
-            TryDeleteLegacyMigrationArtifacts();
+            await TryDeleteLegacyMigrationArtifactsAsync();
         }
     }
 
-    private void RecreateDatabaseFile(string dbPath, string connectionString)
+    private async Task RecreateDatabaseFileAsync(string dbPath, string connectionString)
     {
         _connectionString = null;
-        TryDeleteDatabase(dbPath);
+        await TryDeleteDatabaseAsync(dbPath);
         _connectionString = connectionString;
 
         using var connection = new SqliteConnection(_connectionString);
@@ -193,32 +198,45 @@ public sealed class DatabaseService : IDatabaseService
         ExecuteNonQuery(connection, CreatePlaylistItemsSql);
     }
 
-    private static bool TryImportLegacyPlaylists(SqliteConnection connection)
+    private static async Task<bool> TryImportLegacyPlaylistsAsync(SqliteConnection connection)
     {
-        string playlistsPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, LegacyPlaylistsFolderName);
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        IStorageItem? playlistsItem;
+        try
+        {
+            playlistsItem = await localFolder.TryGetItemAsync(LegacyPlaylistsFolderName);
+        }
+        catch (Exception ex)
+        {
+            LogService.Log($"Failed to locate legacy playlists folder '{LegacyPlaylistsFolderName}': {ex.Message}");
+            return false;
+        }
 
         if (TableHasRows(connection, "playlists"))
         {
             return true;
         }
 
-        if (!Directory.Exists(playlistsPath))
+        if (playlistsItem is not StorageFolder playlistsFolder)
         {
             return true;
         }
 
-        string[] playlistFiles;
+        IReadOnlyList<StorageFile> playlistFiles;
         try
         {
-            playlistFiles = Directory.GetFiles(playlistsPath, "*.json", SearchOption.TopDirectoryOnly);
+            playlistFiles = await playlistsFolder.GetFilesAsync();
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        catch (Exception ex)
         {
-            LogService.Log($"Failed to list legacy playlists in '{playlistsPath}': {ex.Message}");
+            LogService.Log($"Failed to list legacy playlists in '{playlistsFolder.Path}': {ex.Message}");
             return false;
         }
 
-        if (playlistFiles.Length is 0)
+        List<StorageFile> jsonPlaylistFiles = playlistFiles
+            .Where(file => string.Equals(file.FileType, ".json", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        if (jsonPlaylistFiles.Count is 0)
         {
             return true;
         }
@@ -246,9 +264,9 @@ public sealed class DatabaseService : IDatabaseService
         var itemOrderParameter = insertItemCommand.Parameters.Add("@order", SqliteType.Integer);
 
         bool hasImportFailure = false;
-        foreach (string playlistFile in playlistFiles)
+        foreach (StorageFile playlistFile in jsonPlaylistFiles)
         {
-            PersistentPlaylist? playlist = TryReadLegacyPlaylist(playlistFile);
+            PersistentPlaylist? playlist = await TryReadLegacyPlaylistAsync(playlistFile);
             if (playlist is null || string.IsNullOrWhiteSpace(playlist.Id))
             {
                 hasImportFailure = true;
@@ -283,16 +301,21 @@ public sealed class DatabaseService : IDatabaseService
         return !hasImportFailure;
     }
 
-    private static PersistentPlaylist? TryReadLegacyPlaylist(string playlistFile)
+    private static async Task<PersistentPlaylist?> TryReadLegacyPlaylistAsync(StorageFile playlistFile)
     {
         try
         {
-            string json = File.ReadAllText(playlistFile);
+            string json = await FileIO.ReadTextAsync(playlistFile);
             return JsonSerializer.Deserialize<PersistentPlaylist>(json);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        catch (Exception ex) when (ex is JsonException)
         {
-            LogService.Log($"Failed to import legacy playlist '{playlistFile}': {ex.Message}");
+            LogService.Log($"Failed to import legacy playlist '{playlistFile.Path}': {ex.Message}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            LogService.Log($"Failed to read legacy playlist '{playlistFile.Path}': {ex.Message}");
             return null;
         }
     }
@@ -304,44 +327,41 @@ public sealed class DatabaseService : IDatabaseService
         return cmd.ExecuteScalar() is long value && value == 1;
     }
 
-    private static void TryDeleteLegacyMigrationArtifacts()
+    private static async Task TryDeleteLegacyMigrationArtifactsAsync()
     {
-        string localFolderPath = ApplicationData.Current.LocalFolder.Path;
-        string temporaryFolderPath = ApplicationData.Current.TemporaryFolder.Path;
-        string playlistsPath = Path.Combine(localFolderPath, LegacyPlaylistsFolderName);
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        StorageFolder temporaryFolder = ApplicationData.Current.TemporaryFolder;
 
         foreach (string fileName in LegacyLocalFileNames)
         {
-            TryDeleteFile(Path.Combine(localFolderPath, fileName));
+            await TryDeleteStorageItemAsync(localFolder, fileName);
         }
 
-        TryDeleteFile(Path.Combine(temporaryFolderPath, LegacyTemporaryFileName));
-
-        try
-        {
-            if (Directory.Exists(playlistsPath))
-            {
-                Directory.Delete(playlistsPath, recursive: true);
-            }
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            LogService.Log($"Failed to delete legacy playlists folder '{playlistsPath}': {ex.Message}");
-        }
+        await TryDeleteStorageItemAsync(temporaryFolder, LegacyTemporaryFileName);
+        await TryDeleteStorageItemAsync(localFolder, LegacyPlaylistsFolderName);
     }
 
-    private static void TryDeleteFile(string path)
+    private static async Task TryDeleteStorageItemAsync(StorageFolder folder, string itemName)
     {
         try
         {
-            if (File.Exists(path))
+            IStorageItem? item = await folder.TryGetItemAsync(itemName);
+            if (item is null)
             {
-                File.Delete(path);
+                return;
             }
+
+            if (item is StorageFolder storageFolder)
+            {
+                await storageFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                return;
+            }
+
+            await item.DeleteAsync();
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        catch (Exception ex)
         {
-            LogService.Log($"Failed to delete legacy file '{path}': {ex.Message}");
+            LogService.Log($"Failed to delete legacy item '{Path.Combine(folder.Path, itemName)}': {ex.Message}");
         }
     }
 
@@ -372,19 +392,29 @@ public sealed class DatabaseService : IDatabaseService
         cmd.ExecuteNonQuery();
     }
 
-    private static void TryDeleteDatabase(string dbPath)
+    private static async Task TryDeleteDatabaseAsync(string dbPath)
     {
         // Also remove WAL and shared-memory sidecar files.
-        foreach (string path in new[] { dbPath, dbPath + "-shm", dbPath + "-wal" })
+        string? directoryPath = Path.GetDirectoryName(dbPath);
+        if (string.IsNullOrWhiteSpace(directoryPath))
         {
-            try
-            {
-                File.Delete(path);
-            }
-            catch (Exception ex)
-            {
-                LogService.Log($"Failed to delete '{path}': {ex.Message}");
-            }
+            return;
+        }
+
+        StorageFolder folder;
+        try
+        {
+            folder = await StorageFolder.GetFolderFromPathAsync(directoryPath);
+        }
+        catch (Exception ex)
+        {
+            LogService.Log($"Failed to access database directory '{directoryPath}': {ex.Message}");
+            return;
+        }
+
+        foreach (string fileName in new[] { Path.GetFileName(dbPath), Path.GetFileName(dbPath) + "-shm", Path.GetFileName(dbPath) + "-wal" })
+        {
+            await TryDeleteStorageItemAsync(folder, fileName);
         }
     }
 
