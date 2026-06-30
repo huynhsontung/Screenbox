@@ -287,47 +287,6 @@ sealed partial class App : Application
         {
             LogService.Log(e);
         }
-
-        // Delete stale Protobuf/JSON files left over from before the SQLite migration.
-        // Failures are non-fatal; the app continues normally without them.
-        await DeleteLegacyFilesAsync();
-    }
-
-    private static async Task DeleteLegacyFilesAsync()
-    {
-        try
-        {
-            StorageFolder local = ApplicationData.Current.LocalFolder;
-            StorageFolder temp = ApplicationData.Current.TemporaryFolder;
-
-            foreach (string name in new[] { "songs.bin", "videos.bin" })
-            {
-                try
-                {
-                    IStorageItem? item = await local.TryGetItemAsync(name);
-                    if (item != null) await item.DeleteAsync();
-                }
-                catch (Exception) { /* non-fatal */ }
-            }
-
-            try
-            {
-                IStorageItem? item = await temp.TryGetItemAsync("last_positions.bin");
-                if (item != null) await item.DeleteAsync();
-            }
-            catch (Exception) { /* non-fatal */ }
-
-            try
-            {
-                IStorageItem? playlistsFolder = await local.TryGetItemAsync("Playlists");
-                if (playlistsFolder != null) await playlistsFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-            }
-            catch (Exception) { /* non-fatal */ }
-        }
-        catch (Exception e)
-        {
-            LogService.Log(e);
-        }
     }
 
     private Frame InitRootFrame()

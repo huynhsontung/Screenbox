@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Screenbox.Core.Models;
 using Windows.Storage;
 
 namespace Screenbox.Core.Services;
@@ -18,6 +20,9 @@ namespace Screenbox.Core.Services;
 public sealed class DatabaseService : IDatabaseService
 {
     private const string DbFileName = "screenbox.db";
+    private const string LegacyPlaylistsFolderName = "Playlists";
+    private static readonly string[] LegacyLocalFileNames = ["songs.bin", "videos.bin"];
+    private const string LegacyTemporaryFileName = "last_positions.bin";
 
     private string? _connectionString;
     private readonly object _initLock = new();
@@ -93,6 +98,7 @@ public sealed class DatabaseService : IDatabaseService
         ExecuteNonQuery(connection, "PRAGMA journal_mode=WAL;");
         ExecuteNonQuery(connection, "PRAGMA foreign_keys=OFF;");
 
+        bool migrationComplete;
         using var transaction = connection.BeginTransaction();
         EnsureReplaceableTable(connection, "library_folders", CreateLibraryFoldersSql, "id", "path", "media_type");
         EnsureReplaceableTable(connection, "media_records", CreateMediaRecordsSql,
@@ -102,8 +108,14 @@ public sealed class DatabaseService : IDatabaseService
         EnsureReplaceableTable(connection, "playback_progress", CreatePlaybackProgressSql, "location", "position_ticks");
         EnsurePlaylistsTable(connection);
         EnsurePlaylistItemsTable(connection);
+        migrationComplete = TryImportLegacyPlaylists(connection);
         transaction.Commit();
         ExecuteNonQuery(connection, "PRAGMA foreign_keys=ON;");
+
+        if (migrationComplete)
+        {
+            TryDeleteLegacyMigrationArtifacts();
+        }
     }
 
     private void RecreateDatabaseFile(string dbPath, string connectionString)
@@ -158,22 +170,8 @@ public sealed class DatabaseService : IDatabaseService
             return;
         }
 
-        ExecuteNonQuery(connection, "DROP TABLE IF EXISTS playlists_new;");
-        ExecuteNonQuery(connection, CreatePlaylistsMigrationSql);
-
-        string idProjection = actualColumns.Contains("id") ? "id" : "lower(hex(randomblob(16)))";
-        string nameProjection = actualColumns.Contains("display_name") ? "display_name" : "''";
-        string nowTicks = DateTimeOffset.UtcNow.UtcTicks.ToString();
-        string updatedProjection = actualColumns.Contains("last_updated") ? "last_updated" : nowTicks;
-        ExecuteNonQuery(connection, $"""
-            INSERT OR REPLACE INTO playlists_new (id, display_name, last_updated)
-            SELECT {idProjection}, {nameProjection}, {updatedProjection}
-            FROM playlists
-            WHERE {idProjection} IS NOT NULL;
-            """);
-
         ExecuteNonQuery(connection, "DROP TABLE playlists;");
-        ExecuteNonQuery(connection, "ALTER TABLE playlists_new RENAME TO playlists;");
+        ExecuteNonQuery(connection, CreatePlaylistsSql);
     }
 
     private static void EnsurePlaylistItemsTable(SqliteConnection connection)
@@ -191,30 +189,160 @@ public sealed class DatabaseService : IDatabaseService
             return;
         }
 
-        ExecuteNonQuery(connection, "DROP TABLE IF EXISTS playlist_items_new;");
-        ExecuteNonQuery(connection, CreatePlaylistItemsMigrationSql);
-
-        string playlistIdProjection = actualColumns.Contains("playlist_id") ? "playlist_id" : "NULL";
-        string pathProjection = actualColumns.Contains("path") ? "path" : "NULL";
-        string sortOrderProjection = actualColumns.Contains("sort_order")
-            ? "sort_order"
-            : actualColumns.Contains("id") ? "id" : "rowid";
-
-        ExecuteNonQuery(connection, $"""
-            INSERT INTO playlist_items_new (playlist_id, path, sort_order)
-            SELECT {playlistIdProjection}, {pathProjection}, {sortOrderProjection}
-            FROM playlist_items
-            WHERE {playlistIdProjection} IS NOT NULL
-              AND {pathProjection} IS NOT NULL
-              AND EXISTS (
-                  SELECT 1
-                  FROM playlists
-                  WHERE playlists.id = {playlistIdProjection}
-              );
-            """);
-
         ExecuteNonQuery(connection, "DROP TABLE playlist_items;");
-        ExecuteNonQuery(connection, "ALTER TABLE playlist_items_new RENAME TO playlist_items;");
+        ExecuteNonQuery(connection, CreatePlaylistItemsSql);
+    }
+
+    private static bool TryImportLegacyPlaylists(SqliteConnection connection)
+    {
+        string playlistsPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, LegacyPlaylistsFolderName);
+
+        if (TableHasRows(connection, "playlists"))
+        {
+            return true;
+        }
+
+        if (!Directory.Exists(playlistsPath))
+        {
+            return true;
+        }
+
+        string[] playlistFiles;
+        try
+        {
+            playlistFiles = Directory.GetFiles(playlistsPath, "*.json", SearchOption.TopDirectoryOnly);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            LogService.Log($"Failed to list legacy playlists in '{playlistsPath}': {ex.Message}");
+            return false;
+        }
+
+        if (playlistFiles.Length is 0)
+        {
+            return true;
+        }
+
+        using var upsertPlaylistCommand = connection.CreateCommand();
+        upsertPlaylistCommand.CommandText = """
+            INSERT OR REPLACE INTO playlists (id, display_name, last_updated)
+            VALUES (@id, @name, @updated);
+            """;
+        var playlistIdParameter = upsertPlaylistCommand.Parameters.Add("@id", SqliteType.Text);
+        var playlistNameParameter = upsertPlaylistCommand.Parameters.Add("@name", SqliteType.Text);
+        var playlistUpdatedParameter = upsertPlaylistCommand.Parameters.Add("@updated", SqliteType.Integer);
+
+        using var clearItemsCommand = connection.CreateCommand();
+        clearItemsCommand.CommandText = "DELETE FROM playlist_items WHERE playlist_id = @id;";
+        var clearItemsPlaylistIdParameter = clearItemsCommand.Parameters.Add("@id", SqliteType.Text);
+
+        using var insertItemCommand = connection.CreateCommand();
+        insertItemCommand.CommandText = """
+            INSERT INTO playlist_items (playlist_id, path, sort_order)
+            VALUES (@pid, @path, @order);
+            """;
+        var itemPlaylistIdParameter = insertItemCommand.Parameters.Add("@pid", SqliteType.Text);
+        var itemPathParameter = insertItemCommand.Parameters.Add("@path", SqliteType.Text);
+        var itemOrderParameter = insertItemCommand.Parameters.Add("@order", SqliteType.Integer);
+
+        bool hasImportFailure = false;
+        foreach (string playlistFile in playlistFiles)
+        {
+            PersistentPlaylist? playlist = TryReadLegacyPlaylist(playlistFile);
+            if (playlist is null || string.IsNullOrWhiteSpace(playlist.Id))
+            {
+                hasImportFailure = true;
+                continue;
+            }
+
+            playlistIdParameter.Value = playlist.Id;
+            playlistNameParameter.Value = string.IsNullOrWhiteSpace(playlist.DisplayName) ? playlist.Id : playlist.DisplayName;
+            playlistUpdatedParameter.Value = playlist.LastUpdated == default
+                ? DateTimeOffset.UtcNow.UtcTicks
+                : playlist.LastUpdated.UtcTicks;
+            upsertPlaylistCommand.ExecuteNonQuery();
+
+            clearItemsPlaylistIdParameter.Value = playlist.Id;
+            clearItemsCommand.ExecuteNonQuery();
+
+            for (int i = 0; i < playlist.Items.Count; i++)
+            {
+                PersistentMediaRecord item = playlist.Items[i];
+                if (string.IsNullOrWhiteSpace(item.Path))
+                {
+                    continue;
+                }
+
+                itemPlaylistIdParameter.Value = playlist.Id;
+                itemPathParameter.Value = item.Path;
+                itemOrderParameter.Value = i;
+                insertItemCommand.ExecuteNonQuery();
+            }
+        }
+
+        return !hasImportFailure;
+    }
+
+    private static PersistentPlaylist? TryReadLegacyPlaylist(string playlistFile)
+    {
+        try
+        {
+            string json = File.ReadAllText(playlistFile);
+            return JsonSerializer.Deserialize<PersistentPlaylist>(json);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            LogService.Log($"Failed to import legacy playlist '{playlistFile}': {ex.Message}");
+            return null;
+        }
+    }
+
+    private static bool TableHasRows(SqliteConnection connection, string tableName)
+    {
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = $"SELECT EXISTS(SELECT 1 FROM {tableName} LIMIT 1);";
+        return cmd.ExecuteScalar() is long value && value == 1;
+    }
+
+    private static void TryDeleteLegacyMigrationArtifacts()
+    {
+        string localFolderPath = ApplicationData.Current.LocalFolder.Path;
+        string temporaryFolderPath = ApplicationData.Current.TemporaryFolder.Path;
+        string playlistsPath = Path.Combine(localFolderPath, LegacyPlaylistsFolderName);
+
+        foreach (string fileName in LegacyLocalFileNames)
+        {
+            TryDeleteFile(Path.Combine(localFolderPath, fileName));
+        }
+
+        TryDeleteFile(Path.Combine(temporaryFolderPath, LegacyTemporaryFileName));
+
+        try
+        {
+            if (Directory.Exists(playlistsPath))
+            {
+                Directory.Delete(playlistsPath, recursive: true);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            LogService.Log($"Failed to delete legacy playlists folder '{playlistsPath}': {ex.Message}");
+        }
+    }
+
+    private static void TryDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            LogService.Log($"Failed to delete legacy file '{path}': {ex.Message}");
+        }
     }
 
     private static HashSet<string> ReadTableColumns(SqliteConnection connection, string tableName)
@@ -333,20 +461,4 @@ public sealed class DatabaseService : IDatabaseService
         );
         """;
 
-    private const string CreatePlaylistsMigrationSql = """
-        CREATE TABLE playlists_new (
-            id           TEXT PRIMARY KEY,
-            display_name TEXT    NOT NULL,
-            last_updated INTEGER NOT NULL
-        );
-        """;
-
-    private const string CreatePlaylistItemsMigrationSql = """
-        CREATE TABLE playlist_items_new (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            playlist_id TEXT    NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
-            path        TEXT    NOT NULL,
-            sort_order  INTEGER NOT NULL
-        );
-        """;
 }
