@@ -461,7 +461,14 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
                 <Button.Flyout>
-                    <Flyout FlyoutPresenterStyle="{StaticResource FlyoutPresenterMenuFlyoutStyle}" ShouldConstrainToRootBounds="True">
+                    <Flyout ShouldConstrainToRootBounds="True">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style BasedOn="{StaticResource FlyoutPresenterMenuFlyoutStyle}" TargetType="FlyoutPresenter">
+                                <!--  Let the ListView in the picker handle scrolling itself.  -->
+                                <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
                         <controls:ChapterPickerControl
                             ChapterSelectedCommand="{x:Bind ViewModel.NavigateToChapterCommand}"
                             ChaptersSource="{x:Bind SeekBar.ViewModel.Chapters}"
