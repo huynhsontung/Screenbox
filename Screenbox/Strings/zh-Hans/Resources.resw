@@ -1125,4 +1125,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>创建您的第一个播放列表，来整理您喜爱的视频和音乐。</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
+  </data>
 </root>

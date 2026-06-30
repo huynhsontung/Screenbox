@@ -1125,4 +1125,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Create your first playlist to organize your favorite videos and music.</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
+  </data>
 </root>

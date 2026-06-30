@@ -1125,4 +1125,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Hãy tạo danh sách phát đầu tiên để sắp xếp các video và nhạc yêu thích của bạn.</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
+  </data>
 </root>

@@ -1125,4 +1125,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Stwórz swoją pierwszą listę odtwarzania, aby zorganizować swoje ulubione filmy i muzykę.</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
+  </data>
 </root>

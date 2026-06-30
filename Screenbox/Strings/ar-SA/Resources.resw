@@ -1125,4 +1125,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>قم بإنشاء قائمة التشغيل الأولى الخاصة بك لتنظيم الفيديوهات والموسيقى المفضلة لديك.</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
+  </data>
 </root>
