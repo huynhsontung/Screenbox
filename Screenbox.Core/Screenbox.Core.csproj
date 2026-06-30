@@ -158,6 +158,10 @@
     <Compile Include="Models\VideoCacheRecordDto.cs" />
     <Compile Include="Services\IDatabaseService.cs" />
     <Compile Include="Services\DatabaseService.cs" />
+    <Compile Include="Services\DatabaseService.LibraryCache.cs" />
+    <Compile Include="Services\DatabaseService.PlaybackProgress.cs" />
+    <Compile Include="Services\DatabaseService.Playlists.cs" />
+    <Compile Include="Services\DatabaseService.Schema.cs" />
     <Compile Include="Services\IPlaybackProgressTracker.cs" />
     <Compile Include="Services\PlaybackProgressTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
