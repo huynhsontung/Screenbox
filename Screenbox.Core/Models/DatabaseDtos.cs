@@ -8,77 +8,77 @@ namespace Screenbox.Core.Models;
 
 internal sealed class RawCacheLoadResultDto
 {
-    public List<string> FolderPaths { get; init; } = new();
+    public List<string> FolderPaths { get; set; } = new();
 
-    public List<RawMediaRecordDto> Records { get; init; } = new();
+    public List<RawMediaRecordDto> Records { get; set; } = new();
 }
 
 internal sealed class RawMediaRecordDto
 {
-    public string Path { get; init; } = string.Empty;
+    public string Path { get; set; } = string.Empty;
 
-    public string Title { get; init; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
-    public MediaPlaybackType MediaType { get; init; }
+    public MediaPlaybackType MediaType { get; set; }
 
-    public long DateAddedTicks { get; init; }
+    public long DateAddedTicks { get; set; }
 
-    public long DurationTicks { get; init; }
+    public long DurationTicks { get; set; }
 
-    public uint Year { get; init; }
+    public uint Year { get; set; }
 
-    public string Artist { get; init; } = string.Empty;
+    public string Artist { get; set; } = string.Empty;
 
-    public string Album { get; init; } = string.Empty;
+    public string Album { get; set; } = string.Empty;
 
-    public string AlbumArtist { get; init; } = string.Empty;
+    public string AlbumArtist { get; set; } = string.Empty;
 
-    public string Composers { get; init; } = string.Empty;
+    public string Composers { get; set; } = string.Empty;
 
-    public string Genre { get; init; } = string.Empty;
+    public string Genre { get; set; } = string.Empty;
 
-    public uint TrackNumber { get; init; }
+    public uint TrackNumber { get; set; }
 
-    public uint Bitrate { get; init; }
+    public uint Bitrate { get; set; }
 
-    public string Subtitle { get; init; } = string.Empty;
+    public string Subtitle { get; set; } = string.Empty;
 
-    public string Producers { get; init; } = string.Empty;
+    public string Producers { get; set; } = string.Empty;
 
-    public string Writers { get; init; } = string.Empty;
+    public string Writers { get; set; } = string.Empty;
 
-    public uint Width { get; init; }
+    public uint Width { get; set; }
 
-    public uint Height { get; init; }
+    public uint Height { get; set; }
 
-    public uint VideoBitrate { get; init; }
+    public uint VideoBitrate { get; set; }
 }
 
 internal sealed class MusicCacheRecordDto
 {
-    public string Path { get; init; } = string.Empty;
+    public string Path { get; set; } = string.Empty;
 
-    public string Title { get; init; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
-    public DateTimeOffset DateAdded { get; init; }
+    public DateTimeOffset DateAdded { get; set; }
 
-    public MusicInfo Info { get; init; } = new();
+    public MusicInfo Info { get; set; } = new();
 }
 
 internal sealed class VideoCacheRecordDto
 {
-    public string Path { get; init; } = string.Empty;
+    public string Path { get; set; } = string.Empty;
 
-    public string Title { get; init; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
-    public DateTimeOffset DateAdded { get; init; }
+    public DateTimeOffset DateAdded { get; set; }
 
-    public VideoInfo Info { get; init; } = new();
+    public VideoInfo Info { get; set; } = new();
 }
 
 internal sealed class SqlParameterDto
 {
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-    public object Value { get; init; } = DBNull.Value;
+    public object Value { get; set; } = DBNull.Value;
 }

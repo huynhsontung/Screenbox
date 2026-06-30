@@ -3,18 +3,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Data.Sqlite;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
+using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
 namespace Screenbox.Core.Services;
 

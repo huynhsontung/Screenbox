@@ -151,8 +151,10 @@
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
+    <Compile Include="Models\DatabaseDtos.cs" />
     <Compile Include="Services\IDatabaseService.cs" />
     <Compile Include="Services\DatabaseService.cs" />
+    <Compile Include="Services\IPlaybackProgressTracker.cs" />
     <Compile Include="Services\PlaybackProgressTracker.cs" />
     <Compile Include="Helpers\ListGrouping.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />

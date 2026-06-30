@@ -20,12 +20,6 @@ namespace Screenbox.Core.Services;
 
 public sealed class FilesService : IFilesService
 {
-    private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
-        WriteIndented = true,
-        Converters = { new JsonStringEnumConverter() },
-    };
-
     public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
     {
         try
