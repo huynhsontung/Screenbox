@@ -657,6 +657,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>允许最大音量超过 100%</value>
   </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>后退时跳过的时间</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>快进时跳过的时间</value>
+  </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>屏幕控制</value>
   </data>
@@ -922,7 +928,7 @@
     <value>无法加载视觉效果</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>打开单个文件时，自动将文件夹中的所有其他文件添加到播放队列。</value>
+    <value>打开单个文件时，自动将文件夹中的所有其他文件添加到播放队列</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>将文件夹中的所有文件添加到队列</value>

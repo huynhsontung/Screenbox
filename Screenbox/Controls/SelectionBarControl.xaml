@@ -1,0 +1,175 @@
+<UserControl
+    x:Class="Screenbox.Controls.SelectionBarControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Extensions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    d:DesignHeight="48"
+    d:DesignWidth="600"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Border
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
+            Shadow="{StaticResource ElevationThemeShadow}"
+            Translation="0,0,32" />
+        <CommandBar
+            x:Name="SelectionCommandBar"
+            VerticalContentAlignment="Center"
+            DefaultLabelPosition="{x:Bind DefaultLabelPosition, Mode=OneWay}"
+            KeyboardAcceleratorPlacementMode="Hidden">
+            <CommandBar.Resources>
+                <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
+
+                <!--  Reduce the width of the AppBarButton to 48 pixels when label is collapsed.  -->
+                <Style BasedOn="{StaticResource DefaultAppBarButtonStyle}" TargetType="AppBarButton">
+                    <Setter Property="Width" Value="52" />
+                </Style>
+            </CommandBar.Resources>
+            <CommandBar.KeyboardAccelerators>
+                <!--  When primary commands are moved to the overflow menu, their accelerators only work if the overflow menu is currently open.  -->
+                <KeyboardAccelerator Key="Delete" Invoked="DeleteKeyboardAccelerator_OnInvoked" />
+            </CommandBar.KeyboardAccelerators>
+
+            <CommandBar.Content>
+                <StackPanel Margin="10,0,4,0" Orientation="Horizontal">
+                    <CheckBox
+                        MinWidth="60"
+                        AutomationProperties.HelpText="{x:Bind CheckBoxText, Mode=OneWay}"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
+                        Command="{x:Bind CheckBoxCommand}"
+                        CommandParameter="{x:Bind CheckBoxCommandParameter}"
+                        Content="{x:Bind CheckBoxText, Mode=OneWay}"
+                        IsChecked="{x:Bind CheckBoxIsChecked, Mode=TwoWay}"
+                        IsThreeState="True"
+                        ToolTipService.ToolTip="{x:Bind CheckBoxIsChecked, Converter={StaticResource CheckBoxToSelectionToolTipConverter}, Mode=OneWay}" />
+                    <TextBlock Padding="4,5,0,0" Text="•" />
+                    <Button
+                        MinHeight="{StaticResource CheckBoxHeight}"
+                        Padding="4,5,4,6"
+                        VerticalContentAlignment="Top"
+                        extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
+                        AutomationProperties.Name="{x:Bind strings:Resources.ClearSelection}"
+                        BorderThickness="0"
+                        Command="{x:Bind CloseButtonCommand}"
+                        Content="{x:Bind strings:Resources.Clear}">
+                        <Button.Resources>
+                            <!--  Override the style of the button to match a hyperlink, except for the hover foreground to provide better feedback.  -->
+                            <ResourceDictionary>
+                                <ResourceDictionary.ThemeDictionaries>
+                                    <ResourceDictionary x:Key="Default">
+                                        <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                                        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+                                        <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
+                                        <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
+                                    </ResourceDictionary>
+                                    <ResourceDictionary x:Key="Light">
+                                        <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                                        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+                                        <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
+                                        <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
+                                    </ResourceDictionary>
+                                    <ResourceDictionary x:Key="HighContrast">
+                                        <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
+                                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
+                                        <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorHighlightColorBrush" />
+                                        <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemColorButtonTextColorBrush" />
+                                        <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="SystemColorHighlightColorBrush" />
+                                        <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="SystemColorGrayTextColorBrush" />
+                                    </ResourceDictionary>
+                                </ResourceDictionary.ThemeDictionaries>
+                            </ResourceDictionary>
+                        </Button.Resources>
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Escape" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                </StackPanel>
+            </CommandBar.Content>
+
+            <CommandBar.PrimaryCommands>
+                <AppBarButton
+                    x:Name="PlayButton"
+                    Command="{x:Bind PlayButtonCommand}"
+                    CommandParameter="{x:Bind CommandParameter}"
+                    Label="{x:Bind strings:Resources.Play}"
+                    Visibility="{x:Bind IsPlayButtonVisible, Mode=OneWay}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayGlyph}" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+
+                <AppBarButton
+                    x:Name="PlayNextButton"
+                    Command="{x:Bind PlayNextButtonCommand}"
+                    CommandParameter="{x:Bind CommandParameter}"
+                    Label="{x:Bind strings:Resources.PlayNext}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayAddGlyph}" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+
+                <AppBarButton
+                    x:Name="AddToQueueButton"
+                    Command="{x:Bind AddToQueueButtonCommand}"
+                    CommandParameter="{x:Bind CommandParameter}"
+                    Label="{x:Bind strings:Resources.AddToQueue}"
+                    Visibility="{x:Bind IsAddToQueueButtonVisible, Mode=OneWay}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlaylistMusicGlyph}" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+
+                <AppBarButton
+                    x:Name="AddToPlaylistButton"
+                    Icon="Add"
+                    Label="{x:Bind strings:Resources.AddToPlaylist}">
+                    <AppBarButton.Resources>
+                        <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
+                        <x:String x:Key="AppBarButtonFlyoutGlyph">&#xE972;</x:String>
+                        <x:Double x:Key="AppBarButtonSubItemChevronFontSize">12</x:Double>
+                        <Thickness x:Key="AppBarButtonSubItemChevronMargin">-8,18,8,0</Thickness>
+                        <Thickness x:Key="AppBarButtonSubItemChevronLabelOnRightMargin">-7,18,12,0</Thickness>
+                    </AppBarButton.Resources>
+                    <AppBarButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <interactivity:Interaction.Behaviors>
+                                <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind CommandParameter}" />
+                            </interactivity:Interaction.Behaviors>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+
+                <AppBarButton
+                    x:Name="RemoveButton"
+                    Command="{x:Bind RemoveButtonCommand}"
+                    CommandParameter="{x:Bind CommandParameter}"
+                    Icon="Clear"
+                    KeyboardAcceleratorTextOverride="{x:Bind strings:KeyboardResources.VirtualKeyDelete}"
+                    Label="{x:Bind strings:Resources.Remove}"
+                    Visibility="{x:Bind IsRemoveButtonVisible, Mode=OneWay}" />
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Grid>
+</UserControl>

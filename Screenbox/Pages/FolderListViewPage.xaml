@@ -1,11 +1,13 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.FolderListViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -66,7 +68,7 @@
         </MenuFlyout>
 
         <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
-            <Grid>
+            <Grid AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForStorageItem(IsFile, Name, CaptionText, ItemCount)}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="*" />
@@ -76,7 +78,8 @@
                 <FontIcon
                     Grid.Column="0"
                     HorizontalAlignment="Center"
-                    Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
+                    Glyph="{x:Bind converters:GlyphConverter.ToStorageItemGlyph(StorageItem)}" />
+
                 <TextBlock
                     Grid.Column="1"
                     Margin="8,0,16,0"
@@ -87,6 +90,7 @@
                         <behaviors:OverflowTextToolTipBehavior />
                     </interactivity:Interaction.Behaviors>
                 </TextBlock>
+
                 <TextBlock
                     Grid.Column="2"
                     HorizontalAlignment="Right"

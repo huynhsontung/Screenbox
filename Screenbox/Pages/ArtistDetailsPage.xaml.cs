@@ -1,11 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
+using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
-using System;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -173,7 +173,7 @@ namespace Screenbox.Pages
             return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
         }
 
-        private static string GetSubtext(int albumsCount, int songsCount, TimeSpan duration)
+        private string GetSubtext(int albumsCount, int songsCount, TimeSpan duration)
         {
             string albumsCountText = Strings.Resources.AlbumsCount(albumsCount);
             string songsCountText = Strings.Resources.SongsCount(songsCount);

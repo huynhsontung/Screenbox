@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -93,7 +93,7 @@ public partial class MediaViewModel : ObservableRecipient
     private ArtistViewModel[] _artists;
 
     [ObservableProperty]
-    private bool? _isPlaying;
+    private bool _isPlaying;
 
     private WeakReference<BitmapImage>? _thumbnailRef;
 
@@ -194,6 +194,11 @@ public partial class MediaViewModel : ObservableRecipient
         }
 
         return item;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name}; {Caption}";
     }
 
     public void SetOptions(string options)

@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.PlaylistDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -236,6 +236,10 @@
             Padding="{StaticResource ContentPagePadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
+            AllowDrop="True"
+            CanReorderItems="True"
+            DragOver="ItemList_OnDragOver"
+            Drop="ItemList_OnDrop"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind ViewModel.Source.Items, Mode=OneWay}"
             SelectionMode="None"
@@ -265,6 +269,12 @@
             </interactivity:Interaction.Behaviors>
         </ListView>
 
+        <controls:ContentUnavailableView
+            x:Name="NoPlaylistItemsView"
+            Grid.Row="1"
+            IsOpen="False"
+            Message="{x:Bind strings:Resources.NoPlaylistItems}" />
+
         <interactivity:Interaction.Behaviors>
             <behaviors:GamepadXYNavigationBehavior />
         </interactivity:Interaction.Behaviors>
@@ -285,6 +295,19 @@
                         <Setter Target="CoverArtIcon.FontSize" Value="52" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ListHeaderPadding.Height" Value="72" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="ContentStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="NoContent">
+                    <VisualState.StateTriggers>
+                        <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Source.Items, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--<Setter Target="ItemList.Visibility" Value="Collapsed" />-->
+                        <Setter Target="NoPlaylistItemsView.IsOpen" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

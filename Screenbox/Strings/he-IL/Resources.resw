@@ -657,6 +657,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>אפשר לעוצמת הקול המקסימלית לעלות מעל 100%</value>
   </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>כמות הזמן שידולג אחורה, בעת הרצה אחורה</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>כמות הזמן שידולג קדימה, בעת הרצה קדימה</value>
+  </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>פקדים על המסך</value>
   </data>
@@ -1012,7 +1018,7 @@
     <value>החלקה ימינה</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>הפעל לחיצה ממושכת כדי להגביר את מהירות ההפעלה</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
     <value>כלום</value>

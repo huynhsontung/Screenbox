@@ -1,4 +1,4 @@
-﻿<Application
+<Application
     x:Class="Screenbox.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -34,9 +34,8 @@
                     <!--  Converters  -->
                     <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
-                    <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
+                    <converters:NullableBooleanToSelectionToolTipConverter x:Key="CheckBoxToSelectionToolTipConverter" />
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
-                    <converters:CheckBoxToToolTipConverter x:Key="CheckBoxToToolTipConverter" />
                     <!--<converters:ThicknessFiltersConverter x:Key="LeftThicknessFiltersConverter" Filters="Left" />-->
                     <!--<converters:ThicknessFiltersConverter x:Key="TopThicknessFiltersConverter" Filters="Top" />-->
                     <!--<converters:ThicknessFiltersConverter x:Key="RightThicknessFiltersConverter" Filters="Right" />-->
@@ -59,19 +58,10 @@
                         EmptyValue="Collapsed"
                         NotEmptyValue="Visible" />
                     <ctConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
-                    <ctConverters:DoubleToObjectConverter
-                        x:Key="DoubleToBoolConverter"
-                        FalseValue="False"
-                        GreaterThan="0"
-                        NullValue="False"
-                        TrueValue="True" />
                     <ctConverters:BoolToObjectConverter
                         x:Key="BoolToPlayPauseTextConverter"
                         FalseValue="{strings:Resources Key=Play}"
                         TrueValue="{strings:Resources Key=Pause}" />
-                    <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
-                    <converters:DefaultStringConverter x:Key="ArtistTextConverter" Default="{strings:Resources Key=UnknownArtist}" />
-                    <converters:DefaultStringConverter x:Key="AlbumTextConverter" Default="{strings:Resources Key=UnknownAlbum}" />
 
                     <!--  Font sizes  -->
                     <x:Double x:Key="TopNavigationViewItemFontSize">18</x:Double>
@@ -131,23 +121,6 @@
                         <Setter Property="FontSize" Value="{StaticResource TitleMediumTextBlockFontSize}" />
                         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
                     </Style>
-
-                    <!--  Semantic zoom group-level style  -->
-                    <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
-                        <Button
-                            MinWidth="{StaticResource GridViewHeaderItemMinHeight}"
-                            MinHeight="{StaticResource GridViewHeaderItemMinHeight}"
-                            HorizontalAlignment="Stretch"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
-                            ClickMode="Hover"
-                            IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
-                            <TextBlock
-                                Style="{StaticResource SubtitleTextBlockStyle}"
-                                Text="{Binding Group.Key}"
-                                TextWrapping="NoWrap" />
-                        </Button>
-                    </DataTemplate>
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="ms-appx:///Controls/ContentUnavailableView/ContentUnavailableView.xaml" />

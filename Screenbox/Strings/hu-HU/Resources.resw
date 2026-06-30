@@ -657,6 +657,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Engedélyezi hogy a maximális hangerő meghaladja a 100%-ot</value>
   </data>
+  <data name="SettingsRewindDescription" xml:space="preserve">
+    <value>The amount of time skipped backward when you rewind</value>
+  </data>
+  <data name="SettingsFastForwardDescription" xml:space="preserve">
+    <value>The amount of time skipped forward when you fast forward</value>
+  </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Képernyőn megjelenő vezérlők</value>
   </data>
