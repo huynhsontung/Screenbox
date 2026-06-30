@@ -310,7 +310,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     {
         _dispatcherQueue.TryEnqueue(() =>
         {
-            ChapterName = sender.Chapter?.Title.TrimStart();
+            ChapterName = sender.Chapter?.Title;
             CurrentChapterCue = args.NewValue;
         });
     }

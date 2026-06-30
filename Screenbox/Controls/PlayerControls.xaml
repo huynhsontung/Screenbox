@@ -455,7 +455,7 @@
             <Button
                 x:Name="ChapterButton"
                 Height="40"
-                Padding="4,0,4,0"
+                Padding="4,0,4,2"
                 BorderThickness="0"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource SubtleButtonStyle}"
@@ -476,8 +476,8 @@
                     </Flyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="0,0,2,2" Text="{x:Bind ViewModel.ChapterName, Mode=OneWay}" />
-                    <muxc:AnimatedIcon Width="12" Height="12">
+                    <TextBlock Text="{x:Bind ViewModel.ChapterName.TrimStart(), Mode=OneWay}" />
+                    <muxc:AnimatedIcon Width="12" Margin="2,4,0,0">
                         <animatedVisuals:AnimatedChevronDownSmallVisualSource />
                         <muxc:AnimatedIcon.FallbackIconSource>
                             <muxc:FontIconSource FontSize="12" Glyph="&#xE974;" />
