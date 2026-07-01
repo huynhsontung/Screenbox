@@ -2,6 +2,7 @@
     x:Class="Screenbox.Controls.PlayerControls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
@@ -443,12 +444,50 @@
                 MinWidth="0"
                 Margin="8,0,0,2"
                 VerticalAlignment="Center"
-                ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
                 FontSize="{StaticResource BodyTextBlockFontSize}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
-                ShowChapterName="{x:Bind ViewModel.PlayerShowChapters, Mode=OneWay}"
-                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
-                TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
+                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
+            <TextBlock
+                Margin="4,0,0,2"
+                VerticalAlignment="Center"
+                Text="•"
+                Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}" />
+            <Button
+                x:Name="ChapterButton"
+                Width="Auto"
+                Padding="4,0,4,1"
+                AutomationProperties.Name="{x:Bind ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                Style="{StaticResource PlayerButtonStyle}"
+                Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
+                <Button.Flyout>
+                    <Flyout ShouldConstrainToRootBounds="True">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style BasedOn="{StaticResource FlyoutPresenterMenuFlyoutStyle}" TargetType="FlyoutPresenter">
+                                <!--  Let the ListView in the picker handle scrolling itself.  -->
+                                <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <controls:ChapterPickerControl
+                            ChapterSelectedCommand="{x:Bind ViewModel.NavigateToChapterCommand}"
+                            ChaptersSource="{x:Bind SeekBar.ViewModel.Chapters}"
+                            SelectedChapter="{x:Bind ViewModel.CurrentChapterCue, Mode=TwoWay}" />
+                    </Flyout>
+                </Button.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Bind ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}" Typography.NumeralAlignment="Tabular" />
+                    <muxc:AnimatedIcon Width="12" Margin="2,4,0,0">
+                        <animatedVisuals:AnimatedChevronDownSmallVisualSource />
+                        <muxc:AnimatedIcon.FallbackIconSource>
+                            <muxc:FontIconSource FontSize="12" Glyph="&#xE974;" />
+                        </muxc:AnimatedIcon.FallbackIconSource>
+                        <muxc:AnimatedIcon.RenderTransform>
+                            <RotateTransform Angle="-90" />
+                        </muxc:AnimatedIcon.RenderTransform>
+                    </muxc:AnimatedIcon>
+                </StackPanel>
+            </Button>
         </StackPanel>
         <!--  Secondary Panel  -->
         <StackPanel
@@ -655,7 +694,9 @@
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="TimeDisplay.Margin" Value="4,0,0,0" />
-                        <Setter Target="TimeDisplay.FontSize" Value="13" />
+                        <Setter Target="TimeDisplay.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
+                        <Setter Target="ChapterButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="ChapterButton.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
                         <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
@@ -675,6 +716,7 @@
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="ChapterButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeControl.VolumeToggleButtonStyle" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="ShuffleButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
