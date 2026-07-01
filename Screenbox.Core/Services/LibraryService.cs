@@ -437,7 +437,15 @@ public sealed class LibraryService : ILibraryService
             Path = s.Location,
             Title = s.Name,
             DateAdded = s.DateAdded,
-            Info = s.MediaInfo.MusicProperties,
+            Duration = s.MediaInfo.MusicProperties.Duration,
+            Year = s.MediaInfo.MusicProperties.Year,
+            Artist = s.MediaInfo.MusicProperties.Artist,
+            Album = s.MediaInfo.MusicProperties.Album,
+            AlbumArtist = s.MediaInfo.MusicProperties.AlbumArtist,
+            Composers = s.MediaInfo.MusicProperties.Composers,
+            Genre = s.MediaInfo.MusicProperties.Genre,
+            TrackNumber = s.MediaInfo.MusicProperties.TrackNumber,
+            Bitrate = s.MediaInfo.MusicProperties.Bitrate,
         }).ToList();
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -459,7 +467,14 @@ public sealed class LibraryService : ILibraryService
             Path = v.Location,
             Title = v.Name,
             DateAdded = v.DateAdded,
-            Info = v.MediaInfo.VideoProperties,
+            Duration = v.MediaInfo.VideoProperties.Duration,
+            Year = v.MediaInfo.VideoProperties.Year,
+            Subtitle = v.MediaInfo.VideoProperties.Subtitle,
+            Producers = v.MediaInfo.VideoProperties.Producers,
+            Writers = v.MediaInfo.VideoProperties.Writers,
+            Width = v.MediaInfo.VideoProperties.Width,
+            Height = v.MediaInfo.VideoProperties.Height,
+            VideoBitrate = v.MediaInfo.VideoProperties.Bitrate,
         }).ToList();
 
         cancellationToken.ThrowIfCancellationRequested();

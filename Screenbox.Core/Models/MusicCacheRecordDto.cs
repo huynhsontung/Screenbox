@@ -12,5 +12,21 @@ public sealed class MusicCacheRecordDto
 
     public DateTimeOffset DateAdded { get; set; }
 
-    public MusicInfo Info { get; set; } = new();
+    public TimeSpan Duration { get; set; }
+
+    public uint Year { get; set; }
+
+    public string Artist { get; set; } = string.Empty;
+
+    public string Album { get; set; } = string.Empty;
+
+    public string AlbumArtist { get; set; } = string.Empty;
+
+    public string Composers { get; set; } = string.Empty;
+
+    public string Genre { get; set; } = string.Empty;
+
+    public uint TrackNumber { get; set; }
+
+    public uint Bitrate { get; set; }
 }

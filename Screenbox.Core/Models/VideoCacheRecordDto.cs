@@ -12,5 +12,19 @@ public sealed class VideoCacheRecordDto
 
     public DateTimeOffset DateAdded { get; set; }
 
-    public VideoInfo Info { get; set; } = new();
+    public TimeSpan Duration { get; set; }
+
+    public uint Year { get; set; }
+
+    public string Subtitle { get; set; } = string.Empty;
+
+    public string Producers { get; set; } = string.Empty;
+
+    public string Writers { get; set; } = string.Empty;
+
+    public uint Width { get; set; }
+
+    public uint Height { get; set; }
+
+    public uint VideoBitrate { get; set; }
 }
