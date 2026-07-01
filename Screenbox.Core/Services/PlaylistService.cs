@@ -276,8 +276,8 @@ public sealed class PlaylistService : IPlaylistService
             Path = media.Location,
             Title = media.Name,
             MediaType = media.MediaType,
-            DateAddedTicks = media.DateAdded.UtcTicks,
-            DurationTicks = media.Duration.Ticks,
+            DateAdded = media.DateAdded,
+            Duration = media.Duration,
             Year = media.MediaType == MediaPlaybackType.Music
                 ? media.MediaInfo.MusicProperties.Year
                 : media.MediaInfo.VideoProperties.Year,

@@ -170,9 +170,9 @@ public partial class PlaylistViewModel : ObservableRecipient
 
             media.MediaInfo = CreateMediaInfo(record);
 
-            if (record.DateAddedTicks != 0)
+            if (record.DateAdded != default)
             {
-                media.DateAdded = new DateTimeOffset(record.DateAddedTicks, TimeSpan.Zero).ToLocalTime();
+                media.DateAdded = record.DateAdded.ToLocalTime();
             }
         }
 
@@ -186,8 +186,8 @@ public partial class PlaylistViewModel : ObservableRecipient
             Path = media.Location,
             Title = media.Name,
             MediaType = media.MediaType,
-            DateAddedTicks = media.DateAdded.UtcTicks,
-            DurationTicks = media.Duration.Ticks,
+            DateAdded = media.DateAdded,
+            Duration = media.Duration,
             Year = media.MediaType == MediaPlaybackType.Music
                 ? media.MediaInfo.MusicProperties.Year
                 : media.MediaInfo.VideoProperties.Year,
@@ -209,7 +209,6 @@ public partial class PlaylistViewModel : ObservableRecipient
 
     private static MediaInfo CreateMediaInfo(RawMediaRecordDto record)
     {
-        TimeSpan duration = TimeSpan.FromTicks(record.DurationTicks);
         if (record.MediaType == MediaPlaybackType.Music)
         {
             return new MediaInfo(new MusicInfo
@@ -222,7 +221,7 @@ public partial class PlaylistViewModel : ObservableRecipient
                 Genre = record.Genre,
                 TrackNumber = record.TrackNumber,
                 Year = record.Year,
-                Duration = duration,
+                Duration = record.Duration,
                 Bitrate = record.Bitrate,
             });
         }
@@ -236,14 +235,14 @@ public partial class PlaylistViewModel : ObservableRecipient
                 Producers = record.Producers,
                 Writers = record.Writers,
                 Year = record.Year,
-                Duration = duration,
+                Duration = record.Duration,
                 Width = record.Width,
                 Height = record.Height,
                 Bitrate = record.VideoBitrate,
             });
         }
 
-        return new MediaInfo(record.MediaType, record.Title, record.Year, duration);
+        return new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
     }
 
     private void UpdatePlaylist()
