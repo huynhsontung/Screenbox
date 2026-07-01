@@ -43,7 +43,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isFullscreen;
     [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
-    [ObservableProperty] private string? _chapterName;
     [ObservableProperty] private ChapterCue? _currentChapterCue;
     [ObservableProperty] private double _playbackRate;
     [ObservableProperty] private double _audioTimingOffset;
@@ -308,11 +307,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     private void OnChapterChanged(IMediaPlayer sender, ValueChangedEventArgs<ChapterCue?> args)
     {
-        _dispatcherQueue.TryEnqueue(() =>
-        {
-            ChapterName = sender.Chapter?.Title;
-            CurrentChapterCue = args.NewValue;
-        });
+        _dispatcherQueue.TryEnqueue(() => { CurrentChapterCue = args.NewValue; });
     }
 
     public void Receive(PropertyChangedMessage<WindowViewMode> message)

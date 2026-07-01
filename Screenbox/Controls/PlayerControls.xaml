@@ -454,11 +454,11 @@
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}" />
             <Button
                 x:Name="ChapterButton"
-                Height="40"
-                Padding="4,0,4,2"
-                BorderThickness="0"
+                Width="Auto"
+                Padding="4,0,4,1"
+                AutomationProperties.Name="{x:Bind ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-                Style="{StaticResource SubtleButtonStyle}"
+                Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
                 <Button.Flyout>
                     <Flyout ShouldConstrainToRootBounds="True">
@@ -476,7 +476,7 @@
                     </Flyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Bind ViewModel.ChapterName.TrimStart(), Mode=OneWay}" />
+                    <TextBlock Text="{x:Bind ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}" Typography.NumeralAlignment="Tabular" />
                     <muxc:AnimatedIcon Width="12" Margin="2,4,0,0">
                         <animatedVisuals:AnimatedChevronDownSmallVisualSource />
                         <muxc:AnimatedIcon.FallbackIconSource>
@@ -695,7 +695,7 @@
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="TimeDisplay.Margin" Value="4,0,0,0" />
                         <Setter Target="TimeDisplay.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
-                        <Setter Target="ChapterButton.Height" Value="36" />
+                        <Setter Target="ChapterButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="ChapterButton.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
@@ -716,7 +716,7 @@
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="ChapterButton.Height" Value="36" />
+                        <Setter Target="ChapterButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeControl.VolumeToggleButtonStyle" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="ShuffleButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
