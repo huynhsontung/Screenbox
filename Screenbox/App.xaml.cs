@@ -27,6 +27,7 @@ using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -205,6 +206,7 @@ sealed partial class App : Application
 
         Frame rootFrame = InitRootFrame();
         LibVLCSharp.Shared.Core.Initialize();
+        _ = StartupInitAsync();
 
         if (e.PrelaunchActivated) return;
         CoreApplication.EnablePrelaunch(true);
@@ -271,6 +273,19 @@ sealed partial class App : Application
         finally
         {
             deferral.Complete();
+        }
+    }
+
+    private static async Task StartupInitAsync()
+    {
+        var dbService = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IDatabaseService>();
+        try
+        {
+            await dbService.InitializeAsync();
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
         }
     }
 
