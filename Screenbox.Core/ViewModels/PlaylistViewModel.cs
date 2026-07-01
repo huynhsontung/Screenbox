@@ -66,7 +66,7 @@ public partial class PlaylistViewModel : ObservableRecipient
         return new Playlist(0, Items);
     }
 
-    public void Load(PersistentPlaylist persistentPlaylist)
+    public void Load(PersistentPlaylistDto persistentPlaylist)
     {
         if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
         Name = persistentPlaylist.DisplayName;
@@ -130,23 +130,18 @@ public partial class PlaylistViewModel : ObservableRecipient
         Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
     }
 
-    private PersistentPlaylist ToPersistentPlaylist()
+    private PersistentPlaylistDto ToPersistentPlaylist()
     {
-        return new PersistentPlaylist
+        return new PersistentPlaylistDto
         {
             Id = _id.ToString(),
             DisplayName = Name,
             LastUpdated = LastUpdated,
-            Items = Items.Select(m => new PersistentMediaRecord(
-                m.Name,
-                m.Location,
-                m.MediaType == MediaPlaybackType.Music ? m.MediaInfo.MusicProperties : m.MediaInfo.VideoProperties,
-                m.DateAdded
-            )).ToList()
+            Items = Items.Select(ToRawMediaRecord).ToList()
         };
     }
 
-    private MediaViewModel ToMediaViewModel(PersistentMediaRecord record)
+    private MediaViewModel ToMediaViewModel(RawMediaRecordDto record)
     {
         MediaViewModel media;
         bool existing = false;
@@ -173,18 +168,82 @@ public partial class PlaylistViewModel : ObservableRecipient
             if (!string.IsNullOrEmpty(record.Title))
                 media.Name = record.Title;
 
-            media.MediaInfo = record.Properties != null
-                ? new MediaInfo(record.Properties)
-                : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
+            media.MediaInfo = CreateMediaInfo(record);
 
-            if (record.DateAdded != default)
+            if (record.DateAddedTicks != 0)
             {
-                DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
-                media.DateAdded = utcTime.ToLocalTime();
+                media.DateAdded = new DateTimeOffset(record.DateAddedTicks, TimeSpan.Zero).ToLocalTime();
             }
         }
 
         return media;
+    }
+
+    private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
+    {
+        return new RawMediaRecordDto
+        {
+            Path = media.Location,
+            Title = media.Name,
+            MediaType = media.MediaType,
+            DateAddedTicks = media.DateAdded.UtcTicks,
+            DurationTicks = media.Duration.Ticks,
+            Year = media.MediaType == MediaPlaybackType.Music
+                ? media.MediaInfo.MusicProperties.Year
+                : media.MediaInfo.VideoProperties.Year,
+            Artist = media.MediaInfo.MusicProperties.Artist,
+            Album = media.MediaInfo.MusicProperties.Album,
+            AlbumArtist = media.MediaInfo.MusicProperties.AlbumArtist,
+            Composers = media.MediaInfo.MusicProperties.Composers,
+            Genre = media.MediaInfo.MusicProperties.Genre,
+            TrackNumber = media.MediaInfo.MusicProperties.TrackNumber,
+            Bitrate = media.MediaInfo.MusicProperties.Bitrate,
+            Subtitle = media.MediaInfo.VideoProperties.Subtitle,
+            Producers = media.MediaInfo.VideoProperties.Producers,
+            Writers = media.MediaInfo.VideoProperties.Writers,
+            Width = media.MediaInfo.VideoProperties.Width,
+            Height = media.MediaInfo.VideoProperties.Height,
+            VideoBitrate = media.MediaInfo.VideoProperties.Bitrate,
+        };
+    }
+
+    private static MediaInfo CreateMediaInfo(RawMediaRecordDto record)
+    {
+        TimeSpan duration = TimeSpan.FromTicks(record.DurationTicks);
+        if (record.MediaType == MediaPlaybackType.Music)
+        {
+            return new MediaInfo(new MusicInfo
+            {
+                Title = record.Title,
+                Artist = record.Artist,
+                Album = record.Album,
+                AlbumArtist = record.AlbumArtist,
+                Composers = record.Composers,
+                Genre = record.Genre,
+                TrackNumber = record.TrackNumber,
+                Year = record.Year,
+                Duration = duration,
+                Bitrate = record.Bitrate,
+            });
+        }
+
+        if (record.MediaType == MediaPlaybackType.Video)
+        {
+            return new MediaInfo(new VideoInfo
+            {
+                Title = record.Title,
+                Subtitle = record.Subtitle,
+                Producers = record.Producers,
+                Writers = record.Writers,
+                Year = record.Year,
+                Duration = duration,
+                Width = record.Width,
+                Height = record.Height,
+                Bitrate = record.VideoBitrate,
+            });
+        }
+
+        return new MediaInfo(record.MediaType, record.Title, record.Year, duration);
     }
 
     private void UpdatePlaylist()

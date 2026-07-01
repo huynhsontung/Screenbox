@@ -219,14 +219,13 @@
     <Compile Include="Models\MediaPlaybackProgress.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibrary.cs" />
-    <Compile Include="Models\PersistentPlaylist.cs" />
+    <Compile Include="Models\PersistentPlaylistDto.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\NextMediaList.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
-    <Compile Include="Models\PersistentMediaRecord.cs" />
     <Compile Include="Models\SearchSuggestion.cs" />
     <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
