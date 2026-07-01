@@ -219,7 +219,7 @@
     <Compile Include="Models\MediaPlaybackProgress.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibrary.cs" />
-    <Compile Include="Models\PersistentPlaylistDto.cs" />
+    <Compile Include="Models\PlaylistRecordDto.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\NextMediaList.cs" />

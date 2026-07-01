@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Screenbox.Core.Models;
 
-public sealed class PersistentPlaylistDto
+public sealed class PlaylistRecordDto
 {
     public string Id { get; set; } = string.Empty;
 

@@ -39,17 +39,17 @@ public interface IPlaylistService
     /// <summary>
     /// Save a persistent playlist to storage
     /// </summary>
-    Task SavePlaylistAsync(PersistentPlaylistDto playlist);
+    Task SavePlaylistAsync(PlaylistRecordDto playlist);
 
     /// <summary>
     /// Load a persistent playlist from storage
     /// </summary>
-    Task<PersistentPlaylistDto?> LoadPlaylistAsync(string id);
+    Task<PlaylistRecordDto?> LoadPlaylistAsync(string id);
 
     /// <summary>
     /// List persistent playlists from storage
     /// </summary>
-    Task<IReadOnlyList<PersistentPlaylistDto>> ListPlaylistsAsync();
+    Task<IReadOnlyList<PlaylistRecordDto>> ListPlaylistsAsync();
 
     /// <summary>
     /// Delete a persistent playlist from storage

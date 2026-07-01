@@ -66,7 +66,7 @@ public partial class PlaylistViewModel : ObservableRecipient
         return new Playlist(0, Items);
     }
 
-    public void Load(PersistentPlaylistDto persistentPlaylist)
+    public void Load(PlaylistRecordDto persistentPlaylist)
     {
         if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
         Name = persistentPlaylist.DisplayName;
@@ -130,9 +130,9 @@ public partial class PlaylistViewModel : ObservableRecipient
         Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
     }
 
-    private PersistentPlaylistDto ToPersistentPlaylist()
+    private PlaylistRecordDto ToPersistentPlaylist()
     {
-        return new PersistentPlaylistDto
+        return new PlaylistRecordDto
         {
             Id = _id.ToString(),
             DisplayName = Name,

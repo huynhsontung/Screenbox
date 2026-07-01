@@ -152,7 +152,7 @@ public sealed class PlaylistService : IPlaylistService
     /// Saves a playlist and all its items to the database.
     /// Existing items for the playlist are replaced atomically.
     /// </summary>
-    public async Task SavePlaylistAsync(PersistentPlaylistDto playlist)
+    public async Task SavePlaylistAsync(PlaylistRecordDto playlist)
     {
         await _databaseService.SavePlaylistAsync(playlist);
     }
@@ -161,7 +161,7 @@ public sealed class PlaylistService : IPlaylistService
     /// Loads a playlist and its items from the database.
     /// Returns <c>null</c> if the playlist is not found.
     /// </summary>
-    public async Task<PersistentPlaylistDto?> LoadPlaylistAsync(string id)
+    public async Task<PlaylistRecordDto?> LoadPlaylistAsync(string id)
     {
         return await _databaseService.LoadPlaylistAsync(id);
     }
@@ -169,7 +169,7 @@ public sealed class PlaylistService : IPlaylistService
     /// <summary>
     /// Lists all persisted playlists, ordered by <c>last_updated</c> descending.
     /// </summary>
-    public async Task<IReadOnlyList<PersistentPlaylistDto>> ListPlaylistsAsync()
+    public async Task<IReadOnlyList<PlaylistRecordDto>> ListPlaylistsAsync()
     {
         return await _databaseService.ListPlaylistsAsync();
     }
@@ -219,7 +219,7 @@ public sealed class PlaylistService : IPlaylistService
         if (items is null) throw new ArgumentNullException(nameof(items));
         if (items.Count == 0) return;
 
-        PersistentPlaylistDto? playlist = await LoadPlaylistAsync(playlistId);
+        PlaylistRecordDto? playlist = await LoadPlaylistAsync(playlistId);
         if (playlist is null)
         {
             throw new InvalidOperationException($"Playlist '{playlistId}' was not found.");

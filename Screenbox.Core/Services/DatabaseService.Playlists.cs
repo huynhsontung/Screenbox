@@ -13,7 +13,7 @@ namespace Screenbox.Core.Services;
 public sealed partial class DatabaseService
 {
     /// <inheritdoc/>
-    public async Task SavePlaylistAsync(PersistentPlaylistDto playlist)
+    public async Task SavePlaylistAsync(PlaylistRecordDto playlist)
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
@@ -65,11 +65,11 @@ public sealed partial class DatabaseService
     }
 
     /// <inheritdoc/>
-    public async Task<PersistentPlaylistDto?> LoadPlaylistAsync(string id)
+    public async Task<PlaylistRecordDto?> LoadPlaylistAsync(string id)
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
-        PersistentPlaylistDto? playlist = null;
+        PlaylistRecordDto? playlist = null;
 
         using (var cmd = connection.CreateCommand())
         {
@@ -78,7 +78,7 @@ public sealed partial class DatabaseService
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                playlist = new PersistentPlaylistDto
+                playlist = new PlaylistRecordDto
                 {
                     Id = reader.GetString(0),
                     DisplayName = reader.GetString(1),
@@ -97,19 +97,19 @@ public sealed partial class DatabaseService
     }
 
     /// <inheritdoc/>
-    public async Task<List<PersistentPlaylistDto>> ListPlaylistsAsync()
+    public async Task<List<PlaylistRecordDto>> ListPlaylistsAsync()
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
 
-        var playlists = new List<PersistentPlaylistDto>();
+        var playlists = new List<PlaylistRecordDto>();
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = "SELECT id, display_name, last_updated FROM playlists ORDER BY last_updated DESC;";
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                playlists.Add(new PersistentPlaylistDto
+                playlists.Add(new PlaylistRecordDto
                 {
                     Id = reader.GetString(0),
                     DisplayName = reader.GetString(1),
@@ -118,7 +118,7 @@ public sealed partial class DatabaseService
             }
         }
 
-        foreach (PersistentPlaylistDto playlist in playlists)
+        foreach (PlaylistRecordDto playlist in playlists)
         {
             playlist.Items = ReadPlaylistItems(connection, playlist.Id);
         }
