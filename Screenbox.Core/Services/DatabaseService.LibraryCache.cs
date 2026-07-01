@@ -1,5 +1,6 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
@@ -93,15 +94,15 @@ public sealed partial class DatabaseService
                 pPath.Value = record.Path;
                 pTitle.Value = record.Title;
                 pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
-                pDuration.Value = record.Info.Duration.Ticks;
-                pYear.Value = (long)record.Info.Year;
-                pArtist.Value = record.Info.Artist;
-                pAlbum.Value = record.Info.Album;
-                pAlbumArtist.Value = record.Info.AlbumArtist;
-                pComposers.Value = record.Info.Composers;
-                pGenre.Value = record.Info.Genre;
-                pTrack.Value = (long)record.Info.TrackNumber;
-                pBitrate.Value = (long)record.Info.Bitrate;
+                pDuration.Value = record.Duration.Ticks;
+                pYear.Value = (long)record.Year;
+                pArtist.Value = record.Artist;
+                pAlbum.Value = record.Album;
+                pAlbumArtist.Value = record.AlbumArtist;
+                pComposers.Value = record.Composers;
+                pGenre.Value = record.Genre;
+                pTrack.Value = (long)record.TrackNumber;
+                pBitrate.Value = (long)record.Bitrate;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -154,14 +155,14 @@ public sealed partial class DatabaseService
                 pPath.Value = record.Path;
                 pTitle.Value = record.Title;
                 pDateAdded.Value = record.DateAdded.UtcDateTime.Ticks;
-                pDuration.Value = record.Info.Duration.Ticks;
-                pYear.Value = (long)record.Info.Year;
-                pSubtitle.Value = record.Info.Subtitle;
-                pProducers.Value = record.Info.Producers;
-                pWriters.Value = record.Info.Writers;
-                pWidth.Value = (long)record.Info.Width;
-                pHeight.Value = (long)record.Info.Height;
-                pVideoBitrate.Value = (long)record.Info.Bitrate;
+                pDuration.Value = record.Duration.Ticks;
+                pYear.Value = (long)record.Year;
+                pSubtitle.Value = record.Subtitle;
+                pProducers.Value = record.Producers;
+                pWriters.Value = record.Writers;
+                pWidth.Value = (long)record.Width;
+                pHeight.Value = (long)record.Height;
+                pVideoBitrate.Value = (long)record.VideoBitrate;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -176,8 +177,8 @@ public sealed partial class DatabaseService
             Path = reader.GetString(0),
             Title = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
             MediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? 0 : reader.GetInt32(2)),
-            DateAddedTicks = reader.IsDBNull(3) ? 0L : reader.GetInt64(3),
-            DurationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4),
+            DateAdded = reader.IsDBNull(3) ? default : new DateTimeOffset(reader.GetInt64(3), TimeSpan.Zero),
+            Duration = reader.IsDBNull(4) ? TimeSpan.Zero : new TimeSpan(reader.GetInt64(4)),
             Year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5),
             Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
             Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
