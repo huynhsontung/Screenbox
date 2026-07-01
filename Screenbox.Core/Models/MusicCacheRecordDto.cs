@@ -4,7 +4,7 @@ using System;
 
 namespace Screenbox.Core.Models;
 
-public sealed class MusicCacheRecordDto
+public sealed record class MusicCacheRecordDto
 {
     public string Path { get; set; } = string.Empty;
 

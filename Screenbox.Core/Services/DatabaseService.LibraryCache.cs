@@ -1,5 +1,6 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
@@ -176,8 +177,8 @@ public sealed partial class DatabaseService
             Path = reader.GetString(0),
             Title = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
             MediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? 0 : reader.GetInt32(2)),
-            DateAddedTicks = reader.IsDBNull(3) ? 0L : reader.GetInt64(3),
-            DurationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4),
+            DateAdded = reader.IsDBNull(3) ? default : new DateTimeOffset(reader.GetInt64(3), TimeSpan.Zero),
+            Duration = reader.IsDBNull(4) ? TimeSpan.Zero : new TimeSpan(reader.GetInt64(4)),
             Year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5),
             Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
             Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),

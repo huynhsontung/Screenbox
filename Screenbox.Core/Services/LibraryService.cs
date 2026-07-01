@@ -360,14 +360,14 @@ public sealed class LibraryService : ILibraryService
                         Genre = record.Genre,
                         TrackNumber = record.TrackNumber,
                         Year = record.Year,
-                        Duration = new TimeSpan(record.DurationTicks),
+                        Duration = record.Duration,
                         Bitrate = record.Bitrate,
                     });
                 }
 
-                if (record.DateAddedTicks > 0)
+                if (record.DateAdded != default)
                 {
-                    media.DateAdded = new DateTimeOffset(record.DateAddedTicks, TimeSpan.Zero).ToLocalTime();
+                    media.DateAdded = record.DateAdded.ToLocalTime();
                 }
 
                 result.Add(media);
@@ -406,16 +406,16 @@ public sealed class LibraryService : ILibraryService
                         Producers = record.Producers,
                         Writers = record.Writers,
                         Year = record.Year,
-                        Duration = new TimeSpan(record.DurationTicks),
+                        Duration = record.Duration,
                         Width = record.Width,
                         Height = record.Height,
                         Bitrate = record.VideoBitrate,
                     });
                 }
 
-                if (record.DateAddedTicks > 0)
+                if (record.DateAdded != default)
                 {
-                    media.DateAdded = new DateTimeOffset(record.DateAddedTicks, TimeSpan.Zero).ToLocalTime();
+                    media.DateAdded = record.DateAdded.ToLocalTime();
                 }
 
                 result.Add(media);

@@ -1,10 +1,11 @@
 #nullable enable
 
+using System;
 using Screenbox.Core.Enums;
 
 namespace Screenbox.Core.Models;
 
-public sealed class RawMediaRecordDto
+public sealed record class RawMediaRecordDto
 {
     public string Path { get; set; } = string.Empty;
 
@@ -12,9 +13,9 @@ public sealed class RawMediaRecordDto
 
     public MediaPlaybackType MediaType { get; set; }
 
-    public long DateAddedTicks { get; set; }
+    public DateTimeOffset DateAdded { get; set; }
 
-    public long DurationTicks { get; set; }
+    public TimeSpan Duration { get; set; }
 
     public uint Year { get; set; }
 

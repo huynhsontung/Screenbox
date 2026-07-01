@@ -4,7 +4,7 @@ using System;
 
 namespace Screenbox.Core.Models;
 
-internal sealed class SqlParameterDto
+internal sealed record class SqlParameterDto
 {
     public string Name { get; set; } = string.Empty;
 
