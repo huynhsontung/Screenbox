@@ -21,13 +21,11 @@ public sealed class PlaylistService : IPlaylistService
     private const string ThumbnailsFolderName = "Thumbnails";
 
     private readonly IMediaListFactory _mediaListFactory;
-    private readonly IFilesService _filesService;
     private readonly IDatabaseService _databaseService;
 
-    public PlaylistService(IFilesService filesService, IMediaListFactory mediaListFactory, IDatabaseService databaseService)
+    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService)
     {
         _mediaListFactory = mediaListFactory;
-        _filesService = filesService;
         _databaseService = databaseService;
     }
 
@@ -207,7 +205,7 @@ public sealed class PlaylistService : IPlaylistService
     private static string GetHash(string input)
     {
         using var sha256 = System.Security.Cryptography.SHA256.Create();
-        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input.ToLowerInvariant());
+        byte[] bytes = Encoding.UTF8.GetBytes(input.ToLowerInvariant());
         byte[] hashBytes = sha256.ComputeHash(bytes);
         return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
     }
