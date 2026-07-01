@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -114,6 +114,7 @@ public sealed class LibraryService : ILibraryService
         useCache = useCache && !SystemInformation.IsXbox;
         bool hasCache = false;
 
+        List<MediaViewModel> cachedSongs = new();
         List<MediaViewModel> songs = new();
         if (useCache)
         {
@@ -127,6 +128,7 @@ public sealed class LibraryService : ILibraryService
 
                 if (hasCache)
                 {
+                    cachedSongs = new List<MediaViewModel>(songs);
                     try
                     {
                         libraryChangeTracker = library.ChangeTracker;
@@ -180,7 +182,11 @@ public sealed class LibraryService : ILibraryService
             albumFactory.UnknownAlbum,
             artistFactory.UnknownArtist);
 
-        await CacheSongsAsync(library, songs, cancellationToken);
+        if (!hasCache || !songs.SequenceEqual(cachedSongs))
+        {
+            await CacheSongsAsync(library, songs, cancellationToken);
+        }
+
         if (hasCache && changeReader != null)
         {
             await changeReader.AcceptChangesAsync();
@@ -207,6 +213,7 @@ public sealed class LibraryService : ILibraryService
         useCache = useCache && !SystemInformation.IsXbox;
         bool hasCache = false;
 
+        List<MediaViewModel> cachedVideos = new();
         List<MediaViewModel> videos = new();
         if (useCache)
         {
@@ -220,6 +227,7 @@ public sealed class LibraryService : ILibraryService
 
                 if (hasCache)
                 {
+                    cachedVideos = new List<MediaViewModel>(videos);
                     try
                     {
                         libraryChangeTracker = library.ChangeTracker;
@@ -258,7 +266,11 @@ public sealed class LibraryService : ILibraryService
             }
         }
 
-        await CacheVideosAsync(library, videos, cancellationToken);
+        if (!hasCache || !videos.SequenceEqual(cachedVideos))
+        {
+            await CacheVideosAsync(library, videos, cancellationToken);
+        }
+
         if (hasCache && changeReader != null)
         {
             await changeReader.AcceptChangesAsync();
