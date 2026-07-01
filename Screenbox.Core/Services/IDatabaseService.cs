@@ -37,13 +37,13 @@ public interface IDatabaseService
     Task<List<MediaPlaybackProgress>> LoadPlaybackProgressAsync();
 
     /// <summary>Persists a playlist and its items.</summary>
-    Task SavePlaylistAsync(PersistentPlaylist playlist);
+    Task SavePlaylistAsync(PlaylistRecordDto playlist);
 
     /// <summary>Loads a playlist and its items, or null when not found.</summary>
-    Task<PersistentPlaylist?> LoadPlaylistAsync(string id);
+    Task<PlaylistRecordDto?> LoadPlaylistAsync(string id);
 
     /// <summary>Lists all playlists with their items.</summary>
-    Task<List<PersistentPlaylist>> ListPlaylistsAsync();
+    Task<List<PlaylistRecordDto>> ListPlaylistsAsync();
 
     /// <summary>Deletes a playlist and cascades to its items.</summary>
     Task DeletePlaylistAsync(string id);

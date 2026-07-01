@@ -13,7 +13,7 @@ namespace Screenbox.Core.Services;
 public sealed partial class DatabaseService
 {
     /// <inheritdoc/>
-    public async Task SavePlaylistAsync(PersistentPlaylist playlist)
+    public async Task SavePlaylistAsync(PlaylistRecordDto playlist)
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
@@ -54,7 +54,7 @@ public sealed partial class DatabaseService
 
             for (int i = 0; i < playlist.Items.Count; i++)
             {
-                PersistentMediaRecord item = playlist.Items[i];
+                RawMediaRecordDto item = playlist.Items[i];
                 pPath.Value = item.Path;
                 pOrder.Value = i;
                 cmd.ExecuteNonQuery();
@@ -65,11 +65,11 @@ public sealed partial class DatabaseService
     }
 
     /// <inheritdoc/>
-    public async Task<PersistentPlaylist?> LoadPlaylistAsync(string id)
+    public async Task<PlaylistRecordDto?> LoadPlaylistAsync(string id)
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
-        PersistentPlaylist? playlist = null;
+        PlaylistRecordDto? playlist = null;
 
         using (var cmd = connection.CreateCommand())
         {
@@ -78,7 +78,7 @@ public sealed partial class DatabaseService
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                playlist = new PersistentPlaylist
+                playlist = new PlaylistRecordDto
                 {
                     Id = reader.GetString(0),
                     DisplayName = reader.GetString(1),
@@ -97,19 +97,19 @@ public sealed partial class DatabaseService
     }
 
     /// <inheritdoc/>
-    public async Task<List<PersistentPlaylist>> ListPlaylistsAsync()
+    public async Task<List<PlaylistRecordDto>> ListPlaylistsAsync()
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
 
-        var playlists = new List<PersistentPlaylist>();
+        var playlists = new List<PlaylistRecordDto>();
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = "SELECT id, display_name, last_updated FROM playlists ORDER BY last_updated DESC;";
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                playlists.Add(new PersistentPlaylist
+                playlists.Add(new PlaylistRecordDto
                 {
                     Id = reader.GetString(0),
                     DisplayName = reader.GetString(1),
@@ -118,7 +118,7 @@ public sealed partial class DatabaseService
             }
         }
 
-        foreach (PersistentPlaylist playlist in playlists)
+        foreach (PlaylistRecordDto playlist in playlists)
         {
             playlist.Items = ReadPlaylistItems(connection, playlist.Id);
         }
@@ -137,13 +137,13 @@ public sealed partial class DatabaseService
         cmd.ExecuteNonQuery();
     }
 
-    private static List<PersistentMediaRecord> ReadPlaylistItems(SqliteConnection connection, string playlistId)
+    private static List<RawMediaRecordDto> ReadPlaylistItems(SqliteConnection connection, string playlistId)
     {
         using var cmd = connection.CreateCommand();
         cmd.CommandText = SelectPlaylistItemsWithMetadataSql;
         cmd.Parameters.AddWithValue("@pid", playlistId);
 
-        var items = new List<PersistentMediaRecord>();
+        var items = new List<RawMediaRecordDto>();
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
@@ -154,50 +154,27 @@ public sealed partial class DatabaseService
                 fallbackTitle = path;
             }
 
-            string title = reader.IsDBNull(1) ? fallbackTitle : reader.GetString(1);
-            var mediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(2));
-            DateTime dateAdded = reader.IsDBNull(3) ? default : new DateTime(reader.GetInt64(3), DateTimeKind.Utc);
-            long durationTicks = reader.IsDBNull(4) ? 0L : reader.GetInt64(4);
-            uint year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5);
-
-            IMediaProperties properties;
-            if (mediaType == MediaPlaybackType.Music)
+            items.Add(new RawMediaRecordDto
             {
-                properties = new MusicInfo
-                {
-                    Title = title,
-                    Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
-                    Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
-                    AlbumArtist = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
-                    Composers = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
-                    Genre = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
-                    TrackNumber = reader.IsDBNull(11) ? 0u : (uint)reader.GetInt64(11),
-                    Year = year,
-                    Duration = new TimeSpan(durationTicks),
-                };
-            }
-            else
-            {
-                properties = new VideoInfo
-                {
-                    Title = title,
-                    Subtitle = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
-                    Producers = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
-                    Writers = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
-                    Year = year,
-                    Duration = new TimeSpan(durationTicks),
-                };
-            }
-
-            items.Add(new PersistentMediaRecord
-            {
-                Title = title,
                 Path = path,
-                MediaType = mediaType,
-                DateAdded = dateAdded,
-                Duration = new TimeSpan(durationTicks),
-                Year = year,
-                Properties = properties,
+                Title = reader.IsDBNull(1) ? fallbackTitle : reader.GetString(1),
+                MediaType = (MediaPlaybackType)(reader.IsDBNull(2) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(2)),
+                DateAdded = reader.IsDBNull(3) ? default : new DateTimeOffset(reader.GetInt64(3), TimeSpan.Zero),
+                Duration = reader.IsDBNull(4) ? default : TimeSpan.FromTicks(reader.GetInt64(4)),
+                Year = reader.IsDBNull(5) ? 0u : (uint)reader.GetInt64(5),
+                Artist = reader.IsDBNull(6) ? string.Empty : reader.GetString(6),
+                Album = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
+                AlbumArtist = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
+                Composers = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
+                Genre = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
+                TrackNumber = reader.IsDBNull(11) ? 0u : (uint)reader.GetInt64(11),
+                Subtitle = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                Producers = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+                Writers = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+                Bitrate = reader.IsDBNull(15) ? 0u : (uint)reader.GetInt64(15),
+                Width = reader.IsDBNull(16) ? 0u : (uint)reader.GetInt64(16),
+                Height = reader.IsDBNull(17) ? 0u : (uint)reader.GetInt64(17),
+                VideoBitrate = reader.IsDBNull(18) ? 0u : (uint)reader.GetInt64(18),
             });
         }
 
@@ -208,7 +185,7 @@ public sealed partial class DatabaseService
         SELECT pi.path,
                mr.title, mr.media_type, mr.date_added, mr.duration_ticks, mr.year,
                mr.artist, mr.album, mr.album_artist, mr.composers, mr.genre, mr.track_number,
-               mr.subtitle, mr.producers, mr.writers
+               mr.subtitle, mr.producers, mr.writers, mr.bitrate, mr.width, mr.height, mr.video_bitrate
         FROM playlist_items pi
         LEFT JOIN media_records mr ON mr.path = pi.path
         WHERE pi.playlist_id = @pid

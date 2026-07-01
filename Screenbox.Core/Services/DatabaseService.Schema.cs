@@ -220,7 +220,7 @@ public sealed partial class DatabaseService
         bool hasImportFailure = false;
         foreach (StorageFile playlistFile in jsonPlaylistFiles)
         {
-            PersistentPlaylist? playlist = await TryReadLegacyPlaylistAsync(playlistFile);
+            PlaylistRecordDto? playlist = await TryReadLegacyPlaylistAsync(playlistFile);
             if (playlist is null || string.IsNullOrWhiteSpace(playlist.Id))
             {
                 hasImportFailure = true;
@@ -239,7 +239,7 @@ public sealed partial class DatabaseService
 
             for (int i = 0; i < playlist.Items.Count; i++)
             {
-                PersistentMediaRecord item = playlist.Items[i];
+                RawMediaRecordDto item = playlist.Items[i];
                 if (string.IsNullOrWhiteSpace(item.Path))
                 {
                     continue;
@@ -255,12 +255,12 @@ public sealed partial class DatabaseService
         return !hasImportFailure;
     }
 
-    private static async Task<PersistentPlaylist?> TryReadLegacyPlaylistAsync(StorageFile playlistFile)
+    private static async Task<PlaylistRecordDto?> TryReadLegacyPlaylistAsync(StorageFile playlistFile)
     {
         try
         {
             string json = await FileIO.ReadTextAsync(playlistFile);
-            return JsonSerializer.Deserialize<PersistentPlaylist>(json);
+            return JsonSerializer.Deserialize<PlaylistRecordDto>(json);
         }
         catch (Exception ex) when (ex is JsonException)
         {

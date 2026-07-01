@@ -152,7 +152,7 @@ public sealed class PlaylistService : IPlaylistService
     /// Saves a playlist and all its items to the database.
     /// Existing items for the playlist are replaced atomically.
     /// </summary>
-    public async Task SavePlaylistAsync(PersistentPlaylist playlist)
+    public async Task SavePlaylistAsync(PlaylistRecordDto playlist)
     {
         await _databaseService.SavePlaylistAsync(playlist);
     }
@@ -161,7 +161,7 @@ public sealed class PlaylistService : IPlaylistService
     /// Loads a playlist and its items from the database.
     /// Returns <c>null</c> if the playlist is not found.
     /// </summary>
-    public async Task<PersistentPlaylist?> LoadPlaylistAsync(string id)
+    public async Task<PlaylistRecordDto?> LoadPlaylistAsync(string id)
     {
         return await _databaseService.LoadPlaylistAsync(id);
     }
@@ -169,7 +169,7 @@ public sealed class PlaylistService : IPlaylistService
     /// <summary>
     /// Lists all persisted playlists, ordered by <c>last_updated</c> descending.
     /// </summary>
-    public async Task<IReadOnlyList<PersistentPlaylist>> ListPlaylistsAsync()
+    public async Task<IReadOnlyList<PlaylistRecordDto>> ListPlaylistsAsync()
     {
         return await _databaseService.ListPlaylistsAsync();
     }
@@ -219,7 +219,7 @@ public sealed class PlaylistService : IPlaylistService
         if (items is null) throw new ArgumentNullException(nameof(items));
         if (items.Count == 0) return;
 
-        PersistentPlaylist? playlist = await LoadPlaylistAsync(playlistId);
+        PlaylistRecordDto? playlist = await LoadPlaylistAsync(playlistId);
         if (playlist is null)
         {
             throw new InvalidOperationException($"Playlist '{playlistId}' was not found.");
@@ -228,11 +228,7 @@ public sealed class PlaylistService : IPlaylistService
         foreach (MediaViewModel m in items)
         {
             if (m is null) continue;
-            IMediaProperties properties = m.MediaType == MediaPlaybackType.Music
-                ? m.MediaInfo.MusicProperties
-                : m.MediaInfo.VideoProperties;
-
-            playlist.Items.Add(new PersistentMediaRecord(m.Name, m.Location, properties, m.DateAdded));
+            playlist.Items.Add(ToRawMediaRecord(m));
         }
 
         playlist.LastUpdated = DateTimeOffset.Now;
@@ -271,6 +267,34 @@ public sealed class PlaylistService : IPlaylistService
 
         byte[] bytes = Encoding.UTF8.GetBytes(sb.ToString());
         await FileIO.WriteBytesAsync(file, bytes);
+    }
+
+    private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
+    {
+        return new RawMediaRecordDto
+        {
+            Path = media.Location,
+            Title = media.Name,
+            MediaType = media.MediaType,
+            DateAdded = media.DateAdded,
+            Duration = media.Duration,
+            Year = media.MediaType == MediaPlaybackType.Music
+                ? media.MediaInfo.MusicProperties.Year
+                : media.MediaInfo.VideoProperties.Year,
+            Artist = media.MediaInfo.MusicProperties.Artist,
+            Album = media.MediaInfo.MusicProperties.Album,
+            AlbumArtist = media.MediaInfo.MusicProperties.AlbumArtist,
+            Composers = media.MediaInfo.MusicProperties.Composers,
+            Genre = media.MediaInfo.MusicProperties.Genre,
+            TrackNumber = media.MediaInfo.MusicProperties.TrackNumber,
+            Bitrate = media.MediaInfo.MusicProperties.Bitrate,
+            Subtitle = media.MediaInfo.VideoProperties.Subtitle,
+            Producers = media.MediaInfo.VideoProperties.Producers,
+            Writers = media.MediaInfo.VideoProperties.Writers,
+            Width = media.MediaInfo.VideoProperties.Width,
+            Height = media.MediaInfo.VideoProperties.Height,
+            VideoBitrate = media.MediaInfo.VideoProperties.Bitrate,
+        };
     }
 
 }
