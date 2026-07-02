@@ -1126,6 +1126,6 @@
     <value>创建您的第一个播放列表，来整理您喜爱的视频和音乐。</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>此播放列表中没有项目。</value>
   </data>
 </root>
