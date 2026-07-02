@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:core="using:Screenbox.Core"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:local="using:Screenbox.Templates"
     xmlns:strings="using:Screenbox.Strings"
@@ -13,7 +14,7 @@
         <controls:CommonGridViewItem
             Title="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Name, strings:Resources.UnknownAlbum)}"
             Width="{StaticResource CommonGridViewItemWidth}"
-            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, ArtistName)}"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, ArtistName)}"
             Caption="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ArtistName, strings:Resources.UnknownArtist)}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             PlayCommand="{x:Bind PlayAlbumCommand}"
@@ -45,7 +46,7 @@
         <controls:CommonGridViewItem
             Title="{x:Bind Name, Mode=OneWay}"
             Width="{StaticResource CommonGridViewItemWidth}"
-            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, Caption)}"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, Caption)}"
             Caption="{x:Bind Caption, Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
@@ -60,8 +61,8 @@
         <controls:CommonGridViewItem
             Title="{x:Bind Name}"
             Width="{StaticResource WideGridViewItemWidth}"
-            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, DurationText)}"
-            Caption="{x:Bind DurationText}"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, Duration)}"
+            Caption="{x:Bind core:Humanizer.ToDuration(Duration)}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
@@ -75,7 +76,7 @@
         <controls:CommonGridViewItem
             Title="{x:Bind Name, Mode=OneWay}"
             Width="{StaticResource CommonGridViewItemWidth}"
-            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, ItemsCount)}"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, ItemsCount)}"
             Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">

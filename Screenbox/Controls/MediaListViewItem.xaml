@@ -6,6 +6,7 @@
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -75,6 +76,7 @@
             Height="32"
             Padding="0"
             contract14Present:AutomationProperties.AutomationControlType="Button"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatPlayPauseLabel(ViewModel.IsPlaying, ViewModel.Name), Mode=OneWay}"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{x:Bind ViewModel, Mode=OneWay}"
             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
@@ -102,11 +104,13 @@
             Margin="2,0"
             Padding="{StaticResource HyperlinkButtonUniformPadding}"
             contract14Present:AutomationProperties.AutomationControlType="Button"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(strings:Resources.Artist, ArtistText.Text), Mode=OneWay}"
             Command="{x:Bind Common.OpenArtistCommand}"
             CommandParameter="{x:Bind ViewModel.MainArtist, Mode=OneWay, FallbackValue={x:Null}}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
             <TextBlock
+                x:Name="ArtistText"
                 FontSize="{StaticResource CaptionTextBlockFontSize}"
                 Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.MainArtist.Name, strings:Resources.UnknownArtist), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis">
@@ -122,11 +126,13 @@
             Margin="2,0"
             Padding="{StaticResource HyperlinkButtonUniformPadding}"
             contract14Present:AutomationProperties.AutomationControlType="Button"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(strings:Resources.PropertyAlbum, AlbumText.Text), Mode=OneWay}"
             Command="{x:Bind Common.OpenAlbumCommand}"
             CommandParameter="{x:Bind ViewModel.Album, Mode=OneWay}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
             <TextBlock
+                x:Name="AlbumText"
                 FontSize="{StaticResource CaptionTextBlockFontSize}"
                 Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.Album.Name, strings:Resources.UnknownAlbum), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis">
@@ -159,7 +165,7 @@
             VerticalAlignment="Center"
             FontSize="{StaticResource CaptionTextBlockFontSize}"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
-            Text="{x:Bind ViewModel.DurationText, Mode=OneWay}"
+            Text="{x:Bind core:Humanizer.ToDuration(ViewModel.Duration), Mode=OneWay}"
             TextTrimming="CharacterEllipsis" />
 
         <VisualStateManager.VisualStateGroups>
