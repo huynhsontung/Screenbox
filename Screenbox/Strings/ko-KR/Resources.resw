@@ -649,7 +649,7 @@
     <value>자동 크기 조정</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>재생 시 동영상의 기본 해상도에 가장 잘 맞도록 앱 창 크기 조정합니다</value>
+    <value>재생 시 동영상의 기본 해상도에 가장 잘 맞도록 창 크기를 조정합니다</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>볼륨 부스트</value>
@@ -658,10 +658,10 @@
     <value>최대 볼륨을 100% 이상으로 허용합니다</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>되감기할 때 뒤로 건너뛴 시간</value>
+    <value>되감기를 할 때 뒤로 건너뛸 시간</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>빨리감기할 때 앞으로 건너뛴 시간</value>
+    <value>빨리감기를 할 때 앞으로 건너뛸 시간</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>화면 내 컨트롤</value>
@@ -1125,5 +1125,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>좋아하는 비디오와 음악을 정리하려면 첫 번째 재생목록을 만드세요.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>이 재생 목록에 항목이 없습니다.</value>
   </data>
 </root>

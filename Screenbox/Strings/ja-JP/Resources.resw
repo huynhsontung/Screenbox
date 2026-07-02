@@ -1126,4 +1126,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>初めてのプレイリストを作成して、あなたの好きな動画と音楽を整理しましょう</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
+  </data>
 </root>

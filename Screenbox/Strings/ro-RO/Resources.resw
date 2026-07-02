@@ -1125,4 +1125,7 @@
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Creați-vă primul playlist pentru a vă organiza videoclipurile și muzica preferată.</value>
   </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>Nu există elemente în acest playlist.</value>
+  </data>
 </root>
