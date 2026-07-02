@@ -11,10 +11,10 @@
 
     <DataTemplate x:Key="AlbumGridViewItemTemplate" x:DataType="viewModels:AlbumViewModel">
         <controls:CommonGridViewItem
-            Title="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(Name, strings:Resources.UnknownAlbum)}"
+            Title="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Name, strings:Resources.UnknownAlbum)}"
             Width="{StaticResource CommonGridViewItemWidth}"
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForItem(Name, ArtistName)}"
-            Caption="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ArtistName, strings:Resources.UnknownArtist)}"
+            Caption="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ArtistName, strings:Resources.UnknownArtist)}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             PlayCommand="{x:Bind PlayAlbumCommand}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
@@ -27,7 +27,7 @@
 
     <DataTemplate x:Key="ArtistGridViewItemTemplate" x:DataType="viewModels:ArtistViewModel">
         <controls:CommonGridViewItem
-            Title="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(Name, strings:Resources.UnknownArtist)}"
+            Title="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Name, strings:Resources.UnknownArtist)}"
             Width="{StaticResource CommonGridViewItemWidth}"
             AutomationProperties.Name="{x:Bind Name}"
             CornerRadius="{StaticResource CircularCornerRadius}"

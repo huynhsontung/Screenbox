@@ -53,4 +53,29 @@ public static class ItemLabelHelper
 
         return prefix is null ? text : string.Concat(prefix, " ", text);
     }
+
+    /// <summary>
+    /// Gets the specified value, or a localized default string.
+    /// </summary>
+    /// <param name="value">The input string to evaluate.</param>
+    /// <returns>
+    /// The specified value if it is not <see langword="null"/> or empty; otherwise, the localized default string.
+    /// </returns>
+    public static string GetValueOrDefault(string value)
+    {
+        return string.IsNullOrEmpty(value) ? Strings.Resources.Default : value;
+    }
+
+    /// <summary>
+    /// Gets the specified value, or a provided fallback string.
+    /// </summary>
+    /// <param name="value">The input string to evaluate.</param>
+    /// <param name="fallback">The fallback string to use when <paramref name="value"/> is empty.</param>
+    /// <returns>
+    /// The specified value if it is not <see langword="null"/> or empty; otherwise, <paramref name="fallback"/>.
+    /// </returns>
+    public static string GetValueOrFallback(string value, string fallback)
+    {
+        return string.IsNullOrEmpty(value) ? fallback : value;
+    }
 }

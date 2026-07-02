@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -523,7 +523,7 @@
                     Header="{strings:Resources Key=SettingsAudioVisualHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource MusicVisualizerGlyph}}">
-                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind converters:DefaultStringConverter.GetValueOrDefault(AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title), Mode=OneWay}" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind helpers:ItemLabelHelper.GetValueOrDefault(AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title), Mode=OneWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
                             <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" />

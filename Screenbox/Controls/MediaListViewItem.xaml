@@ -7,6 +7,7 @@
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -107,7 +108,7 @@
             Visibility="Collapsed">
             <TextBlock
                 FontSize="{StaticResource CaptionTextBlockFontSize}"
-                Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.MainArtist.Name, strings:Resources.UnknownArtist), Mode=OneWay}"
+                Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.MainArtist.Name, strings:Resources.UnknownArtist), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -127,7 +128,7 @@
             Visibility="Collapsed">
             <TextBlock
                 FontSize="{StaticResource CaptionTextBlockFontSize}"
-                Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.Album.Name, strings:Resources.UnknownAlbum), Mode=OneWay}"
+                Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.Album.Name, strings:Resources.UnknownAlbum), Mode=OneWay}"
                 TextTrimming="CharacterEllipsis">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -142,7 +143,7 @@
             VerticalAlignment="Center"
             FontSize="{StaticResource CaptionTextBlockFontSize}"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
-            Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.MediaInfo.MusicProperties.Genre, strings:Resources.UnknownGenre), Mode=OneWay}"
+            Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.MediaInfo.MusicProperties.Genre, strings:Resources.UnknownGenre), Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
             Visibility="Collapsed">
             <interactivity:Interaction.Behaviors>
