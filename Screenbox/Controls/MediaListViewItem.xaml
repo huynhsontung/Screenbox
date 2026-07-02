@@ -78,7 +78,7 @@
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{x:Bind ViewModel, Mode=OneWay}"
             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-            ToolTipService.ToolTip="{x:Bind ViewModel.IsPlaying, Mode=OneWay, Converter={StaticResource BoolToPlayPauseTextConverter}}"
+            ToolTipService.ToolTip="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.IsPlaying), Mode=OneWay}"
             Visibility="Collapsed">
             <FontIcon Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
         </HyperlinkButton>

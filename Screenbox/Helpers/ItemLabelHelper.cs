@@ -78,4 +78,17 @@ public static class ItemLabelHelper
     {
         return string.IsNullOrEmpty(value) ? fallback : value;
     }
+
+    /// <summary>
+    /// Gets the localized label for a play/pause command.
+    /// </summary>
+    /// <param name="isPlaying"><see langword="true"/> if the media is playing; otherwise, <see langword="false"/>.</param>
+    /// <returns>
+    /// The localized pause label if <paramref name="isPlaying"/> is <see langword="true"/>;
+    /// otherwise, the localized play label.
+    /// </returns>
+    public static string GetPlayPauseLabel(bool isPlaying)
+    {
+        return isPlaying ? Strings.Resources.Pause : Strings.Resources.Play;
+    }
 }

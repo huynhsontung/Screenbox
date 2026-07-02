@@ -394,9 +394,9 @@
             <Button
                 x:Name="PlayPauseButton"
                 Margin="0,0,4,0"
-                extensions:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
+                extensions:AcceleratorService.ToolTip="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.IsPlaying), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
-                AutomationProperties.Name="{x:Bind PlayPauseButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.IsPlaying), Mode=OneWay}"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
