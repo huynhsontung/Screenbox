@@ -285,11 +285,17 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             // pass
         }
 
-        List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync(), FetchPlaylistsAsync() };
-
         try
         {
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(
+                FetchMusicLibraryAsync(),
+                FetchVideosLibraryAsync(),
+                FetchPlaylistsAsync());
+
+            // Fetch playlists again to ensure items are updated after libraries are fetched
+            // This is necessary because playlist items may reference media that is not yet loaded in the library context
+            // Fetching library may take too long so we can't wait for it to finish before fetching playlists
+            await FetchPlaylistsAsync();
         }
         catch (Exception e)
         {
