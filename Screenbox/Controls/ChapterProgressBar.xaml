@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.ChapterProgressBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -15,8 +15,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Styles/Progress.xaml" />
             </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
-            <DataTemplate x:Key="ItemTemplate" x:DataType="viewModels:ChapterViewModel">
+    <ItemsControl ItemsSource="{x:Bind ProgressItems}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="viewModels:ChapterViewModel">
                 <muxc:ProgressBar
                     Width="{x:Bind Width, Mode=OneWay}"
                     Maximum="{x:Bind Maximum, Mode=OneWay}"
@@ -24,16 +28,11 @@
                     Style="{StaticResource ChapterProgressBarStyle}"
                     Value="{x:Bind Value, Mode=OneWay}" />
             </DataTemplate>
-
-            <muxc:StackLayout
-                x:Key="HorizontalStackLayout"
-                Orientation="Horizontal"
-                Spacing="{x:Bind local:ChapterProgressBar.Spacing}" />
-        </ResourceDictionary>
-    </UserControl.Resources>
-
-    <muxc:ItemsRepeater
-        ItemTemplate="{StaticResource ItemTemplate}"
-        ItemsSource="{x:Bind ProgressItems}"
-        Layout="{StaticResource HorizontalStackLayout}" />
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="1" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+    </ItemsControl>
 </UserControl>
