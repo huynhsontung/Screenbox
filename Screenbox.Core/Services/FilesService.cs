@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using ProtoBuf;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -23,12 +20,6 @@ namespace Screenbox.Core.Services;
 
 public sealed class FilesService : IFilesService
 {
-    private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
-        WriteIndented = true,
-        Converters = { new JsonStringEnumConverter() },
-    };
-
     public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
     {
         try
@@ -126,48 +117,6 @@ public sealed class FilesService : IFilesService
         }
 
         return picker.PickSingleFolderAsync();
-    }
-
-    public async Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source)
-    {
-        StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-        await SaveToDiskAsync(file, source);
-        return file;
-    }
-
-    public async Task SaveToDiskAsync<T>(StorageFile file, T source)
-    {
-        if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-        {
-            byte[] json = JsonSerializer.SerializeToUtf8Bytes(source, _jsonSerializerOptions);
-            await FileIO.WriteBytesAsync(file, json);
-        }
-        else
-        {
-            using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-            var writeStream = stream.AsStreamForWrite();
-            Serializer.Serialize(writeStream, source);
-            writeStream.SetLength(writeStream.Position);  // A weird quirk of protobuf-net
-            await stream.FlushAsync();
-        }
-    }
-
-    public async Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName)
-    {
-        StorageFile file = await folder.GetFileAsync(fileName);
-        return await LoadFromDiskAsync<T>(file);
-    }
-
-    public async Task<T> LoadFromDiskAsync<T>(StorageFile file)
-    {
-        if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-        {
-            string json = await FileIO.ReadTextAsync(file);
-            return JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions) ?? throw new InvalidOperationException("Failed to deserialize JSON");
-        }
-
-        using var readStream = await file.OpenReadAsync();
-        return Serializer.Deserialize<T>(readStream.AsStream());
     }
 
     public async Task OpenFileLocationAsync(string path)

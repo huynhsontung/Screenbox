@@ -208,7 +208,8 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
 
 **Persistence Services**
-- **`IPlaybackProgressTracker`**: Tracks and persists the playback progress for each media item, enabling resume-from-position functionality. Handles the `SuspendingMessage` to flush state to disk on app suspension.
+- **`IDatabaseService`**: Low-level SQLite database management. Opens (or creates) `screenbox.db` in `ApplicationData.Current.LocalFolder`, applies the schema on first open, and exposes `CreateConnection()` for typed data access. Automatically recovers from database corruption by deleting and recreating the file — data loss is acceptable because the database is a cache layer. Registered as a singleton and initialized early at app startup.
+- **`IPlaybackProgressTracker`**: Tracks and persists the playback progress for each media item, enabling resume-from-position functionality. Handles the `SuspendingMessage` to flush state to the database on app suspension.
 
 **System Integration Services**
 - **`ISettingsService`**: Application configuration persistence
@@ -280,8 +281,19 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 #### Application State Models  
 - **`MusicLibrary.cs`**: Immutable snapshot of the music library — `Songs`, `Albums`, `Artists`, `UnknownAlbum`, and `UnknownArtist`. Replaced by a new instance whenever the library is refreshed, so all relationships stay consistent. Has a static `Empty` instance used as the initial `LibraryContext.Music` value.
 - **`VideosLibrary.cs`**: Immutable snapshot of the video library — `Videos` list. Same replacement model as `MusicLibrary`.
-- **`PersistentMediaRecord.cs`**: Saved playback state and resume positions
-- **`PersistentStorageLibrary.cs`**: Library folder persistence
+- **`RawMediaRecordDto.cs`**: Serializable snapshot of a media item's metadata (title, path, duration, year, type, and type-specific properties). Used as the unit of persistence for playlist items and as an intermediate representation when reading the media-records cache from the database.
+
+#### SQLite Database Schema
+
+All media-library state is stored in `screenbox.db` (SQLite, `LocalFolder`). The database acts as a **disposable cache** — the app recreates it from scratch if the file is missing or corrupted.
+
+| Table | Purpose |
+|---|---|
+| `library_folders` | Tracks which folders belong to the music and video libraries |
+| `media_records` | Caches media-file metadata indexed by path; queried instead of crawling disk on subsequent launches |
+| `playback_progress` | Stores the last playback position per media location for resume-from-position |
+| `playlists` | One row per saved playlist (id, display name, last-updated timestamp) |
+| `playlist_items` | Ordered list of media snapshots for each playlist; cascade-deleted with the parent playlist |
 
 ## 🏛️ Architecture Rules
 
@@ -335,7 +347,7 @@ The following table summarizes the allowed dependency directions between layers:
 #### Media and Data Processing
 - [LibVLCSharp](https://github.com/videolan/libvlcsharp) - VLC media player integration
 - [TagLibSharp](https://github.com/mono/taglib-sharp) - Audio metadata reading
-- [protobuf-net](https://github.com/protobuf-net/protobuf-net) - Protocol Buffers serialization
+- [Microsoft.Data.Sqlite](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/) - SQLite database access for media library cache and playlist persistence
 
 #### Monitoring and Analytics
 - [Microsoft.AppCenter](https://www.nuget.org/packages/Microsoft.AppCenter/) - Crash reporting and usage analytics
@@ -405,4 +417,3 @@ For detailed build configuration, see [UWP packaging documentation](https://lear
 - [Accessibility Guidelines for UWP Apps](https://learn.microsoft.com/en-us/windows/uwp/accessibility/accessibility)
 
 This structure enables maintainable, scalable development while supporting the rich feature set of a modern media player application.
-

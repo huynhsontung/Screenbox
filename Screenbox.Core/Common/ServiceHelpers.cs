@@ -65,6 +65,7 @@ public static class ServiceHelpers
         services.AddSingleton<IPlaybackProgressTracker, PlaybackProgressTracker>();
 
         // Services
+        services.AddSingleton<IDatabaseService, DatabaseService>();
         services.AddSingleton<IPlayerService, PlayerService>();
         services.AddSingleton<IFilesService, FilesService>();
         services.AddSingleton<ILibraryService, LibraryService>();

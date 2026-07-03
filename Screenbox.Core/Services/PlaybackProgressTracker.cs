@@ -1,15 +1,13 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
-using Windows.Storage;
 
 namespace Screenbox.Core.Services;
 
@@ -17,20 +15,19 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
     IRecipient<SuspendingMessage>
 {
     private const int Capacity = 64;
-    private const string SaveFileName = "last_positions.bin";
 
     public bool IsLoaded => LastUpdated != default;
 
     public DateTimeOffset LastUpdated { get; private set; }
 
-    private readonly IFilesService _filesService;
+    private readonly IDatabaseService _databaseService;
     private List<MediaPlaybackProgress> _progressList = new(Capacity + 1);
     private MediaPlaybackProgress? _updateCache;
     private string? _removeCache;
 
-    public PlaybackProgressTracker(IFilesService filesService)
+    public PlaybackProgressTracker(IDatabaseService databaseService)
     {
-        _filesService = filesService;
+        _databaseService = databaseService;
 
         IsActive = true;
     }
@@ -62,7 +59,7 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
         else
         {
             item = _progressList.Find(x => x.Location == location);
-            if (item == null)
+            if (item is null)
             {
                 item = new MediaPlaybackProgress(location, position);
                 _progressList.Insert(0, item);
@@ -101,35 +98,41 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
         _removeCache = null;
     }
 
+    /// <summary>
+    /// Persists the current progress list to the SQLite database.
+    /// All existing rows are replaced in a single transaction.
+    /// </summary>
     public async Task SaveToDiskAsync()
     {
+        // Snapshot the list on the calling thread before going async.
+        var snapshot = new List<MediaPlaybackProgress>(_progressList);
         try
         {
-            await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _progressList);
+            await _databaseService.ReplacePlaybackProgressAsync(snapshot);
         }
-        catch (FileLoadException)
+        catch (Exception e)
         {
-            // File in use. Skipped
+            LogService.Log($"Failed to save playback progress\n{e}");
         }
     }
 
+    /// <summary>
+    /// Loads the persisted progress list from the SQLite database.
+    /// </summary>
     public async Task LoadFromDiskAsync()
     {
         try
         {
-            List<MediaPlaybackProgress> progressList =
-                await _filesService.LoadFromDiskAsync<List<MediaPlaybackProgress>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
-            progressList.Capacity = Capacity;
-            _progressList = progressList;
+            List<MediaPlaybackProgress> loaded = await _databaseService.LoadPlaybackProgressAsync();
+            loaded.Capacity = Capacity;
+            _progressList = loaded;
             LastUpdated = DateTimeOffset.UtcNow;
         }
-        catch (FileNotFoundException)
+        catch (Exception e)
         {
-            // pass
-        }
-        catch (Exception)
-        {
-            // pass
+            // Non-fatal: app starts with empty progress list.
+            LogService.Log($"Failed to load playback progress\n{e}");
         }
     }
+
 }

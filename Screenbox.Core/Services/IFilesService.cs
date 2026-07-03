@@ -26,9 +26,5 @@ public interface IFilesService
     public Task OpenFileLocationAsync(string path);
     public Task OpenFileLocationAsync(StorageFile file);
     public void AddToRecent(IStorageItem item);
-    public Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source);
-    public Task SaveToDiskAsync<T>(StorageFile file, T source);
-    public Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName);
-    public Task<T> LoadFromDiskAsync<T>(StorageFile file);
     public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
 }

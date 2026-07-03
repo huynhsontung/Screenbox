@@ -12,21 +12,21 @@ using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
+using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
 namespace Screenbox.Core.Services;
 
 public sealed class PlaylistService : IPlaylistService
 {
-    private const string PlaylistsFolderName = "Playlists";
     private const string ThumbnailsFolderName = "Thumbnails";
 
     private readonly IMediaListFactory _mediaListFactory;
-    private readonly IFilesService _filesService;
+    private readonly IDatabaseService _databaseService;
 
-    public PlaylistService(IFilesService filesService, IMediaListFactory mediaListFactory)
+    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService)
     {
         _mediaListFactory = mediaListFactory;
-        _filesService = filesService;
+        _databaseService = databaseService;
     }
 
     public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default)
@@ -148,55 +148,36 @@ public sealed class PlaylistService : IPlaylistService
         }
     }
 
-    public async Task SavePlaylistAsync(PersistentPlaylist playlist)
+    /// <summary>
+    /// Saves a playlist and all its items to the database.
+    /// Existing items for the playlist are replaced atomically.
+    /// </summary>
+    public async Task SavePlaylistAsync(PlaylistRecordDto playlist)
     {
-        StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(PlaylistsFolderName, CreationCollisionOption.OpenIfExists);
-        string fileName = playlist.Id + ".json";
-        await _filesService.SaveToDiskAsync(playlistsFolder, fileName, playlist);
+        await _databaseService.SavePlaylistAsync(playlist);
     }
 
-    public async Task<PersistentPlaylist?> LoadPlaylistAsync(string id)
+    /// <summary>
+    /// Loads a playlist and its items from the database.
+    /// Returns <c>null</c> if the playlist is not found.
+    /// </summary>
+    public async Task<PlaylistRecordDto?> LoadPlaylistAsync(string id)
     {
-        StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(PlaylistsFolderName, CreationCollisionOption.OpenIfExists);
-        string fileName = id + ".json";
-        try
-        {
-            return await _filesService.LoadFromDiskAsync<PersistentPlaylist>(playlistsFolder, fileName);
-        }
-        catch
-        {
-            return null;
-        }
+        return await _databaseService.LoadPlaylistAsync(id);
     }
 
-    public async Task<IReadOnlyList<PersistentPlaylist>> ListPlaylistsAsync()
+    /// <summary>
+    /// Lists all persisted playlists, ordered by <c>last_updated</c> descending.
+    /// </summary>
+    public async Task<IReadOnlyList<PlaylistRecordDto>> ListPlaylistsAsync()
     {
-        StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(PlaylistsFolderName, CreationCollisionOption.OpenIfExists);
-        var files = await playlistsFolder.GetFilesAsync(CommonFileQuery.OrderBySearchRank);
-        var playlists = new List<PersistentPlaylist>();
-        foreach (var file in files)
-        {
-            try
-            {
-                var playlist = await _filesService.LoadFromDiskAsync<PersistentPlaylist>(file);
-                if (playlist != null)
-                    playlists.Add(playlist);
-            }
-            catch { }
-        }
-        return playlists;
+        return await _databaseService.ListPlaylistsAsync();
     }
 
+    /// <summary>Deletes a playlist and cascades to its items.</summary>
     public async Task DeletePlaylistAsync(string id)
     {
-        StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(PlaylistsFolderName, CreationCollisionOption.OpenIfExists);
-        string fileName = id + ".json";
-        try
-        {
-            StorageFile file = await playlistsFolder.GetFileAsync(fileName);
-            await file.DeleteAsync();
-        }
-        catch { }
+        await _databaseService.DeletePlaylistAsync(id);
     }
 
     public async Task SaveThumbnailAsync(string mediaLocation, byte[] imageBytes)
@@ -224,18 +205,21 @@ public sealed class PlaylistService : IPlaylistService
     private static string GetHash(string input)
     {
         using var sha256 = System.Security.Cryptography.SHA256.Create();
-        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input.ToLowerInvariant());
+        byte[] bytes = Encoding.UTF8.GetBytes(input.ToLowerInvariant());
         byte[] hashBytes = sha256.ComputeHash(bytes);
         return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
     }
 
+    /// <summary>
+    /// Appends media items to an existing persistent playlist and persists the updated playlist.
+    /// </summary>
     public async Task AddToPlaylistAsync(string playlistId, IReadOnlyList<MediaViewModel> items)
     {
         if (string.IsNullOrWhiteSpace(playlistId)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(playlistId));
         if (items is null) throw new ArgumentNullException(nameof(items));
         if (items.Count == 0) return;
 
-        PersistentPlaylist? playlist = await LoadPlaylistAsync(playlistId);
+        PlaylistRecordDto? playlist = await LoadPlaylistAsync(playlistId);
         if (playlist is null)
         {
             throw new InvalidOperationException($"Playlist '{playlistId}' was not found.");
@@ -244,11 +228,7 @@ public sealed class PlaylistService : IPlaylistService
         foreach (MediaViewModel m in items)
         {
             if (m is null) continue;
-            IMediaProperties properties = m.MediaType == Screenbox.Core.Enums.MediaPlaybackType.Music
-                ? m.MediaInfo.MusicProperties
-                : m.MediaInfo.VideoProperties;
-
-            playlist.Items.Add(new PersistentMediaRecord(m.Name, m.Location, properties, m.DateAdded));
+            playlist.Items.Add(ToRawMediaRecord(m));
         }
 
         playlist.LastUpdated = DateTimeOffset.Now;
@@ -288,4 +268,33 @@ public sealed class PlaylistService : IPlaylistService
         byte[] bytes = Encoding.UTF8.GetBytes(sb.ToString());
         await FileIO.WriteBytesAsync(file, bytes);
     }
+
+    private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
+    {
+        return new RawMediaRecordDto
+        {
+            Path = media.Location,
+            Title = media.Name,
+            MediaType = media.MediaType,
+            DateAdded = media.DateAdded,
+            Duration = media.Duration,
+            Year = media.MediaType == MediaPlaybackType.Music
+                ? media.MediaInfo.MusicProperties.Year
+                : media.MediaInfo.VideoProperties.Year,
+            Artist = media.MediaInfo.MusicProperties.Artist,
+            Album = media.MediaInfo.MusicProperties.Album,
+            AlbumArtist = media.MediaInfo.MusicProperties.AlbumArtist,
+            Composers = media.MediaInfo.MusicProperties.Composers,
+            Genre = media.MediaInfo.MusicProperties.Genre,
+            TrackNumber = media.MediaInfo.MusicProperties.TrackNumber,
+            Bitrate = media.MediaInfo.MusicProperties.Bitrate,
+            Subtitle = media.MediaInfo.VideoProperties.Subtitle,
+            Producers = media.MediaInfo.VideoProperties.Producers,
+            Writers = media.MediaInfo.VideoProperties.Writers,
+            Width = media.MediaInfo.VideoProperties.Width,
+            Height = media.MediaInfo.VideoProperties.Height,
+            VideoBitrate = media.MediaInfo.VideoProperties.Bitrate,
+        };
+    }
+
 }
