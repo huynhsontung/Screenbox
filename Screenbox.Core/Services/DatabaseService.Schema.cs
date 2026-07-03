@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Screenbox.Core.Models;
@@ -260,12 +261,11 @@ public sealed partial class DatabaseService
         try
         {
             string json = await FileIO.ReadTextAsync(playlistFile);
-            return JsonSerializer.Deserialize<PlaylistRecordDto>(json);
-        }
-        catch (Exception ex) when (ex is JsonException)
-        {
-            LogService.Log($"Failed to import legacy playlist '{playlistFile.Path}': {ex.Message}");
-            return null;
+            var options = new JsonSerializerOptions()
+            {
+                Converters = { new JsonStringEnumConverter() }
+            };
+            return JsonSerializer.Deserialize<PlaylistRecordDto>(json, options);
         }
         catch (Exception ex)
         {
