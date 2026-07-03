@@ -456,7 +456,7 @@
                 x:Name="ChapterButton"
                 Width="Auto"
                 Padding="4,0,4,1"
-                AutomationProperties.Name="{x:Bind ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
@@ -470,13 +470,13 @@
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
                         <controls:ChapterPickerControl
-                            ChapterSelectedCommand="{x:Bind ViewModel.NavigateToChapterCommand}"
+                            ChapterSelectedCommand="{x:Bind SeekBar.ViewModel.SeekToChapterCommand}"
                             ChaptersSource="{x:Bind SeekBar.ViewModel.Chapters}"
-                            SelectedChapter="{x:Bind ViewModel.CurrentChapterCue, Mode=TwoWay}" />
+                            SelectedChapter="{x:Bind SeekBar.ViewModel.CurrentChapterCue, Mode=TwoWay}" />
                     </Flyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Bind ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}" Typography.NumeralAlignment="Tabular" />
+                    <TextBlock Text="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}" Typography.NumeralAlignment="Tabular" />
                     <muxc:AnimatedIcon Width="12" Margin="2,4,0,0">
                         <animatedVisuals:AnimatedChevronDownSmallVisualSource />
                         <muxc:AnimatedIcon.FallbackIconSource>
