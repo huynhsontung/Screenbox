@@ -281,7 +281,7 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 #### Application State Models  
 - **`MusicLibrary.cs`**: Immutable snapshot of the music library — `Songs`, `Albums`, `Artists`, `UnknownAlbum`, and `UnknownArtist`. Replaced by a new instance whenever the library is refreshed, so all relationships stay consistent. Has a static `Empty` instance used as the initial `LibraryContext.Music` value.
 - **`VideosLibrary.cs`**: Immutable snapshot of the video library — `Videos` list. Same replacement model as `MusicLibrary`.
-- **`PersistentMediaRecord.cs`**: Serializable snapshot of a media item's metadata (title, path, duration, year, type, and type-specific properties). Used as the unit of persistence for playlist items and as an intermediate representation when reading the media-records cache from the database.
+- **`RawMediaRecordDto.cs`**: Serializable snapshot of a media item's metadata (title, path, duration, year, type, and type-specific properties). Used as the unit of persistence for playlist items and as an intermediate representation when reading the media-records cache from the database.
 
 #### SQLite Database Schema
 
@@ -417,4 +417,3 @@ For detailed build configuration, see [UWP packaging documentation](https://lear
 - [Accessibility Guidelines for UWP Apps](https://learn.microsoft.com/en-us/windows/uwp/accessibility/accessibility)
 
 This structure enables maintainable, scalable development while supporting the rich feature set of a modern media player application.
-
