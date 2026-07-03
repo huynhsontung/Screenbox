@@ -73,11 +73,15 @@ public partial class PlaylistViewModel : ObservableRecipient
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
         var itemSet = new HashSet<MediaViewModel>(persistentPlaylist.Items.Count);
+
+        var albumFactory = new AlbumViewModelFactory();
+        var artistFactory = new ArtistViewModelFactory();
+
         foreach (var item in persistentPlaylist.Items)
         {
             try
             {
-                var vm = ToMediaViewModel(item);
+                var vm = ToMediaViewModel(item, albumFactory, artistFactory);
                 Items.Add(itemSet.Add(vm) ? vm : new MediaViewModel(vm));
             }
             catch { }
@@ -142,7 +146,7 @@ public partial class PlaylistViewModel : ObservableRecipient
         };
     }
 
-    private MediaViewModel ToMediaViewModel(RawMediaRecordDto record)
+    private MediaViewModel ToMediaViewModel(RawMediaRecordDto record, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
     {
         MediaViewModel media;
         bool existing = false;
@@ -170,6 +174,16 @@ public partial class PlaylistViewModel : ObservableRecipient
                 media.Name = record.Title;
 
             media.MediaInfo = CreateMediaInfo(record);
+
+            if (media.MediaType == MediaPlaybackType.Music)
+            {
+                // Placeholder album and artist for media list view.
+                // This path can happen when playlist is loaded before the music library is loaded
+                albumFactory.AddSong(media);
+                artistFactory.AddSong(media);
+                media.Album = albumFactory.SongsToAlbums[media];
+                media.Artists = artistFactory.SongsToArtists[media].ToArray();
+            }
 
             if (record.DateAdded != default)
             {
