@@ -224,7 +224,7 @@
     <value>Добавить в очередь</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Выбрать</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Выбрать все</value>
@@ -658,10 +658,10 @@
     <value>Разрешить максимальный уровень громкости выше 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Количество пропущенного времени назад при перемотке</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Время пропущено вперед, когда вы быстро вперёд</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Управление экраном</value>
@@ -1006,43 +1006,43 @@
     <value>Tap</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>Свайп вверх</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>Свайп вниз</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>Сдвиг влево</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>Сдвиг вправо</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Включите нажатие и удерживайте для увеличения скорости воспроизведения</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
     <value>Nothing</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>Пуск / пауза</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>Перемотка назад</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>Перемотка вперед</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>Уменьшить громкость</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>Увеличить громкость</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>Уменьшить скорость</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>Увеличить скорость</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Добавить в плейлист</value>
@@ -1054,10 +1054,10 @@
     <value>Новый плейлист</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Импорт плейлиста</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Экспорт</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Выбранный элемент</value>
@@ -1126,6 +1126,6 @@
     <value>Создайте свой первый плейлист для организации своих любимых видео и музыки.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>В плейлисте нет элементов.</value>
   </data>
 </root>
