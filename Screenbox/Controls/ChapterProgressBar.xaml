@@ -21,7 +21,7 @@
                     Width="{x:Bind Width, Mode=OneWay}"
                     Maximum="{x:Bind Maximum, Mode=OneWay}"
                     Minimum="{x:Bind Minimum, Mode=OneWay}"
-                    Style="{StaticResource NoAnimationProgressBarStyle}"
+                    Style="{StaticResource ChapterProgressBarStyle}"
                     Value="{x:Bind Value, Mode=OneWay}" />
             </DataTemplate>
 
