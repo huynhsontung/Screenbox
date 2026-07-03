@@ -72,12 +72,13 @@ public partial class PlaylistViewModel : ObservableRecipient
         Name = persistentPlaylist.DisplayName;
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
+        var itemSet = new HashSet<MediaViewModel>(persistentPlaylist.Items.Count);
         foreach (var item in persistentPlaylist.Items)
         {
             try
             {
                 var vm = ToMediaViewModel(item);
-                Items.Add(Items.Contains(vm) ? new MediaViewModel(vm) : vm);
+                Items.Add(itemSet.Add(vm) ? vm : new MediaViewModel(vm));
             }
             catch { }
         }
