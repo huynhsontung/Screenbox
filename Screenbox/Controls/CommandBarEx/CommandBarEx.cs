@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,7 +22,7 @@ namespace Screenbox.Controls;
 /// ]]></code>
 /// </example>
 [StyleTypedProperty(Property = nameof(MoreButtonStyle), StyleTargetType = typeof(Button))]
-public sealed class CommandBarEx : CommandBar
+public sealed partial class CommandBarEx : CommandBar
 {
     private const string ExpandButtonName = "MoreButton";
 

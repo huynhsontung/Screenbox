@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
@@ -10,7 +10,7 @@ namespace Screenbox.Templates;
 /// <summary>
 /// Selects a <see cref="DataTemplate"/> based on the type of a <see cref="SearchSuggestion"/>.
 /// </summary>
-internal sealed class SearchSuggestionTemplateSelector : DataTemplateSelector
+internal sealed partial class SearchSuggestionTemplateSelector : DataTemplateSelector
 {
     /// <summary>
     /// Gets or sets the template used for displaying a search suggestion item.

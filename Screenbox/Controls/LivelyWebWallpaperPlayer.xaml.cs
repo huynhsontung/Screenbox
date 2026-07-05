@@ -1,12 +1,12 @@
-﻿#nullable enable
+#nullable enable
 
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Screenbox.Lively.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -67,12 +67,12 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         CloseWebView2();
     }
 
-    private async void ViewModelOnTrackUpdateRequested(object sender, EventArgs e)
+    private async void ViewModelOnTrackUpdateRequested(object? sender, EventArgs e)
     {
         await UpdateCurrentTrack();
     }
 
-    private async void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private async void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {

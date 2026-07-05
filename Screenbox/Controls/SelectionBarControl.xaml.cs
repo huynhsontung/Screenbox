@@ -31,7 +31,7 @@ public sealed partial class SelectionBarControl : UserControl
     /// The default is <see langword="null"/>.</value>
     public object CommandParameter
     {
-        get { return (object)GetValue(CommandParameterProperty); }
+        get { return GetValue(CommandParameterProperty); }
         set { SetValue(CommandParameterProperty, value); }
     }
 
@@ -264,7 +264,7 @@ public sealed partial class SelectionBarControl : UserControl
     /// The default is <see langword="null"/>.</value>
     public object CheckBoxCommandParameter
     {
-        get { return (object)GetValue(CheckBoxCommandParameterProperty); }
+        get { return GetValue(CheckBoxCommandParameterProperty); }
         set { SetValue(CheckBoxCommandParameterProperty, value); }
     }
 
@@ -358,7 +358,7 @@ public sealed partial class SelectionBarControl : UserControl
         }
     }
 
-    private void AdditionalCommands_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void AdditionalCommands_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (SelectionCommandBar is null) return;
 
@@ -390,19 +390,19 @@ public sealed partial class SelectionBarControl : UserControl
     {
         switch (e.Action)
         {
-            case NotifyCollectionChangedAction.Add:
+            case NotifyCollectionChangedAction.Add when e.NewItems is { }:
                 foreach (ICommandBarElement item in e.NewItems)
                 {
                     collection.Add(item);
                 }
                 break;
-            case NotifyCollectionChangedAction.Remove:
+            case NotifyCollectionChangedAction.Remove when e.OldItems is { }:
                 foreach (ICommandBarElement item in e.OldItems)
                 {
                     collection.Remove(item);
                 }
                 break;
-            case NotifyCollectionChangedAction.Replace:
+            case NotifyCollectionChangedAction.Replace when e is { OldItems: { }, NewItems: { } }:
                 foreach (ICommandBarElement oldItem in e.OldItems)
                 {
                     collection.Remove(oldItem);

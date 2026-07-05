@@ -8,7 +8,7 @@ namespace Screenbox.Converters;
 /// <summary>
 /// Converts a nullable boolean value to a tooltip string for selection toggles.
 /// </summary>
-public sealed class NullableBooleanToSelectionToolTipConverter : IValueConverter
+public sealed partial class NullableBooleanToSelectionToolTipConverter : IValueConverter
 {
     /// <summary>
     /// Gets the tooltip text for a selection check box based on its current state.

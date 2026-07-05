@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -119,7 +119,7 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         }
     }
 
-    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_isUpdating || AssociatedObject is not { } listViewBase)
         {
@@ -131,7 +131,7 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Add when e.NewItems is { }:
                     foreach (var item in e.NewItems)
                     {
                         if (!listViewBase.SelectedItems.Contains(item))
@@ -140,13 +140,13 @@ internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
                         }
                     }
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Remove when e.OldItems is { }:
                     foreach (var item in e.OldItems)
                     {
                         listViewBase.SelectedItems.Remove(item);
                     }
                     break;
-                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangedAction.Replace when e is { OldItems: { }, NewItems: { } }:
                     foreach (var oldItem in e.OldItems)
                     {
                         listViewBase.SelectedItems.Remove(oldItem);

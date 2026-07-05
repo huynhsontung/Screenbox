@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters;
@@ -11,7 +11,7 @@ namespace Screenbox.Converters;
 /// Use the <see cref="DefaultStringConverter"/> when you want to show a stable
 /// readable placeholder instead of blank text.
 /// </remarks>
-internal sealed class DefaultStringConverter : IValueConverter
+internal sealed partial class DefaultStringConverter : IValueConverter
 {
     /// <summary>
     /// Gets or sets the default string to display when the value is <see langword="null"/>

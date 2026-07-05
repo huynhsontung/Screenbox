@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using Microsoft.Xaml.Interactivity;
@@ -53,7 +53,7 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
         AssociatedObject = null;
     }
 
-    private void OnDropDownOpened(object sender, object e)
+    private void OnDropDownOpened(object? sender, object e)
     {
         if (sender is ComboBox comboBox)
         {
@@ -76,7 +76,7 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
         }
     }
 
-    private void OnDropDownClosed(object sender, object e)
+    private void OnDropDownClosed(object? sender, object e)
     {
         if (sender is ComboBox comboBox)
         {
