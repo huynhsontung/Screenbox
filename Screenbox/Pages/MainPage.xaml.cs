@@ -102,7 +102,7 @@ public sealed partial class MainPage : Page, IContentFrame
         }
     }
 
-    private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ViewModel.PlayerVisible))
         {
