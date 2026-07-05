@@ -30,12 +30,6 @@
       <Version>8.2.251219</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.7</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.7</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>10.0.10</Version>
     </PackageReference>

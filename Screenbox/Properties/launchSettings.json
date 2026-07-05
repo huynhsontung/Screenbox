@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Screenbox.AOT": {
+    "Screenbox": {
       "commandName": "MsixPackage",
       "nativeDebugging": true
     }
