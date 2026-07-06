@@ -229,12 +229,14 @@ public sealed partial class SeekBarViewModel :
         UpdateProgress(newPosition);
     }
 
+    /// <summary>
+    /// Seeks the media playback position to the specified chapter.
+    /// </summary>
+    /// <param name="chapter">The chapter to seek.</param>
     [RelayCommand]
-    private void SeekToChapter(ChapterCue? chapter)
+    private void SeekToChapter(ChapterCue chapter)
     {
-        if (chapter is null) return;
-
-        UpdatePosition(chapter.StartTime, isOffset: false, debounce: false);
+        Messenger.Send(new ChangeTimeRequestMessage(chapter.StartTime, debounce: false));
     }
 
     private void RestoreLastPosition(MediaViewModel media)

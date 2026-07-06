@@ -463,14 +463,15 @@
                 <Button.Flyout>
                     <Flyout ShouldConstrainToRootBounds="True">
                         <Flyout.FlyoutPresenterStyle>
-                            <Style BasedOn="{StaticResource FlyoutPresenterMenuFlyoutStyle}" TargetType="FlyoutPresenter">
+                            <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="{StaticResource MenuFlyoutPresenterThemePadding}" />
                                 <!--  Let the ListView in the picker handle scrolling itself.  -->
                                 <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
                                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
                         <controls:ChapterPickerControl
-                            ChapterSelectedCommand="{x:Bind SeekBar.ViewModel.SeekToChapterCommand}"
+                            ChapterCommand="{x:Bind SeekBar.ViewModel.SeekToChapterCommand}"
                             ChaptersSource="{x:Bind SeekBar.ViewModel.Chapters}"
                             SelectedChapter="{x:Bind SeekBar.ViewModel.CurrentChapterCue, Mode=TwoWay}" />
                     </Flyout>

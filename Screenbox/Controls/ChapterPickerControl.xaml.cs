@@ -32,10 +32,10 @@ public sealed partial class ChapterPickerControl : UserControl
     }
 
     /// <summary>
-    /// Identifies the <see cref="ChapterSelectedCommand"/> dependency property.
+    /// Identifies the <see cref="ChapterCommand"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty ChapterSelectedCommandProperty = DependencyProperty.Register(
-        nameof(ChapterSelectedCommand),
+    public static readonly DependencyProperty ChapterCommandProperty = DependencyProperty.Register(
+        nameof(ChapterCommand),
         typeof(ICommand),
         typeof(ChapterPickerControl),
         new PropertyMetadata(null));
@@ -44,10 +44,10 @@ public sealed partial class ChapterPickerControl : UserControl
     /// Gets or sets the command to invoke when the chapter item is pressed.
     /// </summary>
     /// <value>The command to invoke when the chapter item is pressed.</value>
-    public ICommand ChapterSelectedCommand
+    public ICommand ChapterCommand
     {
-        get { return (ICommand)GetValue(ChapterSelectedCommandProperty); }
-        set { SetValue(ChapterSelectedCommandProperty, value); }
+        get { return (ICommand)GetValue(ChapterCommandProperty); }
+        set { SetValue(ChapterCommandProperty, value); }
     }
 
     /// <summary>
@@ -67,5 +67,11 @@ public sealed partial class ChapterPickerControl : UserControl
     private void ChapterList_OnLoaded(object sender, RoutedEventArgs e)
     {
         ChapterList.ScrollIntoView(SelectedChapter);
+    }
+
+    private void ChapterList_OnItemClick(object sender, ItemClickEventArgs e)
+    {
+        var cue = (ChapterCue)e.ClickedItem;
+        ChapterCommand.Execute(cue);
     }
 }

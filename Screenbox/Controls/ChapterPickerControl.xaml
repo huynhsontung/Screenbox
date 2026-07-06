@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mediaCore="using:Windows.Media.Core"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="224"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -37,12 +36,12 @@
             x:Name="ChapterList"
             Grid.Row="1"
             MaxHeight="400"
-            ui:ListViewExtensions.Command="{x:Bind ChapterSelectedCommand}"
             IsItemClickEnabled="True"
+            ItemClick="ChapterList_OnItemClick"
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ChaptersSource}"
             Loaded="ChapterList_OnLoaded"
-            SelectedItem="{x:Bind SelectedChapter, Mode=TwoWay}"
+            SelectedItem="{x:Bind SelectedChapter, Mode=OneWay}"
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.ItemTemplate>
