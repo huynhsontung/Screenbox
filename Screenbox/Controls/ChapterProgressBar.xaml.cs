@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -68,9 +68,8 @@ namespace Screenbox.Controls
 
         private ObservableCollection<ChapterViewModel> ProgressItems { get; }
 
-        private const double Spacing = 1;
-
         private readonly DispatcherQueueTimer _chaptersUpdateTimer;
+        private readonly double _chapterSpacing;
 
         public ChapterProgressBar()
         {
@@ -78,6 +77,8 @@ namespace Screenbox.Controls
             ProgressItems = new ObservableCollection<ChapterViewModel>();
             this.InitializeComponent();
             SizeChanged += OnSizeChanged;
+
+            _chapterSpacing = (double)Resources["ChaptersSpacing"];
         }
 
         private static void OnChaptersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -268,7 +269,7 @@ namespace Screenbox.Controls
 
         private double GetItemWidth(double durationMs, int chapterCount)
         {
-            double availableWidth = ActualWidth - Spacing * chapterCount;
+            double availableWidth = ActualWidth - _chapterSpacing * chapterCount;
             return Maximum > 0 ? durationMs / Maximum * availableWidth : 0;
         }
     }

@@ -15,6 +15,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Styles/Progress.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <x:Double x:Key="ChaptersSpacing">1</x:Double>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -31,7 +33,7 @@
         </ItemsControl.ItemTemplate>
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" Spacing="1" />
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource ChaptersSpacing}" />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
     </ItemsControl>
