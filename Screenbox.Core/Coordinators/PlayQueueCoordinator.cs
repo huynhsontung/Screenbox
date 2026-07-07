@@ -291,7 +291,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// (TwoWay bindings); coordinator-initiated writes are suppressed via
     /// <see cref="_settingContextFromCoordinator"/>.
     /// </summary>
-    private void OnContextPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         // Skip reactions to writes made by the coordinator itself.
         if (_settingContextFromCoordinator) return;
@@ -849,7 +849,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <see cref="PlayQueueContext.Items"/> collection and updates shuffle backup bookkeeping
     /// when shuffle mode is active.
     /// </summary>
-    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         // Skip intermediate updates during bulk operations — ApplyQueueSnapshot calls
         // NotifyCanExecuteChanged explicitly at the end.
@@ -873,7 +873,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Remove when e.OldItems.Count > 0:
+                case NotifyCollectionChangedAction.Remove when e.OldItems?.Count > 0:
                     foreach (object item in e.OldItems)
                     {
                         backup.Removals.Add((MediaViewModel)item);
@@ -881,7 +881,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
                     break;
 
-                case NotifyCollectionChangedAction.Replace when e.OldItems.Count > 0 && e.OldItems.Count == e.NewItems.Count:
+                case NotifyCollectionChangedAction.Replace when e is
+                {
+                    OldItems: { Count: { } oldCount }, NewItems: { Count: { } newCount }
+                } && oldCount == newCount && newCount > 0:
                     for (int i = 0; i < e.OldItems.Count; i++)
                     {
                         int backupIndex = backup.OriginalPlaylist.IndexOf((MediaViewModel)e.OldItems[i]);
@@ -893,7 +896,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
                     break;
 
-                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Add when e.NewItems is { }:
                     foreach (object item in e.NewItems)
                     {
                         if (!backup.Removals.Remove((MediaViewModel)item))

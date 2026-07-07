@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel Create(Media media)
     {
-        if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
+        if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri? uri))
             return new MediaViewModel(_playerContext, _playerService, media);
 
         // Prefer URI source for easier clean up
