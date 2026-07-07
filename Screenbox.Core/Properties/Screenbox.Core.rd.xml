@@ -29,5 +29,7 @@
 
   	<!-- add directives for your library here -->
 
+    <Type Name="CommunityToolkit.Mvvm.Messaging.IMessengerExtensions" Dynamic="Required All" />
+
   </Library>
 </Directives>
