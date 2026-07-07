@@ -1126,6 +1126,6 @@
     <value>Crie a sua primeira lista de reprodução para organizar os seus vídeos e músicas favoritas.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>Não existem itens nesta lista de reprodução.</value>
   </data>
 </root>
