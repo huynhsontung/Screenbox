@@ -170,8 +170,10 @@ public sealed class LibraryService : ILibraryService
                 song.IsFromLibrary = true;
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
-                song.Album = albumFactory.SongsToAlbums[song];
-                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                if (albumFactory.SongsToAlbums.TryGetValue(song, out var cachedAlbum))
+                    song.Album = cachedAlbum;
+                if (artistFactory.SongsToArtists.TryGetValue(song, out var cachedArtists))
+                    song.Artists = cachedArtists.ToArray();
             }
         }
 
@@ -511,8 +513,10 @@ public sealed class LibraryService : ILibraryService
                 await song.LoadDetailsAsync(_filesService);
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
-                song.Album = albumFactory.SongsToAlbums[song];
-                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                if (albumFactory.SongsToAlbums.TryGetValue(song, out var album))
+                    song.Album = album;
+                if (artistFactory.SongsToArtists.TryGetValue(song, out var artists))
+                    song.Artists = artists.ToArray();
                 target.Add(song);
             }
 
