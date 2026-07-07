@@ -168,6 +168,7 @@ public sealed class LibraryService : ILibraryService
             foreach (MediaViewModel song in songs)
             {
                 song.IsFromLibrary = true;
+                if (song.MediaType != MediaPlaybackType.Music) continue;
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
                 song.Album = albumFactory.SongsToAlbums[song];
@@ -509,6 +510,7 @@ public sealed class LibraryService : ILibraryService
                 MediaViewModel song = _mediaFactory.Create(file);
                 song.IsFromLibrary = true;
                 await song.LoadDetailsAsync(_filesService);
+                if (song.MediaType != MediaPlaybackType.Music) continue;
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
                 song.Album = albumFactory.SongsToAlbums[song];
