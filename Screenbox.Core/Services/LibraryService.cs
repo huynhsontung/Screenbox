@@ -170,8 +170,10 @@ public sealed class LibraryService : ILibraryService
                 song.IsFromLibrary = true;
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
-                song.Album = albumFactory.SongsToAlbums[song];
-                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                song.Album = albumFactory.SongsToAlbums.GetValueOrDefault(song, albumFactory.UnknownAlbum);
+                song.Artists = artistFactory.SongsToArtists.TryGetValue(song, out var artists0)
+                    ? artists0.ToArray()
+                    : new[] { artistFactory.UnknownArtist };
             }
         }
 
@@ -511,8 +513,10 @@ public sealed class LibraryService : ILibraryService
                 await song.LoadDetailsAsync(_filesService);
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
-                song.Album = albumFactory.SongsToAlbums[song];
-                song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                song.Album = albumFactory.SongsToAlbums.GetValueOrDefault(song, albumFactory.UnknownAlbum);
+                song.Artists = artistFactory.SongsToArtists.TryGetValue(song, out var artists1)
+                    ? artists1.ToArray()
+                    : new[] { artistFactory.UnknownArtist };
                 target.Add(song);
             }
 
