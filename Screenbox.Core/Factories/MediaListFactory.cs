@@ -186,9 +186,10 @@ public sealed class MediaListFactory : IMediaListFactory
         Uri? baseUri = null;
         try
         {
-            baseUri = !string.IsNullOrEmpty(playlistFile.Path)
-                ? new Uri(Path.GetDirectoryName(playlistFile.Path), UriKind.Absolute)
-                : null;
+            if (!string.IsNullOrEmpty(playlistFile.Path) && Path.GetDirectoryName(playlistFile.Path) is { } directoryName)
+            {
+                baseUri = new Uri(directoryName, UriKind.Absolute);
+            }
         }
         catch (Exception)
         {
@@ -220,7 +221,7 @@ public sealed class MediaListFactory : IMediaListFactory
                 continue;
 
             MediaViewModel? vm = null;
-            Uri uri;
+            Uri? uri;
 
             try
             {
