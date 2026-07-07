@@ -191,6 +191,10 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         {
             await media.LoadDetailsAsync(_filesService);
         }
+        catch (InvalidOperationException)
+        {
+            // Stale MRU token; WinRT throws this when the underlying file handle is no longer valid.
+        }
         catch (Exception e)
         {
             // The underlying StorageFile (e.g. from MRU) may be in a bad state and
@@ -204,6 +208,10 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         try
         {
             await media.LoadThumbnailAsync();
+        }
+        catch (InvalidOperationException)
+        {
+            // Stale MRU token; WinRT throws this when the underlying file handle is no longer valid.
         }
         catch (Exception e)
         {
@@ -357,6 +365,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (ArgumentException)
         {
+            return null;
+        }
+        catch (InvalidOperationException)
+        {
+            // Stale MRU token; WinRT throws this when the token is no longer valid.
             return null;
         }
         catch (Exception e)
