@@ -122,7 +122,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-IV-:-Interaction#controls
     public async Task UpdateLivelyProperties(WebView2 webView)
     {
-        if (Source is null)
+        if (Source is null || webView.CoreWebView2 == null || webView.CoreWebView2.IsSuspended)
             return;
 
         var functionName = "livelyPropertyListener";
@@ -207,7 +207,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--pause-event
     public async Task UpdatePauseState(WebView2 webView, bool isPaused)
     {
-        if (Source is null || !Source.IsPauseNotify)
+        if (Source is null || !Source.IsPauseNotify || webView.CoreWebView2 == null || webView.CoreWebView2.IsSuspended)
             return;
 
         var obj = new LivelyPlaybackStateModel()
