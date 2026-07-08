@@ -365,6 +365,10 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         {
             return null;
         }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
         catch (Exception e)
         {
             LogService.Log(e);
