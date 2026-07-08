@@ -196,10 +196,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             // WinRT throws InvalidOperationException for stale MRU tokens
             // (e.g. "Method was called at an unexpected time"). Ignore silently.
         }
+        catch (ArgumentException)
+        {
+            // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
+            // throw ArgumentException. Ignore silently — this is a known bad state.
+        }
         catch (Exception e)
         {
-            // The underlying StorageFile (e.g. from MRU) may be in a bad state and
-            // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
             LogService.Log(e);
         }
     }
@@ -215,10 +218,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             // WinRT throws InvalidOperationException for stale MRU tokens
             // (e.g. "Method was called at an unexpected time"). Ignore silently.
         }
+        catch (ArgumentException)
+        {
+            // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
+            // throw ArgumentException. Ignore silently — this is a known bad state.
+        }
         catch (Exception e)
         {
-            // The underlying StorageFile (e.g. from MRU) may be in a bad state and
-            // throw ArgumentException ("Falscher Parameter.") or similar WinRT errors.
             LogService.Log(e);
         }
     }
