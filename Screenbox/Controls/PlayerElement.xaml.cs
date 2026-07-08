@@ -1,5 +1,6 @@
 #nullable enable
 
+using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
@@ -105,7 +106,41 @@ public sealed partial class PlayerElement : UserControl
         if (!IsEnabled) return;
 
         _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
-        VideoViewButton.CapturePointer(e.Pointer);
+
+        // Guard against the pointer already being captured (e.g. a previous
+        // PointerReleased/PointerCanceled was never delivered, common with pen/touch).
+        // Calling CapturePointer for an already-tracked pointer throws
+        // ArgumentException ("Failed to start tracking the pointer, because it is
+        // already being tracked."), which would otherwise surface as an unhandled
+        // crash via CoreApplication.UnhandledErrorDetected.
+        var pointerId = e.Pointer.PointerId;
+        var alreadyCaptured = false;
+        foreach (var captured in VideoViewButton.PointerCaptures)
+        {
+            if (captured.PointerId == pointerId)
+            {
+                alreadyCaptured = true;
+                break;
+            }
+        }
+
+        if (alreadyCaptured)
+        {
+            VideoViewButton.ReleasePointerCapture(e.Pointer);
+        }
+
+        try
+        {
+            VideoViewButton.CapturePointer(e.Pointer);
+        }
+        catch (ArgumentException)
+        {
+            // Defensive fallback: the pointer state can still be inconsistent
+            // (e.g. captured by another element). The gesture recognizer has
+            // already been updated by ProcessDownEvent above, so swallow the
+            // exception rather than crashing the app.
+        }
+
         e.Handled = true;
     }
 
