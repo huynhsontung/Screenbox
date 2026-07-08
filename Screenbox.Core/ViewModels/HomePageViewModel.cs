@@ -191,6 +191,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         {
             await media.LoadDetailsAsync(_filesService);
         }
+        catch (InvalidOperationException)
+        {
+            // WinRT throws InvalidOperationException for stale MRU tokens
+            // (e.g. "Method was called at an unexpected time"). Ignore silently.
+        }
         catch (ArgumentException)
         {
             // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
@@ -207,6 +212,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         try
         {
             await media.LoadThumbnailAsync();
+        }
+        catch (InvalidOperationException)
+        {
+            // WinRT throws InvalidOperationException for stale MRU tokens
+            // (e.g. "Method was called at an unexpected time"). Ignore silently.
         }
         catch (ArgumentException)
         {
@@ -363,6 +373,12 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (ArgumentException)
         {
+            return null;
+        }
+        catch (InvalidOperationException)
+        {
+            // WinRT throws InvalidOperationException for stale MRU tokens
+            // (e.g. "Method was called at an unexpected time"). Treat as not found.
             return null;
         }
         catch (Exception e)
