@@ -18,6 +18,7 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Lively.Helpers;
 using Screenbox.Lively.Models;
+using Screenbox.Lively.Models.Serialization;
 using Screenbox.Lively.Services;
 using Windows.Storage;
 using Windows.Storage.Streams;

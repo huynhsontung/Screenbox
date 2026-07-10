@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Screenbox.Lively.Helpers;
 using Screenbox.Lively.Models;
+using Screenbox.Lively.Models.Serialization;
 using Windows.Storage;
 
 namespace Screenbox.Lively.Services;
