@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Screenbox.Core.Models;
+using Screenbox.Core.Models.Serialization;
 using Windows.Storage;
 
 namespace Screenbox.Core.Services;
@@ -261,11 +261,7 @@ public sealed partial class DatabaseService
         try
         {
             string json = await FileIO.ReadTextAsync(playlistFile);
-            var options = new JsonSerializerOptions()
-            {
-                Converters = { new JsonStringEnumConverter() }
-            };
-            return JsonSerializer.Deserialize<PlaylistRecordDto>(json, options);
+            return JsonSerializer.Deserialize(json, CoreJsonContext.Default.PlaylistRecordDto);
         }
         catch (Exception ex)
         {

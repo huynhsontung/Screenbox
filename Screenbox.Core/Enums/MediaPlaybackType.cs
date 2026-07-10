@@ -1,4 +1,7 @@
-﻿namespace Screenbox.Core.Enums;
+namespace Screenbox.Core.Enums;
+
+//[System.Obsolete("Remove the attribute once the transition from Protobuf to Microsoft.Data.Sqlite has been in place for some time.")]
+[System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
 public enum MediaPlaybackType
 {
     /// <summary>The media type is unknown.</summary>

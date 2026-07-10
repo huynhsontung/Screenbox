@@ -154,6 +154,7 @@
     <Compile Include="Models\MusicCacheRecordDto.cs" />
     <Compile Include="Models\RawCacheLoadResultDto.cs" />
     <Compile Include="Models\RawMediaRecordDto.cs" />
+    <Compile Include="Models\Serialization\CoreJsonContext.cs" />
     <Compile Include="Models\SqlParameterDto.cs" />
     <Compile Include="Models\VideoCacheRecordDto.cs" />
     <Compile Include="Services\IDatabaseService.cs" />
