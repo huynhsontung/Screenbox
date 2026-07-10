@@ -89,7 +89,8 @@ public class LivelyWallpaperService : ILivelyWallpaperService
                 // Guaranteed to have minimum thumbnail (if created using Lively.)
                 PreviewPath = (await wallpaperFolder.GetFileAsync(model.Preview ?? model.Thumbnail)).Path,
             };
-            if (TrySanitizeUrl(model.Contact, out Uri uri))
+
+            if (model.Contact is string contact && TrySanitizeUrl(contact, out Uri uri))
                 obj.AuthorUrl = uri;
 
             return obj;
