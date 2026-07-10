@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -109,7 +109,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
             using var entryStream = livelyInfoEntry.Open();
             using var streamReader = new StreamReader(entryStream);
             var jsonContent = await streamReader.ReadToEndAsync();
-            var model = JsonSerializer.Deserialize<LivelyInfoModel>(jsonContent);
+            var model = JsonSerializer.Deserialize(jsonContent, LivelyJsonContext.Default.LivelyInfoModel);
             return model;
         }
         catch
@@ -124,7 +124,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
         {
             var modelFile = await wallpaperFolder.GetFileAsync("LivelyInfo.json");
             var jsonContent = await FileIO.ReadTextAsync(modelFile);
-            var model = JsonSerializer.Deserialize<LivelyInfoModel>(jsonContent);
+            var model = JsonSerializer.Deserialize(jsonContent, LivelyJsonContext.Default.LivelyInfoModel);
             return model;
         }
         catch

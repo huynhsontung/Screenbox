@@ -125,6 +125,7 @@
     <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="LivelyWallpaperServiceExtensions.cs" />
     <Compile Include="Models\LivelyInfoModel.cs" />
+    <Compile Include="Models\LivelyJsonContext.cs" />
     <Compile Include="Models\LivelyMusicModel.cs" />
     <Compile Include="Models\LivelyPlaybackStateModel.cs" />
     <Compile Include="Models\LivelyWallpaperModel.cs" />

@@ -238,7 +238,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             model.Thumbnail = base64;
         }
 
-        await webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonSerializer.Serialize(model));
+        await webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonSerializer.Serialize(model, LivelyJsonContext.Default.LivelyMusicModel));
     }
 
     private void LoadMedia()
