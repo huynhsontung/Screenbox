@@ -77,11 +77,13 @@ namespace Screenbox.Core.ViewModels
                             IDictionary<string, object> additionalProperties =
                                 await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
 
-                            if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
+                            additionalProperties.TryGetValue(SystemProperties.Music.Artist, out object artistValue);
+                            additionalProperties.TryGetValue(SystemProperties.Media.Duration, out object durationValue);
+                            if (artistValue is string[] { Length: > 0 } contributingArtists)
                             {
                                 CaptionText = string.Join(", ", contributingArtists);
                             }
-                            else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                            else if (durationValue is ulong ticks and > 0)
                             {
                                 TimeSpan duration = TimeSpan.FromTicks((long)ticks);
                                 CaptionText = Humanizer.ToDuration(duration);
