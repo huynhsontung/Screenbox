@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
-public partial class MediaViewModel : ObservableRecipient
+public sealed partial class MediaViewModel : ObservableRecipient
 {
     public string Location { get; }
 

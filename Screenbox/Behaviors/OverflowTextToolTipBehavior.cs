@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
-public class OverflowTextToolTipBehavior : Behavior<TextBlock>
+public sealed partial class OverflowTextToolTipBehavior : Behavior<TextBlock>
 {
     protected override void OnAttached()
     {

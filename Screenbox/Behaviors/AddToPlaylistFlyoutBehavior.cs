@@ -18,7 +18,7 @@ namespace Screenbox.Behaviors;
 /// <summary>
 /// Populates a <see cref="MenuFlyout"/> or a named <see cref="MenuFlyoutSubItem"/> within a <see cref="MenuFlyout"/> with playlist actions.
 /// </summary>
-internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
+internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
 {
     public static readonly DependencyProperty TargetSubItemNameProperty = DependencyProperty.Register(
         nameof(TargetSubItemName),

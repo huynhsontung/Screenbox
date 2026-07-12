@@ -34,7 +34,7 @@ namespace Screenbox.Extensions;
 /// </code>
 /// </example>
 [Windows.Foundation.Metadata.ContractVersion(typeof(Windows.Foundation.UniversalApiContract), 327680u)]
-public sealed class AcceleratorService
+public sealed partial class AcceleratorService
 {
     private static readonly bool _isHebrew = CultureInfo.CurrentCulture.TwoLetterISOLanguageName is "he";
 

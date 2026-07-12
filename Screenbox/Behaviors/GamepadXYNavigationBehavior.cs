@@ -12,7 +12,7 @@ namespace Screenbox.Behaviors;
 /// <summary>
 /// Behavior that modifies the default focus finding for a better gamepad navigation experience
 /// </summary>
-internal class GamepadXYNavigationBehavior : Behavior<FrameworkElement>
+internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkElement>
 {
     protected override void OnAttached()
     {

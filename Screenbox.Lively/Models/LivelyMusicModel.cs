@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Screenbox.Lively.Models;
 
@@ -8,14 +8,14 @@ namespace Screenbox.Lively.Models;
 // Source: https://github.com/rocksdanister/lively
 public class LivelyMusicModel
 {
-    public string AlbumArtist { get; set; }
-    public string AlbumTitle { get; set; }
+    public string AlbumArtist { get; set; } = string.Empty;
+    public string AlbumTitle { get; set; } = string.Empty;
     public int AlbumTrackCount { get; set; }
-    public string Artist { get; set; }
-    public List<string> Genres { get; set; }
-    public string PlaybackType { get; set; }
-    public string Subtitle { get; set; }
-    public string Thumbnail { get; set; }
-    public string Title { get; set; }
+    public string Artist { get; set; } = string.Empty;
+    public List<string> Genres { get; set; } = new();
+    public string PlaybackType { get; set; } = string.Empty;
+    public string Subtitle { get; set; } = string.Empty;
+    public string Thumbnail { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     public int TrackNumber { get; set; }
 }

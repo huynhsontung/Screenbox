@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Behaviors
 {
-    internal class MediaListViewItemBehavior : Behavior<Control>
+    internal sealed partial class MediaListViewItemBehavior : Behavior<Control>
     {
         private SelectorItem? _selector;
         private ListViewBase? _listView;

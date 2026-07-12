@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Screenbox.Behaviors
 {
-    internal class AlternatingListViewBehavior : Behavior<ListViewBase>
+    internal sealed partial class AlternatingListViewBehavior : Behavior<ListViewBase>
     {
         public static readonly DependencyProperty AlternateBackgroundProperty = DependencyProperty.Register(
             nameof(AlternateBackground),

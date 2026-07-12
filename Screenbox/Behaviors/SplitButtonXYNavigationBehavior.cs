@@ -10,7 +10,7 @@ namespace Screenbox.Behaviors;
 /// <summary>
 /// A behavior that makes the <see cref="SplitButton"/> secondary button accessible to XY focus navigation.
 /// </summary>
-internal class SplitButtonXYNavigationBehavior : Behavior<SplitButton>
+internal sealed partial class SplitButtonXYNavigationBehavior : Behavior<SplitButton>
 {
     protected override void OnAttached()
     {

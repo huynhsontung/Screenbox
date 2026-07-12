@@ -7,7 +7,7 @@ using Screenbox.Dialogs;
 
 namespace Screenbox.Commands;
 
-internal class OpenUrlCommand : IRelayCommand
+internal sealed partial class OpenUrlCommand : IRelayCommand
 {
     public IRelayCommand<Uri>? NextCommand { get; set; }
 
