@@ -167,7 +167,17 @@ public unsafe partial class VideoView : SwapChainPanel
 
     private void DestroySwapChain()
     {
-        this.SetSwapChain(IntPtr.Zero);
+        if (_loaded)
+        {
+            try
+            {
+                this.SetSwapChain(IntPtr.Zero);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Safe to ignore ObjectDisposedException during teardown
+            }
+        }
 
         _swapChain.Dispose();
         _d3d11Context.Dispose();

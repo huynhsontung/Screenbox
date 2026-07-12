@@ -1,36 +1,33 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls;
 
+[GeneratedComInterface]
+[Guid("f92f19d2-3ade-45a6-a20c-f6f1ea90554b")]
+internal partial interface ISwapChainPanelNative
+{
+    void SetSwapChain(IntPtr swapChain);
+}
+
 public static class SwapChainPanelExtensions
 {
-    private static readonly Guid ISwapChainPanelNative_IID = new("f92f19d2-3ade-45a6-a20c-f6f1ea90554b");
-
-    public static unsafe int SetSwapChain(this SwapChainPanel panel, IntPtr swapChainPtr)
+    public static void SetSwapChain(this SwapChainPanel panel, IntPtr swapChainPtr)
     {
-        var winrtObj = (WinRT.IWinRTObject)panel;
+        if (panel == null) throw new ArgumentNullException(nameof(panel));
+
+        var winrtObj = panel as WinRT.IWinRTObject;
+        if (winrtObj?.NativeObject == null) 
+            throw new ObjectDisposedException(nameof(panel), "The underlying WinRT native object has been disposed.");
+
         IntPtr nativePtr = winrtObj.NativeObject.ThisPtr;
+        if (nativePtr == IntPtr.Zero) 
+            throw new ObjectDisposedException(nameof(panel), "The underlying WinRT native pointer is null.");
 
-        Guid iid = ISwapChainPanelNative_IID;
-        int hr = Marshal.QueryInterface(nativePtr, in iid, out IntPtr swapChainPanelNativePtr);
-        if (hr != 0) return hr;
-
-        try
-        {
-            // COM vtable layout for ISwapChainPanelNative:
-            // [0] QueryInterface
-            // [1] AddRef
-            // [2] Release
-            // [3] SetSwapChain(IntPtr swapChain)
-            void** vtbl = (void**)swapChainPanelNativePtr;
-            var setSwapChainFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, int>)vtbl[3];
-            return setSwapChainFunc(swapChainPanelNativePtr, swapChainPtr);
-        }
-        finally
-        {
-            Marshal.Release(swapChainPanelNativePtr);
-        }
+        ComWrappers cw = new StrategyBasedComWrappers();
+        var panelNative = (ISwapChainPanelNative)cw.GetOrCreateObjectForComInstance(nativePtr, CreateObjectFlags.None);
+        panelNative.SetSwapChain(swapChainPtr);
     }
 }
