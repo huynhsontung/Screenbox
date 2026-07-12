@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -186,15 +186,15 @@ public sealed class PlayerService : IPlayerService
 #else
             "--verbose=0",
 #endif
-            // "--aout=winstore",
+            "--aout=winstore",
             //"--sout-chromecast-conversion-quality=0",
             "--no-osd"
         };
         options.AddRange(swapChainOptions);
 #if DEBUG
-        LibVLC libVlc = new(true, options.ToArray());
+        LibVLC libVlc = new(true, false, options.ToArray());
 #else
-        LibVLC libVlc = new(false, options.ToArray());
+        LibVLC libVlc = new(false, false, options.ToArray());
 #endif
         LogService.RegisterLibVlcLogging(libVlc);
         _vlcDialogService.SetVlcDialogHandlers(libVlc);
