@@ -26,10 +26,10 @@ public sealed partial class PlayQueueContext : ObservableObject
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 
     /// <summary>The media item currently playing or selected for playback.</summary>
-    [ObservableProperty] private MediaViewModel? _currentItem;
+    [ObservableProperty] public partial MediaViewModel? CurrentItem { get; set; }
 
     /// <summary>The zero-based index of <see cref="CurrentItem"/> within <see cref="Items"/>, or -1 when nothing is active.</summary>
-    [ObservableProperty] private int _currentIndex = -1;
+    [ObservableProperty] public partial int CurrentIndex { get; set; } = -1;
 
     /// <summary>
     /// Whether shuffle mode is active.
@@ -39,7 +39,7 @@ public sealed partial class PlayQueueContext : ObservableObject
     /// on this context to react to UI-initiated shuffle toggles.
     /// </para>
     /// </summary>
-    [ObservableProperty] private bool _shuffleMode;
+    [ObservableProperty] public partial bool ShuffleMode { get; set; }
 
     /// <summary>
     /// The current repeat mode for the play queue.
@@ -49,5 +49,5 @@ public sealed partial class PlayQueueContext : ObservableObject
     /// on this context to react to UI-initiated repeat-mode changes.
     /// </para>
     /// </summary>
-    [ObservableProperty] private MediaPlaybackAutoRepeatMode _repeatMode;
+    [ObservableProperty] public partial MediaPlaybackAutoRepeatMode RepeatMode { get; set; }
 }
