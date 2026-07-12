@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -35,17 +35,17 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<PlaylistRenamedNotificationMessage>,
     IRecipient<PlaylistItemsAddedNotificationMessage>
 {
-    [ObservableProperty] private NotificationLevel _severity;
+    [ObservableProperty] public partial NotificationLevel Severity { get; set; }
 
-    [ObservableProperty] private string? _title;
+    [ObservableProperty] public partial string? Title { get; set; }
 
-    [ObservableProperty] private string? _message;
+    [ObservableProperty] public partial string? Message { get; set; }
 
-    [ObservableProperty] private object? _content;
+    [ObservableProperty] public partial object? Content { get; set; }
 
-    [ObservableProperty] private bool _isOpen;
+    [ObservableProperty] public partial bool IsOpen { get; set; }
 
-    [ObservableProperty] private ButtonBase? _actionButton;
+    [ObservableProperty] public partial ButtonBase? ActionButton { get; set; }
 
     public string? ButtonContent { get; private set; }
 

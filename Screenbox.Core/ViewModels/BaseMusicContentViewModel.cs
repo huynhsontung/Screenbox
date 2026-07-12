@@ -15,9 +15,9 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ShuffleAndPlayCommand))]
-    private IReadOnlyList<MediaViewModel> _songs = Array.Empty<MediaViewModel>();
+    public partial IReadOnlyList<MediaViewModel> Songs { get; set; } = Array.Empty<MediaViewModel>();
 
-    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] public partial bool IsLoading { get; set; }
 
     [RelayCommand(CanExecute = nameof(HasSongs))]
     private void ShuffleAndPlay()

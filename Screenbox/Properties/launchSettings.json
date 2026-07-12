@@ -2,7 +2,7 @@
   "profiles": {
     "Screenbox": {
       "commandName": "MsixPackage",
-      "nativeDebugging": true
+      "nativeDebugging": false
     }
   }
 }

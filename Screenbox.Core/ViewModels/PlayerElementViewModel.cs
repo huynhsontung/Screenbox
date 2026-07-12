@@ -39,7 +39,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         Vertical
     }
 
-    [ObservableProperty] private bool _isHolding;
+    [ObservableProperty] public partial bool IsHolding { get; set; }
 
     public event EventHandler<EventArgs>? ClearViewRequested;
 

@@ -1,11 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Playback;
 
-public sealed class VideoTrack : MediaTrack
+public sealed partial class VideoTrack : MediaTrack
 {
     internal int VlcTrackId { get; }
 
