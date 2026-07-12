@@ -27,10 +27,10 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     public bool IsAdvancedModeEnabled => _settingsService.AdvancedMode;
 
-    [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
-    [ObservableProperty] private Thickness _scrollBarMargin;
-    [ObservableProperty] private Thickness _footerBottomPaddingMargin;
-    [ObservableProperty] private double _footerBottomPaddingHeight;
+    [ObservableProperty] public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
+    [ObservableProperty] public partial Thickness ScrollBarMargin { get; set; }
+    [ObservableProperty] public partial Thickness FooterBottomPaddingMargin { get; set; }
+    [ObservableProperty] public partial double FooterBottomPaddingHeight { get; set; }
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
@@ -50,7 +50,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
-        _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+        NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 

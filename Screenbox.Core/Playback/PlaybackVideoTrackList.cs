@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using LibVLCSharp.Shared;
 using Windows.Media.Core;

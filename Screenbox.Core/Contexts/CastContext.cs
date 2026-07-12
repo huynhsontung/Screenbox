@@ -9,8 +9,8 @@ namespace Screenbox.Core.Contexts;
 public sealed partial class CastContext : ObservableObject
 {
     [ObservableProperty]
-    private RendererWatcher? _rendererWatcher;
+    public partial RendererWatcher? RendererWatcher { get; set; }
 
     [ObservableProperty]
-    private Renderer? _activeRenderer;
+    public partial Renderer? ActiveRenderer { get; set; }
 }
