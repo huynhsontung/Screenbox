@@ -269,7 +269,9 @@ namespace Screenbox.Controls
 
         private double GetItemWidth(double durationMs, int chapterCount)
         {
-            double availableWidth = ActualWidth - _chapterSpacing * chapterCount;
+            const int AlignmentAdjustment = 1; // Tested value to make the items aligned visually
+            var totalChapterSpacing = chapterCount > 0 ? _chapterSpacing * (chapterCount - 1) : 0;
+            double availableWidth = ActualWidth - totalChapterSpacing - AlignmentAdjustment;
             return Maximum > 0 ? durationMs / Maximum * availableWidth : 0;
         }
     }
