@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
@@ -138,7 +138,7 @@ namespace Screenbox.Controls
             if (e.IsGenerated) return;
             PointerPoint pointer = e.GetCurrentPoint((UIElement)sender);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            ViewModel.OnSeekBarPointerWheelChanged(mouseWheelDelta);
+            ViewModel.OnSeekBarPointerWheelChanged(mouseWheelDelta, e.KeyModifiers);
         }
 
         private void ResetPreviewToolTip()

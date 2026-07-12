@@ -17,8 +17,6 @@ using Screenbox.Core.Services;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.System;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Screenbox.Core.ViewModels;
@@ -184,17 +182,35 @@ public sealed partial class SeekBarViewModel :
         PreviewTime = (long)(normalizedPosition * Length);
     }
 
-    public void OnSeekBarPointerWheelChanged(double pointerWheelDelta)
+    /// <summary>
+    /// Interprets a pointer wheel input and adjusts the media playback position accordingly.
+    /// </summary>
+    /// <remarks>
+    /// The seek duration is determined by the following modifier keys:
+    /// <list type="bullet">
+    /// <item><description><see cref="VirtualKeyModifiers.None"/>: Uses the default step.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.Control"/>: Increases the step.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.Shift"/>: Decreases the step.</description></item>
+    /// </list>
+    /// </remarks>
+    /// <param name="pointerWheelDelta">The pointer wheel delta value.</param>
+    /// <param name="modifiers">A bitwise combination of the enumeration values that specifies the modifier keys held during the change.</param>
+    public void OnSeekBarPointerWheelChanged(double pointerWheelDelta, VirtualKeyModifiers modifiers)
     {
-        if (!IsSeekable || MediaPlayer == null) return;
-        var controlPressed = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down;
-        var shiftPressed = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
-        var delta = 5000;
-        if (controlPressed) delta = 10000;
-        if (shiftPressed) delta = 2000;
-        var result = UpdatePosition(TimeSpan.FromMilliseconds(pointerWheelDelta > 0 ? delta : -delta), true, true);
+        if (!IsSeekable || MediaPlayer is null) return;
+
+        int delta = modifiers switch
+        {
+            VirtualKeyModifiers.Control => 10_000,
+            VirtualKeyModifiers.Shift => 2_000,
+            _ => 5_000
+        };
+
+        int signedDelta = pointerWheelDelta > 0 ? delta : -delta;
+        var result = UpdatePosition(TimeSpan.FromMilliseconds(signedDelta), isOffset: true, debounce: true);
         TimeSpan offset = result.NewPosition - result.OriginalPosition;
         string extra = $"{(offset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(offset)}";
+
         Messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
     }
 
