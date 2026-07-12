@@ -14,18 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.4.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <Version>10.0.7</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.7</Version>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj" />
+    <PackageReference Include="LibVLCSharp" Version="3.10.0" />
+    <PackageReference Include="Silk.NET.Direct3D11" Version="2.22.0" />
   </ItemGroup>
 </Project>
