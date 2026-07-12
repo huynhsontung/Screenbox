@@ -349,6 +349,9 @@
     <PackageReference Include="Sentry">
       <Version>5.16.3</Version>
     </PackageReference>
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3">
+      <Version>3.53.3</Version>
+    </PackageReference>
     <PackageReference Include="TagLibSharp">
       <Version>2.3.0</Version>
     </PackageReference>
