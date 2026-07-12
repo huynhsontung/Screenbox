@@ -24,7 +24,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
 {
     public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
-    [ObservableProperty] private bool _hasVideos;
+    [ObservableProperty] public partial bool HasVideos { get; set; }
 
     /// <summary>Gets a value indicating whether the Videos library is available, used to enable the add-folder command.</summary>
     public bool HasLibrary => _libraryContext.VideosStorageLibrary != null;
@@ -35,7 +35,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     public VideosPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _hasVideos = true;
+        HasVideos = true;
         Breadcrumbs = new ObservableCollection<StorageFolder>();
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 

@@ -32,19 +32,19 @@ public sealed partial class SeekBarViewModel :
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
-    [ObservableProperty] private double _length;
+    [ObservableProperty] public partial double Length { get; set; }
 
-    [ObservableProperty] private double _time;
+    [ObservableProperty] public partial double Time { get; set; }
 
-    [ObservableProperty] private bool _isSeekable;
+    [ObservableProperty] public partial bool IsSeekable { get; set; }
 
-    [ObservableProperty] private bool _bufferingVisible;
+    [ObservableProperty] public partial bool BufferingVisible { get; set; }
 
-    [ObservableProperty] private double _previewTime;
+    [ObservableProperty] public partial double PreviewTime { get; set; }
 
-    [ObservableProperty] private bool _shouldShowPreview;
+    [ObservableProperty] public partial bool ShouldShowPreview { get; set; }
 
-    [ObservableProperty] private bool _shouldHandleKeyDown;
+    [ObservableProperty] public partial bool ShouldHandleKeyDown { get; set; }
 
     public ObservableCollection<ChapterCue> Chapters { get; }
 
@@ -81,8 +81,8 @@ public sealed partial class SeekBarViewModel :
         _seekTimer = _dispatcherQueue.CreateTimer();
         _originalPositionTimer = _dispatcherQueue.CreateTimer();
         _originalPositionTimer.IsRepeating = false;
-        _shouldShowPreview = true;
-        _shouldHandleKeyDown = true;
+        ShouldShowPreview = true;
+        ShouldHandleKeyDown = true;
         Chapters = new ObservableCollection<ChapterCue>();
 
         if (MediaPlayer != null)

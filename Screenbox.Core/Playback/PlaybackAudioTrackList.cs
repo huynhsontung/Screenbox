@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using LibVLCSharp.Shared;
 using Windows.Media.Core;
@@ -6,7 +6,7 @@ using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback
 {
-    public sealed class PlaybackAudioTrackList : SingleSelectTrackList<AudioTrack>
+    public sealed partial class PlaybackAudioTrackList : SingleSelectTrackList<AudioTrack>
     {
         private readonly Media? _media;
         private readonly MediaPlaybackAudioTrackList? _source;

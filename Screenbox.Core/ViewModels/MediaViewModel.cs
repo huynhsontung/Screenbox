@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -76,24 +76,24 @@ public sealed partial class MediaViewModel : ObservableRecipient
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
-    [ObservableProperty] private string _name = string.Empty;
-    [ObservableProperty] private bool _isMediaActive;
-    [ObservableProperty] private bool _isAvailable = true;
-    [ObservableProperty] private AlbumViewModel? _album;
-    [ObservableProperty] private string _caption = string.Empty;  // For list item subtitle
-    [ObservableProperty] private string _altCaption = string.Empty;   // For player page subtitle
+    [ObservableProperty] public partial string Name { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsMediaActive { get; set; }
+    [ObservableProperty] public partial bool IsAvailable { get; set; } = true;
+    [ObservableProperty] public partial AlbumViewModel? Album { get; set; }
+    [ObservableProperty] public partial string Caption { get; set; } = string.Empty;  // For list item subtitle
+    [ObservableProperty] public partial string AltCaption { get; set; } = string.Empty;   // For player page subtitle
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DurationText))]
     [NotifyPropertyChangedFor(nameof(TrackNumberText))]
-    private MediaInfo _mediaInfo;
+    public partial MediaInfo MediaInfo { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(MainArtist))]
-    private ArtistViewModel[] _artists;
+    public partial ArtistViewModel[] Artists { get; set; }
 
     [ObservableProperty]
-    private bool _isPlaying;
+    public partial bool IsPlaying { get; set; }
 
     private WeakReference<BitmapImage>? _thumbnailRef;
 
@@ -101,13 +101,13 @@ public sealed partial class MediaViewModel : ObservableRecipient
     {
         _playerService = source._playerService;
         _playerContext = source._playerContext;
-        _name = source._name;
+        Name = source.Name;
         _thumbnailRef = source._thumbnailRef;
-        _mediaInfo = source._mediaInfo;
-        _artists = source._artists;
-        _album = source._album;
-        _caption = source._caption;
-        _altCaption = source._altCaption;
+        MediaInfo = source.MediaInfo;
+        Artists = source.Artists;
+        Album = source.Album;
+        Caption = source.Caption;
+        AltCaption = source.AltCaption;
         _options = new List<string>(source.Options);
         Options = new ReadOnlyCollection<string>(_options);
         Location = source.Location;
@@ -125,9 +125,9 @@ public sealed partial class MediaViewModel : ObservableRecipient
         Source = source;
         Location = string.Empty;
         DateAdded = DateTimeOffset.Now;
-        _name = string.Empty;
-        _mediaInfo = mediaInfo;
-        _artists = Array.Empty<ArtistViewModel>();
+        Name = string.Empty;
+        MediaInfo = mediaInfo;
+        Artists = Array.Empty<ArtistViewModel>();
         _options = new List<string>();
         Options = new ReadOnlyCollection<string>(_options);
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
@@ -137,8 +137,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
         : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
     {
         Location = file.Path;
-        _name = file.Name;
-        _altCaption = file.Name;
+        Name = file.Name;
+        AltCaption = file.Name;
     }
 
     public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Uri uri)
@@ -146,7 +146,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     {
         Guard.IsTrue(uri.IsAbsoluteUri);
         Location = uri.OriginalString;
-        _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+        Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
     }
 
     public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Media media)

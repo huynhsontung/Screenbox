@@ -31,8 +31,8 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 {
     public event EventHandler? TrackUpdateRequested;
 
-    [ObservableProperty] private LivelyWallpaperModel? _source;
-    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] public partial LivelyWallpaperModel? Source { get; set; }
+    [ObservableProperty] public partial bool IsLoading { get; set; }
 
     private MediaViewModel? Media
     {
@@ -76,7 +76,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
         TrackUpdateRequested?.Invoke(this, EventArgs.Empty);
     }
 
-    private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void MediaOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(MediaViewModel.Name) or nameof(MediaViewModel.MainArtist))
         {
@@ -227,7 +227,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
         var model = new LivelyMusicModel
         {
             Title = Media.Name,
-            Artist = Media.MainArtist?.Name,
+            Artist = Media.MainArtist?.Name ?? string.Empty,
             // Optional: Complete the mapping.
         };
 

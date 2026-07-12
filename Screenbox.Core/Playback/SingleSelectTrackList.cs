@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
-    public class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList where T : IMediaTrack
+    public partial class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList where T : IMediaTrack
     {
         public event TypedEventHandler<ISingleSelectMediaTrackList, object?>? SelectedIndexChanged;
 

@@ -30,8 +30,8 @@ namespace Screenbox.Core.ViewModels
 
         internal NavigationMetadata? NavData { get; private set; }
 
-        [ObservableProperty] private bool _isEmpty;
-        [ObservableProperty] private bool _isLoading;
+        [ObservableProperty] public partial bool IsEmpty { get; set; }
+        [ObservableProperty] public partial bool IsLoading { get; set; }
 
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
