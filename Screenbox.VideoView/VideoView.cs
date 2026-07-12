@@ -119,7 +119,7 @@ public unsafe partial class VideoView : SwapChainPanel
         dxgiDevice.SetMaximumFrameLatency(1);
 
         // 5. Set Swap Chain on SwapChainPanel
-        this.SetSwapChain((IntPtr)_swapChain.Handle);
+        this.SetSwapChain((IUnknown*)_swapChain.Handle);
 
         _loaded = true;
         UpdateScale();
@@ -156,7 +156,7 @@ public unsafe partial class VideoView : SwapChainPanel
         using var swapChain2 = _swapChain.QueryInterface<IDXGISwapChain2>();
         if (swapChain2.Handle != null)
         {
-            var matrix = new Silk.NET.DXGI.Matrix3X2F(
+            var matrix = new Matrix3X2F(
                 1.0f / CompositionScaleX, 0.0f,
                 0.0f, 1.0f / CompositionScaleY,
                 0.0f, 0.0f
@@ -171,7 +171,7 @@ public unsafe partial class VideoView : SwapChainPanel
         {
             try
             {
-                this.SetSwapChain(IntPtr.Zero);
+                this.SetSwapChain(null);
             }
             catch (ObjectDisposedException)
             {
