@@ -50,8 +50,6 @@ public partial class MediaViewModel : ObservableRecipient
         ? MediaInfo.MusicProperties.Duration
         : MediaInfo.VideoProperties.Duration;
 
-    public string DurationText => Duration > TimeSpan.Zero ? Humanizer.ToDuration(Duration) : string.Empty;     // Helper for binding
-
     public string TrackNumberText =>
         MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
@@ -84,7 +82,6 @@ public partial class MediaViewModel : ObservableRecipient
     [ObservableProperty] private string _altCaption = string.Empty;   // For player page subtitle
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(DurationText))]
     [NotifyPropertyChangedFor(nameof(TrackNumberText))]
     private MediaInfo _mediaInfo;
 

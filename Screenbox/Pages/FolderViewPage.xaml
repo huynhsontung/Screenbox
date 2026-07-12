@@ -132,9 +132,9 @@
                     <controls:CommonGridViewItem
                         Title="{x:Bind Name, Mode=OneWay}"
                         Width="{StaticResource WideGridViewItemWidth}"
-                        AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForStorageItem(IsFile, Name, CaptionText, ItemCount), Mode=OneWay}"
+                        AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleStorageItemName(IsFile, Name, CaptionText, ItemCount), Mode=OneWay}"
                         CanPlay="{x:Bind IsFile}"
-                        Caption="{x:Bind helpers:ItemLabelHelper.GetCaptionForStorageItem(IsFile, CaptionText, ItemCount), Mode=OneWay}"
+                        Caption="{x:Bind helpers:ItemLabelHelper.GetStorageItemCaption(IsFile, CaptionText, ItemCount), Mode=OneWay}"
                         IsPlaying="{Binding Media.IsPlaying, FallbackValue=False}"
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">
