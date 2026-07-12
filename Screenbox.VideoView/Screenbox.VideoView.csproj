@@ -15,6 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="LibVLCSharp" Version="3.10.0" />
-    <PackageReference Include="Silk.NET.Direct3D11" Version="2.22.0" />
+    <PackageReference Include="Silk.NET.Direct3D11" Version="2.23.0" />
   </ItemGroup>
 </Project>
