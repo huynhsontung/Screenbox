@@ -141,9 +141,8 @@ public sealed partial class MainPage : Page, IContentFrame
         {
             NavView_Navigate("settings");
         }
-        else if (args.SelectedItemContainer != null)
+        else if (args.SelectedItemContainer?.Tag is string navItemTag)
         {
-            var navItemTag = args.SelectedItemContainer.Tag.ToString();
             NavView_Navigate(navItemTag);
         }
     }

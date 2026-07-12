@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Screenbox.Behaviors;
 
-internal class FocusOnItemClickBehavior : Behavior<ListViewBase>
+internal sealed partial class FocusOnItemClickBehavior : Behavior<ListViewBase>
 {
     protected override void OnAttached()
     {

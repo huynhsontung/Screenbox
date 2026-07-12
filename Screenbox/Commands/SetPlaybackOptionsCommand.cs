@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Commands;
 
-internal class SetPlaybackOptionsCommand : IRelayCommand
+internal sealed partial class SetPlaybackOptionsCommand : IRelayCommand
 {
     public event EventHandler? CanExecuteChanged;
 

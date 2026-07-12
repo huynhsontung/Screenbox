@@ -19,7 +19,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public partial class PlaylistViewModel : ObservableRecipient
+public sealed partial class PlaylistViewModel : ObservableRecipient
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 

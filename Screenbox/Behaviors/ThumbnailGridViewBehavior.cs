@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors
 {
-    internal class ThumbnailGridViewBehavior : Behavior<GridView>
+    internal sealed partial class ThumbnailGridViewBehavior : Behavior<GridView>
     {
         protected override void OnAttached()
         {

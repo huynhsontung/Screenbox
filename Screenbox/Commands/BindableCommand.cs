@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 
 namespace Screenbox.Commands;
 
-internal class BindableCommand : DependencyObject, ICommand
+internal sealed partial class BindableCommand : DependencyObject, ICommand
 {
     public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
         nameof(Command),

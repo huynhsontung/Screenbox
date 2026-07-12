@@ -28,7 +28,7 @@ namespace Screenbox.Behaviors;
 /// </ListView>
 /// ]]></code>
 /// </example>
-internal sealed class ListViewSelectionBehavior : Behavior<ListViewBase>
+internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
 {
     /// <summary>
     /// Identifies the <see cref="SelectedItems"/> dependency property.

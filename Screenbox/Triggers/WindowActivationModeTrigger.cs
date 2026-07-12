@@ -44,7 +44,7 @@ namespace Screenbox.Triggers;
 /// ]]></code>
 /// </example>
 [Windows.Foundation.Metadata.ContractVersion(typeof(Windows.Foundation.UniversalApiContract), 327680u)]
-public sealed class WindowActivationModeTrigger : StateTriggerBase
+public sealed partial class WindowActivationModeTrigger : StateTriggerBase
 {
     private readonly CoreWindow _coreWindow;
     private readonly WeakEventListener<WindowActivationModeTrigger, CoreWindow, WindowActivatedEventArgs> _weakEventListener;
