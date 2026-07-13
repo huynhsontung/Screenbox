@@ -350,8 +350,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         try
         {
-            return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
+            var file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
                 AccessCacheOptions.SuppressAccessTimeUpdate);
+            // Try to open the file to ensure it is still accessible. If not, this will throw an exception.
+            using (var stream = await file.OpenReadAsync())
+            {
+                return file;
+            }
         }
         catch (UnauthorizedAccessException)
         {
