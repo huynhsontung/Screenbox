@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.ChapterProgressBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -16,24 +16,25 @@
                 <ResourceDictionary Source="ms-appx:///Styles/Progress.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="ItemTemplate" x:DataType="viewModels:ChapterViewModel">
-                <muxc:ProgressBar
-                    Width="{Binding Width}"
-                    Maximum="{Binding Maximum}"
-                    Minimum="{Binding Minimum}"
-                    Style="{StaticResource NoAnimationProgressBarStyle}"
-                    Value="{Binding Value}" />
-            </DataTemplate>
-
-            <muxc:StackLayout
-                x:Key="HorizontalStackLayout"
-                Orientation="Horizontal"
-                Spacing="{x:Bind local:ChapterProgressBar.Spacing}" />
+            <x:Double x:Key="ChaptersSpacing">1</x:Double>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <muxc:ItemsRepeater
-        ItemTemplate="{StaticResource ItemTemplate}"
-        ItemsSource="{x:Bind ProgressItems}"
-        Layout="{StaticResource HorizontalStackLayout}" />
+    <ItemsControl ItemsSource="{x:Bind ProgressItems}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="viewModels:ChapterViewModel">
+                <muxc:ProgressBar
+                    Width="{x:Bind Width, Mode=OneWay}"
+                    Maximum="{x:Bind Maximum, Mode=OneWay}"
+                    Minimum="{x:Bind Minimum, Mode=OneWay}"
+                    Style="{StaticResource ChapterProgressBarStyle}"
+                    Value="{x:Bind Value, Mode=OneWay}" />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource ChaptersSpacing}" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+    </ItemsControl>
 </UserControl>

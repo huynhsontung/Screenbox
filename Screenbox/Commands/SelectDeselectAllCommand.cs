@@ -11,7 +11,7 @@ namespace Screenbox.Commands;
 /// Represents a command that toggles the selection state of all items in a
 /// <see cref="ListViewBase"/> or <see cref="ListBox"/> control.
 /// </summary>
-public sealed class SelectDeselectAllCommand : ICommand
+public sealed partial class SelectDeselectAllCommand : ICommand
 {
     public event EventHandler? CanExecuteChanged;
 

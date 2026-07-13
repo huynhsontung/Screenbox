@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
-internal class GroupingOverviewBehavior : Behavior<GridView>
+internal sealed partial class GroupingOverviewBehavior : Behavior<GridView>
 {
     public static readonly DependencyProperty GroupTypeProperty = DependencyProperty.Register(
         nameof(GroupType), typeof(string), typeof(GroupingOverviewBehavior), new PropertyMetadata(default(string), OnGroupTypeChanged));

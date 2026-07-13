@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using Windows.UI.Xaml.Data;
@@ -6,7 +6,7 @@ using Screenbox.Core;
 
 namespace Screenbox.Converters
 {
-    internal sealed class HumanizedDurationConverter : IValueConverter
+    internal sealed partial class HumanizedDurationConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object parameter, string language)
         {

@@ -19,7 +19,7 @@ public sealed record LivelyInfoModel
 
     public string? Title { get; set; }
 
-    public string? Thumbnail { get; set; } = null;
+    public string? Thumbnail { get; set; }
 
     public string? Preview { get; set; }
 

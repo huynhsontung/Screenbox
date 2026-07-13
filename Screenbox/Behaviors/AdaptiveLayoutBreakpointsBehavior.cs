@@ -6,7 +6,7 @@ using Microsoft.Xaml.Interactivity;
 
 namespace Screenbox.Behaviors
 {
-    internal class AdaptiveLayoutBreakpointsBehavior : Behavior<Control>
+    internal sealed partial class AdaptiveLayoutBreakpointsBehavior : Behavior<Control>
     {
         public static readonly DependencyProperty BreakpointsProperty = DependencyProperty.Register(
             nameof(Breakpoints),

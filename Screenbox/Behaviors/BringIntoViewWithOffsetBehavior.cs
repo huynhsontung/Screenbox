@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
 
-internal class BringIntoViewWithOffsetBehavior : Behavior<UIElement>
+internal sealed partial class BringIntoViewWithOffsetBehavior : Behavior<UIElement>
 {
     public static readonly DependencyProperty FromBottomProperty = DependencyProperty.Register(
         nameof(FromBottom),

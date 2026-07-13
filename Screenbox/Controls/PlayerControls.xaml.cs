@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Linq;
@@ -169,6 +169,11 @@ public sealed partial class PlayerControls : UserControl
                 : Screenbox.Strings.Resources.None;
             ViewModel.SendStatusMessage(Screenbox.Strings.Resources.SubtitleStatus(label));
         }
+    }
+
+    private Visibility GetChapterVisibility(bool isEnabled, int count)
+    {
+        return isEnabled && count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 }
 

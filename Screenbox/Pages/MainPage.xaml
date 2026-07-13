@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -37,7 +37,7 @@
             <templates:SearchSuggestionTemplateSelector x:Key="SearchSuggestionTemplateSelector">
                 <templates:SearchSuggestionTemplateSelector.ItemTemplate>
                     <DataTemplate x:DataType="models:SearchSuggestion">
-                        <StackPanel AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForSearchSuggestion(Type, Text)}" Orientation="Horizontal">
+                        <StackPanel AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleSearchSuggestionName(Type, Text)}" Orientation="Horizontal">
                             <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}" />
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind Text}" />
                         </StackPanel>

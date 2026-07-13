@@ -68,7 +68,7 @@
         </MenuFlyout>
 
         <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
-            <Grid AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.GetAccessibleNameForStorageItem(IsFile, Name, CaptionText, ItemCount)}">
+            <Grid AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleStorageItemName(IsFile, Name, CaptionText, ItemCount)}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="*" />

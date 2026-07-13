@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using CommunityToolkit.Mvvm.Input;
@@ -8,18 +8,18 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Commands;
 
-internal class SetPlaybackOptionsCommand : IRelayCommand
+internal sealed partial class SetPlaybackOptionsCommand : IRelayCommand
 {
     public event EventHandler? CanExecuteChanged;
 
     public IRelayCommand? PlayCommand { get; set; }
 
-    public bool CanExecute(object parameter)
+    public bool CanExecute(object? parameter)
     {
         return true;
     }
 
-    public async void Execute(object parameter)
+    public async void Execute(object? parameter)
     {
         if (parameter is SettingsPageViewModel settings)
         {
@@ -47,7 +47,7 @@ internal class SetPlaybackOptionsCommand : IRelayCommand
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private static MediaViewModel? TryGetMedia(object parameter) => parameter switch
+    private static MediaViewModel? TryGetMedia(object? parameter) => parameter switch
     {
         MediaViewModel media => media,
         StorageItemViewModel storageItemViewModel => storageItemViewModel.Media,

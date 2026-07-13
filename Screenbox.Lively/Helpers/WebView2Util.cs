@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -45,7 +45,7 @@ public static class WebView2Util
     }
 
     // Ref: https://stackoverflow.com/questions/62835549/equivalent-of-webbrowser-invokescriptstring-object-in-webview2
-    public static async Task<string> ExecuteScriptFunctionAsync(this WebView2 webView, string functionName, params object[] parameters)
+    public static async Task<string> ExecuteScriptFunctionAsync(this WebView2 webView, string functionName, params object?[] parameters)
     {
         var script = new StringBuilder();
         script.Append(functionName);

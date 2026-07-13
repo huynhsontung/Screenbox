@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using Screenbox.Dialogs;
 
 namespace Screenbox.Commands;
 
-internal class ShowPropertiesCommand : IRelayCommand<MediaViewModel>
+internal sealed partial class ShowPropertiesCommand : IRelayCommand<MediaViewModel>
 {
     public event EventHandler? CanExecuteChanged;
 

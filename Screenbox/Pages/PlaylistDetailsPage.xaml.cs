@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
@@ -47,7 +46,7 @@ public sealed partial class PlaylistDetailsPage : Page
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
     private Compositor? _compositor;
-    private SpriteVisual? _backgroundVisual;
+    //private SpriteVisual? _backgroundVisual;
     private ScrollViewer? _scrollViewer;
 
     public PlaylistDetailsPage()
@@ -197,8 +196,8 @@ public sealed partial class PlaylistDetailsPage : Page
 
     private void BackgroundHost_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (_backgroundVisual == null) return;
-        _backgroundVisual.Size = new Vector2((float)e.NewSize.Width, BackgroundVisualHeight);
+        //if (_backgroundVisual == null) return;
+        //_backgroundVisual.Size = new Vector2((float)e.NewSize.Width, BackgroundVisualHeight);
     }
 
     private Thickness GetScrollbarVerticalMargin(Thickness value)

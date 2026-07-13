@@ -10,7 +10,7 @@ namespace Screenbox.Behaviors;
 /// <summary>
 /// A behavior that makes the <see cref="SettingsExpander"/> content accessible to XY focus navigation.
 /// </summary>
-internal class SettingsExpanderXYNavigationBehavior : Behavior<SettingsExpander>
+internal sealed partial class SettingsExpanderXYNavigationBehavior : Behavior<SettingsExpander>
 {
     protected override void OnAttached()
     {

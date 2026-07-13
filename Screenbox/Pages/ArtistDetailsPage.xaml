@@ -6,8 +6,8 @@
     xmlns:collections="using:CommunityToolkit.Mvvm.Collections"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -67,7 +67,7 @@
                         <TextBlock
                             FontSize="{StaticResource BodyTextBlockFontSize}"
                             FontWeight="SemiBold"
-                            Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(Key.(viewModels:AlbumViewModel.Name), strings:Resources.UnknownAlbum)}"
+                            Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Key.(viewModels:AlbumViewModel.Name), strings:Resources.UnknownAlbum)}"
                             TextTrimming="CharacterEllipsis">
                             <interactivity:Interaction.Behaviors>
                                 <behaviors:OverflowTextToolTipBehavior />
@@ -203,7 +203,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind converters:DefaultStringConverter.GetValueOrFallback(ViewModel.Source.Name, strings:Resources.UnknownArtist)}"
+                        Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.Source.Name, strings:Resources.UnknownArtist)}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
