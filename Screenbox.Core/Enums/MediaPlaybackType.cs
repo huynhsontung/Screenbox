@@ -1,6 +1,6 @@
 namespace Screenbox.Core.Enums;
 
-//[System.Obsolete("Remove the attribute once the transition from Protobuf to Microsoft.Data.Sqlite has been in place for some time.")]
+// TODO: Remove the attribute in version 1.0, after giving older versions enough time to migrate away from Protobuf.
 [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
 public enum MediaPlaybackType
 {

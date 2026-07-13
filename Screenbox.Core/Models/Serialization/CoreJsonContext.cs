@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Screenbox.Core.Models.Serialization;
 
-[Obsolete("Remove the class once the transition from Protobuf to Microsoft.Data.Sqlite has been in place for some time.")]
+[Obsolete("Remove the class in version 1.0, after giving older versions enough time to migrate away from Protobuf.")]
 [JsonSourceGenerationOptions( GenerationMode = JsonSourceGenerationMode.Metadata)]
 [JsonSerializable(typeof(PlaylistRecordDto))]
 [JsonSerializable(typeof(RawMediaRecordDto))]
