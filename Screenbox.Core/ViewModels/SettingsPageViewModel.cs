@@ -70,7 +70,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public IReadOnlyList<int> PlayerControlsHideDelayOptions { get; } = new[] { 1, 2, 3, 4, 5 };
 
-    public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
+    public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = Enum.GetValues<PlaybackActionKind>();
 
     private readonly ISettingsService _settingsService;
     private readonly IFilesService _filesService;
