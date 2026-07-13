@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -73,7 +73,7 @@ internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         AssociatedObject.Opening -= AssociatedObjectOnOpening;
     }
 
-    private void AssociatedObjectOnOpening(object sender, object e)
+    private void AssociatedObjectOnOpening(object? sender, object e)
     {
         _flyoutTarget = AssociatedObject.Target;
         PopulateMenu();

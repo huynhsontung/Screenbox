@@ -1,4 +1,4 @@
-﻿// Source (inspired by and ported to C#): https://github.com/microsoft/microsoft-ui-xaml/pull/6829
+// Source (inspired by and ported to C#): https://github.com/microsoft/microsoft-ui-xaml/pull/6829
 
 using System;
 using Windows.UI.Xaml;
@@ -52,7 +52,7 @@ namespace Screenbox.Converters;
 /// myBorder.BorderThickness = thicknessConverter.Extract(exampleThickness, thicknessFilter);
 /// </code>
 /// </example>
-public sealed class ThicknessFiltersConverter : DependencyObject, IValueConverter
+public sealed partial class ThicknessFiltersConverter : DependencyObject, IValueConverter
 {
     /// <summary>
     /// Identifies the <see cref="Filters"/> dependency property.
