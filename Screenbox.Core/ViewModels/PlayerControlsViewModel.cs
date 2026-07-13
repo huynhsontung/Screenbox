@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.ComponentModel;
@@ -41,7 +41,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isFullscreen;
     [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
-    [ObservableProperty] private string? _chapterName;
     [ObservableProperty] private double _playbackRate;
     [ObservableProperty] private double _audioTimingOffset;
     [ObservableProperty] private double _subtitleTimingOffset;
@@ -95,7 +94,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         if (MediaPlayer != null)
         {
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            MediaPlayer.ChapterChanged += OnChapterChanged;
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
@@ -121,14 +119,12 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         if (message.OldValue is { } oldPlayer)
         {
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
-            oldPlayer.ChapterChanged -= OnChapterChanged;
             oldPlayer.NaturalVideoSizeChanged -= OnNaturalVideoSizeChanged;
         }
 
         if (MediaPlayer != null)
         {
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            MediaPlayer.ChapterChanged += OnChapterChanged;
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
     }
@@ -301,11 +297,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         {
             IsPlaying = sender.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
         });
-    }
-
-    private void OnChapterChanged(IMediaPlayer sender, object? args)
-    {
-        _dispatcherQueue.TryEnqueue(() => ChapterName = sender.Chapter?.Title);
     }
 
     public void Receive(PropertyChangedMessage<WindowViewMode> message)

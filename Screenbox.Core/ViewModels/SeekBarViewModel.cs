@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
@@ -43,6 +44,8 @@ public sealed partial class SeekBarViewModel :
     [ObservableProperty] private bool _shouldShowPreview;
 
     [ObservableProperty] private bool _shouldHandleKeyDown;
+
+    [ObservableProperty] private ChapterCue? _currentChapterCue;
 
     public ObservableCollection<ChapterCue> Chapters { get; }
 
@@ -88,6 +91,7 @@ public sealed partial class SeekBarViewModel :
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             MediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
             MediaPlayer.PositionChanged += OnPositionChanged;
+            MediaPlayer.ChapterChanged += OnChapterChanged;
             MediaPlayer.MediaEnded += OnEndReached;
             MediaPlayer.BufferingStarted += OnBufferingStarted;
             MediaPlayer.BufferingEnded += OnBufferingEnded;
@@ -131,6 +135,7 @@ public sealed partial class SeekBarViewModel :
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
             oldPlayer.NaturalDurationChanged -= OnNaturalDurationChanged;
             oldPlayer.PositionChanged -= OnPositionChanged;
+            oldPlayer.ChapterChanged -= OnChapterChanged;
             oldPlayer.MediaEnded -= OnEndReached;
             oldPlayer.BufferingStarted -= OnBufferingStarted;
             oldPlayer.BufferingEnded -= OnBufferingEnded;
@@ -143,6 +148,7 @@ public sealed partial class SeekBarViewModel :
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             MediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
             MediaPlayer.PositionChanged += OnPositionChanged;
+            MediaPlayer.ChapterChanged += OnChapterChanged;
             MediaPlayer.MediaEnded += OnEndReached;
             MediaPlayer.BufferingStarted += OnBufferingStarted;
             MediaPlayer.BufferingEnded += OnBufferingEnded;
@@ -239,6 +245,16 @@ public sealed partial class SeekBarViewModel :
         UpdateProgress(newPosition);
     }
 
+    /// <summary>
+    /// Seeks the media playback position to the specified chapter.
+    /// </summary>
+    /// <param name="chapter">The chapter to seek.</param>
+    [RelayCommand]
+    private void SeekToChapter(ChapterCue chapter)
+    {
+        Messenger.Send(new ChangeTimeRequestMessage(chapter.StartTime, debounce: false));
+    }
+
     private void RestoreLastPosition(MediaViewModel media)
     {
         if (!_settingsService.PersistPlaybackPosition) return;
@@ -325,6 +341,7 @@ public sealed partial class SeekBarViewModel :
             {
                 IsSeekable = false;
                 Time = 0;
+                CurrentChapterCue = null;
                 Chapters.Clear();
             });
         }
@@ -333,6 +350,7 @@ public sealed partial class SeekBarViewModel :
             _dispatcherQueue.TryEnqueue(() =>
             {
                 Time = 0;
+                CurrentChapterCue = null;
                 Chapters.Clear();
             });
         }
@@ -361,6 +379,15 @@ public sealed partial class SeekBarViewModel :
         {
             Time = sender.Position.TotalMilliseconds;
         });
+    }
+
+    private void OnChapterChanged(IMediaPlayer sender, ValueChangedEventArgs<ChapterCue?> args)
+    {
+        // Small delay to prevent boundary retriggers.
+        _originalPositionTimer.Debounce(() =>
+        {
+            CurrentChapterCue = args.NewValue;
+        }, TimeSpan.FromMilliseconds(100));
     }
 
     private void OnNaturalDurationChanged(IMediaPlayer sender, object? args)
