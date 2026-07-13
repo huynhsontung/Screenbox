@@ -163,7 +163,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() => ViewMode = message.NewValue);
     }
 
-    private void OnNavigationServiceNavigated(object sender, EventArgs e)
+    private void OnNavigationServiceNavigated(object? sender, EventArgs e)
     {
         if (PlayerVisibility != PlayerVisibilityState.Visible) return;
         GoBack();
@@ -746,7 +746,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
     }
 
-    private void FocusManagerOnFocusChanged(object sender, FocusManagerGotFocusEventArgs e)
+    private void FocusManagerOnFocusChanged(object? sender, FocusManagerGotFocusEventArgs e)
     {
         if (_visibilityOverride) return;
         ControlsHidden = false;

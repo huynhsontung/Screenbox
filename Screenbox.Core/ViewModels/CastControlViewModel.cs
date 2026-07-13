@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -100,7 +100,7 @@ public sealed partial class CastControlViewModel : ObservableObject
         StartDiscovering();
     }
 
-    private void RendererWatcherOnRendererLost(object sender, RendererLostEventArgs e)
+    private void RendererWatcherOnRendererLost(object? sender, RendererLostEventArgs e)
     {
         _dispatcherQueue.TryEnqueue(() =>
         {
@@ -109,7 +109,7 @@ public sealed partial class CastControlViewModel : ObservableObject
         });
     }
 
-    private void RendererWatcherOnRendererFound(object sender, RendererFoundEventArgs e)
+    private void RendererWatcherOnRendererFound(object? sender, RendererFoundEventArgs e)
     {
         _dispatcherQueue.TryEnqueue(() => Renderers.Add(e.Renderer));
     }

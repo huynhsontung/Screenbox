@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -71,14 +71,14 @@ public sealed class RendererWatcher : IDisposable
         Stop();
     }
 
-    private void OnItemAdded(object sender, RendererDiscovererItemAddedEventArgs e)
+    private void OnItemAdded(object? sender, RendererDiscovererItemAddedEventArgs e)
     {
         Renderer renderer = new(e.RendererItem);
         _renderers.Add(renderer);
         RendererFound?.Invoke(this, new RendererFoundEventArgs(renderer));
     }
 
-    private void OnItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e)
+    private void OnItemDeleted(object? sender, RendererDiscovererItemDeletedEventArgs e)
     {
         Renderer? item = _renderers.FirstOrDefault(r => r.Target == e.RendererItem);
         if (item != null)

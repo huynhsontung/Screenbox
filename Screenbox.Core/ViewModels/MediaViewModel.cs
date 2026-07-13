@@ -58,12 +58,12 @@ public sealed partial class MediaViewModel : ObservableRecipient
         get
         {
             if (_thumbnailRef == null) return null;
-            return _thumbnailRef.TryGetTarget(out BitmapImage image) ? image : null;
+            return _thumbnailRef.TryGetTarget(out BitmapImage? image) ? image : null;
         }
         set
         {
             if (_thumbnailRef == null && value == null) return;
-            if ((_thumbnailRef?.TryGetTarget(out BitmapImage image) ?? false) && image == value) return;
+            if ((_thumbnailRef?.TryGetTarget(out BitmapImage? image) ?? false) && image == value) return;
             SetProperty(ref _thumbnailRef, value == null ? null : new WeakReference<BitmapImage>(value));
         }
     }
@@ -314,7 +314,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
         else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
                  media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-                 Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
+                 Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri))
         {
             Thumbnail = new BitmapImage(artworkUri)
             {

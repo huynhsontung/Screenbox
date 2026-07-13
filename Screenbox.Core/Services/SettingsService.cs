@@ -279,7 +279,7 @@ public sealed class SettingsService : ISettingsService
 
     private static T? GetValue<T>(string key)
     {
-        if (SettingsStorage.TryGetValue(key, out object value))
+        if (SettingsStorage.TryGetValue(key, out object? value))
         {
             return (T)value;
         }

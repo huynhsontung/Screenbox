@@ -626,7 +626,7 @@ public sealed class LibraryService : ILibraryService
                     or StorageLibraryChangeType.EncryptionChanged)) return false;
 
             StorageFile file;
-            MediaViewModel existing;
+            MediaViewModel? existing;
             switch (change.ChangeType)
             {
                 case StorageLibraryChangeType.Created:

@@ -281,7 +281,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
-    private void PlayQueueOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void PlayQueueOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {

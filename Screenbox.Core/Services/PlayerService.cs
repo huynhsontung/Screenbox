@@ -87,7 +87,7 @@ public sealed class PlayerService : IPlayerService
 
     private Media CreateMedia(VlcMediaPlayer player, string str, params string[] options)
     {
-        if (Uri.TryCreate(str, UriKind.Absolute, out Uri uri))
+        if (Uri.TryCreate(str, UriKind.Absolute, out var uri))
         {
             return CreateMedia(player, uri, options);
         }

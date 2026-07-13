@@ -77,7 +77,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         await UpdateContentAsync();
     }
 
-    private void Selection_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void Selection_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SelectionViewModel.IsAllSelected))
         {
@@ -279,7 +279,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         lock (Recent)
         {
             Recent.Remove(media);
-            if (_pathToMruMappings.Remove(media.Location, out string token))
+            if (_pathToMruMappings.Remove(media.Location, out var token))
             {
                 StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
             }

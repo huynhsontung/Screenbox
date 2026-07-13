@@ -49,7 +49,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         Items.CollectionChanged += Items_CollectionChanged;
     }
 
-    private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
 
