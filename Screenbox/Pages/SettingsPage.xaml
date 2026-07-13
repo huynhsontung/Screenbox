@@ -264,11 +264,10 @@
                         <ctc:SettingsCard
                             ActionIcon="{ui:FontIcon Glyph=&#xE8A7;,
                                                      MirroredWhenRightToLeft=True}"
+                            Click="ManageSystemIndexingCard_Click"
                             CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
-                            IsClickEnabled="True"
-                            Click="ManageSystemIndexingCard_Click">
-                        </ctc:SettingsCard>
+                            IsClickEnabled="True" />
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 
