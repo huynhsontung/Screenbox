@@ -1,4 +1,4 @@
-﻿using Screenbox.Core.Enums;
+using Screenbox.Core.Enums;
 using Windows.Media;
 
 namespace Screenbox.Core.Services;
@@ -8,6 +8,17 @@ public interface ISettingsService
     PlayerAutoResizeOption PlayerAutoResize { get; set; }
     bool UseIndexer { get; set; }
     bool PlayerShowControls { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether the remaining playback time
+    /// should be displayed in the player.
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> if the remaining playback time should be displayed;
+    /// otherwise, <see langword="false"/>.
+    /// </value>
+    bool PlayerShowRemainingTime { get; set; }
+
     bool PlayerShowChapters { get; set; }
     int PlayerControlsHideDelay { get; set; }
     int PersistentVolume { get; set; }

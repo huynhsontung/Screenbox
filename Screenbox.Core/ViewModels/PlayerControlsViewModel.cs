@@ -47,6 +47,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [ObservableProperty] private bool _isAdvancedModeActive;
     [ObservableProperty] private bool _isMinimal;
     [ObservableProperty] private bool _playerShowChapters;
+    [ObservableProperty] private bool _isDisplayingRemainingTime;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShouldBeAdaptive))]
@@ -86,6 +87,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _subtitleTimingOffset = 0.0;
         _isAdvancedModeActive = settingsService.AdvancedMode;
         _isMinimal = true;
+        IsDisplayingRemainingTime = settingsService.PlayerShowRemainingTime;
         _playerShowChapters = settingsService.PlayerShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
@@ -246,6 +248,11 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     public void SendStatusMessage(string? message)
     {
         Messenger.Send(new UpdateStatusMessage(message));
+    }
+
+    partial void OnIsDisplayingRemainingTimeChanged(bool value)
+    {
+        _settingsService.PlayerShowRemainingTime = value;
     }
 
     partial void OnPlaybackRateChanged(double value)

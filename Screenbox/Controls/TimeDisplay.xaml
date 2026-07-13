@@ -1,7 +1,8 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.TimeDisplay"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
@@ -9,82 +10,57 @@
     d:DesignWidth="256"
     mc:Ignorable="d">
 
-    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-        <StackPanel
-            FlowDirection="LeftToRight"
-            Orientation="Horizontal"
-            Tapped="TimeDisplay_OnTapped">
-            <TextBlock
-                x:Name="TimeText"
-                d:Text="43:21"
-                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-                Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}"
-                ToolTipService.ToolTip="{strings:Resources Key=TimeElapsed}"
-                Typography.NumeralAlignment="Tabular" />
-            <TextBlock
-                x:Name="RemainingText"
-                d:Text="-58:39"
-                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-                Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}"
-                ToolTipService.ToolTip="{strings:Resources Key=TimeRemaining}"
-                Typography.NumeralAlignment="Tabular"
-                Visibility="Collapsed" />
-            <TextBlock
-                Margin="2,0"
-                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-                Text="/" />
-            <TextBlock
-                d:Text="1:23:45"
-                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-                Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}"
-                ToolTipService.ToolTip="{strings:Resources Key=TimeLength}"
-                Typography.NumeralAlignment="Tabular" />
-        </StackPanel>
+    <Grid
+        x:Name="RootGrid"
+        FlowDirection="LeftToRight"
+        Tapped="RootGrid_OnTapped"
+        Typography.NumeralAlignment="Tabular">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
         <TextBlock
-            x:Name="SeparatorText"
-            d:Visibility="Visible"
+            x:Name="TimeText"
+            Grid.Column="0"
+            d:Text="43:21"
             Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-            Text=" •"
+            Text="{x:Bind core:Humanizer.ToDuration(Time), Mode=OneWay}"
+            ToolTipService.ToolTip="{x:Bind strings:Resources.TimeElapsed}" />
+        <TextBlock
+            x:Name="RemainingText"
+            Grid.Column="0"
+            d:Text="-58:39"
+            Style="{x:Bind TextBlockStyle, Mode=OneWay}"
+            Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}"
+            ToolTipService.ToolTip="{x:Bind strings:Resources.TimeRemaining}"
             Visibility="Collapsed" />
 
         <TextBlock
-            x:Name="NameText"
-            MinWidth="0"
-            Margin="2,0,0,0"
-            d:Visibility="Visible"
+            Grid.Column="1"
+            Margin="2,0"
             Style="{x:Bind TextBlockStyle, Mode=OneWay}"
-            Visibility="Collapsed">
-            <Run d:Text="Title" Text="{x:Bind TitleName, Mode=OneWay}" /><Run x:Name="Separator" Text=": " /><Run d:Text="Chapter 1" Text="{x:Bind ChapterName, Mode=OneWay}" />
-        </TextBlock>
+            Text="/" />
+
+        <TextBlock
+            Grid.Column="2"
+            d:Text="1:23:45"
+            Style="{x:Bind TextBlockStyle, Mode=OneWay}"
+            Text="{x:Bind core:Humanizer.ToDuration(Length), Mode=OneWay}"
+            ToolTipService.ToolTip="{x:Bind strings:Resources.TimeLength}" />
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="TimeTextVisibility">
-                <VisualState x:Name="ShowElapsed" />
-                <VisualState x:Name="ShowRemaining">
+            <VisualStateGroup x:Name="TimeDisplayStates">
+                <VisualState x:Name="ElapsedTime" />
+
+                <VisualState x:Name="RemainingTime">
                     <VisualState.Setters>
                         <Setter Target="TimeText.Visibility" Value="Collapsed" />
                         <Setter Target="RemainingText.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-
-            <VisualStateGroup x:Name="NameStates">
-                <VisualState x:Name="None" />
-                <VisualState x:Name="Both">
-                    <VisualState.Setters>
-                        <Setter Target="SeparatorText.Visibility" Value="Visible" />
-                        <Setter Target="NameText.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Either">
-                    <VisualState.Setters>
-                        <Setter Target="SeparatorText.Visibility" Value="Visible" />
-                        <Setter Target="NameText.Visibility" Value="Visible" />
-                        <Setter Target="Separator.Text" Value="{x:Null}" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </StackPanel>
+    </Grid>
 </UserControl>

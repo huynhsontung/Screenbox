@@ -458,6 +458,7 @@
                 Margin="8,0,0,2"
                 VerticalAlignment="Center"
                 FontSize="{StaticResource BodyTextBlockFontSize}"
+                IsRemainingTimeVisible="{x:Bind ViewModel.IsDisplayingRemainingTime, Mode=TwoWay}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
 
