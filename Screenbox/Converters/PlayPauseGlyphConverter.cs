@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters;
-internal class PlayPauseGlyphConverter : IValueConverter
+
+internal sealed partial class PlayPauseGlyphConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

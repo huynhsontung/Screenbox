@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.ComponentModel;
@@ -40,7 +40,7 @@ public sealed partial class PlayerPage : Page
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
-        ViewModel.GetVolumeChangeStatusMessage = Screenbox.Strings.Resources.VolumeChangeStatusMessage;
+        ViewModel.GetVolumeChangeStatusMessage = Strings.Resources.VolumeChangeStatusMessage;
         _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         RegisterSeekBarPointerHandlers();
@@ -175,7 +175,7 @@ public sealed partial class PlayerPage : Page
         UpdateRootTheme();
     }
 
-    private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {

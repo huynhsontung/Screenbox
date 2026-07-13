@@ -49,7 +49,7 @@ public sealed partial class VideosPage : Page, IContentFrame
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-        if (Common.NavigationStates.TryGetValue(typeof(VideosPage), out string navigationState))
+        if (Common.NavigationStates.TryGetValue(typeof(VideosPage), out string? navigationState))
         {
             ContentFrame.SetNavigationState(navigationState);
             UpdateSelectedNavItem(ContentSourcePageType);
@@ -84,16 +84,15 @@ public sealed partial class VideosPage : Page, IContentFrame
 
     private void LibraryNavView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        if (args.SelectedItemContainer != null)
+        if (args.SelectedItemContainer is { Tag: { } tag } && tag.ToString() is { } navItemTag)
         {
-            string navItemTag = args.SelectedItemContainer.Tag.ToString();
             NavView_Navigate(navItemTag);
         }
     }
 
     private void NavView_Navigate(string navItemTag)
     {
-        Type pageType = _pages.GetValueOrDefault(navItemTag);
+        Type? pageType = _pages.GetValueOrDefault(navItemTag);
         // Get the page type before navigation so you can prevent duplicate
         // entries in the backstack.
         Type? preNavPageType = ContentFrame.CurrentSourcePageType;

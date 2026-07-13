@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using Microsoft.Xaml.Interactivity;
@@ -19,7 +19,7 @@ namespace Screenbox.Behaviors;
 /// exceeds the width of the <b>ComboBox</b> itself, the popup opens in an incorrect horizontal position.</para>
 /// </remarks>
 [TypeConstraint(typeof(ComboBox))]
-public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
+public sealed partial class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
 {
     private double? _cachedWidth;
     private Popup? _popup;
@@ -53,7 +53,7 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
         AssociatedObject = null;
     }
 
-    private void OnDropDownOpened(object sender, object e)
+    private void OnDropDownOpened(object? sender, object e)
     {
         if (sender is ComboBox comboBox)
         {
@@ -76,7 +76,7 @@ public sealed class ComboBoxWidthFromPopupBehavior : DependencyObject, IBehavior
         }
     }
 
-    private void OnDropDownClosed(object sender, object e)
+    private void OnDropDownClosed(object? sender, object e)
     {
         if (sender is ComboBox comboBox)
         {

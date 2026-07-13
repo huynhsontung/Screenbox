@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Screenbox.Behaviors;
 /// <summary>
 /// Populates a <see cref="MenuFlyout"/> or a named <see cref="MenuFlyoutSubItem"/> within a <see cref="MenuFlyout"/> with playlist actions.
 /// </summary>
-internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
+internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
 {
     public static readonly DependencyProperty TargetSubItemNameProperty = DependencyProperty.Register(
         nameof(TargetSubItemName),
@@ -73,7 +73,7 @@ internal sealed class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         AssociatedObject.Opening -= AssociatedObjectOnOpening;
     }
 
-    private void AssociatedObjectOnOpening(object sender, object e)
+    private void AssociatedObjectOnOpening(object? sender, object e)
     {
         _flyoutTarget = AssociatedObject.Target;
         PopulateMenu();

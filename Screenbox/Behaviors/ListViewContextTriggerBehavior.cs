@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Behaviors
 {
-    internal class ListViewContextTriggerBehavior : Trigger<ListViewBase>
+    internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewBase>
     {
         public event TypedEventHandler<ListViewContextTriggerBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
 

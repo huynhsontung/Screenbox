@@ -1,9 +1,10 @@
-﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Controls;
-internal class CustomSlider : Slider
+
+internal sealed partial class CustomSlider : Slider
 {
     public static readonly DependencyProperty IsKeyDownEnabledProperty = DependencyProperty.Register(
         nameof(IsKeyDownEnabled), typeof(bool), typeof(CustomSlider), new PropertyMetadata(true));

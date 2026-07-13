@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +35,7 @@ public sealed partial class SongsPage : Page
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
     }
 
-    private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(SongsPageViewModel.SortBy))
         {
@@ -100,7 +100,7 @@ public sealed partial class SongsPage : Page
         scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
     }
 
-    private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+    private void ScrollViewerOnViewChanging(object? sender, ScrollViewerViewChangingEventArgs e)
     {
         SavePageState(e.NextView.VerticalOffset);
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
@@ -226,7 +226,7 @@ public sealed partial class ErrorInfo : UserControl
     }
 }
 
-public sealed class ErrorInfoAutomationPeer : FrameworkElementAutomationPeer
+public sealed partial class ErrorInfoAutomationPeer : FrameworkElementAutomationPeer
 {
     private readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
     private const string MoreErrorInfoString = "CriticalErrorMoreInformation";

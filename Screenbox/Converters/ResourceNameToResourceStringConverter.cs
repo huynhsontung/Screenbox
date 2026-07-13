@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
@@ -14,7 +14,7 @@ namespace Screenbox.Converters;
 /// <summary>
 /// Value converter that looks up for the source string in the App Resources strings and returns its value, if found.
 /// </summary>
-public sealed class ResourceNameToResourceStringConverter : IValueConverter
+public sealed partial class ResourceNameToResourceStringConverter : IValueConverter
 {
     private static readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
 

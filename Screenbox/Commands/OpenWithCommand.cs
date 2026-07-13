@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace Screenbox.Commands;
 /// Represents a command that opens a media file with an external application
 /// using the system Open With dialog.
 /// </summary>
-internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
+internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
 {
     public event EventHandler? CanExecuteChanged;
 
@@ -31,8 +31,8 @@ internal sealed class OpenWithCommand : IRelayCommand<MediaViewModel>
     public bool CanExecute(MediaViewModel? parameter)
     {
         return parameter?.Source is StorageFile
-            || parameter?.IsFromLibrary == true
-            && _asyncCommand.CanExecute(parameter);
+            || (parameter?.IsFromLibrary == true
+            && _asyncCommand.CanExecute(parameter));
     }
 
     /// <inheritdoc/>

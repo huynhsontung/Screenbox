@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Threading.Tasks;
@@ -8,7 +8,9 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
 using Screenbox.Strings;
 using Windows.UI.Xaml.Controls;
-using muxc = Microsoft.UI.Xaml.Controls;
+
+using SplitButton = Microsoft.UI.Xaml.Controls.SplitButton;
+using SplitButtonClickEventArgs = Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,7 +31,7 @@ public sealed partial class PlaylistsPage : Page
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 
-    private async void HeaderCreateButton_OnClick(muxc.SplitButton sender, muxc.SplitButtonClickEventArgs args)
+    private async void HeaderCreateButton_OnClick(SplitButton sender, SplitButtonClickEventArgs args)
     {
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(playlistName))
