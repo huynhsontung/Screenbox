@@ -283,12 +283,8 @@
             ButtonMargin="0,52,0,84"
             Click="VideoView_OnClick"
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"
-            ManipulationCompleted="VideoView_OnManipulationCompleted">
-            <interactivity:Interaction.Behaviors>
-                <interactivity:EventTriggerBehavior EventName="DoubleTapped">
-                    <interactivity:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
-                </interactivity:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
+            ManipulationCompleted="VideoView_OnManipulationCompleted"
+            DoubleTapped="VideoView_OnDoubleTapped">
         </controls:PlayerElement>
 
         <Button

@@ -266,12 +266,8 @@
                                                      MirroredWhenRightToLeft=True}"
                             CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
-                            IsClickEnabled="True">
-                            <interactivity:Interaction.Behaviors>
-                                <interactivity:EventTriggerBehavior EventName="Click">
-                                    <ctBehaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
-                                </interactivity:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
+                            IsClickEnabled="True"
+                            Click="ManageSystemIndexingCard_Click">
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
