@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Screenbox.Lively.Helpers;
 using Screenbox.Lively.Models;
+using Screenbox.Lively.Models.Serialization;
 using Windows.Storage;
 
 namespace Screenbox.Lively.Services;
@@ -89,7 +90,8 @@ public class LivelyWallpaperService : ILivelyWallpaperService
                 // Guaranteed to have minimum thumbnail (if created using Lively.)
                 PreviewPath = (await wallpaperFolder.GetFileAsync(model.Preview ?? model.Thumbnail)).Path,
             };
-            if (TrySanitizeUrl(model.Contact, out Uri uri))
+
+            if (model.Contact is string contact && TrySanitizeUrl(contact, out Uri uri))
                 obj.AuthorUrl = uri;
 
             return obj;
@@ -109,7 +111,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
             using var entryStream = livelyInfoEntry.Open();
             using var streamReader = new StreamReader(entryStream);
             var jsonContent = await streamReader.ReadToEndAsync();
-            var model = JsonSerializer.Deserialize<LivelyInfoModel>(jsonContent);
+            var model = JsonSerializer.Deserialize(jsonContent, LivelyJsonContext.Default.LivelyInfoModel);
             return model;
         }
         catch
@@ -124,7 +126,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
         {
             var modelFile = await wallpaperFolder.GetFileAsync("LivelyInfo.json");
             var jsonContent = await FileIO.ReadTextAsync(modelFile);
-            var model = JsonSerializer.Deserialize<LivelyInfoModel>(jsonContent);
+            var model = JsonSerializer.Deserialize(jsonContent, LivelyJsonContext.Default.LivelyInfoModel);
             return model;
         }
         catch

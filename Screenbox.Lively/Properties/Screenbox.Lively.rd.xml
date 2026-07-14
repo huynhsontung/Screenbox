@@ -29,7 +29,8 @@
 
   	<!-- add directives for your library here -->
 
-    <Namespace Name="Screenbox.Lively.Models" Serialize="All" />
+    <Namespace Name="Screenbox.Lively.Models" Serialize="Required PublicAndInternal" />
+    <Namespace Name="Screenbox.Lively.Models.Serialization" Serialize="Required PublicAndInternal" />
     <Namespace Name="System.Text.Json" Serialize="All" />
 
   </Library>

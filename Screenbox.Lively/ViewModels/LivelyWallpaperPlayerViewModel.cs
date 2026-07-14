@@ -18,6 +18,7 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Lively.Helpers;
 using Screenbox.Lively.Models;
+using Screenbox.Lively.Models.Serialization;
 using Screenbox.Lively.Services;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -238,7 +239,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             model.Thumbnail = base64;
         }
 
-        await webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonSerializer.Serialize(model));
+        await webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonSerializer.Serialize(model, LivelyJsonContext.Default.LivelyMusicModel));
     }
 
     private void LoadMedia()

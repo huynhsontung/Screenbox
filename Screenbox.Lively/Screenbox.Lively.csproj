@@ -128,6 +128,7 @@
     <Compile Include="Models\LivelyMusicModel.cs" />
     <Compile Include="Models\LivelyPlaybackStateModel.cs" />
     <Compile Include="Models\LivelyWallpaperModel.cs" />
+    <Compile Include="Models\Serialization\LivelyJsonContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ILivelyWallpaperService.cs" />
     <Compile Include="Services\LivelyWallpaperService.cs" />
