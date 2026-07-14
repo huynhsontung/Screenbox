@@ -49,6 +49,12 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
+                    Command="{StaticResource OpenWithCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
+                                       MirroredWhenRightToLeft=True}"
+                    Text="{x:Bind strings:Resources.OpenWith}" />
+                <MenuFlyoutItem
                     Command="{x:Bind ViewModel.RemoveCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
