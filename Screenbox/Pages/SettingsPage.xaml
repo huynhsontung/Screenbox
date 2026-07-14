@@ -264,15 +264,10 @@
                         <ctc:SettingsCard
                             ActionIcon="{ui:FontIcon Glyph=&#xE8A7;,
                                                      MirroredWhenRightToLeft=True}"
+                            Click="ManageSystemIndexingCard_Click"
                             CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
-                            IsClickEnabled="True">
-                            <interactivity:Interaction.Behaviors>
-                                <interactivity:EventTriggerBehavior EventName="Click">
-                                    <ctBehaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
-                                </interactivity:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </ctc:SettingsCard>
+                            IsClickEnabled="True" />
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 

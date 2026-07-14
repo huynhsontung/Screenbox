@@ -521,6 +521,11 @@ public sealed partial class PlayerPage : Page
         args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
     }
 
+    private void VideoView_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        PlayerControls.ViewModel.ToggleFullscreenCommand.Execute(null);
+    }
+
     private void EscapeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         switch (ViewModel.ViewMode)

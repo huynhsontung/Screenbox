@@ -209,11 +209,17 @@
 
             <VisualStateGroup x:Name="PlayingStates">
                 <VisualState x:Name="Playing">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsPlaying, Mode=OneWay, FallbackValue=False}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.PlaybackRate" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NotPlaying">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsPlaying, Mode=OneWay, Converter={StaticResource BoolNegationConverter}, FallbackValue=True}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.PlaybackRate" Value="0" />
                     </VisualState.Setters>
@@ -320,17 +326,5 @@
     <interactivity:Interaction.Behaviors>
         <behaviors:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="390,580,740" />
         <behaviors:MediaListViewItemBehavior />
-        <interactivity:DataTriggerBehavior Binding="{x:Bind ViewModel.IsPlaying, Mode=OneWay}" Value="True">
-            <interactivity:GoToStateAction
-                StateName="Playing"
-                TargetObject="{x:Bind}"
-                UseTransitions="True" />
-        </interactivity:DataTriggerBehavior>
-        <interactivity:DataTriggerBehavior Binding="{x:Bind ViewModel.IsPlaying, Mode=OneWay}" Value="False">
-            <interactivity:GoToStateAction
-                StateName="NotPlaying"
-                TargetObject="{x:Bind}"
-                UseTransitions="True" />
-        </interactivity:DataTriggerBehavior>
     </interactivity:Interaction.Behaviors>
 </UserControl>
