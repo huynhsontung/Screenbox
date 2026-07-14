@@ -65,13 +65,13 @@ public sealed class FilesService : IFilesService
     public StorageItemQueryResult GetSupportedItems(StorageFolder folder)
     {
         // Don't use indexer when querying. Potential incomplete result.
-        QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
+        QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats.ToArray());
         return folder.CreateItemQueryWithOptions(queryOptions);
     }
 
     public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder)
     {
-        QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
+        QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats.ToArray());
         return folder.CreateItemQueryWithOptions(queryOptions).GetItemCountAsync();
     }
 

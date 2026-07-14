@@ -183,8 +183,8 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         // Load media details for the remaining items
         if (!loadMediaDetails) return;
-        IEnumerable<Task> loadingTasks = Recent.Select(x => SafeLoadDetailsAsync(x));
-        loadingTasks = Recent.Select(x => SafeLoadThumbnailAsync(x)).Concat(loadingTasks);
+        IEnumerable<Task> loadingTasks = Recent.Select(SafeLoadDetailsAsync);
+        loadingTasks = Recent.Select(SafeLoadThumbnailAsync).Concat(loadingTasks);
         await Task.WhenAll(loadingTasks);
     }
 
