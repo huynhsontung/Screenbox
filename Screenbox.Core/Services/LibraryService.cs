@@ -43,7 +43,7 @@ public sealed class LibraryService : ILibraryService
     public StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer)
     {
         // Uses the same query options as the service's fetch logic. Centralized to avoid duplication.
-        QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats)
+        QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats.ToArray())
         {
             IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer
         };
@@ -57,7 +57,7 @@ public sealed class LibraryService : ILibraryService
     public StorageFileQueryResult CreateVideosLibraryQuery(bool useIndexer)
     {
         // Uses the same query options as the service's fetch logic. Centralized to avoid duplication.
-        QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats)
+        QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats.ToArray())
         {
             IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer
         };
@@ -696,7 +696,7 @@ public sealed class LibraryService : ILibraryService
     {
         // Removable storage does not support any other default queries.
         // Other than Default and SortByName, all other queries return empty results.
-        QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedAudioFormats);
+        QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedAudioFormats.ToArray());
         queryOptions.SetPropertyPrefetch(
             PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
             CustomPropertyKeys);
@@ -707,7 +707,7 @@ public sealed class LibraryService : ILibraryService
     {
         // Removable storage does not support any other default queries.
         // Other than Default and SortByName, all other queries return empty results.
-        QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats);
+        QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats.ToArray());
         queryOptions.SetPropertyPrefetch(
             PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
             CustomPropertyKeys);
