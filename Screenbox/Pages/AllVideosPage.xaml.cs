@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -27,6 +27,11 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.UpdateVideos();
+        }
+
+        private void VideosGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
+        {
+            ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
         }
     }
 }

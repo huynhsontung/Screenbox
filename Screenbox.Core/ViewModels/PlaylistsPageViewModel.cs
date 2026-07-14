@@ -18,6 +18,9 @@ namespace Screenbox.Core.ViewModels;
 
 public partial class PlaylistsPageViewModel : ObservableRecipient
 {
+    [ObservableProperty]
+    private PlaylistViewModel? _contextPlaylist;
+
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;

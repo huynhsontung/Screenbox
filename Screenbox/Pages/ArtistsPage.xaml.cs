@@ -1,3 +1,5 @@
+#nullable enable
+
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
@@ -60,6 +62,11 @@ public sealed partial class ArtistsPage : Page
     private void ScrollViewerOnViewChanging(object? sender, ScrollViewerViewChangingEventArgs e)
     {
         Common.SavePageState(e.NextView.VerticalOffset, nameof(ArtistsPage), Frame.BackStackDepth);
+    }
+
+    private void ArtistGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs e)
+    {
+        ViewModel.ContextArtist = e.Item.Content as ArtistViewModel;
     }
 
     private void ArtistGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

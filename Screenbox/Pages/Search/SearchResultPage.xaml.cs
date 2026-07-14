@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
@@ -39,6 +39,11 @@ namespace Screenbox.Pages
             double itemWidth = (double)App.Current.Resources["CommonGridViewItemWidth"];
             int desiredCount = (int)(e.NewSize.Width / (itemWidth + 10));
             ViewModel.UpdateGridItems(desiredCount);
+        }
+
+        private void SongListView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
+        {
+            ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
         }
     }
 }

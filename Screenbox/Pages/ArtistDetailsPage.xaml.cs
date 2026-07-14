@@ -81,6 +81,11 @@ namespace Screenbox.Pages
             CreateHeaderAnimation(_props, scrollingProperties.Translation.Y);
         }
 
+        private void ItemList_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
+        {
+            ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
+        }
+
         /// <summary>
         /// Create the animations that, during vertical scrolling, will gradually shrink the cover art, narrow the Y axis and fade in the background,
         /// include padding around the content, fade out the additional text blocks and fill the empty space left with the button panel.

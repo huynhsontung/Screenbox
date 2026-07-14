@@ -21,6 +21,9 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     [ObservableProperty]
     private PlaylistViewModel? _source;
 
+    [ObservableProperty]
+    private MediaViewModel? _contextMedia;
+
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly IMediaListFactory _mediaListFactory;

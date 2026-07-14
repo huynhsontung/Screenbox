@@ -1,9 +1,10 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
@@ -14,10 +15,13 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed class ArtistsPageViewModel : BaseMusicContentViewModel,
+public sealed partial class ArtistsPageViewModel : BaseMusicContentViewModel,
     IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
+
+    [ObservableProperty]
+    private ArtistViewModel? _contextArtist;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;

@@ -74,10 +74,12 @@ public sealed partial class FolderViewPage : Page
 
     private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
     {
-        if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
-        {
-            e.Handled = true;
-        }
+        ViewModel.ContextItem = e.Item.Content as StorageItemViewModel;
+
+        //if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
+        //{
+        //    e.Handled = true;
+        //}
     }
 
     private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)

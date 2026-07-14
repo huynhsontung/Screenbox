@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -37,7 +39,7 @@ public sealed partial class AlbumsPage : Page
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SongsPageViewModel.SortBy))
+        if (e.PropertyName == nameof(AlbumsPageViewModel.SortBy))
         {
             var state = ViewModel.SortBy switch
             {
@@ -88,6 +90,11 @@ public sealed partial class AlbumsPage : Page
     private void ScrollViewerOnViewChanging(object? sender, ScrollViewerViewChangingEventArgs e)
     {
         SavePageState(e.NextView.VerticalOffset);
+    }
+
+    private void AlbumGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs e)
+    {
+        ViewModel.ContextAlbum = e.Item.Content as AlbumViewModel;
     }
 
     private void SavePageState(double verticalOffset)

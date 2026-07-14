@@ -31,6 +31,11 @@ public sealed partial class PlaylistsPage : Page
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 
+    private void PlaylistsGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
+    {
+        ViewModel.ContextPlaylist = args.Item.Content as PlaylistViewModel;
+    }
+
     private async void HeaderCreateButton_OnClick(SplitButton sender, SplitButtonClickEventArgs args)
     {
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();

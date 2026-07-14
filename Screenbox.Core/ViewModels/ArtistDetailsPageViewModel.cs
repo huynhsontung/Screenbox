@@ -30,6 +30,9 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     [NotifyPropertyChangedFor(nameof(SongsCount))]
     private ArtistViewModel? _source;
 
+    [ObservableProperty]
+    private MediaViewModel? _contextMedia;
+
     public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.RelatedSongs) : TimeSpan.Zero;
 
     public int SongsCount => Source?.RelatedSongs.Count ?? 0;

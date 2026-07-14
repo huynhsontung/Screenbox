@@ -76,6 +76,12 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
+
+    private void PlaylistListView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
+    {
+        ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
+    }
+
     private void GoToCurrentItem()
     {
         if (ViewModel.Queue.CurrentItem is not null)

@@ -68,10 +68,12 @@ public sealed partial class FolderListViewPage : Page
 
     private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
     {
-        if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
-        {
-            e.Handled = true;
-        }
+        ViewModel.ContextItem = e.Item.Content as StorageItemViewModel;
+
+        //if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
+        //{
+        //    e.Handled = true;
+        //}
     }
 
     private void ListView_OnLoaded(object sender, RoutedEventArgs e)

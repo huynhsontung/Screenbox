@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Commands;
@@ -37,5 +37,10 @@ public sealed partial class HomePage : Page
             _selectionCommand.ToggleSelection(RecentFilesGridView);
             args.Handled = true;
         }
+    }
+
+    private void RecentFilesGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
+    {
+        ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
     }
 }
