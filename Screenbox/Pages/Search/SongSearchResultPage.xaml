@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.SongSearchResultPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -30,14 +31,20 @@
             <MenuFlyoutItem
                 Command="{x:Bind Common.AddToQueueCommand}"
                 CommandParameter="{Binding}"
-                Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                   Glyph={StaticResource PlaylistMusicGlyph}}"
-                Text="{strings:Resources Key=AddToQueue}" />
+                Text="{x:Bind strings:Resources.AddToQueue}">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon
+                        x:Name="AddToQueueMenuFlyoutItemIcon"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        Glyph="{StaticResource PlaylistMusicAddGlyph}" />
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 Command="{StaticResource OpenWithCommand}"
                 CommandParameter="{Binding}"
-                Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                Icon="{ui:FontIcon Glyph=&#xE7AC;,
+                                   MirroredWhenRightToLeft=True}"
                 Text="{x:Bind strings:Resources.OpenWith}" />
             <MenuFlyoutItem
                 Command="{StaticResource ShowPropertiesCommand}"
@@ -128,6 +135,17 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
