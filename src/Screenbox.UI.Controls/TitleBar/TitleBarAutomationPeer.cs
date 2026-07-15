@@ -1,7 +1,8 @@
+using Screenbox.UI.Controls;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml.Automation.Peers;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Automation.Peers;
 
 /// <summary>
 /// Exposes <see cref="TitleBar"/> types to <a href="https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32">Microsoft UI Automation</a>.

@@ -1,8 +1,8 @@
-﻿#nullable enable
+#nullable enable
 
 using Windows.UI.Xaml;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 public sealed partial class ContentUnavailableView
 {

@@ -1,11 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 public sealed partial class TitleBar
 {

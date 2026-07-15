@@ -161,7 +161,6 @@
     <Compile Include="Controls\ChapterPickerControl.xaml.cs">
       <DependentUpon>ChapterPickerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CommandBarEx\CommandBarEx.cs" />
     <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
       <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
     </Compile>
@@ -187,11 +186,6 @@
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NavigationViewEx\NavigationViewEx.cs" />
-    <Compile Include="Controls\NavigationViewEx\NavigationViewEx.Properties.cs" />
-    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.cs" />
-    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableView.Properties.cs" />
-    <Compile Include="Controls\ContentUnavailableView\ContentUnavailableViewAutomationPeer.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -216,10 +210,6 @@
     <Compile Include="Controls\TimeDisplay.xaml.cs">
       <DependentUpon>TimeDisplay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TitleBar\TitleBar.cs" />
-    <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
-    <Compile Include="Controls\TitleBar\TitleBarAutomationPeer.cs" />
-    <Compile Include="Controls\TitleBar\TitleBarHeightMode.cs" />
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
@@ -581,10 +571,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ContentUnavailableView\ContentUnavailableView_themeresources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\ErrorInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -598,10 +584,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MediaListViewItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ContentUnavailableView\ContentUnavailableView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -634,14 +616,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TimeDisplay.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\TitleBar\TitleBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\TitleBar\TitleBar_themeresources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -861,6 +835,10 @@
     <ProjectReference Include="..\Screenbox.Lively\Screenbox.Lively.csproj">
       <Project>{9b443f29-bff0-45b7-8a84-ee88cd5ae405}</Project>
       <Name>Screenbox.Lively</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Screenbox.UI.Controls\Screenbox.UI.Controls.csproj">
+      <Project>{27eccb04-584c-4de3-ac83-b8380719bd07}</Project>
+      <Name>Screenbox.UI.Controls</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

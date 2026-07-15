@@ -14,6 +14,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Screenbox.Triggers"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -470,14 +471,14 @@
             Grid.Column="0"
             Padding="6,20,6,12" />
 
-        <controls:TitleBar
+        <sbuc:TitleBar
             x:Name="PlayerTitleBar"
             MinHeight="80"
             Background="{ThemeResource PlayerTitleBarBackgroundBrush}">
-            <controls:TitleBar.Resources>
+            <sbuc:TitleBar.Resources>
                 <Thickness x:Key="TitleBarIconMargin">12,0,12,0</Thickness>
                 <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Left</HorizontalAlignment>
-            </controls:TitleBar.Resources>
+            </sbuc:TitleBar.Resources>
 
             <Grid x:Name="PlayerTitleBarContentGrid">
                 <Grid.ColumnDefinitions>
@@ -576,7 +577,7 @@
                 </StackPanel>
             </Grid>
 
-            <controls:TitleBar.Footer>
+            <sbuc:TitleBar.Footer>
                 <Button
                     x:Name="LivelyOptionsButton"
                     Grid.Column="4"
@@ -608,8 +609,8 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-            </controls:TitleBar.Footer>
-        </controls:TitleBar>
+            </sbuc:TitleBar.Footer>
+        </sbuc:TitleBar>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">

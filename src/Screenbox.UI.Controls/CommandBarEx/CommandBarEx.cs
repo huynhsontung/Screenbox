@@ -3,7 +3,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 /// <summary>
 /// Represents an extended <see cref="CommandBar"/> control that provides a
