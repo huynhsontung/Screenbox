@@ -87,7 +87,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _subtitleTimingOffset = 0.0;
         _isAdvancedModeActive = settingsService.AdvancedMode;
         _isMinimal = true;
-        IsDisplayingRemainingTime = settingsService.PlayerShowRemainingTime;
+        IsDisplayingRemainingTime = settingsService.PersistentShowRemainingTime;
         _playerShowChapters = settingsService.PlayerShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
@@ -252,7 +252,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     partial void OnIsDisplayingRemainingTimeChanged(bool value)
     {
-        _settingsService.PlayerShowRemainingTime = value;
+        _settingsService.PersistentShowRemainingTime = value;
     }
 
     partial void OnPlaybackRateChanged(double value)

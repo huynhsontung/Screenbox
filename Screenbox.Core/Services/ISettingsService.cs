@@ -17,7 +17,7 @@ public interface ISettingsService
     /// <see langword="true"/> if the remaining playback time should be displayed;
     /// otherwise, <see langword="false"/>.
     /// </value>
-    bool PlayerShowRemainingTime { get; set; }
+    bool PersistentShowRemainingTime { get; set; }
 
     bool PlayerShowChapters { get; set; }
     int PlayerControlsHideDelay { get; set; }

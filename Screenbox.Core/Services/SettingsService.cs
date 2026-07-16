@@ -32,7 +32,7 @@ public sealed class SettingsService : ISettingsService
     private const string MaxVolumeKey = "Values/MaxVolume";
     private const string PersistentRepeatModeKey = "Values/RepeatMode";
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
-    private const string PlayerShowRemainingTimeKey = "Player/ShowRemainingTime";
+    private const string PersistentShowRemainingTimeKey = "Values/ShowRemainingTime";
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
@@ -155,10 +155,10 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PlayerLivelyPathKey, value);
     }
 
-    public bool PlayerShowRemainingTime
+    public bool PersistentShowRemainingTime
     {
-        get => GetValue<bool>(PlayerShowRemainingTimeKey);
-        set => SetValue(PlayerShowRemainingTimeKey, value);
+        get => GetValue<bool>(PersistentShowRemainingTimeKey);
+        set => SetValue(PersistentShowRemainingTimeKey, value);
     }
 
     public bool PlayerShowChapters
@@ -248,7 +248,7 @@ public sealed class SettingsService : ISettingsService
         SetDefault(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);
         SetDefault(AdvancedMultipleInstancesKey, false);
         SetDefault(GlobalArgumentsKey, string.Empty);
-        SetDefault(PlayerShowRemainingTimeKey, false);
+        SetDefault(PersistentShowRemainingTimeKey, false);
         SetDefault(PlayerShowChaptersKey, true);
         SetDefault(PrivacyPersistPlaybackPosition, true);
         SetDefault(PlayerRewindStepKey, 5);
