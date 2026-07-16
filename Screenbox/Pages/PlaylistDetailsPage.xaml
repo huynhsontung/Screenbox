@@ -27,9 +27,9 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
-                    Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
+                    Text="{x:Bind strings:Resources.Play}">
                     <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayGlyph}" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
