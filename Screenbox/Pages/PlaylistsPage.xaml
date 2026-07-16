@@ -87,39 +87,55 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource ContentPagePadding}"
-            ColumnSpacing="8">
+            Padding="{StaticResource ContentPagePadding}">
+            <TextBlock
+                Style="{StaticResource TitleMediumTextBlockStyle}"
+                Text="{strings:Resources Key=Playlists}"
+                TextWrapping="NoWrap">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+        </Grid>
+
+        <Grid
+            x:Name="SubHeaderGrid"
+            Grid.Row="1"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="0,0,0,8"
+            Padding="{StaticResource ContentPagePadding}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock
-                x:Name="HeaderText"
+            <Button
+                x:Name="SubHeaderCreateButton"
                 Grid.Column="0"
-                Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=Playlists}"
-                TextWrapping="NoWrap" />
-
-            <muxc:SplitButton
-                x:Name="HeaderCreateButton"
-                Grid.Column="1"
-                VerticalAlignment="Top"
-                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                 AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
-                Click="HeaderCreateButton_OnClick"
-                Flyout="{StaticResource CreatePlaylistFlyout}">
+                Command="{x:Bind CreatePlaylistCommand}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                    <TextBlock
-                        x:Name="HeaderCreateButtonText"
-                        Margin="8,0,0,0"
-                        Text="{strings:Resources Key=NewPlaylist}" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
                 </StackPanel>
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:SplitButtonXYNavigationBehavior />
-                </interactivity:Interaction.Behaviors>
-            </muxc:SplitButton>
+            </Button>
+
+            <Button
+                x:Name="SubHeaderImportButton"
+                Grid.Column="1"
+                AutomationProperties.Name="{x:Bind strings:Resources.ImportPlaylist}"
+                Command="{x:Bind ViewModel.ImportPlaylistCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        Glyph="&#xE8B5;"
+                        MirroredWhenRightToLeft="True" />
+                    <TextBlock
+                        x:Name="SubHeaderImportButtonText"
+                        Margin="8,0,0,0"
+                        Text="{x:Bind strings:Resources.ImportPlaylist}" />
+                </StackPanel>
+            </Button>
         </Grid>
 
         <GridView
@@ -168,10 +184,11 @@
                     Glyph="{StaticResource PlaylistOffGlyph}" />
                 <controls:ContentUnavailableView.ActionContent>
                     <muxc:SplitButton
+                        extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
                         AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
                         AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
-                        Click="HeaderCreateButton_OnClick"
+                        Command="{x:Bind CreatePlaylistCommand}"
                         Flyout="{StaticResource CreatePlaylistFlyout}"
                         Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
@@ -196,8 +213,9 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="HeaderCreateButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.NewPlaylist}" />
-                        <Setter Target="HeaderCreateButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="SubHeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SubHeaderImportButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.ImportPlaylist}" />
+                        <Setter Target="SubHeaderImportButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistsGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="NoPlaylistsViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoPlaylistsPanelIcon.Margin" Value="0,0,0,0" />
@@ -212,7 +230,7 @@
                         <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Playlists, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderCreateButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SubHeaderGrid.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistsGridView.Visibility" Value="Collapsed" />
                         <Setter Target="NoPlaylistsViewer.Visibility" Value="Visible" />
                         <Setter Target="NoPlaylistsPanel.IsOpen" Value="True" />

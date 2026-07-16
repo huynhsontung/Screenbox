@@ -9,9 +9,6 @@ using Screenbox.Dialogs;
 using Screenbox.Strings;
 using Windows.UI.Xaml.Controls;
 
-using SplitButton = Microsoft.UI.Xaml.Controls.SplitButton;
-using SplitButtonClickEventArgs = Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs;
-
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Screenbox.Pages;
@@ -31,7 +28,8 @@ public sealed partial class PlaylistsPage : Page
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 
-    private async void HeaderCreateButton_OnClick(SplitButton sender, SplitButtonClickEventArgs args)
+    [RelayCommand]
+    private async Task CreatePlaylistAsync()
     {
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(playlistName))
