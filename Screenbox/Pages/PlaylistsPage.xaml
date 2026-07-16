@@ -5,6 +5,7 @@
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
@@ -22,6 +23,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 <templates:GridViewItemTemplates />
             </ResourceDictionary.MergedDictionaries>
 
@@ -63,6 +65,18 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{strings:Resources Key=Delete}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
+                    CommandParameter="{Binding}"
+                    Text="{x:Bind strings:Resources.Select}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon
+                            x:Name="SelectMenuFlyoutItemIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource SingleSelectGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
@@ -136,6 +150,35 @@
                         Text="{x:Bind strings:Resources.ImportPlaylist}" />
                 </StackPanel>
             </Button>
+
+            <controls:SelectionBarControl
+                x:Name="SelectionBar"
+                Grid.ColumnSpan="2"
+                ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"
+                AddToQueueButtonCommand="{x:Bind ViewModel.AddSelectedToQueueCommand}"
+                CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
+                CheckBoxCommandParameter="{x:Bind PlaylistsGridView}"
+                CheckBoxIsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
+                CheckBoxText="{x:Bind strings:Resources.PlaylistsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
+                CloseButtonCommand="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
+                CommandParameter="{x:Bind PlaylistsGridView.SelectedItems}"
+                IsAddToPlaylistButtonVisible="False"
+                IsRemoveButtonVisible="False"
+                PlayButtonCommand="{x:Bind ViewModel.PlaySelectedCommand}"
+                PlayNextButtonCommand="{x:Bind ViewModel.PlaySelectedNextCommand}"
+                Visibility="Collapsed">
+                <controls:SelectionBarControl.AdditionalCommands>
+                    <AppBarButton
+                        Command="{x:Bind ViewModel.DeleteSelectedCommand}"
+                        CommandParameter="{x:Bind PlaylistsGridView.SelectedItems}"
+                        Icon="Delete"
+                        Label="{x:Bind strings:Resources.Delete}">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Delete" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </controls:SelectionBarControl.AdditionalCommands>
+            </controls:SelectionBarControl>
         </Grid>
 
         <GridView
@@ -148,15 +191,23 @@
             ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
             ItemTemplate="{StaticResource PlaylistGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Playlists}"
-            SelectionMode="None">
+            KeyboardAcceleratorPlacementMode="Hidden"
+            SelectionMode="Extended">
             <GridView.Resources>
                 <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </GridView.Resources>
+            <GridView.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="A"
+                    Invoked="SelectDeselectAllKeyboardAccelerator_OnInvoked"
+                    Modifiers="Control" />
+            </GridView.KeyboardAccelerators>
             <GridView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
             </interactivity:Interaction.Behaviors>
         </GridView>
 
@@ -234,6 +285,22 @@
                         <Setter Target="PlaylistsGridView.Visibility" Value="Collapsed" />
                         <Setter Target="NoPlaylistsViewer.Visibility" Value="Visible" />
                         <Setter Target="NoPlaylistsPanel.IsOpen" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="SelectionStates">
+                <VisualState x:Name="ExtendedSelection" />
+                <VisualState x:Name="MultipleSelection">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SubHeaderCreateButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SubHeaderImportButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SelectionBar.Visibility" Value="Visible" />
+                        <Setter Target="PlaylistsGridView.SelectionMode" Value="Multiple" />
+                        <Setter Target="PlaylistsGridView.IsItemClickEnabled" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

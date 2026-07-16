@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,6 +20,8 @@ namespace Screenbox.Core.ViewModels;
 
 public partial class PlaylistsPageViewModel : ObservableRecipient
 {
+    public SelectionViewModel Selection { get; }
+
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
@@ -28,12 +32,25 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     [ObservableProperty] private PlaylistViewModel? _selectedPlaylist;
 
     public PlaylistsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
-        PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory)
+        PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory,
+        SelectionViewModel selection)
     {
+        Selection = selection;
         _filesService = filesService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
         _playlistFactory = playlistFactory;
+
+        Selection.SetItemsSource(Playlists);
+        Selection.SelectedItems.CollectionChanged += Selection_SelectedItemsChanged;
+    }
+
+    private void Selection_SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        PlaySelectedCommand.NotifyCanExecuteChanged();
+        PlaySelectedNextCommand.NotifyCanExecuteChanged();
+        AddSelectedToQueueCommand.NotifyCanExecuteChanged();
+        DeleteSelectedCommand.NotifyCanExecuteChanged();
     }
 
     public async Task CreatePlaylistAsync(string displayName)
@@ -108,4 +125,65 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 
         await _playlistService.ExportPlaylistItemsAsync(playlist.Items, file);
     }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelected(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems
+            .OfType<PlaylistViewModel>()
+            .SelectMany(p => p.Items)
+            .ToArray();
+        Messenger.SendQueueAndPlay(items[0], items);
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelectedNext(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<PlaylistViewModel>().Reverse().ToArray();
+        foreach (var item in items)
+        {
+            Messenger.SendPlayNext(item.Items);
+        }
+
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void AddSelectedToQueue(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var items = selectedItems.OfType<PlaylistViewModel>().ToArray();
+        foreach (var item in items)
+        {
+            Messenger.SendAddToQueue(item.Items);
+        }
+
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void DeleteSelected(IList<object>? selectedItems)
+    {
+        if (selectedItems is null) return;
+
+        var copy = selectedItems.OfType<PlaylistViewModel>().ToArray();
+        foreach (var item in copy)
+        {
+            _ = DeletePlaylistAsync(item);
+        }
+
+        selectedItems.Clear();
+        Selection.ClearSelectionCommand.Execute(null);
+    }
+
+    private bool HasSelection => Selection.SelectedItems.Count > 0;
 }

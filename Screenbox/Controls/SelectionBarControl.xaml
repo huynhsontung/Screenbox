@@ -144,7 +144,8 @@
                 <AppBarButton
                     x:Name="AddToPlaylistButton"
                     Icon="Add"
-                    Label="{x:Bind strings:Resources.AddToPlaylist}">
+                    Label="{x:Bind strings:Resources.AddToPlaylist}"
+                    Visibility="{x:Bind IsAddToPlaylistButtonVisible, Mode=OneWay}">
                     <AppBarButton.Resources>
                         <Visibility x:Key="AppBarButtonHasFlyoutChevronVisibility">Visible</Visibility>
                         <x:String x:Key="AppBarButtonFlyoutGlyph">&#xE972;</x:String>

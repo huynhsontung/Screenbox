@@ -4,10 +4,12 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
 using Screenbox.Strings;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,11 +23,25 @@ public sealed partial class PlaylistsPage : Page
 
     internal CommonViewModel Common { get; }
 
+    private readonly SelectDeselectAllCommand _selectionCommand;
+
     public PlaylistsPage()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlaylistsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+
+        _selectionCommand = new SelectDeselectAllCommand();
+    }
+
+    private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (ViewModel.Playlists.Count > 0 && _selectionCommand.CanToggleSelection(PlaylistsGridView))
+        {
+            ViewModel.Selection.IsSelectionModeActive = true;
+            _selectionCommand.ToggleSelection(PlaylistsGridView);
+            args.Handled = true;
+        }
     }
 
     [RelayCommand]
