@@ -184,6 +184,7 @@
         <GridView
             x:Name="PlaylistsGridView"
             Grid.Row="2"
+            Margin="{StaticResource TopMediumMargin}"
             Padding="{StaticResource GridViewContentPagePadding}"
             ui:ListViewExtensions.Command="{x:Bind Common.OpenPlaylistCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -301,6 +302,17 @@
                         <Setter Target="SelectionBar.Visibility" Value="Visible" />
                         <Setter Target="PlaylistsGridView.SelectionMode" Value="Multiple" />
                         <Setter Target="PlaylistsGridView.IsItemClickEnabled" Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
