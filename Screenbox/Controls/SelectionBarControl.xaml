@@ -39,7 +39,10 @@
             </CommandBar.Resources>
             <CommandBar.KeyboardAccelerators>
                 <!--  When primary commands are moved to the overflow menu, their accelerators only work if the overflow menu is currently open.  -->
-                <KeyboardAccelerator Key="Delete" Invoked="DeleteKeyboardAccelerator_OnInvoked" />
+                <KeyboardAccelerator
+                    Key="Delete"
+                    Invoked="DeleteKeyboardAccelerator_OnInvoked"
+                    IsEnabled="{x:Bind IsDeleteKeyboardAcceleratorEnabled, Mode=OneWay}" />
             </CommandBar.KeyboardAccelerators>
 
             <CommandBar.Content>
