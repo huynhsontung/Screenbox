@@ -1,10 +1,13 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.WinUI;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -48,6 +51,9 @@ public sealed partial class SelectionViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSelectionModeActive;
 
+    private readonly DispatcherQueue _dispatcherQueue;
+    private readonly DispatcherQueueTimer _selectionStateTimer;
+
     private IReadOnlyCollection<object>? _sourceCollection;
 
     /// <summary>
@@ -55,6 +61,9 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     public SelectionViewModel()
     {
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _selectionStateTimer = _dispatcherQueue.CreateTimer();
+
         SelectedItems = new ObservableCollection<object>();
         SelectedItems.CollectionChanged += SelectedItems_OnCollectionChanged;
     }
@@ -106,14 +115,15 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        RefreshSelectionState();
+        // Delay to avoid updates during a series of events.
+        _selectionStateTimer.Debounce(RefreshSelectionState, TimeSpan.FromMilliseconds(10));
     }
 
     private void SourceCollection_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         // Refresh the selection state to ensure it accurately reflects the current collection
         // (e.g., when removing the last unselected item).
-        RefreshSelectionState();
+        _selectionStateTimer.Debounce(RefreshSelectionState, TimeSpan.FromMilliseconds(10));
     }
 
     private void RefreshSelectionState()
