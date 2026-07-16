@@ -199,6 +199,9 @@
                         <Setter Target="HeaderCreateButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.NewPlaylist}" />
                         <Setter Target="HeaderCreateButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistsGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="NoPlaylistsViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoPlaylistsPanelIcon.Margin" Value="0,0,0,0" />
+                        <Setter Target="NoPlaylistsPanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
