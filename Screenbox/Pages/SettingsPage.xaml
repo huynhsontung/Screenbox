@@ -407,6 +407,67 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsAudioLanguageDescription}"
+                    Header="{strings:Resources Key=SettingsAudioLanguageHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE189;}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsAudioLanguageDescription}"
+                        ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
+                        SelectedIndex="{x:Bind ViewModel.PreferredAudioLanguage, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:LanguageInfo">
+                                <TextBlock Text="{x:Bind NativeName}" TextAlignment="DetectFromContent" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsSubtitleLanguageDescription}"
+                    Header="{strings:Resources Key=SettingsSubtitleLanguageHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8D2;}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsSubtitleLanguageDescription}"
+                        ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
+                        SelectedIndex="{x:Bind ViewModel.PreferredSubtitleLanguage, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:LanguageInfo">
+                                <TextBlock Text="{x:Bind NativeName}" TextAlignment="DetectFromContent" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsSubtitleTypeDescription}"
+                    Header="{strings:Resources Key=SettingsSubtitleTypeHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE14C;}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsSubtitleTypeDescription}"
+                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
+                        SelectedIndex="{x:Bind ViewModel.PreferredSubtitleType, Mode=TwoWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ComboBoxWidthFromPopupBehavior />
+                        </interactivity:Interaction.Behaviors>
+                        <x:String>SubtitleTypeAny</x:String>
+                        <x:String>SubtitleTypeFull</x:String>
+                        <x:String>SubtitleTypeSignsSongs</x:String>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.SettingsOnScreenControlsDescription}"
