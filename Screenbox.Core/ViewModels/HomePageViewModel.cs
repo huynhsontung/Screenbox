@@ -146,16 +146,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
                 }
                 else if (Recent[i].Source is StorageFile existing)
                 {
-                    try
-                    {
-                        if (!file.IsEqual(existing)) MoveOrInsert(file, token, i);
-                    }
-                    catch (Exception)
-                    {
-                        // StorageFile.IsEqual() throws an exception
-                        // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
-                        // pass
-                    }
+                    if (!file.SafeIsEqual(existing)) MoveOrInsert(file, token, i);
                 }
             }
 
@@ -227,19 +218,10 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         for (int j = desiredIndex + 1; j < Recent.Count; j++)
         {
             if (Recent[j].Source is not StorageFile existingFile) continue;
-            try
+            if (file.SafeIsEqual(existingFile))
             {
-                if (file.IsEqual(existingFile))
-                {
-                    existingIndex = j;
-                    break;
-                }
-            }
-            catch (Exception)
-            {
-                // StorageFile.IsEqual() can throw when the underlying MRU item is in
-                // a bad state (e.g. ArgumentException "Falscher Parameter." or
-                // "Element not found." HRESULT 0x80070490). Treat as not equal.
+                existingIndex = j;
+                break;
             }
         }
 
