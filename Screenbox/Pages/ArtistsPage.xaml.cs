@@ -64,11 +64,6 @@ public sealed partial class ArtistsPage : Page
         Common.SavePageState(e.NextView.VerticalOffset, nameof(ArtistsPage), Frame.BackStackDepth);
     }
 
-    private void ArtistGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs e)
-    {
-        ViewModel.ContextArtist = e.Item.Content as ArtistViewModel;
-    }
-
     private void ArtistGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         // TODO: Load artist image from the internet

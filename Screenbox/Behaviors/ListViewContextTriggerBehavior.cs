@@ -1,101 +1,116 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
-using System.Collections.Generic;
-using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
-namespace Screenbox.Behaviors
+namespace Screenbox.Behaviors;
+
+/// <summary>
+/// Represents a behavior that triggers actions when a context menu is requested
+/// on each item of a <see cref="ListViewBase"/> control.
+/// </summary>
+/// <remarks>
+/// This behavior listens for context menu requests and right-tap events on the
+/// associated <see cref="ListViewBase"/> control and executes the specified actions.
+/// </remarks>
+internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewBase>
 {
-    internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewBase>
+    /// <summary>
+    /// Identifies the <see cref="Flyout"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty FlyoutProperty = DependencyProperty.Register(
+        nameof(Flyout),
+        typeof(FlyoutBase),
+        typeof(ListViewContextTriggerBehavior),
+        new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the flyout associated with each item in this <see cref="ListViewBase"/>
+    /// control.
+    /// </summary>
+    /// <value>
+    /// The flyout associated with each item, if any; otherwise, <b><see langword="null"/></b>.
+    /// The default is <see langword="null"/>.
+    /// </value>
+    public FlyoutBase? Flyout
     {
-        public event TypedEventHandler<ListViewContextTriggerBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
+        get => (FlyoutBase?)GetValue(FlyoutProperty);
+        set => SetValue(FlyoutProperty, value);
+    }
 
-        public static readonly DependencyProperty FlyoutProperty = DependencyProperty.Register(
-            nameof(Flyout),
-            typeof(FlyoutBase),
-            typeof(ListViewContextTriggerBehavior),
-            new PropertyMetadata(null));
+    /// <summary>
+    /// Identifies the <see cref="ContextItem"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty ContextItemProperty = DependencyProperty.Register(
+        nameof(ContextItem),
+        typeof(object),
+        typeof(ListViewContextTriggerBehavior),
+        new PropertyMetadata(null));
 
-        public FlyoutBase? Flyout
+    /// <summary>
+    /// Gets or sets the content of the item that was right-clicked or context requested.
+    /// </summary>
+    /// <value>The content of the item that was right-clicked or context requested.</value>
+    public object? ContextItem
+    {
+        get => GetValue(ContextItemProperty);
+        set => SetValue(ContextItemProperty, value);
+    }
+
+    protected override void OnAttached()
+    {
+        base.OnAttached();
+
+        AssociatedObject.ContextRequested += OnContextRequested;
+        AssociatedObject.RightTapped += OnRightTapped;
+    }
+
+    protected override void OnDetaching()
+    {
+        base.OnDetaching();
+
+        AssociatedObject.ContextRequested -= OnContextRequested;
+        AssociatedObject.RightTapped -= OnRightTapped;
+    }
+
+    private void OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
+    {
+        if (args.OriginalSource is not SelectorItem item)
+            return;
+
+        var context = item.Content;
+        ContextItem = context;
+
+        Interaction.ExecuteActions(AssociatedObject, Actions, context);
+
+        Flyout?.ShowAt(item);
+        args.Handled = true;
+    }
+
+    private void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        if (e.OriginalSource is not FrameworkElement element ||
+            element.FindAscendantOrSelf<SelectorItem>() is not { } item)
+            return;
+
+        var context = item.Content;
+        ContextItem = context;
+
+        Interaction.ExecuteActions(AssociatedObject, Actions, context);
+
+        if (Flyout is MenuFlyout menuFlyout)
         {
-            get => (FlyoutBase?)GetValue(FlyoutProperty);
-            set => SetValue(FlyoutProperty, value);
+            menuFlyout.ShowAt(element, e.GetPosition(element));
+        }
+        else
+        {
+            Flyout?.ShowAt(element);
         }
 
-        protected override void OnAttached()
-        {
-            base.OnAttached();
-
-            AssociatedObject.ContextRequested += OnContextRequested;
-            AssociatedObject.RightTapped += OnRightTapped;
-        }
-
-        protected override void OnDetaching()
-        {
-            base.OnDetaching();
-
-            AssociatedObject.ContextRequested -= OnContextRequested;
-            AssociatedObject.RightTapped -= OnRightTapped;
-        }
-
-        private void OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
-        {
-            if (args.OriginalSource is not SelectorItem element) return;
-            ListViewContextRequestedEventArgs eventArgs = new(element);
-            ContextRequested?.Invoke(this, eventArgs);
-            if (eventArgs.Handled) return;
-
-            Interaction.ExecuteActions(AssociatedObject, Actions, element.Content);
-            if (Flyout == null) return;
-            if (Flyout is MenuFlyout { Items: { } } menuFlyout)
-            {
-                SetMenuFlyoutDataContext(menuFlyout.Items, element.Content);
-            }
-
-            Flyout.ShowAt(element);
-            args.Handled = true;
-        }
-
-        private void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            if (e.OriginalSource is not FrameworkElement element ||
-                element.FindAscendantOrSelf<SelectorItem>() is not { } item) return;
-            ListViewContextRequestedEventArgs eventArgs = new(item);
-            ContextRequested?.Invoke(this, eventArgs);
-            if (eventArgs.Handled) return;
-
-            Interaction.ExecuteActions(AssociatedObject, Actions, element.DataContext);
-            if (Flyout == null) return;
-            if (Flyout is MenuFlyout { Items: { } } menuFlyout)
-            {
-                SetMenuFlyoutDataContext(menuFlyout.Items, element.DataContext);
-                menuFlyout.ShowAt(element, e.GetPosition(element));
-            }
-            else
-            {
-                Flyout.ShowAt(element);
-            }
-
-            e.Handled = true;
-        }
-
-        private static void SetMenuFlyoutDataContext(IList<MenuFlyoutItemBase> items, object? dataContext)
-        {
-            List<MenuFlyoutItemBase> menuFlyoutItems = new(items);
-            for (int i = 0; i < menuFlyoutItems.Count; i++)
-            {
-                MenuFlyoutItemBase item = menuFlyoutItems[i];
-                item.DataContext = dataContext;
-                if (item is MenuFlyoutSubItem { Items: { } } subItem)
-                {
-                    menuFlyoutItems.AddRange(subItem.Items);
-                }
-            }
-        }
+        e.Handled = true;
     }
 }

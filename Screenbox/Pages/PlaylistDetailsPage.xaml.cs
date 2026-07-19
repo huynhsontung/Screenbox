@@ -114,11 +114,6 @@ public sealed partial class PlaylistDetailsPage : Page
         }
     }
 
-    private void ItemList_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
-    {
-        ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
-    }
-
     private void CreateHeaderAnimation(CompositionPropertySet propSet, ScalarNode scrollVerticalOffset)
     {
         PropertySetReferenceNode props = propSet.GetReference();

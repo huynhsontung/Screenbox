@@ -92,11 +92,6 @@ public sealed partial class AlbumsPage : Page
         SavePageState(e.NextView.VerticalOffset);
     }
 
-    private void AlbumGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs e)
-    {
-        ViewModel.ContextAlbum = e.Item.Content as AlbumViewModel;
-    }
-
     private void SavePageState(double verticalOffset)
     {
         Common.SavePageState(new KeyValuePair<string, double>(ViewModel.SortBy, verticalOffset), nameof(AlbumsPage),

@@ -40,10 +40,5 @@ namespace Screenbox.Pages
             int desiredCount = (int)(e.NewSize.Width / (itemWidth + 10));
             ViewModel.UpdateGridItems(desiredCount);
         }
-
-        private void SongListView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
-        {
-            ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
-        }
     }
 }

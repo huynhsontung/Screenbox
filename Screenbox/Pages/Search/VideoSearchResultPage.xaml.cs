@@ -32,10 +32,5 @@ namespace Screenbox.Pages
                 DataContext = ViewModel = vm;
             }
         }
-
-        private void VideosGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
-        {
-            ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
-        }
     }
 }

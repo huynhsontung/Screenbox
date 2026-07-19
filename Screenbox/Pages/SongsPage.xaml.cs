@@ -105,12 +105,6 @@ public sealed partial class SongsPage : Page
         SavePageState(e.NextView.VerticalOffset);
     }
 
-
-    private void SongListView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
-    {
-        ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
-    }
-
     private void SavePageState(double verticalOffset)
     {
         Common.SavePageState(new KeyValuePair<string, double>(ViewModel.SortBy, verticalOffset), nameof(SongsPage), Frame.BackStackDepth);

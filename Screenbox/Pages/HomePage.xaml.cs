@@ -38,9 +38,4 @@ public sealed partial class HomePage : Page
             args.Handled = true;
         }
     }
-
-    private void RecentFilesGridView_OnItemContextRequested(Behaviors.ListViewContextTriggerBehavior sender, Behaviors.ListViewContextRequestedEventArgs args)
-    {
-        ViewModel.ContextMedia = args.Item.Content as MediaViewModel;
-    }
 }
