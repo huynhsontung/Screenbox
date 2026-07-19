@@ -21,7 +21,7 @@
     <Page.Resources>
         <MenuFlyout x:Key="ItemFlyout">
             <interactivity:Interaction.Behaviors>
-                <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                <behaviors:AddToPlaylistFlyoutBehavior TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
             </interactivity:Interaction.Behaviors>
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.PlayCommand}"
