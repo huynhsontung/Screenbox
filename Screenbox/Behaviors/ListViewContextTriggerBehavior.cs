@@ -2,6 +2,7 @@
 
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
+using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -85,6 +86,9 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         var context = item.Content;
         ContextItem = context;
 
+        if (!ShouldShowFlyout(context))
+            return;
+
         Interaction.ExecuteActions(AssociatedObject, Actions, context);
 
         Flyout?.ShowAt(item);
@@ -100,6 +104,9 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         var context = item.Content;
         ContextItem = context;
 
+        if (!ShouldShowFlyout(context))
+            return;
+
         Interaction.ExecuteActions(AssociatedObject, Actions, context);
 
         if (Flyout is MenuFlyout menuFlyout)
@@ -112,5 +119,10 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         }
 
         e.Handled = true;
+    }
+
+    private static bool ShouldShowFlyout(object? context)
+    {
+        return context is not StorageItemViewModel { Media: null };
     }
 }
