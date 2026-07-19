@@ -849,7 +849,7 @@
       <Version>0.3.1.5</Version>
     </PackageReference>
     <PackageReference Include="LibVLC.UWP">
-      <Version>3.0.21-2505100334</Version>
+      <Version>3.0.23-2607192200</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
       <Version>5.16.3</Version>
