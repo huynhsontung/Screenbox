@@ -323,6 +323,9 @@
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
       <Version>8.2.251219</Version>
     </PackageReference>
+    <PackageReference Include="LibVLCSharp.UWP">
+      <Version>3.10.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.7</Version>
     </PackageReference>
@@ -340,9 +343,6 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
       <Version>8.4.2</Version>
-    </PackageReference>
-    <PackageReference Include="LibVLCSharp">
-      <Version>3.7.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite">
       <Version>10.0.10</Version>
