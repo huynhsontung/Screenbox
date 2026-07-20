@@ -39,11 +39,14 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
-                <MenuFlyoutItem
-                    Command="{Binding AddAlbumToQueueCommand}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                <MenuFlyoutItem Command="{Binding AddAlbumToQueueCommand}" Text="{x:Bind strings:Resources.AddToQueue}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon
+                            x:Name="AddToQueueMenuFlyoutItemIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
@@ -225,6 +228,7 @@
                         <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                         <Setter Target="SortByFlyout.Placement" Value="BottomEdgeAlignedLeft" />
                     </VisualState.Setters>
                 </VisualState>

@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
@@ -58,10 +58,14 @@
     <x:String x:Key="AudioOffGlyph">&#xF0036;</x:String>
     <x:String x:Key="PlaylistGlyph">&#xF00A8;</x:String>
     <x:String x:Key="PlaylistOffGlyph">&#xF00A9;</x:String>
+    <x:String x:Key="PlaylistAddGlyph">&#xF00AA;</x:String>
+    <x:String x:Key="PlaylistAddMirroredGlyph">&#xF00AB;</x:String>
     <x:String x:Key="DeleteGlyph">&#xE74D;</x:String>
     <x:String x:Key="StatusPlayingGlyph">&#xE93D;</x:String>
     <x:String x:Key="PlaylistMusicGlyph">&#xE93F;</x:String>
     <x:String x:Key="PlaylistMusicMirroredGlyph">&#xF006F;</x:String>
+    <x:String x:Key="PlaylistMusicAddGlyph">&#xF00C2;</x:String>
+    <x:String x:Key="PlaylistMusicAddMirroredGlyph">&#xF00C3;</x:String>
     <x:String x:Key="PlayAddGlyph">&#xF5EB;</x:String>
     <x:String x:Key="SingleSelectGlyph">&#xEA20;</x:String>
     <x:String x:Key="SingleSelectMirroredGlyph">&#xEA66;</x:String>
@@ -69,7 +73,7 @@
     <x:String x:Key="FolderGlyph">&#xE8B7;</x:String>
     <x:String x:Key="FolderOpenGlyph">&#xE838;</x:String>
     <x:String x:Key="FolderListGlyph">&#xF2CE;</x:String>
-    <x:String x:Key="FolderListMirroredGlyph">&#xF00FC;</x:String>
+    <x:String x:Key="FolderListMirroredGlyph">&#xF2CF;</x:String>
     <x:String x:Key="NewFolderGlyph">&#xE8F4;</x:String>
     <x:String x:Key="NewFolderMirroredGlyph">&#xF003F;</x:String>
 

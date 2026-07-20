@@ -134,7 +134,8 @@
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
+                                       MirroredWhenRightToLeft=True}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutSeparator />
@@ -330,7 +331,8 @@
                     AccessKey="{strings:KeyboardResources Key=MenuItemCompactOverlayKey}"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource MiniContract2MirroredGlyph}}"
+                                       Glyph={StaticResource MiniContract2MirroredGlyph},
+                                       MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
@@ -345,7 +347,8 @@
                     x:Name="FullscreenMenuItem"
                     AccessKey="{strings:KeyboardResources Key=MenuItemFullscreenKey}"
                     Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xE740;}"
+                    Icon="{ui:FontIcon Glyph=&#xE740;,
+                                       MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>

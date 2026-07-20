@@ -4,8 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -23,6 +25,10 @@
             </ResourceDictionary.MergedDictionaries>
 
             <MenuFlyout x:Name="ItemFlyout">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                </interactivity:Interaction.Behaviors>
+
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
@@ -38,14 +44,28 @@
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{x:Bind strings:Resources.AddToQueue}" />
+                    Text="{x:Bind strings:Resources.AddToQueue}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon
+                            x:Name="AddToQueueMenuFlyoutItemIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
+                <MenuFlyoutSubItem x:Name="AddToPlaylistSubMenu" Text="{x:Bind strings:Resources.AddToPlaylist}">
+                    <MenuFlyoutSubItem.Icon>
+                        <FontIcon
+                            x:Name="AddToPlaylistMenuFlyoutSubItemIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource PlaylistAddGlyph}" />
+                    </MenuFlyoutSubItem.Icon>
+                </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
+                                       MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
@@ -121,6 +141,18 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
+                        <contract13NotPresent:Setter Target="AddToPlaylistMenuFlyoutSubItemIcon.Glyph" Value="{StaticResource PlaylistAddMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

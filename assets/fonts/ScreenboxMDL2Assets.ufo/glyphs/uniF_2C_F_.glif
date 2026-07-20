@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glyph name="uF00FC" format="2">
+<glyph name="uniF2CF" format="2">
   <advance width="2048"/>
-  <unicode hex="F00FC"/>
+  <unicode hex="F2CF"/>
   <outline>
     <contour>
       <point x="256" y="2048" type="line"/>
@@ -34,27 +34,33 @@
       <point x="256" y="1024" type="line"/>
     </contour>
     <contour>
+      <point x="1664" y="609" type="qcurve" smooth="yes"/>
+      <point x="1664" y="128" type="line"/>
+      <point x="1792" y="128" type="line"/>
       <point x="1792" y="609" type="line" smooth="yes"/>
       <point x="1792" y="664"/>
       <point x="1758" y="708" type="qcurve" smooth="yes"/>
       <point x="1728" y="746" type="line"/>
       <point x="1698" y="708" type="line" smooth="yes"/>
       <point x="1664" y="664"/>
-      <point x="1664" y="609" type="qcurve" smooth="yes"/>
-      <point x="1664" y="128" type="line"/>
-      <point x="1792" y="128" type="line"/>
     </contour>
     <contour>
-      <point x="896" y="896" type="line"/>
-      <point x="896" y="768" type="line"/>
-      <point x="768" y="768" type="line"/>
-      <point x="768" y="896" type="line"/>
-    </contour>
-    <contour>
+      <point x="0" y="896" type="line"/>
       <point x="640" y="896" type="line"/>
       <point x="640" y="768" type="line"/>
       <point x="0" y="768" type="line"/>
-      <point x="0" y="896" type="line"/>
+    </contour>
+    <contour>
+      <point x="768" y="896" type="line"/>
+      <point x="896" y="896" type="line"/>
+      <point x="896" y="768" type="line"/>
+      <point x="768" y="768" type="line"/>
+    </contour>
+    <contour>
+      <point x="0" y="512" type="line"/>
+      <point x="640" y="512" type="line"/>
+      <point x="640" y="384" type="line"/>
+      <point x="0" y="384" type="line"/>
     </contour>
     <contour>
       <point x="768" y="512" type="line"/>
@@ -63,22 +69,16 @@
       <point x="768" y="384" type="line"/>
     </contour>
     <contour>
-      <point x="640" y="512" type="line"/>
-      <point x="640" y="384" type="line"/>
-      <point x="0" y="384" type="line"/>
-      <point x="0" y="512" type="line"/>
+      <point x="0" y="128" type="line"/>
+      <point x="640" y="128" type="line"/>
+      <point x="640" y="0" type="line"/>
+      <point x="0" y="0" type="line"/>
     </contour>
     <contour>
       <point x="768" y="128" type="line"/>
       <point x="896" y="128" type="line"/>
       <point x="896" y="0" type="line"/>
       <point x="768" y="0" type="line"/>
-    </contour>
-    <contour>
-      <point x="640" y="128" type="line"/>
-      <point x="640" y="0" type="line"/>
-      <point x="0" y="0" type="line"/>
-      <point x="0" y="128" type="line"/>
     </contour>
   </outline>
 </glyph>
