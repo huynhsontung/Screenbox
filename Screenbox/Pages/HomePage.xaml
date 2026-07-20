@@ -73,7 +73,8 @@
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
+                                       MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.RemoveCommand}"

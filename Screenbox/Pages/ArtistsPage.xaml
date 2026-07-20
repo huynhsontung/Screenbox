@@ -48,7 +48,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenArtistCommand, Mode=OneWay}"
+                    Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextArtist, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
                     Text="{strings:Resources Key=ShowArtist}" />

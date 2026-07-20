@@ -50,7 +50,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenAlbumCommand, Mode=OneWay}"
+                    Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextAlbum, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
                     Text="{strings:Resources Key=ShowAlbum}" />
