@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -109,7 +109,6 @@ sealed partial class App : Application
 
         // View models
         services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
-        services.AddTransient<Screenbox.ViewModels.PropertyViewModel>();
 
         // Services
         services.AddSingleton<IVlcDialogService, VlcDialogService>();

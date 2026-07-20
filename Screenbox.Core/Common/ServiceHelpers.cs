@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
@@ -13,6 +13,7 @@ public static class ServiceHelpers
     {
         // View models
         services.AddTransient<PlayerElementViewModel>();
+        services.AddTransient<PropertyViewModel>();
         services.AddTransient<ChapterViewModel>();
         services.AddTransient<CompositeTrackPickerViewModel>();
         services.AddTransient<SeekBarViewModel>();

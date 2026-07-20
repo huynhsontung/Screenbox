@@ -307,6 +307,7 @@
     <Compile Include="ViewModels\PlayQueuePanelViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsPageViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
+    <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\SelectionViewModel.cs" />

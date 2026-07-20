@@ -1,8 +1,7 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
-using Screenbox.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

@@ -1,17 +1,14 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Screenbox.Core;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
-using Screenbox.Core.ViewModels;
-using Screenbox.Strings;
 using Windows.Storage;
 
-namespace Screenbox.ViewModels;
+namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PropertyViewModel : ObservableObject
 {
@@ -56,37 +53,37 @@ public sealed partial class PropertyViewModel : ObservableObject
         switch (media.MediaType)
         {
             case MediaPlaybackType.Video:
-                MediaProperties[Resources.PropertyTitle] = string.IsNullOrEmpty(media.MediaInfo.VideoProperties.Title)
+                MediaProperties["PropertyTitle"] = string.IsNullOrEmpty(media.MediaInfo.VideoProperties.Title)
                     ? media.Name
                     : media.MediaInfo.VideoProperties.Title;
-                MediaProperties[Resources.PropertySubtitle] = media.MediaInfo.VideoProperties.Subtitle;
-                MediaProperties[Resources.PropertyYear] = media.MediaInfo.VideoProperties.Year > 0
+                MediaProperties["PropertySubtitle"] = media.MediaInfo.VideoProperties.Subtitle;
+                MediaProperties["PropertyYear"] = media.MediaInfo.VideoProperties.Year > 0
                     ? media.MediaInfo.VideoProperties.Year.ToString()
                     : string.Empty;
-                MediaProperties[Resources.PropertyProducers] = string.Join("; ", media.MediaInfo.VideoProperties.Producers);
-                MediaProperties[Resources.PropertyWriters] = string.Join("; ", media.MediaInfo.VideoProperties.Writers);
-                MediaProperties[Resources.PropertyLength] = Humanizer.ToDuration(media.MediaInfo.VideoProperties.Duration);
+                MediaProperties["PropertyProducers"] = string.Join("; ", media.MediaInfo.VideoProperties.Producers);
+                MediaProperties["PropertyWriters"] = string.Join("; ", media.MediaInfo.VideoProperties.Writers);
+                MediaProperties["PropertyLength"] = Humanizer.ToDuration(media.MediaInfo.VideoProperties.Duration);
 
-                VideoProperties[Resources.PropertyResolution] = $"{media.MediaInfo.VideoProperties.Width}×{media.MediaInfo.VideoProperties.Height}";
-                VideoProperties[Resources.PropertyBitRate] = $"{media.MediaInfo.VideoProperties.Bitrate / 1000} kbps";
+                VideoProperties["PropertyResolution"] = $"{media.MediaInfo.VideoProperties.Width}×{media.MediaInfo.VideoProperties.Height}";
+                VideoProperties["PropertyBitRate"] = $"{media.MediaInfo.VideoProperties.Bitrate / 1000} kbps";
 
-                AudioProperties[Resources.PropertyBitRate] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
+                AudioProperties["PropertyBitRate"] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
                 break;
 
             case MediaPlaybackType.Music:
-                MediaProperties[Resources.PropertyTitle] = media.MediaInfo.MusicProperties.Title;
-                MediaProperties[Resources.PropertyContributingArtists] = media.MediaInfo.MusicProperties.Artist;
-                MediaProperties[Resources.PropertyAlbum] = media.MediaInfo.MusicProperties.Album;
-                MediaProperties[Resources.PropertyAlbumArtist] = media.MediaInfo.MusicProperties.AlbumArtist;
-                MediaProperties[Resources.PropertyComposers] = string.Join("; ", media.MediaInfo.MusicProperties.Composers);
-                MediaProperties[Resources.PropertyGenre] = string.Join("; ", media.MediaInfo.MusicProperties.Genre);
-                MediaProperties[Resources.PropertyTrack] = media.MediaInfo.MusicProperties.TrackNumber.ToString();
-                MediaProperties[Resources.PropertyYear] = media.MediaInfo.MusicProperties.Year > 0
+                MediaProperties["PropertyTitle"] = media.MediaInfo.MusicProperties.Title;
+                MediaProperties["PropertyContributingArtists"] = media.MediaInfo.MusicProperties.Artist;
+                MediaProperties["PropertyAlbum"] = media.MediaInfo.MusicProperties.Album;
+                MediaProperties["PropertyAlbumArtist"] = media.MediaInfo.MusicProperties.AlbumArtist;
+                MediaProperties["PropertyComposers"] = string.Join("; ", media.MediaInfo.MusicProperties.Composers);
+                MediaProperties["PropertyGenre"] = string.Join("; ", media.MediaInfo.MusicProperties.Genre);
+                MediaProperties["PropertyTrack"] = media.MediaInfo.MusicProperties.TrackNumber.ToString();
+                MediaProperties["PropertyYear"] = media.MediaInfo.MusicProperties.Year > 0
                     ? media.MediaInfo.MusicProperties.Year.ToString()
                     : string.Empty;
-                MediaProperties[Resources.PropertyLength] = Humanizer.ToDuration(media.MediaInfo.MusicProperties.Duration);
+                MediaProperties["PropertyLength"] = Humanizer.ToDuration(media.MediaInfo.MusicProperties.Duration);
 
-                AudioProperties[Resources.PropertyBitRate] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
+                AudioProperties["PropertyBitRate"] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
                 break;
         }
 
@@ -95,10 +92,10 @@ public sealed partial class PropertyViewModel : ObservableObject
             case StorageFile file:
                 _mediaFile = file;
                 CanNavigateToFile = true;
-                FileProperties[Resources.PropertyFileType] = _mediaFile.FileType;
-                FileProperties[Resources.PropertyContentType] = _mediaFile.ContentType;
-                FileProperties[Resources.PropertySize] = BytesToHumanReadable((long)media.MediaInfo.Size);
-                FileProperties[Resources.PropertyLastModified] = media.MediaInfo.DateModified.ToString();
+                FileProperties["PropertyFileType"] = _mediaFile.FileType;
+                FileProperties["PropertyContentType"] = _mediaFile.ContentType;
+                FileProperties["PropertySize"] = BytesToHumanReadable((long)media.MediaInfo.Size);
+                FileProperties["PropertyLastModified"] = media.MediaInfo.DateModified.ToString();
                 break;
             case Uri uri:
                 _mediaUri = uri;
