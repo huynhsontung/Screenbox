@@ -342,8 +342,6 @@ public sealed partial class SelectionBarControl : UserControl
     ///// <inheritdoc cref="CommandBar.SecondaryCommands"/>
     //public ObservableCollection<ICommandBarElement>? SecondaryCommands { get; }
 
-    private bool IsDeleteKeyboardAcceleratorEnabled => IsRemoveButtonVisible;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionBarControl"/> class.
     /// </summary>
