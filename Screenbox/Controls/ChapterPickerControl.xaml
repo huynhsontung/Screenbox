@@ -2,8 +2,10 @@
     x:Class="Screenbox.Controls.ChapterPickerControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mediaCore="using:Windows.Media.Core"
@@ -52,11 +54,18 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="{x:Bind Title.TrimStart()}" />
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="{x:Bind Title.TrimStart()}"
+                            TextTrimming="CharacterEllipsis">
+                            <interactivity:Interaction.Behaviors>
+                                <behaviors:OverflowTextToolTipBehavior />
+                            </interactivity:Interaction.Behaviors>
+                        </TextBlock>
 
                         <TextBlock
                             Grid.Column="1"
-                            Padding="4,2,0,0"
+                            Padding="8,2,0,0"
                             FontSize="{StaticResource CaptionTextBlockFontSize}"
                             Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
                             Text="{x:Bind core:Humanizer.ToDuration(StartTime)}"

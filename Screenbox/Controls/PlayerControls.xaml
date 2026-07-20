@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
@@ -10,6 +11,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
@@ -132,7 +134,8 @@
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
                     CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE7AC;}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
+                                       MirroredWhenRightToLeft=True}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutSeparator />
@@ -328,7 +331,8 @@
                     AccessKey="{strings:KeyboardResources Key=MenuItemCompactOverlayKey}"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource MiniContract2MirroredGlyph}}"
+                                       Glyph={StaticResource MiniContract2MirroredGlyph},
+                                       MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
@@ -343,7 +347,8 @@
                     x:Name="FullscreenMenuItem"
                     AccessKey="{strings:KeyboardResources Key=MenuItemFullscreenKey}"
                     Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xE740;}"
+                    Icon="{ui:FontIcon Glyph=&#xE740;,
+                                       MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
@@ -386,14 +391,22 @@
             VerticalAlignment="Center"
             Background="Transparent"
             Foreground="Transparent" />
-        <!--  Primary Panel  -->
-        <StackPanel
-            Grid.Row="1"
-            Grid.Column="0"
-            Orientation="Horizontal">
+
+        <!--#region Primary Controls-->
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
             <!--  Play/Pause  -->
             <Button
                 x:Name="PlayPauseButton"
+                Grid.Column="0"
                 Margin="0,0,4,0"
                 extensions:AcceleratorService.ToolTip="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.IsPlaying), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
@@ -407,59 +420,97 @@
                     <KeyboardAccelerator Key="Space" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
                 </Button.KeyboardAccelerators>
             </Button>
-            <!--  Previous/Next  -->
-            <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
-                <Button
-                    x:Name="PreviousButton"
-                    extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
-                    AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
-                    AutomationProperties.Name="{x:Bind PreviousButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
-                    Command="{x:Bind ViewModel.PreviousCommand}"
-                    CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
-                    Style="{StaticResource PlayerButtonStyle}">
-                    <FontIcon Glyph="&#xE892;" />
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="PageUp" />
-                        <KeyboardAccelerator Key="P" Modifiers="Shift" />
-                    </Button.KeyboardAccelerators>
-                </Button>
-                <Button
-                    x:Name="NextButton"
-                    extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
-                    AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
-                    AutomationProperties.Name="{x:Bind NextButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
-                    Command="{x:Bind ViewModel.NextCommand}"
-                    CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
-                    Style="{StaticResource PlayerButtonStyle}">
-                    <FontIcon Glyph="&#xE893;" />
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="PageDown" />
-                        <KeyboardAccelerator Key="N" Modifiers="Shift" />
-                    </Button.KeyboardAccelerators>
-                </Button>
-            </StackPanel>
-            <!--  Time & Chapter  -->
+
+            <!--  Previous + Next  -->
+            <Button
+                x:Name="PreviousButton"
+                Grid.Column="1"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
+                AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
+                AutomationProperties.Name="{x:Bind PreviousButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
+                Command="{x:Bind ViewModel.PreviousCommand}"
+                CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
+                Style="{StaticResource PlayerButtonStyle}">
+                <FontIcon Glyph="&#xE892;" />
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="PageUp" />
+                    <KeyboardAccelerator Key="P" Modifiers="Shift" />
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button
+                x:Name="NextButton"
+                Grid.Column="2"
+                extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
+                AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
+                AutomationProperties.Name="{x:Bind NextButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
+                Command="{x:Bind ViewModel.NextCommand}"
+                CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
+                Style="{StaticResource PlayerButtonStyle}">
+                <FontIcon Glyph="&#xE893;" />
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="PageDown" />
+                    <KeyboardAccelerator Key="N" Modifiers="Shift" />
+                </Button.KeyboardAccelerators>
+            </Button>
+
+            <!--  Time  -->
             <controls:TimeDisplay
                 x:Name="TimeDisplay"
+                Grid.Column="3"
                 MinWidth="0"
                 Margin="8,0,0,2"
                 VerticalAlignment="Center"
                 FontSize="{StaticResource BodyTextBlockFontSize}"
+                IsRemainingTimeVisible="{x:Bind ViewModel.IsDisplayingRemainingTime, Mode=TwoWay}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
+
+            <!--  Chapter  -->
             <TextBlock
-                Margin="4,0,0,2"
+                Grid.Column="4"
+                Margin="5,0,0,2"
                 VerticalAlignment="Center"
                 Text="•"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}" />
+
             <Button
                 x:Name="ChapterButton"
+                Grid.Column="5"
                 Width="Auto"
                 Padding="4,0,4,1"
                 AutomationProperties.Name="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Column="0"
+                        Text="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis"
+                        Typography.NumeralAlignment="Tabular">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
+
+                    <muxc:AnimatedIcon
+                        Grid.Column="1"
+                        Width="12"
+                        Margin="2,4,0,0">
+                        <animatedVisuals:AnimatedChevronDownSmallVisualSource />
+                        <muxc:AnimatedIcon.FallbackIconSource>
+                            <muxc:FontIconSource FontSize="12" Glyph="&#xE974;" />
+                        </muxc:AnimatedIcon.FallbackIconSource>
+                        <muxc:AnimatedIcon.RenderTransform>
+                            <RotateTransform Angle="-90" />
+                        </muxc:AnimatedIcon.RenderTransform>
+                    </muxc:AnimatedIcon>
+                </Grid>
                 <Button.Flyout>
                     <Flyout ShouldConstrainToRootBounds="True">
                         <Flyout.FlyoutPresenterStyle>
@@ -476,21 +527,11 @@
                             SelectedChapter="{x:Bind SeekBar.ViewModel.CurrentChapterCue, Mode=TwoWay}" />
                     </Flyout>
                 </Button.Flyout>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}" Typography.NumeralAlignment="Tabular" />
-                    <muxc:AnimatedIcon Width="12" Margin="2,4,0,0">
-                        <animatedVisuals:AnimatedChevronDownSmallVisualSource />
-                        <muxc:AnimatedIcon.FallbackIconSource>
-                            <muxc:FontIconSource FontSize="12" Glyph="&#xE974;" />
-                        </muxc:AnimatedIcon.FallbackIconSource>
-                        <muxc:AnimatedIcon.RenderTransform>
-                            <RotateTransform Angle="-90" />
-                        </muxc:AnimatedIcon.RenderTransform>
-                    </muxc:AnimatedIcon>
-                </StackPanel>
             </Button>
-        </StackPanel>
-        <!--  Secondary Panel  -->
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Secondary Controls-->
         <StackPanel
             Grid.Row="1"
             Grid.Column="1"
@@ -632,6 +673,7 @@
                 <FontIcon Glyph="&#xE712;" />
             </Button>
         </StackPanel>
+        <!--#endregion-->
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveControlStates">
@@ -726,6 +768,20 @@
                         <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="FullscreenButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="MoreButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PreviousButton.(Grid.Column)" Value="2" />
+                        <Setter Target="NextButton.(Grid.Column)" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -6,6 +6,7 @@ This software incorporates third party material from the projects listed below.
 ## LibVLCSharp
 
 **Source**: [https://github.com/videolan/libvlcsharp](https://github.com/videolan/libvlcsharp)
+
 ```
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999
@@ -516,6 +517,7 @@ That's all there is to it!
 ## Windows UI Library
 
 **Source**: [https://github.com/microsoft/microsoft-ui-xaml](https://github.com/microsoft/microsoft-ui-xaml)
+
 ```
 MIT License
 
@@ -543,6 +545,7 @@ SOFTWARE
 ## Windows Community Toolkit
 
 **Source**: [https://github.com/CommunityToolkit/Windows](https://github.com/CommunityToolkit/Windows)
+
 ```
 Copyright © .NET Foundation and Contributors. All rights reserved.
 
@@ -556,7 +559,9 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 ```
 
 ## MVVM Toolkit
+
 **Source** [https://github.com/CommunityToolkit/dotnet](https://github.com/CommunityToolkit/dotnet)
+
 ```
 Copyright © .NET Foundation and Contributors
 
@@ -571,38 +576,40 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-## Protobuf-net
+## Microsoft.Data.Sqlite
 
-**Source**: [https://github.com/protobuf-net/protobuf-net](https://github.com/protobuf-net/protobuf-net)
+**Source** [https://github.com/dotnet/dotnet](https://github.com/dotnet/dotnet)
+
 ```
-The core Protocol Buffers technology is provided courtesy of Google.
-At the time of writing, this is released under the BSD license.
-Full details can be found here:
+The MIT License (MIT)
 
-http://code.google.com/p/protobuf/
+Copyright (c) .NET Foundation and Contributors
 
-The protobuf-net logo is Copyright 2021 onwards Marc Gravell; you must
-not use this logo (or any derivative) in your own works without explicit
-permission.
+All rights reserved.
 
-This .NET implementation is Copyright 2008 onwards Marc Gravell
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```
 
 ## ReswPlus
 
 **Source**: [https://github.com/DotNetPlus/ReswPlus](https://github.com/DotNetPlus/ReswPlus)
+
 ```
 MIT License
 
@@ -628,11 +635,13 @@ SOFTWARE.
 ```
 
 ## Sentry
+
 **Source**: [https://github.com/getsentry/sentry-dotnet](https://github.com/getsentry/sentry-dotnet)
+
 ```
 MIT License
 
-Copyright (c) 2018-2024 Sentry
+Copyright (c) 2018 Sentry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -654,7 +663,9 @@ SOFTWARE.
 ```
 
 ## TagLib#
+
 **Source**: [https://github.com/mono/taglib-sharp](https://github.com/mono/taglib-sharp)
+
 ```
       GNU LESSER GENERAL PUBLIC LICENSE
            Version 2.1, February 1999

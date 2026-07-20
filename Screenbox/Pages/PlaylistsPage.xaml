@@ -31,9 +31,11 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{x:Bind strings:Resources.Play}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
                     CommandParameter="{Binding}"
@@ -43,9 +45,14 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.AddToQueueCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlaylistMusicGlyph}}"
-                    Text="{strings:Resources Key=AddToQueue}" />
+                    Text="{x:Bind strings:Resources.AddToQueue}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon
+                            x:Name="AddToQueueMenuFlyoutItemIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind RenamePlaylistCommand}"
@@ -313,6 +320,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
+                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
