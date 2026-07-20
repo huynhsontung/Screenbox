@@ -16,7 +16,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <Page.Resources>
-        <MenuFlyout x:Name="ItemFlyout">
+        <MenuFlyout x:Key="ItemFlyout">
             <interactivity:Interaction.Behaviors>
                 <behaviors:AddToPlaylistFlyoutBehavior TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
             </interactivity:Interaction.Behaviors>

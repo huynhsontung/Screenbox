@@ -24,7 +24,7 @@
                 <templates:GridViewItemTemplates />
             </ResourceDictionary.MergedDictionaries>
 
-            <MenuFlyout x:Name="ItemFlyout">
+            <MenuFlyout x:Key="ItemFlyout">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AddToPlaylistFlyoutBehavior TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
                 </interactivity:Interaction.Behaviors>
