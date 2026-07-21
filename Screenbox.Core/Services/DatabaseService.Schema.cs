@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
@@ -163,6 +162,10 @@ public sealed partial class DatabaseService
         ExecuteNonQuery(connection, CreatePlaylistItemsSql);
     }
 
+    // This method is marked NoInlining to prevent the JIT compiler from eagerly loading
+    // WinRT types (ApplicationData) when the caller (InitializeCoreAsync) is compiled.
+    // This allows the test project (which lacks WinRT support) to execute InitializeCoreAsync
+    // securely without crashing with a PlatformNotSupportedException, provided it supplies a DbFolderPath.
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static (string LocalFolder, string TemporaryFolder) GetUwpFolderPaths()
     {
