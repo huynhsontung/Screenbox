@@ -94,6 +94,9 @@ jobs:
           -p:AppxPackageSigningEnabled=false @sentryArgs `
           -restore
     
+    - name: Run unit tests
+      run: dotnet test Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
+
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v7
       if: github.ref_type == 'tag'
