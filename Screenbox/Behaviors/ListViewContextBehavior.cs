@@ -2,7 +2,6 @@
 
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
-using Screenbox.Core.ViewModels;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,7 +21,8 @@ namespace Screenbox.Behaviors;
 internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
 {
     /// <summary>
-    /// Triggers when a context menu is requested on an item in the associated <see cref="ListViewBase"/> control.
+    /// Occurs when the user has completed a context menu request on an item in the
+    /// associated <see cref="ListViewBase"/> control.
     /// </summary>
     public event TypedEventHandler<ListViewContextBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
 

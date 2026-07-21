@@ -49,9 +49,9 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
     /// If not specified, the root level of the <see cref="MenuFlyout"/> will be populated.
     /// </remarks>
     /// <value>The target <see cref="MenuFlyoutSubItem"/>. The default is <see langword="null"/>.</value>
-    public MenuFlyoutSubItem TargetSubItem
+    public MenuFlyoutSubItem? TargetSubItem
     {
-        get => (MenuFlyoutSubItem)GetValue(TargetSubItemProperty);
+        get => (MenuFlyoutSubItem?)GetValue(TargetSubItemProperty);
         set => SetValue(TargetSubItemProperty, value);
     }
 
