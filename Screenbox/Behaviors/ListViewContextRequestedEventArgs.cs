@@ -7,7 +7,7 @@ public class ListViewContextRequestedEventArgs : EventArgs
 {
     public SelectorItem Item { get; }
 
-    public bool ShouldShowFlyout { get; set; } = true;
+    public bool Handled { get; set; }
 
     public ListViewContextRequestedEventArgs(SelectorItem item)
     {

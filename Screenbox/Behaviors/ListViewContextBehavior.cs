@@ -95,7 +95,7 @@ internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
         var itemArgs = new ListViewContextRequestedEventArgs(item);
         ContextRequested?.Invoke(this, itemArgs);
 
-        if (!itemArgs.ShouldShowFlyout)
+        if (itemArgs.Handled)
             return;
 
         Flyout?.ShowAt(item);
@@ -114,7 +114,7 @@ internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
         var itemArgs = new ListViewContextRequestedEventArgs(item);
         ContextRequested?.Invoke(this, itemArgs);
 
-        if (!itemArgs.ShouldShowFlyout)
+        if (itemArgs.Handled)
             return;
 
         if (Flyout is MenuFlyout menuFlyout)

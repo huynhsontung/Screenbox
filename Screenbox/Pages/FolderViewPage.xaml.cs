@@ -76,7 +76,7 @@ public sealed partial class FolderViewPage : Page
     {
         if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
         {
-            e.ShouldShowFlyout = false;
+            e.Handled = true;
         }
     }
 
