@@ -144,7 +144,7 @@
     <Compile Include="Behaviors\FocusOnItemClickBehavior.cs" />
     <Compile Include="Behaviors\GamepadXYNavigationBehavior.cs" />
     <Compile Include="Behaviors\GroupingOverviewBehavior.cs" />
-    <Compile Include="Behaviors\ListViewContextTriggerBehavior.cs" />
+    <Compile Include="Behaviors\ListViewContextBehavior.cs" />
     <Compile Include="Behaviors\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Behaviors\ListViewSelectionBehavior.cs" />
     <Compile Include="Behaviors\MediaListViewItemBehavior.cs" />

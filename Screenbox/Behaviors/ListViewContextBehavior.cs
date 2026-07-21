@@ -19,12 +19,12 @@ namespace Screenbox.Behaviors;
 /// This behavior listens for context menu requests and right-tap events on the
 /// associated <see cref="ListViewBase"/> control and executes the specified actions.
 /// </remarks>
-internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewBase>
+internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
 {
     /// <summary>
     /// Triggers when a context menu is requested on an item in the associated <see cref="ListViewBase"/> control.
     /// </summary>
-    public event TypedEventHandler<ListViewContextTriggerBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
+    public event TypedEventHandler<ListViewContextBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
 
     /// <summary>
     /// Identifies the <see cref="Flyout"/> dependency property.
@@ -32,7 +32,7 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
     public static readonly DependencyProperty FlyoutProperty = DependencyProperty.Register(
         nameof(Flyout),
         typeof(FlyoutBase),
-        typeof(ListViewContextTriggerBehavior),
+        typeof(ListViewContextBehavior),
         new PropertyMetadata(null));
 
     /// <summary>
@@ -55,7 +55,7 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
     public static readonly DependencyProperty ContextItemProperty = DependencyProperty.Register(
         nameof(ContextItem),
         typeof(object),
-        typeof(ListViewContextTriggerBehavior),
+        typeof(ListViewContextBehavior),
         new PropertyMetadata(null));
 
     /// <summary>
@@ -98,8 +98,6 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         if (!itemArgs.ShouldShowFlyout)
             return;
 
-        Interaction.ExecuteActions(AssociatedObject, Actions, context);
-
         Flyout?.ShowAt(item);
         args.Handled = true;
     }
@@ -118,8 +116,6 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
 
         if (!itemArgs.ShouldShowFlyout)
             return;
-
-        Interaction.ExecuteActions(AssociatedObject, Actions, context);
 
         if (Flyout is MenuFlyout menuFlyout)
         {

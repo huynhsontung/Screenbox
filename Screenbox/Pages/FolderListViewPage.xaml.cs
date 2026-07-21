@@ -66,7 +66,7 @@ public sealed partial class FolderListViewPage : Page
         }
     }
 
-    private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
+    private void FolderView_OnItemContextRequested(ListViewContextBehavior sender, ListViewContextRequestedEventArgs e)
     {
         if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
         {

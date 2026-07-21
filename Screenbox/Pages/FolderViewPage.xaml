@@ -162,7 +162,7 @@
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoFocusBehavior />
-                <behaviors:ListViewContextTriggerBehavior
+                <behaviors:ListViewContextBehavior
                     ContextItem="{x:Bind ViewModel.ContextItem, Mode=TwoWay}"
                     ContextRequested="FolderView_OnItemContextRequested"
                     Flyout="{StaticResource ItemFlyout}" />
