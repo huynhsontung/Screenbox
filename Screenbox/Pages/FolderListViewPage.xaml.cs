@@ -66,6 +66,14 @@ public sealed partial class FolderListViewPage : Page
         }
     }
 
+    private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
+    {
+        if (e.Item.Content is not StorageItemViewModel content || content.Media == null)
+        {
+            e.ShouldShowFlyout = false;
+        }
+    }
+
     private void ListView_OnLoaded(object sender, RoutedEventArgs e)
     {
         _scrollViewer = ListView.FindDescendant<ScrollViewer>();

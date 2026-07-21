@@ -3,6 +3,7 @@
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using Screenbox.Core.ViewModels;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -20,6 +21,11 @@ namespace Screenbox.Behaviors;
 /// </remarks>
 internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewBase>
 {
+    /// <summary>
+    /// Triggers when a context menu is requested on an item in the associated <see cref="ListViewBase"/> control.
+    /// </summary>
+    public event TypedEventHandler<ListViewContextTriggerBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
+
     /// <summary>
     /// Identifies the <see cref="Flyout"/> dependency property.
     /// </summary>
@@ -86,7 +92,10 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         var context = item.Content;
         ContextItem = context;
 
-        if (!ShouldShowFlyout(context))
+        var itemArgs = new ListViewContextRequestedEventArgs(item);
+        ContextRequested?.Invoke(this, itemArgs);
+
+        if (!itemArgs.ShouldShowFlyout)
             return;
 
         Interaction.ExecuteActions(AssociatedObject, Actions, context);
@@ -104,7 +113,10 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         var context = item.Content;
         ContextItem = context;
 
-        if (!ShouldShowFlyout(context))
+        var itemArgs = new ListViewContextRequestedEventArgs(item);
+        ContextRequested?.Invoke(this, itemArgs);
+
+        if (!itemArgs.ShouldShowFlyout)
             return;
 
         Interaction.ExecuteActions(AssociatedObject, Actions, context);
@@ -119,10 +131,5 @@ internal sealed partial class ListViewContextTriggerBehavior : Trigger<ListViewB
         }
 
         e.Handled = true;
-    }
-
-    private static bool ShouldShowFlyout(object? context)
-    {
-        return context is not StorageItemViewModel { Media: null };
     }
 }
