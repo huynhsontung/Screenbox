@@ -5,6 +5,7 @@
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
@@ -12,50 +13,54 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:ResourceNameToResourceStringConverter x:Key="PropertyStringToResourceStringConverter" />
-
-        <DataTemplate x:Key="PropertyItemTemplate">
+        <DataTemplate x:Key="PropertyItemTemplate" x:DataType="models:MediaMetadata">
             <UserControl>
-                <Grid x:Name="PropertyGrid">
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="FirstColumn" Width="0.6*" />
+                        <ColumnDefinition Width="0.6*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+
                     <TextBlock
                         x:Name="TitleText"
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="0,0,8,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{Binding Key, Converter={StaticResource PropertyStringToResourceStringConverter}}"
+                        Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromName(Name)}"
                         TextTrimming="CharacterEllipsis" />
+
                     <TextBlock
                         x:Name="ValueText"
                         Grid.Row="0"
                         Grid.Column="1"
-                        HorizontalAlignment="Left"
-                        Text="{Binding Value}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind Value}"
                         TextWrapping="Wrap" />
 
                     <VisualStateManager.VisualStateGroups>
                         <VisualStateGroup x:Name="LayoutGroup">
-                            <VisualState x:Name="Horizontal" />
+                            <VisualState x:Name="Horizontal">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="720" />
+                                </VisualState.StateTriggers>
+                            </VisualState>
+
                             <VisualState x:Name="Vertical">
                                 <VisualState.StateTriggers>
-                                    <triggers:ControlSizeTrigger MaxWidth="400" TargetElement="{Binding ElementName=PropertyGrid}" />
+                                    <AdaptiveTrigger MinWindowWidth="0" />
                                 </VisualState.StateTriggers>
                                 <VisualState.Setters>
+                                    <Setter Target="TitleText.Margin" Value="0,0,0,0" />
+                                    <Setter Target="TitleText.(Grid.ColumnSpan)" Value="2" />
                                     <Setter Target="ValueText.(Grid.Row)" Value="1" />
                                     <Setter Target="ValueText.(Grid.Column)" Value="0" />
-                                    <Setter Target="TitleText.Margin" Value="0,0,0,0" />
-                                    <Setter Target="FirstColumn.Width" Value="*" />
+                                    <Setter Target="ValueText.(Grid.ColumnSpan)" Value="2" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -67,13 +72,13 @@
         <muxc:StackLayout
             x:Key="PropertyStackLayout"
             Orientation="Vertical"
-            Spacing="10" />
+            Spacing="12" />
     </UserControl.Resources>
 
     <ScrollViewer HorizontalScrollMode="Disabled" ZoomMode="Disabled">
         <StackPanel Orientation="Vertical">
             <muxc:Expander
-                Margin="0,0,0,8"
+                Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
                 Header="{strings:Resources Key=Media}"
                 IsExpanded="True">
@@ -84,7 +89,7 @@
             </muxc:Expander>
 
             <muxc:Expander
-                Margin="0,8"
+                Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
                 Header="{strings:Resources Key=Video}"
                 IsExpanded="True"
@@ -96,7 +101,7 @@
             </muxc:Expander>
 
             <muxc:Expander
-                Margin="0,8"
+                Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
                 Header="{strings:Resources Key=Music}"
                 IsExpanded="True"
@@ -108,8 +113,9 @@
             </muxc:Expander>
 
             <muxc:Expander
-                Margin="0,8"
+                Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
                 Header="{strings:Resources Key=File}"
                 IsExpanded="True">
                 <StackPanel Orientation="Vertical">
@@ -121,7 +127,7 @@
 
                     <TextBlock
                         x:Name="LocationTitleText"
-                        Margin="0,10,0,0"
+                        Margin="{StaticResource TopMediumMargin}"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -131,12 +137,14 @@
 
                     <TextBlock
                         x:Name="LocationText"
+                        Margin="{StaticResource BottomMediumMargin}"
                         HorizontalAlignment="Left"
+                        IsTextSelectionEnabled="True"
                         Text="{x:Bind Media.Location}"
                         TextWrapping="Wrap" />
 
                     <HyperlinkButton
-                        Margin="-11,10,0,0"
+                        Margin="{StaticResource InfoBarHyperlinkButtonMargin}"
                         HorizontalAlignment="Left"
                         Command="{x:Bind ViewModel.OpenFileLocationCommand}"
                         Content="{x:Bind strings:Resources.OpenFileLocation}" />

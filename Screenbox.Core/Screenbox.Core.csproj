@@ -151,6 +151,7 @@
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
+    <Compile Include="Models\MediaMetadata.cs" />
     <Compile Include="Models\MusicCacheRecordDto.cs" />
     <Compile Include="Models\RawCacheLoadResultDto.cs" />
     <Compile Include="Models\RawMediaRecordDto.cs" />

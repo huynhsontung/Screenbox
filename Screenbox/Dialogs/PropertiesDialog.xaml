@@ -1,4 +1,4 @@
-﻿<ContentDialog
+<ContentDialog
     x:Class="Screenbox.Dialogs.PropertiesDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,6 +13,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <controls:PropertiesView MinWidth="400" Media="{x:Bind Media, Mode=OneWay}" />
+        <controls:PropertiesView Media="{x:Bind Media, Mode=OneWay}" />
     </Grid>
 </ContentDialog>

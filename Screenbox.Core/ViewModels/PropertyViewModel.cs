@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -12,13 +13,13 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PropertyViewModel : ObservableObject
 {
-    public Dictionary<string, string> MediaProperties { get; }
+    public IList<MediaMetadata> MediaProperties { get; }
 
-    public Dictionary<string, string> VideoProperties { get; }
+    public IList<MediaMetadata> VideoProperties { get; }
 
-    public Dictionary<string, string> AudioProperties { get; }
+    public IList<MediaMetadata> AudioProperties { get; }
 
-    public Dictionary<string, string> FileProperties { get; }
+    public IList<MediaMetadata> FileProperties { get; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(OpenFileLocationCommand))]
@@ -31,10 +32,10 @@ public sealed partial class PropertyViewModel : ObservableObject
     public PropertyViewModel(IFilesService filesService)
     {
         _filesService = filesService;
-        MediaProperties = new Dictionary<string, string>();
-        VideoProperties = new Dictionary<string, string>();
-        AudioProperties = new Dictionary<string, string>();
-        FileProperties = new Dictionary<string, string>();
+        MediaProperties = new List<MediaMetadata>();
+        VideoProperties = new List<MediaMetadata>();
+        AudioProperties = new List<MediaMetadata>();
+        FileProperties = new List<MediaMetadata>();
     }
 
     /// <summary>
@@ -53,37 +54,37 @@ public sealed partial class PropertyViewModel : ObservableObject
         switch (media.MediaType)
         {
             case MediaPlaybackType.Video:
-                MediaProperties["PropertyTitle"] = string.IsNullOrEmpty(media.MediaInfo.VideoProperties.Title)
+                MediaProperties.Add(new MediaMetadata("PropertyTitle", string.IsNullOrEmpty(media.MediaInfo.VideoProperties.Title)
                     ? media.Name
-                    : media.MediaInfo.VideoProperties.Title;
-                MediaProperties["PropertySubtitle"] = media.MediaInfo.VideoProperties.Subtitle;
-                MediaProperties["PropertyYear"] = media.MediaInfo.VideoProperties.Year > 0
+                    : media.MediaInfo.VideoProperties.Title));
+                MediaProperties.Add(new MediaMetadata("PropertySubtitle", media.MediaInfo.VideoProperties.Subtitle));
+                MediaProperties.Add(new MediaMetadata("PropertyYear", media.MediaInfo.VideoProperties.Year > 0
                     ? media.MediaInfo.VideoProperties.Year.ToString()
-                    : string.Empty;
-                MediaProperties["PropertyProducers"] = string.Join("; ", media.MediaInfo.VideoProperties.Producers);
-                MediaProperties["PropertyWriters"] = string.Join("; ", media.MediaInfo.VideoProperties.Writers);
-                MediaProperties["PropertyLength"] = Humanizer.ToDuration(media.MediaInfo.VideoProperties.Duration);
+                    : string.Empty));
+                MediaProperties.Add(new MediaMetadata("PropertyProducers", string.Join("; ", media.MediaInfo.VideoProperties.Producers)));
+                MediaProperties.Add(new MediaMetadata("PropertyWriters", string.Join("; ", media.MediaInfo.VideoProperties.Writers)));
+                MediaProperties.Add(new MediaMetadata("PropertyLength", Humanizer.ToDuration(media.MediaInfo.VideoProperties.Duration)));
 
-                VideoProperties["PropertyResolution"] = $"{media.MediaInfo.VideoProperties.Width}×{media.MediaInfo.VideoProperties.Height}";
-                VideoProperties["PropertyBitRate"] = $"{media.MediaInfo.VideoProperties.Bitrate / 1000} kbps";
+                VideoProperties.Add(new MediaMetadata("PropertyResolution", $"{media.MediaInfo.VideoProperties.Width}×{media.MediaInfo.VideoProperties.Height}"));
+                VideoProperties.Add(new MediaMetadata("PropertyBitRate", $"{media.MediaInfo.VideoProperties.Bitrate / 1000} kbps"));
 
-                AudioProperties["PropertyBitRate"] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
+                AudioProperties.Add(new MediaMetadata("PropertyBitRate", $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps"));
                 break;
 
             case MediaPlaybackType.Music:
-                MediaProperties["PropertyTitle"] = media.MediaInfo.MusicProperties.Title;
-                MediaProperties["PropertyContributingArtists"] = media.MediaInfo.MusicProperties.Artist;
-                MediaProperties["PropertyAlbum"] = media.MediaInfo.MusicProperties.Album;
-                MediaProperties["PropertyAlbumArtist"] = media.MediaInfo.MusicProperties.AlbumArtist;
-                MediaProperties["PropertyComposers"] = string.Join("; ", media.MediaInfo.MusicProperties.Composers);
-                MediaProperties["PropertyGenre"] = string.Join("; ", media.MediaInfo.MusicProperties.Genre);
-                MediaProperties["PropertyTrack"] = media.MediaInfo.MusicProperties.TrackNumber.ToString();
-                MediaProperties["PropertyYear"] = media.MediaInfo.MusicProperties.Year > 0
+                MediaProperties.Add(new MediaMetadata("PropertyTitle", media.MediaInfo.MusicProperties.Title));
+                MediaProperties.Add(new MediaMetadata("PropertyContributingArtists", media.MediaInfo.MusicProperties.Artist));
+                MediaProperties.Add(new MediaMetadata("PropertyAlbum", media.MediaInfo.MusicProperties.Album));
+                MediaProperties.Add(new MediaMetadata("PropertyAlbumArtist", media.MediaInfo.MusicProperties.AlbumArtist));
+                MediaProperties.Add(new MediaMetadata("PropertyComposers", string.Join("; ", media.MediaInfo.MusicProperties.Composers)));
+                MediaProperties.Add(new MediaMetadata("PropertyGenre", string.Join("; ", media.MediaInfo.MusicProperties.Genre)));
+                MediaProperties.Add(new MediaMetadata("PropertyTrack", media.MediaInfo.MusicProperties.TrackNumber.ToString()));
+                MediaProperties.Add(new MediaMetadata("PropertyYear", media.MediaInfo.MusicProperties.Year > 0
                     ? media.MediaInfo.MusicProperties.Year.ToString()
-                    : string.Empty;
-                MediaProperties["PropertyLength"] = Humanizer.ToDuration(media.MediaInfo.MusicProperties.Duration);
+                    : string.Empty));
+                MediaProperties.Add(new MediaMetadata("PropertyLength", Humanizer.ToDuration(media.MediaInfo.MusicProperties.Duration)));
 
-                AudioProperties["PropertyBitRate"] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
+                AudioProperties.Add(new MediaMetadata("PropertyBitRate", $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps"));
                 break;
         }
 
@@ -92,10 +93,10 @@ public sealed partial class PropertyViewModel : ObservableObject
             case StorageFile file:
                 _mediaFile = file;
                 CanNavigateToFile = true;
-                FileProperties["PropertyFileType"] = _mediaFile.FileType;
-                FileProperties["PropertyContentType"] = _mediaFile.ContentType;
-                FileProperties["PropertySize"] = BytesToHumanReadable((long)media.MediaInfo.Size);
-                FileProperties["PropertyLastModified"] = media.MediaInfo.DateModified.ToString();
+                FileProperties.Add(new MediaMetadata("PropertyFileType", _mediaFile.FileType));
+                FileProperties.Add(new MediaMetadata("PropertyContentType", _mediaFile.ContentType));
+                FileProperties.Add(new MediaMetadata("PropertySize", BytesToHumanReadable((long)media.MediaInfo.Size)));
+                FileProperties.Add(new MediaMetadata("PropertyLastModified", media.MediaInfo.DateModified.ToString()));
                 break;
             case Uri uri:
                 _mediaUri = uri;
