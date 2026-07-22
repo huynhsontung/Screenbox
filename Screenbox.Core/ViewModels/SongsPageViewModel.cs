@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,9 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
     public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
+
+    [ObservableProperty]
+    private MediaViewModel? _contextMedia;
 
     [ObservableProperty]
     private string _sortBy = string.Empty;

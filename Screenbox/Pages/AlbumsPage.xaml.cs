@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -37,7 +39,7 @@ public sealed partial class AlbumsPage : Page
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SongsPageViewModel.SortBy))
+        if (e.PropertyName == nameof(AlbumsPageViewModel.SortBy))
         {
             var state = ViewModel.SortBy switch
             {

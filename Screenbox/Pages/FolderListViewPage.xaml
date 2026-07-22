@@ -21,25 +21,25 @@
     <Page.Resources>
         <MenuFlyout x:Key="ItemFlyout">
             <interactivity:Interaction.Behaviors>
-                <behaviors:AddToPlaylistFlyoutBehavior TargetSubItemName="AddToPlaylistSubMenu" />
+                <behaviors:AddToPlaylistFlyoutBehavior TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
             </interactivity:Interaction.Behaviors>
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.PlayCommand}"
-                CommandParameter="{Binding}"
-                Text="{Binding Media.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
+                CommandParameter="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
+                Text="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.ContextItem.Media.IsPlaying), Mode=OneWay}">
                 <MenuFlyoutItem.Icon>
-                    <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{Binding Media.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                    <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.ContextItem.Media.IsPlaying), Mode=OneWay}" />
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.PlayNextCommand}"
-                CommandParameter="{Binding}"
+                CommandParameter="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource PlayAddGlyph}}"
                 Text="{strings:Resources Key=PlayNext}" />
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.AddToQueueCommand}"
-                CommandParameter="{Binding}"
+                CommandParameter="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                 Text="{x:Bind strings:Resources.AddToQueue}">
                 <MenuFlyoutItem.Icon>
                     <FontIcon
@@ -59,18 +59,18 @@
             </MenuFlyoutSubItem>
             <MenuFlyoutItem
                 Command="{StaticResource OpenWithCommand}"
-                CommandParameter="{Binding Media}"
+                CommandParameter="{x:Bind ViewModel.ContextItem.Media, Mode=OneWay}"
                 Icon="{ui:FontIcon Glyph=&#xE7AC;,
                                    MirroredWhenRightToLeft=True}"
                 Text="{x:Bind strings:Resources.OpenWith}" />
             <MenuFlyoutItem
                 Command="{StaticResource ShowPropertiesCommand}"
-                CommandParameter="{Binding Media}"
+                CommandParameter="{x:Bind ViewModel.ContextItem.Media, Mode=OneWay}"
                 Icon="{ui:FontIcon Glyph=&#xE946;}"
                 Text="{strings:Resources Key=Properties}" />
             <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
             <MenuFlyoutItem
-                CommandParameter="{Binding}"
+                CommandParameter="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                 Icon="{ui:SymbolIcon Symbol=Setting}"
                 Text="{strings:Resources Key=SetPlaybackOptions}"
                 Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
@@ -140,7 +140,10 @@
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <behaviors:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewContextBehavior
+                    ContextItem="{x:Bind ViewModel.ContextItem, Mode=TwoWay}"
+                    ContextRequested="FolderView_OnItemContextRequested"
+                    Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>

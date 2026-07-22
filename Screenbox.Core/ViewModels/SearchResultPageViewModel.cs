@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,6 +24,9 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<AlbumViewModel> Albums { get; }
         public ObservableCollection<MediaViewModel> Songs { get; }
         public ObservableCollection<MediaViewModel> Videos { get; }
+
+        [ObservableProperty]
+        private MediaViewModel? _contextMedia;
 
         [ObservableProperty] private bool _showArtists;
         [ObservableProperty] private bool _showAlbums;
