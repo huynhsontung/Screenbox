@@ -12,6 +12,7 @@
     <UseUwp>true</UseUwp>
     <AssetTargetFallback>$(AssetTargetFallback);uap10.0.18362;uap10.0.26100;uap10.0</AssetTargetFallback>
     <NoWarn>$(NoWarn);NETSDK1218;CS0618</NoWarn>
+    <DefaultLanguage>en-US</DefaultLanguage>
 
     <!-- Native AOT and Trimming Analyzers -->
     <IsAotCompatible>true</IsAotCompatible>
