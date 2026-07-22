@@ -524,6 +524,7 @@
                         <controls:ChapterPickerControl
                             ChapterCommand="{x:Bind SeekBar.ViewModel.SeekToChapterCommand}"
                             ChaptersSource="{x:Bind SeekBar.ViewModel.Chapters}"
+                            Label="{x:Bind strings:Resources.ChapterPluralized(SeekBar.ViewModel.Chapters.Count), Mode=OneWay}"
                             SelectedChapter="{x:Bind SeekBar.ViewModel.CurrentChapterCue, Mode=TwoWay}" />
                     </Flyout>
                 </Button.Flyout>
