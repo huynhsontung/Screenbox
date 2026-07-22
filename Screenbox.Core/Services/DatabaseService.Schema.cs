@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Screenbox.Core.Models;
 using Screenbox.Core.Models.Serialization;
-using Windows.Storage;
 
 namespace Screenbox.Core.Services;
 
@@ -29,17 +28,7 @@ public sealed partial class DatabaseService
 
     private async Task InitializeCoreAsync()
     {
-        if (DbFolderPath != null)
-        {
-            _rootPath = DbFolderPath;
-            _tempPath = DbFolderPath;
-        }
-        else
-        {
-            (_rootPath, _tempPath) = GetUwpFolderPaths();
-        }
-
-        string dbPath = Path.Combine(_rootPath, DbFileName);
+        string dbPath = Path.Combine(DbFolderPath, DbFileName);
         string connectionString = new SqliteConnectionStringBuilder
         {
             DataSource = dbPath,
@@ -162,19 +151,10 @@ public sealed partial class DatabaseService
         ExecuteNonQuery(connection, CreatePlaylistItemsSql);
     }
 
-    // This method is marked NoInlining to prevent the JIT compiler from eagerly loading
-    // WinRT types (ApplicationData) when the caller (InitializeCoreAsync) is compiled.
-    // This allows the test project (which lacks WinRT support) to execute InitializeCoreAsync
-    // securely without crashing with a PlatformNotSupportedException, provided it supplies a DbFolderPath.
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-    private static (string LocalFolder, string TemporaryFolder) GetUwpFolderPaths()
-    {
-        return (ApplicationData.Current.LocalFolder.Path, ApplicationData.Current.TemporaryFolder.Path);
-    }
-
     private async Task<bool> TryImportLegacyPlaylistsAsync(SqliteConnection connection)
     {
-        string playlistsDirPath = Path.Combine(_rootPath!, LegacyPlaylistsFolderName);
+        // Legacy playlists are stored in a folder named "Playlists" within the local app data folder, same as DB folder path.
+        string playlistsDirPath = Path.Combine(DbFolderPath, LegacyPlaylistsFolderName);
         if (TableHasRows(connection, "playlists") || !Directory.Exists(playlistsDirPath))
         {
             return true;
@@ -267,11 +247,12 @@ public sealed partial class DatabaseService
 
     private void TryDeleteLegacyMigrationArtifacts()
     {
+        // Legacy files are stored within the local app data folder, same as DB folder path.
         foreach (string fileName in LegacyLocalFileNames)
         {
             try
             {
-                string filePath = Path.Combine(_rootPath!, fileName);
+                string filePath = Path.Combine(DbFolderPath, fileName);
                 if (File.Exists(filePath)) File.Delete(filePath);
             }
             catch (Exception ex)
@@ -282,17 +263,7 @@ public sealed partial class DatabaseService
 
         try
         {
-            string tempFile = Path.Combine(_tempPath!, LegacyTemporaryFileName);
-            if (File.Exists(tempFile)) File.Delete(tempFile);
-        }
-        catch (Exception ex)
-        {
-            LogService.Log($"Failed to delete legacy artifact '{LegacyTemporaryFileName}': {ex.Message}");
-        }
-
-        try
-        {
-            string legacyPlaylistsFolder = Path.Combine(_rootPath!, LegacyPlaylistsFolderName);
+            string legacyPlaylistsFolder = Path.Combine(DbFolderPath, LegacyPlaylistsFolderName);
             if (Directory.Exists(legacyPlaylistsFolder)) Directory.Delete(legacyPlaylistsFolder, recursive: true);
         }
         catch (Exception ex)
