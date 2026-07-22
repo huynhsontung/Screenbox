@@ -7,6 +7,6 @@ namespace Screenbox.Core.Models.Serialization;
 [JsonSourceGenerationOptions( GenerationMode = JsonSourceGenerationMode.Metadata)]
 [JsonSerializable(typeof(PlaylistRecordDto))]
 [JsonSerializable(typeof(RawMediaRecordDto))]
-internal sealed partial class CoreJsonContext : JsonSerializerContext
+public sealed partial class CoreJsonContext : JsonSerializerContext
 {
 }
