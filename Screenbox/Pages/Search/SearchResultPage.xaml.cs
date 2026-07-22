@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;

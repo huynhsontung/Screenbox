@@ -22,6 +22,9 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 {
     public SelectionViewModel Selection { get; }
 
+    [ObservableProperty]
+    private PlaylistViewModel? _contextPlaylist;
+
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;

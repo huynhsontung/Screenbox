@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     [ObservableProperty]
     private string _sortBy = string.Empty;
+
+    [ObservableProperty]
+    private AlbumViewModel? _contextAlbum;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;

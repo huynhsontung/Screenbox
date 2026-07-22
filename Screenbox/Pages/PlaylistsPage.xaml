@@ -30,7 +30,7 @@
             <MenuFlyout x:Key="ItemFlyout">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.Play}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayGlyph}" />
@@ -38,13 +38,13 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.AddToQueueCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.AddToQueue}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon
@@ -56,12 +56,12 @@
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind RenamePlaylistCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Rename}"
                     Text="{strings:Resources Key=Rename}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ExportPlaylistCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Text="{strings:Resources Key=Export}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
@@ -69,13 +69,13 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     Command="{x:Bind DeletePlaylistCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{strings:Resources Key=Delete}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
-                    CommandParameter="{Binding}"
+                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.Select}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon
@@ -215,7 +215,7 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
-                <behaviors:ListViewContextTriggerBehavior Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
             </interactivity:Interaction.Behaviors>
         </GridView>

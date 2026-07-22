@@ -27,6 +27,9 @@ namespace Screenbox.Core.ViewModels;
 /// </remarks>
 public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 {
+    [ObservableProperty]
+    private MediaViewModel? _contextMedia;
+
     /// <summary>The observable play queue state for data binding.</summary>
     public PlayQueueContext Queue { get; }
 

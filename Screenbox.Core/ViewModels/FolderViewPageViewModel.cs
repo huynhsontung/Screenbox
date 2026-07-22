@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -29,6 +29,9 @@ namespace Screenbox.Core.ViewModels
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
         internal NavigationMetadata? NavData { get; private set; }
+
+        [ObservableProperty]
+        private StorageItemViewModel? _contextItem;
 
         [ObservableProperty] private bool _isEmpty;
         [ObservableProperty] private bool _isLoading;

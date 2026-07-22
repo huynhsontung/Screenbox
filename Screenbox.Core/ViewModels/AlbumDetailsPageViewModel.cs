@@ -20,6 +20,9 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
     [NotifyPropertyChangedFor(nameof(TotalDuration))]
     private AlbumViewModel? _source;
 
+    [ObservableProperty]
+    private MediaViewModel? _contextMedia;
+
     public uint? Year => Source?.Year;
 
     public int SongsCount => Source?.RelatedSongs.Count ?? 0;

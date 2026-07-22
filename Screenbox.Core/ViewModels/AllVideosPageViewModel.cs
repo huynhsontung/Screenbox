@@ -1,4 +1,6 @@
-﻿using System;
+#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,6 +19,9 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<VideosLibrary>>
 {
     [ObservableProperty] private bool _isLoading;
+
+    [ObservableProperty]
+    private MediaViewModel? _contextMedia;
 
     public ObservableCollection<MediaViewModel> Videos { get; }
 
