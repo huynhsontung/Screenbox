@@ -136,6 +136,7 @@
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlaybackActionKind.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
+    <Compile Include="Enums\Property.cs" />
     <Compile Include="Enums\SearchSuggestionType.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />
