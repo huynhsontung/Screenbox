@@ -45,7 +45,7 @@ public sealed partial class SeekBarViewModel :
 
     [ObservableProperty] private bool _shouldHandleKeyDown;
 
-    [ObservableProperty] public partial ChapterCue? CurrentChapterCue { get; set; }
+    [ObservableProperty] private ChapterCue? _currentChapterCue;
 
     public ObservableCollection<ChapterCue> Chapters { get; }
 
