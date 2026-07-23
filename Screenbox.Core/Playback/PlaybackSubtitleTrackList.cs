@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using System.Linq;
@@ -90,6 +90,28 @@ namespace Screenbox.Core.Playback
 
         public void AddExternalSubtitle(VlcMediaPlayer player, StorageFile file, bool select)
         {
+            string fileName = file.Name;
+            string filePath = file.Path;
+
+            bool alreadyExists = _pendingSubtitleTracks.Any(x =>
+                (!string.IsNullOrEmpty(filePath) && string.Equals(x.File.Path, filePath, System.StringComparison.OrdinalIgnoreCase)) ||
+                string.Equals(x.File.Name, fileName, System.StringComparison.OrdinalIgnoreCase)) ||
+                TrackList.Any(t => string.Equals(t.Label, fileName, System.StringComparison.OrdinalIgnoreCase));
+
+            if (alreadyExists)
+            {
+                if (select)
+                {
+                    int existingIndex = TrackList.FindIndex(t =>
+                        string.Equals(t.Label, fileName, System.StringComparison.OrdinalIgnoreCase));
+                    if (existingIndex >= 0)
+                    {
+                        SelectedIndex = existingIndex;
+                    }
+                }
+                return;
+            }
+
             var lazySub = new LazySubtitleTrack(player, file);
             _pendingSubtitleTracks.Add(lazySub);
             TrackList.Add(lazySub.Track);
@@ -124,7 +146,31 @@ namespace Screenbox.Core.Playback
             {
                 if (track.TrackType == TrackType.Text)
                 {
-                    TrackList.Add(new SubtitleTrack(track));
+                    string trackDesc = track.Description ?? string.Empty;
+
+                    var matchingLazy = _pendingSubtitleTracks.FirstOrDefault(x =>
+                        x.Track.VlcSpu == -1 &&
+                        (!string.IsNullOrEmpty(trackDesc) && (
+                            string.Equals(x.File.Name, trackDesc, System.StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(x.Track.Label, trackDesc, System.StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(System.IO.Path.GetFileNameWithoutExtension(x.File.Name), trackDesc, System.StringComparison.OrdinalIgnoreCase) ||
+                            x.File.Name.StartsWith(trackDesc, System.StringComparison.OrdinalIgnoreCase)
+                        )));
+
+                    if (matchingLazy != null)
+                    {
+                        matchingLazy.Track.VlcSpu = track.Id;
+                        matchingLazy.Track.Id = track.Id.ToString();
+                        continue;
+                    }
+
+                    bool exists = TrackList.Any(t => t.VlcSpu == track.Id ||
+                        (!string.IsNullOrEmpty(trackDesc) && string.Equals(t.Label, trackDesc, System.StringComparison.OrdinalIgnoreCase)));
+
+                    if (!exists)
+                    {
+                        TrackList.Add(new SubtitleTrack(track));
+                    }
                 }
             }
         }

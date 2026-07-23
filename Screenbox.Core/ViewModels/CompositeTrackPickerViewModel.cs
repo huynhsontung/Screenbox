@@ -92,11 +92,15 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         var playbackSubtitleTrackList = media.Item.Value?.SubtitleTracks;
         if (playbackSubtitleTrackList == null) return;
         if (playbackSubtitleTrackList.Count > 0) subtitleInitialized = true;
-        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file, message.NeighboringFilesQuery);
-        foreach (StorageFile subtitleFile in subtitles)
+
+        if (!subtitleInitialized)
         {
-            // Preload subtitle but don't select it
-            playbackSubtitleTrackList.AddExternalSubtitle(player, subtitleFile, false);
+            IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file, message.NeighboringFilesQuery);
+            foreach (StorageFile subtitleFile in subtitles)
+            {
+                // Preload subtitle but don't select it
+                playbackSubtitleTrackList.AddExternalSubtitle(player, subtitleFile, false);
+            }
         }
 
         if (!subtitleInitialized && media.Item.Value is { } playbackItem)
@@ -190,7 +194,8 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
                 LogService.Log(e);
             }
         }
-        else
+
+        if (subtitles.Count == 0)
         {
             // Fallback to creating a new query with subtitle filter
 
