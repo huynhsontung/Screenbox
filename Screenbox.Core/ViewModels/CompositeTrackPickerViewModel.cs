@@ -194,8 +194,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
                 LogService.Log(e);
             }
         }
-
-        if (subtitles.Count == 0)
+        else
         {
             // Fallback to creating a new query with subtitle filter
 
