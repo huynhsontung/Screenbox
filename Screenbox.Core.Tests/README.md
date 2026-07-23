@@ -24,9 +24,6 @@ This test project contains unit tests for `Screenbox.Core` focusing on SQL datab
      - `<IsAotCompatible>true</IsAotCompatible>`
      - `<EnableTrimAnalyzer>true</EnableTrimAnalyzer>`
      - `<EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>`
-   - All test code adheres to Native AOT constraints:
-     - Avoids runtime `System.Reflection.Emit` and non-source-generated reflection JSON serialization.
-     - Validates DTO data structures and parameter binding models (`SqlParameterDto`) under trimmed environments.
 
 5. **✨ Modern C# Features**:
    - Target Framework: `net10.0-windows10.0.26100.0`.
@@ -45,16 +42,16 @@ The test project relies strictly on the `x64`, `ARM64`, or `x86` build architect
 
 ### Using MSBuild / Visual Studio:
 ```cmd
-"C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" Screenbox.Core.Tests\Screenbox.Core.Tests.csproj /p:Configuration=Debug /p:Platform=x64 /restore
+"C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" Screenbox.Core.Tests\Screenbox.Core.Tests.csproj /p:Configuration=Release /p:Platform=x64 /restore
 ```
 
 ### Running Tests:
 ```cmd
-vstest.console.exe Screenbox.Core.Tests\bin\x64\Debug\net10.0-windows10.0.26100.0\Screenbox.Core.Tests.dll
+vstest.console.exe Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
 ```
 Or via `.NET CLI` targeting the pre-built DLL (which is how GitHub Actions CI executes it):
 ```cmd
-dotnet test Screenbox.Core.Tests\bin\x64\Debug\*\Screenbox.Core.Tests.dll
+dotnet test Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
 ```
 
 ---
