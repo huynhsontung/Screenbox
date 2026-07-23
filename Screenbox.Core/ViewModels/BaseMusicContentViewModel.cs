@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 
 namespace Screenbox.Core.ViewModels;
+
 public abstract partial class BaseMusicContentViewModel : ObservableRecipient
 {
     private bool HasSongs => Songs.Count > 0;
@@ -19,7 +20,7 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
 
     [ObservableProperty] public partial bool IsLoading { get; set; }
 
-    [RelayCommand(CanExecute = nameof(HasSongs))]
+    public IRelayCommand ShuffleAndPlayCommand => field ??= new RelayCommand(ShuffleAndPlay, () => HasSongs);
     private void ShuffleAndPlay()
     {
         if (Songs.Count == 0) return;

@@ -16,6 +16,7 @@
     xmlns:templates="using:Screenbox.Templates"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -28,6 +29,8 @@
                 x:Name="SongsSource"
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedSongs}" />
+
+            <commands:BindableCommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
 
             <MenuFlyout x:Key="ItemFlyout">
                 <interactivity:Interaction.Behaviors>
@@ -205,8 +208,8 @@
                     SelectionMode="None"
                     Style="{StaticResource MediaListViewStyle}">
                     <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlayCommand, ElementName=SongListView}" />
+                        <DataTemplate x:DataType="viewModels:MediaViewModel">
+                            <controls:MediaListViewItem PlayCommand="{StaticResource PlayCommand}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.GroupStyle>
