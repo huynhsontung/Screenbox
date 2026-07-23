@@ -28,7 +28,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     public SelectionViewModel Selection { get; }
 
     [ObservableProperty]
-    private MediaViewModel? _contextMedia;
+    public partial MediaViewModel? ContextMedia { get; set; }
 
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;

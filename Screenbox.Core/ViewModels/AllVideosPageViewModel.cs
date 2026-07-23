@@ -21,7 +21,7 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient,
     [ObservableProperty] public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private MediaViewModel? _contextMedia;
+    public partial MediaViewModel? ContextMedia { get; set; }
 
     public ObservableCollection<MediaViewModel> Videos { get; }
 

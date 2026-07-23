@@ -21,7 +21,7 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
     public partial AlbumViewModel? Source { get; set; }
 
     [ObservableProperty]
-    private MediaViewModel? _contextMedia;
+    public partial MediaViewModel? ContextMedia { get; set; }
 
     public uint? Year => Source?.Year;
 
