@@ -1,10 +1,11 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
+using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Helpers;
 
@@ -48,8 +49,21 @@ public static class CollectionExtensions
         }
     }
 
+    public static void SyncObservableGroups(this IList<ObservableMediaGroup> groups,
+        IReadOnlyList<IGrouping<string, MediaViewModel>> reference) =>
+        groups.SyncObservableGroups(reference, (key, items) =>
+            items as ObservableMediaGroup ?? new ObservableMediaGroup(key, items));
+
     public static void SyncObservableGroups<TKey, TValue>(this IList<ObservableGroup<TKey, TValue>> target,
-        IReadOnlyList<IGrouping<TKey, TValue>> reference) where TKey : notnull
+        IReadOnlyList<IGrouping<TKey, TValue>> reference) where TKey : notnull =>
+        target.SyncObservableGroups(reference, (key, items) =>
+            items as ObservableGroup<TKey, TValue> ?? new ObservableGroup<TKey, TValue>(key, items));
+
+    public static void SyncObservableGroups<TKey, TValue, TGroup>(this IList<TGroup> target,
+        IReadOnlyList<IGrouping<TKey, TValue>> reference,
+        Func<TKey, IEnumerable<TValue>, TGroup> groupFactory)
+        where TKey : notnull
+        where TGroup : IGrouping<TKey, TValue>, IList<TValue>
     {
         var refDict = reference.ToDictionary(g => g.Key, g => g.ToList());
         var targetDict = target.ToDictionary(g => g.Key, g => g);
@@ -59,7 +73,7 @@ public static class CollectionExtensions
         var unifiedGroups = reference.Select(g =>
                 targetDict.TryGetValue(g.Key, out var targetGroup)
                     ? targetGroup
-                    : g as ObservableGroup<TKey, TValue> ?? new ObservableGroup<TKey, TValue>(g))
+                    : groupFactory(g.Key, g))
             .ToList();
         target.SyncItems(unifiedGroups);
 
