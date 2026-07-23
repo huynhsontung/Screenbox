@@ -25,6 +25,21 @@ jobs:
 
     - name: Lint XAML files
       run: .\scripts\lint-xaml.ps1
+
+  test:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v3
+
+    - name: Build tests
+      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -restore
+
+    - name: Run tests
+      run: dotnet test Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
   
   build:
     runs-on: windows-latest
@@ -35,7 +50,7 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
 
-    - uses: actions/cache@v5
+    - uses: actions/cache@v6
       with:
         path: ~\.nuget\packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -93,7 +108,7 @@ jobs:
           -p:AppxPackageDir=$env:PackageDir `
           -p:AppxPackageSigningEnabled=false @sentryArgs `
           -restore
-    
+
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v7
       if: github.ref_type == 'tag'
