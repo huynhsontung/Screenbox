@@ -11,7 +11,7 @@ public sealed record MediaMetadata
     /// Gets the key that identifies the media metadata entry.
     /// </summary>
     /// <value>A value indicating the metadata entry.</value>
-    public Property Key { get; }
+    public MediaProperty Key { get; }
 
     /// <summary>
     /// Gets the value of the media metadata entry.
@@ -25,7 +25,7 @@ public sealed record MediaMetadata
     /// </summary>
     /// <param name="key">The key that identifies the metadata entry.</param>
     /// <param name="value">The value associated with the metadata entry.</param>
-    public MediaMetadata(Property key, string value)
+    public MediaMetadata(MediaProperty key, string value)
     {
         Key = key;
         Value = value;

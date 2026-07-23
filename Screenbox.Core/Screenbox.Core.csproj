@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -133,10 +133,10 @@
     <Compile Include="Contexts\PlayQueueContext.cs" />
     <Compile Include="Contexts\WindowContext.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
+    <Compile Include="Enums\MediaProperty.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlaybackActionKind.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
-    <Compile Include="Enums\Property.cs" />
     <Compile Include="Enums\SearchSuggestionType.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />

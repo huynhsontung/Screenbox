@@ -1,6 +1,6 @@
 namespace Screenbox.Core.Enums;
 
-public enum Property
+public enum MediaProperty
 {
     Title,
     Subtitle,
