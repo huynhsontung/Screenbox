@@ -13,6 +13,25 @@ namespace Screenbox.Controls;
 public sealed partial class ChapterPickerControl : UserControl
 {
     /// <summary>
+    /// Identifies the <see cref="Label"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
+        nameof(Label),
+        typeof(string),
+        typeof(ChapterPickerControl),
+        new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the text description displayed on the chapter picker control.
+    /// </summary>
+    /// <value>The text description displayed on the chapter picker control.</value>
+    public string Label
+    {
+        get { return (string)GetValue(LabelProperty); }
+        set { SetValue(LabelProperty, value); }
+    }
+
+    /// <summary>
     /// Identifies the <see cref="SelectedChapter"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SelectedChapterProperty = DependencyProperty.Register(
