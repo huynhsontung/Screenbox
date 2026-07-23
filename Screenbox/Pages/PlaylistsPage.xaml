@@ -126,13 +126,14 @@
             Margin="0,0,0,8"
             Padding="{StaticResource ContentPagePadding}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Button
                 x:Name="SubHeaderCreateButton"
                 Grid.Column="0"
+                Margin="0,0,8,0"
                 AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
                 Command="{x:Bind CreatePlaylistCommand}"
                 Style="{StaticResource AccentButtonStyle}">
