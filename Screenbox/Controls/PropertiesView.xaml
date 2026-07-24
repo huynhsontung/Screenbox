@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.PropertiesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -46,7 +46,7 @@
                             <VisualState x:Name="Horizontal" />
                             <VisualState x:Name="Vertical">
                                 <VisualState.StateTriggers>
-                                    <triggers:ControlSizeTrigger MaxWidth="400" TargetElement="{Binding ElementName=PropertyGrid}" />
+                                    <ui:ControlSizeTrigger MaxWidth="400" TargetElement="{Binding ElementName=PropertyGrid}" />
                                 </VisualState.StateTriggers>
                                 <VisualState.Setters>
                                     <Setter Target="ValueText.(Grid.Row)" Value="1" />
