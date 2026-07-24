@@ -21,7 +21,7 @@ public sealed partial class ArtistsPageViewModel : BaseMusicContentViewModel,
     public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
     [ObservableProperty]
-    private ArtistViewModel? _contextArtist;
+    public partial ArtistViewModel? ContextArtist { get; set; }
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;

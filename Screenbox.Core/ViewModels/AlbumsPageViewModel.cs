@@ -27,7 +27,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     public partial string SortBy { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private AlbumViewModel? _contextAlbum;
+    public partial AlbumViewModel? ContextAlbum { get; set; }
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
