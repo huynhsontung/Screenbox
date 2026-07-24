@@ -109,7 +109,13 @@
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
             <TextBlock
+                Grid.Column="0"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=Playlists}"
                 TextWrapping="NoWrap">
@@ -117,6 +123,22 @@
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
+
+            <muxc:SplitButton
+                x:Name="HeaderCreateButton"
+                Grid.Column="1"
+                AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
+                Command="{x:Bind CreatePlaylistCommand}"
+                Flyout="{StaticResource CreatePlaylistFlyout}"
+                Style="{StaticResource DefaultSplitButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                    <TextBlock
+                        x:Name="HeaderCreateButtonText"
+                        Margin="8,0,0,0"
+                        Text="{x:Bind strings:Resources.NewPlaylist}" />
+                </StackPanel>
+            </muxc:SplitButton>
         </Grid>
 
         <Grid
@@ -125,44 +147,24 @@
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="0,0,0,8"
             Padding="{StaticResource ContentPagePadding}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Button
-                x:Name="SubHeaderCreateButton"
-                Grid.Column="0"
-                Margin="0,0,8,0"
-                AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
-                Command="{x:Bind CreatePlaylistCommand}"
-                Style="{StaticResource AccentButtonStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
-                </StackPanel>
-            </Button>
-
-            <Button
-                x:Name="SubHeaderImportButton"
-                Grid.Column="1"
-                AutomationProperties.Name="{x:Bind strings:Resources.ImportPlaylist}"
-                Command="{x:Bind ViewModel.ImportPlaylistCommand}">
+            <ToggleButton
+                x:Name="SubHeaderMultiSelectButton"
+                AccessKey="{x:Bind strings:KeyboardResources.CommandMultiSelectKey}"
+                AutomationProperties.Name="{x:Bind strings:Resources.Multiselect}"
+                IsChecked="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=TwoWay}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
+                        x:Name="SubHeaderMultiSelectButtonIcon"
                         Margin="{StaticResource IconButtonStandardIconMargin}"
-                        Glyph="&#xE8B5;"
-                        MirroredWhenRightToLeft="True" />
+                        Glyph="&#xE762;" />
                     <TextBlock
-                        x:Name="SubHeaderImportButtonText"
+                        x:Name="SubHeaderMultiSelectButtonText"
                         Margin="8,0,0,0"
-                        Text="{x:Bind strings:Resources.ImportPlaylist}" />
+                        Text="{x:Bind strings:Resources.Multiselect}" />
                 </StackPanel>
-            </Button>
-
+            </ToggleButton>
             <controls:SelectionBarControl
                 x:Name="SelectionBar"
-                Grid.ColumnSpan="2"
                 ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"
                 AddToQueueButtonCommand="{x:Bind ViewModel.AddSelectedToQueueCommand}"
                 CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
@@ -274,9 +276,11 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="HeaderCreateButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.NewPlaylist}" />
+                        <Setter Target="HeaderCreateButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="SubHeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="SubHeaderImportButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.ImportPlaylist}" />
-                        <Setter Target="SubHeaderImportButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="SubHeaderMultiSelectButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.Multiselect}" />
+                        <Setter Target="SubHeaderMultiSelectButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistsGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="NoPlaylistsViewer.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoPlaylistsPanelIcon.Margin" Value="0,0,0,0" />
@@ -291,6 +295,7 @@
                         <triggers:IsNullOrEmptyStateTrigger Value="{x:Bind ViewModel.Playlists, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="HeaderCreateButton.Visibility" Value="Collapsed" />
                         <Setter Target="SubHeaderGrid.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistsGridView.Visibility" Value="Collapsed" />
                         <Setter Target="NoPlaylistsViewer.Visibility" Value="Visible" />
@@ -306,8 +311,7 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SubHeaderCreateButton.Visibility" Value="Collapsed" />
-                        <Setter Target="SubHeaderImportButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SubHeaderMultiSelectButton.Visibility" Value="Collapsed" />
                         <Setter Target="SelectionBar.Visibility" Value="Visible" />
                         <Setter Target="PlaylistsGridView.SelectionMode" Value="Multiple" />
                         <Setter Target="PlaylistsGridView.IsItemClickEnabled" Value="False" />
@@ -323,6 +327,7 @@
                     <VisualState.Setters>
                         <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
                         <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
+                        <Setter Target="SubHeaderMultiSelectButtonIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
