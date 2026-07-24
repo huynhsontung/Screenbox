@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>总持续时间</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Chapter</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Chapters</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章</value>
     <comment>#Format[Int32 chapter]</comment>
