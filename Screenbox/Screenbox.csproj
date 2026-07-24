@@ -342,7 +342,6 @@
     </Compile>
     <Compile Include="Templates\SearchSuggestionTemplateSelector.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
-    <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="Triggers\WindowActivationModeTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
