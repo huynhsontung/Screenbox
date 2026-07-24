@@ -54,6 +54,11 @@
                     CommandParameter="{x:Bind ViewModel.ContextAlbum, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
                     Text="{strings:Resources Key=ShowAlbum}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenArtistCommand}"
+                    CommandParameter="{x:Bind ViewModel.ContextAlbum.RelatedSongs[0].MainArtist, FallbackValue={x:Null}, Mode=OneWay}"
+                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                    Text="{x:Bind strings:Resources.ShowArtist}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
