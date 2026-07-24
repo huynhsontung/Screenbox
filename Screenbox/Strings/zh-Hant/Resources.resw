@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>總時長</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Chapter</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Chapters</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章節</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1124,5 +1132,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>創建您的第一個播放清單，來整理您喜愛的視頻和音樂。</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
   </data>
 </root>

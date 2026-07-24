@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>Kokonaiskesto</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Chapter</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Chapters</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Luku {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -224,7 +232,7 @@
     <value>Lisää jonoon</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Valitse</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Valitse kaikki</value>
@@ -658,10 +666,10 @@
     <value>Anna äänenvoimakkuuden ylittää 100 %</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Kuinka paljon hypätään taaksepäin kun kelaat taaksepäin</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Kuinka paljon hypätään eteenpäin kun kelaat eteenpäin</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Näytöllä näkyvät ohjaimet</value>
@@ -1003,46 +1011,46 @@
     <value>Kansio</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Napauta</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>Pyyhkäise ylös</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>Pyyhkäise alas</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>Pyyhkäise vasemmalle</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>Pyyhkäise oikealle</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Ota käyttöön "paina ja pidä pohjassa nostaaksesi toistonopeutta"</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>Tyhjä</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>Toista/Pysäytä</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>Kelaa taaksepäin</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>Kelaa eteenpäin</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>Laske äänenvoimakkuutta</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>Lisää äänenvoimakkuutta</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>Laske nopeutta</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>Lisää nopeutta</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Lisää soittolistalle</value>
@@ -1124,5 +1132,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Luo ensimmäinen soittolistasi järjestääksesi suosikki videosi ja musiikkisi.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>Tässä soittolistassa ei ole tiedostoja.</value>
   </data>
 </root>

@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>Durée totale</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Chapter</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Chapters</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Chapitre {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1124,5 +1132,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Créez votre première liste pour organiser vos vidéos et musiques favorites.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>There are no items in this playlist.</value>
   </data>
 </root>

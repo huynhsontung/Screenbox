@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>Tổng thời lượng</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Chapter</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Chapters</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Chương {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1124,5 +1132,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Hãy tạo danh sách phát đầu tiên để sắp xếp các video và nhạc yêu thích của bạn.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>Danh sách phát này hiện không có mục nào.</value>
   </data>
 </root>
