@@ -181,7 +181,11 @@
                         </MenuFlyout>
                     </muxc:DropDownButton.Flyout>
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
+                        <FontIcon
+                            x:Name="AddToPlaylistButtonIcon"
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource PlaylistAddGlyph}" />
                         <TextBlock
                             x:Name="AddToPlaylistButtonLabel"
                             Margin="8,0,0,0"
@@ -347,6 +351,7 @@
                     <VisualState.Setters>
                         <contract13NotPresent:Setter Target="AddToPlaylistMenuFlyoutSubItemIcon.Glyph" Value="{StaticResource PlaylistAddMirroredGlyph}" />
                         <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
+                        <contract13NotPresent:Setter Target="AddToPlaylistButtonIcon.Glyph" Value="{StaticResource PlaylistAddMirroredGlyph}" />
                         <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>
