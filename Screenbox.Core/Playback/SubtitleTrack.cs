@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
@@ -6,7 +6,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
-    public sealed class SubtitleTrack : MediaTrack
+    public sealed partial class SubtitleTrack : MediaTrack
     {
         internal int VlcSpu { get; set; }
 

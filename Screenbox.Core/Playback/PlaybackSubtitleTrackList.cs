@@ -9,7 +9,7 @@ using Windows.Storage;
 
 namespace Screenbox.Core.Playback;
 
-public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
+public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
 {
     private readonly Media _media;
     private readonly List<LazySubtitleTrack> _pendingSubtitleTracks;

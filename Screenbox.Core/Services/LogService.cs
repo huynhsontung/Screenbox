@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using LibVLCSharp.Shared;
-using Microsoft.AppCenter.Crashes;
 using Sentry;
 using Sentry.Protocol;
 

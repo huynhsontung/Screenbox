@@ -1,17 +1,13 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.Core.Helpers;
@@ -27,7 +23,6 @@ using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -45,7 +40,7 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
-        ConfigureAppCenter();
+        // ConfigureAppCenter();
         ConfigureSentry();
         InitializeComponent();
 
@@ -71,7 +66,6 @@ sealed partial class App : Application
     }
 
     [SecurityCritical]
-    [HandleProcessCorruptedStateExceptions]
     private void CoreApplication_UnhandledErrorDetected(object sender, UnhandledErrorDetectedEventArgs e)
     {
         try
@@ -142,7 +136,7 @@ sealed partial class App : Application
 
     private static void ConfigureAppCenter()
     {
-        AppCenter.Start(Secrets.AppCenterApiKey, typeof(Analytics), typeof(Crashes));
+        //AppCenter.Start(Secrets.AppCenterApiKey, typeof(Analytics), typeof(Crashes));
     }
 
     private void ConfigureSentry()
@@ -150,7 +144,7 @@ sealed partial class App : Application
         if (string.IsNullOrEmpty(Secrets.SentryDsn))
             return;
 
-        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+        //CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
 
         SentrySdk.Init(options =>
         {

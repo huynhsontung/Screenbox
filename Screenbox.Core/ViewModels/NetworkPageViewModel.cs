@@ -10,11 +10,11 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class NetworkPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private string _titleText;
+        [ObservableProperty] public partial string TitleText { get; set; }
 
         public NetworkPageViewModel()
         {
-            _titleText = string.Empty;
+            TitleText = string.Empty;
             Breadcrumbs = new ObservableCollection<string>();
         }
 

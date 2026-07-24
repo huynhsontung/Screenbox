@@ -32,7 +32,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
-    private LivelyWallpaperModel? _selectedVisualizer;
+    public partial LivelyWallpaperModel? SelectedVisualizer { get; set; }
 
     private readonly LivelyWallpaperModel _default = new()
     {

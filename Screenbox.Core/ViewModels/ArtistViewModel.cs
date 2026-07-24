@@ -20,7 +20,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient
 
     public string Name { get; }
 
-    [ObservableProperty] private bool _isPlaying;
+    [ObservableProperty] public partial bool IsPlaying { get; set; }
 
     public ArtistViewModel()
     {

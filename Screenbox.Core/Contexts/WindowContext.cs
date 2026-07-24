@@ -18,5 +18,5 @@ public sealed partial class WindowContext : ObservableRecipient
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
-    private WindowViewMode _viewMode;
+    public partial WindowViewMode ViewMode { get; set; }
 }

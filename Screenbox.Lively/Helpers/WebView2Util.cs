@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
+using Screenbox.Lively.Models;
+using Screenbox.Lively.Models.Serialization;
 using Windows.System;
 
 namespace Screenbox.Lively.Helpers;
@@ -52,7 +56,22 @@ public static class WebView2Util
         script.Append("(");
         for (int i = 0; i < parameters.Length; i++)
         {
-            script.Append(JsonSerializer.Serialize(parameters[i]));
+            var param = parameters[i];
+            string serialized = param switch
+            {
+                null => "null",
+                string s => $"\"{JsonEncodedText.Encode(s)}\"",
+                bool b => b ? "true" : "false",
+                int n => n.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                double d => d.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                float f => f.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                IEnumerable<double> arr => SerializeDoubleArray(arr),
+                LivelyPlaybackStateModel m => JsonSerializer.Serialize(m, LivelyJsonContext.Default.LivelyPlaybackStateModel),
+                LivelyMusicModel mm => JsonSerializer.Serialize(mm, LivelyJsonContext.Default.LivelyMusicModel),
+                LivelyInfoModel info => JsonSerializer.Serialize(info, LivelyJsonContext.Default.LivelyInfoModel),
+                _ => throw new NotSupportedException($"Type {param.GetType()} is not supported for AOT-safe serialization.")
+            };
+            script.Append(serialized);
             if (i < parameters.Length - 1)
             {
                 script.Append(", ");
@@ -60,6 +79,23 @@ public static class WebView2Util
         }
         script.Append(");");
         return await webView.ExecuteScriptAsync(script.ToString());
+    }
+
+    private static string SerializeDoubleArray(IEnumerable<double> enumerable)
+    {
+        var sb = new StringBuilder();
+        sb.Append("[");
+        var arr = enumerable.ToArray();
+        for (int i = 0; i < arr.Length; i++)
+        {
+            sb.Append(arr[i].ToString(System.Globalization.CultureInfo.InvariantCulture));
+            if (i < arr.Length - 1)
+            {
+                sb.Append(", ");
+            }
+        }
+        sb.Append("]");
+        return sb.ToString();
     }
 
     public static async Task<bool> DownloadWebView()

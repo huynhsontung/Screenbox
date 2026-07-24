@@ -19,7 +19,7 @@ namespace Screenbox.Core.ViewModels;
 public partial class PlaylistsPageViewModel : ObservableRecipient
 {
     [ObservableProperty]
-    private PlaylistViewModel? _contextPlaylist;
+    public partial PlaylistViewModel? ContextPlaylist { get; set; }
 
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
@@ -28,7 +28,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 
     public ObservableCollection<PlaylistViewModel> Playlists => _playlistsContext.Playlists;
 
-    [ObservableProperty] private PlaylistViewModel? _selectedPlaylist;
+    [ObservableProperty] public partial PlaylistViewModel? SelectedPlaylist { get; set; }
 
     public PlaylistsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
         PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory)
