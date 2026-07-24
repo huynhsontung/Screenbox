@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Helpers;
+
 internal static class VlcMediaExtensions
 {
     public static async Task ParseAsync(this Media media, TimeSpan timeout, CancellationToken cancellationToken = default)
@@ -39,7 +40,7 @@ internal static class VlcMediaExtensions
 
         return;
 
-        void MediaOnParsedChanged(object sender, MediaParsedChangedEventArgs e)
+        void MediaOnParsedChanged(object? sender, MediaParsedChangedEventArgs e)
         {
             tsc.TrySetResult(e.ParsedStatus);
         }
@@ -66,7 +67,7 @@ internal static class VlcMediaExtensions
 
         return;
 
-        void OnMediaOnParsedChanged(object sender, MediaParsedChangedEventArgs args)
+        void OnMediaOnParsedChanged(object? sender, MediaParsedChangedEventArgs args)
         {
             tcs.TrySetResult(args.ParsedStatus == MediaParsedStatus.Done);
         }

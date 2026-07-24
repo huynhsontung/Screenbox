@@ -65,7 +65,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         Selection.SelectedItems.CollectionChanged += Selection_SelectedItemsChanged;
     }
 
-    private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void ItemsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         HasItems = Queue.Items.Count > 0;
         if (!HasItems)
@@ -74,7 +74,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         }
     }
 
-    private void Selection_SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Selection_SelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         PlaySelectedNextCommand.NotifyCanExecuteChanged();
         RemoveSelectedCommand.NotifyCanExecuteChanged();

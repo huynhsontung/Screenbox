@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -92,7 +92,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         _pageStates[pageTypeName + backStackDepth] = state;
     }
 
-    public bool TryGetPageState(string pageTypeName, int backStackDepth, out object state)
+    public bool TryGetPageState(string pageTypeName, int backStackDepth, out object? state)
     {
         return _pageStates.TryGetValue(pageTypeName + backStackDepth, out state);
     }

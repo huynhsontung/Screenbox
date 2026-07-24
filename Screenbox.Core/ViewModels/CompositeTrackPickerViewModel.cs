@@ -202,7 +202,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             // "Iron.Man.2008" -> "Iron*Man*2008*"
             string strictPattern = string.Join("*", tokens) + "*";
 
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats.ToArray())
             {
                 ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
             };

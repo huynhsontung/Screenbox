@@ -132,7 +132,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     {
         var groups = context.Music.Albums.Values.GroupBy(a =>
                 a.Year > 0
-                    ? a.Year.ToString()
+                    ? a.Year.ToString() ?? MediaGroupingHelpers.OtherGroupSymbol
                     : MediaGroupingHelpers.OtherGroupSymbol)
             .OrderByDescending(g => g.Key == MediaGroupingHelpers.OtherGroupSymbol ? 0 : uint.Parse(g.Key))
             .ToList();

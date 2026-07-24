@@ -34,7 +34,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient
         Name = artist;
     }
 
-    private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void RelatedSongsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.OldItems != null)
         {
@@ -53,7 +53,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient
         }
     }
 
-    private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void MediaOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
         {

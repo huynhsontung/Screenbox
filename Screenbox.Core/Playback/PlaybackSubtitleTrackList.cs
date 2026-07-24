@@ -131,7 +131,7 @@ public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTr
         }
     }
 
-    private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
+    private void Media_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
     {
         if (e.ParsedStatus != MediaParsedStatus.Done) return;
         _media.ParsedChanged -= Media_ParsedChanged;

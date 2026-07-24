@@ -885,12 +885,14 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     OldItems: { Count: { } oldCount }, NewItems: { Count: { } newCount }
                 } && oldCount == newCount && newCount > 0:
-                    for (int i = 0; i < e.OldItems.Count; i++)
+                    for (int i = 0; i < oldCount; i++)
                     {
-                        int backupIndex = backup.OriginalPlaylist.IndexOf((MediaViewModel)e.OldItems[i]);
+                        if (e.OldItems[i] is not MediaViewModel oldItem) continue;
+                        if (e.NewItems[i] is not MediaViewModel newItem) continue;
+                        int backupIndex = backup.OriginalPlaylist.IndexOf(oldItem);
                         if (backupIndex >= 0)
                         {
-                            backup.OriginalPlaylist[backupIndex] = (MediaViewModel)e.NewItems[i];
+                            backup.OriginalPlaylist[backupIndex] = newItem;
                         }
                     }
 

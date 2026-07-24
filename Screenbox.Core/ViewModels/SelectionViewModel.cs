@@ -113,13 +113,13 @@ public sealed partial class SelectionViewModel : ObservableObject
         SelectedItems.Clear();
     }
 
-    private void SelectedItems_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void SelectedItems_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         // Delay to avoid updates during a series of events.
         _selectionStateTimer.Debounce(RefreshSelectionState, TimeSpan.FromMilliseconds(10));
     }
 
-    private void SourceCollection_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void SourceCollection_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         // Refresh the selection state to ensure it accurately reflects the current collection
         // (e.g., when removing the last unselected item).
