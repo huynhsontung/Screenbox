@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>Duração total</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Capítulo</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Capítulos</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capítulo {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1102,6 +1110,14 @@
     <value>Tem a certeza de que pretende eliminar a lista de reprodução "{0}"?  Não é possível anular esta ação.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Histórico de posição reproduzida</value>
   </data>
@@ -1124,5 +1140,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Crie a sua primeira lista de reprodução para organizar os seus vídeos e músicas favoritas.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>Não existem itens nesta lista de reprodução.</value>
   </data>
 </root>
