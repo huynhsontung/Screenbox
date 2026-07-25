@@ -1110,6 +1110,14 @@
     <value>Anda pasti mahu memadam senarai main '{0}'? Tindakan ini tidak boleh dibuat asal.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Sejarah posisi main balik</value>
   </data>

@@ -1110,6 +1110,14 @@
     <value>Tem certeza que deseja excluir a playlist "{0}"? Esta ação não pode ser desfeita.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Histórico da posição de reprodução</value>
   </data>

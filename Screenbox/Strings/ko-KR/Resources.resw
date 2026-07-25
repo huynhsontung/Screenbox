@@ -1111,6 +1111,14 @@
     <value>정말로 '{0}' 재생목록을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>재생 위치 기록</value>
   </data>

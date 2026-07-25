@@ -1110,6 +1110,14 @@
     <value>Sunteți sigur că doriți să ștergeți playlist-ul „{0}”? Această acțiune nu poate fi anulată.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Istoricul pozițiilor de redare</value>
   </data>

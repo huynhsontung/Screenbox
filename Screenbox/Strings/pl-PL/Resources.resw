@@ -1110,6 +1110,14 @@
     <value>Czy na pewno chcesz usunąć listę odtwarzania '{0}'? Nie możesz cofnąć tej czynności.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Historia pozycji odtwarzania</value>
   </data>
