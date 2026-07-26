@@ -149,11 +149,11 @@
     <value>משך זמן הכולל</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>{0} פרק</value>
+    <value>פרק</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>{0} פרקים</value>
+    <value>פרקים</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
