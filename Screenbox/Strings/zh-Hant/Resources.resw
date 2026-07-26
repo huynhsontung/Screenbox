@@ -149,11 +149,11 @@
     <value>總時長</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>章節</value>
+    <value>{0} 章節</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>章節</value>
+    <value>{0} 章節</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
