@@ -12,6 +12,9 @@
             <x:Double x:Key="TextFillColorSecondaryOpacity">0.775</x:Double>
             <x:Double x:Key="TextFillColorTertiaryOpacity">0.53</x:Double>
 
+            <!--  Fallback for system ThemeResource that is missing on some Windows/WinUI contract versions  -->
+            <StaticResource x:Key="GridViewItemCheckBoxBorderBrush" ResourceKey="ControlStrongStrokeColorDefaultBrush" />
+
             <StaticResource x:Key="MediaGridViewItemBackgroundPointerOver" ResourceKey="ControlFillColorDefaultBrush" />
             <StaticResource x:Key="MediaGridViewItemBackgroundPressed" ResourceKey="ControlAltFillColorTertiaryBrush" />
             <StaticResource x:Key="MediaGridViewItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
@@ -31,6 +34,9 @@
             <x:Double x:Key="TextFillColorSecondaryOpacity">0.695</x:Double>
             <x:Double x:Key="TextFillColorTertiaryOpacity">0.5</x:Double>
 
+            <!--  Fallback for system ThemeResource that is missing on some Windows/WinUI contract versions  -->
+            <StaticResource x:Key="GridViewItemCheckBoxBorderBrush" ResourceKey="ControlStrongStrokeColorDefaultBrush" />
+
             <StaticResource x:Key="MediaGridViewItemBackgroundPointerOver" ResourceKey="ControlFillColorDefaultBrush" />
             <StaticResource x:Key="MediaGridViewItemBackgroundPressed" ResourceKey="LayerFillColorDefaultBrush" />
             <StaticResource x:Key="MediaGridViewItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
@@ -49,6 +55,9 @@
         <ResourceDictionary x:Key="HighContrast">
             <x:Double x:Key="TextFillColorSecondaryOpacity">1</x:Double>
             <x:Double x:Key="TextFillColorTertiaryOpacity">1</x:Double>
+
+            <!--  Fallback for system ThemeResource that is missing on some Windows/WinUI contract versions  -->
+            <StaticResource x:Key="GridViewItemCheckBoxBorderBrush" ResourceKey="SystemColorButtonTextColorBrush" />
 
             <StaticResource x:Key="MediaGridViewItemBackgroundPointerOver" ResourceKey="SystemColorHighlightTextColorBrush" />
             <StaticResource x:Key="MediaGridViewItemBackgroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
