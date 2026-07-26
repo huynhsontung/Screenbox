@@ -149,11 +149,11 @@
     <value>Całkowita długość</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>{0} chapter</value>
+    <value>Chapter</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>{0} chapters</value>
+    <value>Chapters</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
