@@ -149,11 +149,11 @@
     <value>總時長</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>{0} chapter</value>
+    <value>{0} 章節</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>{0} chapters</value>
+    <value>{0} 章節</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -1111,11 +1111,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>已選取 {0} 個播放清單</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>已選取 {0} 個播放清單</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1142,6 +1142,6 @@
     <value>創建您的第一個播放清單，來整理您喜愛的視頻和音樂。</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>播放清單中沒有項目。</value>
   </data>
 </root>
