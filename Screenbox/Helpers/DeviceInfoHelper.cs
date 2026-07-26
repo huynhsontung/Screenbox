@@ -11,8 +11,32 @@ namespace Screenbox.Helpers;
 /// </summary>
 public static class DeviceInfoHelper
 {
-    private static readonly KeyboardCapabilities _keyboardCapabilities = new();
-    private static readonly TouchCapabilities _touchCapabilities = new();
+    private static readonly KeyboardCapabilities? _keyboardCapabilities = GetKeyboardCapabilities();
+    private static readonly TouchCapabilities? _touchCapabilities = GetTouchCapabilities();
+
+    private static KeyboardCapabilities? GetKeyboardCapabilities()
+    {
+        try
+        {
+            return new KeyboardCapabilities();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static TouchCapabilities? GetTouchCapabilities()
+    {
+        try
+        {
+            return new TouchCapabilities();
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     /// <summary>
     /// Gets the type of device reported by the system.
@@ -39,11 +63,11 @@ public static class DeviceInfoHelper
     /// Gets a value that indicates whether the current device has a physical keyboard.
     /// </summary>
     /// <value><see langword="true"/> if a keyboard is detected; otherwise, <see langword="false"/>.</value>
-    public static bool IsKeyboardPresent => _keyboardCapabilities.KeyboardPresent != 0;
+    public static bool IsKeyboardPresent => _keyboardCapabilities != null && _keyboardCapabilities.KeyboardPresent != 0;
 
     /// <summary>
     /// Gets a value that indicates whether the current device has a touch digitizer.
     /// </summary>
     /// <value><see langword="true"/> if touch input is supported; otherwise, <see langword="false"/>.</value>
-    public static bool IsTouchPresent => _touchCapabilities.TouchPresent != 0;
+    public static bool IsTouchPresent => _touchCapabilities != null && _touchCapabilities.TouchPresent != 0;
 }
