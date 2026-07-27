@@ -68,7 +68,7 @@ public sealed partial class NetworkPage : Page, IContentFrame
     private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
     {
         if (FolderViewFrame.Content is not FolderListViewPage view) return;
-        IReadOnlyList<StorageFolder> crumbs = view.ViewModel.Breadcrumbs.Take(args.Index + 1).ToArray();
+        IReadOnlyList<StorageFolder> crumbs = view.ViewModel.BreadcrumbLocations.Take(args.Index + 1).ToArray();
         FolderViewFrame.Navigate(typeof(FolderListViewPage), crumbs, new SuppressNavigationTransitionInfo());
     }
 
