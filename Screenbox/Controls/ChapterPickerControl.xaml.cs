@@ -73,7 +73,7 @@ public sealed partial class ChapterPickerControl : UserControl
     /// Gets or sets the chapters.
     /// </summary>
     /// <value>A collection of <see cref="ChapterCue"/> classes.</value>
-    public IReadOnlyList<ChapterCue>? ChaptersSource { get; set; }
+    public IList<ChapterCue>? ChaptersSource { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChapterPickerControl"/> class.

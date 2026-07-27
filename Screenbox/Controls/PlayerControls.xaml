@@ -478,7 +478,7 @@
                 Grid.Column="5"
                 Width="Auto"
                 Padding="4,0,4,1"
-                AutomationProperties.Name="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind GetChapterTitle(SeekBar.ViewModel.CurrentChapterCue), Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind GetChapterVisibility(ViewModel.PlayerShowChapters, SeekBar.ViewModel.Chapters.Count), Mode=OneWay}">
@@ -490,7 +490,7 @@
 
                     <TextBlock
                         Grid.Column="0"
-                        Text="{x:Bind SeekBar.ViewModel.CurrentChapterCue.Title.TrimStart(), Mode=OneWay}"
+                        Text="{x:Bind GetChapterTitle(SeekBar.ViewModel.CurrentChapterCue), Mode=OneWay}"
                         TextTrimming="CharacterEllipsis"
                         Typography.NumeralAlignment="Tabular">
                         <interactivity:Interaction.Behaviors>
