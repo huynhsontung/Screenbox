@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.NotificationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -41,14 +41,14 @@
 
     <muxc:InfoBar
         x:Name="InfoBar"
-        Title="{x:Bind ViewModel.Title, Mode=OneWay}"
+        Title="{x:Bind GetDisplayTitle(ViewModel.Kind, ViewModel.Title, ViewModel.Count), Mode=OneWay}"
         HorizontalAlignment="Center"
         VerticalAlignment="Bottom"
-        ActionButton="{x:Bind ViewModel.ActionButton, Mode=OneWay}"
+        ActionButton="{x:Bind GetActionButton(ViewModel.Kind, ViewModel.ActionContent, ViewModel.ActionCommand), Mode=OneWay}"
         CloseButtonCommand="{x:Bind ViewModel.CloseCommand}"
         Content="{x:Bind ViewModel.Content, Mode=OneWay}"
         CornerRadius="{StaticResource OverlayCornerRadius}"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
-        Message="{x:Bind ViewModel.Message, Mode=OneWay}"
+        Message="{x:Bind GetDisplayMessage(ViewModel.Kind, ViewModel.Message), Mode=OneWay}"
         Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Severity), Mode=OneWay}" />
 </UserControl>

@@ -27,7 +27,6 @@ using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -106,9 +105,6 @@ sealed partial class App : Application
         ServiceCollection services = new();
         ServiceHelpers.PopulateCoreServices(services);
         services.AddLivelyWallpaperServices();
-
-        // View models
-        services.AddTransient<Screenbox.ViewModels.NotificationViewModel>();
 
         // Services
         services.AddSingleton<IVlcDialogService, VlcDialogService>();
