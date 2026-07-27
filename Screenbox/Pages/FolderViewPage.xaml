@@ -144,6 +144,8 @@
                         CanPlay="{x:Bind IsFile}"
                         Caption="{x:Bind helpers:ItemLabelHelper.GetStorageItemCaption(IsFile, CaptionText, ItemCount), Mode=OneWay}"
                         IsPlaying="{x:Bind Media.IsPlaying, Mode=OneWay}"
+                        PlayCommand="{StaticResource MediaListViewItemPlayCommand}"
+                        PlayCommandParameter="{x:Bind}"
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">
                         <controls:CommonGridViewItem.PlaceholderIconSource>
