@@ -176,14 +176,4 @@ public sealed partial class PlayerControls : UserControl
     {
         return isEnabled && count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
-
-    // Due the init time order mismatch between SeekBar view model and ChapterTitleConverter resource
-    // we cannot use the ChapterTitleConverter in the XAML, so we have to duplicate the logic here.
-    private string GetChapterTitle(ChapterCue? chapterCue)
-    {
-        if (chapterCue is null) return string.Empty;
-        return !string.IsNullOrWhiteSpace(chapterCue.Title)
-            ? chapterCue.Title.TrimStart()
-            : Screenbox.Strings.Resources.ChapterName(SeekBar.ViewModel.Chapters.IndexOf(chapterCue) + 1);
-    }
 }

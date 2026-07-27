@@ -11,10 +11,10 @@ namespace Screenbox.Converters;
 public sealed class ChapterTitleConverter : DependencyObject, IValueConverter
 {
     public static readonly DependencyProperty ChaptersProperty = DependencyProperty.Register(
-    nameof(Chapters),
-    typeof(IList<ChapterCue>),
-    typeof(ChapterTitleConverter),
-    new PropertyMetadata(null));
+        nameof(Chapters),
+        typeof(IList<ChapterCue>),
+        typeof(ChapterTitleConverter),
+        new PropertyMetadata(null));
 
     public IList<ChapterCue>? Chapters
     {
@@ -22,21 +22,32 @@ public sealed class ChapterTitleConverter : DependencyObject, IValueConverter
         set => SetValue(ChaptersProperty, value);
     }
 
+    /// <summary>
+    /// Gets a display-ready title for the specified chapter cue.
+    /// </summary>
+    /// <param name="chapterCue">The chapter cue for which to get the title.</param>
+    /// <param name="chapters">The list of chapter cues.</param>
+    /// <returns>
+    /// The chapter title with leading whitespace removed if available; otherwise,
+    /// a fallback title derived from the chapter index.
+    /// </returns>
+    public static string GetChapterTitle(ChapterCue? chapterCue, IList<ChapterCue>? chapters)
+    {
+        if (chapterCue is null) return string.Empty;
+        return !string.IsNullOrWhiteSpace(chapterCue.Title) || chapters is null
+            ? chapterCue.Title.TrimStart()
+            : Strings.Resources.ChapterName(chapters.IndexOf(chapterCue) + 1);
+    }
+
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        return GetChapterTitle(value as ChapterCue);
+        return value is not ChapterCue chapter
+            ? DependencyProperty.UnsetValue
+            : GetChapterTitle(chapter, Chapters);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
         throw new NotImplementedException();
-    }
-
-    private string GetChapterTitle(ChapterCue? chapterCue)
-    {
-        if (chapterCue is null) return string.Empty;
-        return !string.IsNullOrWhiteSpace(chapterCue.Title) || Chapters is null
-            ? chapterCue.Title.TrimStart()
-            : Screenbox.Strings.Resources.ChapterName(Chapters.IndexOf(chapterCue) + 1);
     }
 }
