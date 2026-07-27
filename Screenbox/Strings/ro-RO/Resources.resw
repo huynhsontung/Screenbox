@@ -149,11 +149,11 @@
     <value>Durată totală</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Capitol</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Capitole</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -1111,11 +1111,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>Playlist-ul {0} selectat</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>Playlist-urile {0} selectate</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
