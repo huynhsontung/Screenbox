@@ -3,14 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
-    xmlns:collections="using:CommunityToolkit.Mvvm.Collections"
-    xmlns:helpers="using:Screenbox.Core.Helpers"
+    xmlns:collections="using:System.Collections"
+    xmlns:common="using:Screenbox.Core.Common"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Templates"
     xmlns:vm="using:Screenbox.ViewModels">
 
     <!--  ListViewBase Header  -->
-    <DataTemplate x:Key="GroupHeaderTemplate" x:DataType="helpers:ObservableMediaGroup">
+    <DataTemplate x:Key="GroupHeaderTemplate" x:DataType="common:IStringKey">
         <TextBlock
             FontWeight="SemiBold"
             Text="{x:Bind Key}"
@@ -30,9 +30,9 @@
             ClickMode="Hover"
             FontSize="{StaticResource SubtitleTextBlockFontSize}"
             FontWeight="SemiBold"
-            IsEnabled="{x:Bind local:GroupedViewTemplates.IsIntegerNormal(Group.(helpers:ObservableMediaGroup.Count)), Mode=OneWay}"
+            IsEnabled="{x:Bind local:GroupedViewTemplates.IsIntegerNormal(Group.(collections:ICollection.Count)), Mode=OneWay}"
             Style="{StaticResource SubtleButtonStyle}">
-            <TextBlock Text="{x:Bind (x:String)((helpers:ObservableMediaGroup)Group).Key}" TextTrimming="CharacterEllipsis">
+            <TextBlock Text="{x:Bind ((common:IStringKey)Group).Key}" TextTrimming="CharacterEllipsis">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
                 </interactivity:Interaction.Behaviors>

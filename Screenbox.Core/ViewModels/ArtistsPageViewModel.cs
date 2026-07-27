@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -18,7 +18,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class ArtistsPageViewModel : BaseMusicContentViewModel,
     IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
-    public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
+    public ObservableCollection<ObservableArtistGroup> GroupedArtists { get; } = [];
 
     [ObservableProperty]
     public partial ArtistViewModel? ContextArtist { get; set; }
@@ -32,7 +32,6 @@ public sealed partial class ArtistsPageViewModel : BaseMusicContentViewModel,
         _libraryContext = libraryContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
-        GroupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
         PopulateGroups();
 
         IsActive = true;
@@ -53,8 +52,9 @@ public sealed partial class ArtistsPageViewModel : BaseMusicContentViewModel,
         // No need to run fetch async. HomePageViewModel should already called the method.
         Songs = _libraryContext.Music.Songs;
 
-        var groupings = GetDefaultGrouping(_libraryContext);
-        GroupedArtists.SyncObservableGroups(groupings);
+        var groups = GetDefaultGrouping(_libraryContext);
+        GroupedArtists.SyncObservableGroups(groups, (key, items)
+                => items as ObservableArtistGroup ?? new ObservableArtistGroup(key, items));
 
         // Progressively update when it's still loading
         if (_libraryContext.IsLoadingMusic)
@@ -96,7 +96,7 @@ public sealed partial class ArtistsPageViewModel : BaseMusicContentViewModel,
     {
         foreach (string key in MediaGroupingHelpers.CharacterGroupLabels)
         {
-            GroupedArtists.AddGroup(key);
+            GroupedArtists.Add(new ObservableArtistGroup(key));
         }
     }
 }

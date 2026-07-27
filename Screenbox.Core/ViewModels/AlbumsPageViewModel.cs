@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -21,7 +21,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
-    public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
+    public ObservableCollection<ObservableAlbumGroup> GroupedAlbums { get; } = [];
 
     [ObservableProperty]
     public partial string SortBy { get; set; } = string.Empty;
@@ -38,7 +38,6 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         _libraryContext = libraryContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
-        GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
 
         IsActive = true;
     }
@@ -64,14 +63,15 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         {
             // Only sync when the number of items is low enough
             // Sync on too many items can cause UI hang
-            GroupedAlbums.SyncObservableGroups(groups);
+            GroupedAlbums.SyncObservableGroups(groups, (key, items)
+                => items as ObservableAlbumGroup ?? new ObservableAlbumGroup(key, items));
         }
         else
         {
             GroupedAlbums.Clear();
             foreach (IGrouping<string, AlbumViewModel> group in groups)
             {
-                GroupedAlbums.AddGroup(group);
+                GroupedAlbums.Add(new ObservableAlbumGroup(group));
             }
         }
 
@@ -177,7 +177,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         GroupedAlbums.Clear();
         foreach (IGrouping<string, AlbumViewModel> group in groups)
         {
-            GroupedAlbums.AddGroup(group);
+            GroupedAlbums.Add(new ObservableAlbumGroup(group));
         }
     }
 
