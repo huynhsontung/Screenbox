@@ -60,7 +60,8 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         {
             // Only sync when the number of items is low enough
             // Sync on too many items can cause UI hang
-            GroupedSongs.SyncObservableGroups(groups);
+            GroupedSongs.SyncObservableGroups(groups, (key, items)
+                => items as ObservableMediaGroup ?? new ObservableMediaGroup(key, items));
         }
         else
         {

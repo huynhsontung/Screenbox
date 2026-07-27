@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
-using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Helpers;
 
@@ -48,11 +47,6 @@ public static class CollectionExtensions
             target.RemoveAt(i);
         }
     }
-
-    public static void SyncObservableGroups(this IList<ObservableMediaGroup> groups,
-        IReadOnlyList<IGrouping<string, MediaViewModel>> reference) =>
-        groups.SyncObservableGroups(reference, (key, items) =>
-            items as ObservableMediaGroup ?? new ObservableMediaGroup(key, items));
 
     public static void SyncObservableGroups<TKey, TValue>(this IList<ObservableGroup<TKey, TValue>> target,
         IReadOnlyList<IGrouping<TKey, TValue>> reference) where TKey : notnull =>

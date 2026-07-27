@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Screenbox.Core.Common;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Helpers;
 
 [WinRT.GeneratedBindableCustomProperty]
-public sealed partial class ObservableMediaGroup : ObservableCollection<MediaViewModel>, IGrouping<string, MediaViewModel>
+public sealed partial class ObservableMediaGroup :
+    ObservableCollection<MediaViewModel>, IGrouping<string, MediaViewModel>, IStringKey
 {
     public string Key { get; }
 
