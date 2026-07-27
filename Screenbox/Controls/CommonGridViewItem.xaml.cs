@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -14,6 +14,9 @@ public sealed partial class CommonGridViewItem : UserControl
 
     public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
         nameof(PlayCommand), typeof(ICommand), typeof(CommonGridViewItem), new PropertyMetadata(default(ICommand)));
+
+    public static readonly DependencyProperty PlayCommandParameterProperty = DependencyProperty.Register(
+        nameof(PlayCommandParameter), typeof(object), typeof(CommonGridViewItem), new PropertyMetadata(default(object)));
 
     public static readonly DependencyProperty HorizontalTextAlignmentProperty = DependencyProperty.Register(
         nameof(HorizontalTextAlignment), typeof(TextAlignment), typeof(CommonGridViewItem), new PropertyMetadata(TextAlignment.Left));
@@ -82,6 +85,12 @@ public sealed partial class CommonGridViewItem : UserControl
     {
         get => (ICommand?)GetValue(PlayCommandProperty);
         set => SetValue(PlayCommandProperty, value);
+    }
+
+    public object? PlayCommandParameter
+    {
+        get => GetValue(PlayCommandParameterProperty);
+        set => SetValue(PlayCommandParameterProperty, value);
     }
 
     public double ThumbnailHeight

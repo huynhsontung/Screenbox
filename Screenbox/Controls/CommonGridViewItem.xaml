@@ -67,7 +67,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
-            CommandParameter="{Binding}"
+            CommandParameter="{x:Bind PlayCommandParameter, Mode=OneWay}"
             CornerRadius="{StaticResource CircularCornerRadius}"
             Opacity="0"
             Style="{StaticResource AccentButtonStyle}"
