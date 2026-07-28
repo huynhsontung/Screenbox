@@ -31,6 +31,10 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<PlaylistRenamedNotificationMessage>,
     IRecipient<PlaylistItemsAddedNotificationMessage>
 {
+    private const double NotificationDurationShort = 5.0;
+    private const double NotificationDurationMedium = 8.0;
+    private const double NotificationDurationLong = 15.0;
+
     [ObservableProperty]
     private NotificationKind _kind;
 
@@ -101,7 +105,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             Message = message.File.Name;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(5));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationShort));
         });
     }
 
@@ -130,7 +134,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             ActionCommand = new RelayCommand(() => _filesService.OpenFileLocationAsync(message.Value));
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(8));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationMedium));
         }
 
         _dispatcherQueue.TryEnqueue(SetNotification);
@@ -160,7 +164,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             });
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -202,7 +206,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             });
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -275,7 +279,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistItemsAddedNotificationMessage message)
     {
-        ShowSuccessNotification(NotificationKind.PlaylistItemsAdded, message.PlaylistName, null, message.ItemCount);
+        ShowSuccessNotification(NotificationKind.PlaylistItemsAdded, message.PlaylistName, message: null, count: message.ItemCount);
     }
 
     private void ShowSuccessNotification(NotificationKind kind, string? title = null, string? message = null, int count = 0)
@@ -290,7 +294,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             Severity = NotificationLevel.Success;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(5));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationShort));
         });
     }
 
@@ -304,7 +308,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             Severity = NotificationLevel.Error;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -319,7 +323,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
             Severity = NotificationLevel.Error;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
