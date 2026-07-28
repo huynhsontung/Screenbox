@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,7 +23,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     /// Gets the albums grouped with their related media items.
     /// </summary>
     /// <value>The grouped collection of albums and associated songs.</value>
-    public ObservableGroupedCollection<AlbumViewModel, MediaViewModel> GroupedAlbums { get; }
+    public ObservableCollection<ObservableAlbumMediaGroup> GroupedAlbums { get; } = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalDuration))]
@@ -44,7 +44,6 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     public ArtistDetailsPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        GroupedAlbums = new ObservableGroupedCollection<AlbumViewModel, MediaViewModel>();
     }
 
     public void OnNavigatedTo(object? parameter)
@@ -72,7 +71,8 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
             .OrderByDescending(g => g.Key?.Year ?? 0)
             .ToList();
 
-        GroupedAlbums.SyncObservableGroups(albumGroups);
+        GroupedAlbums.SyncObservableGroups(albumGroups, (key, items)
+            => items as ObservableAlbumMediaGroup ?? new ObservableAlbumMediaGroup(key, items));
 
         IEnumerable<Task> loadingTasks = albumGroups
             .Where(g => g.Key is { AlbumArt: null })
