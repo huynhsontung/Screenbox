@@ -8,6 +8,7 @@
     xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:coreHelpers="using:Screenbox.Core.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -28,12 +29,14 @@
                 <templates:GroupedViewTemplates />
             </ResourceDictionary.MergedDictionaries>
 
+            <commands:BindableCommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
+
             <CollectionViewSource
                 x:Name="AlbumSource"
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
-            <DataTemplate x:Key="AlbumTopGroupHeaderTemplate" x:DataType="collections:IReadOnlyObservableGroup">
+            <DataTemplate x:Key="AlbumTopGroupHeaderTemplate" x:DataType="coreHelpers:ObservableAlbumMediaGroup">
                 <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -52,12 +55,12 @@
                         Shadow="{StaticResource ElevationThemeShadow}"
                         Translation="0,0,8">
                         <Grid.Background>
-                            <ImageBrush ImageSource="{x:Bind ((viewModels:AlbumViewModel)Key).AlbumArt, Mode=OneWay}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{x:Bind Key.AlbumArt, Mode=OneWay}" Stretch="UniformToFill" />
                         </Grid.Background>
                         <Border
                             Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                             CornerRadius="{StaticResource ControlCornerRadius}"
-                            Visibility="{x:Bind ((viewModels:AlbumViewModel)Key).AlbumArt, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}">
+                            Visibility="{x:Bind Key.AlbumArt, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}">
                             <FontIcon
                                 FontSize="32"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -69,7 +72,7 @@
                         <TextBlock
                             FontSize="{StaticResource BodyTextBlockFontSize}"
                             FontWeight="SemiBold"
-                            Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Key.(viewModels:AlbumViewModel.Name), strings:Resources.UnknownAlbum)}"
+                            Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Key.Name, strings:Resources.UnknownAlbum)}"
                             TextTrimming="CharacterEllipsis">
                             <interactivity:Interaction.Behaviors>
                                 <behaviors:OverflowTextToolTipBehavior />
@@ -78,7 +81,7 @@
                         <TextBlock
                             FontSize="{StaticResource CaptionTextBlockFontSize}"
                             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                            Text="{x:Bind ((viewModels:AlbumViewModel)Key).Year}" />
+                            Text="{x:Bind Key.Year}" />
                     </StackPanel>
                 </Grid>
             </DataTemplate>
@@ -306,11 +309,11 @@
             SelectionMode="None"
             Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="viewModels:MediaViewModel">
                     <controls:MediaListViewItem
                         IsAlbumColumnVisible="False"
                         IsTrackNumberVisible="True"
-                        PlayCommand="{Binding DataContext.PlayCommand, ElementName=ItemList}" />
+                        PlayCommand="{StaticResource PlayCommand}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemsPanel>
