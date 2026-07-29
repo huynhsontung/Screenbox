@@ -1,6 +1,7 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -52,7 +53,7 @@ public sealed partial class SelectDeselectAllCommand : ICommand
     public void ToggleSelection(ListViewBase listViewBase)
     {
         var allItemsRange = new ItemIndexRange(0, (uint)listViewBase.Items.Count);
-        if (listViewBase.SelectedItems.Count != listViewBase.Items.Count)
+        if (listViewBase.SelectedRanges.Sum(range => range.Length) != listViewBase.Items.Count)
         {
             listViewBase.SelectRange(allItemsRange);
         }
@@ -70,9 +71,16 @@ public sealed partial class SelectDeselectAllCommand : ICommand
     /// <param name="listBox">The target control whose selection state will be changed.</param>
     public void ToggleSelection(ListBox listBox)
     {
-        if (listBox.SelectedItems.Count != listBox.Items.Count)
+        // CsWinRT issue: Avoid interacting with SelectedItems as much as possible due to
+        // potential cast to ICollection<object> failure. Cause unknown.
+        if ((listBox.SelectionMode == SelectionMode.Single && listBox.SelectedItem == null)
+            || listBox.SelectedItems.Count != listBox.Items.Count)
         {
             listBox.SelectAll();
+        }
+        else if (listBox.SelectionMode == SelectionMode.Single)
+        {
+            listBox.SelectedItem = null;
         }
         else
         {
