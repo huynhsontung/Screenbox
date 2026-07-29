@@ -17,6 +17,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     d:DesignHeight="752"
     d:DesignWidth="848"
     Loaded="PlayQueue_OnLoaded"
@@ -28,6 +29,8 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
+
+                <commands:BindableCommand x:Key="PlaySingleCommand" Command="{x:Bind ViewModel.PlaySingleCommand}" />
 
                 <MenuFlyout x:Key="ItemFlyout">
                     <interactivity:Interaction.Behaviors>
@@ -262,8 +265,8 @@
                 <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
             </ListView.Resources>
             <ListView.ItemTemplate>
-                <DataTemplate>
-                    <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{Binding DataContext.PlaySingleCommand, ElementName=PlaylistListView}" />
+                <DataTemplate x:DataType="viewModels:MediaViewModel">
+                    <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{StaticResource PlaySingleCommand}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Footer>
