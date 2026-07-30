@@ -40,6 +40,18 @@ public class SelectionViewModelTests
         Assert.Equal(7, vm.SelectedCount);
     }
 
+    [Fact]
+    public void SetRanges_ShouldReplaceAndCompactRanges()
+    {
+        var vm = new SelectionViewModel();
+        vm.SetRanges(new[] { new ItemIndexRange(0, 3), new ItemIndexRange(2, 4) });
+
+        Assert.Single(vm.SelectedRanges);
+        Assert.Equal(0, vm.SelectedRanges[0].FirstIndex);
+        Assert.Equal(6u, vm.SelectedRanges[0].Length); // 0..5
+        Assert.Equal(6, vm.SelectedCount);
+    }
+
 
 
     [Fact]
