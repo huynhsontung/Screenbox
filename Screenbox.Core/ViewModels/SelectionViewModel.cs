@@ -1,78 +1,66 @@
 #nullable enable
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.WinUI;
-using Windows.System;
+using Screenbox.Core.Helpers;
+using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Core.ViewModels;
 
 /// <summary>
 /// Provides selection state and helpers for view models that support item selection.
+/// Assumes <see cref="SelectedRanges"/> is always maintained in a compacted and ordered state.
 /// </summary>
-/// <remarks>
-/// This view model exposes selection-related properties such as the set of selected
-/// items, whether selection mode is active, and the selection state for a collection
-/// of items. It is intended to be composed into other view models to provide a
-/// consistent selection experience across the application.
-/// </remarks>
 public sealed partial class SelectionViewModel : ObservableObject
 {
+    private readonly ObservableCollection<ItemIndexRange> _selectedRanges;
+
     /// <summary>
-    /// Gets the collection of currently selected items.
+    /// Gets the read-only collection of currently selected item index ranges.
+    /// Assumed to be always ordered and non-overlapping.
     /// </summary>
-    /// <value>
-    /// A collection containing the selected items. The default is an empty collection.
-    /// </value>
-    public ObservableCollection<object> SelectedItems { get; }
+    public ReadOnlyObservableCollection<ItemIndexRange> SelectedRanges { get; }
+
+    /// <summary>
+    /// Gets the total count of distinct selected items across all ranges.
+    /// </summary>
+    public int SelectedCount => SelectedRanges.Sum(r => (int)r.Length);
 
     /// <summary>
     /// Gets or sets a value that indicates whether all items are selected.
     /// </summary>
-    /// <value>
-    /// <see langword="true"/> if all items are selected; <see langword="false"/> if none
-    /// are selected; otherwise, <see langword="null"/> to indicate a mixed selection.
-    /// The default is <see langword="false"/>.
-    /// </value>
     [ObservableProperty]
     private bool? _isAllSelected = false;
 
     /// <summary>
     /// Gets or sets a value that indicates whether selection mode is active.
     /// </summary>
-    /// <value>
-    /// <see langword="true"/> if selection mode is active; otherwise, <see langword="false"/>.
-    /// The default is <see langword="false"/>.
-    /// </value>
     [ObservableProperty]
     private bool _isSelectionModeActive;
 
-    private readonly DispatcherQueue _dispatcherQueue;
-    private readonly DispatcherQueueTimer _selectionStateTimer;
-
-    private IReadOnlyCollection<object>? _sourceCollection;
+    private IReadOnlyList<object>? _sourceCollection;
+    private bool _isUpdating;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
     /// </summary>
     public SelectionViewModel()
     {
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _selectionStateTimer = _dispatcherQueue.CreateTimer();
-
-        SelectedItems = new ObservableCollection<object>();
-        SelectedItems.CollectionChanged += SelectedItems_OnCollectionChanged;
+        _selectedRanges = new ObservableCollection<ItemIndexRange>();
+        SelectedRanges = new ReadOnlyObservableCollection<ItemIndexRange>(_selectedRanges);
+        _selectedRanges.CollectionChanged += SelectedRanges_OnCollectionChanged;
     }
 
     /// <summary>
     /// Sets the source collection for selection and updates the selection state.
     /// </summary>
-    /// <param name="source">A collection of items to be used as the selection source.</param>
-    public void SetItemsSource(IReadOnlyCollection<object>? source)
+    public void SetItemsSource(IReadOnlyList<object>? source)
     {
         if (_sourceCollection is INotifyCollectionChanged oldCollection)
         {
@@ -85,6 +73,196 @@ public sealed partial class SelectionViewModel : ObservableObject
         {
             newCollection.CollectionChanged += SourceCollection_OnCollectionChanged;
         }
+
+        _isUpdating = true;
+        try
+        {
+            CompactRanges();
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
+    }
+
+    /// <summary>
+    /// Sets the selected ranges from an external collection, maintaining the compacted and ordered invariant.
+    /// </summary>
+    public void SetRanges(IEnumerable<ItemIndexRange> ranges)
+    {
+        var newRanges = CompactRangesInternal(ranges);
+
+        _isUpdating = true;
+        try
+        {
+            IsSelectionModeActive = newRanges.Count > 0;
+            _selectedRanges.SyncItems(newRanges);
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
+    }
+
+    /// <summary>
+    /// Compacts and normalizes the given ranges in memory without mutating <see cref="SelectedRanges"/>.
+    /// </summary>
+    private List<ItemIndexRange> CompactRangesInternal(IEnumerable<ItemIndexRange> ranges)
+    {
+        int sourceCount = _sourceCollection?.Count ?? int.MaxValue;
+
+        var validRanges = new List<ItemIndexRange>();
+        foreach (var r in ranges)
+        {
+            if (r.Length == 0 || r.FirstIndex < 0 || r.FirstIndex >= sourceCount) continue;
+
+            int lastIndex = Math.Min(r.LastIndex, sourceCount - 1);
+            uint length = (uint)(lastIndex - r.FirstIndex + 1);
+            if (length > 0)
+            {
+                validRanges.Add(new ItemIndexRange(r.FirstIndex, length));
+            }
+        }
+
+        if (validRanges.Count == 0) return new List<ItemIndexRange>();
+
+        var sorted = validRanges.OrderBy(r => r.FirstIndex).ToList();
+        var merged = new List<ItemIndexRange>();
+        ItemIndexRange current = sorted[0];
+
+        for (int i = 1; i < sorted.Count; i++)
+        {
+            var next = sorted[i];
+            if (next.FirstIndex <= current.LastIndex + 1)
+            {
+                int newLast = Math.Max(current.LastIndex, next.LastIndex);
+                int newFirst = current.FirstIndex;
+                current = new ItemIndexRange(newFirst, (uint)(newLast - newFirst + 1));
+            }
+            else
+            {
+                merged.Add(current);
+                current = next;
+            }
+        }
+        merged.Add(current);
+        return merged;
+    }
+
+    /// <summary>
+    /// Compacts and normalizes <see cref="SelectedRanges"/> in place using <see cref="CollectionExtensions.SyncItems"/>.
+    /// </summary>
+    private void CompactRanges()
+    {
+        if (SelectedRanges.Count == 0) return;
+        var compacted = CompactRangesInternal(SelectedRanges);
+        _selectedRanges.SyncItems(compacted);
+    }
+
+    /// <summary>
+    /// Retrieves a list of selected items from the configured source collection based on current selected ranges.
+    /// </summary>
+    public List<T> GetSelectedItems<T>()
+    {
+        var list = _sourceCollection;
+        if (list is null || list.Count == 0 || SelectedRanges.Count == 0) return new List<T>();
+
+        var selectedItems = new List<T>();
+        foreach (var range in SelectedRanges)
+        {
+            int start = Math.Max(0, range.FirstIndex);
+            int end = Math.Min(list.Count - 1, range.LastIndex);
+            for (int i = start; i <= end; i++)
+            {
+                selectedItems.Add((T)list[i]);
+            }
+        }
+
+        return selectedItems;
+    }
+
+    /// <summary>
+    /// Retrieves a list of selected objects from the configured source collection based on current selected ranges.
+    /// </summary>
+    public List<object> GetSelectedItems()
+    {
+        if (_sourceCollection is null || _sourceCollection.Count == 0) return new List<object>();
+        return GetSelectedItems<object>();
+    }
+
+    /// <summary>
+    /// Selects a specified range of items, calculating the final merged ranges in memory first,
+    /// then updating <see cref="SelectedRanges"/> in place with minimal collection mutations.
+    /// </summary>
+    public void SelectRange(ItemIndexRange range)
+    {
+        if (range.Length == 0) return;
+
+        var newRanges = CompactRangesInternal(SelectedRanges.Concat(new[] { range }));
+
+        _isUpdating = true;
+        try
+        {
+            IsSelectionModeActive = true;
+            _selectedRanges.SyncItems(newRanges);
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
+    }
+
+    /// <summary>
+    /// Deselects a specified range of items, calculating remaining ranges in memory first,
+    /// then updating <see cref="SelectedRanges"/> in place with minimal collection mutations.
+    /// </summary>
+    public void DeselectRange(ItemIndexRange range)
+    {
+        if (range.Length == 0 || SelectedRanges.Count == 0) return;
+
+        var remaining = new List<ItemIndexRange>();
+        foreach (var r in SelectedRanges)
+        {
+            // Fully outside
+            if (r.LastIndex < range.FirstIndex || r.FirstIndex > range.LastIndex)
+            {
+                remaining.Add(r);
+                continue;
+            }
+
+            // Left portion remaining
+            if (r.FirstIndex < range.FirstIndex)
+            {
+                remaining.Add(new ItemIndexRange(r.FirstIndex, (uint)(range.FirstIndex - r.FirstIndex)));
+            }
+
+            // Right portion remaining
+            if (r.LastIndex > range.LastIndex)
+            {
+                remaining.Add(new ItemIndexRange(range.LastIndex + 1, (uint)(r.LastIndex - range.LastIndex)));
+            }
+        }
+
+        var newRanges = CompactRangesInternal(remaining);
+
+        _isUpdating = true;
+        try
+        {
+            _selectedRanges.SyncItems(newRanges);
+            // Don't disable selection mode since use may still want to select after clearing selection
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
     }
 
     /// <summary>
@@ -94,13 +272,46 @@ public sealed partial class SelectionViewModel : ObservableObject
     [RelayCommand]
     private void SelectItem(object? item)
     {
-        if (item is null) return;
-
-        IsSelectionModeActive = true;
-        if (!SelectedItems.Contains(item))
+        int index = GetItemIndex(item);
+        if (index >= 0)
         {
-            SelectedItems.Add(item);
+            SelectRange(new ItemIndexRange(index, 1));
         }
+    }
+
+    /// <summary>
+    /// Deselects the specified item.
+    /// </summary>
+    /// <param name="item">An object representing the item to deselect.</param>
+    [RelayCommand]
+    private void DeselectItem(object? item)
+    {
+        int index = GetItemIndex(item);
+        if (index >= 0)
+        {
+            DeselectRange(new ItemIndexRange(index, 1));
+        }
+    }
+
+    private int GetItemIndex(object? item)
+    {
+        if (item is null || _sourceCollection is null) return -1;
+
+        if (_sourceCollection is IList list)
+        {
+            return list.IndexOf(item);
+        }
+
+        int i = 0;
+        foreach (var elem in _sourceCollection)
+        {
+            if (Equals(elem, item))
+            {
+                return i;
+            }
+            i++;
+        }
+        return -1;
     }
 
     /// <summary>
@@ -109,21 +320,58 @@ public sealed partial class SelectionViewModel : ObservableObject
     [RelayCommand]
     private void ClearSelection()
     {
-        IsSelectionModeActive = false;
-        SelectedItems.Clear();
+        _isUpdating = true;
+        try
+        {
+            IsSelectionModeActive = false;
+            _selectedRanges.Clear();
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
     }
 
-    private void SelectedItems_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    [RelayCommand]
+    private void DisableSelectionMode()
     {
-        // Delay to avoid updates during a series of events.
-        _selectionStateTimer.Debounce(RefreshSelectionState, TimeSpan.FromMilliseconds(10));
+        IsSelectionModeActive = false;
+        ClearSelection();
+    }
+
+    private void SelectedRanges_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (_isUpdating) return;
+
+        _isUpdating = true;
+        try
+        {
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
     }
 
     private void SourceCollection_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        // Refresh the selection state to ensure it accurately reflects the current collection
-        // (e.g., when removing the last unselected item).
-        _selectionStateTimer.Debounce(RefreshSelectionState, TimeSpan.FromMilliseconds(10));
+        if (_isUpdating) return;
+
+        _isUpdating = true;
+        try
+        {
+            CompactRanges();
+            OnPropertyChanged(nameof(SelectedCount));
+            RefreshSelectionState();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
     }
 
     private void RefreshSelectionState()
@@ -131,7 +379,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         if (_sourceCollection is null) return;
 
         int totalCount = _sourceCollection.Count;
-        int selectedCount = SelectedItems.Count;
+        int selectedCount = SelectedCount;
         if (selectedCount < 0 || selectedCount > totalCount) return;
 
         IsAllSelected = selectedCount == 0
