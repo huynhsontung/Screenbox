@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.PlaylistsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -217,7 +217,7 @@
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
-                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
+                <behaviors:ListViewSelectionBehavior Selection="{x:Bind ViewModel.Selection}" />
             </interactivity:Interaction.Behaviors>
         </GridView>
 
