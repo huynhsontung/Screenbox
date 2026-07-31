@@ -45,7 +45,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         _playlistFactory = playlistFactory;
 
         Selection.SetItemsSource(Playlists);
-        Selection.SelectedRanges.CollectionChanged += Selection_SelectedRangesChanged;
+        ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
     }
 
     private void Selection_SelectedRangesChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -143,9 +143,11 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelectedNext()
     {
-        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>().Reverse().ToArray();
-        if (selectedItems.Length == 0) return;
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        if (selectedItems.Count == 0)
+            return;
 
+        selectedItems.Reverse();
         foreach (var item in selectedItems)
         {
             Messenger.SendPlayNext(item.Items);
