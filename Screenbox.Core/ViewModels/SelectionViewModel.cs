@@ -46,7 +46,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     private bool _isSelectionModeActive;
 
     private IReadOnlyList<object>? _sourceCollection;
-    private bool _isUpdating;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
@@ -74,16 +73,8 @@ public sealed partial class SelectionViewModel : ObservableObject
             newCollection.CollectionChanged += SourceCollection_OnCollectionChanged;
         }
 
-        _isUpdating = true;
-        try
-        {
-            CompactRanges();
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
+        CompactRanges();
+        RefreshSelectionState();
     }
 
     /// <summary>
@@ -93,18 +84,10 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         var newRanges = CompactRangesInternal(ranges);
 
-        _isUpdating = true;
-        try
-        {
-            IsSelectionModeActive = newRanges.Count > 0;
-            _selectedRanges.SyncItems(newRanges);
-            SelectedCount = newRanges.Sum(r => (int)r.Length);
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
+        IsSelectionModeActive = newRanges.Count > 0;
+        _selectedRanges.SyncItems(newRanges);
+        SelectedCount = newRanges.Sum(r => (int)r.Length);
+        RefreshSelectionState();
     }
 
     /// <summary>
@@ -209,18 +192,10 @@ public sealed partial class SelectionViewModel : ObservableObject
 
         var newRanges = CompactRangesInternal(SelectedRanges.Concat(new[] { range }));
 
-        _isUpdating = true;
-        try
-        {
-            IsSelectionModeActive = true;
-            _selectedRanges.SyncItems(newRanges);
-            SelectedCount = newRanges.Sum(r => (int)r.Length);
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
+        IsSelectionModeActive = true;
+        _selectedRanges.SyncItems(newRanges);
+        SelectedCount = newRanges.Sum(r => (int)r.Length);
+        RefreshSelectionState();
     }
 
     /// <summary>
@@ -256,18 +231,10 @@ public sealed partial class SelectionViewModel : ObservableObject
 
         var newRanges = CompactRangesInternal(remaining);
 
-        _isUpdating = true;
-        try
-        {
-            _selectedRanges.SyncItems(newRanges);
-            SelectedCount = newRanges.Sum(r => (int)r.Length);
-            // Don't disable selection mode since use may still want to select after clearing selection
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
+        _selectedRanges.SyncItems(newRanges);
+        SelectedCount = newRanges.Sum(r => (int)r.Length);
+        // Don't disable selection mode since use may still want to select after clearing selection
+        RefreshSelectionState();
     }
 
     /// <summary>
@@ -322,18 +289,10 @@ public sealed partial class SelectionViewModel : ObservableObject
     [RelayCommand]
     public void ClearSelection()
     {
-        _isUpdating = true;
-        try
-        {
-            IsSelectionModeActive = false;
-            _selectedRanges.Clear();
-            SelectedCount = 0;
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
+        IsSelectionModeActive = false;
+        _selectedRanges.Clear();
+        SelectedCount = 0;
+        RefreshSelectionState();
     }
 
     /// <summary>
@@ -348,18 +307,8 @@ public sealed partial class SelectionViewModel : ObservableObject
 
     private void SourceCollection_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_isUpdating) return;
-
-        _isUpdating = true;
-        try
-        {
-            CompactRanges();
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
+        CompactRanges();
+        RefreshSelectionState();
     }
 
     private void RefreshSelectionState()
