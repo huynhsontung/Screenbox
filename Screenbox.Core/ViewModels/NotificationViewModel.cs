@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -51,16 +52,13 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     private string? _message;
 
     [ObservableProperty]
-    private object? _content;
-
-    [ObservableProperty]
     private bool _isOpen;
 
     [ObservableProperty]
     private string? _actionContent;
 
     [ObservableProperty]
-    private RelayCommand? _actionCommand;
+    private ICommand? _actionCommand;
 
     private readonly IFilesService _filesService;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -117,7 +115,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         string body = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
             ? $"{message.Path}{message.Reason}"
             : $"{message.Path}{Environment.NewLine}{message.Reason}";
-        ShowErrorNotification(NotificationKind.FailedToLoadMedia, body);
+        ShowErrorNotification(NotificationKind.MediaLoadFailed, body);
     }
 
     /// <summary>
@@ -178,15 +176,15 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         switch (message.Library)
         {
             case KnownLibraryId.Music:
-                kind = NotificationKind.AccessDeniedMusicLibrary;
+                kind = NotificationKind.MusicLibraryAccessDenied;
                 link = new Uri("ms-settings:privacy-musiclibrary");
                 break;
             case KnownLibraryId.Pictures:
-                kind = NotificationKind.AccessDeniedPicturesLibrary;
+                kind = NotificationKind.PicturesLibraryAccessDenied;
                 link = new Uri("ms-settings:privacy-pictures");
                 break;
             case KnownLibraryId.Videos:
-                kind = NotificationKind.AccessDeniedVideosLibrary;
+                kind = NotificationKind.VideosLibraryAccessDenied;
                 link = new Uri("ms-settings:privacy-videos");
                 break;
             case KnownLibraryId.Documents:
@@ -215,7 +213,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToSaveFrameNotificationMessage message)
     {
-        ShowErrorNotification(NotificationKind.FailedToSaveFrame, message.Reason);
+        ShowErrorNotification(NotificationKind.FrameSaveFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -223,7 +221,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToLoadSubtitleNotificationMessage message)
     {
-        ShowErrorNotification(NotificationKind.FailedToLoadSubtitle, message.Reason);
+        ShowErrorNotification(NotificationKind.SubtitleLoadFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -231,7 +229,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToOpenFilesNotificationMessage message)
     {
-        ShowErrorNotification(NotificationKind.FailedToOpenFiles, message.Reason);
+        ShowErrorNotification(NotificationKind.FileOpenFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -239,7 +237,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToAddFolderNotificationMessage message)
     {
-        ShowErrorNotification(NotificationKind.FailedToAddFolder, message.Reason);
+        ShowErrorNotification(NotificationKind.FolderAddFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -247,7 +245,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToInitializeNotificationMessage message)
     {
-        ShowErrorNotification(NotificationKind.FailedToInitialize, message.Reason);
+        ShowErrorNotification(NotificationKind.InitializationFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -255,7 +253,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistCreatedNotificationMessage message)
     {
-        ShowSuccessNotification(NotificationKind.PlaylistCreated, message.PlaylistName);
+        ShowSuccessNotification(NotificationKind.PlaylistCreated, title: message.PlaylistName);
     }
 
     /// <summary>
@@ -263,7 +261,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistDeletedNotificationMessage message)
     {
-        ShowSuccessNotification(NotificationKind.PlaylistDeleted, message.PlaylistName);
+        ShowSuccessNotification(NotificationKind.PlaylistDeleted, title: message.PlaylistName);
     }
 
     /// <summary>
@@ -271,7 +269,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistRenamedNotificationMessage message)
     {
-        ShowSuccessNotification(NotificationKind.PlaylistRenamed, message.NewName);
+        ShowSuccessNotification(NotificationKind.PlaylistRenamed, title: message.NewName);
     }
 
     /// <summary>
@@ -279,7 +277,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistItemsAddedNotificationMessage message)
     {
-        ShowSuccessNotification(NotificationKind.PlaylistItemsAdded, message.PlaylistName, message: null, count: message.ItemCount);
+        ShowSuccessNotification(NotificationKind.PlaylistItemsAdded, title: message.PlaylistName, count: message.ItemCount);
     }
 
     private void ShowSuccessNotification(NotificationKind kind, string? title = null, string? message = null, int count = 0)
@@ -288,10 +286,10 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         {
             Reset();
             Kind = kind;
+            Severity = NotificationLevel.Success;
             Title = title;
             Message = message;
             Count = count;
-            Severity = NotificationLevel.Success;
 
             IsOpen = true;
             _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationShort));
@@ -304,8 +302,8 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         {
             Reset();
             Kind = kind;
-            Message = message;
             Severity = NotificationLevel.Error;
+            Message = message;
 
             IsOpen = true;
             _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
@@ -317,10 +315,10 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
-            Kind = NotificationKind.Generic;
+            Kind = NotificationKind.None;
+            Severity = NotificationLevel.Error;
             Title = title;
             Message = message;
-            Severity = NotificationLevel.Error;
 
             IsOpen = true;
             _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
@@ -336,13 +334,12 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     private void Reset()
     {
         Kind = NotificationKind.None;
+        Severity = default;
         Title = default;
         Count = default;
         Message = default;
-        Severity = default;
         ActionContent = default;
         ActionCommand = default;
-        Content = default;
         IsOpen = false;
     }
 }

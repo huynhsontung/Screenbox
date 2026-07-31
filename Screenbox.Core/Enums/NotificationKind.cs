@@ -3,27 +3,24 @@ namespace Screenbox.Core.Enums;
 public enum NotificationKind
 {
     None,
-    Generic,
 
-    AccessDeniedMusicLibrary,
-    AccessDeniedPicturesLibrary,
-    AccessDeniedVideosLibrary,
+    MusicLibraryAccessDenied,
+    PicturesLibraryAccessDenied,
+    VideosLibraryAccessDenied,
 
-    FailedToAddFolder,
-    FailedToInitialize,
-    FailedToLoadMedia,
-    FailedToLoadSubtitle,
-    FailedToSaveFrame,
-    FailedToOpenFiles,
-    
+    InitializationFailed,
+    FileOpenFailed,
+    FolderAddFailed,
+    MediaLoadFailed,
+    SubtitleLoadFailed,
+    FrameSaveFailed,
+
     FrameSaved,
-
+    SubtitleAdded,
     PlaylistCreated,
     PlaylistDeleted,
     PlaylistRenamed,
     PlaylistItemsAdded,
 
     ResumePosition,
-
-    SubtitleAdded,
 }

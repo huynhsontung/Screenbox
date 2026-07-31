@@ -1,7 +1,7 @@
 #nullable enable
 
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
@@ -22,18 +22,13 @@ public sealed partial class NotificationView : UserControl
         DataContext = Ioc.Default.GetRequiredService<NotificationViewModel>();
     }
 
-    private ButtonBase? GetActionButton(NotificationKind kind, string? actionContent, RelayCommand? actionCommand)
+    private ButtonBase? GetActionButton(NotificationKind kind, string? actionContent, ICommand? actionCommand)
     {
-        if (actionCommand is null)
-        {
-            return null;
-        }
-
         return kind switch
         {
-            NotificationKind.AccessDeniedMusicLibrary or
-            NotificationKind.AccessDeniedPicturesLibrary or
-            NotificationKind.AccessDeniedVideosLibrary => new HyperlinkButton
+            NotificationKind.MusicLibraryAccessDenied or
+            NotificationKind.PicturesLibraryAccessDenied or
+            NotificationKind.VideosLibraryAccessDenied => new HyperlinkButton
             {
                 Content = Strings.Resources.OpenPrivacySettingsButtonText,
                 Command = actionCommand,
@@ -56,24 +51,23 @@ public sealed partial class NotificationView : UserControl
     {
         return kind switch
         {
-            NotificationKind.None => null,
-            NotificationKind.Generic => title,
-            NotificationKind.AccessDeniedMusicLibrary => Strings.Resources.AccessDeniedMusicLibraryTitle,
-            NotificationKind.AccessDeniedPicturesLibrary => Strings.Resources.AccessDeniedPicturesLibraryTitle,
-            NotificationKind.AccessDeniedVideosLibrary => Strings.Resources.AccessDeniedVideosLibraryTitle,
-            NotificationKind.FailedToAddFolder => Strings.Resources.FailedToAddFolderNotificationTitle,
-            NotificationKind.FailedToInitialize => Strings.Resources.FailedToInitializeNotificationTitle,
-            NotificationKind.FailedToLoadMedia => Strings.Resources.FailedToLoadMediaNotificationTitle,
-            NotificationKind.FailedToLoadSubtitle => Strings.Resources.FailedToLoadSubtitleNotificationTitle,
-            NotificationKind.FailedToOpenFiles => Strings.Resources.FailedToOpenFilesNotificationTitle,
-            NotificationKind.FailedToSaveFrame => Strings.Resources.FailedToSaveFrameNotificationTitle,
+            NotificationKind.None => title,
+            NotificationKind.MusicLibraryAccessDenied => Strings.Resources.AccessDeniedMusicLibraryTitle,
+            NotificationKind.PicturesLibraryAccessDenied => Strings.Resources.AccessDeniedPicturesLibraryTitle,
+            NotificationKind.VideosLibraryAccessDenied => Strings.Resources.AccessDeniedVideosLibraryTitle,
+            NotificationKind.InitializationFailed => Strings.Resources.FailedToInitializeNotificationTitle,
+            NotificationKind.FileOpenFailed => Strings.Resources.FailedToOpenFilesNotificationTitle,
+            NotificationKind.FolderAddFailed => Strings.Resources.FailedToAddFolderNotificationTitle,
+            NotificationKind.MediaLoadFailed => Strings.Resources.FailedToLoadMediaNotificationTitle,
+            NotificationKind.SubtitleLoadFailed => Strings.Resources.FailedToLoadSubtitleNotificationTitle,
+            NotificationKind.FrameSaveFailed => Strings.Resources.FailedToSaveFrameNotificationTitle,
             NotificationKind.FrameSaved => Strings.Resources.FrameSavedNotificationTitle,
+            NotificationKind.SubtitleAdded => Strings.Resources.SubtitleAddedNotificationTitle,
             NotificationKind.PlaylistCreated => Strings.Resources.PlaylistCreatedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistDeleted => Strings.Resources.PlaylistDeletedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistRenamed => Strings.Resources.PlaylistRenamedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistItemsAdded => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
             NotificationKind.ResumePosition => Strings.Resources.ResumePositionNotificationTitle,
-            NotificationKind.SubtitleAdded => Strings.Resources.SubtitleAddedNotificationTitle,
             _ => null,
         };
     }
@@ -82,17 +76,16 @@ public sealed partial class NotificationView : UserControl
     {
         return kind switch
         {
-            NotificationKind.None => null,
-            NotificationKind.Generic => message,
-            NotificationKind.AccessDeniedMusicLibrary => Strings.Resources.AccessDeniedMessage,
-            NotificationKind.AccessDeniedPicturesLibrary => Strings.Resources.AccessDeniedMessage,
-            NotificationKind.AccessDeniedVideosLibrary => Strings.Resources.AccessDeniedMessage,
-            NotificationKind.FailedToAddFolder => message,
-            NotificationKind.FailedToInitialize => message,
-            NotificationKind.FailedToLoadMedia => message,
-            NotificationKind.FailedToLoadSubtitle => message,
-            NotificationKind.FailedToOpenFiles => message,
-            NotificationKind.FailedToSaveFrame => message,
+            NotificationKind.None => message,
+            NotificationKind.MusicLibraryAccessDenied => Strings.Resources.AccessDeniedMessage,
+            NotificationKind.PicturesLibraryAccessDenied => Strings.Resources.AccessDeniedMessage,
+            NotificationKind.VideosLibraryAccessDenied => Strings.Resources.AccessDeniedMessage,
+            NotificationKind.InitializationFailed => message,
+            NotificationKind.FileOpenFailed => message,
+            NotificationKind.FolderAddFailed => message,
+            NotificationKind.MediaLoadFailed => message,
+            NotificationKind.SubtitleLoadFailed => message,
+            NotificationKind.FrameSaveFailed => message,
             NotificationKind.SubtitleAdded => message,
             _ => null,
         };

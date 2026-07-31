@@ -46,7 +46,6 @@
         VerticalAlignment="Bottom"
         ActionButton="{x:Bind GetActionButton(ViewModel.Kind, ViewModel.ActionContent, ViewModel.ActionCommand), Mode=OneWay}"
         CloseButtonCommand="{x:Bind ViewModel.CloseCommand}"
-        Content="{x:Bind ViewModel.Content, Mode=OneWay}"
         CornerRadius="{StaticResource OverlayCornerRadius}"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
         Message="{x:Bind GetDisplayMessage(ViewModel.Kind, ViewModel.Message), Mode=OneWay}"
