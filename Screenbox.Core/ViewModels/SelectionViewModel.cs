@@ -28,9 +28,10 @@ public sealed partial class SelectionViewModel : ObservableObject
     public ReadOnlyObservableCollection<ItemIndexRange> SelectedRanges { get; }
 
     /// <summary>
-    /// Gets the total count of distinct selected items across all ranges.
+    /// Gets or sets the total count of distinct selected items across all ranges.
     /// </summary>
-    public int SelectedCount => SelectedRanges.Sum(r => (int)r.Length);
+    [ObservableProperty]
+    private int _selectedCount;
 
     /// <summary>
     /// Gets or sets a value that indicates whether all items are selected.
@@ -78,7 +79,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         try
         {
             CompactRanges();
-            OnPropertyChanged(nameof(SelectedCount));
+            SelectedCount = _selectedRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
@@ -99,7 +100,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         {
             IsSelectionModeActive = newRanges.Count > 0;
             _selectedRanges.SyncItems(newRanges);
-            OnPropertyChanged(nameof(SelectedCount));
+            SelectedCount = newRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
@@ -158,9 +159,15 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     private void CompactRanges()
     {
-        if (SelectedRanges.Count == 0) return;
+        if (SelectedRanges.Count == 0)
+        {
+            SelectedCount = 0;
+            return;
+        }
+        
         var compacted = CompactRangesInternal(SelectedRanges);
         _selectedRanges.SyncItems(compacted);
+        SelectedCount = compacted.Sum(r => (int)r.Length);
     }
 
     /// <summary>
@@ -209,7 +216,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         {
             IsSelectionModeActive = true;
             _selectedRanges.SyncItems(newRanges);
-            OnPropertyChanged(nameof(SelectedCount));
+            SelectedCount = newRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
@@ -255,8 +262,8 @@ public sealed partial class SelectionViewModel : ObservableObject
         try
         {
             _selectedRanges.SyncItems(newRanges);
+            SelectedCount = newRanges.Sum(r => (int)r.Length);
             // Don't disable selection mode since use may still want to select after clearing selection
-            OnPropertyChanged(nameof(SelectedCount));
             RefreshSelectionState();
         }
         finally
@@ -322,7 +329,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         {
             IsSelectionModeActive = false;
             _selectedRanges.Clear();
-            OnPropertyChanged(nameof(SelectedCount));
+            SelectedCount = 0;
             RefreshSelectionState();
         }
         finally
@@ -348,7 +355,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         _isUpdating = true;
         try
         {
-            OnPropertyChanged(nameof(SelectedCount));
+            SelectedCount = _selectedRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
@@ -365,7 +372,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         try
         {
             CompactRanges();
-            OnPropertyChanged(nameof(SelectedCount));
+            SelectedCount = _selectedRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
