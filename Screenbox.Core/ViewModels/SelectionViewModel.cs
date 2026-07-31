@@ -270,7 +270,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     /// <param name="item">An object representing the item to select.</param>
     [RelayCommand]
-    private void SelectItem(object? item)
+    public void SelectItem(object? item)
     {
         int index = GetItemIndex(item);
         if (index >= 0)
@@ -284,7 +284,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     /// <param name="item">An object representing the item to deselect.</param>
     [RelayCommand]
-    private void DeselectItem(object? item)
+    public void DeselectItem(object? item)
     {
         int index = GetItemIndex(item);
         if (index >= 0)
@@ -293,7 +293,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         }
     }
 
-    private int GetItemIndex(object? item)
+    public int GetItemIndex(object? item)
     {
         if (item is null || _sourceCollection is null) return -1;
 
@@ -314,11 +314,8 @@ public sealed partial class SelectionViewModel : ObservableObject
         return -1;
     }
 
-    /// <summary>
-    /// Clears the current selection and exits selection mode.
-    /// </summary>
     [RelayCommand]
-    private void ClearSelection()
+    public void ClearSelection()
     {
         _isUpdating = true;
         try
@@ -334,8 +331,11 @@ public sealed partial class SelectionViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Clears the current selection and exits selection mode.
+    /// </summary>
     [RelayCommand]
-    private void DisableSelectionMode()
+    public void DisableSelectionMode()
     {
         IsSelectionModeActive = false;
         ClearSelection();

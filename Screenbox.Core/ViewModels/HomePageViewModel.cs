@@ -306,8 +306,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -316,7 +315,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var items = Selection.GetSelectedItems<MediaViewModel>();
         items.Reverse();
         Messenger.SendPlayNext(items.ToArray());
-        Selection.ClearSelection();
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -324,8 +323,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         var items = Selection.GetSelectedItems<MediaViewModel>().ToArray();
         Messenger.SendAddToQueue(items);
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -337,8 +335,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             Remove(item);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
