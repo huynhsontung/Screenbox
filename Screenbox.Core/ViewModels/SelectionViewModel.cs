@@ -55,7 +55,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         _selectedRanges = new ObservableCollection<ItemIndexRange>();
         SelectedRanges = new ReadOnlyObservableCollection<ItemIndexRange>(_selectedRanges);
-        _selectedRanges.CollectionChanged += SelectedRanges_OnCollectionChanged;
     }
 
     /// <summary>
@@ -79,7 +78,6 @@ public sealed partial class SelectionViewModel : ObservableObject
         try
         {
             CompactRanges();
-            SelectedCount = _selectedRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
@@ -348,22 +346,6 @@ public sealed partial class SelectionViewModel : ObservableObject
         ClearSelection();
     }
 
-    private void SelectedRanges_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (_isUpdating) return;
-
-        _isUpdating = true;
-        try
-        {
-            SelectedCount = _selectedRanges.Sum(r => (int)r.Length);
-            RefreshSelectionState();
-        }
-        finally
-        {
-            _isUpdating = false;
-        }
-    }
-
     private void SourceCollection_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_isUpdating) return;
@@ -372,7 +354,6 @@ public sealed partial class SelectionViewModel : ObservableObject
         try
         {
             CompactRanges();
-            SelectedCount = _selectedRanges.Sum(r => (int)r.Length);
             RefreshSelectionState();
         }
         finally
