@@ -36,12 +36,21 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// <summary>
     /// Gets or sets a value that indicates whether all items are selected.
     /// </summary>
+    /// <value>
+    /// <see langword="true"/> if all items are selected; <see langword="false"/> if none
+    /// are selected; otherwise, <see langword="null"/> to indicate a mixed selection.
+    /// The default is <see langword="false"/>.
+    /// </value>
     [ObservableProperty]
     private bool? _isAllSelected = false;
 
     /// <summary>
     /// Gets or sets a value that indicates whether selection mode is active.
     /// </summary>
+    /// <value>
+    /// <see langword="true"/> if selection mode is active; otherwise, <see langword="false"/>.
+    /// The default is <see langword="false"/>.
+    /// </value>
     [ObservableProperty]
     private bool _isSelectionModeActive;
 
