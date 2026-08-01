@@ -82,7 +82,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     public void SetRanges(IEnumerable<ItemIndexRange> ranges)
     {
-        var newRanges = CompactRangesInternal(ranges);
+        var newRanges = GetCompactRanges(ranges);
 
         IsSelectionModeActive = newRanges.Count > 0;
         _selectedRanges.SyncItems(newRanges);
@@ -93,24 +93,33 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// <summary>
     /// Compacts and normalizes the given ranges in memory without mutating <see cref="SelectedRanges"/>.
     /// </summary>
-    private List<ItemIndexRange> CompactRangesInternal(IEnumerable<ItemIndexRange> ranges)
+    private List<ItemIndexRange> GetCompactRanges(IEnumerable<ItemIndexRange> ranges)
     {
         int sourceCount = _sourceCollection?.Count ?? int.MaxValue;
 
         var validRanges = new List<ItemIndexRange>();
         foreach (var r in ranges)
         {
-            if (r.Length == 0 || r.FirstIndex < 0 || r.FirstIndex >= sourceCount) continue;
+            if (r.Length == 0 || r.FirstIndex < 0 || r.FirstIndex >= sourceCount)
+                continue;
 
-            int lastIndex = Math.Min(r.LastIndex, sourceCount - 1);
-            uint length = (uint)(lastIndex - r.FirstIndex + 1);
+            // If the range is fully within the source collection, add it as is
+            if (r.LastIndex < sourceCount)
+            {
+                validRanges.Add(r);
+                continue;
+            }
+
+            // Range extends beyond the source collection, truncate it to the valid range
+            int length = sourceCount - r.FirstIndex;
             if (length > 0)
             {
-                validRanges.Add(new ItemIndexRange(r.FirstIndex, length));
+                validRanges.Add(new ItemIndexRange(r.FirstIndex, (uint)length));
             }
         }
 
-        if (validRanges.Count == 0) return new List<ItemIndexRange>();
+        if (validRanges.Count == 0)
+            return new List<ItemIndexRange>();
 
         var sorted = validRanges.OrderBy(r => r.FirstIndex).ToList();
         var merged = new List<ItemIndexRange>();
@@ -119,6 +128,8 @@ public sealed partial class SelectionViewModel : ObservableObject
         for (int i = 1; i < sorted.Count; i++)
         {
             var next = sorted[i];
+            // Merge overlapping or adjacent ranges
+            // If the next range starts before or at the end of the current range, merge them  
             if (next.FirstIndex <= current.LastIndex + 1)
             {
                 int newLast = Math.Max(current.LastIndex, next.LastIndex);
@@ -127,10 +138,12 @@ public sealed partial class SelectionViewModel : ObservableObject
             }
             else
             {
+                // No overlap, add the current range and move to the next
                 merged.Add(current);
                 current = next;
             }
         }
+        
         merged.Add(current);
         return merged;
     }
@@ -146,7 +159,7 @@ public sealed partial class SelectionViewModel : ObservableObject
             return;
         }
         
-        var compacted = CompactRangesInternal(SelectedRanges);
+        var compacted = GetCompactRanges(SelectedRanges);
         _selectedRanges.SyncItems(compacted);
         SelectedCount = compacted.Sum(r => (int)r.Length);
     }
@@ -190,7 +203,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         if (range.Length == 0) return;
 
-        var newRanges = CompactRangesInternal(SelectedRanges.Concat(new[] { range }));
+        var newRanges = GetCompactRanges(SelectedRanges.Concat(new[] { range }));
 
         IsSelectionModeActive = true;
         _selectedRanges.SyncItems(newRanges);
@@ -229,7 +242,7 @@ public sealed partial class SelectionViewModel : ObservableObject
             }
         }
 
-        var newRanges = CompactRangesInternal(remaining);
+        var newRanges = GetCompactRanges(remaining);
 
         _selectedRanges.SyncItems(newRanges);
         SelectedCount = newRanges.Sum(r => (int)r.Length);
