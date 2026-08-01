@@ -91,80 +91,6 @@ public sealed partial class SelectionViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Compacts and normalizes the given ranges in memory without mutating <see cref="SelectedRanges"/>.
-    /// </summary>
-    private List<ItemIndexRange> GetCompactRanges(IEnumerable<ItemIndexRange> ranges)
-    {
-        int sourceCount = _sourceCollection?.Count ?? int.MaxValue;
-
-        var validRanges = new List<ItemIndexRange>();
-        foreach (var r in ranges)
-        {
-            if (r.Length == 0 || r.FirstIndex < 0 || r.FirstIndex >= sourceCount)
-                continue;
-
-            // If the range is fully within the source collection, add it as is
-            if (r.LastIndex < sourceCount)
-            {
-                validRanges.Add(r);
-                continue;
-            }
-
-            // Range extends beyond the source collection, truncate it to the valid range
-            int length = sourceCount - r.FirstIndex;
-            if (length > 0)
-            {
-                validRanges.Add(new ItemIndexRange(r.FirstIndex, (uint)length));
-            }
-        }
-
-        if (validRanges.Count == 0)
-            return new List<ItemIndexRange>();
-
-        var sorted = validRanges.OrderBy(r => r.FirstIndex).ToList();
-        var merged = new List<ItemIndexRange>();
-        ItemIndexRange current = sorted[0];
-
-        for (int i = 1; i < sorted.Count; i++)
-        {
-            var next = sorted[i];
-            // Merge overlapping or adjacent ranges
-            // If the next range starts before or at the end of the current range, merge them  
-            if (next.FirstIndex <= current.LastIndex + 1)
-            {
-                int newLast = Math.Max(current.LastIndex, next.LastIndex);
-                int newFirst = current.FirstIndex;
-                current = new ItemIndexRange(newFirst, (uint)(newLast - newFirst + 1));
-            }
-            else
-            {
-                // No overlap, add the current range and move to the next
-                merged.Add(current);
-                current = next;
-            }
-        }
-        
-        merged.Add(current);
-        return merged;
-    }
-
-    /// <summary>
-    /// Compacts and normalizes <see cref="SelectedRanges"/> in place using <see cref="CollectionExtensions.SyncItems"/>.
-    /// </summary>
-    private void CompactRanges()
-    {
-        if (SelectedRanges.Count == 0)
-        {
-            SelectedCount = 0;
-            return;
-        }
-        
-        var compacted = GetCompactRanges(SelectedRanges);
-        _selectedRanges.SyncItems(compacted);
-        SelectedCount = compacted.Sum(r => (int)r.Length);
-    }
-
-    /// <summary>
     /// Retrieves a list of selected items from the configured source collection based on current selected ranges.
     /// </summary>
     public List<T> GetSelectedItems<T>()
@@ -336,4 +262,79 @@ public sealed partial class SelectionViewModel : ObservableObject
             ? false
             : selectedCount == totalCount ? true : null;
     }
+
+    /// <summary>
+    /// Compacts and normalizes the given ranges in memory without mutating <see cref="SelectedRanges"/>.
+    /// </summary>
+    private List<ItemIndexRange> GetCompactRanges(IEnumerable<ItemIndexRange> ranges)
+    {
+        int sourceCount = _sourceCollection?.Count ?? int.MaxValue;
+
+        var validRanges = new List<ItemIndexRange>();
+        foreach (var r in ranges)
+        {
+            if (r.Length == 0 || r.FirstIndex < 0 || r.FirstIndex >= sourceCount)
+                continue;
+
+            // If the range is fully within the source collection, add it as is
+            if (r.LastIndex < sourceCount)
+            {
+                validRanges.Add(r);
+                continue;
+            }
+
+            // Range extends beyond the source collection, truncate it to the valid range
+            int length = sourceCount - r.FirstIndex;
+            if (length > 0)
+            {
+                validRanges.Add(new ItemIndexRange(r.FirstIndex, (uint)length));
+            }
+        }
+
+        if (validRanges.Count == 0)
+            return new List<ItemIndexRange>();
+
+        var sorted = validRanges.OrderBy(r => r.FirstIndex).ToList();
+        var merged = new List<ItemIndexRange>();
+        ItemIndexRange current = sorted[0];
+
+        for (int i = 1; i < sorted.Count; i++)
+        {
+            var next = sorted[i];
+            // Merge overlapping or adjacent ranges
+            // If the next range starts before or at the end of the current range, merge them  
+            if (next.FirstIndex <= current.LastIndex + 1)
+            {
+                int newLast = Math.Max(current.LastIndex, next.LastIndex);
+                int newFirst = current.FirstIndex;
+                current = new ItemIndexRange(newFirst, (uint)(newLast - newFirst + 1));
+            }
+            else
+            {
+                // No overlap, add the current range and move to the next
+                merged.Add(current);
+                current = next;
+            }
+        }
+        
+        merged.Add(current);
+        return merged;
+    }
+
+    /// <summary>
+    /// Compacts and normalizes <see cref="SelectedRanges"/> in place using <see cref="CollectionExtensions.SyncItems"/>.
+    /// </summary>
+    private void CompactRanges()
+    {
+        if (SelectedRanges.Count == 0)
+        {
+            SelectedCount = 0;
+            return;
+        }
+        
+        var compacted = GetCompactRanges(SelectedRanges);
+        _selectedRanges.SyncItems(compacted);
+        SelectedCount = compacted.Sum(r => (int)r.Length);
+    }
+
 }
