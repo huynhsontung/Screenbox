@@ -23,6 +23,7 @@ public sealed class SettingsService : ISettingsService
     private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
     private const string GeneralShowRecent = "General/ShowRecent";
     private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
+    private const string GeneralFrameCaptureFolderTokenKey = "General/FrameCaptureFolderToken";
     private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
     private const string AdvancedModeKey = "Advanced/IsEnabled";
     private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
@@ -93,6 +94,12 @@ public sealed class SettingsService : ISettingsService
     {
         get => GetValue<bool>(GeneralEnqueueAllInFolder);
         set => SetValue(GeneralEnqueueAllInFolder, value);
+    }
+
+    public string FrameCaptureFolderToken
+    {
+        get => GetValue<string>(GeneralFrameCaptureFolderTokenKey) ?? string.Empty;
+        set => SetValue(GeneralFrameCaptureFolderTokenKey, value);
     }
 
     public bool RestorePlaybackPosition
@@ -242,6 +249,7 @@ public sealed class SettingsService : ISettingsService
         SetDefault(MaxVolumeKey, 100);
         SetDefault(LibrariesUseIndexerKey, true);
         SetDefault(LibrariesSearchRemovableStorageKey, true);
+        SetDefault(GeneralFrameCaptureFolderTokenKey, string.Empty);
         SetDefault(GeneralShowRecent, true);
         SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
         SetDefault(AdvancedModeKey, false);

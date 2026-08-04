@@ -67,11 +67,14 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
+    private readonly IFilesService _filesService;
     private readonly IPlayQueueCoordinator _coordinator;
+
     private Size _aspectRatio;
 
     public PlayerControlsViewModel(
         PlayQueueContext playQueue,
+        IFilesService filesService,
         IPlayQueueCoordinator coordinator,
         ISettingsService settingsService,
         IWindowService windowService,
@@ -81,6 +84,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _windowService = windowService;
         _settingsService = settingsService;
         _playerContext = playerContext;
+        _filesService = filesService;
         _coordinator = coordinator;
         _playbackRate = 1.0;
         _audioTimingOffset = 0.0;
@@ -432,7 +436,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Saves a snapshot of the current video frame to the Pictures library.
+    /// Saves a snapshot of the current video frame to the configured folder, falling back
+    /// to the Pictures library when the folder is not set or cannot be accessed.
     /// Sends a <see cref="FailedToSaveFrameNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand(CanExecute = nameof(HasVideo))]
@@ -454,7 +459,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
-    private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
+    private async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
     {
         if (mediaPlayer is not VlcMediaPlayer player)
         {
@@ -471,11 +476,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                 throw new Exception("VLC failed to save snapshot");
 
             StorageFile file = (await tempFolder.GetFilesAsync())[0];
-            StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
-            StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
-            StorageFolder destFolder =
-                await defaultSaveFolder.CreateFolderAsync("Screenbox",
-                    CreationCollisionOption.OpenIfExists);
+            StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_settingsService.FrameCaptureFolderToken);
             return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
                 NameCollisionOption.GenerateUniqueName);
         }

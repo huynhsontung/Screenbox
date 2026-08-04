@@ -316,9 +316,9 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
-                <!--  General section  -->
+                <!--#region General Section-->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
-
+                <!--  Enqueue All Files In Folder  -->
                 <ctc:SettingsCard
                     x:Name="SettingsEnqueueAllFilesInFolderCard"
                     Margin="{StaticResource SettingsCardMargin}"
@@ -328,6 +328,20 @@
                                              Glyph={StaticResource FolderListGlyph}}">
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
+                <!--  Frame Capture Location  -->
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.SettingsFrameCaptureLocationDescription}"
+                    Description="{x:Bind ViewModel.FrameCaptureFolderPath, Mode=OneWay}"
+                    Header="{x:Bind strings:Resources.SettingsFrameCaptureLocationHeader}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource ImageExportGlyph}}">
+                    <Button
+                        MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                        Command="{x:Bind ViewModel.ChangeFrameCaptureLocationCommand}"
+                        Content="{x:Bind strings:Resources.ChangeFolder}" />
+                </ctc:SettingsCard>
+                <!--#endregion-->
 
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />

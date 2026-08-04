@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -55,6 +55,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private int _selectedLanguage;
     [ObservableProperty] private bool _persistPlaybackPosition;
 
+    [ObservableProperty]
+    private string _frameCaptureFolderPath;
+
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
     public ObservableCollection<StorageFolder> VideoLocations { get; }
@@ -70,6 +73,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
 
     private readonly ISettingsService _settingsService;
+    private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -90,11 +94,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public SettingsPageViewModel(
         ISettingsService settingsService,
+        IFilesService filesService,
         LibraryContext libraryContext,
         ILibraryCoordinator libraryCoordinator,
         IPlaybackProgressTracker playbackProgressTracker)
     {
         _settingsService = settingsService;
+        _filesService = filesService;
         _libraryContext = libraryContext;
         _libraryCoordinator = libraryCoordinator;
         _playbackProgressTracker = playbackProgressTracker;
@@ -152,6 +158,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             >= 125 => 1,
             _ => 0
         };
+
+        _frameCaptureFolderPath = string.Empty;
 
         string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
         _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
@@ -420,6 +428,24 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     }
 
     [RelayCommand]
+    private async Task ChangeFrameCaptureLocationAsync()
+    {
+        StorageFolder? folder = await _filesService.PickFolderAsync();
+        if (folder is null) return;
+
+        // Release the previous entry so the FutureAccessList (capped at 1000 items) doesn't accumulate stale folders.
+        string oldToken = _settingsService.FrameCaptureFolderToken;
+        if (!string.IsNullOrEmpty(oldToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(oldToken))
+        {
+            StorageApplicationPermissions.FutureAccessList.Remove(oldToken);
+        }
+
+        string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
+        _settingsService.FrameCaptureFolderToken = newToken;
+        FrameCaptureFolderPath = folder.Path;
+    }
+
+    [RelayCommand]
     private void ClearRecentHistory()
     {
         StorageApplicationPermissions.MostRecentlyUsedList.Clear();
@@ -467,6 +493,19 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         UpdateLibraryLocations();
         await UpdateRemovableStorageFoldersAsync();
+    }
+
+    public async Task LoadFrameCaptureFolderPathAsync()
+    {
+        try
+        {
+            var destFolder = await _filesService.GetFrameCaptureFolderAsync(_settingsService.FrameCaptureFolderToken);
+            FrameCaptureFolderPath = destFolder.Path;
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
     }
 
     private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)

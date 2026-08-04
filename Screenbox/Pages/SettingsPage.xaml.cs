@@ -40,6 +40,7 @@ public sealed partial class SettingsPage : Page
     {
         base.OnNavigatedTo(e);
         await ViewModel.LoadLibraryLocations();
+        await ViewModel.LoadFrameCaptureFolderPathAsync();
         await AudioVisualSelector.ViewModel.InitializeVisualizers();
     }
 

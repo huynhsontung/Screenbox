@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,4 +27,6 @@ public interface IFilesService
     public Task OpenFileLocationAsync(StorageFile file);
     public void AddToRecent(IStorageItem item);
     public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
+
+    Task<StorageFolder> GetFrameCaptureFolderAsync(string token);
 }

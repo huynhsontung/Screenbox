@@ -37,6 +37,16 @@ public interface ISettingsService
     MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
 
     /// <summary>
+    /// Gets or sets the access token used to retrieve the user-selected folder where
+    /// video frame captures are saved via <see cref="Windows.Storage.AccessCache.StorageApplicationPermissions"/>.
+    /// </summary>
+    /// <value>
+    /// The token of the <see cref="Windows.Storage.StorageFolder"/>, or an
+    /// empty string if the default location should be used.
+    /// </value>
+    string FrameCaptureFolderToken { get; set; }
+
+    /// <summary>
     /// Gets or sets a value that indicates whether the playback position should be saved
     /// and restored between sessions.
     /// </summary>
