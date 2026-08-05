@@ -233,10 +233,8 @@ public sealed partial class SelectionViewModel : ObservableObject
         return -1;
     }
 
-    [RelayCommand]
     public void ClearSelection()
     {
-        IsSelectionModeActive = false;
         _selectedRanges.Clear();
         SelectedCount = 0;
         RefreshSelectionState();
