@@ -43,7 +43,7 @@ public sealed class MediaListFactory : IMediaListFactory
                     var m3uItems = await ParseM3uAsync(m3uFile, cancellationToken);
                     if (m3uItems.Count > 0)
                     {
-                        if (playNext != null && m3uFile.IsEqual(playNext))
+                        if (playNext != null && m3uFile.SafeIsEqual(playNext))
                             next = m3uItems[0];
                         queue.AddRange(m3uItems);
                     }
@@ -52,7 +52,7 @@ public sealed class MediaListFactory : IMediaListFactory
 
                 case StorageFile storageFile when storageFile.IsSupported():
                     var vm = _mediaFactory.GetOrCreate(storageFile);
-                    if (playNext != null && storageFile.IsEqual(playNext))
+                    if (playNext != null && storageFile.SafeIsEqual(playNext))
                         next = vm;
 
                     if (storageFile.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(vm, cancellationToken) is { Count: > 0 } playlist)
