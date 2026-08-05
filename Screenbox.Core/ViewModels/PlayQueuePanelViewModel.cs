@@ -12,7 +12,6 @@ using Screenbox.Core.Coordinators;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
