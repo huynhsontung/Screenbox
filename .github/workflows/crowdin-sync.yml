@@ -18,15 +18,35 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      
+      - name: Crowdin Sync (Upload)
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          localization_branch_name: l10n_crowdin
+          crowdin_branch_name: main
+          skip_ref_checkout: true
+          create_pull_request: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          # A numeric ID, found at https://crowdin.com/project/<projectName>/tools/api
+          CROWDIN_PROJECT_ID: "608787"
+
+          # Visit https://crowdin.com/settings#api-key to create this token
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
 
       - name: Checkout or create 'l10n_crowdin' branch
         run: |
           git switch l10n_crowdin || git switch -c l10n_crowdin
 
-      - name: Crowdin Sync
+      - name: Crowdin Sync (Download)
         uses: crowdin/github-action@v2
         with:
-          upload_sources: true
+          upload_sources: false
           upload_translations: false
           download_translations: true
           localization_branch_name: l10n_crowdin

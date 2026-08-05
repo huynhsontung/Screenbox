@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>總時長</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>章節</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>章節</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章節</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1102,6 +1110,14 @@
     <value>您確定要刪除 '{0}' 播放清單嗎？此操作無法復原。</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>已選取 {0} 個播放清單</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>已選取 {0} 個播放清單</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>播放位置歷史</value>
   </data>
@@ -1124,5 +1140,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>創建您的第一個播放清單，來整理您喜愛的視頻和音樂。</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>播放清單中沒有項目。</value>
   </data>
 </root>

@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,6 +20,8 @@ namespace Screenbox.Core.ViewModels;
 
 public partial class PlaylistsPageViewModel : ObservableRecipient
 {
+    public SelectionViewModel Selection { get; }
+
     [ObservableProperty]
     private PlaylistViewModel? _contextPlaylist;
 
@@ -31,12 +35,25 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     [ObservableProperty] private PlaylistViewModel? _selectedPlaylist;
 
     public PlaylistsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
-        PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory)
+        PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory,
+        SelectionViewModel selection)
     {
+        Selection = selection;
         _filesService = filesService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
         _playlistFactory = playlistFactory;
+
+        Selection.SetItemsSource(Playlists);
+        ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
+    }
+
+    private void Selection_SelectedRangesChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        PlaySelectedCommand.NotifyCanExecuteChanged();
+        PlaySelectedNextCommand.NotifyCanExecuteChanged();
+        AddSelectedToQueueCommand.NotifyCanExecuteChanged();
+        DeleteSelectedCommand.NotifyCanExecuteChanged();
     }
 
     public async Task CreatePlaylistAsync(string displayName)
@@ -111,4 +128,57 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 
         await _playlistService.ExportPlaylistItemsAsync(playlist.Items, file);
     }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelected()
+    {
+        var items = Selection
+            .GetSelectedItems<PlaylistViewModel>()
+            .SelectMany(p => p.Items)
+            .ToArray();
+        Messenger.SendQueueAndPlay(items[0], items);
+        Selection.DisableSelectionMode();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void PlaySelectedNext()
+    {
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        if (selectedItems.Count == 0)
+            return;
+
+        selectedItems.Reverse();
+        foreach (var item in selectedItems)
+        {
+            Messenger.SendPlayNext(item.Items);
+        }
+
+        Selection.DisableSelectionMode();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void AddSelectedToQueue()
+    {
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        foreach (var item in selectedItems)
+        {
+            Messenger.SendAddToQueue(item.Items);
+        }
+
+        Selection.DisableSelectionMode();
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void DeleteSelected()
+    {
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        foreach (var item in selectedItems)
+        {
+            _ = DeletePlaylistAsync(item);
+        }
+
+        Selection.DisableSelectionMode();
+    }
+
+    private bool HasSelection => Selection.SelectedRanges.Count > 0;
 }

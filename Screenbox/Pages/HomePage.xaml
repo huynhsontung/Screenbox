@@ -216,9 +216,8 @@
                 CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
                 CheckBoxCommandParameter="{x:Bind RecentFilesGridView}"
                 CheckBoxIsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
-                CheckBoxText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
-                CloseButtonCommand="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
-                CommandParameter="{x:Bind RecentFilesGridView.SelectedItems}"
+                CheckBoxText="{x:Bind strings:Resources.ItemsSelected(ViewModel.Selection.SelectedCount), Mode=OneWay}"
+                CloseButtonCommand="{x:Bind ViewModel.Selection.DisableSelectionModeCommand}"
                 PlayButtonCommand="{x:Bind ViewModel.PlaySelectedCommand}"
                 PlayNextButtonCommand="{x:Bind ViewModel.PlaySelectedNextCommand}"
                 RemoveButtonCommand="{x:Bind ViewModel.RemoveSelectedCommand}"
@@ -252,7 +251,7 @@
             </GridView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextMedia, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
-                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
+                <behaviors:ListViewSelectionBehavior Selection="{x:Bind ViewModel.Selection}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </interactivity:Interaction.Behaviors>
         </GridView>

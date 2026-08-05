@@ -176,4 +176,3 @@ public sealed partial class PlayerControls : UserControl
         return isEnabled && count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 }
-

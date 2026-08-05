@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>Tổng thời lượng</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>Chapter</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>Chapters</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Chương {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1102,6 +1110,14 @@
     <value>Bạn có chắc chắn muốn xóa danh sách phát '{0}' không? Bạn không thể hoàn tác thao tác này.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>Lịch sử vị trí phát lại</value>
   </data>
@@ -1124,5 +1140,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>Hãy tạo danh sách phát đầu tiên để sắp xếp các video và nhạc yêu thích của bạn.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>Danh sách phát này hiện không có mục nào.</value>
   </data>
 </root>

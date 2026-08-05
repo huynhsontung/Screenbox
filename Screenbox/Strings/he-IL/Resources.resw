@@ -148,6 +148,14 @@
   <data name="TimeLength" xml:space="preserve">
     <value>משך זמן הכולל</value>
   </data>
+  <data name="ChapterPluralized_One" xml:space="preserve">
+    <value>פרק</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ChapterPluralized_Other" xml:space="preserve">
+    <value>פרקים</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>פרק {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -1102,6 +1110,14 @@
     <value>האם אתה בטוח שברצונך למחוק את רשימת ההשמעה '{0}'? לא ניתן לבטל פעולה זו.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
+  <data name="PlaylistsSelected_One" xml:space="preserve">
+    <value>{0} playlist selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="PlaylistsSelected_Other" xml:space="preserve">
+    <value>{0} playlists selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
     <value>היסטוריית מיקומי השמעה</value>
   </data>
@@ -1124,5 +1140,8 @@
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
     <value>צור את רשימת ההשמעה הראשונה שלך כדי לארגן את הסרטונים והמוזיקה האהובים עליך.</value>
+  </data>
+  <data name="NoPlaylistItems" xml:space="preserve">
+    <value>אין פריטים ברשימת ההשמעה הזו.</value>
   </data>
 </root>

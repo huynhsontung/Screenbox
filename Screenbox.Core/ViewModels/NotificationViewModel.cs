@@ -1,21 +1,18 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
-using Screenbox.Core;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using Screenbox.Strings;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 
-namespace Screenbox.ViewModels;
+namespace Screenbox.Core.ViewModels;
 
 public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<RaiseFrameSavedNotificationMessage>,
@@ -35,21 +32,33 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<PlaylistRenamedNotificationMessage>,
     IRecipient<PlaylistItemsAddedNotificationMessage>
 {
-    [ObservableProperty] private NotificationLevel _severity;
+    private const double NotificationDurationShort = 5.0;
+    private const double NotificationDurationMedium = 8.0;
+    private const double NotificationDurationLong = 15.0;
 
-    [ObservableProperty] private string? _title;
+    [ObservableProperty]
+    private NotificationKind _kind;
 
-    [ObservableProperty] private string? _message;
+    [ObservableProperty]
+    private NotificationLevel _severity;
 
-    [ObservableProperty] private object? _content;
+    [ObservableProperty]
+    private string? _title;
 
-    [ObservableProperty] private bool _isOpen;
+    [ObservableProperty]
+    private int _count;
 
-    [ObservableProperty] private ButtonBase? _actionButton;
+    [ObservableProperty]
+    private string? _message;
 
-    public string? ButtonContent { get; private set; }
+    [ObservableProperty]
+    private bool _isOpen;
 
-    public RelayCommand? ActionCommand { get; private set; }
+    [ObservableProperty]
+    private string? _actionContent;
+
+    [ObservableProperty]
+    private ICommand? _actionCommand;
 
     private readonly IFilesService _filesService;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -89,12 +98,12 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
-            Title = Resources.SubtitleAddedNotificationTitle;
+            Kind = NotificationKind.SubtitleAdded;
             Severity = NotificationLevel.Success;
             Message = message.File.Name;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(5));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationShort));
         });
     }
 
@@ -103,10 +112,10 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(MediaLoadFailedNotificationMessage message)
     {
-        var body = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
+        string body = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
             ? $"{message.Path}{message.Reason}"
             : $"{message.Path}{Environment.NewLine}{message.Reason}";
-        ShowErrorNotification(Resources.FailedToLoadMediaNotificationTitle, body);
+        ShowErrorNotification(NotificationKind.MediaLoadFailed, body);
     }
 
     /// <summary>
@@ -117,19 +126,13 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         void SetNotification()
         {
             Reset();
-            Title = Resources.FrameSavedNotificationTitle;
+            Kind = NotificationKind.FrameSaved;
             Severity = NotificationLevel.Success;
-            ButtonContent = message.Value.Name;
+            ActionContent = message.Value.Name;
             ActionCommand = new RelayCommand(() => _filesService.OpenFileLocationAsync(message.Value));
 
-            ActionButton = new HyperlinkButton
-            {
-                Content = ButtonContent,
-                Command = ActionCommand
-            };
-
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(8));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationMedium));
         }
 
         _dispatcherQueue.TryEnqueue(SetNotification);
@@ -140,28 +143,26 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(RaiseResumePositionNotificationMessage message)
     {
-        if (Severity == NotificationLevel.Error && IsOpen) return;
+        if (Severity is NotificationLevel.Error && IsOpen)
+            return;
+
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
-            if (message.Value <= TimeSpan.Zero) return;
-            Title = Resources.ResumePositionNotificationTitle;
+            if (message.Value <= TimeSpan.Zero)
+                return;
+
+            Kind = NotificationKind.ResumePosition;
             Severity = NotificationLevel.Info;
-            ButtonContent = Resources.GoToPosition(Humanizer.ToDuration(message.Value));
+            ActionContent = Humanizer.ToDuration(message.Value);
             ActionCommand = new RelayCommand(() =>
             {
                 IsOpen = false;
                 Messenger.Send(new ChangeTimeRequestMessage(message.Value, debounce: false));
             });
 
-            ActionButton = new Button
-            {
-                Content = ButtonContent,
-                Command = ActionCommand
-            };
-
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -170,20 +171,20 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(RaiseLibraryAccessDeniedNotificationMessage message)
     {
-        string title;
+        NotificationKind kind;
         Uri link;
         switch (message.Library)
         {
             case KnownLibraryId.Music:
-                title = Resources.AccessDeniedMusicLibraryTitle;
+                kind = NotificationKind.MusicLibraryAccessDenied;
                 link = new Uri("ms-settings:privacy-musiclibrary");
                 break;
             case KnownLibraryId.Pictures:
-                title = Resources.AccessDeniedPicturesLibraryTitle;
+                kind = NotificationKind.PicturesLibraryAccessDenied;
                 link = new Uri("ms-settings:privacy-pictures");
                 break;
             case KnownLibraryId.Videos:
-                title = Resources.AccessDeniedVideosLibraryTitle;
+                kind = NotificationKind.VideosLibraryAccessDenied;
                 link = new Uri("ms-settings:privacy-videos");
                 break;
             case KnownLibraryId.Documents:
@@ -194,24 +195,16 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
-            Title = title;
+            Kind = kind;
             Severity = NotificationLevel.Error;
-            ButtonContent = Resources.OpenPrivacySettingsButtonText;
-            Message = Resources.AccessDeniedMessage;
             ActionCommand = new RelayCommand(() =>
             {
                 IsOpen = false;
                 _ = Launcher.LaunchUriAsync(link);
             });
 
-            ActionButton = new HyperlinkButton
-            {
-                Content = ButtonContent,
-                Command = ActionCommand
-            };
-
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -220,7 +213,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToSaveFrameNotificationMessage message)
     {
-        ShowErrorNotification(Resources.FailedToSaveFrameNotificationTitle, message.Reason);
+        ShowErrorNotification(NotificationKind.FrameSaveFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -228,7 +221,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToLoadSubtitleNotificationMessage message)
     {
-        ShowErrorNotification(Resources.FailedToLoadSubtitleNotificationTitle, message.Reason);
+        ShowErrorNotification(NotificationKind.SubtitleLoadFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -236,7 +229,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToOpenFilesNotificationMessage message)
     {
-        ShowErrorNotification(Resources.FailedToOpenFilesNotificationTitle, message.Reason);
+        ShowErrorNotification(NotificationKind.FileOpenFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -244,7 +237,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToAddFolderNotificationMessage message)
     {
-        ShowErrorNotification(Resources.FailedToAddFolderNotificationTitle, message.Reason);
+        ShowErrorNotification(NotificationKind.FolderAddFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -252,7 +245,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(FailedToInitializeNotificationMessage message)
     {
-        ShowErrorNotification(Resources.FailedToInitializeNotificationTitle, message.Reason);
+        ShowErrorNotification(NotificationKind.InitializationFailed, message: message.Reason);
     }
 
     /// <summary>
@@ -260,7 +253,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistCreatedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistCreatedNotificationTitle(message.PlaylistName), null);
+        ShowSuccessNotification(NotificationKind.PlaylistCreated, title: message.PlaylistName);
     }
 
     /// <summary>
@@ -268,7 +261,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistDeletedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistDeletedNotificationTitle(message.PlaylistName), null);
+        ShowSuccessNotification(NotificationKind.PlaylistDeleted, title: message.PlaylistName);
     }
 
     /// <summary>
@@ -276,25 +269,44 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     /// </summary>
     public void Receive(PlaylistRenamedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistRenamedNotificationTitle(message.NewName), null);
+        ShowSuccessNotification(NotificationKind.PlaylistRenamed, title: message.NewName);
     }
 
+    /// <summary>
+    /// Handles a notification that items were added to a playlist.
+    /// </summary>
     public void Receive(PlaylistItemsAddedNotificationMessage message)
     {
-        ShowSuccessNotification(Resources.PlaylistItemsAddedNotificationTitle(message.ItemCount, message.PlaylistName), null);
+        ShowSuccessNotification(NotificationKind.PlaylistItemsAdded, title: message.PlaylistName, count: message.ItemCount);
     }
 
-    private void ShowSuccessNotification(string? title, string? message)
+    private void ShowSuccessNotification(NotificationKind kind, string? title = null, string? message = null, int count = 0)
     {
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
+            Kind = kind;
+            Severity = NotificationLevel.Success;
             Title = title;
             Message = message;
-            Severity = NotificationLevel.Success;
+            Count = count;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(5));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationShort));
+        });
+    }
+
+    private void ShowErrorNotification(NotificationKind kind, string? message)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            Reset();
+            Kind = kind;
+            Severity = NotificationLevel.Error;
+            Message = message;
+
+            IsOpen = true;
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -303,12 +315,13 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
+            Kind = NotificationKind.None;
+            Severity = NotificationLevel.Error;
             Title = title;
             Message = message;
-            Severity = NotificationLevel.Error;
 
             IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(NotificationDurationLong));
         });
     }
 
@@ -320,13 +333,13 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
 
     private void Reset()
     {
-        Title = default;
-        Message = default;
+        Kind = NotificationKind.None;
         Severity = default;
-        ButtonContent = default;
+        Title = default;
+        Count = default;
+        Message = default;
+        ActionContent = default;
         ActionCommand = default;
-        Content = default;
-        ActionButton = default;
         IsOpen = false;
     }
 }

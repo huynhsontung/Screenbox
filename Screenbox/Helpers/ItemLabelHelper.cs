@@ -113,6 +113,37 @@ public static class ItemLabelHelper
     }
 
     /// <summary>
+    /// Gets the localized label for a media property.
+    /// </summary>
+    /// <param name="property">The media property to localize.</param>
+    /// <returns>The localized media property label.</returns>
+    public static string GetMediaPropertyResourceString(MediaProperty property)
+    {
+        return property switch
+        {
+            MediaProperty.Title => Strings.Resources.PropertyTitle,
+            MediaProperty.Subtitle => Strings.Resources.PropertySubtitle,
+            MediaProperty.Year => Strings.Resources.PropertyYear,
+            MediaProperty.Producers => Strings.Resources.PropertyProducers,
+            MediaProperty.Writers => Strings.Resources.PropertyWriters,
+            MediaProperty.Length => Strings.Resources.PropertyLength,
+            MediaProperty.Resolution => Strings.Resources.PropertyResolution,
+            MediaProperty.BitRate => Strings.Resources.PropertyBitRate,
+            MediaProperty.ContributingArtists => Strings.Resources.PropertyContributingArtists,
+            MediaProperty.Album => Strings.Resources.PropertyAlbum,
+            MediaProperty.AlbumArtist => Strings.Resources.PropertyAlbumArtist,
+            MediaProperty.Composers => Strings.Resources.PropertyComposers,
+            MediaProperty.Genre => Strings.Resources.PropertyGenre,
+            MediaProperty.Track => Strings.Resources.PropertyTrack,
+            MediaProperty.FileType => Strings.Resources.PropertyFileType,
+            MediaProperty.ContentType => Strings.Resources.PropertyContentType,
+            MediaProperty.Size => Strings.Resources.PropertySize,
+            MediaProperty.LastModified => Strings.Resources.PropertyLastModified,
+            _ => property.ToString()
+        };
+    }
+
+    /// <summary>
     /// Gets the localized label for a play/pause command.
     /// </summary>
     /// <param name="isPlaying"><see langword="true"/> if the media is playing; otherwise, <see langword="false"/>.</param>

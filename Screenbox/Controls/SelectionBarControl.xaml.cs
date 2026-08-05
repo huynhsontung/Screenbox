@@ -144,6 +144,30 @@ public sealed partial class SelectionBarControl : UserControl
 
     #endregion
 
+    #region AddToPlaylist Button properties
+
+    /// <summary>
+    /// Identifies the <see cref="IsAddToPlaylistButtonVisible"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty IsAddToPlaylistButtonVisibleProperty = DependencyProperty.Register(
+        nameof(IsAddToPlaylistButtonVisible),
+        typeof(bool),
+        typeof(SelectionBarControl),
+        new PropertyMetadata(true));
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether the add to playlist button is shown.
+    /// </summary>
+    /// <value><see langword="true"/> to show the add to playlist button. <see langword="false"/>
+    /// to hide the add to playlist button. The default is <b>true</b>.</value>
+    public bool IsAddToPlaylistButtonVisible
+    {
+        get { return (bool)GetValue(IsAddToPlaylistButtonVisibleProperty); }
+        set { SetValue(IsAddToPlaylistButtonVisibleProperty, value); }
+    }
+
+    #endregion
+
     #region Remove Button properties
 
     /// <summary>
@@ -436,7 +460,10 @@ public sealed partial class SelectionBarControl : UserControl
                 ToolTipService.SetToolTip(AddToQueueButton, Strings.Resources.AddToQueue);
             }
 
-            ToolTipService.SetToolTip(AddToPlaylistButton, Strings.Resources.AddToPlaylist);
+            if (IsAddToPlaylistButtonVisible)
+            {
+                ToolTipService.SetToolTip(AddToPlaylistButton, Strings.Resources.AddToPlaylist);
+            }
         }
         else
         {
@@ -452,7 +479,10 @@ public sealed partial class SelectionBarControl : UserControl
                 AddToQueueButton.ClearValue(ToolTipService.ToolTipProperty);
             }
 
-            AddToPlaylistButton.ClearValue(ToolTipService.ToolTipProperty);
+            if (IsAddToPlaylistButtonVisible && AddToPlaylistButton is not null)
+            {
+                AddToPlaylistButton.ClearValue(ToolTipService.ToolTipProperty);
+            }
         }
     }
 }
