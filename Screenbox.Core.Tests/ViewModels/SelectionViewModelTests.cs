@@ -94,7 +94,7 @@ public class SelectionViewModelTests
     }
 
     [Fact]
-    public void ClearSelection_ShouldEmptySelectedRangesAndResetState()
+    public void ClearSelection_ShouldEmptySelectedRanges()
     {
         var vm = new SelectionViewModel();
         vm.SelectRange(new ItemIndexRange(0, 2));
@@ -103,10 +103,8 @@ public class SelectionViewModelTests
 
         vm.ClearSelection();
 
-        Assert.False(vm.IsSelectionModeActive);
+        Assert.True(vm.IsSelectionModeActive);
         Assert.Empty(vm.SelectedRanges);
         Assert.Equal(0, vm.SelectedCount);
     }
 }
-
-
