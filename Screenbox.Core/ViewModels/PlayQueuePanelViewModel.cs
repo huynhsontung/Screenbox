@@ -137,24 +137,16 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     private void MoveSelectedItemUp()
     {
         if (!IsSelectedItemNotFirst()) return;
-        List<MediaViewModel> selected = Selection.GetSelectedItems<MediaViewModel>();
-        if (selected.Count != 1) return;
-        MediaViewModel item = selected[0];
-        int oldIndex = Queue.Items.IndexOf(item);
-        if (oldIndex <= 0) return;
+        int oldIndex = Selection.SelectedRanges[0].FirstIndex;
+        var item = Queue.Items[oldIndex];
 
-        MoveItemUp(item);
-
+        // Preserve selection.
+        // When inserting before the selected, ListView selection is briefly out of sync.
+        // Insert first. Remove. Then reselect.
         int newIndex = oldIndex - 1;
-
-        // Re-select the item after the move. Delaying ensures the ListView has
-        // processed the collection change before we add back the selection;
-        // doing it synchronously would cause the entire list to reload.
-        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-        {
-            Selection.ClearSelection();
-            Selection.SelectRange(new Windows.UI.Xaml.Data.ItemIndexRange(newIndex, 1));
-        });
+        Queue.Items.Insert(newIndex, item);
+        Queue.Items.RemoveAt(oldIndex + 1);
+        Selection.SelectRange(new Windows.UI.Xaml.Data.ItemIndexRange(newIndex, 1));
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
@@ -170,22 +162,14 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     private void MoveSelectedItemDown()
     {
         if (!IsSelectedItemNotLast()) return;
-        List<MediaViewModel> selected = Selection.GetSelectedItems<MediaViewModel>();
-        if (selected.Count != 1) return;
-        MediaViewModel item = selected[0];
-        int oldIndex = Queue.Items.IndexOf(item);
-        if (oldIndex == -1 || oldIndex >= Queue.Items.Count - 1) return;
+        int oldIndex = Selection.SelectedRanges[0].FirstIndex;
+        var item = Queue.Items[oldIndex];
 
-        MoveItemDown(item);
-
-        int newIndex = oldIndex + 1;
-
-        // Re-select the item after the move. Same reasoning as MoveSelectedItemUp.
-        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-        {
-            Selection.ClearSelection();
-            Selection.SelectRange(new Windows.UI.Xaml.Data.ItemIndexRange(newIndex, 1));
-        });
+        // Preserve selection. Insert first. Reselect. Remove after.
+        int newIndex = oldIndex + 2;
+        Queue.Items.Insert(newIndex, item);
+        Selection.SelectRange(new Windows.UI.Xaml.Data.ItemIndexRange(newIndex, 1));
+        Queue.Items.RemoveAt(oldIndex);
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotLast))]
