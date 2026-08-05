@@ -37,6 +37,7 @@ public static class ServiceHelpers
         services.AddTransient<AllVideosPageViewModel>();
         services.AddTransient<MusicPageViewModel>();
         services.AddTransient<SearchResultPageViewModel>();
+        services.AddTransient<NotificationViewModel>();
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<PlaylistsPageViewModel>();
