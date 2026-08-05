@@ -44,7 +44,6 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private readonly IPlayQueueCoordinator _coordinator;
     private readonly IFilesService _filesService;
-    private readonly DispatcherQueue _dispatcherQueue;
 
     public PlayQueuePanelViewModel(
         PlayQueueContext queue,
@@ -57,7 +56,6 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         Selection = selection;
         _filesService = filesService;
         _hasItems = queue.Items.Count > 0;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
         Selection.SetItemsSource(Queue.Items);
