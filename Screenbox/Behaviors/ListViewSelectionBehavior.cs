@@ -1,56 +1,35 @@
 #nullable enable
 
-using System.Collections;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Microsoft.Xaml.Interactivity;
+using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
 
 /// <summary>
-/// Provides a behavior that synchronizes an external collection of selected items
-/// with the <see cref="ListViewBase.SelectedItems"/> collection.
+/// Provides a behavior that synchronizes a <see cref="SelectionViewModel"/> with the <see cref="ListViewBase.SelectedRanges"/> collection.
 /// </summary>
-/// <remarks>
-/// The <see cref="ListViewBase.SelectedItems"/> property is a read-only, non-bindable collection,
-/// which prevents direct data binding. This behavior enables two-way synchronization of selected
-/// items between a <see cref="ListViewBase"/> and an <see cref="IEnumerable"/> collection,
-/// such as <see cref="ObservableCollection{object}"/>.
-/// </remarks>
-/// <example>
-/// <code lang="xml"><![CDATA[
-/// <ListView ItemsSource="{x:Bind Contacts}">
-///     <interactivity:Interaction.Behaviors>
-///         <local:ListViewSelectionBehavior SelectedItems="{x:Bind SelectedContacts}" />
-///     </interactivity:Interaction.Behaviors>
-/// </ListView>
-/// ]]></code>
-/// </example>
 internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
 {
     /// <summary>
-    /// Identifies the <see cref="SelectedItems"/> dependency property.
+    /// Identifies the <see cref="Selection"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(
-        nameof(SelectedItems),
-        typeof(IEnumerable),
+    public static readonly DependencyProperty SelectionProperty = DependencyProperty.Register(
+        nameof(Selection),
+        typeof(SelectionViewModel),
         typeof(ListViewSelectionBehavior),
-        new PropertyMetadata(null, OnSelectedItemsChanged));
+        new PropertyMetadata(null, OnSelectionChanged));
 
     /// <summary>
-    /// Gets or sets the collection that is synchronized with the selected items
-    /// of the associated <see cref="ListViewBase"/>.
+    /// Gets or sets the selection view model associated with this behavior.
     /// </summary>
-    /// <value>
-    /// An <see cref="IEnumerable"/> collection that reflects the selected items.
-    /// The default is <see langword="null"/>.
-    /// </value>
-    public IEnumerable? SelectedItems
+    public SelectionViewModel? Selection
     {
-        get => (IEnumerable?)GetValue(SelectedItemsProperty);
-        set => SetValue(SelectedItemsProperty, value);
+        get => (SelectionViewModel?)GetValue(SelectionProperty);
+        set => SetValue(SelectionProperty, value);
     }
 
     private bool _isUpdating;
@@ -60,6 +39,11 @@ internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
         base.OnAttached();
 
         AssociatedObject.SelectionChanged += ListViewBase_OnSelectionChanged;
+        if (Selection is { } selection)
+        {
+            ((INotifyCollectionChanged)selection.SelectedRanges).CollectionChanged += Selection_CollectionChanged;
+            SyncVmToNative();
+        }
     }
 
     protected override void OnDetaching()
@@ -67,32 +51,42 @@ internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
         base.OnDetaching();
 
         AssociatedObject.SelectionChanged -= ListViewBase_OnSelectionChanged;
-
-        if (SelectedItems is INotifyCollectionChanged oldCollection)
+        if (Selection is { } selection)
         {
-            oldCollection.CollectionChanged -= OnCollectionChanged;
+            ((INotifyCollectionChanged)selection.SelectedRanges).CollectionChanged -= Selection_CollectionChanged;
         }
     }
 
-    private static void OnSelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnSelectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is ListViewSelectionBehavior behavior)
         {
-            if (e.OldValue is INotifyCollectionChanged oldValue)
+            if (e.OldValue is SelectionViewModel oldVm)
             {
-                oldValue.CollectionChanged -= behavior.OnCollectionChanged;
+                ((INotifyCollectionChanged)oldVm.SelectedRanges).CollectionChanged -= behavior.Selection_CollectionChanged;
             }
 
-            if (e.NewValue is INotifyCollectionChanged newValue)
+            if (e.NewValue is SelectionViewModel newVm)
             {
-                newValue.CollectionChanged += behavior.OnCollectionChanged;
+                ((INotifyCollectionChanged)newVm.SelectedRanges).CollectionChanged += behavior.Selection_CollectionChanged;
+                behavior.SyncVmToNative();
             }
         }
     }
 
     private void ListViewBase_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_isUpdating || SelectedItems is not IList collection)
+        SyncNativeToVm();
+    }
+
+    private void Selection_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        SyncVmToNative();
+    }
+
+    private void SyncNativeToVm()
+    {
+        if (_isUpdating || AssociatedObject is not { } listViewBase || Selection is not { } selection)
         {
             return;
         }
@@ -100,18 +94,8 @@ internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
         _isUpdating = true;
         try
         {
-            foreach (var item in e.RemovedItems)
-            {
-                collection.Remove(item);
-            }
-
-            foreach (var item in e.AddedItems)
-            {
-                if (!collection.Contains(item))
-                {
-                    collection.Add(item);
-                }
-            }
+            var nativeRanges = listViewBase.SelectedRanges.ToList();
+            selection.SetRanges(nativeRanges);
         }
         finally
         {
@@ -119,9 +103,9 @@ internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
         }
     }
 
-    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void SyncVmToNative()
     {
-        if (_isUpdating || AssociatedObject is not { } listViewBase)
+        if (_isUpdating || AssociatedObject is not { } listViewBase || Selection is not { } selection)
         {
             return;
         }
@@ -129,42 +113,34 @@ internal sealed partial class ListViewSelectionBehavior : Behavior<ListViewBase>
         _isUpdating = true;
         try
         {
-            switch (e.Action)
+            var vmRanges = selection.SelectedRanges.ToList();
+            if (vmRanges.Count == 0)
             {
-                case NotifyCollectionChangedAction.Add when e.NewItems is { }:
-                    foreach (var item in e.NewItems)
-                    {
-                        if (!listViewBase.SelectedItems.Contains(item))
-                        {
-                            listViewBase.SelectedItems.Add(item);
-                        }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove when e.OldItems is { }:
-                    foreach (var item in e.OldItems)
-                    {
-                        listViewBase.SelectedItems.Remove(item);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Replace when e is { OldItems: { }, NewItems: { } }:
-                    foreach (var oldItem in e.OldItems)
-                    {
-                        listViewBase.SelectedItems.Remove(oldItem);
-                    }
-                    foreach (var newItem in e.NewItems)
-                    {
-                        if (!listViewBase.SelectedItems.Contains(newItem))
-                        {
-                            listViewBase.SelectedItems.Add(newItem);
-                        }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Move:
-                    // Move doesn't affect selection state, items stay selected if they were previously.
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    listViewBase.SelectedItems.Clear();
-                    break;
+                foreach (var range in listViewBase.SelectedRanges.ToList())
+                {
+                    listViewBase.DeselectRange(range);
+                }
+                return;
+            }
+
+            var nativeRanges = listViewBase.SelectedRanges.ToList();
+
+            // Deselect ranges no longer present in ViewModel
+            foreach (var range in nativeRanges)
+            {
+                if (!vmRanges.Any(r => r.FirstIndex == range.FirstIndex && r.Length == range.Length))
+                {
+                    listViewBase.DeselectRange(range);
+                }
+            }
+
+            // Select ranges present in ViewModel but not natively
+            foreach (var range in vmRanges)
+            {
+                if (!nativeRanges.Any(r => r.FirstIndex == range.FirstIndex && r.Length == range.Length))
+                {
+                    listViewBase.SelectRange(range);
+                }
             }
         }
         finally

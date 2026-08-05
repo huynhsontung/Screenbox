@@ -170,9 +170,8 @@
                 CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
                 CheckBoxCommandParameter="{x:Bind PlaylistsGridView}"
                 CheckBoxIsChecked="{x:Bind ViewModel.Selection.IsAllSelected, Mode=OneWay}"
-                CheckBoxText="{x:Bind strings:Resources.PlaylistsSelected(ViewModel.Selection.SelectedItems.Count), Mode=OneWay}"
-                CloseButtonCommand="{x:Bind ViewModel.Selection.ClearSelectionCommand}"
-                CommandParameter="{x:Bind PlaylistsGridView.SelectedItems}"
+                CheckBoxText="{x:Bind strings:Resources.PlaylistsSelected(ViewModel.Selection.SelectedCount), Mode=OneWay}"
+                CloseButtonCommand="{x:Bind ViewModel.Selection.DisableSelectionModeCommand}"
                 IsAddToPlaylistButtonVisible="False"
                 IsRemoveButtonVisible="False"
                 PlayButtonCommand="{x:Bind ViewModel.PlaySelectedCommand}"
@@ -181,7 +180,6 @@
                 <controls:SelectionBarControl.AdditionalCommands>
                     <AppBarButton
                         Command="{x:Bind ViewModel.DeleteSelectedCommand}"
-                        CommandParameter="{x:Bind PlaylistsGridView.SelectedItems}"
                         Icon="Delete"
                         Label="{x:Bind strings:Resources.Delete}">
                         <AppBarButton.KeyboardAccelerators>
@@ -219,7 +217,7 @@
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
-                <behaviors:ListViewSelectionBehavior SelectedItems="{x:Bind ViewModel.Selection.SelectedItems}" />
+                <behaviors:ListViewSelectionBehavior Selection="{x:Bind ViewModel.Selection}" />
             </interactivity:Interaction.Behaviors>
         </GridView>
 

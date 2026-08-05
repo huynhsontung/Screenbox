@@ -45,10 +45,10 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         _playlistFactory = playlistFactory;
 
         Selection.SetItemsSource(Playlists);
-        Selection.SelectedItems.CollectionChanged += Selection_SelectedItemsChanged;
+        ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
     }
 
-    private void Selection_SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Selection_SelectedRangesChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         PlaySelectedCommand.NotifyCanExecuteChanged();
         PlaySelectedNextCommand.NotifyCanExecuteChanged();
@@ -130,63 +130,55 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelected(IList<object>? selectedItems)
+    private void PlaySelected()
     {
-        if (selectedItems is null) return;
-
-        var items = selectedItems
-            .OfType<PlaylistViewModel>()
+        var items = Selection
+            .GetSelectedItems<PlaylistViewModel>()
             .SelectMany(p => p.Items)
             .ToArray();
         Messenger.SendQueueAndPlay(items[0], items);
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelectedNext(IList<object>? selectedItems)
+    private void PlaySelectedNext()
     {
-        if (selectedItems is null) return;
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        if (selectedItems.Count == 0)
+            return;
 
-        var items = selectedItems.OfType<PlaylistViewModel>().Reverse().ToArray();
-        foreach (var item in items)
+        selectedItems.Reverse();
+        foreach (var item in selectedItems)
         {
             Messenger.SendPlayNext(item.Items);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void AddSelectedToQueue(IList<object>? selectedItems)
+    private void AddSelectedToQueue()
     {
-        if (selectedItems is null) return;
-
-        var items = selectedItems.OfType<PlaylistViewModel>().ToArray();
-        foreach (var item in items)
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        foreach (var item in selectedItems)
         {
             Messenger.SendAddToQueue(item.Items);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void DeleteSelected(IList<object>? selectedItems)
+    private void DeleteSelected()
     {
-        if (selectedItems is null) return;
-
-        var copy = selectedItems.OfType<PlaylistViewModel>().ToArray();
-        foreach (var item in copy)
+        var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
+        foreach (var item in selectedItems)
         {
             _ = DeletePlaylistAsync(item);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
-    private bool HasSelection => Selection.SelectedItems.Count > 0;
+    private bool HasSelection => Selection.SelectedRanges.Count > 0;
 }

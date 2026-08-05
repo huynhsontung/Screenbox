@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -62,7 +61,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
         Selection.SetItemsSource(Queue.Items);
-        Selection.SelectedItems.CollectionChanged += Selection_SelectedItemsChanged;
+        ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
     }
 
     private void ItemsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -74,7 +73,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         }
     }
 
-    private void Selection_SelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void Selection_SelectedRangesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         PlaySelectedNextCommand.NotifyCanExecuteChanged();
         RemoveSelectedCommand.NotifyCanExecuteChanged();
@@ -86,11 +85,10 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     private void Clear() => _coordinator.Clear();
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void RemoveSelected(IList<object>? selectedItems)
+    private void RemoveSelected()
     {
-        if (selectedItems is null) return;
-        List<object> copy = selectedItems.ToList();
-        selectedItems.Clear();
+        List<MediaViewModel> copy = Selection.GetSelectedItems<MediaViewModel>();
+        Selection.ClearSelection();
         foreach (MediaViewModel item in copy)
         {
             Remove(item);
@@ -117,11 +115,12 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelectedNext(IList<object>? selectedItems)
+    private void PlaySelectedNext()
     {
-        if (selectedItems is null) return;
-        List<object> reverse = selectedItems.Reverse().ToList();
-        selectedItems.Clear();
+        List<MediaViewModel> reverse = Selection.GetSelectedItems<MediaViewModel>();
+        if (reverse.Count == 0) return;
+        reverse.Reverse();
+        Selection.ClearSelection();
         foreach (MediaViewModel item in reverse)
         {
             PlayNext(item);
@@ -135,16 +134,27 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(IsSelectedItemNotFirst))]
-    private void MoveSelectedItemUp(IList<object>? selectedItems)
+    private void MoveSelectedItemUp()
     {
-        if (selectedItems is not { Count: 1 }) return;
-        MediaViewModel item = (MediaViewModel)selectedItems[0];
+        if (!IsSelectedItemNotFirst()) return;
+        List<MediaViewModel> selected = Selection.GetSelectedItems<MediaViewModel>();
+        if (selected.Count != 1) return;
+        MediaViewModel item = selected[0];
+        int oldIndex = Queue.Items.IndexOf(item);
+        if (oldIndex <= 0) return;
+
         MoveItemUp(item);
+
+        int newIndex = oldIndex - 1;
 
         // Re-select the item after the move. Delaying ensures the ListView has
         // processed the collection change before we add back the selection;
         // doing it synchronously would cause the entire list to reload.
-        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
+        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+        {
+            Selection.ClearSelection();
+            Selection.SelectRange(new Windows.UI.Xaml.Data.ItemIndexRange(newIndex, 1));
+        });
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
@@ -157,14 +167,25 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(IsSelectedItemNotLast))]
-    private void MoveSelectedItemDown(IList<object>? selectedItems)
+    private void MoveSelectedItemDown()
     {
-        if (selectedItems is not { Count: 1 }) return;
-        MediaViewModel item = (MediaViewModel)selectedItems[0];
+        if (!IsSelectedItemNotLast()) return;
+        List<MediaViewModel> selected = Selection.GetSelectedItems<MediaViewModel>();
+        if (selected.Count != 1) return;
+        MediaViewModel item = selected[0];
+        int oldIndex = Queue.Items.IndexOf(item);
+        if (oldIndex == -1 || oldIndex >= Queue.Items.Count - 1) return;
+
         MoveItemDown(item);
 
+        int newIndex = oldIndex + 1;
+
         // Re-select the item after the move. Same reasoning as MoveSelectedItemUp.
-        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
+        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+        {
+            Selection.ClearSelection();
+            Selection.SelectRange(new Windows.UI.Xaml.Data.ItemIndexRange(newIndex, 1));
+        });
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotLast))]
@@ -201,15 +222,19 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     public Task EnqueueDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex) =>
         _coordinator.EnqueueAsync(items, insertIndex);
 
-    private bool HasSelection() => Selection.SelectedItems.Count > 0;
+    private bool HasSelection() => Selection.SelectedRanges.Count > 0;
+
+    private bool IsSelectionSingle() => Selection.SelectedRanges.Count == 1 && Selection.SelectedRanges[0] is { Length: 1 };
 
     private bool IsSelectedItemNotFirst() =>
-        Selection.SelectedItems.Count == 1 &&
-        Queue.Items.Count > 0 && Queue.Items[0] != Selection.SelectedItems[0];
+        IsSelectionSingle() &&
+        Queue.Items.Count > 0 &&
+        Selection.SelectedRanges[0].FirstIndex > 0;
 
     private bool IsSelectedItemNotLast() =>
-        Selection.SelectedItems.Count == 1 &&
-        Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != Selection.SelectedItems[0];
+        IsSelectionSingle() &&
+        Queue.Items.Count > 0 &&
+        Selection.SelectedRanges[0].LastIndex < Queue.Items.Count - 1;
 
     private bool IsItemNotFirst(MediaViewModel item) => Queue.Items.Count > 0 && Queue.Items[0] != item;
 

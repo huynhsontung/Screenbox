@@ -298,55 +298,44 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelected(IList<object>? selectedItems)
+    private void PlaySelected()
     {
-        if (selectedItems is null) return;
-
-        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        var items = Selection.GetSelectedItems<MediaViewModel>().ToArray();
         if (items.Length > 0)
         {
             Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelectedNext(IList<object>? selectedItems)
+    private void PlaySelectedNext()
     {
-        if (selectedItems is null) return;
-
-        var items = selectedItems.OfType<MediaViewModel>().Reverse().ToArray();
-        Messenger.SendPlayNext(items);
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        var items = Selection.GetSelectedItems<MediaViewModel>();
+        items.Reverse();
+        Messenger.SendPlayNext(items.ToArray());
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void AddSelectedToQueue(IList<object>? selectedItems)
+    private void AddSelectedToQueue()
     {
-        if (selectedItems is null) return;
-
-        var items = selectedItems.OfType<MediaViewModel>().ToArray();
+        var items = Selection.GetSelectedItems<MediaViewModel>().ToArray();
         Messenger.SendAddToQueue(items);
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void RemoveSelected(IList<object>? selectedItems)
+    private void RemoveSelected()
     {
-        if (selectedItems is null) return;
-
-        var copy = selectedItems.OfType<MediaViewModel>().ToArray();
+        var copy = Selection.GetSelectedItems<MediaViewModel>().ToArray();
         foreach (var item in copy)
         {
             Remove(item);
         }
 
-        selectedItems.Clear();
-        Selection.ClearSelectionCommand.Execute(null);
+        Selection.DisableSelectionMode();
     }
 
     private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
@@ -379,5 +368,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    private bool HasSelection() => Selection.SelectedItems.Count > 0;
+    private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }
+
