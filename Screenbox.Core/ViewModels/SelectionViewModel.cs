@@ -105,10 +105,10 @@ public sealed partial class SelectionViewModel : ObservableObject
     public List<T> GetSelectedItems<T>()
     {
         var list = _sourceCollection;
-        if (list is null || list.Count == 0 || SelectedRanges.Count == 0) return new List<T>();
+        if (list is null || list.Count == 0 || _selectedRanges.Count == 0) return new List<T>();
 
         var selectedItems = new List<T>();
-        foreach (var range in SelectedRanges)
+        foreach (var range in _selectedRanges)
         {
             int start = Math.Max(0, range.FirstIndex);
             int end = Math.Min(list.Count - 1, range.LastIndex);
@@ -138,7 +138,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         if (range.Length == 0) return;
 
-        var newRanges = GetCompactRanges(SelectedRanges.Concat(new[] { range }));
+        var newRanges = GetCompactRanges(_selectedRanges.Concat(new[] { range }));
 
         IsSelectionModeActive = true;
         _selectedRanges.SyncItems(newRanges);
@@ -152,10 +152,10 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     public void DeselectRange(ItemIndexRange range)
     {
-        if (range.Length == 0 || SelectedRanges.Count == 0) return;
+        if (range.Length == 0 || _selectedRanges.Count == 0) return;
 
         var remaining = new List<ItemIndexRange>();
-        foreach (var r in SelectedRanges)
+        foreach (var r in _selectedRanges)
         {
             // Fully outside
             if (r.LastIndex < range.FirstIndex || r.FirstIndex > range.LastIndex)
@@ -177,10 +177,9 @@ public sealed partial class SelectionViewModel : ObservableObject
             }
         }
 
-        var newRanges = GetCompactRanges(remaining);
-
-        _selectedRanges.SyncItems(newRanges);
-        SelectedCount = newRanges.Sum(r => (int)r.Length);
+        // When deselecting, we don't need to compact since we started with a compacted collection
+        _selectedRanges.SyncItems(remaining);
+        SelectedCount = remaining.Sum(r => (int)r.Length);
         // Don't disable selection mode since use may still want to select after clearing selection
         RefreshSelectionState();
     }
@@ -335,13 +334,13 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// </summary>
     private void CompactRanges()
     {
-        if (SelectedRanges.Count == 0)
+        if (_selectedRanges.Count == 0)
         {
             SelectedCount = 0;
             return;
         }
         
-        var compacted = GetCompactRanges(SelectedRanges);
+        var compacted = GetCompactRanges(_selectedRanges);
         _selectedRanges.SyncItems(compacted);
         SelectedCount = compacted.Sum(r => (int)r.Length);
     }
