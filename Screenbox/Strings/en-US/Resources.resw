@@ -1153,4 +1153,7 @@
   <data name="ChangeFolder" xml:space="preserve">
     <value>Change folder</value>
   </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
 </root>

@@ -191,7 +191,12 @@ public sealed class FilesService : IFilesService
         return new MediaInfo(mediaType);
     }
 
-    public async Task<StorageFolder> GetFrameCaptureFolderAsync(string token)
+    public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token)
+    {
+        return GetFrameCaptureFolderFromTokenAsync(token).AsAsyncOperation();
+    }
+
+    private static async Task<StorageFolder> GetFrameCaptureFolderFromTokenAsync(string token)
     {
         if (!string.IsNullOrEmpty(token)
             && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))

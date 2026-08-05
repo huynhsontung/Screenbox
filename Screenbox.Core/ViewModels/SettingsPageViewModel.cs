@@ -56,7 +56,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] private bool _persistPlaybackPosition;
 
     [ObservableProperty]
-    private string _frameCaptureFolderPath;
+    private StorageFolder? _frameCaptureFolder;
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -158,8 +158,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             >= 125 => 1,
             _ => 0
         };
-
-        _frameCaptureFolderPath = string.Empty;
 
         string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
         _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
@@ -442,7 +440,21 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
         _settingsService.FrameCaptureFolderToken = newToken;
-        FrameCaptureFolderPath = folder.Path;
+        FrameCaptureFolder = folder;
+    }
+
+    [RelayCommand]
+    private async Task OpenFrameCaptureFolderAsync()
+    {
+        try
+        {
+            await LoadFrameCaptureFolderAsync();
+            await Launcher.LaunchFolderAsync(FrameCaptureFolder);
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
     }
 
     [RelayCommand]
@@ -495,12 +507,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         await UpdateRemovableStorageFoldersAsync();
     }
 
-    public async Task LoadFrameCaptureFolderPathAsync()
+    public async Task LoadFrameCaptureFolderAsync()
     {
         try
         {
-            var destFolder = await _filesService.GetFrameCaptureFolderAsync(_settingsService.FrameCaptureFolderToken);
-            FrameCaptureFolderPath = destFolder.Path;
+            FrameCaptureFolder = await _filesService.GetFrameCaptureFolderAsync(_settingsService.FrameCaptureFolderToken);
         }
         catch (Exception e)
         {

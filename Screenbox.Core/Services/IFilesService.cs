@@ -28,5 +28,13 @@ public interface IFilesService
     public void AddToRecent(IStorageItem item);
     public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
 
-    Task<StorageFolder> GetFrameCaptureFolderAsync(string token);
+    /// <summary>
+    /// Retrieves the frame captures <see cref="StorageFolder"/> for the given token.
+    /// </summary>
+    /// <param name="token">The token of the frame captures folder.</param>
+    /// <returns>
+    /// When this method completes successfully, it returns the frame captures folder
+    /// that is associated with the specified token.
+    /// </returns>
+    IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token);
 }
