@@ -264,6 +264,10 @@
             </controls:ContentUnavailableView>
         </ScrollViewer>
 
+        <interactivity:Interaction.Behaviors>
+            <behaviors:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
