@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
@@ -234,20 +234,20 @@
                     Source="{x:Bind AlbumArtImage.ImageSource, Mode=OneWay}"
                     Stretch="UniformToFill" />
                 <Image x:Name="BackgroundImage" Stretch="UniformToFill">
-                    <animations:Explicit.Animations>
-                        <animations:AnimationSet x:Name="BackgroundArtFadeOutAnimation">
-                            <animations:OpacityAnimation
+                    <ctAnimations:Explicit.Animations>
+                        <ctAnimations:AnimationSet x:Name="BackgroundArtFadeOutAnimation">
+                            <ctAnimations:OpacityAnimation
                                 EasingMode="EaseInOut"
                                 To="0"
                                 Duration="0:0:1" />
-                        </animations:AnimationSet>
-                        <animations:AnimationSet x:Name="BackgroundArtFadeInAnimation">
-                            <animations:OpacityAnimation
+                        </ctAnimations:AnimationSet>
+                        <ctAnimations:AnimationSet x:Name="BackgroundArtFadeInAnimation">
+                            <ctAnimations:OpacityAnimation
                                 EasingMode="EaseOut"
                                 To="1"
                                 Duration="0:0:1" />
-                        </animations:AnimationSet>
-                    </animations:Explicit.Animations>
+                        </ctAnimations:AnimationSet>
+                    </ctAnimations:Explicit.Animations>
                 </Image>
             </Grid>
 
@@ -392,8 +392,8 @@
             Padding="9,5,9,6"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            animations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
-            animations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
+            ctAnimations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
+            ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
             d:Visibility="Visible"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
@@ -419,15 +419,15 @@
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             CornerRadius="{StaticResource CircularCornerRadius}"
             Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
-            <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation To="0.8" Duration="0:0:0.03" />
-                <animations:ScaleAnimation To="1" Duration="0:0:0.03" />
-            </animations:Implicit.ShowAnimations>
-            <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation To="0.0" Duration="0:0:0.6" />
+            <ctAnimations:Implicit.ShowAnimations>
+                <ctAnimations:OpacityAnimation To="0.8" Duration="0:0:0.03" />
+                <ctAnimations:ScaleAnimation To="1" Duration="0:0:0.03" />
+            </ctAnimations:Implicit.ShowAnimations>
+            <ctAnimations:Implicit.HideAnimations>
+                <ctAnimations:OpacityAnimation To="0.0" Duration="0:0:0.6" />
                 <!--  1.25 is relative scale from 64px to 80px  -->
-                <animations:ScaleAnimation To="1.25" Duration="0:0:0.6" />
-            </animations:Implicit.HideAnimations>
+                <ctAnimations:ScaleAnimation To="1.25" Duration="0:0:0.6" />
+            </ctAnimations:Implicit.HideAnimations>
             <FontIcon
                 x:Name="PlayerStateBadgeIcon"
                 d:Glyph="{StaticResource PlaySolidGlyph}"

@@ -14,7 +14,6 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:templates="using:Screenbox.Templates"
-    xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
@@ -263,7 +262,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
+                        <ui:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}" To="{StaticResource MinimalNavigationViewDisplayMode}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
