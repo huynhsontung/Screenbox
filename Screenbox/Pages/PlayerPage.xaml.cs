@@ -463,25 +463,25 @@ public sealed partial class PlayerPage : Page
 
     private void LayoutRoot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.OriginalKey == VirtualKey.Space &&
+        if (e.OriginalKey is VirtualKey.Space or VirtualKey.GamepadX &&
             !KeyboardAcceleratorHelper.IsControlKeyDown &&
             !KeyboardAcceleratorHelper.IsShiftKeyDown &&
             !e.KeyStatus.IsMenuKeyDown)
         {
             e.Handled = true;
-            ViewModel.ProcessSpaceKeyDown();
+            ViewModel.OnPlayPausePressed();
         }
     }
 
     private void LayoutRoot_OnPreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
-        if (e.OriginalKey == VirtualKey.Space &&
+        if (e.OriginalKey is VirtualKey.Space or VirtualKey.GamepadX &&
             !KeyboardAcceleratorHelper.IsControlKeyDown &&
             !KeyboardAcceleratorHelper.IsShiftKeyDown &&
             !e.KeyStatus.IsMenuKeyDown)
         {
             e.Handled = true;
-            ViewModel.ProcessSpaceKeyUp();
+            ViewModel.OnPlayPauseReleased();
         }
     }
 
