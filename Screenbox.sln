@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screenbox.Lively", "Screenb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screenbox.Core.Tests", "Screenbox.Core.Tests\Screenbox.Core.Tests.csproj", "{E3294F9A-40C6-4C57-9A33-8B3BAA35C6D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screenbox.UI.Controls", "src\Screenbox.UI.Controls\Screenbox.UI.Controls.csproj", "{27ECCB04-584C-4DE3-AC83-B8380719BD07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screenbox.UI.Controls", "Screenbox.UI.Controls\Screenbox.UI.Controls.csproj", "{27ECCB04-584C-4DE3-AC83-B8380719BD07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

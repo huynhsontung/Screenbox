@@ -836,7 +836,7 @@
       <Project>{9b443f29-bff0-45b7-8a84-ee88cd5ae405}</Project>
       <Name>Screenbox.Lively</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Screenbox.UI.Controls\Screenbox.UI.Controls.csproj">
+    <ProjectReference Include="..\Screenbox.UI.Controls\Screenbox.UI.Controls.csproj">
       <Project>{27eccb04-584c-4de3-ac83-b8380719bd07}</Project>
       <Name>Screenbox.UI.Controls</Name>
     </ProjectReference>
