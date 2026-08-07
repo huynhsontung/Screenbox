@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.PlayerElement"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -39,7 +39,6 @@
         <!--  Use -1 bottom margin to avoid white line artifact  -->
         <vlcSharp:VideoView
             x:Name="VlcVideoView"
-            Margin="0,0,0,-1"
             Canvas.ZIndex="0"
             FlowDirection="LeftToRight"
             Initialized="VlcVideoView_OnInitialized"
