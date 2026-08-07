@@ -93,7 +93,12 @@ public sealed partial class SelectionViewModel : ObservableObject
     {
         var newRanges = GetCompactRanges(ranges);
 
-        IsSelectionModeActive = newRanges.Count > 0;
+        // Activate selection mode if there are any selected ranges and selection mode is not already active
+        if (!IsSelectionModeActive && newRanges.Count > 0)
+        {
+            IsSelectionModeActive = true;
+        }
+
         _selectedRanges.SyncItems(newRanges);
         SelectedCount = newRanges.Sum(r => (int)r.Length);
         RefreshSelectionState();
@@ -322,7 +327,7 @@ public sealed partial class SelectionViewModel : ObservableObject
                 current = next;
             }
         }
-        
+
         merged.Add(current);
         return merged;
     }
@@ -337,7 +342,7 @@ public sealed partial class SelectionViewModel : ObservableObject
             SelectedCount = 0;
             return;
         }
-        
+
         var compacted = GetCompactRanges(_selectedRanges);
         _selectedRanges.SyncItems(compacted);
         SelectedCount = compacted.Sum(r => (int)r.Length);
