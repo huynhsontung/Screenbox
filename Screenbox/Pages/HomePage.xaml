@@ -16,6 +16,7 @@
     xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:primitives="using:Windows.UI.Xaml.Controls.Primitives"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:templates="using:Screenbox.Templates"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -266,7 +267,7 @@
             HorizontalScrollMode="Disabled"
             VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
-            <controls:ContentUnavailableView
+            <sbuc:ContentUnavailableView
                 x:Name="WelcomePanel"
                 Title="{x:Bind strings:Resources.WelcomePanelHeader}"
                 IsOpen="False"
@@ -277,7 +278,7 @@
                     FontFamily="Segoe UI Emoji"
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Glyph="&#x1F44B;" />
-                <controls:ContentUnavailableView.ActionContent>
+                <sbuc:ContentUnavailableView.ActionContent>
                     <muxc:SplitButton
                         extensions:SplitButtonExtensions.PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
                         extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
@@ -300,8 +301,8 @@
                             <behaviors:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
                     </muxc:SplitButton>
-                </controls:ContentUnavailableView.ActionContent>
-            </controls:ContentUnavailableView>
+                </sbuc:ContentUnavailableView.ActionContent>
+            </sbuc:ContentUnavailableView>
         </ScrollViewer>
 
         <interactivity:Interaction.Behaviors>

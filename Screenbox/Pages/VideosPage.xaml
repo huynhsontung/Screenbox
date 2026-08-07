@@ -10,6 +10,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -123,7 +124,7 @@
                     HorizontalScrollMode="Disabled"
                     VerticalScrollBarVisibility="Auto"
                     Visibility="Collapsed">
-                    <controls:ContentUnavailableView
+                    <sbuc:ContentUnavailableView
                         x:Name="NoVideosPanel"
                         Title="{x:Bind strings:Resources.NoVideosPanelHeader}"
                         IsOpen="False"
@@ -135,7 +136,7 @@
                             FontSize="{StaticResource NoContentPanelIconFontSize}"
                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                             Glyph="{StaticResource MoviesOffGlyph}" />
-                        <controls:ContentUnavailableView.ActionContent>
+                        <sbuc:ContentUnavailableView.ActionContent>
                             <Button
                                 AccessKey="{x:Bind strings:KeyboardResources.CommandAddFolderKey}"
                                 AutomationProperties.Name="{x:Bind strings:Resources.AddFolder}"
@@ -152,8 +153,8 @@
                                     <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
                                 </StackPanel>
                             </Button>
-                        </controls:ContentUnavailableView.ActionContent>
-                    </controls:ContentUnavailableView>
+                        </sbuc:ContentUnavailableView.ActionContent>
+                    </sbuc:ContentUnavailableView>
                 </ScrollViewer>
             </Grid>
         </muxc:NavigationView>

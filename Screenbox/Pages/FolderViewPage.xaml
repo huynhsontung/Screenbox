@@ -12,6 +12,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -171,7 +172,7 @@
         </GridView>
 
         <!--  Empty content  -->
-        <controls:ContentUnavailableView
+        <sbuc:ContentUnavailableView
             x:Name="NoContentPanel"
             Grid.Row="2"
             Margin="{StaticResource TopLargeMargin}"

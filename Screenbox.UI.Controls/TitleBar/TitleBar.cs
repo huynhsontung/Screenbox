@@ -1,5 +1,6 @@
-﻿#nullable enable
+#nullable enable
 
+using Screenbox.UI.Automation.Peers;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -8,7 +9,7 @@ using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 /// <summary>
 /// Represents a control that replaces the default system title bar with a container,

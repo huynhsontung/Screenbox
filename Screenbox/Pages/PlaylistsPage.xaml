@@ -14,6 +14,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:primitives="using:Windows.UI.Xaml.Controls.Primitives"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:templates="using:Screenbox.Templates"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -230,7 +231,7 @@
             HorizontalScrollMode="Disabled"
             VerticalScrollBarVisibility="Auto"
             Visibility="Collapsed">
-            <controls:ContentUnavailableView
+            <sbuc:ContentUnavailableView
                 x:Name="NoPlaylistsPanel"
                 Title="{x:Bind strings:Resources.NoPlaylistsPanelHeader}"
                 IsOpen="False"
@@ -242,7 +243,7 @@
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Glyph="{StaticResource PlaylistOffGlyph}" />
-                <controls:ContentUnavailableView.ActionContent>
+                <sbuc:ContentUnavailableView.ActionContent>
                     <muxc:SplitButton
                         extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
                         AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
@@ -259,8 +260,8 @@
                             <behaviors:SplitButtonXYNavigationBehavior />
                         </interactivity:Interaction.Behaviors>
                     </muxc:SplitButton>
-                </controls:ContentUnavailableView.ActionContent>
-            </controls:ContentUnavailableView>
+                </sbuc:ContentUnavailableView.ActionContent>
+            </sbuc:ContentUnavailableView>
         </ScrollViewer>
 
         <interactivity:Interaction.Behaviors>

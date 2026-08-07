@@ -1,11 +1,12 @@
-﻿#nullable enable
+#nullable enable
 
+using Screenbox.UI.Automation.Peers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 /// <summary>
 /// Represents a control that displays placeholder content when no data is present.

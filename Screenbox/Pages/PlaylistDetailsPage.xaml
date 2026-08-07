@@ -11,6 +11,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
     Loaded="PlaylistDetailsPage_OnLoaded"
@@ -170,13 +171,13 @@
                     </TextBlock>
 
                     <Grid x:Name="ButtonPanel">
-                        <controls:CommandBarEx
+                        <sbuc:CommandBarEx
                             Margin="-8,8,0,0"
                             HorizontalAlignment="Left"
                             AccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
                             DefaultLabelPosition="Right"
                             MoreButtonStyle="{StaticResource EllipsisDefaultButtonStyle}">
-                            <controls:CommandBarEx.Resources>
+                            <sbuc:CommandBarEx.Resources>
                                 <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
@@ -186,7 +187,7 @@
                                 <Thickness x:Key="AppBarButtonContentViewboxMargin">16,16,0,16</Thickness>
                                 <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,14,16,15</Thickness>
                                 <Thickness x:Key="AppBarButtonInnerBorderMargin">4,8,4,8</Thickness>
-                            </controls:CommandBarEx.Resources>
+                            </sbuc:CommandBarEx.Resources>
 
                             <AppBarButton
                                 AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
@@ -236,7 +237,7 @@
                                 Icon="{ui:SymbolIcon Symbol=Delete}"
                                 Label="{strings:Resources Key=Delete}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
-                        </controls:CommandBarEx>
+                        </sbuc:CommandBarEx>
                     </Grid>
                 </StackPanel>
             </Grid>
@@ -281,7 +282,7 @@
             </interactivity:Interaction.Behaviors>
         </ListView>
 
-        <controls:ContentUnavailableView
+        <sbuc:ContentUnavailableView
             x:Name="NoPlaylistItemsView"
             Grid.Row="1"
             IsOpen="False"

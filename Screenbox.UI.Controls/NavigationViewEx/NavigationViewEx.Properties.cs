@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Generic;
 using Windows.UI.Xaml;
@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 [StyleTypedProperty(Property = nameof(BackButtonStyle), StyleTargetType = typeof(Button))]
 [StyleTypedProperty(Property = nameof(PaneToggleButtonStyle), StyleTargetType = typeof(Button))]

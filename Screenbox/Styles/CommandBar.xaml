@@ -55,8 +55,6 @@
             Duration="{StaticResource ControlFasterAnimationDuration}" />
     </ctAnimations:ImplicitAnimationSet>
 
-    <Style BasedOn="{StaticResource DefaultCommandBarStyle}" TargetType="controls:CommandBarEx" />
-
     <!--  AppBarButton styled to resemble the default button. For optimal results, apply this style together with the adjusted margin values.  -->
     <!--  Using styles in a CommandBar overrides the overflow style. To work around this, we set horizontal alignment to stretch and define width in visual states, not in the style setters.  -->
     <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/CommonStyles/AppBarButton_themeresources.xaml  -->

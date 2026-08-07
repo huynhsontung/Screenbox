@@ -1,4 +1,4 @@
-﻿namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 /// <summary>
 /// Defines constants that specify the height of the <see cref="TitleBar"/>.

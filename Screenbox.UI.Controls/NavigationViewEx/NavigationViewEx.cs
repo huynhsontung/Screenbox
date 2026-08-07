@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using NavigationViewDisplayModeChangedEventArgs = Microsoft.UI.Xaml.Controls.Nav
 using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 using NavigationViewPaneClosingEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs;
 
-namespace Screenbox.Controls;
+namespace Screenbox.UI.Controls;
 
 /// <summary>
 /// Represents a custom navigation view that extends the functionality of the
