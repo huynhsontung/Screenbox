@@ -36,7 +36,6 @@
             <Border Background="Transparent" />
         </UserControl>
 
-        <!--  Use -1 bottom margin to avoid white line artifact  -->
         <vlcSharp:VideoView
             x:Name="VlcVideoView"
             Canvas.ZIndex="0"
