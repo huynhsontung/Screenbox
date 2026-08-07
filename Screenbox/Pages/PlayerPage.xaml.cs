@@ -469,7 +469,7 @@ public sealed partial class PlayerPage : Page
             !e.KeyStatus.IsMenuKeyDown)
         {
             e.Handled = true;
-            ViewModel.OnPlayPausePressed();
+            ViewModel.HandlePlayPauseKeyDown();
         }
     }
 
@@ -481,7 +481,7 @@ public sealed partial class PlayerPage : Page
             !e.KeyStatus.IsMenuKeyDown)
         {
             e.Handled = true;
-            ViewModel.OnPlayPauseReleased();
+            ViewModel.HandlePlayPauseKeyUp();
         }
     }
 

@@ -308,16 +308,16 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Handles the play/pause press interaction, initiating the hold
+    /// Handles the play/pause key press interaction, initiating the hold
     /// behavior that temporarily increases playback speed.
     /// </summary>
     /// <remarks>
     /// If the media is currently <see cref="MediaPlaybackState.Paused"/> and
-    /// <see cref="SettingsService.PlayerGesturePressAndHold"/> is not enabled,
+    /// <see cref="ISettingsService.PlayerGesturePressAndHold"/> is not enabled,
     /// the hold behavior is not available. To activate the hold behavior, the play/pause
     /// key needs to be pressed and held down for at least 500 milliseconds.
     /// </remarks>
-    public void OnPlayPausePressed()
+    public void HandlePlayPauseKeyDown()
     {
         const double HoldingSpeed = 2.0;
 
@@ -349,7 +349,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// If the play/pause key is pressed and released quickly, toggles playback state;
     /// if held, restores the original playback rate.
     /// </remarks>
-    public void OnPlayPauseReleased()
+    public void HandlePlayPauseKeyUp()
     {
         _playPauseHoldTimer.Stop();
 
