@@ -79,6 +79,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     public Func<double, string>? GetVolumeChangeStatusMessage { get; set; }
 
     // TODO: Temporary workaround, remove after completing the UpdateStatusMessage refactor.
+    /// <summary>
+    /// Gets the scale factor for resizing the player window.
+    /// </summary>
+    /// <value>The scale factor for resizing the player window.</value>
     public double ResizeScale { get; private set; }
 
     public bool IsPlayerVisibilityVisible => PlayerVisibility is PlayerVisibilityState.Visible;
@@ -376,13 +380,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// Handles a volume increment or decrement based on the specified key.
     /// </summary>
     /// <remarks>
-    /// <para>Volume change is only available when the player is visible.</para>
     /// The following keys determine the volume delta:
     /// <list type="bullet">
     /// <item><description><see cref="VirtualKey.Add"/>, (<see cref="VirtualKey"/>)0xBB (VK_OEM_PLUS),
-    /// or <see cref="VirtualKey.Up"/> (when player is visible): Increase volume by 5.</description></item>
+    /// or <see cref="VirtualKey.Up"/> (when player is visible): Increase volume by <c>5</c>.</description></item>
     /// <item><description><see cref="VirtualKey.Subtract"/>, (<see cref="VirtualKey"/>)0xBD (VK_OEM_MINUS),
-    /// or <see cref="VirtualKey.Down"/> (when player is visible): Decrease volume by 5.</description></item>
+    /// or <see cref="VirtualKey.Down"/> (when player is visible): Decrease volume by <c>5</c>.</description></item>
     /// </list>
     /// </remarks>
     /// <param name="key">The key that was pressed.</param>
@@ -411,15 +414,17 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <remarks>
     /// The following keys determine the seek direction:
     /// <list type="bullet">
-    /// <item><term><see cref="VirtualKey.Right"/> (when player is visible) or <see cref="VirtualKey.L"/></term><description>Seek forward.</description></item>
-    /// <item><term><see cref="VirtualKey.Left"/> (when player is visible) or <see cref="VirtualKey.J"/></term><description>Seek backward.</description></item>
+    /// <item><description><see cref="VirtualKey.L"/> or <see cref="VirtualKey.Right"/> (when player is visible): Seek forward.</description></item>
+    /// <item><description><see cref="VirtualKey.J"/> or <see cref="VirtualKey.Left"/> (when player is visible): Seek backward.</description></item>
     /// </list>
     /// The seek duration is determined by the following modifier keys:
     /// <list type="bullet">
-    /// <item><term><see cref="VirtualKeyModifiers.None"/></term><description>Seek using the default interval.</description></item>
-    /// <item><term><see cref="VirtualKeyModifiers.Control"/></term><description>Seek using double (<c>2×</c>) the configured interval.</description></item>
-    /// <item><term><see cref="VirtualKeyModifiers.Shift"/></term><description>Seek using one-fifth (<c>1/5</c>) of the configured interval.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.None"/>: Seek using the default interval.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.Control"/>: Seek using double (<c>2×</c>) the configured interval.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.Shift"/>: Seek using one-fifth (<c>1/5</c>) of the configured interval.</description></item>
     /// </list>
+    /// The default seek intervals are based on the configured <see cref="ISettingsService.PlayerRewindStep"/>
+    /// and <see cref="ISettingsService.PlayerFastForwardStep"/> values.
     /// </remarks>
     /// <param name="key">A value of the enumeration that specifies the key that was pressed.</param>
     /// <param name="modifiers">A bitwise combination of the enumeration values that specifies the modifier keys held during the key press.</param>
@@ -454,10 +459,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Handles a seek to position by percentage operation based on the specified key.
+    /// Handles jumping to a specific playback position by percentage based on the specified key.
     /// </summary>
     /// <remarks>
-    /// <para>Jumping to a specific position is only available when the player is visible.</para>
+    /// <para>Requires <see cref="PlayerVisibility"/> to be <see cref="PlayerVisibilityState.Visible"/>.</para>
     /// The following keys determine the jump action:
     /// <list type="bullet">
     /// <item><description><see cref="VirtualKey.Home"/>: Seek to start.</description></item>
@@ -507,12 +512,13 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// Handles a playback rate increment or decrement based on keyboard input.
     /// </summary>
     /// <remarks>
-    /// <para>Playback rate change is only available when the player is visible.</para>
+    /// <para>Requires <see cref="PlayerVisibility"/> to be <see cref="PlayerVisibilityState.Visible"/>.</para>
     /// The following keys, in combination with the <see cref="VirtualKeyModifiers.Shift"/> modifier, determine the change:
     /// <list type="bullet">
     /// <item><description>(<see cref="VirtualKey"/>)0xBE (VK_OEM_PERIOD): Increase playback rate by 0.25x.</description></item>
     /// <item><description>(<see cref="VirtualKey"/>)0xBC (VK_OEM_COMMA): Decrease playback rate by 0.25x.</description></item>
     /// </list>
+    /// The playback rate is clamped between 0.25x and 4x.
     /// </remarks>
     /// <param name="key">The key that was pressed.</param>
     /// <param name="modifiers">The modifier keys held during the key press.</param>
@@ -540,10 +546,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Handles frame stepping operation based on the specified key.
+    /// Handles frame-stepping based on the specified key.
     /// </summary>
     /// <remarks>
-    /// Frame stepping is only available when the player is visible, the media can be seeked, and playback is paused.
+    /// Requires <see cref="PlayerVisibility"/> to be <see cref="PlayerVisibilityState.Visible"/>,
+    /// <see cref="MediaPlayer.CanSeek"/> to be true, and <see cref="MediaPlayer.PlaybackState"/>
+    /// to be <see cref="MediaPlaybackState.Paused"/>.
     /// <list type="bullet">
     /// <item><description>(<see cref="VirtualKey"/>)0xBE (VK_OEM_PERIOD): Step forward one frame.</description></item>
     /// <item><description>(<see cref="VirtualKey"/>)0xBC (VK_OEM_COMMA): Step backward one frame.</description></item>
