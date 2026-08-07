@@ -70,6 +70,11 @@ public sealed partial class DatabaseService
             }
         }
 
+        // Delete media records that are no longer present in the current scan
+        var musicPaths = new HashSet<string>(records.Count);
+        foreach (MusicCacheRecordDto record in records) musicPaths.Add(record.Path);
+        DeleteStaleMediaRecords(connection, MediaPlaybackType.Music, musicPaths);
+
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = UpsertMusicMediaRecordSql;
@@ -132,6 +137,11 @@ public sealed partial class DatabaseService
             }
         }
 
+        // Delete media records that are no longer present in the current scan
+        var videoPaths = new HashSet<string>(records.Count);
+        foreach (VideoCacheRecordDto record in records) videoPaths.Add(record.Path);
+        DeleteStaleMediaRecords(connection, MediaPlaybackType.Video, videoPaths);
+
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = UpsertVideoMediaRecordSql;
@@ -168,6 +178,15 @@ public sealed partial class DatabaseService
         }
 
         transaction.Commit();
+    }
+
+    private static void DeleteStaleMediaRecords(SqliteConnection connection, MediaPlaybackType mediaType, HashSet<string> currentPaths)
+    {
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = "DELETE FROM media_records WHERE media_type = @mt AND path NOT IN (SELECT value FROM json_each(@paths));";
+        cmd.Parameters.AddWithValue("@mt", (int)mediaType);
+        cmd.Parameters.AddWithValue("@paths", System.Text.Json.JsonSerializer.Serialize(currentPaths));
+        cmd.ExecuteNonQuery();
     }
 
     private static RawMediaRecordDto ReadRawRecord(SqliteDataReader reader)
