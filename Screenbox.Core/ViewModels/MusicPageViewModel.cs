@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         HasContent = true;
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<MusicLibrary>>(this);
     }
 
     public void Receive(PropertyChangedMessage<MusicLibrary> message)

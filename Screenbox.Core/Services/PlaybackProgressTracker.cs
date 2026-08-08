@@ -29,7 +29,7 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
     {
         _databaseService = databaseService;
 
-        IsActive = true;
+        Messenger.Register<SuspendingMessage>(this);
     }
 
     public void Receive(SuspendingMessage message)

@@ -124,8 +124,17 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
-        // Activate the view model's messenger
-        IsActive = true;
+        Messenger.Register<UpdateStatusMessage>(this);
+        Messenger.Register<UpdateVolumeStatusMessage>(this);
+        Messenger.Register<TogglePlayerVisibilityMessage>(this);
+        Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
+        Messenger.Register<QueueCurrentItemChangedMessage>(this);
+        Messenger.Register<ShowPlayPauseBadgeMessage>(this);
+        Messenger.Register<OverrideControlsHideDelayMessage>(this);
+        Messenger.Register<DragDropMessage>(this);
+        Messenger.Register<VisualizerChangedMessage>(this);
+        Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
+        Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
     }
 
     public async void Receive(DragDropMessage message)

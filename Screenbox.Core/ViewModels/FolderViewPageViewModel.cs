@@ -56,7 +56,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _loadingTimer = _dispatcherQueue.CreateTimer();
 
-        IsActive = true;
+        Messenger.Register<RefreshFolderMessage>(this);
     }
 
     public void Receive(RefreshFolderMessage message)

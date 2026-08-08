@@ -63,7 +63,8 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<LivelyWallpaperModel?>>(this);
+        Messenger.Register<QueueCurrentItemChangedMessage>(this);
     }
 
     public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)

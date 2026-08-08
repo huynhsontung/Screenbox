@@ -128,7 +128,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
         }
 
-        IsActive = true;
+        Messenger.Register<PlayMediaMessage>(this);
+        Messenger.Register<PlayFilesMessage>(this);
+        Messenger.Register<SetQueueMessage>(this);
+        Messenger.Register<ClearQueueMessage>(this);
+        Messenger.Register<QueueRequestMessage>(this);
+        Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
     }
 
     #region Message Handlers

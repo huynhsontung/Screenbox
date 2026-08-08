@@ -36,7 +36,7 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient,
         _timer = _dispatcherQueue.CreateTimer();
         Videos = new ObservableCollection<MediaViewModel>();
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<VideosLibrary>>(this);
     }
 
     public void Receive(PropertyChangedMessage<VideosLibrary> message)
