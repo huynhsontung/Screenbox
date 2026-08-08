@@ -170,18 +170,20 @@
                 x:Name="HeaderText"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=Home}" />
-            <muxc:SplitButton
+            <sbuc:SplitButtonEx
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=OpenFilesToolTip}"
-                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=OpenFilesSecondaryToolTip}"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderOpenButtonText.Text}"
                 Command="{x:Bind Common.OpenFilesCommand}"
-                Flyout="{StaticResource OpenFlyout}">
+                Flyout="{StaticResource OpenFlyout}"
+                IsSecondaryButtonTabStop="True"
+                PrimaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
+                SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                SecondaryButtonToolTip="{x:Bind strings:Resources.OpenFilesSecondaryToolTip}"
+                Style="{StaticResource DefaultSplitButtonStyle}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         Margin="{StaticResource IconButtonStandardIconMargin}"
@@ -193,10 +195,9 @@
                         Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:SplitButtonXYNavigationBehavior />
                     <behaviors:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
-            </muxc:SplitButton>
+            </sbuc:SplitButtonEx>
         </Grid>
 
         <Grid
@@ -279,15 +280,16 @@
                     FontSize="{StaticResource NoContentPanelIconFontSize}"
                     Glyph="&#x1F44B;" />
                 <sbuc:ContentUnavailableView.ActionContent>
-                    <muxc:SplitButton
-                        extensions:SplitButtonExtensions.PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
-                        extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
-                        extensions:SplitButtonExtensions.SecondaryButtonToolTip="{x:Bind strings:Resources.OpenFilesSecondaryToolTip}"
-                        AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                    <sbuc:SplitButtonEx
                         AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
                         AutomationProperties.Name="{x:Bind strings:Resources.OpenFiles}"
                         Command="{x:Bind Common.OpenFilesCommand}"
                         Flyout="{StaticResource OpenFlyout}"
+                        IsSecondaryButtonTabStop="True"
+                        PrimaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                        PrimaryButtonToolTip="{x:Bind strings:Resources.OpenFilesToolTip}"
+                        SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                        SecondaryButtonToolTip="{x:Bind strings:Resources.OpenFilesSecondaryToolTip}"
                         Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
@@ -297,10 +299,9 @@
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.OpenFiles}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
-                            <behaviors:SplitButtonXYNavigationBehavior />
                             <behaviors:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
-                    </muxc:SplitButton>
+                    </sbuc:SplitButtonEx>
                 </sbuc:ContentUnavailableView.ActionContent>
             </sbuc:ContentUnavailableView>
         </ScrollViewer>
