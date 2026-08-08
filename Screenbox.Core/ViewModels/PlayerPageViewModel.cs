@@ -404,6 +404,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             _ => 0,
         };
 
+        if (delta == 0)
+            return;
+
         int newValue = Messenger.Send(new ChangeVolumeRequestMessage(delta, true));
         Messenger.Send(new UpdateVolumeStatusMessage(newValue));
     }
