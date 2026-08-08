@@ -12,6 +12,7 @@
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <EnableMsixTooling>true</EnableMsixTooling>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
@@ -43,7 +44,7 @@
       <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="LibVLC.UWP">
-      <Version>3.0.23-2607192200</Version>
+      <Version>3.0.23-2608080242</Version>
     </PackageReference>
     <PackageReference Include="Starpine.ReswPlus" Version="0.3.2-202605101917" />
   </ItemGroup>
