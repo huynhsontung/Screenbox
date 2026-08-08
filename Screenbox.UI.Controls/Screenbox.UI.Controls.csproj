@@ -14,14 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.2.251219</Version>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.2.251219</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.7</Version>
-    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Animations" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
   </ItemGroup>
 </Project>
