@@ -23,6 +23,8 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <commands:BindableCommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
+
             <MenuFlyout x:Key="ItemFlyout">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
@@ -262,7 +264,7 @@
                     <controls:MediaListViewItem
                         IsAlbumColumnVisible="True"
                         IsTrackNumberVisible="False"
-                        PlayCommand="{Binding DataContext.PlayCommand, ElementName=ItemList}" />
+                        PlayCommand="{StaticResource PlayCommand}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
