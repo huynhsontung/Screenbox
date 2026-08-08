@@ -33,9 +33,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>10.0.10</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.14</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.7</Version>
     </PackageReference>
