@@ -199,6 +199,7 @@ public sealed class DatabaseServiceTests
     }
 
     [Fact]
+    public async Task PlaylistOperations_SaveLoadListAndDelete_BehavesCorrectly()
     {
         using var fixture = new TestDirectoryFixture();
         var dbService = new DatabaseService(fixture.DirectoryPath);
