@@ -11,6 +11,7 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -487,38 +488,41 @@ public sealed partial class PlayerPage : Page
 
     private void ChangeVolumeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        args.Handled = ViewModel.ProcessChangeVolumeKeyDown(args.KeyboardAccelerator.Key);
+        ViewModel.HandleVolumeKey(args.KeyboardAccelerator.Key);
+        args.Handled = true;
     }
 
     private void SeekKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        ViewModel.ProcessSeekKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        ViewModel.HandleSeekKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
         args.Handled = true;
     }
 
     private void FrameSteppingKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        args.Handled = ViewModel.ProcessFrameSteppingKeyDown(args.KeyboardAccelerator.Key);
+        ViewModel.HandleFrameSteppingKey(args.KeyboardAccelerator.Key);
+        args.Handled = true;
     }
 
     private void PlaybackRateKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        args.Handled = ViewModel.ProcessTogglePlaybackRateKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        ViewModel.HandlePlaybackRateToggleKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        args.Handled = true;
     }
 
     private void WindowResizeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        double? scale = ViewModel.ProcessResizeKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
-        args.Handled = scale.HasValue;
-        if (scale.HasValue)
-        {
-            ViewModel.SendStatusMessage(Screenbox.Strings.Resources.ScaleStatus($"{scale.Value * 100:0.##}%"));
-        }
+        var boundsRect = Window.Current.CoreWindow.Bounds;
+
+        ViewModel.HandleResizeKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers, new Size(boundsRect.Width, boundsRect.Height));
+        ViewModel.SendStatusMessage(Strings.Resources.ScaleStatus($"{ViewModel.ResizeScale * 100:0.##}%"));
+        args.Handled = true;
     }
 
     private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
+        ViewModel.HandlePercentJumpKey(args.KeyboardAccelerator.Key);
+        args.Handled = true;
     }
 
     private void VideoView_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
