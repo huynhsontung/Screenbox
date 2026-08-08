@@ -202,7 +202,7 @@
             ItemTemplate="{StaticResource PlaylistGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Playlists}"
             KeyboardAcceleratorPlacementMode="Hidden"
-            SelectionMode="Extended">
+            SelectionMode="None">
             <GridView.Resources>
                 <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </GridView.Resources>
