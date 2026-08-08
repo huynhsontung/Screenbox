@@ -23,7 +23,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     public SelectionViewModel Selection { get; }
 
     [ObservableProperty]
-    private PlaylistViewModel? _contextPlaylist;
+    public partial PlaylistViewModel? ContextPlaylist { get; set; }
 
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
@@ -32,7 +32,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 
     public ObservableCollection<PlaylistViewModel> Playlists => _playlistsContext.Playlists;
 
-    [ObservableProperty] private PlaylistViewModel? _selectedPlaylist;
+    [ObservableProperty] public partial PlaylistViewModel? SelectedPlaylist { get; set; }
 
     public PlaylistsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
         PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory,
@@ -48,7 +48,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
     }
 
-    private void Selection_SelectedRangesChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Selection_SelectedRangesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         PlaySelectedCommand.NotifyCanExecuteChanged();
         PlaySelectedNextCommand.NotifyCanExecuteChanged();

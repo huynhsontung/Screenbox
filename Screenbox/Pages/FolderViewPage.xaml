@@ -81,10 +81,6 @@
                     </MenuFlyoutItem.Command>
                 </MenuFlyoutItem>
             </MenuFlyout>
-
-            <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
-                <muxc:BreadcrumbBarItem AutomationProperties.Name="{x:Bind DisplayName}" Content="{x:Bind DisplayName}" />
-            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -115,7 +111,6 @@
             Margin="{StaticResource ContentPagePadding}"
             AccessKey="{strings:KeyboardResources Key=CommandBreadcrumbBarKey}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
-            ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
             KeyTipPlacementMode="Right" />
 
@@ -149,6 +144,8 @@
                         CanPlay="{x:Bind IsFile}"
                         Caption="{x:Bind helpers:ItemLabelHelper.GetStorageItemCaption(IsFile, CaptionText, ItemCount), Mode=OneWay}"
                         IsPlaying="{x:Bind Media.IsPlaying, Mode=OneWay}"
+                        PlayCommand="{StaticResource MediaListViewItemPlayCommand}"
+                        PlayCommandParameter="{x:Bind}"
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">
                         <controls:CommonGridViewItem.PlaceholderIconSource>

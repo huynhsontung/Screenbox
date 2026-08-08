@@ -47,17 +47,17 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     /// actual underlying subtitle track index is typically obtained by subtracting <c>1</c> from this value.</description></item>
     /// </list>
     /// </summary>
-    [ObservableProperty] private int _subtitleTrackIndex;
+    [ObservableProperty] public partial int SubtitleTrackIndex { get; set; }
 
     /// <summary>
     /// The currently selected audio track index. <c>-1</c> means no track is selected.
     /// </summary>
-    [ObservableProperty] private int _audioTrackIndex;
+    [ObservableProperty] public partial int AudioTrackIndex { get; set; }
 
     /// <summary>
     /// The currently selected video track index. <c>-1</c> means no track is selected.
     /// </summary>
-    [ObservableProperty] private int _videoTrackIndex;
+    [ObservableProperty] public partial int VideoTrackIndex { get; set; }
 
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;

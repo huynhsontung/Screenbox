@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -22,21 +22,21 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class VideosPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<VideosLibrary>>
 {
-    public ObservableCollection<StorageFolder> Breadcrumbs { get; }
+    public ObservableCollection<string> Breadcrumbs { get; } = new();
 
-    [ObservableProperty] private bool _hasVideos;
+    [ObservableProperty] public partial bool HasVideos { get; set; }
 
     /// <summary>Gets a value indicating whether the Videos library is available, used to enable the add-folder command.</summary>
     public bool HasLibrary => _libraryContext.VideosStorageLibrary != null;
 
+    private readonly List<StorageFolder> _breadcrumbLocations = new();
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
 
     public VideosPageViewModel(LibraryContext libraryContext)
     {
         _libraryContext = libraryContext;
-        _hasVideos = true;
-        Breadcrumbs = new ObservableCollection<StorageFolder>();
+        HasVideos = true;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         IsActive = true;
@@ -50,7 +50,11 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     public void UpdateVideos()
     {
         if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
-            Breadcrumbs.Add(firstFolder);
+        {
+            Breadcrumbs.Add(firstFolder.DisplayName);
+            _breadcrumbLocations.Add(firstFolder);
+        }
+
         HasVideos = _libraryContext.Videos.Videos.Count > 0;
         AddFolderCommand.NotifyCanExecuteChanged();
     }
@@ -80,16 +84,21 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     private void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
     {
         Breadcrumbs.Clear();
+        _breadcrumbLocations.Clear();
         if (crumbs == null)
         {
             if (TryGetFirstFolder(out StorageFolder firstFolder))
-                Breadcrumbs.Add(firstFolder);
+            {
+                Breadcrumbs.Add(firstFolder.DisplayName);
+                _breadcrumbLocations.Add(firstFolder);
+            }
         }
         else
         {
             foreach (StorageFolder storageFolder in crumbs)
             {
-                Breadcrumbs.Add(storageFolder);
+                Breadcrumbs.Add(storageFolder.DisplayName);
+                _breadcrumbLocations.Add(storageFolder);
             }
         }
     }

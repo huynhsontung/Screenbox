@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -20,13 +20,10 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
-    public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
+    public ObservableCollection<ObservableMediaGroup> GroupedSongs { get; } = new();
 
-    [ObservableProperty]
-    private MediaViewModel? _contextMedia;
-
-    [ObservableProperty]
-    private string _sortBy = string.Empty;
+    [ObservableProperty] public partial MediaViewModel? ContextMedia { get; set; }
+    [ObservableProperty] public partial string SortBy { get; set; } = string.Empty;
 
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -37,7 +34,6 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         _libraryContext = libraryContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
-        GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
 
         IsActive = true;
     }
@@ -64,14 +60,15 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         {
             // Only sync when the number of items is low enough
             // Sync on too many items can cause UI hang
-            GroupedSongs.SyncObservableGroups(groups);
+            GroupedSongs.SyncObservableGroups(groups, (key, items)
+                => items as ObservableMediaGroup ?? new ObservableMediaGroup(key, items));
         }
         else
         {
             GroupedSongs.Clear();
             foreach (IGrouping<string, MediaViewModel> group in groups)
             {
-                GroupedSongs.AddGroup(group);
+                GroupedSongs.Add(new ObservableMediaGroup(group));
             }
         }
 
@@ -183,7 +180,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         GroupedSongs.Clear();
         foreach (IGrouping<string, MediaViewModel> group in groups)
         {
-            GroupedSongs.AddGroup(group);
+            GroupedSongs.Add(new ObservableMediaGroup(group));
         }
     }
 

@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -26,34 +26,34 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class SettingsPageViewModel : ObservableRecipient
 {
-    [ObservableProperty] private int _playerAutoResize;
-    [ObservableProperty] private int _playerRewindStep;
-    [ObservableProperty] private int _playerFastForwardStep;
-    [ObservableProperty] private PlaybackActionKind _playerGestureTap;
-    [ObservableProperty] private PlaybackActionKind _playerGestureSwipeUp;
-    [ObservableProperty] private PlaybackActionKind _playerGestureSwipeDown;
-    [ObservableProperty] private PlaybackActionKind _playerGestureSwipeLeft;
-    [ObservableProperty] private PlaybackActionKind _playerGestureSwipeRight;
-    [ObservableProperty] private bool _playerGestureSlideVertical;
-    [ObservableProperty] private bool _playerGestureSlideHorizontal;
-    [ObservableProperty] private bool _playerGesturePressAndHold;
-    [ObservableProperty] private bool _playerShowControls;
-    [ObservableProperty] private bool _playerShowChapters;
-    [ObservableProperty] private int _playerControlsHideDelay;
-    [ObservableProperty] private int _volumeBoost;
-    [ObservableProperty] private bool _useIndexer;
-    [ObservableProperty] private bool _showRecent;
-    [ObservableProperty] private int _theme;
-    [ObservableProperty] private bool _enqueueAllFilesInFolder;
-    [ObservableProperty] private bool _restorePlaybackPosition;
-    [ObservableProperty] private bool _searchRemovableStorage;
-    [ObservableProperty] private bool _advancedMode;
-    [ObservableProperty] private int _videoUpscaling;
-    [ObservableProperty] private bool _useMultipleInstances;
-    [ObservableProperty] private string _globalArguments;
-    [ObservableProperty] private bool _isRelaunchRequired;
-    [ObservableProperty] private int _selectedLanguage;
-    [ObservableProperty] private bool _persistPlaybackPosition;
+    [ObservableProperty] public partial int PlayerAutoResize { get; set; }
+    [ObservableProperty] public partial int PlayerRewindStep { get; set; }
+    [ObservableProperty] public partial int PlayerFastForwardStep { get; set; }
+    [ObservableProperty] public partial PlaybackActionKind PlayerGestureTap { get; set; }
+    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeUp { get; set; }
+    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeDown { get; set; }
+    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeLeft { get; set; }
+    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeRight { get; set; }
+    [ObservableProperty] public partial bool PlayerGestureSlideVertical { get; set; }
+    [ObservableProperty] public partial bool PlayerGestureSlideHorizontal { get; set; }
+    [ObservableProperty] public partial bool PlayerGesturePressAndHold { get; set; }
+    [ObservableProperty] public partial bool PlayerShowControls { get; set; }
+    [ObservableProperty] public partial bool PlayerShowChapters { get; set; }
+    [ObservableProperty] public partial int PlayerControlsHideDelay { get; set; }
+    [ObservableProperty] public partial int VolumeBoost { get; set; }
+    [ObservableProperty] public partial bool UseIndexer { get; set; }
+    [ObservableProperty] public partial bool ShowRecent { get; set; }
+    [ObservableProperty] public partial int Theme { get; set; }
+    [ObservableProperty] public partial bool EnqueueAllFilesInFolder { get; set; }
+    [ObservableProperty] public partial bool RestorePlaybackPosition { get; set; }
+    [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
+    [ObservableProperty] public partial bool AdvancedMode { get; set; }
+    [ObservableProperty] public partial int VideoUpscaling { get; set; }
+    [ObservableProperty] public partial bool UseMultipleInstances { get; set; }
+    [ObservableProperty] public partial string GlobalArguments { get; set; }
+    [ObservableProperty] public partial bool IsRelaunchRequired { get; set; }
+    [ObservableProperty] public partial int SelectedLanguage { get; set; }
+    [ObservableProperty] public partial bool PersistPlaybackPosition { get; set; }
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -67,7 +67,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public IReadOnlyList<int> PlayerControlsHideDelayOptions { get; } = new[] { 1, 2, 3, 4, 5 };
 
-    public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = (PlaybackActionKind[])Enum.GetValues(typeof(PlaybackActionKind));
+    public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = Enum.GetValues<PlaybackActionKind>();
 
     private readonly ISettingsService _settingsService;
     private readonly LibraryContext _libraryContext;
@@ -119,33 +119,33 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
 
         // Load values
-        _playerAutoResize = (int)_settingsService.PlayerAutoResize;
-        _playerRewindStep = _settingsService.PlayerRewindStep;
-        _playerFastForwardStep = _settingsService.PlayerFastForwardStep;
-        _playerGestureTap = _settingsService.PlayerGestureTap;
-        _playerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
-        _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
-        _playerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
-        _playerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
-        _playerGestureSlideVertical = _settingsService.PlayerGestureSlideVertical;
-        _playerGestureSlideHorizontal = _settingsService.PlayerGestureSlideHorizontal;
-        _playerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
-        _playerShowControls = _settingsService.PlayerShowControls;
-        _playerShowChapters = _settingsService.PlayerShowChapters;
-        _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
-        _useIndexer = _settingsService.UseIndexer;
-        _showRecent = _settingsService.ShowRecent;
-        _persistPlaybackPosition = _settingsService.PersistPlaybackPosition;
-        _theme = ((int)_settingsService.Theme + 2) % 3;
-        _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
-        _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
-        _searchRemovableStorage = _settingsService.SearchRemovableStorage;
-        _advancedMode = _settingsService.AdvancedMode;
-        _useMultipleInstances = _settingsService.UseMultipleInstances;
-        _videoUpscaling = (int)_settingsService.VideoUpscale;
-        _globalArguments = _settingsService.GlobalArguments;
+        PlayerAutoResize = (int)_settingsService.PlayerAutoResize;
+        PlayerRewindStep = _settingsService.PlayerRewindStep;
+        PlayerFastForwardStep = _settingsService.PlayerFastForwardStep;
+        PlayerGestureTap = _settingsService.PlayerGestureTap;
+        PlayerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
+        PlayerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
+        PlayerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
+        PlayerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
+        PlayerGestureSlideVertical = _settingsService.PlayerGestureSlideVertical;
+        PlayerGestureSlideHorizontal = _settingsService.PlayerGestureSlideHorizontal;
+        PlayerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
+        PlayerShowControls = _settingsService.PlayerShowControls;
+        PlayerShowChapters = _settingsService.PlayerShowChapters;
+        PlayerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
+        UseIndexer = _settingsService.UseIndexer;
+        ShowRecent = _settingsService.ShowRecent;
+        PersistPlaybackPosition = _settingsService.PersistPlaybackPosition;
+        Theme = ((int)_settingsService.Theme + 2) % 3;
+        EnqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
+        RestorePlaybackPosition = _settingsService.RestorePlaybackPosition;
+        SearchRemovableStorage = _settingsService.SearchRemovableStorage;
+        AdvancedMode = _settingsService.AdvancedMode;
+        UseMultipleInstances = _settingsService.UseMultipleInstances;
+        VideoUpscaling = (int)_settingsService.VideoUpscale;
+        GlobalArguments = _settingsService.GlobalArguments;
         int maxVolume = _settingsService.MaxVolume;
-        _volumeBoost = maxVolume switch
+        VolumeBoost = maxVolume switch
         {
             >= 200 => 3,
             >= 150 => 2,
@@ -154,10 +154,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         };
 
         string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
-        _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
+        SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
 
         // Setting initial values for relaunch check
-        _initialValues ??= new InitialValues(_globalArguments, _advancedMode, _videoUpscaling, _selectedLanguage);
+        _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, SelectedLanguage);
         CheckForRelaunch();
 
         IsActive = true;

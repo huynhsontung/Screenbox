@@ -18,6 +18,7 @@
             Caption="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ArtistName, strings:Resources.UnknownArtist)}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             PlayCommand="{x:Bind PlayAlbumCommand}"
+            PlayCommandParameter="{x:Bind}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind AlbumArt, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
@@ -35,6 +36,7 @@
             HorizontalTextAlignment="Center"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             PlayCommand="{x:Bind PlayArtistCommand}"
+            PlayCommandParameter="{x:Bind}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
                 <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="&#xE77B;" />
@@ -49,6 +51,7 @@
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, Caption)}"
             Caption="{x:Bind Caption, Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+            PlayCommandParameter="{x:Bind}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
@@ -64,6 +67,7 @@
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, Duration)}"
             Caption="{x:Bind core:Humanizer.ToDuration(Duration)}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+            PlayCommandParameter="{x:Bind}"
             ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
             ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
@@ -79,6 +83,7 @@
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, ItemsCount)}"
             Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+            PlayCommandParameter="{x:Bind}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
                 <FontIconSource

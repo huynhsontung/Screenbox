@@ -35,16 +35,16 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private const int MaxTotalSuggestions = 10;
     private const double IndexWeightFactor = 0.1;
 
-    [ObservableProperty] private bool _playerVisible;
-    [ObservableProperty] private bool _shouldUseMargin;
-    [ObservableProperty] private bool _isPaneOpen;
-    [ObservableProperty] private string _searchQuery;
-    [ObservableProperty] private string _criticalErrorMessage;
-    [ObservableProperty] private bool _hasCriticalError;
+    [ObservableProperty] public partial bool PlayerVisible { get; set; }
+    [ObservableProperty] public partial bool ShouldUseMargin { get; set; }
+    [ObservableProperty] public partial bool IsPaneOpen { get; set; }
+    [ObservableProperty] public partial string SearchQuery { get; set; }
+    [ObservableProperty] public partial string CriticalErrorMessage { get; set; }
+    [ObservableProperty] public partial bool HasCriticalError { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
-    private NavigationViewDisplayMode _navigationViewDisplayMode;
+    public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
 
     private readonly ISettingsService _settingsService;
     private readonly ISearchService _searchService;
@@ -75,8 +75,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
         _playlistFactory = playlistFactory;
-        _searchQuery = string.Empty;
-        _criticalErrorMessage = string.Empty;
+        SearchQuery = string.Empty;
+        CriticalErrorMessage = string.Empty;
         SearchSuggestions = new ObservableCollection<SearchSuggestion>();
 
         IsActive = true;

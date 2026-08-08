@@ -15,15 +15,6 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
-
-    <Page.Resources>
-        <ResourceDictionary>
-            <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
-                <muxc:BreadcrumbBarItem AutomationProperties.Name="{x:Bind DisplayName}" Content="{x:Bind DisplayName}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </Page.Resources>
-
     <interactivity:Interaction.Behaviors>
         <behaviors:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
@@ -105,7 +96,6 @@
                     x:Name="BreadcrumbBar"
                     Grid.Row="0"
                     Margin="{StaticResource ContentPagePadding}"
-                    ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
 
                 <Frame

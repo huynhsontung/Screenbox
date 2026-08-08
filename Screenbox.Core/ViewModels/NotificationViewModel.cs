@@ -37,28 +37,28 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
     private const double NotificationDurationLong = 15.0;
 
     [ObservableProperty]
-    private NotificationKind _kind;
+    public partial NotificationKind Kind { get; set; }
 
     [ObservableProperty]
-    private NotificationLevel _severity;
+    public partial NotificationLevel Severity { get; set; }
 
     [ObservableProperty]
-    private string? _title;
+    public partial string? Title { get; set; }
 
     [ObservableProperty]
-    private int _count;
+    public partial int Count { get; set; }
 
     [ObservableProperty]
-    private string? _message;
+    public partial string? Message { get; set; }
 
     [ObservableProperty]
-    private bool _isOpen;
+    public partial bool IsOpen { get; set; }
 
     [ObservableProperty]
-    private string? _actionContent;
+    public partial string? ActionContent { get; set; }
 
     [ObservableProperty]
-    private ICommand? _actionCommand;
+    public partial ICommand? ActionCommand { get; set; }
 
     private readonly IFilesService _filesService;
     private readonly DispatcherQueue _dispatcherQueue;

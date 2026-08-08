@@ -4,7 +4,7 @@ using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Models
 {
-    public sealed class Renderer
+    public sealed partial class Renderer
     {
         public bool IsAvailable { get; private set; }
 

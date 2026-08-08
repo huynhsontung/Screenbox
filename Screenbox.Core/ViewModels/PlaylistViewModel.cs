@@ -25,10 +25,10 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
 
     public double ItemsCount => Items.Count;    // For binding
 
-    [ObservableProperty] private string _name = string.Empty;
-    [ObservableProperty] private bool _isPlaying;
-    [ObservableProperty] private object? _thumbnail;
-    [ObservableProperty] private DateTimeOffset _lastUpdated = DateTimeOffset.Now;
+    [ObservableProperty] public partial string Name { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsPlaying { get; set; }
+    [ObservableProperty] public partial object? Thumbnail { get; set; }
+    [ObservableProperty] public partial DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
 
     public string Id => _id.ToString();
 
