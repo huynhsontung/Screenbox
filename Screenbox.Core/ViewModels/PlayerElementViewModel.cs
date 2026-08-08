@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -96,8 +96,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
         transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
 
-        // View model does not receive any message
-        IsActive = true;
+        Messenger.Register<ChangeAspectRatioMessage>(this);
+        Messenger.Register<SettingsChangedMessage>(this);
     }
 
     public void Receive(SettingsChangedMessage message)

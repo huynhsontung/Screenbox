@@ -55,8 +55,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
 
-        // Activate the view model's messenger
-        IsActive = true;
+        Messenger.Register<QueueCurrentItemChangedMessage>(this);
     }
 
     public void Receive(QueueCurrentItemChangedMessage message)

@@ -75,7 +75,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         AudioTracks = new ObservableCollection<string>();
         VideoTracks = new ObservableCollection<string>();
 
-        IsActive = true;
+        Messenger.Register<QueueCurrentItemChangedMessage>(this);
     }
 
     /// <summary>

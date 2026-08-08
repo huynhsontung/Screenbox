@@ -99,8 +99,12 @@ public sealed partial class SeekBarViewModel :
             MediaPlayer.CanSeekChanged += OnCanSeekChanged;
         }
 
-        // Activate the view model's messenger
-        IsActive = true;
+        Messenger.Register<TimeChangeOverrideMessage>(this);
+        Messenger.Register<ChangeTimeRequestMessage>(this);
+        Messenger.Register<PlayerControlsVisibilityChangedMessage>(this);
+        Messenger.Register<QueueCurrentItemChangedMessage>(this);
+        Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
+        Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
     }
 
     public void Receive(QueueCurrentItemChangedMessage message)

@@ -103,7 +103,12 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
+        Messenger.Register<SettingsChangedMessage>(this);
+        Messenger.Register<TogglePlayPauseMessage>(this);
+        Messenger.Register<ChangePlaybackRateRequestMessage>(this);
+        Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
+        Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
     }
 
     public void Receive(SettingsChangedMessage message)
