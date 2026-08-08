@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
-    xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
+    xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
@@ -315,9 +315,9 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
-                <!--  General section  -->
+                <!--#region General Section-->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
-
+                <!--  Enqueue All Files In Folder  -->
                 <ctc:SettingsCard
                     x:Name="SettingsEnqueueAllFilesInFolderCard"
                     Margin="{StaticResource SettingsCardMargin}"
@@ -327,6 +327,42 @@
                                              Glyph={StaticResource FolderListGlyph}}">
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
+                <!--  Frame Capture Location  -->
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.SettingsFrameCaptureLocationDescription}"
+                    Header="{x:Bind strings:Resources.SettingsFrameCaptureLocationHeader}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource ImageExportGlyph}}">
+                    <ctc:SettingsCard.Description>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind ViewModel.FrameCaptureFolder.Path, Mode=OneWay}" />
+                            <HyperlinkButton
+                                Padding="4,0"
+                                contract14Present:AutomationProperties.AutomationControlType="Button"
+                                AutomationProperties.Name="{x:Bind strings:Resources.ChangeFolder}"
+                                BorderThickness="0"
+                                Command="{x:Bind ViewModel.ChangeFrameCaptureLocationCommand}"
+                                Content="{x:Bind strings:Resources.Change}"
+                                FocusVisualMargin="0,-3"
+                                FontWeight="Normal">
+                                <HyperlinkButton.Resources>
+                                    <StaticResource x:Key="HyperlinkButtonBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
+                                    <StaticResource x:Key="HyperlinkButtonBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
+                                    <StaticResource x:Key="HyperlinkButtonBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
+                                </HyperlinkButton.Resources>
+                            </HyperlinkButton>
+                        </StackPanel>
+                    </ctc:SettingsCard.Description>
+                    <Button
+                        MinWidth="{StaticResource SettingsCardButtonMinWidth}"
+                        Command="{x:Bind ViewModel.OpenFrameCaptureFolderCommand}"
+                        Content="{x:Bind strings:Resources.OpenFolder}" />
+                </ctc:SettingsCard>
+                <!--#endregion-->
 
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
@@ -773,10 +809,10 @@
                         <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <contract13Present:Setter Target="MusicLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MusicLibraryMirroredGlyph}" />
-                        <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
-                        <contract13Present:Setter Target="VideoLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MoviesLibraryMirroredGlyph}" />
-                        <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <contract14Present:Setter Target="MusicLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MusicLibraryMirroredGlyph}" />
+                        <contract14Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <contract14Present:Setter Target="VideoLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MoviesLibraryMirroredGlyph}" />
+                        <contract14Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
                         <Setter Target="SettingsEnqueueAllFilesInFolderCard.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource FolderListMirroredGlyph}}" />
                         <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource MusicVisualizerMirroredGlyph}}" />
                     </VisualState.Setters>
