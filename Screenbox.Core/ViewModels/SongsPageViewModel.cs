@@ -35,7 +35,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<MusicLibrary>>(this);
     }
 
     public void Receive(PropertyChangedMessage<MusicLibrary> message)

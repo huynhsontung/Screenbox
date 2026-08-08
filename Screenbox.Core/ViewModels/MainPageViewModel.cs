@@ -79,7 +79,9 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         CriticalErrorMessage = string.Empty;
         SearchSuggestions = new ObservableCollection<SearchSuggestion>();
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
+        Messenger.Register<NavigationViewDisplayModeRequestMessage>(this);
+        Messenger.Register<CriticalErrorMessage>(this);
     }
 
     public void Receive(CriticalErrorMessage message)

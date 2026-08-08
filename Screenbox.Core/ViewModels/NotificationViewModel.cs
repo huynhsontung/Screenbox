@@ -70,8 +70,22 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _timer = _dispatcherQueue.CreateTimer();
 
-        // Activate the view model's messenger
-        IsActive = true;
+        Messenger.Register<RaiseFrameSavedNotificationMessage>(this);
+        Messenger.Register<RaiseResumePositionNotificationMessage>(this);
+        Messenger.Register<RaiseLibraryAccessDeniedNotificationMessage>(this);
+        Messenger.Register<MediaLoadFailedNotificationMessage>(this);
+        Messenger.Register<CloseNotificationMessage>(this);
+        Messenger.Register<SubtitleAddedNotificationMessage>(this);
+        Messenger.Register<ErrorMessage>(this);
+        Messenger.Register<FailedToSaveFrameNotificationMessage>(this);
+        Messenger.Register<FailedToLoadSubtitleNotificationMessage>(this);
+        Messenger.Register<FailedToOpenFilesNotificationMessage>(this);
+        Messenger.Register<FailedToAddFolderNotificationMessage>(this);
+        Messenger.Register<FailedToInitializeNotificationMessage>(this);
+        Messenger.Register<PlaylistCreatedNotificationMessage>(this);
+        Messenger.Register<PlaylistDeletedNotificationMessage>(this);
+        Messenger.Register<PlaylistRenamedNotificationMessage>(this);
+        Messenger.Register<PlaylistItemsAddedNotificationMessage>(this);
     }
 
     /// <summary>

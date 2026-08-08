@@ -54,8 +54,9 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 
-        // Activate the view model's messenger
-        IsActive = true;
+        Messenger.Register<SettingsChangedMessage>(this);
+        Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
+        Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
     }
 
     public void Receive(SettingsChangedMessage message)
