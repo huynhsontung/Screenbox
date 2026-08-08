@@ -6,8 +6,7 @@
     xmlns:collections="using:System.Collections"
     xmlns:common="using:Screenbox.Core.Common"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:local="using:Screenbox.Templates"
-    xmlns:vm="using:Screenbox.ViewModels">
+    xmlns:local="using:Screenbox.Templates">
 
     <!--  ListViewBase Header  -->
     <DataTemplate x:Key="GroupHeaderTemplate" x:DataType="common:IStringKey">
@@ -30,7 +29,7 @@
             ClickMode="Hover"
             FontSize="{StaticResource SubtitleTextBlockFontSize}"
             FontWeight="SemiBold"
-            IsEnabled="{x:Bind local:GroupedViewTemplates.IsIntegerNormal(Group.(collections:ICollection.Count)), Mode=OneWay}"
+            IsEnabled="{x:Bind local:GroupedViewTemplates.IsIntegerNormal(Group.(collections:ICollection.Count))}"
             Style="{StaticResource SubtleButtonStyle}">
             <TextBlock Text="{x:Bind ((common:IStringKey)Group).Key}" TextTrimming="CharacterEllipsis">
                 <interactivity:Interaction.Behaviors>
