@@ -44,7 +44,7 @@
       <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="LibVLC.UWP">
-      <Version>3.0.23-2608080242</Version>
+      <Version>3.0.23-2608082208</Version>
     </PackageReference>
     <PackageReference Include="Starpine.ReswPlus" Version="0.3.2-202605101917" />
   </ItemGroup>
