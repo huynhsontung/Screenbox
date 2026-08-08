@@ -256,7 +256,7 @@
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind ViewModel.Queue.Items}"
             KeyboardAcceleratorPlacementMode="Hidden"
-            SelectionMode="Extended"
+            SelectionMode="None"
             Style="{StaticResource MediaListViewStyle}">
             <ListView.Resources>
                 <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
