@@ -70,6 +70,9 @@ public sealed partial class DatabaseService
             }
         }
 
+        ExecuteNonQuery(connection, "DELETE FROM media_records WHERE media_type = @mt;",
+            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Music });
+
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = UpsertMusicMediaRecordSql;
@@ -131,6 +134,9 @@ public sealed partial class DatabaseService
                 cmd.ExecuteNonQuery();
             }
         }
+
+        ExecuteNonQuery(connection, "DELETE FROM media_records WHERE media_type = @mt;",
+            new SqlParameterDto { Name = "@mt", Value = (int)MediaPlaybackType.Video });
 
         using (var cmd = connection.CreateCommand())
         {
