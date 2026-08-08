@@ -31,7 +31,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// Gets or sets the total count of distinct selected items across all ranges.
     /// </summary>
     [ObservableProperty]
-    private int _selectedCount;
+    public partial int SelectedCount { get; set; }
 
     /// <summary>
     /// Gets or sets a value that indicates whether all items are selected.

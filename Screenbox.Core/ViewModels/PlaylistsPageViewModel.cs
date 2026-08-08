@@ -48,7 +48,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
     }
 
-    private void Selection_SelectedRangesChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Selection_SelectedRangesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         PlaySelectedCommand.NotifyCanExecuteChanged();
         PlaySelectedNextCommand.NotifyCanExecuteChanged();
