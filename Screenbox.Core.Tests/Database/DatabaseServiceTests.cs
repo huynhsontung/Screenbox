@@ -139,6 +139,66 @@ public sealed class DatabaseServiceTests
     }
 
     [Fact]
+    public async Task SaveMusicCacheAsync_ClearsStaleRecordsOnRescan()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var dbService = new DatabaseService(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        // Initial save with two songs
+        List<string> folders = [@"C:\Music\Folder1", @"C:\Music\Folder2"];
+        List<MusicCacheRecordDto> initialRecords =
+        [
+            new MusicCacheRecordDto { Path = @"C:\Music\Folder1\song1.mp3", Title = "Song One" },
+            new MusicCacheRecordDto { Path = @"C:\Music\Folder2\song2.mp3", Title = "Song Two" },
+        ];
+        await dbService.SaveMusicCacheAsync(folders, initialRecords);
+
+        // Re-save with only one folder/song (simulating folder removal + refresh)
+        List<string> updatedFolders = [@"C:\Music\Folder1"];
+        List<MusicCacheRecordDto> updatedRecords =
+        [
+            new MusicCacheRecordDto { Path = @"C:\Music\Folder1\song1.mp3", Title = "Song One" },
+        ];
+        await dbService.SaveMusicCacheAsync(updatedFolders, updatedRecords);
+
+        RawCacheLoadResultDto result = await dbService.LoadLibraryCacheAsync(MediaPlaybackType.Music);
+
+        Assert.Single(result.Records);
+        Assert.Equal(@"C:\Music\Folder1\song1.mp3", result.Records[0].Path);
+    }
+
+    [Fact]
+    public async Task SaveVideoCacheAsync_ClearsStaleRecordsOnRescan()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var dbService = new DatabaseService(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        // Initial save with two videos
+        List<string> folders = [@"C:\Videos\Folder1", @"C:\Videos\Folder2"];
+        List<VideoCacheRecordDto> initialRecords =
+        [
+            new VideoCacheRecordDto { Path = @"C:\Videos\Folder1\video1.mp4", Title = "Video One" },
+            new VideoCacheRecordDto { Path = @"C:\Videos\Folder2\video2.mp4", Title = "Video Two" },
+        ];
+        await dbService.SaveVideoCacheAsync(folders, initialRecords);
+
+        // Re-save with only one folder/video (simulating folder removal + refresh)
+        List<string> updatedFolders = [@"C:\Videos\Folder1"];
+        List<VideoCacheRecordDto> updatedRecords =
+        [
+            new VideoCacheRecordDto { Path = @"C:\Videos\Folder1\video1.mp4", Title = "Video One" },
+        ];
+        await dbService.SaveVideoCacheAsync(updatedFolders, updatedRecords);
+
+        RawCacheLoadResultDto result = await dbService.LoadLibraryCacheAsync(MediaPlaybackType.Video);
+
+        Assert.Single(result.Records);
+        Assert.Equal(@"C:\Videos\Folder1\video1.mp4", result.Records[0].Path);
+    }
+
+    [Fact]
     public async Task PlaylistOperations_SaveLoadListAndDelete_BehavesCorrectly()
     {
         using var fixture = new TestDirectoryFixture();
