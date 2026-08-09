@@ -43,6 +43,9 @@ jobs:
   
   build:
     runs-on: windows-2025-vs2026
+    strategy:
+      matrix:
+        platform: [x64, x86, arm64]
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -82,8 +85,7 @@ jobs:
     - name: Build store package
       env:
         BuildMode: StoreUpload
-        BuildPlatforms: x86|x64|arm64
-        PackageDir: C:\DeployOutput
+        PackageDir: C:\DeployOutput\
         SENTRY_ORG: starpine
         SENTRY_PROJECT: screenbox
         SENTRY_URL: https://sentry.io/
@@ -101,19 +103,16 @@ jobs:
         msbuild Screenbox\Screenbox.csproj `
           -p:RestoreConfigFile=nuget.config `
           -p:Configuration=Release `
-          -p:Platform=x64 `
-          -p:AppxBundle=Always `
-          -p:AppxBundlePlatforms="$env:BuildPlatforms" `
+          -p:Platform=${{ matrix.platform }} `
           -p:UapAppxPackageBuildMode=$env:BuildMode `
-          -p:AppxPackageDir=$env:PackageDir `
-          -p:AppxPackageSigningEnabled=false @sentryArgs `
+          -p:AppxPackageDir=$env:PackageDir @sentryArgs `
           -restore
 
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v7
       if: github.ref_type == 'tag'
       with:
-        name: store-upload
+        name: store-upload-${{ matrix.platform }}
         path: |
           C:\DeployOutput\*.msixupload
           C:\DeployOutput\*.appxupload
@@ -121,7 +120,7 @@ jobs:
     - name: Create sideload artifact
       uses: actions/upload-artifact@v7
       with:
-        name: Screenbox-sideload
+        name: Screenbox-sideload-${{ matrix.platform }}
         path: |
           C:\DeployOutput\*_Test
 
@@ -136,7 +135,8 @@ jobs:
     - name: Download package
       uses: actions/download-artifact@v8
       with:
-        name: Screenbox-sideload
+        pattern: Screenbox-sideload-*
+        merge-multiple: true
         path: download/
 
     - name: Zip artifact
