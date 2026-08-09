@@ -438,7 +438,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             StorageApplicationPermissions.FutureAccessList.Remove(oldToken);
         }
 
-        string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder);
+        string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder, "frame-capture");
         _settingsService.FrameCaptureFolderToken = newToken;
         FrameCaptureFolder = folder;
     }
