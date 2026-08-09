@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters;
 
-public sealed class ChapterTitleConverter : DependencyObject, IValueConverter
+public sealed partial class ChapterTitleConverter : DependencyObject, IValueConverter
 {
     public static readonly DependencyProperty ChaptersProperty = DependencyProperty.Register(
         nameof(Chapters),
