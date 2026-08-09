@@ -66,7 +66,7 @@ sealed partial class App : Application
     }
 
     [SecurityCritical]
-    private void CoreApplication_UnhandledErrorDetected(object sender, UnhandledErrorDetectedEventArgs e)
+    private void CoreApplication_UnhandledErrorDetected(object? sender, UnhandledErrorDetectedEventArgs e)
     {
         try
         {
@@ -90,8 +90,24 @@ sealed partial class App : Application
 
                 // Flush the event immediately
                 SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
-                throw;
             }
+        }
+    }
+
+    [SecurityCritical]
+    private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        // Get a reference to the exception, because the Exception property is cleared when accessed.
+        var exception = e.Exception;
+        if (exception != null)
+        {
+            // Tell Sentry this was an unhandled exception
+            exception.Data[Mechanism.HandledKey] = false;
+            exception.Data[Mechanism.MechanismKey] = "Application.UnhandledException";
+            // Capture the exception
+            SentrySdk.CaptureException(exception);
+            // Flush the event immediately
+            SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
         }
     }
 
@@ -130,32 +146,29 @@ sealed partial class App : Application
         return services.BuildServiceProvider();
     }
 
-    private static void ConfigureAppCenter()
-    {
-        //AppCenter.Start(Secrets.AppCenterApiKey, typeof(Analytics), typeof(Crashes));
-    }
-
     private void ConfigureSentry()
     {
         if (string.IsNullOrEmpty(Secrets.SentryDsn))
             return;
 
-        //CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
 
         SentrySdk.Init(options =>
         {
             options.Dsn = Secrets.SentryDsn;
             options.SampleRate = 1.0f;
-            // options.StackTraceMode = StackTraceMode.Enhanced;    // Not supported in UWP
             options.IsGlobalModeEnabled = true;
             options.AutoSessionTracking = true;
             options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
+            options.DisableWinUiUnhandledExceptionIntegration();
         });
 
         SentrySdk.ConfigureScope(scope =>
         {
             scope.SetTag("device_family", DeviceInfoHelper.DeviceFamily);
         });
+
+        this.UnhandledException += App_UnhandledException;
+        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
     }
 
     private void SetMinWindowSize()
