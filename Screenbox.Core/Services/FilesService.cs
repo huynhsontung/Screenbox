@@ -191,6 +191,32 @@ public sealed class FilesService : IFilesService
         return new MediaInfo(mediaType);
     }
 
+    public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token)
+    {
+        return GetFrameCaptureFolderFromTokenAsync(token).AsAsyncOperation();
+    }
+
+    private static async Task<StorageFolder> GetFrameCaptureFolderFromTokenAsync(string token)
+    {
+        if (!string.IsNullOrEmpty(token)
+            && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+        {
+            try
+            {
+                return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
+            }
+            catch (Exception e) when (e is FileNotFoundException or UnauthorizedAccessException)
+            {
+                // Folder was moved, deleted, or access was revoked. Fall back to the default location.
+            }
+        }
+
+        StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+        StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
+
+        return await defaultSaveFolder.CreateFolderAsync("Screenbox", CreationCollisionOption.OpenIfExists);
+    }
+
     private static bool IsExpectedStoragePropertiesHResult(int hresult)
     {
         const int RPC_S_SERVER_UNAVAILABLE = unchecked((int)0x800706BA);
