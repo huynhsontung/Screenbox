@@ -53,27 +53,13 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public string TrackNumberText =>
         MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
-    public BitmapImage? Thumbnail
-    {
-        get
-        {
-            if (_thumbnailRef == null) return null;
-            return _thumbnailRef.TryGetTarget(out BitmapImage? image) ? image : null;
-        }
-        set
-        {
-            if (_thumbnailRef == null && value == null) return;
-            if ((_thumbnailRef?.TryGetTarget(out BitmapImage? image) ?? false) && image == value) return;
-            SetProperty(ref _thumbnailRef, value == null ? null : new WeakReference<BitmapImage>(value));
-        }
-    }
-
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly IPlayerService _playerService;
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
+    [ObservableProperty] public partial BitmapImage? Thumbnail { get; private set; }
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsMediaActive { get; set; }
     [ObservableProperty] public partial bool IsAvailable { get; set; } = true;
@@ -92,14 +78,11 @@ public sealed partial class MediaViewModel : ObservableRecipient
     [ObservableProperty]
     public partial bool IsPlaying { get; set; }
 
-    private WeakReference<BitmapImage>? _thumbnailRef;
-
     public MediaViewModel(MediaViewModel source)
     {
         _playerService = source._playerService;
         _playerContext = source._playerContext;
         Name = source.Name;
-        _thumbnailRef = source._thumbnailRef;
         MediaInfo = source.MediaInfo;
         Artists = source.Artists;
         Album = source.Album;
@@ -351,34 +334,27 @@ public sealed partial class MediaViewModel : ObservableRecipient
             var format = MediaFile.DetectFormat(header[..read], pathHint);
             if (format == MediaFormat.Unknown) return null;
 
-            // Load up to 10 MB into memory to search for picture tags
-            long lengthToRead = Math.Min(stream.Length, 10 * 1024 * 1024);
-            byte[] poolBuffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int)lengthToRead);
-            try
-            {
-                stream.Seek(0, SeekOrigin.Begin);
-                var bytesRead = await stream.ReadAsync(poolBuffer, 0, (int)lengthToRead);
-                if (bytesRead == 0) return null;
+            // Load up to 2 MB into memory to search for picture tags
+            long lengthToRead = Math.Min(stream.Length, 2 * 1024 * 1024);
+            using var memoryOwner = System.Buffers.MemoryPool<byte>.Shared.Rent((int)lengthToRead);
+            stream.Seek(0, SeekOrigin.Begin);
+            var bytesRead = await stream.ReadAsync(memoryOwner.Memory);
+            if (bytesRead == 0) return null;
 
-                var result = MediaFile.ReadFromData(poolBuffer, pathHint);
-                if (!result.IsSuccess) return null;
-                var pictures = result.Tag?.Pictures;
-                if (pictures == null || pictures.Length == 0) return null;
+            var result = MediaFile.ReadFromData(memoryOwner.Memory, pathHint);
+            if (!result.IsSuccess) return null;
+            var pictures = result.Tag?.Pictures;
+            if (pictures == null || pictures.Length == 0) return null;
 
-                var cover =
-                    pictures.FirstOrDefault(p => p.PictureType is PictureType.FrontCover or PictureType.Media) ??
-                    pictures.FirstOrDefault();
-                if (cover == null) return null;
+            var cover =
+                pictures.FirstOrDefault(p => p.PictureType is PictureType.FrontCover or PictureType.Media) ??
+                pictures.FirstOrDefault();
+            if (cover == null) return null;
 
-                var inMemoryStream = new InMemoryRandomAccessStream();
-                await inMemoryStream.AsStreamForWrite().WriteAsync(cover.PictureData.Memory);
-                inMemoryStream.Seek(0);
-                return inMemoryStream;
-            }
-            finally
-            {
-                System.Buffers.ArrayPool<byte>.Shared.Return(poolBuffer);
-            }
+            var inMemoryStream = new InMemoryRandomAccessStream();
+            await inMemoryStream.AsStreamForWrite().WriteAsync(cover.PictureData.Memory);
+            inMemoryStream.Seek(0);
+            return inMemoryStream;
         }
         catch (Exception)
         {
