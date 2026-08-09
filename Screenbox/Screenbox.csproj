@@ -59,6 +59,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Pending translations are explicitly removed. Remove the language below when a translation is complete. -->
+    <PRIResource Remove="Strings\af-ZA\*.resw" />
+    <PRIResource Remove="Strings\ca-ES\*.resw" />
+    <PRIResource Remove="Strings\cs-CZ\*.resw" />
+    <PRIResource Remove="Strings\da-DK\*.resw" />
+    <PRIResource Remove="Strings\fa-IR\*.resw" />
+    <PRIResource Remove="Strings\no-NO\*.resw" />
+    <PRIResource Remove="Strings\sr-SP\*.resw" />
+    <PRIResource Remove="Strings\sv-SE\*.resw" />
+    <PRIResource Remove="Strings\ta-IN\*.resw" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj" />
     <ProjectReference Include="..\Screenbox.Lively\Screenbox.Lively.csproj" />
     <ProjectReference Include="..\Screenbox.UI.Controls\Screenbox.UI.Controls.csproj" />
