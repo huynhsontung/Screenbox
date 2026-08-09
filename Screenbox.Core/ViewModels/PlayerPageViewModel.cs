@@ -94,15 +94,15 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _controlsVisibilityTimer;
     private readonly DispatcherQueueTimer _statusMessageTimer;
     private readonly DispatcherQueueTimer _playPauseBadgeTimer;
-    private readonly DispatcherQueueTimer _spaceKeyHoldTimer;
+    private readonly DispatcherQueueTimer _playPauseHoldTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
     private readonly IFilesService _filesService;
     private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
     private bool _resizeNext;
-    private bool _isSpaceKeyHolding;
-    private double? _playbackRateBeforeHold;
+    private bool _isPlayPauseHoldActive;
+    private double _playbackRateBeforeHold;
 
     public PlayerPageViewModel(IWindowService windowService,
         ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext,
@@ -117,7 +117,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
         _statusMessageTimer = _dispatcherQueue.CreateTimer();
         _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
-        _spaceKeyHoldTimer = _dispatcherQueue.CreateTimer();
+        _playPauseHoldTimer = _dispatcherQueue.CreateTimer();
         _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         _playerVisibility = PlayerVisibilityState.Hidden;
 
@@ -315,24 +315,25 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Initiates the space key hold behavior, temporarily accelerating playback
-    /// rate while the key is pressed.
+    /// Handles the play/pause key press interaction, initiating the hold
+    /// behavior that temporarily increases playback speed.
     /// </summary>
     /// <remarks>
-    /// If the media is <see cref="MediaPlaybackState.Paused"/>, the hold behavior
-    /// is not available. To activate the hold behavior, the space key needs to be
-    /// pressed and held down for at least 500 milliseconds.
+    /// If the media is currently <see cref="MediaPlaybackState.Paused"/> and
+    /// <see cref="ISettingsService.PlayerGesturePressAndHold"/> is not enabled,
+    /// the hold behavior is not available. To activate the hold behavior, the play/pause
+    /// key needs to be pressed and held down for at least 500 milliseconds.
     /// </remarks>
-    public void ProcessSpaceKeyDown()
+    public void HandlePlayPauseKeyDown()
     {
         const double HoldingSpeed = 2.0;
 
         if (!_settingsService.PlayerGesturePressAndHold ||
-            _isSpaceKeyHolding ||
+            _isPlayPauseHoldActive ||
             MediaPlayer is null || MediaPlayer.PlaybackState is MediaPlaybackState.Paused)
             return;
 
-        _spaceKeyHoldTimer.Debounce(() =>
+        _playPauseHoldTimer.Debounce(() =>
         {
             _playbackRateBeforeHold = MediaPlayer.PlaybackRate;
             // If the rate is already faster than the holding speed, set it to twice the holding speed.
@@ -343,36 +344,35 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
             }
 
-            _isSpaceKeyHolding = true;
+            _isPlayPauseHoldActive = true;
         }, TimeSpan.FromMilliseconds(500));
     }
 
     /// <summary>
-    /// Interprets the release of the space key to either toggle playback or revert
-    /// to the original playback rate.
+    /// Handles the release of the play/pause key to either toggle playback or
+    /// revert to the original playback rate.
     /// </summary>
     /// <remarks>
-    /// If the space key is pressed and released quickly, toggles playback state;
+    /// If the play/pause key is pressed and released quickly, toggles playback state;
     /// if held, restores the original playback rate.
     /// </remarks>
-    public void ProcessSpaceKeyUp()
+    public void HandlePlayPauseKeyUp()
     {
-        _spaceKeyHoldTimer.Stop();
+        _playPauseHoldTimer.Stop();
 
-        if (!_isSpaceKeyHolding)
+        if (!_isPlayPauseHoldActive)
         {
             Messenger.Send(new TogglePlayPauseMessage(true));
         }
         else
         {
-            if (_playbackRateBeforeHold.HasValue && MediaPlayer is not null && MediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
+            if (MediaPlayer is not null && MediaPlayer.PlaybackRate != _playbackRateBeforeHold)
             {
-                Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
-                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
+                Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
+                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold)));
             }
 
-            _playbackRateBeforeHold = null;
-            _isSpaceKeyHolding = false;
+            _isPlayPauseHoldActive = false;
         }
     }
 
