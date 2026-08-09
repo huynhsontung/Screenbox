@@ -1,0 +1,26 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:primitives="using:Screenbox.UI.Controls.Primitives">
+
+    <!--#region ThicknessFiltersConverter-->
+    <primitives:ThicknessFiltersConverter x:Key="LeftThicknessFiltersConverter" Filters="Left" />
+    <primitives:ThicknessFiltersConverter x:Key="TopThicknessFiltersConverter" Filters="Top" />
+    <primitives:ThicknessFiltersConverter x:Key="RightThicknessFiltersConverter" Filters="Right" />
+    <primitives:ThicknessFiltersConverter x:Key="BottomThicknessFiltersConverter" Filters="Bottom" />
+
+    <primitives:ThicknessFiltersConverter x:Key="HorizontalThicknessFiltersConverter" Filters="Left,Right" />
+    <primitives:ThicknessFiltersConverter x:Key="VerticalThicknessFiltersConverter" Filters="Top,Bottom" />
+    <primitives:ThicknessFiltersConverter x:Key="TopAndLeftThicknessFiltersConverter" Filters="Left,Top" />
+    <primitives:ThicknessFiltersConverter x:Key="TopAndRightThicknessFiltersConverter" Filters="Top,Right" />
+    <primitives:ThicknessFiltersConverter x:Key="BottomAndLeftThicknessFiltersConverter" Filters="Left,Bottom" />
+    <primitives:ThicknessFiltersConverter x:Key="BottomAndRightThicknessFiltersConverter" Filters="Right,Bottom" />
+
+    <primitives:ThicknessFiltersConverter x:Key="HorizontalAndTopThicknessFiltersConverter" Filters="Left,Top,Right" />
+    <primitives:ThicknessFiltersConverter x:Key="HorizontalAndBottomThicknessFiltersConverter" Filters="Left,Right,Bottom" />
+    <primitives:ThicknessFiltersConverter x:Key="VerticalAndLeftThicknessFiltersConverter" Filters="Left,Top,Bottom" />
+    <primitives:ThicknessFiltersConverter x:Key="VerticalAndRightThicknessFiltersConverter" Filters="Top,Right,Bottom" />
+
+    <primitives:ThicknessFiltersConverter x:Key="AllThicknessFiltersConverter" Filters="Left,Top,Right,Bottom" />
+    <!--#endregion-->
+</ResourceDictionary>

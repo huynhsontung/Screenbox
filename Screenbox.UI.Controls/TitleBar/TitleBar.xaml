@@ -3,10 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Screenbox.UI.Controls">
 
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Screenbox.UI.Controls/TitleBar/TitleBar_themeresources.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-
     <Style BasedOn="{StaticResource DefaultTitleBarStyle}" TargetType="local:TitleBar" />
 
     <Style x:Key="DefaultTitleBarStyle" TargetType="local:TitleBar">
