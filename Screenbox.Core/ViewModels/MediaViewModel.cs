@@ -18,7 +18,7 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using TagLib;
+using TagLibSharp2.Core;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
@@ -342,24 +342,43 @@ public sealed partial class MediaViewModel : ObservableRecipient
         try
         {
             using var stream = await file.OpenStreamForReadAsync(); // Throwable: FileNotFoundException
-            var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
-            var fileAbstract = new StreamAbstraction(name, stream);
-            using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
-            if (tagFile.Tag.Pictures.Length == 0) return null;
-            var cover =
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type != PictureType.NotAPicture);
-            if (cover == null) return null;
-            if (cover.Data.IsEmpty)
-            {
-                if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
-                ((ILazy)cover).Load();
-            }
 
-            var inMemoryStream = new InMemoryRandomAccessStream();
-            await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
-            inMemoryStream.Seek(0);
-            return inMemoryStream;
+            // Read first 16 bytes using stackalloc for format detection
+            Span<byte> header = stackalloc byte[16];
+            int read = stream.Read(header);
+            string pathHint = file.Path ?? file.Name;
+
+            var format = MediaFile.DetectFormat(header[..read], pathHint);
+            if (format == MediaFormat.Unknown) return null;
+
+            // Load up to 10 MB into memory to search for picture tags
+            long lengthToRead = Math.Min(stream.Length, 10 * 1024 * 1024);
+            byte[] poolBuffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int)lengthToRead);
+            try
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                var bytesRead = await stream.ReadAsync(poolBuffer, 0, (int)lengthToRead);
+                if (bytesRead == 0) return null;
+
+                var result = MediaFile.ReadFromData(poolBuffer, pathHint);
+                if (!result.IsSuccess) return null;
+                var pictures = result.Tag?.Pictures;
+                if (pictures == null || pictures.Length == 0) return null;
+
+                var cover =
+                    pictures.FirstOrDefault(p => p.PictureType is PictureType.FrontCover or PictureType.Media) ??
+                    pictures.FirstOrDefault();
+                if (cover == null) return null;
+
+                var inMemoryStream = new InMemoryRandomAccessStream();
+                await inMemoryStream.AsStreamForWrite().WriteAsync(cover.PictureData.Memory);
+                inMemoryStream.Seek(0);
+                return inMemoryStream;
+            }
+            finally
+            {
+                System.Buffers.ArrayPool<byte>.Shared.Return(poolBuffer);
+            }
         }
         catch (Exception)
         {
