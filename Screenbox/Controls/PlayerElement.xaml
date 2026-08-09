@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vlcSharp="using:LibVLCSharp.Platforms.Windows"
+    xmlns:vlcSharp="using:Screenbox.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Unloaded="OnUnloaded"
@@ -42,7 +42,6 @@
             FlowDirection="LeftToRight"
             Initialized="VlcVideoView_OnInitialized"
             IsHitTestVisible="False"
-            IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
             SizeChanged="VlcVideoView_OnSizeChanged" />

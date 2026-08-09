@@ -23,6 +23,8 @@
                 <templates:GridViewItemTemplates />
             </ResourceDictionary.MergedDictionaries>
 
+            <commands:BindableCommand x:Key="PlaySongCommand" Command="{x:Bind ViewModel.PlaySongCommand}" />
+
             <MenuFlyout x:Key="ItemFlyout">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AddToPlaylistFlyoutBehavior TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
@@ -220,7 +222,7 @@
                         Style="{StaticResource MediaListViewStyle}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlaySongCommand, ElementName=SongListView}" />
+                                <controls:MediaListViewItem PlayCommand="{StaticResource PlaySongCommand}" />
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>

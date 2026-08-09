@@ -31,7 +31,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// Gets or sets the total count of distinct selected items across all ranges.
     /// </summary>
     [ObservableProperty]
-    private int _selectedCount;
+    public partial int SelectedCount { get; set; }
 
     /// <summary>
     /// Gets or sets a value that indicates whether all items are selected.
@@ -42,7 +42,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// The default is <see langword="false"/>.
     /// </value>
     [ObservableProperty]
-    private bool? _isAllSelected = false;
+    public partial bool? IsAllSelected { get; set; } = false;
 
     /// <summary>
     /// Gets or sets a value that indicates whether selection mode is active.
@@ -52,7 +52,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// The default is <see langword="false"/>.
     /// </value>
     [ObservableProperty]
-    private bool _isSelectionModeActive;
+    public partial bool IsSelectionModeActive { get; set; }
 
     private IReadOnlyList<object>? _sourceCollection;
 

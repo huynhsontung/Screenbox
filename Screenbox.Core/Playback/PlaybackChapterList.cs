@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared.Structures;
+using LibVLCSharp.Shared.Structures;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,7 +7,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
-    public sealed class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
+    public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
     {
         private readonly List<ChapterCue> _chapters;
         private readonly PlaybackItem _item;

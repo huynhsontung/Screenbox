@@ -5,15 +5,15 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class ChapterViewModel : ObservableObject
     {
         [ObservableProperty]
-        private double _value;
+        public partial double Value { get; set; }
 
         [ObservableProperty]
-        private double _minimum;
+        public partial double Minimum { get; set; }
 
         [ObservableProperty]
-        private double _maximum;
+        public partial double Maximum { get; set; }
 
         [ObservableProperty]
-        private double _width;
+        public partial double Width { get; set; }
     }
 }

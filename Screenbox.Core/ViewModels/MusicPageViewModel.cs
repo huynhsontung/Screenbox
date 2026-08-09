@@ -16,7 +16,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class MusicPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<MusicLibrary>>
 {
-    [ObservableProperty] private bool _hasContent;
+    [ObservableProperty] public partial bool HasContent { get; set; }
 
     /// <summary>Gets a value indicating whether the Music library is available, used to enable the add-folder command.</summary>
     public bool LibraryLoaded => _libraryContext.MusicStorageLibrary != null;
@@ -28,7 +28,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
     {
         _libraryContext = libraryContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _hasContent = true;
+        HasContent = true;
 
         IsActive = true;
     }

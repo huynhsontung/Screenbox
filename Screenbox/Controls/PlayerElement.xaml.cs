@@ -1,7 +1,6 @@
 #nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
@@ -56,7 +55,7 @@ public sealed partial class PlayerElement : UserControl
         }
     }
 
-    private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
+    private void VlcVideoView_OnInitialized(object sender, VideoViewInitializedEventArgs e)
     {
         ViewModel.Initialize(e.SwapChainOptions);
     }

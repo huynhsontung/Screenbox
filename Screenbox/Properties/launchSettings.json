@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Screenbox": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
+    }
+  }
+}

@@ -20,10 +20,10 @@ public sealed partial class CastControlViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CastCommand))]
-    private Renderer? _selectedRenderer;
+    public partial Renderer? SelectedRenderer { get; set; }
 
-    [ObservableProperty] private Renderer? _castingDevice;
-    [ObservableProperty] private bool _isCasting;
+    [ObservableProperty] public partial Renderer? CastingDevice { get; set; }
+    [ObservableProperty] public partial bool IsCasting { get; set; }
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 

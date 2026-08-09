@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using Screenbox;
@@ -45,7 +45,12 @@ public static class Program
             {
                 // If we successfully registered this instance, we can now just
                 // go ahead and do normal XAML initialization.
-                Windows.UI.Xaml.Application.Start(p => new App());
+                Windows.UI.Xaml.Application.Start(p =>
+                {
+                    var context = new Windows.System.DispatcherQueueSynchronizationContext(Windows.System.DispatcherQueue.GetForCurrentThread());
+                    System.Threading.SynchronizationContext.SetSynchronizationContext(context);
+                    new App();
+                });
             }
             else
             {

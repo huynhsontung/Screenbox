@@ -18,10 +18,10 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class AllVideosPageViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<VideosLibrary>>
 {
-    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private MediaViewModel? _contextMedia;
+    public partial MediaViewModel? ContextMedia { get; set; }
 
     public ObservableCollection<MediaViewModel> Videos { get; }
 

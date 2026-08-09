@@ -52,7 +52,7 @@
             SingleSelectionFollowsFocus="False">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="mediaCore:ChapterCue">
-                    <Grid AutomationProperties.Name="{x:Bind Converter={StaticResource ChapterTitleConverter}, Mode=OneWay}">
+                    <Grid AutomationProperties.Name="{x:Bind Converter={StaticResource ChapterTitleConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -60,7 +60,7 @@
 
                         <TextBlock
                             Grid.Column="0"
-                            Text="{x:Bind Converter={StaticResource ChapterTitleConverter}, Mode=OneWay}"
+                            Text="{x:Bind Converter={StaticResource ChapterTitleConverter}}"
                             TextTrimming="CharacterEllipsis">
                             <interactivity:Interaction.Behaviors>
                                 <behaviors:OverflowTextToolTipBehavior />
