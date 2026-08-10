@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         _settingsService = settingsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<LivelyWallpaperModel?>>(this);
     }
 
     public async Task InitializeVisualizers()

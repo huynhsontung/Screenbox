@@ -39,7 +39,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         HasVideos = true;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        IsActive = true;
+        Messenger.Register<PropertyChangedMessage<VideosLibrary>>(this);
     }
 
     public void Receive(PropertyChangedMessage<VideosLibrary> message)

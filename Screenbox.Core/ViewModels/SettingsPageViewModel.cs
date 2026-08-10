@@ -165,8 +165,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         // Setting initial values for relaunch check
         _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, SelectedLanguage);
         CheckForRelaunch();
-
-        IsActive = true;
     }
 
     partial void OnThemeChanged(int value)
