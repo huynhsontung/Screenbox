@@ -1145,15 +1145,15 @@
     <value>Nu există elemente în acest playlist.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Captura de cadru va fii salvată în</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Locația capturii de cadru</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Modificare folder</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Modificare</value>
   </data>
 </root>
