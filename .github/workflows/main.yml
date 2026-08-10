@@ -43,7 +43,7 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Build tests
-      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\
+      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\ -restore
 
     - name: Run tests
       run: C:\BuildOutput\Screenbox.Core.Tests.exe
