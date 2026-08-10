@@ -1146,15 +1146,15 @@
     <value>이 재생 목록에 항목이 없습니다.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>프레임 캡처 저장 위치</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>캡처한 프레임이 저장될 폴더를 선택하세요</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>폴더 변경</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>변경</value>
   </data>
 </root>
