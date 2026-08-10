@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
@@ -34,8 +34,8 @@
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3">
       <Version>2.1.12</Version>
     </PackageReference>
-    <PackageReference Include="TagLibSharp">
-      <Version>2.3.0</Version>
+    <PackageReference Include="z440.atl.core">
+      <Version>7.15.3</Version>
     </PackageReference>
   </ItemGroup>
 </Project>

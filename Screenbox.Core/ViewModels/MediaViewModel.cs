@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using ATL;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -18,7 +19,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using TagLib;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
@@ -338,28 +338,20 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)
     {
-        if (!file.IsAvailable) return null;
+        if (!file.IsAvailable || !file.IsSupportedAudio()) return null;
         try
         {
             using var stream = await file.OpenStreamForReadAsync(); // Throwable: FileNotFoundException
-            var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
-            var fileAbstract = new StreamAbstraction(name, stream);
-            using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
-            if (tagFile.Tag.Pictures.Length == 0) return null;
+            var ext = Path.GetExtension(file.Name);
+            var track = new Track(stream, ext);
+            var pictures = track.EmbeddedPictures;
+            if (pictures.Count == 0) return null;
             var cover =
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type != PictureType.NotAPicture);
-            if (cover == null) return null;
-            if (cover.Data.IsEmpty)
-            {
-                if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
-                ((ILazy)cover).Load();
-            }
+                pictures.FirstOrDefault(p => p.PicType is PictureInfo.PIC_TYPE.Front or PictureInfo.PIC_TYPE.CD) ??
+                pictures.FirstOrDefault();
+            if (cover?.PictureData == null || cover.PictureData.Length == 0) return null;
 
-            var inMemoryStream = new InMemoryRandomAccessStream();
-            await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
-            inMemoryStream.Seek(0);
-            return inMemoryStream;
+            return new MemoryStream(cover.PictureData).AsRandomAccessStream();
         }
         catch (Exception)
         {
