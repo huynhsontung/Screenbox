@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -249,7 +249,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (current != null)
         {
             await current.LoadDetailsAsync(_filesService);
-            await current.LoadThumbnailAsync();
+            await current.LoadThumbnailAsync(decodePixelHeight: 512);
 
             // Process again in case media type changed after loading details
             _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));

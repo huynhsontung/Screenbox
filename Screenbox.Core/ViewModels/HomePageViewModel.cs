@@ -208,7 +208,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         try
         {
-            await media.LoadThumbnailAsync();
+            await media.LoadThumbnailAsync(decodePixelHeight: 256);
         }
         catch (ArgumentException)
         {

@@ -68,7 +68,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient
     {
         if (RelatedSongs.Count > 0)
         {
-            await RelatedSongs[0].LoadThumbnailAsync();
+            await RelatedSongs[0].LoadThumbnailAsync(decodePixelHeight: 256);
             UpdateProperties();
         }
     }

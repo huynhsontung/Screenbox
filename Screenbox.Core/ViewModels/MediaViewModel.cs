@@ -280,9 +280,11 @@ public sealed partial class MediaViewModel : ObservableRecipient
             AltCaption = string.Empty;
     }
 
-    public async Task LoadThumbnailAsync()
+    public async Task LoadThumbnailAsync(int decodePixelHeight = 256)
     {
-        if (Thumbnail != null) return;
+        if (Thumbnail is not null)
+            return;
+
         if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } storageFile)
         {
             UpdateSource(storageFile);
@@ -291,11 +293,13 @@ public sealed partial class MediaViewModel : ObservableRecipient
         if (Source is StorageFile file)
         {
             using var source = await GetThumbnailSourceAsync(file);
-            if (source == null) return;
+            if (source is null)
+                return;
+
             BitmapImage image = new()
             {
                 DecodePixelType = DecodePixelType.Logical,
-                DecodePixelHeight = 300
+                DecodePixelHeight = decodePixelHeight,
             };
 
             try
@@ -317,7 +321,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
             Thumbnail = new BitmapImage(artworkUri)
             {
                 DecodePixelType = DecodePixelType.Logical,
-                DecodePixelHeight = 300
+                DecodePixelHeight = decodePixelHeight
             };
         }
     }

@@ -701,7 +701,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
 
         _mediaBuffer = newBuffer;
-        await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
+        await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync(decodePixelHeight: 512)));
     }
 
     /// <summary>
