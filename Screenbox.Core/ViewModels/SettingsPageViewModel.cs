@@ -54,9 +54,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial bool IsRelaunchRequired { get; set; }
     [ObservableProperty] public partial int SelectedLanguage { get; set; }
     [ObservableProperty] public partial bool PersistPlaybackPosition { get; set; }
-
-    [ObservableProperty]
-    private StorageFolder? _frameCaptureFolder;
+    [ObservableProperty] public partial StorageFolder? FrameCaptureFolder { get; set; }
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
 
