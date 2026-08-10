@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
@@ -13,7 +13,13 @@
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <EnableMsixTooling>true</EnableMsixTooling>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Disable generated Main for custom Main in Program.cs with multi-instancing support. -->
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <!-- Disable default PRI items to manually control which languages are included in the app package. -->
+    <EnableDefaultPriItems>false</EnableDefaultPriItems>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Packaging">
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
@@ -23,6 +29,7 @@
     <AppxBundle>Never</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
       <Version>8.2.251219</Version>
@@ -58,7 +65,8 @@
     <PackageReference Include="Starpine.ReswPlus" Version="0.3.2-202605101917" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="Localization">
+    <PRIResource Include="**\*.resw" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     <!-- Pending translations are explicitly removed. Remove the language below when a translation is complete. -->
     <PRIResource Remove="Strings\af-ZA\*.resw" />
     <PRIResource Remove="Strings\ca-ES\*.resw" />
