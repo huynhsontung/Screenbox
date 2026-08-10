@@ -35,14 +35,21 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
 
+    - uses: actions/cache@v6
+      with:
+        path: ~\.nuget\packages
+        key: ${{ runner.os }}-nuget-test-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-test-
+
     - name: Build tests
-      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -restore
+      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\ -restore
 
     - name: Run tests
-      run: dotnet test Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
+      run: C:\BuildOutput\Screenbox.Core.Tests.exe
   
   build:
-    runs-on: windows-2025-vs2026
+    runs-on: windows-latest
     strategy:
       matrix:
         platform: [x64, x86, arm64]
