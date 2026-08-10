@@ -90,7 +90,7 @@ public sealed partial class AlbumDetailsPage : Page
         MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
         if (firstSong.Thumbnail != null)
         {
-            var thumbnailSource = await firstSong.GetThumbnailSourceAsync();
+            using var thumbnailSource = await firstSong.GetThumbnailSourceAsync();
             if (thumbnailSource == null) return;
             CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, thumbnailSource);
         }
@@ -107,7 +107,7 @@ public sealed partial class AlbumDetailsPage : Page
         if (e.PropertyName == nameof(MediaViewModel.Thumbnail) && media.Thumbnail != null)
         {
             media.PropertyChanged -= OnPropertyChanged;
-            var thumbnailSource = await media.GetThumbnailSourceAsync();
+            using var thumbnailSource = await media.GetThumbnailSourceAsync();
             if (thumbnailSource == null) return;
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
             CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, thumbnailSource);
