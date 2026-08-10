@@ -42,8 +42,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
 
+    - name: Build tests
+      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\
+
     - name: Run tests
-      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -t:Test
+      run: C:\BuildOutput\Screenbox.Core.Tests.exe
   
   build:
     runs-on: windows-latest
