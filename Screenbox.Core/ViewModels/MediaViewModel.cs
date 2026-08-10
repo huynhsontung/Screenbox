@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -339,6 +340,10 @@ public sealed partial class MediaViewModel : ObservableRecipient
             // https://learn.microsoft.com/windows/apps/develop/files/thumbnails
             StorageItemThumbnail? source =
                 await file.GetThumbnailAsync(ThumbnailMode.SingleItem, requestedSize: 1280, ThumbnailOptions.UseCurrentScale);
+#if DEBUG
+            Debug.WriteLine($"[Thumbnail] Dimensions: {source.OriginalWidth}×{source.OriginalHeight}, Type=\"{source.Type}\", ReturnedSmallerCachedSize=\"{source.ReturnedSmallerCachedSize}\"");
+#endif
+
             if (source is { Type: ThumbnailType.Image })
             {
                 return source;
