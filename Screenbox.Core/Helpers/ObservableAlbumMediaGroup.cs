@@ -25,4 +25,9 @@ public sealed partial class ObservableAlbumMediaGroup :
     {
         Key = group.Key;
     }
+
+    public override string ToString()
+    {
+        return $"{Key.Year} - {Key.Name}";
+    }
 }

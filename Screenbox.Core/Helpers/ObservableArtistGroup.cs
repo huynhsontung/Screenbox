@@ -26,4 +26,9 @@ public sealed partial class ObservableArtistGroup :
     {
         Key = group.Key;
     }
+
+    public override string ToString()
+    {
+        return Key;
+    }
 }
