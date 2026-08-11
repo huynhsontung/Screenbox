@@ -30,7 +30,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     // so we need to maintain a separate list of StorageFolder for navigation.
     public string[] Breadcrumbs { get; private set; } = [];
 
-    public IReadOnlyList<StorageFolder> BreadcrumbLocations { get; private set; } = [];
+    public StorageFolder[] BreadcrumbLocations { get; private set; } = [];
 
     internal NavigationMetadata? NavData { get; private set; }
 
@@ -100,7 +100,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         switch (parameter)
         {
             case IReadOnlyList<StorageFolder> { Count: > 0 } breadcrumbs:
-                BreadcrumbLocations = breadcrumbs;
+                BreadcrumbLocations = [.. breadcrumbs];
                 Breadcrumbs = breadcrumbs.Select(f => f.DisplayName).ToArray();
                 await FetchFolderContentAsync(breadcrumbs.Last());
                 break;
