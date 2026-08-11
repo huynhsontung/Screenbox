@@ -15,6 +15,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>

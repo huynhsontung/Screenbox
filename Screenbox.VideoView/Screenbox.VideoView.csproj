@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="LibVLCSharp" Version="3.10.1" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
     <PackageReference Include="Silk.NET.Direct3D11" Version="2.23.0" />
   </ItemGroup>
 </Project>
