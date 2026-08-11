@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using Screenbox.Core.Common;
 
 namespace Screenbox.Core

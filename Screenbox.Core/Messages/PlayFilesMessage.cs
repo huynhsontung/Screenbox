@@ -1,7 +1,5 @@
-﻿#nullable enable
-
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Windows.Storage;
 using Windows.Storage.Search;
 

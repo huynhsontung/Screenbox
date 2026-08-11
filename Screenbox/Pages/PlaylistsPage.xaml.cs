@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -14,6 +12,7 @@ using Windows.UI.Xaml.Input;
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Screenbox.Pages;
+
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>

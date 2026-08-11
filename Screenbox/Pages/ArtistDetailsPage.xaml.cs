@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;

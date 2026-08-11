@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;

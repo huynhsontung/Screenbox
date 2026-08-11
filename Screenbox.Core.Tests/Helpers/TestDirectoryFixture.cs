@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace Screenbox.Core.Tests.Helpers;
 
 /// <summary>

@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using Screenbox.Core.Models;
 using Windows.UI.Xaml.Data;

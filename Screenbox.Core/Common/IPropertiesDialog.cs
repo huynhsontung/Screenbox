@@ -1,6 +1,3 @@
-﻿#nullable enable
-
-
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Common

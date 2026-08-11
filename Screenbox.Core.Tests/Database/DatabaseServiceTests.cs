@@ -1,5 +1,3 @@
-#nullable enable
-
 using Microsoft.Data.Sqlite;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;

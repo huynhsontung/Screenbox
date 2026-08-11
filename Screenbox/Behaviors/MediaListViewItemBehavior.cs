@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Windows.Input;
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;

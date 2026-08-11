@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Models;
 using Windows.Storage;

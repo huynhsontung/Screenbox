@@ -1,8 +1,6 @@
-﻿#nullable enable
-
-using Screenbox.Core.Helpers;
 using System;
 using System.Threading.Tasks;
+using Screenbox.Core.Helpers;
 using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;

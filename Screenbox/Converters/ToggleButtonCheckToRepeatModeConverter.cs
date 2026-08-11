@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using CommunityToolkit.Diagnostics;
 using Windows.Media;

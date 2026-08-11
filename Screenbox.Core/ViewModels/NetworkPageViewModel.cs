@@ -1,9 +1,7 @@
-﻿#nullable enable
-
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.Storage;
 
 namespace Screenbox.Core.ViewModels

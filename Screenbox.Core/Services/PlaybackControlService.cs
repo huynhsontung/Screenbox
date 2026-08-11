@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Threading.Tasks;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;

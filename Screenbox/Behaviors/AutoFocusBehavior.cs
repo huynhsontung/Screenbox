@@ -1,8 +1,6 @@
-﻿#nullable enable
-
+using System;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Behaviors;
-using System;
 using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI.Core;
@@ -11,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Behaviors;
+
 internal sealed partial class AutoFocusBehavior : BehaviorBase<Control>
 {
     private bool _focused;

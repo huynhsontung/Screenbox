@@ -1,5 +1,3 @@
-#nullable enable
-
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 using Windows.Media.Core;

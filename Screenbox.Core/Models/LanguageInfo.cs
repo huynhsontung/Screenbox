@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace Screenbox.Core.Models;
 
 /// <summary>

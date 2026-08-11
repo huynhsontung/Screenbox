@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Collections.Generic;
 using System.Windows.Input;
 using Windows.Media.Core;

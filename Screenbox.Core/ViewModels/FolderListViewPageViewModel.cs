@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 

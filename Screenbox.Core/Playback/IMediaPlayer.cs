@@ -1,7 +1,5 @@
-﻿#nullable enable
-
-using Screenbox.Core.Events;
 using System;
+using Screenbox.Core.Events;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;

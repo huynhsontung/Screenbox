@@ -1,11 +1,10 @@
-﻿#nullable enable
-
-using Screenbox.Lively.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Screenbox.Lively.Models;
 using Windows.Storage;
 
 namespace Screenbox.Lively.Services;
+
 public interface ILivelyWallpaperService
 {
     Task<List<LivelyWallpaperModel>> GetAvailableVisualizersAsync();

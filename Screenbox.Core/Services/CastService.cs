@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;

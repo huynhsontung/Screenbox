@@ -1,5 +1,3 @@
-#nullable enable
-
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Windows.UI.Xaml;

@@ -1,7 +1,5 @@
-﻿#nullable enable
-
-using Screenbox.Core.Enums;
 using System.Threading.Tasks;
+using Screenbox.Core.Enums;
 using Windows.Foundation;
 
 namespace Screenbox.Core.Services

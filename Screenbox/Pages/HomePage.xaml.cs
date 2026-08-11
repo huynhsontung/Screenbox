@@ -1,5 +1,3 @@
-#nullable enable
-
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Commands;
 using Screenbox.Core.ViewModels;
