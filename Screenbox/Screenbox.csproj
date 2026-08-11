@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
@@ -31,37 +31,16 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.2.251219</Version>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.2.251219</Version>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.2.251219</Version>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.2.251219</Version>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.2.251219</Version>
-    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Animations" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.Uwp.Behaviors" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.Uwp.Converters" Version="8.2.251219" />
     <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>10.0.10</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.14</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.7</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>3.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="LibVLC.UWP">
-      <Version>3.0.23-2608082208</Version>
-    </PackageReference>
+    <PackageReference Include="LibVLC.UWP" Version="3.0.23-2608082208" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
     <PackageReference Include="Starpine.ReswPlus" Version="0.3.2-202605101917" />
   </ItemGroup>
 
