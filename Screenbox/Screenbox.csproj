@@ -40,6 +40,7 @@
     <PackageReference Include="LibVLC.UWP" Version="3.0.23-2608082208" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
     <PackageReference Include="Starpine.ReswPlus" Version="0.3.2-202605101917" />
   </ItemGroup>

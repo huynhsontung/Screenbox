@@ -1,6 +1,5 @@
 #nullable enable
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,14 +98,14 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         // If no DataContext is set at the behavior or sub-menu level, we can try to fall back to the target element's DataContext
         dataContext ??= _flyoutTarget?.DataContext;
 
-        IReadOnlyList<MediaViewModel> contextItems = dataContext switch
+        MediaViewModel[] contextItems = dataContext switch
         {
             StorageItemViewModel { Media: { } media } => [media],
             MediaViewModel vm => [vm],
-            IReadOnlyList<MediaViewModel> list => list,
-            IEnumerable<MediaViewModel> collection => collection.ToList(),
-            IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToList(),
-            _ => Array.Empty<MediaViewModel>(),
+            IReadOnlyList<MediaViewModel> list => list.ToArray(),
+            IEnumerable<MediaViewModel> collection => collection.ToArray(),
+            IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToArray(),
+            _ => [],
         };
 
         menuItems.Clear();
