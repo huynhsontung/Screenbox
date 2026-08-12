@@ -5,13 +5,12 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Models.Serialization;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
-using Xunit;
 
 namespace Screenbox.Core.Tests.Database;
 
 public sealed class LegacyMigrationTests
 {
-    [Fact]
+    [Test]
     public async Task InitializeAsync_MigratesLegacyJsonPlaylistsToSql_AndCleansUpLegacyFiles()
     {
         using var fixture = new TestDirectoryFixture();
@@ -47,19 +46,19 @@ public sealed class LegacyMigrationTests
 
         // 3. Verify playlist was imported into SQL database
         PlaylistRecordDto? importedPlaylist = await dbService.LoadPlaylistAsync("legacy_pl_123");
-        Assert.NotNull(importedPlaylist);
-        Assert.Equal("legacy_pl_123", importedPlaylist.Id);
-        Assert.Equal("Classic Rock", importedPlaylist.DisplayName);
-        Assert.Equal(2, importedPlaylist.Items.Count);
-        Assert.Equal(@"C:\Music\Rock\stairway.flac", importedPlaylist.Items[0].Path);
-        Assert.Equal(@"C:\Music\Rock\hotel_california.flac", importedPlaylist.Items[1].Path);
+        await Assert.That(importedPlaylist).IsNotNull();
+        await Assert.That(importedPlaylist.Id).IsEqualTo("legacy_pl_123");
+        await Assert.That(importedPlaylist.DisplayName).IsEqualTo("Classic Rock");
+        await Assert.That(importedPlaylist.Items.Count).IsEqualTo(2);
+        await Assert.That(importedPlaylist.Items[0].Path).IsEqualTo(@"C:\Music\Rock\stairway.flac");
+        await Assert.That(importedPlaylist.Items[1].Path).IsEqualTo(@"C:\Music\Rock\hotel_california.flac");
 
         // 4. Verify post-migration cleanup deleted the legacy Playlists directory and legacy files
-        Assert.False(Directory.Exists(playlistsDirPath), "Legacy Playlists directory should be deleted after successful migration.");
-        Assert.False(File.Exists(songsBinPath), "Legacy songs.bin file should be deleted after successful migration.");
+        await Assert.That(Directory.Exists(playlistsDirPath)).IsFalse().Because("Legacy Playlists directory should be deleted after successful migration.");
+        await Assert.That(File.Exists(songsBinPath)).IsFalse().Because("Legacy songs.bin file should be deleted after successful migration.");
     }
 
-    [Fact]
+    [Test]
     public async Task InitializeAsync_WhenSqlDatabaseAlreadyHasPlaylists_DoesNotReimportLegacyFiles()
     {
         using var fixture = new TestDirectoryFixture();
@@ -97,9 +96,9 @@ public sealed class LegacyMigrationTests
 
         // 4. Verify the existing playlist remains and the legacy one was NOT imported
         PlaylistRecordDto? existing = await dbService2.LoadPlaylistAsync("existing_sql_pl");
-        Assert.NotNull(existing);
+        await Assert.That(existing).IsNotNull();
 
         PlaylistRecordDto? legacy = await dbService2.LoadPlaylistAsync("ignored_legacy_pl");
-        Assert.Null(legacy);
+        await Assert.That(legacy).IsNull();
     }
 }

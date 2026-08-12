@@ -4,14 +4,13 @@ using System.Text.Json;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.Models.Serialization;
-using Xunit;
 
 namespace Screenbox.Core.Tests.Serialization;
 
 public sealed class JsonSerializationTests
 {
-    [Fact]
-    public void PlaylistRecordDto_SerializationAndDeserialization_UsingCoreJsonContext()
+    [Test]
+    public async Task PlaylistRecordDto_SerializationAndDeserialization_UsingCoreJsonContext()
     {
         var original = new PlaylistRecordDto
         {
@@ -35,25 +34,25 @@ public sealed class JsonSerializationTests
         };
 
         string json = JsonSerializer.Serialize(original, CoreJsonContext.Default.PlaylistRecordDto);
-        Assert.False(string.IsNullOrWhiteSpace(json));
+        await Assert.That(string.IsNullOrWhiteSpace(json)).IsFalse();
 
         PlaylistRecordDto? deserialized = JsonSerializer.Deserialize(json, CoreJsonContext.Default.PlaylistRecordDto);
 
-        Assert.NotNull(deserialized);
-        Assert.Equal(original.Id, deserialized.Id);
-        Assert.Equal(original.DisplayName, deserialized.DisplayName);
-        Assert.Equal(original.LastUpdated, deserialized.LastUpdated);
-        Assert.Single(deserialized.Items);
+        await Assert.That(deserialized).IsNotNull();
+        await Assert.That(deserialized.Id).IsEqualTo(original.Id);
+        await Assert.That(deserialized.DisplayName).IsEqualTo(original.DisplayName);
+        await Assert.That(deserialized.LastUpdated).IsEqualTo(original.LastUpdated);
+        await Assert.That(deserialized.Items).HasSingleItem();
 
         RawMediaRecordDto item = deserialized.Items[0];
-        Assert.Equal(@"C:\Music\Synth\track1.flac", item.Path);
-        Assert.Equal("Midnight City", item.Title);
-        Assert.Equal("M83", item.Artist);
-        Assert.Equal(MediaPlaybackType.Music, item.MediaType);
+        await Assert.That(item.Path).IsEqualTo(@"C:\Music\Synth\track1.flac");
+        await Assert.That(item.Title).IsEqualTo("Midnight City");
+        await Assert.That(item.Artist).IsEqualTo("M83");
+        await Assert.That(item.MediaType).IsEqualTo(MediaPlaybackType.Music);
     }
 
-    [Fact]
-    public void RawMediaRecordDto_SerializationAndDeserialization_HandlesAllProperties()
+    [Test]
+    public async Task RawMediaRecordDto_SerializationAndDeserialization_HandlesAllProperties()
     {
         var original = new RawMediaRecordDto
         {
@@ -81,11 +80,11 @@ public sealed class JsonSerializationTests
         string json = JsonSerializer.Serialize(original, CoreJsonContext.Default.RawMediaRecordDto);
         RawMediaRecordDto? deserialized = JsonSerializer.Deserialize(json, CoreJsonContext.Default.RawMediaRecordDto);
 
-        Assert.NotNull(deserialized);
-        Assert.Equal(original.Path, deserialized.Path);
-        Assert.Equal(original.Title, deserialized.Title);
-        Assert.Equal(original.Width, deserialized.Width);
-        Assert.Equal(original.Height, deserialized.Height);
-        Assert.Equal(original.VideoBitrate, deserialized.VideoBitrate);
+        await Assert.That(deserialized).IsNotNull();
+        await Assert.That(deserialized.Path).IsEqualTo(original.Path);
+        await Assert.That(deserialized.Title).IsEqualTo(original.Title);
+        await Assert.That(deserialized.Width).IsEqualTo(original.Width);
+        await Assert.That(deserialized.Height).IsEqualTo(original.Height);
+        await Assert.That(deserialized.VideoBitrate).IsEqualTo(original.VideoBitrate);
     }
 }
