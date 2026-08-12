@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:primitives="using:Windows.UI.Xaml.Controls.Primitives"
+    xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
     Loaded="PlayQueuePage_OnLoaded"
@@ -76,18 +77,20 @@
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
 
-            <muxc:SplitButton
+            <sbuc:SplitButtonEx
                 x:Name="HeaderAddButton"
                 Grid.Column="1"
                 VerticalAlignment="Top"
-                extensions:SplitButtonExtensions.PrimaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                extensions:SplitButtonExtensions.SecondaryButtonToolTip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderAddButtonText.Text}"
                 Command="{x:Bind PlayQueue.ViewModel.AddFilesCommand}"
-                Flyout="{StaticResource AddToPlayQueueFlyout}">
+                Flyout="{StaticResource AddToPlayQueueFlyout}"
+                IsSecondaryButtonTabStop="True"
+                PrimaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                PrimaryButtonToolTip="{x:Bind strings:Resources.AddFilesToPlayQueueToolTip}"
+                SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                SecondaryButtonToolTip="{x:Bind strings:Resources.AddFilesToPlayQueueSecondaryToolTip}"
+                Style="{StaticResource DefaultSplitButtonStyle}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         Margin="{StaticResource IconButtonStandardIconMargin}"
@@ -99,10 +102,9 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:SplitButtonXYNavigationBehavior />
                     <behaviors:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
-            </muxc:SplitButton>
+            </sbuc:SplitButtonEx>
         </Grid>
 
         <controls:PlayQueueControl

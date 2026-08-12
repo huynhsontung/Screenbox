@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Screenbox.Converters;
+namespace Screenbox.UI.Controls.Primitives;
 
 /// <summary>
 /// Defines constants that specify the filter type for a <see cref="ThicknessFiltersConverter"/> instance.

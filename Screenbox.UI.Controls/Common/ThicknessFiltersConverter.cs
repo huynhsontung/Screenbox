@@ -1,10 +1,11 @@
-// Source (inspired by and ported to C#): https://github.com/microsoft/microsoft-ui-xaml/pull/6829
+// Inspired by:
+// https://github.com/microsoft/microsoft-ui-xaml/pull/6829
 
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace Screenbox.Converters;
+namespace Screenbox.UI.Controls.Primitives;
 
 /// <summary>
 /// Converts an existing <see cref="Thickness"/> struct to a new <see cref="Thickness"/> struct,
@@ -16,33 +17,33 @@ namespace Screenbox.Converters;
 /// </remarks>
 /// <example>
 /// The following example shows how to use the <see cref="ThicknessFiltersConverter"/> element.
-/// <code lang="xml">
-/// &lt;ControlTemplate TargetType="Button"&gt;
-///     &lt;Grid&gt;
-///         &lt;Grid.Resources&gt;
-///             &lt;local:ThicknessFiltersConverter x:Name="VerticalThicknessFiltersConverter" Filters="Top,Bottom" /&gt;
-///         &lt;/Grid.Resources&gt;
-///         &lt;Border Background="{TemplateBinding Background}"
+/// <code lang="xml"><![CDATA[
+/// <ControlTemplate TargetType="Button">
+///     <Grid>
+///         <Grid.Resources>
+///             <local:ThicknessFiltersConverter x:Name="VerticalThicknessFiltersConverter" Filters="Top,Bottom" />
+///         </Grid.Resources>
+///         <Border Background="{TemplateBinding Background}"
 ///                 BorderBrush="{TemplateBinding BorderBrush}"
 ///                 BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalThicknessFiltersConverter}}"
-///                 Padding="{TemplateBinding Padding}" /&gt;
-///     &lt;/Grid&gt;
-/// &lt;/ControlTemplate&gt;
-/// </code>
-/// <code lang="xml">
-/// &lt;Grid&gt;
-///     &lt;Grid.Resources&gt;
-///         &lt;local:ThicknessFiltersConverter x:Name="VerticalThicknessFiltersConverter" Filters="Top,Bottom" /&gt;
-///         &lt;Thickness x:Key="ExampleBorderThickness"&gt;1,1,1,1&lt;/Thickness&gt;
-///     &lt;/Grid.Resources&gt;
-///     &lt;Border Background="DarkBlue"
+///                 Padding="{TemplateBinding Padding}" />
+///     </Grid>
+/// </ControlTemplate>
+/// ]]></code>
+/// <code lang="xml"><![CDATA[
+/// <Grid>
+///     <Grid.Resources>
+///         <local:ThicknessFiltersConverter x:Name="VerticalThicknessFiltersConverter" Filters="Top,Bottom" />
+///         <Thickness x:Key="ExampleBorderThickness">1,1,1,1</Thickness>
+///     </Grid.Resources>
+///     <Border Background="DarkBlue"
 ///             BorderBrush="Cyan"
-///             BorderThickness="{Binding Source={StaticResource ExampleBorderThickness}, Converter={StaticResource VerticalThicknessFiltersConverter}}" /&gt;
-/// &lt;/Grid&gt;
-/// </code>
+///             BorderThickness="{Binding Source={StaticResource ExampleBorderThickness}, Converter={StaticResource VerticalThicknessFiltersConverter}}" />
+/// </Grid>
+/// ]]></code>
 /// <code lang="c#">
-/// var myBorder = new Border();
-/// var exampleThickness = new Thickness(1, 1, 1, 1);
+/// var myBorder = new Windows.UI.Xaml.Controls.Border();
+/// var exampleThickness = new Windows.UI.Xaml.Thickness(1, 1, 1, 1);
 /// 
 /// // Create the converter instance and the filter type.
 /// var thicknessConverter = new ThicknessFiltersConverter();
@@ -58,7 +59,10 @@ public sealed partial class ThicknessFiltersConverter : DependencyObject, IValue
     /// Identifies the <see cref="Filters"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty FiltersProperty = DependencyProperty.Register(
-        nameof(Filters), typeof(ThicknessFilterKinds), typeof(ThicknessFiltersConverter), new PropertyMetadata(ThicknessFilterKinds.None));
+        nameof(Filters),
+        typeof(ThicknessFilterKinds),
+        typeof(ThicknessFiltersConverter),
+        new PropertyMetadata(ThicknessFilterKinds.None));
 
     /// <summary>
     /// Gets or sets the type of the filter applied to the <see cref="ThicknessFiltersConverter"/>.
@@ -70,11 +74,15 @@ public sealed partial class ThicknessFiltersConverter : DependencyObject, IValue
     }
 
     /// <summary>
-    /// Extracts the specified <see cref="Thickness"/> fields based on the provided <see cref="ThicknessFilterKinds"/> combination.
+    /// Creates a new <see cref="Thickness"/> containing only the components specified
+    /// by the provided <see cref="ThicknessFilterKinds"/> combination.
     /// </summary>
-    /// <param name="thickness">The source <see cref="Thickness"/> instance to extract values from.</param>
-    /// <param name="filterKinds">A combination of <see cref="ThicknessFilterKinds"/> values specifying the extraction behavior.</param>
-    /// <returns>A <see cref="Thickness"/> containing only the specified fields from <paramref name="thickness"/>, the others are set to 0.</returns>
+    /// <param name="thickness">The source <see cref="Thickness"/> from which component values are extracted.</param>
+    /// <param name="filterKinds">A bitwise combination of the enumeration values that specifies which components of the <see cref="Thickness"/> to extract.</param>
+    /// <returns>
+    /// A <see cref="Thickness"/> containing only the specified fields from <paramref name="thickness"/>,
+    /// the others are set to 0.
+    /// </returns>
     public static Thickness Extract(Thickness thickness, ThicknessFilterKinds filterKinds)
     {
         if (filterKinds != ThicknessFilterKinds.None)

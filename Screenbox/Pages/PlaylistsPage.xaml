@@ -124,12 +124,14 @@
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
 
-            <muxc:SplitButton
+            <sbuc:SplitButtonEx
                 x:Name="HeaderCreateButton"
                 Grid.Column="1"
                 AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
                 Command="{x:Bind CreatePlaylistCommand}"
                 Flyout="{StaticResource CreatePlaylistFlyout}"
+                IsSecondaryButtonTabStop="True"
+                SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
                 Style="{StaticResource DefaultSplitButtonStyle}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
@@ -138,7 +140,7 @@
                         Margin="8,0,0,0"
                         Text="{x:Bind strings:Resources.NewPlaylist}" />
                 </StackPanel>
-            </muxc:SplitButton>
+            </sbuc:SplitButtonEx>
         </Grid>
 
         <Grid
@@ -244,22 +246,18 @@
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Glyph="{StaticResource PlaylistOffGlyph}" />
                 <sbuc:ContentUnavailableView.ActionContent>
-                    <muxc:SplitButton
-                        extensions:SplitButtonExtensions.SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
-                        AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
-                        AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
+                    <sbuc:SplitButtonEx
                         AutomationProperties.Name="{x:Bind strings:Resources.NewPlaylist}"
                         Command="{x:Bind CreatePlaylistCommand}"
                         Flyout="{StaticResource CreatePlaylistFlyout}"
+                        IsSecondaryButtonTabStop="True"
+                        SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
                         Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=NewPlaylist}" />
                         </StackPanel>
-                        <interactivity:Interaction.Behaviors>
-                            <behaviors:SplitButtonXYNavigationBehavior />
-                        </interactivity:Interaction.Behaviors>
-                    </muxc:SplitButton>
+                    </sbuc:SplitButtonEx>
                 </sbuc:ContentUnavailableView.ActionContent>
             </sbuc:ContentUnavailableView>
         </ScrollViewer>
