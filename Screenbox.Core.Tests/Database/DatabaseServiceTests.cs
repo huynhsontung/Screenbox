@@ -5,13 +5,12 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
-using Xunit;
 
 namespace Screenbox.Core.Tests.Database;
 
 public sealed class DatabaseServiceTests
 {
-    [Fact]
+    [Test]
     public async Task InitializeAsync_CreatesDatabaseAndAllRequiredTables()
     {
         using var fixture = new TestDirectoryFixture();
@@ -20,7 +19,7 @@ public sealed class DatabaseServiceTests
         await dbService.InitializeAsync();
 
         string dbPath = Path.Combine(fixture.DirectoryPath, "screenbox.db");
-        Assert.True(File.Exists(dbPath), "Database file screenbox.db should be created.");
+        await Assert.That(File.Exists(dbPath)).IsTrue().Because("Database file screenbox.db should be created.");
 
         using var connection = new SqliteConnection($"Data Source={dbPath}");
         connection.Open();
@@ -32,11 +31,11 @@ public sealed class DatabaseServiceTests
             cmd.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=@name;";
             cmd.Parameters.AddWithValue("@name", tableName);
             long count = (long)(cmd.ExecuteScalar() ?? 0L);
-            Assert.Equal(1L, count);
+            await Assert.That(count).IsEqualTo(1L);
         }
     }
 
-    [Fact]
+    [Test]
     public async Task SaveMusicCacheAsync_And_LoadLibraryCacheAsync_PersistsAndRetrievesMusicRecords()
     {
         using var fixture = new TestDirectoryFixture();
@@ -82,21 +81,21 @@ public sealed class DatabaseServiceTests
 
         RawCacheLoadResultDto result = await dbService.LoadLibraryCacheAsync(MediaPlaybackType.Music);
 
-        Assert.Equal(2, result.FolderPaths.Count);
-        Assert.Contains(@"C:\Music\Folder1", result.FolderPaths);
-        Assert.Contains(@"C:\Music\Folder2", result.FolderPaths);
+        await Assert.That(result.FolderPaths.Count).IsEqualTo(2);
+        await Assert.That(result.FolderPaths).Contains(@"C:\Music\Folder1");
+        await Assert.That(result.FolderPaths).Contains(@"C:\Music\Folder2");
 
-        Assert.Equal(2, result.Records.Count);
+        await Assert.That(result.Records.Count).IsEqualTo(2);
         RawMediaRecordDto? song1 = result.Records.Find(r => r.Path == @"C:\Music\Folder1\song1.mp3");
-        Assert.NotNull(song1);
-        Assert.Equal("Song One", song1.Title);
-        Assert.Equal("Artist Alpha", song1.Artist);
-        Assert.Equal("Album One", song1.Album);
-        Assert.Equal(1u, song1.TrackNumber);
-        Assert.Equal(MediaPlaybackType.Music, song1.MediaType);
+        await Assert.That(song1).IsNotNull();
+        await Assert.That(song1.Title).IsEqualTo("Song One");
+        await Assert.That(song1.Artist).IsEqualTo("Artist Alpha");
+        await Assert.That(song1.Album).IsEqualTo("Album One");
+        await Assert.That(song1.TrackNumber).IsEqualTo(1u);
+        await Assert.That(song1.MediaType).IsEqualTo(MediaPlaybackType.Music);
     }
 
-    [Fact]
+    [Test]
     public async Task SaveVideoCacheAsync_And_LoadLibraryCacheAsync_PersistsAndRetrievesVideoRecords()
     {
         using var fixture = new TestDirectoryFixture();
@@ -126,19 +125,19 @@ public sealed class DatabaseServiceTests
 
         RawCacheLoadResultDto result = await dbService.LoadLibraryCacheAsync(MediaPlaybackType.Video);
 
-        Assert.Single(result.FolderPaths);
-        Assert.Equal(@"C:\Videos\Movies", result.FolderPaths[0]);
+        await Assert.That(result.FolderPaths).HasSingleItem();
+        await Assert.That(result.FolderPaths[0]).IsEqualTo(@"C:\Videos\Movies");
 
-        Assert.Single(result.Records);
+        await Assert.That(result.Records).HasSingleItem();
         RawMediaRecordDto video = result.Records[0];
-        Assert.Equal(@"C:\Videos\Movies\clip.mp4", video.Path);
-        Assert.Equal("Sample Clip", video.Title);
-        Assert.Equal(1920u, video.Width);
-        Assert.Equal(1080u, video.Height);
-        Assert.Equal(MediaPlaybackType.Video, video.MediaType);
+        await Assert.That(video.Path).IsEqualTo(@"C:\Videos\Movies\clip.mp4");
+        await Assert.That(video.Title).IsEqualTo("Sample Clip");
+        await Assert.That(video.Width).IsEqualTo(1920u);
+        await Assert.That(video.Height).IsEqualTo(1080u);
+        await Assert.That(video.MediaType).IsEqualTo(MediaPlaybackType.Video);
     }
 
-    [Fact]
+    [Test]
     public async Task SaveMusicCacheAsync_ClearsStaleRecordsOnRescan()
     {
         using var fixture = new TestDirectoryFixture();
@@ -164,11 +163,11 @@ public sealed class DatabaseServiceTests
 
         RawCacheLoadResultDto result = await dbService.LoadLibraryCacheAsync(MediaPlaybackType.Music);
 
-        Assert.Single(result.Records);
-        Assert.Equal(@"C:\Music\Folder1\song1.mp3", result.Records[0].Path);
+        await Assert.That(result.Records).HasSingleItem();
+        await Assert.That(result.Records[0].Path).IsEqualTo(@"C:\Music\Folder1\song1.mp3");
     }
 
-    [Fact]
+    [Test]
     public async Task SaveVideoCacheAsync_ClearsStaleRecordsOnRescan()
     {
         using var fixture = new TestDirectoryFixture();
@@ -194,11 +193,11 @@ public sealed class DatabaseServiceTests
 
         RawCacheLoadResultDto result = await dbService.LoadLibraryCacheAsync(MediaPlaybackType.Video);
 
-        Assert.Single(result.Records);
-        Assert.Equal(@"C:\Videos\Folder1\video1.mp4", result.Records[0].Path);
+        await Assert.That(result.Records).HasSingleItem();
+        await Assert.That(result.Records[0].Path).IsEqualTo(@"C:\Videos\Folder1\video1.mp4");
     }
 
-    [Fact]
+    [Test]
     public async Task PlaylistOperations_SaveLoadListAndDelete_BehavesCorrectly()
     {
         using var fixture = new TestDirectoryFixture();
@@ -222,25 +221,25 @@ public sealed class DatabaseServiceTests
 
         // 2. Load Playlist
         PlaylistRecordDto? loaded = await dbService.LoadPlaylistAsync("pl_001");
-        Assert.NotNull(loaded);
-        Assert.Equal("pl_001", loaded.Id);
-        Assert.Equal("My Favorites", loaded.DisplayName);
-        Assert.Equal(2, loaded.Items.Count);
-        Assert.Equal(@"C:\Media\track1.mp3", loaded.Items[0].Path);
-        Assert.Equal(@"C:\Media\track2.mp3", loaded.Items[1].Path);
+        await Assert.That(loaded).IsNotNull();
+        await Assert.That(loaded.Id).IsEqualTo("pl_001");
+        await Assert.That(loaded.DisplayName).IsEqualTo("My Favorites");
+        await Assert.That(loaded.Items.Count).IsEqualTo(2);
+        await Assert.That(loaded.Items[0].Path).IsEqualTo(@"C:\Media\track1.mp3");
+        await Assert.That(loaded.Items[1].Path).IsEqualTo(@"C:\Media\track2.mp3");
 
         // 3. List Playlists
         List<PlaylistRecordDto> playlists = await dbService.ListPlaylistsAsync();
-        Assert.Single(playlists);
-        Assert.Equal("pl_001", playlists[0].Id);
+        await Assert.That(playlists).HasSingleItem();
+        await Assert.That(playlists[0].Id).IsEqualTo("pl_001");
 
         // 4. Delete Playlist
         await dbService.DeletePlaylistAsync("pl_001");
         PlaylistRecordDto? deleted = await dbService.LoadPlaylistAsync("pl_001");
-        Assert.Null(deleted);
+        await Assert.That(deleted).IsNull();
     }
 
-    [Fact]
+    [Test]
     public async Task PlaybackProgressOperations_SaveAndLoad_RoundtripsPositionTicks()
     {
         using var fixture = new TestDirectoryFixture();
@@ -254,8 +253,8 @@ public sealed class DatabaseServiceTests
         await dbService.ReplacePlaybackProgressAsync(snapshot);
 
         List<MediaPlaybackProgress> loadedList = await dbService.LoadPlaybackProgressAsync();
-        Assert.Single(loadedList);
-        Assert.Equal(location, loadedList[0].Location);
-        Assert.Equal(expectedPosition.Ticks, loadedList[0].Position.Ticks);
+        await Assert.That(loadedList).HasSingleItem();
+        await Assert.That(loadedList[0].Location).IsEqualTo(location);
+        await Assert.That(loadedList[0].Position.Ticks).IsEqualTo(expectedPosition.Ticks);
     }
 }
