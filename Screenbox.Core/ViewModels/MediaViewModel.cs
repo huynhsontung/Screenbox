@@ -3,9 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,7 +16,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using TagLib;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
@@ -333,51 +330,15 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private static async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
     {
-        return await GetCoverFromTagAsync(file) ?? await GetStorageFileThumbnailAsync(file);
-    }
+        if (!file.IsAvailable)
+            return null;
 
-    private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)
-    {
-        if (!file.IsAvailable) return null;
         try
         {
-            using var stream = await file.OpenStreamForReadAsync(); // Throwable: FileNotFoundException
-            var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
-            var fileAbstract = new StreamAbstraction(name, stream);
-            using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
-            if (tagFile.Tag.Pictures.Length == 0) return null;
-            var cover =
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type != PictureType.NotAPicture);
-            if (cover == null) return null;
-            if (cover.Data.IsEmpty)
-            {
-                if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
-                ((ILazy)cover).Load();
-            }
-
-            var inMemoryStream = new InMemoryRandomAccessStream();
-            await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
-            inMemoryStream.Seek(0);
-            return inMemoryStream;
-        }
-        catch (Exception)
-        {
-            // FileNotFoundException
-            // UnsupportedFormatException
-            // CorruptFileException
-            // pass
-        }
-
-        return null;
-    }
-
-    private static async Task<IRandomAccessStream?> GetStorageFileThumbnailAsync(StorageFile file)
-    {
-        if (!file.IsAvailable) return null;
-        try
-        {
-            StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+            // Use SingleItem mode to retrieve embedded album art with original aspect ratio.
+            // https://learn.microsoft.com/windows/apps/develop/files/thumbnails
+            StorageItemThumbnail? source =
+                await file.GetThumbnailAsync(ThumbnailMode.SingleItem, requestedSize: 1280, ThumbnailOptions.UseCurrentScale);
             if (source is { Type: ThumbnailType.Image })
             {
                 return source;
