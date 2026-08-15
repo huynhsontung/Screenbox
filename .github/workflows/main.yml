@@ -117,7 +117,6 @@ jobs:
 
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v7
-      if: github.ref_type == 'tag'
       with:
         name: store-upload-${{ matrix.platform }}
         path: |
@@ -133,7 +132,6 @@ jobs:
 
   bundle-store:
     needs: build
-    if: github.ref_type == 'tag'
     runs-on: windows-latest
     steps:
     - name: Download individual store uploads
