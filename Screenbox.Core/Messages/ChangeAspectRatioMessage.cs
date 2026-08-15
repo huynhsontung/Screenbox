@@ -1,12 +1,11 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Windows.Foundation;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class ChangeAspectRatioMessage : ValueChangedMessage<Size>
 {
-    public sealed class ChangeAspectRatioMessage : ValueChangedMessage<Size>
+    public ChangeAspectRatioMessage(Size value) : base(value)
     {
-        public ChangeAspectRatioMessage(Size value) : base(value)
-        {
-        }
     }
 }

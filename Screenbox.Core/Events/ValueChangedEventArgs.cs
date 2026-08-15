@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 
-namespace Screenbox.Core.Events
+namespace Screenbox.Core.Events;
+
+public class ValueChangedEventArgs<T> : EventArgs
 {
-    public class ValueChangedEventArgs<T> : EventArgs
+    public T NewValue { get; }
+
+    public T OldValue { get; }
+
+    public ValueChangedEventArgs(T newValue, T oldValue)
     {
-        public T NewValue { get; }
-
-        public T OldValue { get; }
-
-        public ValueChangedEventArgs(T newValue, T oldValue)
-        {
-            NewValue = newValue;
-            OldValue = oldValue;
-        }
+        NewValue = newValue;
+        OldValue = oldValue;
     }
 }

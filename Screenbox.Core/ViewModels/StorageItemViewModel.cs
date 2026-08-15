@@ -6,92 +6,91 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
-namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+public sealed partial class StorageItemViewModel : ObservableObject
 {
-    public sealed partial class StorageItemViewModel : ObservableObject
+    public string Name { get; }
+
+    public string Path { get; }
+
+    public DateTimeOffset DateCreated { get; }
+
+    public IStorageItem StorageItem { get; }
+
+    public MediaViewModel? Media { get; }
+
+    public bool IsFile { get; }
+
+    [ObservableProperty] public partial string CaptionText { get; set; }
+    [ObservableProperty] public partial uint ItemCount { get; set; }
+
+    private readonly IFilesService _filesService;
+
+    public StorageItemViewModel(IFilesService filesService,
+        MediaViewModelFactory mediaFactory,
+        IStorageItem storageItem)
     {
-        public string Name { get; }
+        _filesService = filesService;
+        StorageItem = storageItem;
+        CaptionText = string.Empty;
+        DateCreated = storageItem.DateCreated;
 
-        public string Path { get; }
-
-        public DateTimeOffset DateCreated { get; }
-
-        public IStorageItem StorageItem { get; }
-
-        public MediaViewModel? Media { get; }
-
-        public bool IsFile { get; }
-
-        [ObservableProperty] public partial string CaptionText { get; set; }
-        [ObservableProperty] public partial uint ItemCount { get; set; }
-
-        private readonly IFilesService _filesService;
-
-        public StorageItemViewModel(IFilesService filesService,
-            MediaViewModelFactory mediaFactory,
-            IStorageItem storageItem)
+        if (storageItem is StorageFile file)
         {
-            _filesService = filesService;
-            StorageItem = storageItem;
-            CaptionText = string.Empty;
-            DateCreated = storageItem.DateCreated;
+            IsFile = true;
+            Media = mediaFactory.GetOrCreate(file);
+            Name = Media.Name;
+            Path = Media.Location;
+        }
+        else
+        {
+            Name = storageItem.Name;
+            Path = storageItem.Path;
+        }
+    }
 
-            if (storageItem is StorageFile file)
+    public async Task UpdateCaptionAsync()
+    {
+        try
+        {
+            switch (StorageItem)
             {
-                IsFile = true;
-                Media = mediaFactory.GetOrCreate(file);
-                Name = Media.Name;
-                Path = Media.Location;
-            }
-            else
-            {
-                Name = storageItem.Name;
-                Path = storageItem.Path;
+                case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
+                    ItemCount = await _filesService.GetSupportedItemCountAsync(folder);
+                    break;
+                case StorageFile file:
+                    if (!string.IsNullOrEmpty(Media?.Caption))
+                    {
+                        CaptionText = Media?.Caption ?? string.Empty;
+                    }
+                    else
+                    {
+                        string[] additionalPropertyKeys =
+                        {
+                            SystemProperties.Music.Artist,
+                            SystemProperties.Media.Duration
+                        };
+
+                        IDictionary<string, object> additionalProperties =
+                            await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
+
+                        if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
+                        {
+                            CaptionText = string.Join(", ", contributingArtists);
+                        }
+                        else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                        {
+                            TimeSpan duration = TimeSpan.FromTicks((long)ticks);
+                            CaptionText = Humanizer.ToDuration(duration);
+                        }
+                    }
+                    break;
             }
         }
-
-        public async Task UpdateCaptionAsync()
+        catch (Exception e)
         {
-            try
-            {
-                switch (StorageItem)
-                {
-                    case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
-                        ItemCount = await _filesService.GetSupportedItemCountAsync(folder);
-                        break;
-                    case StorageFile file:
-                        if (!string.IsNullOrEmpty(Media?.Caption))
-                        {
-                            CaptionText = Media?.Caption ?? string.Empty;
-                        }
-                        else
-                        {
-                            string[] additionalPropertyKeys =
-                            {
-                                SystemProperties.Music.Artist,
-                                SystemProperties.Media.Duration
-                            };
-
-                            IDictionary<string, object> additionalProperties =
-                                await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
-
-                            if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
-                            {
-                                CaptionText = string.Join(", ", contributingArtists);
-                            }
-                            else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
-                            {
-                                TimeSpan duration = TimeSpan.FromTicks((long)ticks);
-                                CaptionText = Humanizer.ToDuration(duration);
-                            }
-                        }
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                LogService.Log(e);
-            }
+            LogService.Log(e);
         }
     }
 }

@@ -45,7 +45,7 @@ public sealed partial class TitleBar
     /// </remarks>
     public object Header
     {
-        get { return (object)GetValue(HeaderProperty); }
+        get { return GetValue(HeaderProperty); }
         set { SetValue(HeaderProperty, value); }
     }
 
@@ -147,7 +147,7 @@ public sealed partial class TitleBar
     /// </remarks>
     public object Footer
     {
-        get { return (object)GetValue(FooterProperty); }
+        get { return GetValue(FooterProperty); }
         set { SetValue(FooterProperty, value); }
     }
 

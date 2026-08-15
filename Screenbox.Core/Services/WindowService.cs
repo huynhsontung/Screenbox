@@ -9,148 +9,147 @@ using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 
-namespace Screenbox.Core.Services
+namespace Screenbox.Core.Services;
+
+public sealed class WindowService : IWindowService
 {
-    public sealed class WindowService : IWindowService
+    public WindowViewMode ViewMode => _windowContext.ViewMode;
+
+    private readonly WindowContext _windowContext;
+    private CoreCursor? _cursor;
+
+    public WindowService(WindowContext windowContext)
     {
-        public WindowViewMode ViewMode => _windowContext.ViewMode;
+        _windowContext = windowContext;
+        Window.Current.SizeChanged += OnWindowSizeChanged;
+    }
 
-        private readonly WindowContext _windowContext;
-        private CoreCursor? _cursor;
+    private void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
+    {
+        ApplicationView view = ApplicationView.GetForCurrentView();
+        if (_windowContext.ViewMode == WindowViewMode.FullScreen && !view.IsFullScreenMode)
+            _windowContext.ViewMode = WindowViewMode.Default;
+    }
 
-        public WindowService(WindowContext windowContext)
+    public bool TryEnterFullScreen()
+    {
+        ApplicationView? view = ApplicationView.GetForCurrentView();
+        if (view.TryEnterFullScreenMode())
         {
-            _windowContext = windowContext;
-            Window.Current.SizeChanged += OnWindowSizeChanged;
+            _windowContext.ViewMode = WindowViewMode.FullScreen;
+            return true;
         }
 
-        private void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
+        return false;
+    }
+
+    public void ExitFullScreen()
+    {
+        ApplicationView? view = ApplicationView.GetForCurrentView();
+        view?.ExitFullScreenMode();
+        if (_windowContext.ViewMode == WindowViewMode.FullScreen)
+            _windowContext.ViewMode = WindowViewMode.Default;
+    }
+
+    public async Task<bool> TryExitCompactLayoutAsync()
+    {
+        ApplicationView? view = ApplicationView.GetForCurrentView();
+        if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            if (_windowContext.ViewMode == WindowViewMode.FullScreen && !view.IsFullScreenMode)
+            if (_windowContext.ViewMode == WindowViewMode.Compact)
                 _windowContext.ViewMode = WindowViewMode.Default;
+            return true;
         }
 
-        public bool TryEnterFullScreen()
+        return false;
+    }
+
+    public async Task<bool> TryEnterCompactLayoutAsync(Size viewSize)
+    {
+        ApplicationView? view = ApplicationView.GetForCurrentView();
+        ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+        if (!viewSize.IsEmpty)
         {
-            ApplicationView? view = ApplicationView.GetForCurrentView();
-            if (view.TryEnterFullScreenMode())
-            {
-                _windowContext.ViewMode = WindowViewMode.FullScreen;
-                return true;
-            }
-
-            return false;
+            preferences.ViewSizePreference = ViewSizePreference.Custom;
+            preferences.CustomSize = viewSize;
         }
 
-        public void ExitFullScreen()
+        if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
         {
-            ApplicationView? view = ApplicationView.GetForCurrentView();
-            view?.ExitFullScreenMode();
-            if (_windowContext.ViewMode == WindowViewMode.FullScreen)
-                _windowContext.ViewMode = WindowViewMode.Default;
+            _windowContext.ViewMode = WindowViewMode.Compact;
+            return true;
         }
 
-        public async Task<bool> TryExitCompactLayoutAsync()
+        return false;
+    }
+
+    public Size GetMaxWindowSize()
+    {
+        DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+        ApplicationView view = ApplicationView.GetForCurrentView();
+        return GetMaxWindowSize(view, displayInformation);
+    }
+
+    private static Size GetMaxWindowSize(ApplicationView view, DisplayInformation displayInformation)
+    {
+        double maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
+        double maxHeight = (displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel) - 48;
+        if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
         {
-            ApplicationView? view = ApplicationView.GetForCurrentView();
-            if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
-            {
-                if (_windowContext.ViewMode == WindowViewMode.Compact)
-                    _windowContext.ViewMode = WindowViewMode.Default;
-                return true;
-            }
-
-            return false;
+            DisplayRegion? displayRegion = view.GetDisplayRegions()[0]; // Active display region
+            maxWidth = displayRegion.WorkAreaSize.Width / displayInformation.RawPixelsPerViewPixel;
+            maxHeight = displayRegion.WorkAreaSize.Height / displayInformation.RawPixelsPerViewPixel;
         }
 
-        public async Task<bool> TryEnterCompactLayoutAsync(Size viewSize)
+        // Cannot use the full work area size. Subtract some padding.
+        maxHeight -= 16;
+        maxWidth -= 16;
+        return new Size(maxWidth, maxHeight);
+    }
+
+    public double ResizeWindow(Size desiredSize, double scalar = 1)
+    {
+        if (scalar < 0 || desiredSize.IsEmpty) return -1;
+        ApplicationView view = ApplicationView.GetForCurrentView();
+        DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+        Size maxWindowSize = GetMaxWindowSize(view, displayInformation);
+        double maxWidth = maxWindowSize.Width;
+        double maxHeight = maxWindowSize.Height;
+
+        if (scalar == 0)
         {
-            ApplicationView? view = ApplicationView.GetForCurrentView();
-            ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
-            if (!viewSize.IsEmpty)
-            {
-                preferences.ViewSizePreference = ViewSizePreference.Custom;
-                preferences.CustomSize = viewSize;
-            }
-
-            if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
-            {
-                _windowContext.ViewMode = WindowViewMode.Compact;
-                return true;
-            }
-
-            return false;
+            double widthRatio = maxWidth / desiredSize.Width;
+            double heightRatio = maxHeight / desiredSize.Height;
+            scalar = Math.Min(widthRatio, heightRatio);
         }
 
-        public Size GetMaxWindowSize()
+        double aspectRatio = desiredSize.Width / desiredSize.Height;
+        double newWidth = desiredSize.Width * scalar;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+        double newHeight = newWidth / aspectRatio;
+        scalar = newWidth / desiredSize.Width;
+        if (view.TryResizeView(new Size(newWidth, newHeight)))
         {
-            DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            return GetMaxWindowSize(view, displayInformation);
+            return scalar;
         }
 
-        private static Size GetMaxWindowSize(ApplicationView view, DisplayInformation displayInformation)
+        return -1;
+    }
+
+    public void HideCursor()
+    {
+        CoreWindow? coreWindow = Window.Current.CoreWindow;
+        if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
         {
-            double maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
-            double maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel - 48;
-            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
-            {
-                DisplayRegion? displayRegion = view.GetDisplayRegions()[0]; // Active display region
-                maxWidth = displayRegion.WorkAreaSize.Width / displayInformation.RawPixelsPerViewPixel;
-                maxHeight = displayRegion.WorkAreaSize.Height / displayInformation.RawPixelsPerViewPixel;
-            }
-
-            // Cannot use the full work area size. Subtract some padding.
-            maxHeight -= 16;
-            maxWidth -= 16;
-            return new Size(maxWidth, maxHeight);
+            _cursor = coreWindow.PointerCursor;
+            coreWindow.PointerCursor = null;
         }
+    }
 
-        public double ResizeWindow(Size desiredSize, double scalar = 1)
-        {
-            if (scalar < 0 || desiredSize.IsEmpty) return -1;
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
-            Size maxWindowSize = GetMaxWindowSize(view, displayInformation);
-            double maxWidth = maxWindowSize.Width;
-            double maxHeight = maxWindowSize.Height;
-
-            if (scalar == 0)
-            {
-                double widthRatio = maxWidth / desiredSize.Width;
-                double heightRatio = maxHeight / desiredSize.Height;
-                scalar = Math.Min(widthRatio, heightRatio);
-            }
-
-            double aspectRatio = desiredSize.Width / desiredSize.Height;
-            double newWidth = desiredSize.Width * scalar;
-            if (newWidth > maxWidth) newWidth = maxWidth;
-            double newHeight = newWidth / aspectRatio;
-            scalar = newWidth / desiredSize.Width;
-            if (view.TryResizeView(new Size(newWidth, newHeight)))
-            {
-                return scalar;
-            }
-
-            return -1;
-        }
-
-        public void HideCursor()
-        {
-            CoreWindow? coreWindow = Window.Current.CoreWindow;
-            if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
-            {
-                _cursor = coreWindow.PointerCursor;
-                coreWindow.PointerCursor = null;
-            }
-        }
-
-        public void ShowCursor()
-        {
-            CoreWindow? coreWindow = Window.Current.CoreWindow;
-            coreWindow.PointerCursor ??= _cursor;
-        }
+    public void ShowCursor()
+    {
+        CoreWindow? coreWindow = Window.Current.CoreWindow;
+        coreWindow.PointerCursor ??= _cursor;
     }
 }
 

@@ -1,10 +1,9 @@
-﻿namespace Screenbox.Core.Enums
+namespace Screenbox.Core.Enums;
+
+public enum NotificationLevel
 {
-    public enum NotificationLevel
-    {
-        Info,
-        Warning,
-        Error,
-        Success
-    }
+    Info,
+    Warning,
+    Error,
+    Success
 }

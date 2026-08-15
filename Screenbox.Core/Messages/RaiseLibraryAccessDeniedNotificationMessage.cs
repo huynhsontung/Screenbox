@@ -1,14 +1,13 @@
-﻿using Windows.Storage;
+using Windows.Storage;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class RaiseLibraryAccessDeniedNotificationMessage
 {
-    public sealed class RaiseLibraryAccessDeniedNotificationMessage
-    {
-        public KnownLibraryId Library { get; }
+    public KnownLibraryId Library { get; }
 
-        public RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId library)
-        {
-            Library = library;
-        }
+    public RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId library)
+    {
+        Library = library;
     }
 }

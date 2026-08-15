@@ -1,4 +1,4 @@
-﻿using Microsoft.Xaml.Interactivity;
+using Microsoft.Xaml.Interactivity;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -33,8 +33,8 @@ internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkEl
     private void AssociatedObjectOnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         // Exit if not a Gamepad event
-        if (e.OriginalKey is not (>= VirtualKey.GamepadDPadUp and <= VirtualKey.GamepadDPadRight
-            or >= VirtualKey.GamepadLeftThumbstickUp and <= VirtualKey.GamepadLeftThumbstickLeft))
+        if (e.OriginalKey is not ((>= VirtualKey.GamepadDPadUp and <= VirtualKey.GamepadDPadRight)
+            or (>= VirtualKey.GamepadLeftThumbstickUp and <= VirtualKey.GamepadLeftThumbstickLeft)))
             return;
 
         DependencyObject? candidate = null;

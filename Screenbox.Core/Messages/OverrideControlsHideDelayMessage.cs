@@ -1,7 +1,6 @@
-﻿namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed record OverrideControlsHideDelayMessage(int Delay)
 {
-    public sealed record OverrideControlsHideDelayMessage(int Delay)
-    {
-        public int Delay { get; } = Delay;
-    }
+    public int Delay { get; } = Delay;
 }

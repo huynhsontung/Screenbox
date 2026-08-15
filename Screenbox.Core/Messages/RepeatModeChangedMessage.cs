@@ -1,12 +1,11 @@
-﻿using Windows.Media;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Windows.Media;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class RepeatModeChangedMessage : ValueChangedMessage<MediaPlaybackAutoRepeatMode>
 {
-    public sealed class RepeatModeChangedMessage : ValueChangedMessage<MediaPlaybackAutoRepeatMode>
+    public RepeatModeChangedMessage(MediaPlaybackAutoRepeatMode value) : base(value)
     {
-        public RepeatModeChangedMessage(MediaPlaybackAutoRepeatMode value) : base(value)
-        {
-        }
     }
 }

@@ -1,22 +1,21 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using Screenbox.Core.Models;
 using System;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Models;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class ChangeTimeRequestMessage : RequestMessage<PositionChangedResult>
 {
-    public sealed class ChangeTimeRequestMessage : RequestMessage<PositionChangedResult>
+    public bool Debounce { get; }
+
+    public bool IsOffset { get; }
+
+    public TimeSpan Value { get; }
+
+    public ChangeTimeRequestMessage(TimeSpan value, bool isOffset = false, bool debounce = true)
     {
-        public bool Debounce { get; }
-
-        public bool IsOffset { get; }
-
-        public TimeSpan Value { get; }
-
-        public ChangeTimeRequestMessage(TimeSpan value, bool isOffset = false, bool debounce = true)
-        {
-            Value = value;
-            IsOffset = isOffset;
-            Debounce = debounce;
-        }
+        Value = value;
+        IsOffset = isOffset;
+        Debounce = debounce;
     }
 }

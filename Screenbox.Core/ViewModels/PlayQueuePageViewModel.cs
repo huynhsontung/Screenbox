@@ -9,44 +9,43 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
-namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+public sealed partial class PlayQueuePageViewModel : ObservableRecipient
 {
-    public sealed partial class PlayQueuePageViewModel : ObservableRecipient
+    private readonly IFilesService _filesService;
+    private readonly IPlayQueueCoordinator _coordinator;
+
+    public PlayQueuePageViewModel(IFilesService filesService, IPlayQueueCoordinator coordinator)
     {
-        private readonly IFilesService _filesService;
-        private readonly IPlayQueueCoordinator _coordinator;
+        _filesService = filesService;
+        _coordinator = coordinator;
+    }
 
-        public PlayQueuePageViewModel(IFilesService filesService, IPlayQueueCoordinator coordinator)
+    [RelayCommand]
+    private void AddUrl(Uri? uri)
+    {
+        if (uri == null) return;
+        Messenger.Send(new PlayMediaMessage(uri));
+    }
+
+    /// <summary>
+    /// Opens a folder picker and queues all supported media files in the selected folder.
+    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
+    /// </summary>
+    [RelayCommand]
+    private async Task AddFolderAsync()
+    {
+        try
         {
-            _filesService = filesService;
-            _coordinator = coordinator;
+            StorageFolder? folder = await _filesService.PickFolderAsync();
+            if (folder == null) return;
+            IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
+            await _coordinator.EnqueueAsync(items);
         }
-
-        [RelayCommand]
-        private void AddUrl(Uri? uri)
+        catch (Exception e)
         {
-            if (uri == null) return;
-            Messenger.Send(new PlayMediaMessage(uri));
-        }
-
-        /// <summary>
-        /// Opens a folder picker and queues all supported media files in the selected folder.
-        /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
-        /// </summary>
-        [RelayCommand]
-        private async Task AddFolderAsync()
-        {
-            try
-            {
-                StorageFolder? folder = await _filesService.PickFolderAsync();
-                if (folder == null) return;
-                IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
-                await _coordinator.EnqueueAsync(items);
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
-            }
+            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
         }
     }
 }

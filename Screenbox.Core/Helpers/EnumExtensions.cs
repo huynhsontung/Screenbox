@@ -1,8 +1,9 @@
-﻿using Screenbox.Core.Enums;
 using System;
+using Screenbox.Core.Enums;
 using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Helpers;
+
 public static class EnumExtensions
 {
     public static ElementTheme ToElementTheme(this ThemeOption themeOption)

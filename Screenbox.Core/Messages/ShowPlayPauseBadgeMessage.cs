@@ -1,12 +1,11 @@
-﻿namespace Screenbox.Core.Messages
-{
-    public sealed class ShowPlayPauseBadgeMessage
-    {
-        public bool IsPlaying { get; }
+namespace Screenbox.Core.Messages;
 
-        public ShowPlayPauseBadgeMessage(bool isPlaying)
-        {
-            IsPlaying = isPlaying;
-        }
+public sealed class ShowPlayPauseBadgeMessage
+{
+    public bool IsPlaying { get; }
+
+    public ShowPlayPauseBadgeMessage(bool isPlaying)
+    {
+        IsPlaying = isPlaying;
     }
 }

@@ -5,30 +5,29 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace Screenbox.Pages
+namespace Screenbox.Pages;
+
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class AlbumSearchResultPage : Page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class AlbumSearchResultPage : Page
+    internal SearchResultPageViewModel? ViewModel { get; set; }
+
+    internal CommonViewModel Common { get; }
+
+    public AlbumSearchResultPage()
     {
-        internal SearchResultPageViewModel? ViewModel { get; set; }
+        this.InitializeComponent();
+        Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+    }
 
-        internal CommonViewModel Common { get; }
-
-        public AlbumSearchResultPage()
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (e.Parameter is SearchResultPageViewModel vm)
         {
-            this.InitializeComponent();
-            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            if (e.Parameter is SearchResultPageViewModel vm)
-            {
-                DataContext = ViewModel = vm;
-            }
+            DataContext = ViewModel = vm;
         }
     }
 }

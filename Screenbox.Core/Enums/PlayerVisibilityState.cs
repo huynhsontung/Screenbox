@@ -1,9 +1,8 @@
-﻿namespace Screenbox.Core.Enums
+namespace Screenbox.Core.Enums;
+
+public enum PlayerVisibilityState
 {
-    public enum PlayerVisibilityState
-    {
-        Visible,
-        Minimal,
-        Hidden
-    }
+    Visible,
+    Minimal,
+    Hidden
 }
