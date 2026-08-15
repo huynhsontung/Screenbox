@@ -1,9 +1,8 @@
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
+using Screenbox.Core.ViewModels;
 
-namespace Screenbox.Core.Common
+namespace Screenbox.Core.Common;
+
+public interface IPropertiesDialog : IDialog
 {
-    public interface IPropertiesDialog : IDialog
-    {
-        MediaViewModel? Media { get; set; }
-    }
+    MediaViewModel? Media { get; set; }
 }
