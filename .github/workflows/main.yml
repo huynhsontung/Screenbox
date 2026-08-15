@@ -117,6 +117,7 @@ jobs:
 
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v7
+      if: github.ref_type == 'tag'
       with:
         name: store-upload-${{ matrix.platform }}
         path: |
@@ -132,6 +133,7 @@ jobs:
 
   bundle-store:
     needs: build
+    if: github.ref_type == 'tag'
     runs-on: windows-latest
     steps:
     - name: Download individual store uploads
@@ -156,15 +158,15 @@ jobs:
       run: |
         $baseOutputDir = "AppPackages\StoreUploadTemp"
         $mapFilePath = "$baseOutputDir\bundle.map"
-        
+
         $mapContent = @("[Files]")
-        
+
         # Find all extracted .msix files and add them to the MakeAppx map
         $msixFiles = Get-ChildItem -Path "$baseOutputDir\Extracted" -Filter "*.msix" -Recurse
         foreach ($msix in $msixFiles) {
             $mapContent += "`"$($msix.FullName)`" `"$($msix.Name)`""
         }
-        
+
         $mapContent | Out-File -Encoding utf8 -FilePath $mapFilePath
 
         # Extract the version from the first package name (e.g., Screenbox_0.19.2.0_x86.msix -> 0.19.2.0)
