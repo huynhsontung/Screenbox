@@ -90,7 +90,7 @@ public sealed partial class PlayQueueControl : UserControl
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.HasItems && _selectionCommand.CanToggleSelection(PlaylistListView))
+        if (ViewModel.HasItems)
         {
             ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(PlaylistListView);

@@ -35,7 +35,7 @@ public sealed partial class PlaylistsPage : Page
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.Playlists.Count > 0 && _selectionCommand.CanToggleSelection(PlaylistsGridView))
+        if (ViewModel.Playlists.Count > 0)
         {
             ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(PlaylistsGridView);
