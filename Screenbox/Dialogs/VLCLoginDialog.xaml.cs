@@ -5,45 +5,44 @@ using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace Screenbox.Dialogs
+namespace Screenbox.Dialogs;
+
+public sealed partial class VLCLoginDialog : ContentDialog, IVlcLoginDialog
 {
-    public sealed partial class VLCLoginDialog : ContentDialog, IVlcLoginDialog
+    public static readonly DependencyProperty UsernameProperty = DependencyProperty.Register(
+        nameof(Username),
+        typeof(string),
+        typeof(VLCLoginDialog),
+        new PropertyMetadata(null));
+
+    public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register(
+        nameof(Password),
+        typeof(string),
+        typeof(VLCLoginDialog),
+        new PropertyMetadata(null));
+
+    public string? Text { get; set; }
+
+    public string? Username
     {
-        public static readonly DependencyProperty UsernameProperty = DependencyProperty.Register(
-            nameof(Username),
-            typeof(string),
-            typeof(VLCLoginDialog),
-            new PropertyMetadata(null));
+        get => (string?)GetValue(UsernameProperty);
+        set => SetValue(UsernameProperty, value);
+    }
 
-        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register(
-            nameof(Password),
-            typeof(string),
-            typeof(VLCLoginDialog),
-            new PropertyMetadata(null));
+    public string Password
+    {
+        get => (string)GetValue(PasswordProperty);
+        set => SetValue(PasswordProperty, value);
+    }
 
-        public string? Text { get; set; }
+    public bool StoreCredential { get; set; }
 
-        public string? Username
-        {
-            get => (string?)GetValue(UsernameProperty);
-            set => SetValue(UsernameProperty, value);
-        }
+    public bool AskStoreCredential { get; set; }
 
-        public string Password
-        {
-            get => (string)GetValue(PasswordProperty);
-            set => SetValue(PasswordProperty, value);
-        }
-
-        public bool StoreCredential { get; set; }
-
-        public bool AskStoreCredential { get; set; }
-
-        public VLCLoginDialog()
-        {
-            this.InitializeComponent();
-            FlowDirection = GlobalizationHelper.GetFlowDirection();
-            RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
-        }
+    public VLCLoginDialog()
+    {
+        this.InitializeComponent();
+        FlowDirection = GlobalizationHelper.GetFlowDirection();
+        RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
     }
 }

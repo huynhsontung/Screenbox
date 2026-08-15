@@ -1,16 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Windows.Storage;
 
-namespace Screenbox.Core.Events
-{
-    public sealed class FolderViewNavigationEventArgs : EventArgs
-    {
-        public IReadOnlyList<StorageFolder> Breadcrumbs { get; }
+namespace Screenbox.Core.Events;
 
-        public FolderViewNavigationEventArgs(IReadOnlyList<StorageFolder> breadcrumbs)
-        {
-            Breadcrumbs = breadcrumbs;
-        }
+public sealed class FolderViewNavigationEventArgs : EventArgs
+{
+    public IReadOnlyList<StorageFolder> Breadcrumbs { get; }
+
+    public FolderViewNavigationEventArgs(IReadOnlyList<StorageFolder> breadcrumbs)
+    {
+        Breadcrumbs = breadcrumbs;
     }
 }

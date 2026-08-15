@@ -1,13 +1,12 @@
 using System;
 
-namespace Screenbox.Core
+namespace Screenbox.Core;
+
+public interface IContentFrame
 {
-    public interface IContentFrame
-    {
-        object? FrameContent { get; }
-        Type ContentSourcePageType { get; }
-        bool CanGoBack { get; }
-        void GoBack();
-        void NavigateContent(Type pageType, object? parameter);
-    }
+    object? FrameContent { get; }
+    Type ContentSourcePageType { get; }
+    bool CanGoBack { get; }
+    void GoBack();
+    void NavigateContent(Type pageType, object? parameter);
 }

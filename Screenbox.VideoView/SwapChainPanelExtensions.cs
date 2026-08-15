@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-using Windows.UI.Xaml.Controls;
 using Silk.NET.Core.Native;
+using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls;
 
@@ -20,11 +20,11 @@ internal static class SwapChainPanelExtensions
         if (panel == null) throw new ArgumentNullException(nameof(panel));
 
         var winrtObj = panel as WinRT.IWinRTObject;
-        if (winrtObj?.NativeObject == null) 
+        if (winrtObj?.NativeObject == null)
             throw new ObjectDisposedException(nameof(panel), "The underlying WinRT native object has been disposed.");
 
         IntPtr nativePtr = winrtObj.NativeObject.ThisPtr;
-        if (nativePtr == IntPtr.Zero) 
+        if (nativePtr == IntPtr.Zero)
             throw new ObjectDisposedException(nameof(panel), "The underlying WinRT native pointer is null.");
 
         ComWrappers cw = new StrategyBasedComWrappers();

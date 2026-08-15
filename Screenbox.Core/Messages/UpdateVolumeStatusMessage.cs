@@ -1,11 +1,10 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class UpdateVolumeStatusMessage : ValueChangedMessage<int>
 {
-    public sealed class UpdateVolumeStatusMessage : ValueChangedMessage<int>
+    public UpdateVolumeStatusMessage(int value) : base(value)
     {
-        public UpdateVolumeStatusMessage(int value) : base(value)
-        {
-        }
     }
 }

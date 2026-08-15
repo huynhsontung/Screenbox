@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
-using Windows.Media.Playback;
 
 namespace Screenbox.Core.Contexts;
 

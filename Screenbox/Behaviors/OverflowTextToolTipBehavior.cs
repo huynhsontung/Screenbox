@@ -1,7 +1,8 @@
-﻿using Microsoft.Xaml.Interactivity;
+using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
+
 public sealed partial class OverflowTextToolTipBehavior : Behavior<TextBlock>
 {
     protected override void OnAttached()

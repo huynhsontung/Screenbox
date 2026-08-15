@@ -1,6 +1,5 @@
-﻿namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+public class VideoSearchResultPageViewModel
 {
-    public class VideoSearchResultPageViewModel
-    {
-    }
 }

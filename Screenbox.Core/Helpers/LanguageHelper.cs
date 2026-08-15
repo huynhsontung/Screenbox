@@ -1,7 +1,8 @@
-﻿using System.Linq;
+using System.Linq;
 using Windows.ApplicationModel.Resources;
 
 namespace Screenbox.Core.Helpers;
+
 internal static class LanguageHelper
 {
     private static readonly ResourceLoader Loader = ResourceLoader.GetForViewIndependentUse("Screenbox.Core/LanguageCodes");

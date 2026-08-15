@@ -1,50 +1,49 @@
-﻿using System;
+using System;
 using Windows.System.Display;
 
-namespace Screenbox.Core.Helpers
+namespace Screenbox.Core.Helpers;
+
+internal class DisplayRequestTracker
 {
-    internal class DisplayRequestTracker
+    public bool IsActive => _requestCount > 0;
+
+    private readonly DisplayRequest _displayRequest;
+    private int _requestCount;
+
+    public DisplayRequestTracker()
     {
-        public bool IsActive => _requestCount > 0;
+        _displayRequest = new DisplayRequest();
+    }
 
-        private readonly DisplayRequest _displayRequest;
-        private int _requestCount;
-
-        public DisplayRequestTracker()
+    public void RequestActive()
+    {
+        lock (_displayRequest)
         {
-            _displayRequest = new DisplayRequest();
-        }
-
-        public void RequestActive()
-        {
-            lock (_displayRequest)
+            try
             {
-                try
-                {
-                    _displayRequest.RequestActive();
-                    _requestCount++;
-                }
-                catch (Exception)
-                {
-                    // pass
-                }
+                _displayRequest.RequestActive();
+                _requestCount++;
+            }
+            catch (Exception)
+            {
+                // pass
             }
         }
+    }
 
-        public void RequestRelease()
+    public void RequestRelease()
+    {
+        lock (_displayRequest)
         {
-            lock (_displayRequest)
+            if (_requestCount <= 0) return;
+            try
             {
-                if (_requestCount <= 0) return;
-                try
-                {
-                    _displayRequest.RequestRelease();
-                    _requestCount--;
-                }
-                catch (Exception)
-                {
-                    // pass
-                }
+                _displayRequest.RequestRelease();
+                _requestCount--;
+            }
+            catch (Exception)
+            {
+                // pass
             }
         }
     }

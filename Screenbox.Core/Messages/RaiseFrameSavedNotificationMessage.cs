@@ -1,12 +1,11 @@
-﻿using Windows.Storage;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Windows.Storage;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class RaiseFrameSavedNotificationMessage : ValueChangedMessage<StorageFile>
 {
-    public sealed class RaiseFrameSavedNotificationMessage : ValueChangedMessage<StorageFile>
+    public RaiseFrameSavedNotificationMessage(StorageFile value) : base(value)
     {
-        public RaiseFrameSavedNotificationMessage(StorageFile value) : base(value)
-        {
-        }
     }
 }

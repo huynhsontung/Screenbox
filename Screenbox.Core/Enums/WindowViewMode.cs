@@ -1,9 +1,8 @@
-﻿namespace Screenbox.Core.Enums
+namespace Screenbox.Core.Enums;
+
+public enum WindowViewMode
 {
-    public enum WindowViewMode
-    {
-        Default,
-        Compact,
-        FullScreen
-    }
+    Default,
+    Compact,
+    FullScreen
 }

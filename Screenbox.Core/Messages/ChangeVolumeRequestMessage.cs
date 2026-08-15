@@ -1,17 +1,16 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
-namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class ChangeVolumeRequestMessage : RequestMessage<int>
 {
-    public sealed class ChangeVolumeRequestMessage : RequestMessage<int>
+    public bool IsOffset { get; }
+
+    public int Value { get; }
+
+    public ChangeVolumeRequestMessage(int value, bool offset = false)
     {
-        public bool IsOffset { get; }
-
-        public int Value { get; }
-
-        public ChangeVolumeRequestMessage(int value, bool offset = false)
-        {
-            Value = value;
-            IsOffset = offset;
-        }
+        Value = value;
+        IsOffset = offset;
     }
 }

@@ -81,7 +81,7 @@ public sealed partial class ContentUnavailableView
     /// The default is <see langword="null"/>.</value>
     public object ActionContent
     {
-        get { return (object)GetValue(ActionContentProperty); }
+        get { return GetValue(ActionContentProperty); }
         set { SetValue(ActionContentProperty, value); }
     }
 

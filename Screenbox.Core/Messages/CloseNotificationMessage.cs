@@ -1,6 +1,5 @@
-﻿namespace Screenbox.Core.Messages
+namespace Screenbox.Core.Messages;
+
+public sealed class CloseNotificationMessage
 {
-    public sealed class CloseNotificationMessage
-    {
-    }
 }

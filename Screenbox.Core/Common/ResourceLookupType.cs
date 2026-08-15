@@ -1,10 +1,9 @@
-﻿namespace Screenbox.Core
+namespace Screenbox.Core;
+
+public enum StringLookupType
 {
-    public enum StringLookupType
-    {
-        None,
-        GoToPosition,
-        FrameSavedNotificationTitle,
-        ResumePositionNotificationTitle
-    }
+    None,
+    GoToPosition,
+    FrameSavedNotificationTitle,
+    ResumePositionNotificationTitle
 }
