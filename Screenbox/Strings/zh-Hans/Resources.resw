@@ -1145,15 +1145,15 @@
     <value>此播放列表中没有项目。</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>帧抓取将保存到</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>抓取帧位置</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>更改文件夹</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>更改</value>
   </data>
 </root>
