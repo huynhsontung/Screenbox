@@ -4,7 +4,6 @@ using System.Linq;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services;
 

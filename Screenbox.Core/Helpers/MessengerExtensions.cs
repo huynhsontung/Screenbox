@@ -4,7 +4,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
+using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Helpers;
 
