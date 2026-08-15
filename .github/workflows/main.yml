@@ -156,13 +156,16 @@ jobs:
       run: |
         $baseOutputDir = "AppPackages\StoreUploadTemp"
         $mapFilePath = "$baseOutputDir\bundle.map"
-        "[Files]`n" | Out-File -Encoding utf8 $mapFilePath
-
+        
+        $mapContent = @("[Files]")
+        
         # Find all extracted .msix files and add them to the MakeAppx map
         $msixFiles = Get-ChildItem -Path "$baseOutputDir\Extracted" -Filter "*.msix" -Recurse
         foreach ($msix in $msixFiles) {
-            "`"$($msix.FullName)`"`n" | Out-File -Encoding utf8 -Append $mapFilePath
+            $mapContent += "`"$($msix.FullName)`" `"$($msix.Name)`""
         }
+        
+        $mapContent | Out-File -Encoding utf8 -FilePath $mapFilePath
 
         # Extract the version from the first package name (e.g., Screenbox_0.19.2.0_x86.msix -> 0.19.2.0)
         $version = $msixFiles[0].Name.Split('_')[1]
