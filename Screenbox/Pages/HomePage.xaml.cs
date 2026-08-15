@@ -29,7 +29,7 @@ public sealed partial class HomePage : Page
 
     private void SelectDeselectAllKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        if (ViewModel.Recent.Count > 0 && _selectionCommand.CanToggleSelection(RecentFilesGridView))
+        if (ViewModel.Recent.Count > 0)
         {
             ViewModel.Selection.IsSelectionModeActive = true;
             _selectionCommand.ToggleSelection(RecentFilesGridView);

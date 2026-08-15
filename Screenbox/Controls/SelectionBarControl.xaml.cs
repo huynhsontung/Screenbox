@@ -398,11 +398,11 @@ public sealed partial class SelectionBarControl : UserControl
     {
         if (!IsRemoveButtonVisible) return;
 
-        if (RemoveButtonCommand is { } cmd && CommandParameter is { } parameter)
+        if (RemoveButtonCommand is { } cmd)
         {
-            if (cmd.CanExecute(parameter))
+            if (cmd.CanExecute(CommandParameter))
             {
-                cmd.Execute(parameter);
+                cmd.Execute(CommandParameter);
                 args.Handled = true;
             }
         }
