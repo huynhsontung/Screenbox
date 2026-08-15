@@ -1,5 +1,3 @@
-#nullable enable
-
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Windows.Storage.Search;
 

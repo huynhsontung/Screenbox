@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace Screenbox.Core.Messages;
 
 public class ErrorMessage

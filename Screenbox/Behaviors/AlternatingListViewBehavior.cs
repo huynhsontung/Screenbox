@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using Windows.Foundation.Collections;

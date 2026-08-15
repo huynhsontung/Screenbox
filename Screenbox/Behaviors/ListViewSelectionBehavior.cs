@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.Xaml.Interactivity;

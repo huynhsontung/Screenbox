@@ -1,5 +1,3 @@
-#nullable enable
-
 using Screenbox.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;

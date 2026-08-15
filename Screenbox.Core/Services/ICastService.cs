@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;

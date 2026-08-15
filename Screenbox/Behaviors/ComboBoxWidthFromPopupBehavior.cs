@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml;

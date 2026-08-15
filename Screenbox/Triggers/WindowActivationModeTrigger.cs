@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using CommunityToolkit.WinUI.Helpers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;

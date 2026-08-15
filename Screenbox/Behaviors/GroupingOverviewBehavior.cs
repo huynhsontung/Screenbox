@@ -1,12 +1,11 @@
-﻿#nullable enable
-
+using System;
 using Microsoft.Xaml.Interactivity;
 using Screenbox.Core.Helpers;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Behaviors;
+
 internal sealed partial class GroupingOverviewBehavior : Behavior<GridView>
 {
     public static readonly DependencyProperty GroupTypeProperty = DependencyProperty.Register(

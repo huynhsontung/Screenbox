@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Text.Json;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;

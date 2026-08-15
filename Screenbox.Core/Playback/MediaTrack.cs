@@ -1,12 +1,11 @@
-#nullable enable
-
+using System;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Helpers;
-using System;
 using Windows.Globalization;
 using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
+
 public abstract partial class MediaTrack : IMediaTrack
 {
     public string Id { get; internal set; }

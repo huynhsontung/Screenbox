@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Services;

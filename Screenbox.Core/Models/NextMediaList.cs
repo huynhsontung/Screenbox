@@ -1,9 +1,8 @@
-﻿#nullable enable
-
 using System.Collections.Generic;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Models;
+
 public sealed class NextMediaList
 {
     public MediaViewModel NextItem { get; }

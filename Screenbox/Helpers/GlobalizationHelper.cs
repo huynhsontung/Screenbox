@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;

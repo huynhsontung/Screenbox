@@ -1,9 +1,7 @@
-﻿#nullable enable
-
-using Screenbox.Core.Contexts;
-using Screenbox.Core.Enums;
 using System;
 using System.Threading.Tasks;
+using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Core;

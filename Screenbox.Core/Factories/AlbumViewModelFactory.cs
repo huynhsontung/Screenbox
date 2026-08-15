@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Collections.Generic;
 using System.Globalization;
 using Screenbox.Core.Enums;

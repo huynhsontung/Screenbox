@@ -1,7 +1,5 @@
-﻿#nullable enable
-
-using LibVLCSharp.Shared;
 using System;
+using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Playback
 {

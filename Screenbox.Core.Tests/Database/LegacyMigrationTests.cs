@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Text.Json;
 using Screenbox.Core.Models;
 using Screenbox.Core.Models.Serialization;

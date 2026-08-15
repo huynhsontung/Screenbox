@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;

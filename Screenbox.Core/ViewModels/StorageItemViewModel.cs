@@ -1,12 +1,10 @@
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
+using Windows.Storage;
 
 namespace Screenbox.Core.ViewModels
 {

@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Services;

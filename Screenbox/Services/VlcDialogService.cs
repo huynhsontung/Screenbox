@@ -1,14 +1,12 @@
-﻿#nullable enable
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
-using Screenbox.Dialogs;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using Screenbox.Dialogs;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Services;

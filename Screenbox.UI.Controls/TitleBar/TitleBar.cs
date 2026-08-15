@@ -1,5 +1,3 @@
-#nullable enable
-
 using Screenbox.UI.Automation.Peers;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;

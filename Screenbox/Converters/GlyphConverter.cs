@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
