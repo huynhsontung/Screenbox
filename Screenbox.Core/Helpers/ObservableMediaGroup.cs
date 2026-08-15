@@ -26,4 +26,9 @@ public sealed partial class ObservableMediaGroup :
     {
         Key = group.Key;
     }
+
+    public override string ToString()
+    {
+        return Key;
+    }
 }
