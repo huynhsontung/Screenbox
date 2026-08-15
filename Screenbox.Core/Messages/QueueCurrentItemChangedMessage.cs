@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.ViewModels;
 using Windows.Storage.Search;
-
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Messages;
 

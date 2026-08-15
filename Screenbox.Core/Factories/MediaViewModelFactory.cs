@@ -5,8 +5,8 @@ using LibVLCSharp.Shared;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
 using Windows.Storage;
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories;
 

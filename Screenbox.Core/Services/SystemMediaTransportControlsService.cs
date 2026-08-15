@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.ViewModels;
 using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services;
 

@@ -3,7 +3,6 @@ using System.Globalization;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories;
 
