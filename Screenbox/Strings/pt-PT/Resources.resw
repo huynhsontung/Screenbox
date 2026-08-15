@@ -1145,15 +1145,15 @@
     <value>Não existem itens nesta lista de reprodução.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>As capturas de fotogramas serão guardadas em</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Localização das capturas de fotograma</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Alterar pasta</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Alterar</value>
   </data>
 </root>
