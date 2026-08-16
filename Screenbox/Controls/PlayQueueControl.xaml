@@ -81,6 +81,11 @@
                         Icon="{ui:FontIcon Glyph=&#xE74B;}"
                         Text="{strings:Resources Key=MoveDown}" />
                     <MenuFlyoutItem
+                        Command="{StaticResource RevealInFileExplorerCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                        Icon="{ui:FontIcon Glyph=&#xEC50;}"
+                        Text="{strings:Resources Key=RevealInFileExplorer}" />
+                    <MenuFlyoutItem
                         Command="{StaticResource ShowPropertiesCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE946;}"

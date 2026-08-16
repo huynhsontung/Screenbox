@@ -30,6 +30,7 @@
                     <!--  Commands  -->
                     <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
+                    <commands:RevealInFileExplorerCommand x:Key="RevealInFileExplorerCommand" />
                     <commands:OpenWithCommand x:Key="OpenWithCommand" />
 
                     <!--  Converters  -->
