@@ -26,4 +26,4 @@ jobs:
 
     - name: Restore nuget packages
       shell: pwsh
-      run: msbuild Screenbox.sln -t:restore -p:RestoreConfigFile=nuget.config -p:RestoreLockedMode=false -p:Platform=x64 -p:Configuration=Release
+      run: msbuild Screenbox.slnx -t:restore -p:RestoreConfigFile=nuget.config -p:RestoreLockedMode=false -p:Platform=x64 -p:Configuration=Release
