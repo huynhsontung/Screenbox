@@ -52,15 +52,31 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     [ObservableProperty] public partial MediaViewModel? Media { get; set; }
     [ObservableProperty] public partial bool ShowVisualizer { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value that specifies the playback command of the on-screen display.
+    /// </summary>
+    /// <value>A value of the enumeration that indicates the playback command associated with the on-screen display.</value>
     [ObservableProperty]
     public partial PlaybackCommandKind CurrentPlaybackCommand { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the player OSD message is visible.
+    /// </summary>
+    /// <value><see langword="true"/> if the player OSD message is visible; otherwise, <see langword="false"/>.</value>
     [ObservableProperty]
     public partial bool IsOsdMessageVisible { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the player OSD badge is visible.
+    /// </summary>
+    /// <value><see langword="true"/> if the player OSD badge is visible; otherwise, <see langword="false"/>.</value>
     [ObservableProperty]
     public partial bool IsOsdBadgeVisible { get; set; }
 
+    /// <summary>
+    /// Gets or sets the value for the player OSD message.
+    /// </summary>
+    /// <value>The value for the player OSD message.</value>
     [ObservableProperty]
     public partial object? OsdMessageValue { get; set; }
 

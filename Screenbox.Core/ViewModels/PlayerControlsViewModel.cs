@@ -36,6 +36,10 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
+    /// <summary>
+    /// Gets a value that indicates whether the current playback item has exactly one subtitle track.
+    /// </summary>
+    /// <value><see langword="true"/> if the current playback item has exactly one subtitle track; otherwise, <see langword="false"/>.</value>
     public bool HasSingleSubtitleTrackCount => MediaPlayer?.PlaybackItem is { SubtitleTracks.Count: 1 };
 
     [ObservableProperty] public partial bool IsPlaying { get; set; }

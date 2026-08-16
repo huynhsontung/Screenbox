@@ -1,5 +1,8 @@
 namespace Screenbox.Core.Enums;
 
+/// <summary>
+/// Defines constants that specify the playback action represented by an on-screen display update.
+/// </summary>
 public enum PlaybackCommandKind
 {
     //None,
