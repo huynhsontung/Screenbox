@@ -460,16 +460,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (delta == 0)
             return;
 
-        PositionChangedResult result = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(delta), isOffset: true, debounce: false));
-        TimeSpan seekOffset = result.NewPosition - result.OriginalPosition;
-        string seekExtra = $"{(seekOffset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(seekOffset)}";
-        string message = $"{Humanizer.ToDuration(result.NewPosition)} / {Humanizer.ToDuration(result.NaturalDuration)} ({seekExtra})";
-        Messenger.Send(
-            new PlayerOsdUpdateMessage(
-                delta > 0 ? PlaybackCommandKind.FastForward : PlaybackCommandKind.Rewind,
-                Value: message)
-            .WithBadge()
-            .WithMessage());
+        Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(delta));
     }
 
     /// <summary>

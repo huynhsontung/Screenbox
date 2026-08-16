@@ -564,17 +564,23 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private void UpdateTimeStatusMessage(TimeSpan newTime)
     {
-        string changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
-        if (changeText[0] != '-')
-        {
-            changeText = "+" + changeText;
-        }
+        TimeSpan delta = newTime - _timeBeforeManipulation;
+        bool isDeltaPositive = delta.Ticks >= 0;
 
-        string status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
+        var statusStrBuilder = new System.Text.StringBuilder(64);
+        statusStrBuilder.Append(Humanizer.ToDuration(newTime))
+            .Append(" (");
+
+        if (isDeltaPositive)
+            statusStrBuilder.Append('+');
+
+        statusStrBuilder.Append(Humanizer.ToDuration(delta))
+            .Append(')');
+
         Messenger.Send(
             new PlayerOsdUpdateMessage(
-                changeText[0] != '-' ? PlaybackCommandKind.FastForward : PlaybackCommandKind.Rewind,
-                Value: status)
+                isDeltaPositive ? PlaybackCommandKind.FastForward : PlaybackCommandKind.Rewind,
+                Value: statusStrBuilder.ToString())
             .WithMessage());
     }
 }
