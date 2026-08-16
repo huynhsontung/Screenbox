@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -86,8 +87,15 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
 
     partial void OnIsMuteChanged(bool value)
     {
-        if (MediaPlayer == null) return;
+        if (MediaPlayer is null)
+            return;
+
         MediaPlayer.IsMuted = value;
+        Messenger.Send(
+            new PlayerOsdUpdateMessage(
+                value ? PlaybackCommandKind.Mute : PlaybackCommandKind.VolumeUp,
+                Value: Volume)
+            .WithBadge());
     }
 
     private void OnVolumeChanged(IMediaPlayer sender, object? args)

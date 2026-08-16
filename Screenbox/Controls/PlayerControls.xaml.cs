@@ -158,15 +158,12 @@ public sealed partial class PlayerControls : UserControl
 
     private void ToggleSubtitleKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        var result = ViewModel.ProcessToggleSubtitleKeyDown(args.KeyboardAccelerator.Modifiers);
-        args.Handled = result.Handled;
-        if (result.Handled)
-        {
-            string label = !string.IsNullOrEmpty(result.TrackLabel)
-                ? result.TrackLabel!
-                : Screenbox.Strings.Resources.None;
-            ViewModel.SendStatusMessage(Screenbox.Strings.Resources.SubtitleStatus(label));
-        }
+        // Ignore subtitle toggle when the key is pressed without modifiers and subtitles cannot be uniquely selected.
+        if (args.KeyboardAccelerator.Modifiers == VirtualKeyModifiers.None && !ViewModel.HasSingleSubtitleTrackCount)
+            return;
+
+        ViewModel.HandleSubtitleToggleKey(args.KeyboardAccelerator.Modifiers);
+        args.Handled = true;
     }
 
     private Visibility GetChapterVisibility(bool isEnabled, int count)

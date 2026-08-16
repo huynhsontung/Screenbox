@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
+using Screenbox.Core;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -39,7 +41,6 @@ public sealed partial class PlayerPage : Page
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
-        ViewModel.GetVolumeChangeStatusMessage = Strings.Resources.VolumeChangeStatusMessage;
         _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         RegisterSeekBarPointerHandlers();
@@ -513,7 +514,6 @@ public sealed partial class PlayerPage : Page
         var boundsRect = Window.Current.CoreWindow.Bounds;
 
         ViewModel.HandleResizeKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers, new Size(boundsRect.Width, boundsRect.Height));
-        ViewModel.SendStatusMessage(Strings.Resources.ScaleStatus($"{ViewModel.ResizeScale * 100:0.##}%"));
         args.Handled = true;
     }
 
@@ -542,5 +542,35 @@ public sealed partial class PlayerPage : Page
                 args.Handled = true;
                 break;
         }
+    }
+
+    private string GetMessageText(PlaybackCommandKind kind, object? value)
+    {
+        return kind switch
+        {
+            //PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is TimeSpan time => Humanizer.ToDuration(time),
+            PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is string timeStr => timeStr,
+            PlaybackCommandKind.VolumeUp or PlaybackCommandKind.VolumeDown when value is int volume => Strings.Resources.VolumeChangeStatusMessage(volume),
+            PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown when value is double rate => $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}\u00D7",
+            //PlaybackCommandKind.AspectRatio when value is string ratio => $"{Strings.Resources.AspectRatio}: {Converters.ResourceNameToResourceStringConverter.FromName(ratio)}",
+            PlaybackCommandKind.Scale when value is double scale => Strings.Resources.ScaleStatus($"{scale * 100:0.##}%"),
+            PlaybackCommandKind.Subtitle when value is string label => Strings.Resources.SubtitleStatus(label),
+            PlaybackCommandKind.SubtitleOff => Strings.Resources.SubtitleStatus(Strings.Resources.None),
+            _ when value is string str => str,
+            _ => string.Empty,
+        };
+    }
+
+    private HorizontalAlignment GetBadgeHorizontalAlignment(PlaybackCommandKind kind)
+    {
+        if (ViewModel.PlayerVisibility == PlayerVisibilityState.Minimal)
+            return HorizontalAlignment.Center;
+
+        return kind switch
+        {
+            PlaybackCommandKind.Rewind => HorizontalAlignment.Left,
+            PlaybackCommandKind.FastForward => HorizontalAlignment.Right,
+            _ => HorizontalAlignment.Center,
+        };
     }
 }

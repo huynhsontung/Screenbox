@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
@@ -116,7 +117,10 @@ internal static class MessengerExtensions
         string text = string.IsNullOrEmpty(extra)
             ? $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)}"
             : $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)} ({extra})";
-        messenger.Send(new UpdateStatusMessage(text));
+        var kind = extra.StartsWith("-", StringComparison.Ordinal)
+            ? PlaybackCommandKind.Rewind
+            : PlaybackCommandKind.FastForward;
+        messenger.Send(new PlayerOsdUpdateMessage(kind, Value: text).WithMessage());
     }
 
     public static void SendSeekWithStatus(this IMessenger messenger, TimeSpan amount)

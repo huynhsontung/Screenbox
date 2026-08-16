@@ -71,7 +71,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private bool _playerGestureSlideVertical;
     private bool _playerGestureSlideHorizontal;
     private bool _playerGesturePressAndHold;
-    private double? _playbackRateBeforeHold;
+    private double _playbackRateBeforeHold;
     private SlideOrientation _slideOrientation;
     private double _rawPixelsPerViewPixel = 1.0;
 
@@ -259,7 +259,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         if (!isHorizontal)
         {
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 2 : -2, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume));
+            Messenger.Send(
+                new PlayerOsdUpdateMessage(
+                    delta > 0 ? PlaybackCommandKind.VolumeUp : PlaybackCommandKind.VolumeDown,
+                    Value: volume)
+                .WithMessage());
         }
         else if (VlcMediaPlayer?.CanSeek ?? false)
         {
@@ -339,7 +343,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         if (_slideOrientation is SlideOrientation.Vertical)
         {
             int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-(VerticalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.Y), true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume));
+            Messenger.Send(
+                new PlayerOsdUpdateMessage(
+                    delta.Y > 0 ? PlaybackCommandKind.VolumeDown : PlaybackCommandKind.VolumeUp,
+                    Value: volume)
+                .WithMessage());
         }
         else if (_slideOrientation is SlideOrientation.Horizontal && (VlcMediaPlayer?.CanSeek ?? false))
         {
@@ -372,19 +380,19 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
                 {
                     Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                    Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
+                    Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, Value: effectiveHoldingSpeed, Duration: Timeout.InfiniteTimeSpan).WithMessage());
                 }
 
                 IsHolding = true;
                 break;
             case HoldingState.Completed when IsHolding:
             case HoldingState.Canceled when IsHolding:
-                if (_playbackRateBeforeHold.HasValue && VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold.Value)
+                if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold)
                 {
-                    Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold.Value));
-                    Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold.Value)));
+                    Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
+                    Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateDown, Value: _playbackRateBeforeHold).WithMessage());
                 }
-                _playbackRateBeforeHold = null;
+
                 IsHolding = false;
                 break;
         }
@@ -423,20 +431,20 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 }
                 break;
             case PlaybackActionKind.DecreaseVolume:
-                var volumeDown = Messenger.Send(new ChangeVolumeRequestMessage((int)-change, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volumeDown));
+                int volumeDown = Messenger.Send(new ChangeVolumeRequestMessage((int)-change, true));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.VolumeDown, Value: volumeDown).WithMessage());
                 break;
             case PlaybackActionKind.IncreaseVolume:
-                var volumeUp = Messenger.Send(new ChangeVolumeRequestMessage((int)change, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
+                int volumeUp = Messenger.Send(new ChangeVolumeRequestMessage((int)change, true));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.VolumeUp, Value: volumeUp).WithMessage());
                 break;
             case PlaybackActionKind.DecreaseRate:
                 double rateDown = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(playbackRate - rateDelta, 0.25, 4)));
-                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(rateDown)));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateDown, Value: rateDown).WithMessage());
                 break;
             case PlaybackActionKind.IncreaseRate:
                 double rateUp = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(playbackRate + rateDelta, 0.25, 4)));
-                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(rateUp)));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, Value: rateUp).WithMessage());
                 break;
         }
     }
@@ -556,12 +564,17 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private void UpdateTimeStatusMessage(TimeSpan newTime)
     {
-        var changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
+        string changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
         if (changeText[0] != '-')
         {
             changeText = "+" + changeText;
         }
-        var status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
-        Messenger.Send(new UpdateStatusMessage(status));
+
+        string status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
+        Messenger.Send(
+            new PlayerOsdUpdateMessage(
+                changeText[0] != '-' ? PlaybackCommandKind.FastForward : PlaybackCommandKind.Rewind,
+                Value: status)
+            .WithMessage());
     }
 }
