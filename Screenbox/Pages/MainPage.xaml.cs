@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
-using Sentry;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
@@ -36,6 +36,7 @@ public sealed partial class MainPage : Page, IContentFrame
     private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
     private readonly Dictionary<string, Type> _pages;
+    private readonly ILogger<MainPage> _logger;
 
     public MainPage()
     {
@@ -52,6 +53,7 @@ public sealed partial class MainPage : Page, IContentFrame
             { "settings", typeof(SettingsPage) }
         };
 
+        _logger = Ioc.Default.GetRequiredService<ILogger<MainPage>>();
         DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ContentFrame.Navigating += ContentFrame_Navigating;
@@ -121,11 +123,10 @@ public sealed partial class MainPage : Page, IContentFrame
 
     private void ContentFrame_Navigating(object sender, NavigatingCancelEventArgs e)
     {
-        SentrySdk.AddBreadcrumb(string.Empty, category: "navigation", type: "navigation", data: new Dictionary<string, string> {
-            { "from", ((Frame)sender).CurrentSourcePageType?.Name ?? string.Empty },
-            { "to", e.SourcePageType?.Name ?? string.Empty },
-            { "NavigationMode", e.NavigationMode.ToString()  }
-        });
+        _logger.LogInformation("Navigation requested from {FromPage} to {ToPage} with mode {NavigationMode}.",
+            ((Frame)sender).CurrentSourcePageType?.Name ?? string.Empty,
+            e.SourcePageType?.Name ?? string.Empty,
+            e.NavigationMode);
     }
 
     private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)

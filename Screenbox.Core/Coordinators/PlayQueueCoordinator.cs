@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -16,7 +17,6 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
-using Sentry;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -61,6 +61,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly PlayerContext _playerContext;
     private readonly DispatcherQueue _dispatcherQueue;
+    private readonly ILogger<PlayQueueCoordinator> _logger;
 
     // Internal playlist model — separate from the observable context.Items collection.
     // Tracks shuffle backup, current index, and provides a snapshot for service calls.
@@ -89,7 +90,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         ISettingsService settingsService,
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
-        PlayerContext playerContext)
+        PlayerContext playerContext,
+        ILogger<PlayQueueCoordinator> logger)
     {
         _context = context;
         _playlistService = playlistService;
@@ -100,6 +102,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
         _playerContext = playerContext;
+        _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         _playlist = new Playlist();
@@ -555,9 +558,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// </summary>
     private async Task OnCurrentItemChangedAsync(MediaViewModel? value)
     {
-        SentrySdk.AddBreadcrumb("Play queue current item changed", data: value is not null
-            ? new Dictionary<string, string> { { "MediaType", value.MediaType.ToString() } }
-            : null);
+        _logger.LogInformation("Play queue current item changed. {HasCurrentItem} {MediaType}",
+            value is not null,
+            value?.MediaType.ToString() ?? string.Empty);
 
         Messenger.Send(new QueueCurrentItemChangedMessage(value, _neighboringFilesQuery));
         RaiseCanNavigateChanged();

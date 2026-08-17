@@ -1,13 +1,12 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using Sentry;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
@@ -29,13 +28,16 @@ public sealed partial class CastControlViewModel : ObservableObject
     private readonly CastContext _castContext;
     private readonly ICastService _castService;
     private readonly DispatcherQueue _dispatcherQueue;
+    private readonly ILogger<CastControlViewModel> _logger;
 
-    public CastControlViewModel(PlayerContext playerContext, CastContext castContext, ICastService castService)
+    public CastControlViewModel(PlayerContext playerContext, CastContext castContext, ICastService castService,
+        ILogger<CastControlViewModel> logger)
     {
         _playerContext = playerContext;
         _castContext = castContext;
         _castService = castService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _logger = logger;
         Renderers = new ObservableCollection<Renderer>();
     }
 
@@ -70,13 +72,11 @@ public sealed partial class CastControlViewModel : ObservableObject
     private void Cast()
     {
         if (SelectedRenderer == null || MediaPlayer == null) return;
-        SentrySdk.AddBreadcrumb("Start casting", category: "command", type: "user", data: new Dictionary<string, string>
-        {
-            {"rendererHash", SelectedRenderer.Name.GetHashCode().ToString()},
-            {"rendererType", SelectedRenderer.Type},
-            {"canRenderAudio", SelectedRenderer.CanRenderAudio.ToString()},
-            {"canRenderVideo", SelectedRenderer.CanRenderVideo.ToString()},
-        });
+        _logger.LogInformation("Start casting. {RendererHash} {RendererType} {CanRenderAudio} {CanRenderVideo}",
+            SelectedRenderer.Name.GetHashCode(),
+            SelectedRenderer.Type,
+            SelectedRenderer.CanRenderAudio,
+            SelectedRenderer.CanRenderVideo);
         if (_castService.SetActiveRenderer(MediaPlayer, SelectedRenderer))
         {
             _castContext.ActiveRenderer = SelectedRenderer;
@@ -91,7 +91,7 @@ public sealed partial class CastControlViewModel : ObservableObject
     private void StopCasting()
     {
         if (MediaPlayer == null) return;
-        SentrySdk.AddBreadcrumb("Stop casting", category: "command", type: "user");
+        _logger.LogInformation("Stop casting.");
         _castService.SetActiveRenderer(MediaPlayer, null);
         _castContext.ActiveRenderer = null;
         IsCasting = false;
