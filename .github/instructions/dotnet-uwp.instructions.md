@@ -1,15 +1,14 @@
 ---
-description: 'Guidelines for building .NET UWP applications'
+description: 'Guidelines for building UWP .NET 9+ applications'
 applyTo: '**/*.cs'
 ---
 
-# .NET UWP
+# UWP .NET 9+
 
 ## C# Instructions
 
-- Always use the latest version C#, currently C# 13 features.
+- Always use the latest version C#, currently C# 14 features.
 - Write clear and concise comments for each function.
-- Use `#nullable enable` directive at the top of each file to enable nullable reference types.
 
 ## General Instructions
 
@@ -56,6 +55,7 @@ applyTo: '**/*.cs'
 - `Screenbox.Core/Models/`: Data structures and entities
 - `Screenbox.Core/Messages/`: MVVM Toolkit messenger message types
 - `Screenbox.Core/Playback/`: Media playback logic and components
+- `Screenbox.UI.Controls/`: Custom (templated) controls.
 
 ## Nullable Reference Types
 
@@ -72,7 +72,7 @@ applyTo: '**/*.cs'
 - Use Dependency Injection for service, factory, and view model instantiation.
 - View should have minimal code-behind; use data binding and commands instead.
 - View should not bind directly to models; use view models as intermediaries.
-- View models should derived from `ObservableObject` or `ObservableRecipient` from the MVVM Toolkit.
+- View models should be derived from `ObservableObject` or `ObservableRecipient` from the MVVM Toolkit.
 - UI properties in view models should use `ObservableProperty` attribute for automatic property change notification.
 - Use `ICommand` implementations (e.g., `RelayCommand`, `AsyncRelayCommand`) for handling user interactions instead of event handlers in code-behind.
 - Services should be stateless.
@@ -83,6 +83,9 @@ applyTo: '**/*.cs'
 - Guide users through creating unit tests.
 - Do not emit "Act", "Arrange" or "Assert" comments.
 - Copy existing style in nearby files for test method names and capitalization.
+- **NEVER** use a plain MSTest, xUnit, or TUnit for tests that instantiate XAML types. Use the `UWP Unit Test App` project, which provides the necessary infrastructure for such tests.
+    - Use `[TestMethod]` for pure logic tests and `[UITestMethod]` for any test that creates or interacts with XAML types (controls, pages, user controls, etc.).
+    - Build the solution before running tests to enable Visual Studio test discovery.
 
 ## Performance Optimization
 
@@ -98,10 +101,10 @@ applyTo: '**/*.cs'
 public class MainViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _userName;
+    public partial string UserName { get; set; }
 
     [ObservableProperty]
-    private string _password;
+    public partial string Password { get; set; }
 
     [RelayCommand]
     private void Login()
@@ -109,7 +112,9 @@ public class MainViewModel : ObservableObject
         // Add login logic here
     }
 }
+```
 
+```cs
 public class MessagingViewModel : ObservableRecipient,
     IRecipient<Message>
 {
@@ -120,7 +125,7 @@ public class MessagingViewModel : ObservableRecipient,
         _service = service;
 
         // Activate the view model's messenger
-        IsActive = true;
+        Messenger.Register<Message>(this);
     }
 
     public void Receive(Message message)
