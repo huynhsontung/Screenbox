@@ -119,7 +119,7 @@ sealed partial class App : Application
 #if DEBUG
             builder.AddDebug();
 #endif
-            builder.AddFilter("Sentry", LogLevel.Warning);
+            builder.AddFilter("Sentry", Microsoft.Extensions.Logging.LogLevel.Warning);
             builder.AddSentry(options =>
             {
                 options.Dsn = Secrets.SentryDsn;
@@ -128,11 +128,11 @@ sealed partial class App : Application
                 options.AutoSessionTracking = true;
                 options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
                 options.DisableWinUiUnhandledExceptionIntegration();
-                options.MinimumEventLevel = LogLevel.Error;
+                options.MinimumEventLevel = Microsoft.Extensions.Logging.LogLevel.Error;
 #if DEBUG
-                options.MinimumBreadcrumbLevel = LogLevel.Debug;
+                options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Debug;
 #else
-                options.MinimumBreadcrumbLevel = LogLevel.Information;
+                options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Information;
 #endif
             });
         });
