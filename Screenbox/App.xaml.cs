@@ -133,6 +133,7 @@ sealed partial class App : Application
         {
 #if DEBUG
             builder.AddDebug();
+            builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Debug);
 #endif
             builder.AddSentry(options =>
             {

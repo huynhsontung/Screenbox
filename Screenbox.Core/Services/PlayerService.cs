@@ -209,9 +209,9 @@ public sealed partial class PlayerService : IPlayerService
 
     private void OnLibVlcLog(object? sender, LogEventArgs e)
     {
-        LogVlcDebug(_vlcLogger, e.FormattedLog);
+        LogVlcMessage(_vlcLogger, e.Module ?? "", e.Level, e.Message);
     }
 
-    [LoggerMessage(Level = Microsoft.Extensions.Logging.LogLevel.Debug, Message = "{FormattedLog}")]
-    private static partial void LogVlcDebug(ILogger logger, string formattedLog);
+    [LoggerMessage(Level = Microsoft.Extensions.Logging.LogLevel.Debug, Message = "{Module}: {VlcLogLevel}: {Message}")]
+    private static partial void LogVlcMessage(ILogger logger, string module, LibVLCSharp.Shared.LogLevel vlcLogLevel, string message);
 }
