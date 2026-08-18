@@ -101,6 +101,11 @@ public sealed partial class PlayerElement : UserControl
     {
         if (!IsEnabled) return;
 
+        // If the gesture recognizer is already active, complete the current gesture before processing the new down event.
+        // If we don't do this, the gesture recognizer will throw an exception.
+        if (_gestureRecognizer.IsActive)
+            _gestureRecognizer.CompleteGesture();
+
         _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
         VideoViewButton.CapturePointer(e.Pointer);
         e.Handled = true;
