@@ -10,7 +10,7 @@ using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services;
 
-public sealed class PlayerService : IPlayerService
+public sealed partial class PlayerService : IPlayerService
 {
     private readonly IVlcDialogService _vlcDialogService;
     private readonly ILogger<PlayerService> _logger;
@@ -21,11 +21,11 @@ public sealed class PlayerService : IPlayerService
     public PlayerService(
         IVlcDialogService vlcDialogService,
         ILogger<PlayerService> logger,
-        ILoggerFactory loggerFactory)
+        ILogger<LibVLC> vlcLogger)
     {
         _vlcDialogService = vlcDialogService;
         _logger = logger;
-        _vlcLogger = loggerFactory.CreateLogger("LibVLC");
+        _vlcLogger = vlcLogger;
 
         // FutureAccessList is preferred because it can handle network StorageFiles
         // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
@@ -209,6 +209,9 @@ public sealed class PlayerService : IPlayerService
 
     private void OnLibVlcLog(object? sender, LogEventArgs e)
     {
-        _vlcLogger.LogDebug("{Message}", e.FormattedLog);
+        LogVlcDebug(_vlcLogger, e.FormattedLog);
     }
+
+    [LoggerMessage(Level = Microsoft.Extensions.Logging.LogLevel.Debug, Message = "{FormattedLog}")]
+    private static partial void LogVlcDebug(ILogger logger, string formattedLog);
 }
