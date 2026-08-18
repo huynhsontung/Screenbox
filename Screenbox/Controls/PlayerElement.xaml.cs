@@ -108,11 +108,9 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        if (!IsEnabled) return;
-
         _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
         VideoViewButton.ReleasePointerCapture(e.Pointer);
-        e.Handled = true;
+        e.Handled = IsEnabled;
     }
 
     private void VideoViewButton_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
