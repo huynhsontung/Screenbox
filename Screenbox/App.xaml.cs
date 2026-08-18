@@ -18,6 +18,7 @@ using Screenbox.Lively;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
+using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -42,7 +43,11 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
+        // Initialize Sentry SDK and immediately register error handlers before XAML is initialized
         _ = InitializeSentrySdk();
+        UnhandledException += App_UnhandledException;
+        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+
         InitializeComponent();
 
         if (DeviceInfoHelper.IsXbox)
@@ -60,16 +65,13 @@ sealed partial class App : Application
         // https://learn.microsoft.com/en-us/windows/apps/design/accessibility/high-contrast-themes#setting-highcontrastadjustment-to-none
         HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
 
-        Suspending += OnSuspending;
-
         _services = ConfigureServices();
         CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(_services);
 
         _logger = _services.GetRequiredService<ILogger<App>>();
         _telemetryService = _services.GetRequiredService<ITelemetryService>();
 
-        UnhandledException += App_UnhandledException;
-        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+        Suspending += OnSuspending;
     }
 
     [SecurityCritical]
@@ -81,16 +83,23 @@ sealed partial class App : Application
         }
         catch (Exception ex)
         {
+            // Tell Sentry this was an unhandled exception
+            ex.Data[Mechanism.HandledKey] = false;
+            ex.Data[Mechanism.MechanismKey] = "CoreApplication.UnhandledErrorDetected";
+
+            // Capture the exception
+            SentrySdk.CaptureException(ex);
+
+            // Flush the event immediately
+            SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+
             if (ex is VLCException { Message: "Could not create Direct3D11 device : No compatible adapter found." })
             {
                 WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
-                _logger.LogError(ex, "Direct3D11 device initialization failed.");
             }
             else
             {
-                _logger.LogCritical(ex, "Unhandled exception detected by {Mechanism}. {HandledState}",
-                    "CoreApplication.UnhandledErrorDetected", false);
-                _telemetryService.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+                throw;
             }
         }
     }
@@ -102,9 +111,15 @@ sealed partial class App : Application
         var exception = e.Exception;
         if (exception != null)
         {
-            _logger.LogCritical(exception, "Unhandled exception detected by {Mechanism}. {HandledState}",
-                "Application.UnhandledException", false);
-            _telemetryService.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+            // Tell Sentry this was an unhandled exception
+            exception.Data[Mechanism.HandledKey] = false;
+            exception.Data[Mechanism.MechanismKey] = "Application.UnhandledException";
+
+            // Capture the exception
+            SentrySdk.CaptureException(exception);
+
+            // Flush the event immediately
+            SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
         }
     }
 
@@ -116,21 +131,15 @@ sealed partial class App : Application
         services.AddSingleton<ITelemetryService, SentryTelemetryService>();
         services.AddLogging(builder =>
         {
-            builder.ClearProviders();
 #if DEBUG
             builder.AddDebug();
 #endif
-            builder.AddFilter("Sentry", Microsoft.Extensions.Logging.LogLevel.Warning);
             builder.AddSentry(options =>
             {
                 ConfigureSentryOptions(options);
                 options.InitializeSdk = false;
                 options.MinimumEventLevel = Microsoft.Extensions.Logging.LogLevel.Error;
-#if DEBUG
-                options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Debug;
-#else
                 options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Information;
-#endif
             });
         });
 
@@ -163,14 +172,16 @@ sealed partial class App : Application
         return services.BuildServiceProvider();
     }
 
-    private static IDisposable? InitializeSentrySdk()
+    private static IDisposable InitializeSentrySdk()
     {
-        if (string.IsNullOrWhiteSpace(Secrets.SentryDsn))
-        {
-            return null;
-        }
+        var initRef = SentrySdk.Init(options => ConfigureSentryOptions(options));
 
-        return SentrySdk.Init(options => ConfigureSentryOptions(options));
+        SentrySdk.ConfigureScope(scope =>
+        {
+            scope.SetTag("device_family", DeviceInfoHelper.DeviceFamily);
+        });
+
+        return initRef;
     }
 
     private static void ConfigureSentryOptions(SentryOptions options)
