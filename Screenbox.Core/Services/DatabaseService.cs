@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Windows.Storage;
 
 namespace Screenbox.Core.Services;
@@ -22,6 +24,7 @@ public sealed partial class DatabaseService : IDatabaseService
     public string DbFolderPath { get; }
 
     private string? _connectionString;
+    private readonly ILogger<DatabaseService> _logger;
     private readonly object _initLock = new();
     private Task? _initializationTask;
 
@@ -29,9 +32,10 @@ public sealed partial class DatabaseService : IDatabaseService
     /// Initializes a new instance of the <see cref="DatabaseService"/> class.
     /// </summary>
     /// <param name="dbFolderPath">Optional custom folder path for database storage. If <c>null</c>, defaults to ApplicationData LocalFolder.</param>
-    public DatabaseService(string? dbFolderPath = null)
+    public DatabaseService(string? dbFolderPath = null, ILogger<DatabaseService>? logger = null)
     {
         DbFolderPath = dbFolderPath ?? GetUwpFolderPath();
+        _logger = logger ?? NullLogger<DatabaseService>.Instance;
     }
 
     // This method is marked NoInlining to prevent the JIT compiler from eagerly loading

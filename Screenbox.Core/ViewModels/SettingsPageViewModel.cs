@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
@@ -76,6 +77,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
     private readonly IPlaybackProgressTracker _playbackProgressTracker;
+    private readonly ILogger<SettingsPageViewModel> _logger;
     private static InitialValues? _initialValues;
     private StorageLibrary? _videosLibrary;
     private StorageLibrary? _musicLibrary;
@@ -93,13 +95,15 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         IFilesService filesService,
         LibraryContext libraryContext,
         ILibraryCoordinator libraryCoordinator,
-        IPlaybackProgressTracker playbackProgressTracker)
+        IPlaybackProgressTracker playbackProgressTracker,
+        ILogger<SettingsPageViewModel> logger)
     {
         _settingsService = settingsService;
         _filesService = filesService;
         _libraryContext = libraryContext;
         _libraryCoordinator = libraryCoordinator;
         _playbackProgressTracker = playbackProgressTracker;
+        _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
         MusicLocations = new ObservableCollection<StorageFolder>();
@@ -285,7 +289,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to refresh library watchers after updating the indexer setting.");
             }
         }
     }
@@ -447,7 +451,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to open the frame capture folder.");
         }
     }
 
@@ -509,7 +513,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to load the frame capture folder.");
         }
     }
 
@@ -575,7 +579,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         catch (Exception e)
         {
             Messenger.Send(new ErrorMessage(null, e.Message));
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to refresh the music library from settings.");
         }
     }
 
@@ -592,7 +596,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         catch (Exception e)
         {
             Messenger.Send(new ErrorMessage(null, e.Message));
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to refresh the videos library from settings.");
         }
     }
 

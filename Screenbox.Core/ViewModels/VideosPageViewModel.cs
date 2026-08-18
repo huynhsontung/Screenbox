@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -30,10 +31,12 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
     private readonly List<StorageFolder> _breadcrumbLocations = new();
     private readonly LibraryContext _libraryContext;
     private readonly DispatcherQueue _dispatcherQueue;
+    private readonly ILogger<VideosPageViewModel> _logger;
 
-    public VideosPageViewModel(LibraryContext libraryContext)
+    public VideosPageViewModel(LibraryContext libraryContext, ILogger<VideosPageViewModel> logger)
     {
         _libraryContext = libraryContext;
+        _logger = logger;
         HasVideos = true;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
@@ -74,7 +77,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         {
             folder = ApplicationData.Current.TemporaryFolder;
             Messenger.Send(new ErrorMessage(null, e.Message));
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to resolve the first videos folder.");
             return false;
         }
     }

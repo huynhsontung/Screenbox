@@ -613,7 +613,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to enqueue neighboring files.");
         }
         finally
         {

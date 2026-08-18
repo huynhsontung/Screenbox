@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -27,14 +28,16 @@ public sealed class LibraryService : ILibraryService
     private readonly IFilesService _filesService;
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
+    private readonly ILogger<LibraryService> _logger;
 
     public LibraryService(ISettingsService settingsService, IFilesService filesService,
-        IDatabaseService databaseService, MediaViewModelFactory mediaFactory)
+        IDatabaseService databaseService, MediaViewModelFactory mediaFactory, ILogger<LibraryService> logger)
     {
         _settingsService = settingsService;
         _filesService = filesService;
         _databaseService = databaseService;
         _mediaFactory = mediaFactory;
+        _logger = logger;
     }
 
     public StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer)
@@ -135,7 +138,7 @@ public sealed class LibraryService : ILibraryService
                     }
                     catch (Exception e)
                     {
-                        LogService.Log($"Failed to resolve change from library tracker\n{e}");
+                        _logger.LogError(e, "Failed to resolve music library changes from the change tracker.");
                     }
                 }
             }
@@ -234,7 +237,7 @@ public sealed class LibraryService : ILibraryService
                     }
                     catch (Exception e)
                     {
-                        LogService.Log($"Failed to resolve change from library tracker\n{e}");
+                        _logger.LogError(e, "Failed to resolve video library changes from the change tracker.");
                     }
                 }
             }
@@ -307,7 +310,7 @@ public sealed class LibraryService : ILibraryService
         }
         catch (Exception e)
         {
-            LogService.Log($"Failed to load library cache from database\n{e}");
+            _logger.LogError(e, "Failed to load the music library cache from the database.");
             return new RawCacheLoadResultDto();
         }
     }
@@ -323,7 +326,7 @@ public sealed class LibraryService : ILibraryService
         }
         catch (Exception e)
         {
-            LogService.Log($"Failed to load library cache from database\n{e}");
+            _logger.LogError(e, "Failed to load the video library cache from the database.");
             return new RawCacheLoadResultDto();
         }
     }
@@ -371,7 +374,7 @@ public sealed class LibraryService : ILibraryService
             }
             catch (Exception e)
             {
-                LogService.Log($"Failed to create MediaViewModel for path '{record.Path}'\n{e}");
+                _logger.LogError(e, "Failed to create a music MediaViewModel for path '{Path}'.", record.Path);
             }
         }
 
@@ -419,7 +422,7 @@ public sealed class LibraryService : ILibraryService
             }
             catch (Exception e)
             {
-                LogService.Log($"Failed to create MediaViewModel for path '{record.Path}'\n{e}");
+                _logger.LogError(e, "Failed to create a video MediaViewModel for path '{Path}'.", record.Path);
             }
         }
 
@@ -452,7 +455,7 @@ public sealed class LibraryService : ILibraryService
         }
         catch (Exception e) when (e is not OperationCanceledException)
         {
-            LogService.Log($"Failed to write music cache to database\n{e}");
+            _logger.LogError(e, "Failed to write the music library cache to the database.");
         }
     }
 
@@ -481,7 +484,7 @@ public sealed class LibraryService : ILibraryService
         }
         catch (Exception e) when (e is not OperationCanceledException)
         {
-            LogService.Log($"Failed to write video cache to database\n{e}");
+            _logger.LogError(e, "Failed to write the video library cache to the database.");
         }
     }
 
@@ -581,7 +584,7 @@ public sealed class LibraryService : ILibraryService
             {
                 e.Data[nameof(fetchIndex)] = fetchIndex;
                 e.Data[nameof(batchSize)] = batchSize;
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to fetch files from storage.");
             }
 
             return Array.Empty<StorageFile>();

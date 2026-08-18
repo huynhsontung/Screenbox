@@ -41,7 +41,7 @@ public sealed partial class DatabaseService
         }
         catch (Exception ex) when (ex is SqliteException or IOException)
         {
-            LogService.Log(ex);
+            _logger.LogError(ex, "Failed to initialize the database schema. Recreating the database file.");
             RecreateDatabaseFile(dbPath, connectionString);
         }
     }
@@ -197,7 +197,7 @@ public sealed partial class DatabaseService
             }
             catch (Exception ex)
             {
-                LogService.Log($"Failed to read legacy playlist '{filePath}': {ex.Message}");
+                _logger.LogError(ex, "Failed to read legacy playlist '{Path}'.", filePath);
                 hasImportFailure = true;
                 continue;
             }
@@ -255,7 +255,7 @@ public sealed partial class DatabaseService
             }
             catch (Exception ex)
             {
-                LogService.Log($"Failed to delete legacy artifact '{fileName}': {ex.Message}");
+                _logger.LogWarning(ex, "Failed to delete legacy artifact '{FileName}'.", fileName);
             }
         }
 
@@ -266,7 +266,7 @@ public sealed partial class DatabaseService
         }
         catch (Exception ex)
         {
-            LogService.Log($"Failed to delete legacy folder '{LegacyPlaylistsFolderName}': {ex.Message}");
+            _logger.LogWarning(ex, "Failed to delete legacy folder '{FolderName}'.", LegacyPlaylistsFolderName);
         }
     }
 
@@ -322,7 +322,7 @@ public sealed partial class DatabaseService
             }
             catch (Exception ex)
             {
-                LogService.Log($"Failed to delete database file '{file}': {ex.Message}");
+                _logger.LogWarning(ex, "Failed to delete database file '{FilePath}'.", file);
             }
         }
     }

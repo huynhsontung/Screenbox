@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -34,17 +35,20 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly Dictionary<string, string> _pathToMruMappings;
+    private readonly ILogger<HomePageViewModel> _logger;
 
     public HomePageViewModel(
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ILogger<HomePageViewModel> logger)
     {
         Selection = selection;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _settingsService = settingsService;
+        _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
         _pathToMruMappings = new Dictionary<string, string>();
@@ -174,7 +178,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to remove stale MRU token '{Token}'.", token);
             }
         }
 
@@ -198,11 +202,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to load recent media details for '{Path}'.", media.Location);
         }
     }
 
-    private static async Task SafeLoadThumbnailAsync(MediaViewModel media)
+    private async Task SafeLoadThumbnailAsync(MediaViewModel media)
     {
         try
         {
@@ -215,7 +219,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to load a thumbnail for '{Path}'.", media.Location);
         }
     }
 
@@ -335,7 +339,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Selection.DisableSelectionMode();
     }
 
-    private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
+    private async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
     {
         try
         {
@@ -360,7 +364,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to resolve MRU token '{Token}' to a file.", token);
             return null;
         }
     }

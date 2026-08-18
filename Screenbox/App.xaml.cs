@@ -17,6 +17,7 @@ using Screenbox.Helpers;
 using Screenbox.Lively;
 using Screenbox.Pages;
 using Screenbox.Services;
+using Sentry;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -41,6 +42,7 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
+        _ = InitializeSentrySdk();
         InitializeComponent();
 
         if (DeviceInfoHelper.IsXbox)
@@ -65,7 +67,6 @@ sealed partial class App : Application
 
         _logger = _services.GetRequiredService<ILogger<App>>();
         _telemetryService = _services.GetRequiredService<ITelemetryService>();
-        LogService.Initialize(_services.GetRequiredService<ILoggerFactory>());
 
         UnhandledException += App_UnhandledException;
         CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
@@ -122,12 +123,8 @@ sealed partial class App : Application
             builder.AddFilter("Sentry", Microsoft.Extensions.Logging.LogLevel.Warning);
             builder.AddSentry(options =>
             {
-                options.Dsn = Secrets.SentryDsn;
-                options.SampleRate = 1.0f;
-                options.IsGlobalModeEnabled = true;
-                options.AutoSessionTracking = true;
-                options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
-                options.DisableWinUiUnhandledExceptionIntegration();
+                ConfigureSentryOptions(options);
+                options.InitializeSdk = false;
                 options.MinimumEventLevel = Microsoft.Extensions.Logging.LogLevel.Error;
 #if DEBUG
                 options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Debug;
@@ -164,6 +161,25 @@ sealed partial class App : Application
         ));
 
         return services.BuildServiceProvider();
+    }
+
+    private static IDisposable? InitializeSentrySdk()
+    {
+        if (string.IsNullOrWhiteSpace(Secrets.SentryDsn))
+        {
+            return null;
+        }
+
+        return SentrySdk.Init(options => ConfigureSentryOptions(options));
+    }
+
+    private static void ConfigureSentryOptions(SentryOptions options)
+    {
+        options.Dsn = Secrets.SentryDsn;
+        options.SampleRate = 1.0f;
+        options.IsGlobalModeEnabled = true;
+        options.AutoSessionTracking = true;
+        options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
     }
 
     private void SetMinWindowSize()

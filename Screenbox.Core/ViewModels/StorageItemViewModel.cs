@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -26,12 +27,15 @@ public sealed partial class StorageItemViewModel : ObservableObject
     [ObservableProperty] public partial uint ItemCount { get; set; }
 
     private readonly IFilesService _filesService;
+    private readonly ILogger<StorageItemViewModel> _logger;
 
     public StorageItemViewModel(IFilesService filesService,
         MediaViewModelFactory mediaFactory,
+        ILogger<StorageItemViewModel> logger,
         IStorageItem storageItem)
     {
         _filesService = filesService;
+        _logger = logger;
         StorageItem = storageItem;
         CaptionText = string.Empty;
         DateCreated = storageItem.DateCreated;
@@ -90,7 +94,7 @@ public sealed partial class StorageItemViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to update the caption for storage item '{Path}'.", Path);
         }
     }
 }
