@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Models;
 using Screenbox.Core.Models.Serialization;
 
@@ -309,7 +310,7 @@ public sealed partial class DatabaseService
         cmd.ExecuteNonQuery();
     }
 
-    private static void TryDeleteDatabase(string dbPath)
+    private void TryDeleteDatabase(string dbPath)
     {
         foreach (string file in new[] { dbPath, dbPath + "-shm", dbPath + "-wal" })
         {

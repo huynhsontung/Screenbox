@@ -11,9 +11,10 @@ namespace Screenbox.Core.Helpers;
 
 public static class MediaGroupingHelpers
 {
-    private static ILogger<MediaGroupingHelpers> Logger =>
-        ((IServiceProvider)Ioc.Default).GetService(typeof(ILogger<MediaGroupingHelpers>)) as ILogger<MediaGroupingHelpers>
-        ?? NullLogger<MediaGroupingHelpers>.Instance;
+    private static ILogger Logger =>
+        (((IServiceProvider)Ioc.Default).GetService(typeof(ILoggerFactory)) as ILoggerFactory)
+            ?.CreateLogger(typeof(MediaGroupingHelpers).FullName!)
+        ?? NullLogger.Instance;
 
     public const string OtherGroupSymbol = "\u2026";
 
