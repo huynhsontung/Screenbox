@@ -27,10 +27,14 @@ try {
         }
 
         # Resolve full path if relative
-        $filePath = if (Test-Path $targetFile) { $targetFile } else { Join-Path (Split-Path -Parent $PSScriptRoot) $targetFile }
+        $repoRoot = Split-Path -Parent $PSScriptRoot
+        $filePath = if (Test-Path -LiteralPath $targetFile) { $targetFile } else { Join-Path $repoRoot $targetFile }
 
-        # Format only the targeted XAML file if it exists
-        if (Test-Path $filePath) {
+        $resolvedPath = Resolve-Path -LiteralPath $filePath -ErrorAction SilentlyContinue
+        $filePath = if ($resolvedPath) { $resolvedPath.Path } else { $null }
+
+        # Format only the targeted XAML file if it exists and is within the repo
+        if ($filePath -and $filePath.StartsWith($repoRoot, [System.StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $filePath)) {
             dotnet tool run xstyler -f $filePath 2>&1 | Out-Null
         }
     }
