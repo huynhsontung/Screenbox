@@ -62,7 +62,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj" />
     <ProjectReference Include="..\Screenbox.Lively\Screenbox.Lively.csproj" />
-    <ProjectReference Include="..\Screenbox.UI.Controls\Screenbox.UI.Controls.csproj" />
+    <ProjectReference Include="..\Screenbox.UI\Screenbox.UI.csproj" />
     <ProjectReference Include="..\Screenbox.VideoView\Screenbox.VideoView.csproj" />
   </ItemGroup>
 </Project>

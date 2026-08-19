@@ -5,16 +5,16 @@
 
     <ResourceDictionary.MergedDictionaries>
         <!--#region Common-->
-        <ResourceDictionary Source="ms-appx:///Screenbox.UI.Controls/CommonStyles/SplitButton_themeresources.xaml" />
-        <ResourceDictionary Source="ms-appx:///Screenbox.UI.Controls/CommonStyles/Thickness_themeresources.xaml" />
+        <ResourceDictionary Source="ms-appx:///Screenbox.UI/Controls/CommonStyles/SplitButton_themeresources.xaml" />
+        <ResourceDictionary Source="ms-appx:///Screenbox.UI/Controls/CommonStyles/Thickness_themeresources.xaml" />
         <!--#endregion-->
 
         <!--#region ContentUnavailableView-->
-        <ResourceDictionary Source="ms-appx:///Screenbox.UI.Controls/ContentUnavailableView/ContentUnavailableView_themeresources.xaml" />
+        <ResourceDictionary Source="ms-appx:///Screenbox.UI/Controls/ContentUnavailableView/ContentUnavailableView_themeresources.xaml" />
         <!--#endregion-->
 
         <!--#region TitleBar-->
-        <ResourceDictionary Source="ms-appx:///Screenbox.UI.Controls/TitleBar/TitleBar_themeresources.xaml" />
+        <ResourceDictionary Source="ms-appx:///Screenbox.UI/Controls/TitleBar/TitleBar_themeresources.xaml" />
         <!--#endregion-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
