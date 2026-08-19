@@ -24,7 +24,7 @@ dotnet tool restore
 ### Restore NuGet Packages
 For the full solution:
 ```pwsh
-msbuild Screenbox.slnx -t:restore -p:RestoreConfigFile=nuget.config -p:RestoreLockedMode=false -p:Platform=x64 -p:Configuration=Release
+msbuild Screenbox.slnx -t:restore -p:Platform=x64 -p:Configuration=Debug
 ```
 
 Or restore the main UWP app project individually:
@@ -36,14 +36,7 @@ msbuild Screenbox/Screenbox.csproj /p:Configuration=Debug /p:Platform=x64 /t:Res
 
 ## 2. Compilation / Build
 
-Screenbox targets `x64` by default for local development.
-
-### Build Core Logic (`Screenbox.Core`)
-```pwsh
-msbuild Screenbox.Core/Screenbox.Core.csproj /t:Build /p:Configuration=Debug /p:Platform=x64 /m
-```
-
-### Build Main Application (`Screenbox`)
+Target the system platform for local development. For example, to build the main UWP app in Debug mode on the `x64` platform:
 ```pwsh
 msbuild Screenbox/Screenbox.csproj /p:Configuration=Debug /p:Platform=x64 /t:Build /m
 ```
@@ -55,11 +48,6 @@ msbuild Screenbox/Screenbox.csproj /p:Configuration=Debug /p:Platform=x64 /t:Bui
 ### Run Full Test Suite
 ```pwsh
 dotnet test Screenbox.Core.Tests/Screenbox.Core.Tests.csproj -v minimal
-```
-
-### Run Focused Database Service Tests
-```pwsh
-dotnet test Screenbox.Core.Tests/Screenbox.Core.Tests.csproj --filter "FullyQualifiedName~DatabaseServiceTests" -v n
 ```
 
 ### Testing Rules & Constraints
