@@ -5,6 +5,4 @@ Screenbox only collects exception and diagnostic details such as log messages, e
 
 Telemetry is used to assess Screenbox's adaptation and identify programming issues, guiding the development process. This data is not used for marketing or sales. This data is not sent to any third party.
 
-During local debugging builds, logs may also be written to the Visual Studio debug output to help diagnose development issues.
-
 Source code of the telemetry service is public and can be viewed from the project's repository.
