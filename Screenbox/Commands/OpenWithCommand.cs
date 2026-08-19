@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
@@ -20,12 +20,11 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
     public event EventHandler? CanExecuteChanged;
 
     private readonly AsyncRelayCommand<MediaViewModel> _asyncCommand;
-    private static ILogger<OpenWithCommand> Logger =>
-        ((IServiceProvider)Ioc.Default).GetService(typeof(ILogger<OpenWithCommand>)) as ILogger<OpenWithCommand>
-        ?? NullLogger<OpenWithCommand>.Instance;
+    private readonly ILogger<OpenWithCommand> _logger;
 
     public OpenWithCommand()
     {
+        _logger = DefaultLogging.CreateLogger<OpenWithCommand>();
         _asyncCommand = new AsyncRelayCommand<MediaViewModel>(OpenWithAsync);
         _asyncCommand.CanExecuteChanged += (_, _) => NotifyCanExecuteChanged();
     }
@@ -91,12 +90,12 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
             bool success = await Launcher.LaunchFileAsync(file, options);
             if (!success)
             {
-                Logger.LogWarning("Failed to open file with an external application because no application was selected or available.");
+                _logger.LogWarning("Failed to open file with an external application because no application was selected or available.");
             }
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Failed to open '{Path}' with an external application.", file.Path);
+            _logger.LogError(ex, "Failed to open '{Path}' with an external application.", file.Path);
         }
     }
 }

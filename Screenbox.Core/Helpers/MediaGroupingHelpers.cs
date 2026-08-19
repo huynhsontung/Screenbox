@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Windows.Globalization;
 using Windows.Globalization.Collation;
 
@@ -11,10 +9,7 @@ namespace Screenbox.Core.Helpers;
 
 public static class MediaGroupingHelpers
 {
-    private static ILogger Logger =>
-        (((IServiceProvider)Ioc.Default).GetService(typeof(ILoggerFactory)) as ILoggerFactory)
-            ?.CreateLogger(typeof(MediaGroupingHelpers).FullName!)
-        ?? NullLogger.Instance;
+    private static readonly ILogger Logger = DefaultLogging.CreateLogger(nameof(MediaGroupingHelpers));
 
     public const string OtherGroupSymbol = "\u2026";
 
