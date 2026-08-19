@@ -40,7 +40,14 @@ public sealed partial class SongsPage : Page
             return;
         }
 
-        var state = ViewModel.SortBy switch
+        UpdateSortVisualState(ViewModel.SortBy);
+        UpdateSortByFlyout();
+        SavePageState(0);
+    }
+
+    private void UpdateSortVisualState(string sortBy)
+    {
+        var state = sortBy switch
         {
             "album" => "SortByAlbum",
             "artist" => "SortByArtist",
@@ -48,8 +55,6 @@ public sealed partial class SongsPage : Page
         };
 
         VisualStateManager.GoToState(this, state, true);
-        UpdateSortByFlyout();
-        SavePageState(0);
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -63,6 +68,9 @@ public sealed partial class SongsPage : Page
             ViewModel.SortBy = pair.Key;
             _contentVerticalOffset = pair.Value;
         }
+
+        UpdateSortVisualState(ViewModel.SortBy);
+        UpdateSortByFlyout();
 
         if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchSongs))
         {

@@ -39,15 +39,20 @@ public sealed partial class AlbumsPage : Page
     {
         if (e.PropertyName == nameof(AlbumsPageViewModel.SortBy))
         {
-            var state = ViewModel.SortBy switch
-            {
-                "artist" => "SortByArtist",
-                _ => "SortByTitle"
-            };
-            VisualStateManager.GoToState(this, state, true);
+            UpdateSortVisualState(ViewModel.SortBy);
             UpdateSortByFlyout();
             SavePageState(0);
         }
+    }
+
+    private void UpdateSortVisualState(string sortBy)
+    {
+        var state = sortBy switch
+        {
+            "artist" => "SortByArtist",
+            _ => "SortByTitle"
+        };
+        VisualStateManager.GoToState(this, state, true);
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -60,6 +65,9 @@ public sealed partial class AlbumsPage : Page
             ViewModel.SortBy = pair.Key;
             _contentVerticalOffset = pair.Value;
         }
+
+        UpdateSortVisualState(ViewModel.SortBy);
+        UpdateSortByFlyout();
 
         if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchAlbums))
             ViewModel.FetchAlbums();

@@ -11,6 +11,7 @@ using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
@@ -24,26 +25,36 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     [ObservableProperty] public partial string SortBy { get; set; } = string.Empty;
 
     private readonly LibraryContext _libraryContext;
-    private readonly DispatcherQueue _dispatcherQueue;
-    private readonly DispatcherQueueTimer _refreshTimer;
+    private readonly ISettingsService _settingsService;
+    private readonly DispatcherQueue? _dispatcherQueue;
+    private readonly DispatcherQueueTimer? _refreshTimer;
 
-    public SongsPageViewModel(LibraryContext libraryContext)
+    public SongsPageViewModel(LibraryContext libraryContext, ISettingsService settingsService)
     {
         _libraryContext = libraryContext;
+        _settingsService = settingsService;
+        SortBy = _settingsService.PersistentSongsSortBy;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _refreshTimer = _dispatcherQueue.CreateTimer();
+        _refreshTimer = _dispatcherQueue?.CreateTimer();
 
         Messenger.Register<PropertyChangedMessage<MusicLibrary>>(this);
     }
 
     public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        _dispatcherQueue.TryEnqueue(FetchSongs);
+        if (_dispatcherQueue is not null)
+        {
+            _dispatcherQueue.TryEnqueue(FetchSongs);
+        }
+        else
+        {
+            FetchSongs();
+        }
     }
 
     public void OnNavigatedFrom()
     {
-        _refreshTimer.Stop();
+        _refreshTimer?.Stop();
     }
 
     public void FetchSongs()
@@ -73,11 +84,11 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         // Progressively update when it's still loading
         if (_libraryContext.IsLoadingMusic)
         {
-            _refreshTimer.Debounce(FetchSongs, TimeSpan.FromSeconds(5));
+            _refreshTimer?.Debounce(FetchSongs, TimeSpan.FromSeconds(5));
         }
         else
         {
-            _refreshTimer.Stop();
+            _refreshTimer?.Stop();
         }
     }
 
@@ -174,6 +185,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     partial void OnSortByChanged(string value)
     {
+        _settingsService.PersistentSongsSortBy = value;
         var groups = GetCurrentGrouping(_libraryContext, value);
         GroupedSongs.Clear();
         foreach (IGrouping<string, MediaViewModel> group in groups)

@@ -32,6 +32,8 @@ public sealed class SettingsService : ISettingsService
     private const string PersistentRepeatModeKey = "Values/RepeatMode";
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
     private const string PersistentShowRemainingTimeKey = "Values/ShowRemainingTime";
+    private const string PersistentSongsSortByKey = "Values/Songs/SortBy";
+    private const string PersistentAlbumsSortByKey = "Values/Albums/SortBy";
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
@@ -238,6 +240,18 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PlayerGesturePressAndHoldKey, value);
     }
 
+    public string PersistentSongsSortBy
+    {
+        get => GetValue<string>(PersistentSongsSortByKey) is { Length: > 0 } value ? value : "title";
+        set => SetValue(PersistentSongsSortByKey, value);
+    }
+
+    public string PersistentAlbumsSortBy
+    {
+        get => GetValue<string>(PersistentAlbumsSortByKey) is { Length: > 0 } value ? value : "title";
+        set => SetValue(PersistentAlbumsSortByKey, value);
+    }
+
     public SettingsService()
     {
         SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
@@ -255,6 +269,8 @@ public sealed class SettingsService : ISettingsService
         SetDefault(AdvancedMultipleInstancesKey, false);
         SetDefault(GlobalArgumentsKey, string.Empty);
         SetDefault(PersistentShowRemainingTimeKey, false);
+        SetDefault(PersistentSongsSortByKey, "title");
+        SetDefault(PersistentAlbumsSortByKey, "title");
         SetDefault(PlayerShowChaptersKey, true);
         SetDefault(PrivacyPersistPlaybackPosition, true);
         SetDefault(PlayerRewindStepKey, 5);
