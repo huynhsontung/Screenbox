@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using Windows.Globalization;
 using Windows.Globalization.Collation;
 
@@ -9,8 +8,6 @@ namespace Screenbox.Core.Helpers;
 
 public static class MediaGroupingHelpers
 {
-    private static readonly ILogger Logger = DefaultLogging.CreateLogger(nameof(MediaGroupingHelpers));
-
     public const string OtherGroupSymbol = "\u2026";
 
     public static IReadOnlyList<string> CharacterGroupLabels { get; }
@@ -36,18 +33,9 @@ public static class MediaGroupingHelpers
 
     public static string GetCharacterGroupLabel(string name)
     {
-        try
-        {
-            string? label = _characterGroupings.Lookup(name);
-            return string.IsNullOrEmpty(label) || !_characterGroupSet.Contains(label)
-                ? OtherGroupSymbol
-                : label;
-        }
-        catch (Exception e)
-        {
-            Logger.LogError(e, "Failed to determine the character grouping label.");
-        }
-
-        return OtherGroupSymbol;
+        string? label = _characterGroupings.Lookup(name);
+        return string.IsNullOrEmpty(label) || !_characterGroupSet.Contains(label)
+            ? OtherGroupSymbol
+            : label;
     }
 }
