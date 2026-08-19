@@ -66,10 +66,10 @@
                                        MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
-                    Command="{StaticResource RevealInFileExplorerCommand}"
+                    Command="{StaticResource ShowInFileExplorerCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextItem.Media, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                    Text="{strings:Resources Key=RevealInFileExplorer}" />
+                    Text="{strings:Resources Key=ShowInFileExplorer}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextItem.Media, Mode=OneWay}"
@@ -220,3 +220,4 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
+

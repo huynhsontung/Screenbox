@@ -10,18 +10,18 @@ using Windows.Storage;
 namespace Screenbox.Commands;
 
 /// <summary>
-/// Represents a command that reveals a media file in File Explorer,
+/// Represents a command that shows a media file in File Explorer,
 /// opening the containing folder and selecting the file.
 /// </summary>
-internal sealed partial class RevealInFileExplorerCommand : IRelayCommand<MediaViewModel>
+internal sealed partial class ShowInFileExplorerCommand : IRelayCommand<MediaViewModel>
 {
     public event EventHandler? CanExecuteChanged;
 
     private readonly AsyncRelayCommand<MediaViewModel> _asyncCommand;
 
-    public RevealInFileExplorerCommand()
+    public ShowInFileExplorerCommand()
     {
-        _asyncCommand = new AsyncRelayCommand<MediaViewModel>(RevealInFileExplorerAsync);
+        _asyncCommand = new AsyncRelayCommand<MediaViewModel>(ShowInFileExplorerAsync);
         _asyncCommand.CanExecuteChanged += (_, _) => NotifyCanExecuteChanged();
     }
 
@@ -61,7 +61,7 @@ internal sealed partial class RevealInFileExplorerCommand : IRelayCommand<MediaV
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private async Task RevealInFileExplorerAsync(MediaViewModel? parameter)
+    private async Task ShowInFileExplorerAsync(MediaViewModel? parameter)
     {
         if (parameter is null)
             return;
@@ -87,3 +87,4 @@ internal sealed partial class RevealInFileExplorerCommand : IRelayCommand<MediaV
         }
     }
 }
+

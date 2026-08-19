@@ -30,7 +30,7 @@
                     <!--  Commands  -->
                     <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
-                    <commands:RevealInFileExplorerCommand x:Key="RevealInFileExplorerCommand" />
+                    <commands:ShowInFileExplorerCommand x:Key="ShowInFileExplorerCommand" />
                     <commands:OpenWithCommand x:Key="OpenWithCommand" />
 
                     <!--  Converters  -->
@@ -116,3 +116,4 @@
         </muxc:XamlControlsResources>
     </Application.Resources>
 </Application>
+

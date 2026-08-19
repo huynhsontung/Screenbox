@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.PlayQueueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -81,10 +81,10 @@
                         Icon="{ui:FontIcon Glyph=&#xE74B;}"
                         Text="{strings:Resources Key=MoveDown}" />
                     <MenuFlyoutItem
-                        Command="{StaticResource RevealInFileExplorerCommand}"
+                        Command="{StaticResource ShowInFileExplorerCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                        Text="{strings:Resources Key=RevealInFileExplorer}" />
+                        Text="{strings:Resources Key=ShowInFileExplorer}" />
                     <MenuFlyoutItem
                         Command="{StaticResource ShowPropertiesCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
@@ -364,3 +364,4 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
 </UserControl>
+
