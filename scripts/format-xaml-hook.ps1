@@ -38,23 +38,6 @@ try {
             dotnet tool run xstyler -f $filePath 2>&1 | Out-Null
         }
     }
-    else {
-        # Fallback if no specific TargetFile in payload: format modified XAML files from git diff
-        $repoRoot = git rev-parse --show-toplevel 2>$null
-        if (-not $repoRoot) {
-            $repoRoot = Split-Path -Parent $PSScriptRoot
-        }
-
-        $modifiedXaml = git -C $repoRoot diff --name-only | Where-Object { 
-            $_ -like '*.xaml' -and 
-            $_ -notmatch "(\\obj\\)|(\\bin\\)" -and 
-            (Test-Path (Join-Path $repoRoot $_)) 
-        } | ForEach-Object { Join-Path $repoRoot $_ }
-
-        if ($modifiedXaml -and $modifiedXaml.Count -gt 0) {
-            dotnet tool run xstyler -f $modifiedXaml 2>&1 | Out-Null
-        }
-    }
 } catch {
     # Fail silently to avoid blocking the agent execution loop
 }
