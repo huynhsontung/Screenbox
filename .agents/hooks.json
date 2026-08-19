@@ -1,0 +1,16 @@
+{
+  "xaml-auto-formatter": {
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File ../scripts/format-xaml-hook.ps1",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
