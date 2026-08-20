@@ -126,7 +126,7 @@ internal static class MessengerExtensions
         if (hasExtra)
             sb.Append(" (").Append(extra).Append(')');
 
-        messenger.Send(new PlayerOsdUpdateMessage(kind, Value: sb.ToString(), HasBadge: hasExtra && showBadge).WithMessage());
+        messenger.Send(new PlayerOsdUpdateMessage(kind, value: sb.ToString()) { HasBadge = hasExtra && showBadge, HasMessage = true });
     }
 
     public static void SendSeekWithStatus(this IMessenger messenger, TimeSpan amount)

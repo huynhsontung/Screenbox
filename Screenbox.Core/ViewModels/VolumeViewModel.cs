@@ -93,9 +93,9 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
         MediaPlayer.IsMuted = value;
         Messenger.Send(
             new PlayerOsdUpdateMessage(
-                value ? PlaybackCommandKind.Mute : PlaybackCommandKind.VolumeUp,
-                Value: Volume)
-            .WithBadge());
+                value ? PlaybackCommandKind.Mute : PlaybackCommandKind.Volume,
+                value: Volume)
+            .ShowBadge());
     }
 
     private void OnVolumeChanged(IMediaPlayer sender, object? args)

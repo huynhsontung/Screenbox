@@ -550,7 +550,7 @@ public sealed partial class PlayerPage : Page
         {
             //PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is TimeSpan time => Humanizer.ToDuration(time),
             PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is string timeStr => timeStr,
-            PlaybackCommandKind.VolumeUp or PlaybackCommandKind.VolumeDown when value is int volume => Strings.Resources.VolumeChangeStatusMessage(volume),
+            PlaybackCommandKind.Volume when value is int volume => Strings.Resources.VolumeChangeStatusMessage(volume),
             PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown when value is double rate => $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}\u00D7",
             //PlaybackCommandKind.AspectRatio when value is string ratio => $"{Strings.Resources.AspectRatio}: {Converters.ResourceNameToResourceStringConverter.FromName(ratio)}",
             PlaybackCommandKind.Scale when value is double scale => Strings.Resources.ScaleStatus($"{scale * 100:0.##}%"),

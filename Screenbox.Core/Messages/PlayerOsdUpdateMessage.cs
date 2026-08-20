@@ -6,37 +6,89 @@ namespace Screenbox.Core.Messages;
 /// <summary>
 /// Represents an update for the player on-screen display (OSD) message and badge state.
 /// </summary>
-/// <param name="Kind">A value of the enumeration that specifies the playback action associated with the update.</param>
-/// <param name="Value">The display value associated with the update, such as a volume level or time string.</param>
-/// <param name="Duration">The custom display duration for the update, if one is specified.</param>
-/// <param name="HasMessage"><see langword="true"/> to display the message text; otherwise, <see langword="false"/>.</param>
-/// <param name="HasBadge"><see langword="true"/> to show the command badge; otherwise, <see langword="false"/>.</param>
-public sealed record PlayerOsdUpdateMessage(
-    PlaybackCommandKind Kind,
-    object? Value = null,
-    TimeSpan? Duration = null,
-    bool HasMessage = false,
-    bool HasBadge = false)
+public sealed class PlayerOsdUpdateMessage
 {
     /// <summary>
-    /// Creates a <see cref="PlayerOsdUpdateMessage"/> instance with the <see cref="HasBadge"/>
-    /// property set to <see langword="true"/>.
+    /// Gets the playback command associated with the update.
     /// </summary>
-    /// <returns>A new <see cref="PlayerOsdUpdateMessage"/> instance.</returns>
-    public PlayerOsdUpdateMessage WithBadge() =>
-        this with { HasBadge = true };
-
-    //public PlayerOsdUpdateMessage WithDuration(TimeSpan duration) =>
-    //    this with { Duration = duration };
+    /// <value>A value of the enumeration that specifies the playback action associated with the update.</value>
+    public PlaybackCommandKind Kind { get; init; }
 
     /// <summary>
-    /// Creates a <see cref="PlayerOsdUpdateMessage"/> instance with the <see cref="HasMessage"/>
-    /// property set to <see langword="true"/>.
+    /// Gets the payload associated with the update.
     /// </summary>
-    /// <returns>A new <see cref="PlayerOsdUpdateMessage"/> instance.</returns>
-    public PlayerOsdUpdateMessage WithMessage() =>
-        this with { HasMessage = true };
+    /// <value>
+    /// The data value to display or process with the update, or <see langword="null"/>
+    /// if no value is set.
+    /// </value>
+    public object? Value { get; init; }
 
-    //public PlayerOsdUpdateMessage WithValue(object value) =>
-    //    this with { Value = value };
+    /// <summary>
+    /// Gets the display duration for the update.
+    /// </summary>
+    /// <value>
+    /// The duration of the update. The default is <c>1</c> second.
+    /// </value>
+    public TimeSpan Duration { get; private set; } = TimeSpan.FromSeconds(1);
+
+    /// <summary>
+    /// Gets a value indicating whether the update includes a message.
+    /// </summary>
+    /// <value><see langword="true"/> to display a message; otherwise, <see langword="false"/>.</value>
+    public bool HasMessage { get; set; }
+
+    /// <summary>
+    /// Gets a value indicating whether the update includes a badge.
+    /// </summary>
+    /// <value><see langword="true"/> to display the badge; otherwise, <see langword="false"/>.</value>
+    public bool HasBadge { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlayerOsdUpdateMessage"/> class
+    /// with the specified playback command kind, and value.
+    /// </summary>
+    /// <param name="kind">A value of the enumeration that specifies the playback command associated with the update.</param>
+    /// <param name="value">The payload to associate with the update, or <see langword="null"/> if no value is provided.</param>
+    public PlayerOsdUpdateMessage(PlaybackCommandKind kind, object? value = null)
+    {
+        Kind = kind;
+        Value = value;
+    }
+
+    /// <summary>
+    /// Show the OSD badge.
+    /// </summary>
+    /// <returns>
+    /// Returns the <see cref="PlayerOsdUpdateMessage"/> instance so that additional method calls can be chained.
+    /// </returns>
+    public PlayerOsdUpdateMessage ShowBadge()
+    {
+        HasBadge = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Show the OSD message.
+    /// </summary>
+    /// <returns>
+    /// Returns the <see cref="PlayerOsdUpdateMessage"/> instance so that additional method calls can be chained.
+    /// </returns>
+    public PlayerOsdUpdateMessage ShowMessage()
+    {
+        HasMessage = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the display duration for the OSD update.
+    /// </summary>
+    /// <param name="duration">The display duration to set.</param>
+    /// <returns>
+    /// Returns the <see cref="PlayerOsdUpdateMessage"/> instance so that additional method calls can be chained.
+    /// </returns>
+    public PlayerOsdUpdateMessage SetDuration(TimeSpan duration)
+    {
+        Duration = duration;
+        return this;
+    }
 }

@@ -231,7 +231,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 _statusMessageTimer.Debounce(() =>
                 {
                     IsOsdMessageVisible = false;
-                }, message.Duration ?? TimeSpan.FromMilliseconds(1000));
+                }, message.Duration);
             });
         }
 
@@ -247,7 +247,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 _playPauseBadgeTimer.Debounce(() =>
                 {
                     IsOsdBadgeVisible = false;
-                }, message.Duration ?? TimeSpan.FromMilliseconds(1000));
+                }, message.Duration);
             });
         }
     }
@@ -354,7 +354,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             if (MediaPlayer.PlaybackRate != effectiveHoldingSpeed)
             {
                 Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, Value: effectiveHoldingSpeed, Duration: Timeout.InfiniteTimeSpan).WithMessage());
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, value: effectiveHoldingSpeed).SetDuration(Timeout.InfiniteTimeSpan).ShowMessage());
             }
 
             _isPlayPauseHoldActive = true;
@@ -382,7 +382,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             if (MediaPlayer is not null && MediaPlayer.PlaybackRate != _playbackRateBeforeHold)
             {
                 Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
-                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateDown, Value: _playbackRateBeforeHold).WithMessage());
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateDown, value: _playbackRateBeforeHold).ShowMessage());
             }
 
             _isPlayPauseHoldActive = false;
@@ -421,12 +421,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             return;
 
         int newValue = Messenger.Send(new ChangeVolumeRequestMessage(delta, true));
-        Messenger.Send(
-            new PlayerOsdUpdateMessage(
-                delta > 0 ? PlaybackCommandKind.VolumeUp : PlaybackCommandKind.VolumeDown,
-                Value: newValue)
-            .WithBadge()
-            .WithMessage());
+        Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: newValue).ShowBadge().ShowMessage());
     }
 
     /// <summary>
@@ -566,9 +561,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         Messenger.Send(
             new PlayerOsdUpdateMessage(
                 delta > 0 ? PlaybackCommandKind.RateUp : PlaybackCommandKind.RateDown,
-                Value: newRate)
-            .WithBadge()
-            .WithMessage());
+                value: newRate)
+            .ShowBadge()
+            .ShowMessage());
     }
 
     /// <summary>
@@ -651,7 +646,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (newScalar is null or <= 0)
             return;
 
-        Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Scale, Value: scale.Value).WithMessage());
+        Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Scale, value: scale.Value).ShowMessage());
     }
 
     public void OnFileLaunched()

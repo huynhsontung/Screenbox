@@ -177,7 +177,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
             return;
 
         PlayPause();
-        Messenger.Send(new PlayerOsdUpdateMessage(IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play).WithBadge());
+        Messenger.Send(new PlayerOsdUpdateMessage(IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play).ShowBadge());
     }
 
     /// <summary>
@@ -222,8 +222,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         Messenger.Send(
             new PlayerOsdUpdateMessage(
                 label is null ? PlaybackCommandKind.SubtitleOff : PlaybackCommandKind.Subtitle,
-                Value: label)
-            .WithMessage());
+                value: label)
+            .ShowMessage());
     }
 
     partial void OnIsDisplayingRemainingTimeChanged(bool value)

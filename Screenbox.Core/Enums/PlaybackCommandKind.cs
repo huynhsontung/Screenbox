@@ -17,8 +17,7 @@ public enum PlaybackCommandKind
     NextChapter,
     PreviousChapter,
 
-    VolumeUp,
-    VolumeDown,
+    Volume,
     Mute,
 
     RateUp,
