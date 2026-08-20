@@ -101,6 +101,11 @@ public sealed partial class PlayerElement : UserControl
     {
         if (!IsEnabled) return;
 
+        // If the gesture recognizer is already active, complete the current gesture before processing the new down event.
+        // If we don't do this, the gesture recognizer will throw an exception.
+        if (_gestureRecognizer.IsActive)
+            _gestureRecognizer.CompleteGesture();
+
         _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
         VideoViewButton.CapturePointer(e.Pointer);
         e.Handled = true;
@@ -108,11 +113,9 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        if (!IsEnabled) return;
-
         _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
         VideoViewButton.ReleasePointerCapture(e.Pointer);
-        e.Handled = true;
+        e.Handled = IsEnabled;
     }
 
     private void VideoViewButton_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
