@@ -24,7 +24,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<SettingsChangedMessage>,
     IRecipient<TogglePlayPauseMessage>,
-    IRecipient<ChangePlaybackRateRequestMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
     IRecipient<PropertyChangedMessage<WindowViewMode>>
 {
@@ -39,9 +38,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial bool IsFullscreen { get; set; }
     [ObservableProperty] public partial string? TitleName { get; set; } // TODO: Handle VLC title name
-    [ObservableProperty] public partial double PlaybackRate { get; set; }
-    [ObservableProperty] public partial double AudioTimingOffset { get; set; }
-    [ObservableProperty] public partial double SubtitleTimingOffset { get; set; }
     [ObservableProperty] public partial bool IsAdvancedModeActive { get; set; }
     [ObservableProperty] public partial bool IsMinimal { get; set; }
     [ObservableProperty] public partial bool PlayerShowChapters { get; set; }
@@ -84,9 +80,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _playerContext = playerContext;
         _filesService = filesService;
         _coordinator = coordinator;
-        PlaybackRate = 1.0;
-        AudioTimingOffset = 0.0;
-        SubtitleTimingOffset = 0.0;
         IsAdvancedModeActive = settingsService.AdvancedMode;
         IsMinimal = true;
         IsDisplayingRemainingTime = settingsService.PersistentShowRemainingTime;
@@ -104,7 +97,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
         Messenger.Register<SettingsChangedMessage>(this);
         Messenger.Register<TogglePlayPauseMessage>(this);
-        Messenger.Register<ChangePlaybackRateRequestMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
     }
@@ -149,12 +141,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         {
             PlayPause();
         }
-    }
-
-    public void Receive(ChangePlaybackRateRequestMessage message)
-    {
-        SetPlaybackRate(message.Value);
-        message.Reply(PlaybackRate);
     }
 
     public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
@@ -262,40 +248,13 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _settingsService.PersistentShowRemainingTime = value;
     }
 
-    partial void OnPlaybackRateChanged(double value)
-    {
-        if (MediaPlayer == null) return;
-        MediaPlayer.PlaybackRate = value;
-    }
-
-    partial void OnAudioTimingOffsetChanged(double value)
-    {
-        if (MediaPlayer == null) return;
-
-        if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
-        {
-            vlcMediaPlayer.AudioDelay = value;
-        }
-    }
-
-    partial void OnSubtitleTimingOffsetChanged(double value)
-    {
-        if (MediaPlayer == null) return;
-
-        if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
-        {
-            vlcMediaPlayer.SubtitleDelay = value;
-        }
-    }
-
     private void PlayQueueOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
             case nameof(PlayQueueContext.CurrentItem):
                 HasActiveItem = PlayQueue.CurrentItem is not null;
-                SubtitleTimingOffset = 0;
-                AudioTimingOffset = 0;
+                Messenger.Send(new ResetPlaybackSessionMessage());
                 break;
         }
     }
@@ -362,12 +321,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
             MediaPlayer.Play();
             MediaPlayer.Position = pos;
         });
-    }
-
-    [RelayCommand]
-    private void SetPlaybackRate(double rate)
-    {
-        PlaybackRate = rate;
     }
 
     [RelayCommand]
