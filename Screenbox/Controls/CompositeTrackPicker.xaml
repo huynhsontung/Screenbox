@@ -20,6 +20,17 @@
 
         <x:Double x:Key="TimingOffsetIncrement">50</x:Double>
         <x:Double x:Key="TimingOffsetDecrement">-50</x:Double>
+
+        <DataTemplate x:Key="MediaTrackItemDataTemplate" x:DataType="x:String">
+            <TextBlock
+                HorizontalTextAlignment="DetectFromContent"
+                Text="{x:Bind}"
+                TextTrimming="{StaticResource MenuFlyoutItemTextTrimming}">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid Width="224">
@@ -28,6 +39,7 @@
             <!--  Video tracks  -->
             <ListView
                 ItemContainerTransitions="{x:Null}"
+                ItemTemplate="{StaticResource MediaTrackItemDataTemplate}"
                 ItemsSource="{x:Bind VideoDisplayList}"
                 ScrollViewer.VerticalScrollMode="Disabled"
                 SelectedIndex="{x:Bind ViewModel.VideoTrackIndex, Mode=TwoWay}"
@@ -51,6 +63,7 @@
             <!--  Audio tracks  -->
             <ListView
                 ItemContainerTransitions="{x:Null}"
+                ItemTemplate="{StaticResource MediaTrackItemDataTemplate}"
                 ItemsSource="{x:Bind AudioDisplayList}"
                 ScrollViewer.VerticalScrollMode="Disabled"
                 SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}"
@@ -92,20 +105,12 @@
             <!--  Subtitle tracks  -->
             <ListView
                 ItemContainerTransitions="{x:Null}"
+                ItemTemplate="{StaticResource MediaTrackItemDataTemplate}"
                 ItemsSource="{x:Bind SubtitleDisplayList}"
                 ScrollViewer.VerticalScrollMode="Disabled"
                 SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
                 SelectionMode="Single"
                 SingleSelectionFollowsFocus="False">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <TextBlock Text="{x:Bind}" TextTrimming="{StaticResource MenuFlyoutItemTextTrimming}">
-                            <interactivity:Interaction.Behaviors>
-                                <behaviors:OverflowTextToolTipBehavior />
-                            </interactivity:Interaction.Behaviors>
-                        </TextBlock>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
                 <ListView.Header>
                     <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="16,0,4,0">
                         <Grid.ColumnDefinitions>
@@ -153,12 +158,14 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Button
                 Grid.Row="0"
                 Width="{StaticResource NavigationBackButtonWidth}"
-                Height="{StaticResource NavigationBackButtonHeight}"
+                Height="{StaticResource NavigationBackButtonWidth}"
                 Margin="4,2,4,2"
                 Padding="0"
                 BorderThickness="0"
@@ -188,30 +195,23 @@
                 Text="{x:Bind strings:Resources.Audio}" />
 
             <!--  Offset  -->
-            <Grid
+            <TextBlock
                 Grid.Row="1"
-                Padding="12,12,12,16"
-                RowSpacing="8">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                Margin="16,12,16,8"
+                Style="{StaticResource BodyStrongTextBlockStyle}"
+                Text="{x:Bind strings:Resources.TimingOffset}" />
+
+            <Grid
+                Grid.Row="2"
+                Padding="12,0"
+                FlowDirection="LeftToRight">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.ColumnSpan="3"
-                    Margin="4,0"
-                    Style="{StaticResource BodyStrongTextBlockStyle}"
-                    Text="{x:Bind strings:Resources.TimingOffset}" />
-
                 <Button
-                    Grid.Row="1"
                     Grid.Column="0"
                     Width="32"
                     Height="32"
@@ -224,10 +224,8 @@
                     Style="{StaticResource SubtleButtonStyle}" />
 
                 <Slider
-                    Grid.Row="1"
                     Grid.Column="1"
                     Margin="8,0,8,0"
-                    FlowDirection="LeftToRight"
                     IsThumbToolTipEnabled="False"
                     Maximum="3000"
                     Minimum="-3000"
@@ -236,7 +234,6 @@
                     Value="{x:Bind PlaybackSession.AudioTimingOffset, Mode=TwoWay}" />
 
                 <Button
-                    Grid.Row="1"
                     Grid.Column="2"
                     Width="32"
                     Height="32"
@@ -248,19 +245,21 @@
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="{StaticResource CaptionTextBlockFontSize}"
                     Style="{StaticResource SubtleButtonStyle}" />
-
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.ColumnSpan="3"
-                    HorizontalAlignment="Center"
-                    Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.AudioTimingOffset, Mode=OneWay}" /> <Run Text="ms" /></TextBlock>
             </Grid>
+
+            <TextBlock
+                Grid.Row="3"
+                Margin="12,8,12,11"
+                HorizontalAlignment="Center"
+                Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.AudioTimingOffset, Mode=OneWay}" /> <Run Text="ms" /></TextBlock>
         </Grid>
         <!--#endregion-->
 
         <!--#region Subtitle Options-->
         <Grid x:Name="SubtitleOptionsGrid" Visibility="Collapsed">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -298,30 +297,23 @@
                 Text="{x:Bind strings:Resources.Subtitles}" />
 
             <!--  Offset  -->
-            <Grid
+            <TextBlock
                 Grid.Row="1"
-                Padding="12,12,12,16"
-                RowSpacing="8">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                Margin="16,12,16,8"
+                Style="{StaticResource BodyStrongTextBlockStyle}"
+                Text="{x:Bind strings:Resources.TimingOffset}" />
+
+            <Grid
+                Grid.Row="2"
+                Margin="12,0"
+                FlowDirection="LeftToRight">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.ColumnSpan="3"
-                    Margin="4,0"
-                    Style="{StaticResource BodyStrongTextBlockStyle}"
-                    Text="{x:Bind strings:Resources.TimingOffset}" />
-
                 <Button
-                    Grid.Row="1"
                     Grid.Column="0"
                     Width="32"
                     Height="32"
@@ -335,10 +327,8 @@
                     Style="{StaticResource SubtleButtonStyle}" />
 
                 <Slider
-                    Grid.Row="1"
                     Grid.Column="1"
                     Margin="8,0,8,0"
-                    FlowDirection="LeftToRight"
                     IsThumbToolTipEnabled="False"
                     Maximum="3000"
                     Minimum="-3000"
@@ -347,7 +337,6 @@
                     Value="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=TwoWay}" />
 
                 <Button
-                    Grid.Row="1"
                     Grid.Column="2"
                     Width="32"
                     Height="32"
@@ -359,13 +348,13 @@
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="{StaticResource CaptionTextBlockFontSize}"
                     Style="{StaticResource SubtleButtonStyle}" />
-
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.ColumnSpan="3"
-                    HorizontalAlignment="Center"
-                    Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=OneWay}" /> <Run Text="ms" /></TextBlock>
             </Grid>
+
+            <TextBlock
+                Grid.Row="3"
+                Margin="12,8,12,11"
+                HorizontalAlignment="Center"
+                Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=OneWay}" /> <Run Text="ms" /></TextBlock>
         </Grid>
         <!--#endregion-->
 
