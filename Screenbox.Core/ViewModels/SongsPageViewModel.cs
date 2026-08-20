@@ -27,8 +27,8 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     private readonly LibraryContext _libraryContext;
     private readonly ISettingsService _settingsService;
-    private readonly DispatcherQueue? _dispatcherQueue;
-    private readonly DispatcherQueueTimer? _refreshTimer;
+    private readonly DispatcherQueue _dispatcherQueue;
+    private readonly DispatcherQueueTimer _refreshTimer;
 
     public SongsPageViewModel(LibraryContext libraryContext, ISettingsService settingsService)
     {
@@ -36,26 +36,19 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         _settingsService = settingsService;
         SortBy = _settingsService.PersistentSongsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _refreshTimer = _dispatcherQueue?.CreateTimer();
+        _refreshTimer = _dispatcherQueue.CreateTimer();
 
         Messenger.Register<PropertyChangedMessage<MusicLibrary>>(this);
     }
 
     public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (_dispatcherQueue is not null)
-        {
-            _dispatcherQueue.TryEnqueue(FetchSongs);
-        }
-        else
-        {
-            FetchSongs();
-        }
+        _dispatcherQueue.TryEnqueue(FetchSongs);
     }
 
     public void OnNavigatedFrom()
     {
-        _refreshTimer?.Stop();
+        _refreshTimer.Stop();
     }
 
     public void FetchSongs()
@@ -85,11 +78,11 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         // Progressively update when it's still loading
         if (_libraryContext.IsLoadingMusic)
         {
-            _refreshTimer?.Debounce(FetchSongs, TimeSpan.FromSeconds(5));
+            _refreshTimer.Debounce(FetchSongs, TimeSpan.FromSeconds(5));
         }
         else
         {
-            _refreshTimer?.Stop();
+            _refreshTimer.Stop();
         }
     }
 

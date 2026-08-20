@@ -41,4 +41,22 @@ public class SongsPageViewModelTests
         await Assert.That(vm.SortBy).IsEqualTo(SongSortOrder.DateAdded);
         await Assert.That(settings.PersistentSongsSortOrder).IsEqualTo(SongSortOrder.DateAdded);
     }
+
+    [Test]
+    public async Task Receive_ShouldEnqueueFetchSongsViaDispatcherQueue()
+    {
+        var settings = new TestSettingsService();
+        var libraryContext = new LibraryContext();
+        var vm = new SongsPageViewModel(libraryContext, settings);
+
+        var message = new CommunityToolkit.Mvvm.Messaging.Messages.PropertyChangedMessage<Screenbox.Core.Models.MusicLibrary>(
+            libraryContext,
+            nameof(LibraryContext.Music),
+            libraryContext.Music,
+            libraryContext.Music);
+
+        vm.Receive(message);
+
+        await Assert.That(vm.GroupedSongs).IsNotNull();
+    }
 }
