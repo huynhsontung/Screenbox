@@ -1,5 +1,6 @@
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Models;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
 
@@ -43,20 +44,31 @@ public class SongsPageViewModelTests
     }
 
     [Test]
-    public async Task Receive_ShouldEnqueueFetchSongsViaDispatcherQueue()
+    public async Task Receive_ShouldEnqueueAndExecuteFetchSongsViaDispatcherQueue()
     {
         var settings = new TestSettingsService();
         var libraryContext = new LibraryContext();
         var vm = new SongsPageViewModel(libraryContext, settings);
 
-        var message = new CommunityToolkit.Mvvm.Messaging.Messages.PropertyChangedMessage<Screenbox.Core.Models.MusicLibrary>(
-            libraryContext,
-            nameof(LibraryContext.Music),
-            libraryContext.Music,
-            libraryContext.Music);
+        await Assert.That(vm.Songs).IsEmpty();
+        await Assert.That(vm.GroupedSongs).IsEmpty();
 
-        vm.Receive(message);
+        var song = new MediaViewModel(new PlayerContext(), new TestPlayerService(), new Uri("file:///c:/music/song.mp3"))
+        {
+            Name = "Song A"
+        };
+        var newLibrary = new MusicLibrary(
+            new[] { song },
+            new Dictionary<string, AlbumViewModel>(),
+            new Dictionary<string, ArtistViewModel>(),
+            new AlbumViewModel(),
+            new ArtistViewModel());
 
-        await Assert.That(vm.GroupedSongs).IsNotNull();
+        libraryContext.Music = newLibrary;
+        DispatcherQueueTestHelper.PumpEvents();
+
+        await Assert.That(vm.Songs.Count).IsEqualTo(1);
+        await Assert.That(vm.GroupedSongs).IsNotEmpty();
+        await Assert.That(vm.GroupedSongs.SelectMany(g => g)).Contains(song);
     }
 }

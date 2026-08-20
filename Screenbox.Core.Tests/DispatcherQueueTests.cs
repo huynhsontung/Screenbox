@@ -14,4 +14,18 @@ public class DispatcherQueueTests
         var timer = queue!.CreateTimer();
         await Assert.That(timer).IsNotNull();
     }
+
+    [Test]
+    public async Task DispatcherQueue_ShouldExecuteEnqueuedWork_WhenPumpingEvents()
+    {
+        var queue = DispatcherQueue.GetForCurrentThread();
+        await Assert.That(queue).IsNotNull();
+
+        var executed = false;
+        queue!.TryEnqueue(() => executed = true);
+
+        DispatcherQueueTestHelper.PumpEvents();
+
+        await Assert.That(executed).IsTrue();
+    }
 }
