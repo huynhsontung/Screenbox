@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -13,9 +15,6 @@ namespace Screenbox.Controls;
 
 public sealed partial class CompositeTrackPicker : UserControl
 {
-    public IRelayCommand? ShowSubtitleOptionsCommand { get; set; }
-    public IRelayCommand? ShowAudioOptionsCommand { get; set; }
-
     /// <summary>
     /// View-level subtitle track list that prepends a localized "Disable" entry to
     /// <see cref="CompositeTrackPickerViewModel.SubtitleTracks"/> and applies "Track N"
@@ -35,10 +34,13 @@ public sealed partial class CompositeTrackPicker : UserControl
 
     internal CompositeTrackPickerViewModel ViewModel => (CompositeTrackPickerViewModel)DataContext;
 
+    internal PlaybackSessionViewModel PlaybackSession { get; }
+
     public CompositeTrackPicker()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<CompositeTrackPickerViewModel>();
+        PlaybackSession = Ioc.Default.GetRequiredService<PlaybackSessionViewModel>();
 
         ViewModel.SubtitleTracks.CollectionChanged += (_, _) => RebuildSubtitleDisplayList();
         ViewModel.AudioTracks.CollectionChanged += (_, _) => RebuildAudioDisplayList();
@@ -79,5 +81,10 @@ public sealed partial class CompositeTrackPicker : UserControl
 
         // Avoid clearing and repopulating the existing ObservableCollection to prevent unexpected SelectedIndex change.
         VideoDisplayList.SyncItems(newList);
+    }
+
+    private bool IsTrackPickerDisplayMode(TrackPickerDisplayMode current, TrackPickerDisplayMode target)
+    {
+        return current == target;
     }
 }

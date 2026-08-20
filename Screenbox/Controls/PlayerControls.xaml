@@ -81,44 +81,6 @@
                 </StackPanel>
             </Flyout>
 
-            <Flyout x:Key="SubtitleOptionsFlyout">
-                <StackPanel
-                    Width="180"
-                    FlowDirection="LeftToRight"
-                    Orientation="Vertical"
-                    Spacing="8">
-                    <Slider
-                        x:Name="SubtitleTimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
-                        IsThumbToolTipEnabled="False"
-                        Maximum="3000"
-                        Minimum="-3000"
-                        SmallChange="25"
-                        StepFrequency="50"
-                        Value="{Binding SubtitleTimingOffset, Mode=TwoWay}" />
-                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=SubtitleTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
-                </StackPanel>
-            </Flyout>
-
-            <Flyout x:Key="AudioOptionsFlyout">
-                <StackPanel
-                    Width="180"
-                    FlowDirection="LeftToRight"
-                    Orientation="Vertical"
-                    Spacing="8">
-                    <Slider
-                        x:Name="AudioTimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
-                        IsThumbToolTipEnabled="False"
-                        Maximum="3000"
-                        Minimum="-3000"
-                        SmallChange="25"
-                        StepFrequency="50"
-                        Value="{Binding AudioTimingOffset, Mode=TwoWay}" />
-                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=AudioTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
-                </StackPanel>
-            </Flyout>
-
             <MenuFlyout x:Key="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
@@ -156,32 +118,32 @@
                     KeyTipPlacementMode="Left"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToSpeedGlyph(ViewModel.PlaybackRate), Mode=OneWay}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToSpeedGlyph(PlaybackSession.PlaybackRate), Mode=OneWay}" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed025MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed025}"
                         Text="0.25 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed05MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed05MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed050}"
                         Text="0.5 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed075MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed075MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed075}"
                         Text="0.75 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed1MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed1MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         IsChecked="True"
@@ -189,35 +151,35 @@
                         Text="1 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed125MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed125MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed125}"
                         Text="1.25 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed15MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed15MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed150}"
                         Text="1.5 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed175MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed175MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed175}"
                         Text="1.75 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed2MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed2MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed200}"
                         Text="2 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed4MenuItem"
-                        Command="{x:Bind ViewModel.SetPlaybackRateCommand}"
+                        Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed4MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         Tag="{StaticResource Speed400}"

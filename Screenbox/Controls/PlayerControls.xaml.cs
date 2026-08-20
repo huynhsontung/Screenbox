@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -35,6 +34,8 @@ public sealed partial class PlayerControls : UserControl
 
     internal CommonViewModel Common { get; }
 
+    internal PlaybackSessionViewModel PlaybackSession { get; }
+
     private Flyout? _castFlyout;
 
     public PlayerControls()
@@ -42,22 +43,7 @@ public sealed partial class PlayerControls : UserControl
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-        AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
-        AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
-    }
-
-    private void ShowSubtitleOptions()
-    {
-        AudioSubtitlePickerFlyout.Hide();
-        Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];
-        flyout.ShowAt(AudioAndCaptionButton);
-    }
-
-    private void ShowAudioOptions()
-    {
-        AudioSubtitlePickerFlyout.Hide();
-        Flyout flyout = (Flyout)Resources["AudioOptionsFlyout"];
-        flyout.ShowAt(AudioAndCaptionButton);
+        PlaybackSession = Ioc.Default.GetRequiredService<PlaybackSessionViewModel>();
     }
 
     public void FocusFirstButton(FocusState value = FocusState.Programmatic)
@@ -75,13 +61,13 @@ public sealed partial class PlayerControls : UserControl
     {
         Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
         customSpeedFlyout.ShowAt(MoreButton);
-        if (SpeedSlider.Value != ViewModel.PlaybackRate)
+        if (SpeedSlider.Value != PlaybackSession.PlaybackRate)
         {
-            SpeedSlider.Value = ViewModel.PlaybackRate;
+            SpeedSlider.Value = PlaybackSession.PlaybackRate;
         }
         else
         {
-            SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackRate);
+            SelectAlternatePlaybackSpeedItem(PlaybackSession.PlaybackRate);
         }
     }
 
@@ -99,7 +85,7 @@ public sealed partial class PlayerControls : UserControl
             SpeedSlider.Value = newValue;
         }
 
-        ViewModel.SetPlaybackRateCommand.Execute(newValue);
+        PlaybackSession.SetPlaybackRateCommand.Execute(newValue);
         SelectAlternatePlaybackSpeedItem(newValue);
     }
 
