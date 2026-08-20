@@ -41,7 +41,6 @@ public sealed partial class AlbumsPage : Page
         if (e.PropertyName == nameof(AlbumsPageViewModel.SortBy))
         {
             UpdateSortVisualState(ViewModel.SortBy);
-            UpdateSortByFlyout();
             SavePageState(0);
         }
     }
@@ -68,7 +67,6 @@ public sealed partial class AlbumsPage : Page
         }
 
         UpdateSortVisualState(ViewModel.SortBy);
-        UpdateSortByFlyout();
 
         if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchAlbums))
             ViewModel.FetchAlbums();
@@ -105,23 +103,22 @@ public sealed partial class AlbumsPage : Page
             Frame.BackStackDepth);
     }
 
-    private string GetSortByText(AlbumSortOrder tag)
+    private bool IsSortBy(AlbumSortOrder current, AlbumSortOrder target) => current == target;
+
+    private string GetSortByText(AlbumSortOrder sortBy)
     {
-        var item = SortByFlyout.Items?.FirstOrDefault(x => x.Tag is AlbumSortOrder order && order == tag) ?? SortByFlyout.Items?.FirstOrDefault();
-        return (item as MenuFlyoutItem)?.Text ?? string.Empty;
+        return sortBy switch
+        {
+            AlbumSortOrder.Artist => Strings.Resources.Artist,
+            AlbumSortOrder.Year => Strings.Resources.ReleasedYear,
+            AlbumSortOrder.DateAdded => Strings.Resources.DateAdded,
+            _ => Strings.Resources.PropertyTitle
+        };
     }
 
     private string GetSortByButtonAutomationName(AlbumSortOrder value)
     {
         var optionText = GetSortByText(value);
         return Strings.Resources.SortByAutomationName(optionText);
-    }
-
-    private void UpdateSortByFlyout()
-    {
-        if (SortByFlyout.Items?.FirstOrDefault(x => x.Tag is AlbumSortOrder order && order == ViewModel.SortBy) is RadioMenuFlyoutItem radioItem)
-        {
-            radioItem.IsChecked = true;
-        }
     }
 }

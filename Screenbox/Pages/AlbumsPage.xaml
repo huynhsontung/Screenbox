@@ -106,26 +106,25 @@
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:AlbumSortOrder.Title}"
                         GroupName="SortOrder"
-                        IsChecked="True"
-                        Tag="{x:Bind enums:AlbumSortOrder.Title}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Title), Mode=OneWay}"
                         Text="{strings:Resources Key=PropertyTitle}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:AlbumSortOrder.Artist}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:AlbumSortOrder.Artist}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Artist), Mode=OneWay}"
                         Text="{strings:Resources Key=Artist}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:AlbumSortOrder.Year}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:AlbumSortOrder.Year}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Year), Mode=OneWay}"
                         Text="{strings:Resources Key=ReleasedYear}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:AlbumSortOrder.DateAdded}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:AlbumSortOrder.DateAdded}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.DateAdded), Mode=OneWay}"
                         Text="{strings:Resources Key=DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>

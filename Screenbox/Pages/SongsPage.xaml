@@ -151,32 +151,31 @@
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Title}"
                         GroupName="SortOrder"
-                        IsChecked="True"
-                        Tag="{x:Bind enums:SongSortOrder.Title}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Title), Mode=OneWay}"
                         Text="{strings:Resources Key=PropertyTitle}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Album}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:SongSortOrder.Album}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Album), Mode=OneWay}"
                         Text="{strings:Resources Key=PropertyAlbum}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Artist}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:SongSortOrder.Artist}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Artist), Mode=OneWay}"
                         Text="{strings:Resources Key=Artist}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Year}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:SongSortOrder.Year}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Year), Mode=OneWay}"
                         Text="{strings:Resources Key=ReleasedYear}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.DateAdded}"
                         GroupName="SortOrder"
-                        Tag="{x:Bind enums:SongSortOrder.DateAdded}"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.DateAdded), Mode=OneWay}"
                         Text="{strings:Resources Key=DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
