@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -45,23 +44,6 @@ public sealed partial class PlayerControls : UserControl
         DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         PlaybackSession = Ioc.Default.GetRequiredService<PlaybackSessionViewModel>();
-
-        AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
-        AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
-    }
-
-    private void ShowSubtitleOptions()
-    {
-        AudioSubtitlePickerFlyout.Hide();
-        Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];
-        flyout.ShowAt(AudioAndCaptionButton);
-    }
-
-    private void ShowAudioOptions()
-    {
-        AudioSubtitlePickerFlyout.Hide();
-        Flyout flyout = (Flyout)Resources["AudioOptionsFlyout"];
-        flyout.ShowAt(AudioAndCaptionButton);
     }
 
     public void FocusFirstButton(FocusState value = FocusState.Programmatic)
