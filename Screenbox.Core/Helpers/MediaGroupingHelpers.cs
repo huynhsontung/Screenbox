@@ -19,9 +19,19 @@ public static class MediaGroupingHelpers
 
     static MediaGroupingHelpers()
     {
-        _characterGroupings = string.IsNullOrWhiteSpace(ApplicationLanguages.PrimaryLanguageOverride)
+        string? overrideLanguage = null;
+        try
+        {
+            overrideLanguage = ApplicationLanguages.PrimaryLanguageOverride;
+        }
+        catch (Exception)
+        {
+            // Unpackaged environment (e.g. unit tests) lacks package identity
+        }
+
+        _characterGroupings = string.IsNullOrWhiteSpace(overrideLanguage)
             ? new CharacterGroupings()
-            : new CharacterGroupings(ApplicationLanguages.PrimaryLanguageOverride);
+            : new CharacterGroupings(overrideLanguage);
         CharacterGroupLabels = _characterGroupings
             .Select(x => string.IsNullOrEmpty(x.Label) ? OtherGroupSymbol : x.Label)
             .Distinct()
