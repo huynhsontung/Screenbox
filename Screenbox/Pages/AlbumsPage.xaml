@@ -91,49 +91,69 @@
             </StackPanel>
         </Button>
 
-        <muxc:DropDownButton
-            x:Name="SortByButton"
+        <StackPanel
+            x:Name="HeaderActionsPanel"
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
-            AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
-            AutomationProperties.Name="{x:Bind GetSortByButtonAutomationName(ViewModel.SortBy), Mode=OneWay}"
-            Background="Transparent"
-            BorderBrush="Transparent">
-            <muxc:DropDownButton.Flyout>
-                <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
-                    <muxc:RadioMenuFlyoutItem
-                        Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="{x:Bind enums:AlbumSortOrder.Title}"
-                        GroupName="SortOrder"
-                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Title), Mode=OneWay}"
-                        Text="{strings:Resources Key=PropertyTitle}" />
-                    <muxc:RadioMenuFlyoutItem
-                        Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="{x:Bind enums:AlbumSortOrder.Artist}"
-                        GroupName="SortOrder"
-                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Artist), Mode=OneWay}"
-                        Text="{strings:Resources Key=Artist}" />
-                    <muxc:RadioMenuFlyoutItem
-                        Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="{x:Bind enums:AlbumSortOrder.Year}"
-                        GroupName="SortOrder"
-                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Year), Mode=OneWay}"
-                        Text="{strings:Resources Key=ReleasedYear}" />
-                    <muxc:RadioMenuFlyoutItem
-                        Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="{x:Bind enums:AlbumSortOrder.DateAdded}"
-                        GroupName="SortOrder"
-                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.DateAdded), Mode=OneWay}"
-                        Text="{strings:Resources Key=DateAdded}" />
-                </MenuFlyout>
-            </muxc:DropDownButton.Flyout>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
-                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
-                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-            </StackPanel>
-        </muxc:DropDownButton>
+            Orientation="Horizontal"
+            Spacing="8">
+            <muxc:DropDownButton
+                x:Name="SortByButton"
+                AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
+                AutomationProperties.Name="{x:Bind GetSortByButtonAutomationName(ViewModel.SortBy), Mode=OneWay}"
+                Background="Transparent"
+                BorderBrush="Transparent">
+                <muxc:DropDownButton.Flyout>
+                    <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
+                        <muxc:RadioMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetSortByCommand}"
+                            CommandParameter="{x:Bind enums:AlbumSortOrder.Title}"
+                            GroupName="SortOrder"
+                            IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Title), Mode=OneWay}"
+                            Text="{strings:Resources Key=PropertyTitle}" />
+                        <muxc:RadioMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetSortByCommand}"
+                            CommandParameter="{x:Bind enums:AlbumSortOrder.Artist}"
+                            GroupName="SortOrder"
+                            IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Artist), Mode=OneWay}"
+                            Text="{strings:Resources Key=Artist}" />
+                        <muxc:RadioMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetSortByCommand}"
+                            CommandParameter="{x:Bind enums:AlbumSortOrder.Year}"
+                            GroupName="SortOrder"
+                            IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Year), Mode=OneWay}"
+                            Text="{strings:Resources Key=ReleasedYear}" />
+                        <muxc:RadioMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetSortByCommand}"
+                            CommandParameter="{x:Bind enums:AlbumSortOrder.DateAdded}"
+                            GroupName="SortOrder"
+                            IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.DateAdded), Mode=OneWay}"
+                            Text="{strings:Resources Key=DateAdded}" />
+                    </MenuFlyout>
+                </muxc:DropDownButton.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
+                    <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                    <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+                </StackPanel>
+            </muxc:DropDownButton>
+
+            <muxc:DropDownButton
+                x:Name="GenreButton"
+                AccessKey="{strings:KeyboardResources Key=CommandFilterByGenreKey}"
+                AutomationProperties.Name="{x:Bind GetGenreButtonAutomationName(ViewModel.SelectedGenre), Mode=OneWay}"
+                Background="Transparent"
+                BorderBrush="Transparent">
+                <muxc:DropDownButton.Flyout>
+                    <MenuFlyout x:Name="GenreFlyout" Placement="BottomEdgeAlignedRight" />
+                </muxc:DropDownButton.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="GenreText"><Run Text="{strings:Resources Key=PropertyGenre}" /><Run Text=":&#160;" /></TextBlock>
+                    <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetGenreText(ViewModel.SelectedGenre), Mode=OneWay}" />
+                </StackPanel>
+            </muxc:DropDownButton>
+        </StackPanel>
 
         <muxc:ProgressBar
             Grid.Row="1"
@@ -210,8 +230,9 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="HeaderActionsPanel.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SortByText.Visibility" Value="Collapsed" />
+                        <Setter Target="GenreText.Visibility" Value="Collapsed" />
                         <Setter Target="AlbumGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
@@ -235,6 +256,7 @@
                     <VisualState.Setters>
                         <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                         <Setter Target="SortByFlyout.Placement" Value="BottomEdgeAlignedLeft" />
+                        <Setter Target="GenreFlyout.Placement" Value="BottomEdgeAlignedLeft" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -24,6 +24,8 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     [ObservableProperty] public partial MediaViewModel? ContextMedia { get; set; }
     [ObservableProperty] public partial SongSortOrder SortBy { get; set; } = SongSortOrder.Title;
+    [ObservableProperty] public partial string? SelectedGenre { get; set; }
+    [ObservableProperty] public partial IReadOnlyList<string> Genres { get; set; } = Array.Empty<string>();
 
     private readonly LibraryContext _libraryContext;
     private readonly ISettingsService _settingsService;
@@ -55,7 +57,8 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
         IsLoading = _libraryContext.IsLoadingMusic;
-        Songs = _libraryContext.Music.Songs;
+        Genres = _libraryContext.Music.Genres;
+        Songs = GetFilteredSongs().ToList();
 
         // Populate song groups with fetched result
         var groups = GetCurrentGrouping(_libraryContext, SortBy);
@@ -84,6 +87,17 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         {
             _refreshTimer.Stop();
         }
+    }
+
+    private IEnumerable<MediaViewModel> GetFilteredSongs()
+    {
+        IReadOnlyList<MediaViewModel> allSongs = _libraryContext.Music.Songs;
+        return SelectedGenre switch
+        {
+            null => allSongs,
+            "" => allSongs.Where(s => string.IsNullOrWhiteSpace(s.MediaInfo.MusicProperties.Genre)),
+            _ => allSongs.Where(s => string.Equals(s.MediaInfo.MusicProperties.Genre.Trim(), SelectedGenre, StringComparison.CurrentCultureIgnoreCase))
+        };
     }
 
     private List<IGrouping<string, MediaViewModel>> GetAlbumGrouping(LibraryContext context)
@@ -180,7 +194,18 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     partial void OnSortByChanged(SongSortOrder value)
     {
         _settingsService.PersistentSongsSortOrder = value;
-        var groups = GetCurrentGrouping(_libraryContext, value);
+        UpdateGrouping();
+    }
+
+    partial void OnSelectedGenreChanged(string? value)
+    {
+        Songs = GetFilteredSongs().ToList();
+        UpdateGrouping();
+    }
+
+    private void UpdateGrouping()
+    {
+        var groups = GetCurrentGrouping(_libraryContext, SortBy);
         GroupedSongs.Clear();
         foreach (IGrouping<string, MediaViewModel> group in groups)
         {
@@ -192,6 +217,12 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     private void SetSortBy(SongSortOrder tag)
     {
         SortBy = tag;
+    }
+
+    [RelayCommand]
+    private void SetGenre(string? genre)
+    {
+        SelectedGenre = genre;
     }
 
     [RelayCommand]

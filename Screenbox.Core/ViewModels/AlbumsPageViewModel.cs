@@ -27,6 +27,12 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     public partial AlbumSortOrder SortBy { get; set; } = AlbumSortOrder.Title;
 
     [ObservableProperty]
+    public partial string? SelectedGenre { get; set; }
+
+    [ObservableProperty]
+    public partial IReadOnlyList<string> Genres { get; set; } = Array.Empty<string>();
+
+    [ObservableProperty]
     public partial AlbumViewModel? ContextAlbum { get; set; }
 
     private readonly LibraryContext _libraryContext;
@@ -59,7 +65,8 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     {
         // No need to run fetch async. HomePageViewModel should already called the method.
         IsLoading = _libraryContext.IsLoadingMusic;
-        Songs = _libraryContext.Music.Songs;
+        Genres = _libraryContext.Music.Genres;
+        Songs = GetFilteredSongs().ToList();
 
         var groups = GetCurrentGrouping(_libraryContext, SortBy);
         if (Songs.Count < 5000)
@@ -89,9 +96,31 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         }
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetDefaultGrouping(LibraryContext context)
+    private IEnumerable<MediaViewModel> GetFilteredSongs()
     {
-        var groups = context.Music.Albums.Values
+        IReadOnlyList<MediaViewModel> allSongs = _libraryContext.Music.Songs;
+        return SelectedGenre switch
+        {
+            null => allSongs,
+            "" => allSongs.Where(s => string.IsNullOrWhiteSpace(s.MediaInfo.MusicProperties.Genre)),
+            _ => allSongs.Where(s => string.Equals(s.MediaInfo.MusicProperties.Genre.Trim(), SelectedGenre, StringComparison.CurrentCultureIgnoreCase))
+        };
+    }
+
+    private IEnumerable<AlbumViewModel> GetFilteredAlbums(LibraryContext context)
+    {
+        IEnumerable<AlbumViewModel> allAlbums = context.Music.Albums.Values;
+        return SelectedGenre switch
+        {
+            null => allAlbums,
+            "" => allAlbums.Where(a => a.RelatedSongs.Any(s => string.IsNullOrWhiteSpace(s.MediaInfo.MusicProperties.Genre))),
+            _ => allAlbums.Where(a => a.RelatedSongs.Any(s => string.Equals(s.MediaInfo.MusicProperties.Genre.Trim(), SelectedGenre, StringComparison.CurrentCultureIgnoreCase)))
+        };
+    }
+
+    private List<IGrouping<string, AlbumViewModel>> GetDefaultGrouping(LibraryContext context, IEnumerable<AlbumViewModel> albums)
+    {
+        var groups = albums
             .OrderBy(a => a.Name, StringComparer.CurrentCulture)
             .GroupBy(album => album == context.Music.UnknownAlbum
                 ? MediaGroupingHelpers.OtherGroupSymbol
@@ -114,9 +143,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return sortedGroup;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetArtistGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetArtistGrouping(LibraryContext context, IEnumerable<AlbumViewModel> albums)
     {
-        var groups = context.Music.Albums.Values.GroupBy(a => a.ArtistName)
+        var groups = albums.GroupBy(a => a.ArtistName)
             .OrderBy(g => g.Key, StringComparer.CurrentCulture)
             .ToList();
 
@@ -131,9 +160,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetYearGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetYearGrouping(IEnumerable<AlbumViewModel> albums)
     {
-        var groups = context.Music.Albums.Values.GroupBy(a =>
+        var groups = albums.GroupBy(a =>
                 a.Year > 0
                     ? a.Year.ToString() ?? MediaGroupingHelpers.OtherGroupSymbol
                     : MediaGroupingHelpers.OtherGroupSymbol)
@@ -142,9 +171,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetDateAddedGrouping(LibraryContext context)
+    private List<IGrouping<string, AlbumViewModel>> GetDateAddedGrouping(IEnumerable<AlbumViewModel> albums)
     {
-        var groups = context.Music.Albums.Values.GroupBy(a => a.DateAdded.Date)
+        var groups = albums.GroupBy(a => a.DateAdded.Date)
             .OrderByDescending(g => g.Key)
             .Select(g =>
                 new ListGrouping<string, AlbumViewModel>(
@@ -156,12 +185,13 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(LibraryContext context, AlbumSortOrder sortBy)
     {
+        var albums = GetFilteredAlbums(context);
         return sortBy switch
         {
-            AlbumSortOrder.Artist => GetArtistGrouping(context),
-            AlbumSortOrder.Year => GetYearGrouping(context),
-            AlbumSortOrder.DateAdded => GetDateAddedGrouping(context),
-            _ => GetDefaultGrouping(context)
+            AlbumSortOrder.Artist => GetArtistGrouping(context, albums),
+            AlbumSortOrder.Year => GetYearGrouping(albums),
+            AlbumSortOrder.DateAdded => GetDateAddedGrouping(albums),
+            _ => GetDefaultGrouping(context, albums)
         };
     }
 
@@ -177,7 +207,18 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     partial void OnSortByChanged(AlbumSortOrder value)
     {
         _settingsService.PersistentAlbumsSortOrder = value;
-        var groups = GetCurrentGrouping(_libraryContext, value);
+        UpdateGrouping();
+    }
+
+    partial void OnSelectedGenreChanged(string? value)
+    {
+        Songs = GetFilteredSongs().ToList();
+        UpdateGrouping();
+    }
+
+    private void UpdateGrouping()
+    {
+        var groups = GetCurrentGrouping(_libraryContext, SortBy);
         GroupedAlbums.Clear();
         foreach (IGrouping<string, AlbumViewModel> group in groups)
         {
@@ -189,5 +230,11 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     private void SetSortBy(AlbumSortOrder tag)
     {
         SortBy = tag;
+    }
+
+    [RelayCommand]
+    private void SetGenre(string? genre)
+    {
+        SelectedGenre = genre;
     }
 }
