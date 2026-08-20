@@ -139,11 +139,11 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                 break;
             case VirtualKey.GamepadRightThumbstickUp:
                 int volumeUp = Messenger.Send(new ChangeVolumeRequestMessage(VolumeAdjustmentStep, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volumeUp));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volumeUp).ShowBadge().ShowMessage());
                 break;
             case VirtualKey.GamepadRightThumbstickDown:
                 int volumeDown = Messenger.Send(new ChangeVolumeRequestMessage(-VolumeAdjustmentStep, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volumeDown));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volumeDown).ShowBadge().ShowMessage());
                 break;
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));

@@ -36,6 +36,12 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
+    /// <summary>
+    /// Gets a value that indicates whether the current playback item has exactly one subtitle track.
+    /// </summary>
+    /// <value><see langword="true"/> if the current playback item has exactly one subtitle track; otherwise, <see langword="false"/>.</value>
+    public bool HasSingleSubtitleTrackCount => MediaPlayer?.PlaybackItem is { SubtitleTracks.Count: 1 };
+
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial bool IsFullscreen { get; set; }
     [ObservableProperty] public partial string? TitleName { get; set; } // TODO: Handle VLC title name
@@ -167,9 +173,11 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     /// </summary>
     public void PlayPauseWithBadge()
     {
-        if (!HasActiveItem) return;
-        Messenger.Send(new ShowPlayPauseBadgeMessage(!IsPlaying));
+        if (!HasActiveItem)
+            return;
+
         PlayPause();
+        Messenger.Send(new PlayerOsdUpdateMessage(IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play).ShowBadge());
     }
 
     /// <summary>
@@ -184,77 +192,38 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     /// </list>
     /// </remarks>
     /// <param name="modifiers">The modifier keys held during the key press.</param>
-    /// <returns>
-    /// A tuple where <c>Handled</c> is <see langword="true"/> if the toggle succeeded, and
-    /// <c>TrackLabel</c> is the label of the newly selected track, or <see langword="null"/> if subtitles were disabled.
-    /// </returns>
-    public (bool Handled, string? TrackLabel) ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
+    public void HandleSubtitleToggleKey(VirtualKeyModifiers modifiers)
     {
         if (MediaPlayer?.PlaybackItem is null)
+            return;
+
+        PlaybackSubtitleTrackList tracks = MediaPlayer.PlaybackItem.SubtitleTracks;
+        int count = tracks.Count;
+        if (count == 0 || (count > 1 && modifiers == VirtualKeyModifiers.None))
+            return;
+
+        int oldIndex = tracks.SelectedIndex;
+
+        tracks.SelectedIndex = modifiers switch
         {
-            return (false, null);
-        }
+            VirtualKeyModifiers.None when count == 1
+                => oldIndex >= 0 ? -1 : 0,
+            VirtualKeyModifiers.Control
+                => oldIndex == count - 1 ? -1 : ++oldIndex,
+            VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift
+                => oldIndex == -1 ? count - 1 : --oldIndex,
+            _ => oldIndex,
+        };
 
-        PlaybackSubtitleTrackList subtitleTracks = MediaPlayer.PlaybackItem.SubtitleTracks;
-        if (subtitleTracks.Count == 0)
-        {
-            return (false, null);
-        }
-
-        switch (modifiers)
-        {
-            case VirtualKeyModifiers.None when subtitleTracks.Count == 1:
-                if (subtitleTracks.SelectedIndex >= 0)
-                {
-                    subtitleTracks.SelectedIndex = -1;
-                }
-                else
-                {
-                    subtitleTracks.SelectedIndex = 0;
-                }
-
-                break;
-            case VirtualKeyModifiers.Control:
-                if (subtitleTracks.SelectedIndex == subtitleTracks.Count - 1)
-                {
-                    subtitleTracks.SelectedIndex = -1;
-                }
-                else
-                {
-                    subtitleTracks.SelectedIndex++;
-                }
-
-                break;
-            case VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift:
-                if (subtitleTracks.SelectedIndex == -1)
-                {
-                    subtitleTracks.SelectedIndex = subtitleTracks.Count - 1;
-                }
-                else
-                {
-                    subtitleTracks.SelectedIndex--;
-                }
-
-                break;
-            default:
-                return (false, null);
-        }
-
-        string? label = subtitleTracks.SelectedIndex == -1
+        string? label = tracks.SelectedIndex == -1
             ? null
-            : subtitleTracks[subtitleTracks.SelectedIndex].Label;
+            : tracks[tracks.SelectedIndex].Label;
 
-        return (true, label);
-    }
-
-    /// <summary>
-    /// Sends a status message via the messenger.
-    /// The view layer should call this after formatting a localized status string.
-    /// </summary>
-    /// <param name="message">The formatted status message to display.</param>
-    public void SendStatusMessage(string? message)
-    {
-        Messenger.Send(new UpdateStatusMessage(message));
+        Messenger.Send(
+            new PlayerOsdUpdateMessage(
+                label is null ? PlaybackCommandKind.SubtitleOff : PlaybackCommandKind.Subtitle,
+                value: label)
+            .ShowMessage());
     }
 
     partial void OnIsDisplayingRemainingTimeChanged(bool value)

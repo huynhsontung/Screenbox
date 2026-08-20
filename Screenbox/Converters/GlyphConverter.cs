@@ -15,8 +15,11 @@ namespace Screenbox.Converters;
 /// </summary>
 public static partial class GlyphConverter
 {
+    private const string PauseSolidGlyph = "\uE62E";
+    private const string MuteGlyph = "\uE74F";
     private const string MoviesGlyph = "\uE8B2";
     private const string AudioGlyph = "\uE8D6";
+    private const string PlaySolidGlyph = "\uF5B0";
 
     /// <summary>
     /// Gets the shuffle glyph code based on a boolean condition.
@@ -140,9 +143,6 @@ public static partial class GlyphConverter
     /// </returns>
     public static string ToPlayPauseSolidGlyph(bool value)
     {
-        const string PlaySolidGlyph = "\uF5B0";
-        const string PauseSolidGlyph = "\uE62E";
-
         return value ? PauseSolidGlyph : PlaySolidGlyph;
     }
 
@@ -157,13 +157,13 @@ public static partial class GlyphConverter
     /// </returns>
     public static string ToVolumeGlyph(bool isMute, int volume)
     {
-        const string MuteGlyph = "\uE74F";
         const string Volume0Glyph = "\uE992";
         const string Volume1Glyph = "\uE993";
         const string Volume2Glyph = "\uE994";
         const string Volume3Glyph = "\uE995";
 
-        if (isMute) return MuteGlyph;
+        if (isMute)
+            return MuteGlyph;
 
         return volume switch
         {
@@ -171,6 +171,35 @@ public static partial class GlyphConverter
             < 50 => Volume1Glyph,
             < 75 => Volume2Glyph,
             _ => Volume3Glyph
+        };
+    }
+
+    /// <summary>
+    /// Gets the player badge glyph code for the given playback command.
+    /// </summary>
+    /// <param name="kind">A value indicating the playback command.</param>
+    /// <param name="value">An optional value associated with the command.</param>
+    /// <returns>A glyph code representing the playback command.</returns>
+    public static string ToPlaybackCommandBadgeGlyph(PlaybackCommandKind kind, object? value)
+    {
+        //const string StopSolidGlyph = "\uEE95";
+        const string ChevronLeftMedGlyph = "\uE973";
+        const string ChevronRightMedGlyph = "\uE974";
+        const string RewindGlyph = "\uE628";
+        const string FastForwardGlyph = "\uE627";
+
+        return kind switch
+        {
+            PlaybackCommandKind.Play => PlaySolidGlyph,
+            PlaybackCommandKind.Pause => PauseSolidGlyph,
+            //PlaybackCommandKind.Stop => StopSolidGlyph,
+            PlaybackCommandKind.Rewind => ChevronLeftMedGlyph,
+            PlaybackCommandKind.FastForward => ChevronRightMedGlyph,
+            PlaybackCommandKind.Volume when value is int volume => ToVolumeGlyph(isMute: false, volume),
+            PlaybackCommandKind.Mute => MuteGlyph,
+            PlaybackCommandKind.RateUp => RewindGlyph,
+            PlaybackCommandKind.RateDown => FastForwardGlyph,
+            _ => string.Empty,
         };
     }
 
