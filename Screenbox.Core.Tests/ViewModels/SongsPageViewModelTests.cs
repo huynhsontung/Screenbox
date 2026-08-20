@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
@@ -44,7 +45,23 @@ public class SongsPageViewModelTests
     }
 
     [Test]
-    public async Task Receive_ShouldEnqueueAndExecuteFetchSongsViaDispatcherQueue()
+    public void Receive_ShouldNotThrow()
+    {
+        var settings = new TestSettingsService();
+        var libraryContext = new LibraryContext();
+        var vm = new SongsPageViewModel(libraryContext, settings);
+
+        var message = new PropertyChangedMessage<MusicLibrary>(
+            libraryContext,
+            nameof(LibraryContext.Music),
+            libraryContext.Music,
+            libraryContext.Music);
+
+        vm.Receive(message);
+    }
+
+    [Test]
+    public async Task FetchSongs_ShouldUpdateSongsAndGroupedSongs()
     {
         var settings = new TestSettingsService();
         var libraryContext = new LibraryContext();
@@ -65,7 +82,7 @@ public class SongsPageViewModelTests
             new ArtistViewModel());
 
         libraryContext.Music = newLibrary;
-        DispatcherQueueTestHelper.PumpEvents();
+        vm.FetchSongs();
 
         await Assert.That(vm.Songs.Count).IsEqualTo(1);
         await Assert.That(vm.GroupedSongs).IsNotEmpty();
