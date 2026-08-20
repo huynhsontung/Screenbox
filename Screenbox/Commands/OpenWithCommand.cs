@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
@@ -18,9 +20,11 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
     public event EventHandler? CanExecuteChanged;
 
     private readonly AsyncRelayCommand<MediaViewModel> _asyncCommand;
+    private readonly ILogger<OpenWithCommand> _logger;
 
     public OpenWithCommand()
     {
+        _logger = DefaultLogging.CreateLogger<OpenWithCommand>();
         _asyncCommand = new AsyncRelayCommand<MediaViewModel>(OpenWithAsync);
         _asyncCommand.CanExecuteChanged += (_, _) => NotifyCanExecuteChanged();
     }
@@ -86,12 +90,12 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
             bool success = await Launcher.LaunchFileAsync(file, options);
             if (!success)
             {
-                LogService.Log("Failed to open file with external application. No application available or the operation was cancelled.");
+                _logger.LogWarning("Failed to open file with an external application because no application was selected or available.");
             }
         }
         catch (Exception ex)
         {
-            LogService.Log(ex);
+            _logger.LogError(ex, "Failed to open '{Path}' with an external application.", file.Path);
         }
     }
 }

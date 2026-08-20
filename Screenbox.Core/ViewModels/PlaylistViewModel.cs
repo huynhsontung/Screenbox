@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
@@ -36,11 +37,16 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _playlistSaveTimer;
+    private readonly ILogger<PlaylistViewModel> _logger;
 
-    public PlaylistViewModel(IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
+    public PlaylistViewModel(
+        IPlaylistService playlistService,
+        MediaViewModelFactory mediaFactory,
+        ILogger<PlaylistViewModel> logger)
     {
         _playlistService = playlistService;
         _mediaFactory = mediaFactory;
+        _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _playlistSaveTimer = _dispatcherQueue.CreateTimer();
 
@@ -270,7 +276,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
                 }
                 catch (Exception ex)
                 {
-                    LogService.Log(ex);
+                    _logger.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
                 }
             });
         }

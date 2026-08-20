@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using LibVLCSharp.Shared;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
@@ -57,6 +58,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _clickTimer;
     private readonly DispatcherQueueTimer _pointerWheelTimer;
     private readonly DisplayRequestTracker _requestTracker;
+    private readonly ILogger<PlayerElementViewModel> _logger;
     private CancellationTokenSource? _initCts;
     private Size _viewSize;
     private Size _aspectRatio;
@@ -79,12 +81,14 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         PlayerContext playerContext,
         IPlayerService playerService,
         ISettingsService settingsService,
-        ISystemMediaTransportControlsService transportControlsService)
+        ISystemMediaTransportControlsService transportControlsService,
+        ILogger<PlayerElementViewModel> logger)
     {
         _playerContext = playerContext;
         _playerService = playerService;
         _settingsService = settingsService;
         _transportControlsService = transportControlsService;
+        _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _clickTimer = _dispatcherQueue.CreateTimer();
         _pointerWheelTimer = _dispatcherQueue.CreateTimer();
@@ -217,7 +221,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         catch (Exception e)
         {
             _rawPixelsPerViewPixel = 1.0;
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to query the current display information.");
         }
     }
 

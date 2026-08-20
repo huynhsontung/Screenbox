@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Screenbox.Core.Services;
 using Windows.Globalization;
 using Windows.Globalization.Collation;
 
@@ -34,18 +33,9 @@ public static class MediaGroupingHelpers
 
     public static string GetCharacterGroupLabel(string name)
     {
-        try
-        {
-            string? label = _characterGroupings.Lookup(name);
-            return string.IsNullOrEmpty(label) || !_characterGroupSet.Contains(label)
-                ? OtherGroupSymbol
-                : label;
-        }
-        catch (Exception e)
-        {
-            LogService.Log(e);
-        }
-
-        return OtherGroupSymbol;
+        string? label = _characterGroupings.Lookup(name);
+        return string.IsNullOrEmpty(label) || !_characterGroupSet.Contains(label)
+            ? OtherGroupSymbol
+            : label;
     }
 }

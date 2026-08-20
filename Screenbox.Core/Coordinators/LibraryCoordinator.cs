@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -21,6 +22,7 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
     private readonly LibraryContext _context;
     private readonly ILibraryService _libraryService;
     private readonly ISettingsService _settingsService;
+    private readonly ILogger<LibraryCoordinator> _logger;
 
     private readonly DispatcherQueueTimer _musicRefreshTimer;
     private readonly DispatcherQueueTimer _videosRefreshTimer;
@@ -36,11 +38,16 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
     private bool UseIndexer => _settingsService.UseIndexer;
     private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
 
-    public LibraryCoordinator(LibraryContext context, ILibraryService libraryService, ISettingsService settingsService)
+    public LibraryCoordinator(
+        LibraryContext context,
+        ILibraryService libraryService,
+        ISettingsService settingsService,
+        ILogger<LibraryCoordinator> logger)
     {
         _context = context;
         _libraryService = libraryService;
         _settingsService = settingsService;
+        _logger = logger;
 
         DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _musicRefreshTimer = dispatcherQueue.CreateTimer();
@@ -225,7 +232,7 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to refresh the music library after a contents change notification.");
             }
         }
 
@@ -242,7 +249,7 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to refresh the videos library after a contents change notification.");
             }
         }
 
@@ -262,7 +269,7 @@ public sealed class LibraryCoordinator : ILibraryCoordinator
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to refresh libraries after a portable storage device change.");
             }
         }
 

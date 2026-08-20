@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -18,6 +19,13 @@ namespace Screenbox.Core.Services;
 
 public sealed class FilesService : IFilesService
 {
+    private readonly ILogger<FilesService> _logger;
+
+    public FilesService(ILogger<FilesService> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
     {
         try
@@ -183,7 +191,7 @@ public sealed class FilesService : IFilesService
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to load media metadata for '{Path}'.", file.Path);
         }
 
         return new MediaInfo(mediaType);

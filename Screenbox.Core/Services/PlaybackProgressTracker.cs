@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 
@@ -19,13 +20,15 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
     public DateTimeOffset LastUpdated { get; private set; }
 
     private readonly IDatabaseService _databaseService;
+    private readonly ILogger<PlaybackProgressTracker> _logger;
     private List<MediaPlaybackProgress> _progressList = new(Capacity + 1);
     private MediaPlaybackProgress? _updateCache;
     private string? _removeCache;
 
-    public PlaybackProgressTracker(IDatabaseService databaseService)
+    public PlaybackProgressTracker(IDatabaseService databaseService, ILogger<PlaybackProgressTracker> logger)
     {
         _databaseService = databaseService;
+        _logger = logger;
 
         Messenger.Register<SuspendingMessage>(this);
     }
@@ -110,7 +113,7 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
         }
         catch (Exception e)
         {
-            LogService.Log($"Failed to save playback progress\n{e}");
+            _logger.LogError(e, "Failed to save playback progress.");
         }
     }
 
@@ -129,7 +132,7 @@ public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProg
         catch (Exception e)
         {
             // Non-fatal: app starts with empty progress list.
-            LogService.Log($"Failed to load playback progress\n{e}");
+            _logger.LogError(e, "Failed to load playback progress.");
         }
     }
 

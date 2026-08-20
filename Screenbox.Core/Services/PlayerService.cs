@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Playback;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -9,15 +10,22 @@ using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services;
 
-public sealed class PlayerService : IPlayerService
+public sealed partial class PlayerService : IPlayerService
 {
     private readonly IVlcDialogService _vlcDialogService;
+    private readonly ILogger<PlayerService> _logger;
+    private readonly ILogger _vlcLogger;
     private readonly bool _useFal;
     private readonly Dictionary<string, int> _tokenReferences = new();
 
-    public PlayerService(IVlcDialogService vlcDialogService)
+    public PlayerService(
+        IVlcDialogService vlcDialogService,
+        ILogger<PlayerService> logger,
+        ILogger<LibVLC> vlcLogger)
     {
         _vlcDialogService = vlcDialogService;
+        _logger = logger;
+        _vlcLogger = vlcLogger;
 
         // FutureAccessList is preferred because it can handle network StorageFiles
         // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
@@ -129,7 +137,7 @@ public sealed class PlayerService : IPlayerService
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to release a playback access token.");
             }
         }
 
@@ -194,8 +202,16 @@ public sealed class PlayerService : IPlayerService
 #else
         LibVLC libVlc = new(false, false, options.ToArray());
 #endif
-        LogService.RegisterLibVlcLogging(libVlc);
+        libVlc.Log += OnLibVlcLog;
         _vlcDialogService.SetVlcDialogHandlers(libVlc);
         return libVlc;
     }
+
+    private void OnLibVlcLog(object? sender, LogEventArgs e)
+    {
+        LogVlcMessage(_vlcLogger, e.Module ?? "", e.Level, e.Message);
+    }
+
+    [LoggerMessage(Level = Microsoft.Extensions.Logging.LogLevel.Debug, Message = "{Module}: {VlcLogLevel}: {Message}")]
+    private static partial void LogVlcMessage(ILogger logger, string module, LibVLCSharp.Shared.LogLevel vlcLogLevel, string message);
 }

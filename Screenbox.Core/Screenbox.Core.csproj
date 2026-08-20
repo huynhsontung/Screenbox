@@ -20,8 +20,8 @@
     <PackageReference Include="LibVLCSharp" Version="3.10.1" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
-    <PackageReference Include="Sentry" Version="6.8.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
   </ItemGroup>
 </Project>

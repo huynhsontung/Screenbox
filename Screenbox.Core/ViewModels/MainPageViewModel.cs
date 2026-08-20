@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
@@ -52,6 +53,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
     private readonly IPlaylistViewModelFactory _playlistFactory;
+    private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
     /// Gets the collection of search suggestions for the current search query.
@@ -63,7 +65,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     public MainPageViewModel(ISettingsService settingsService, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
-        PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory)
+        PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory,
+        ILogger<MainPageViewModel> logger)
     {
         _settingsService = settingsService;
         _searchService = searchService;
@@ -73,6 +76,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
         _playlistFactory = playlistFactory;
+        _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;
         SearchSuggestions = new ObservableCollection<SearchSuggestion>();
@@ -299,7 +303,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to fetch startup libraries.");
         }
     }
 
@@ -316,7 +320,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         catch (Exception e)
         {
             Messenger.Send(new ErrorMessage(null, e.Message));
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to fetch the music library.");
         }
     }
 
@@ -333,7 +337,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         catch (Exception e)
         {
             Messenger.Send(new ErrorMessage(null, e.Message));
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to fetch the videos library.");
         }
     }
 
@@ -356,14 +360,14 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                 }
                 catch (Exception e)
                 {
-                    LogService.Log(e);
+                    _logger.LogError(e, "Failed to load playlist '{PlaylistId}'.", p.Id);
                 }
             }
         }
         catch (Exception e)
         {
             Messenger.Send(new ErrorMessage(null, e.Message));
-            LogService.Log(e);
+            _logger.LogError(e, "Failed to fetch playlists.");
         }
     }
 }

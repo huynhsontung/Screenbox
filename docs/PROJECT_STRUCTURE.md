@@ -350,8 +350,9 @@ The following table summarizes the allowed dependency directions between layers:
 - [Microsoft.Data.Sqlite](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/) - SQLite database access for media library cache and playlist persistence
 
 #### Monitoring and Analytics
-- [Microsoft.AppCenter](https://www.nuget.org/packages/Microsoft.AppCenter/) - Crash reporting and usage analytics
 - [Sentry](https://www.nuget.org/packages/Sentry/) - Error tracking and performance monitoring
+- [Sentry.Extensions.Logging](https://www.nuget.org/packages/Sentry.Extensions.Logging/) - Sentry provider for `Microsoft.Extensions.Logging` with breadcrumb/event integration
+- [Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/) - Unified structured logging API used across Core and app layers
 
 ## 📋 Development Guidelines
 

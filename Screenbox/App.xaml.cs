@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -32,14 +33,21 @@ namespace Screenbox;
 /// </summary>
 sealed partial class App : Application
 {
+    private readonly IServiceProvider _services;
+    private readonly ILogger<App> _logger;
+    private readonly ITelemetryService _telemetryService;
+
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
     {
-        // ConfigureAppCenter();
-        ConfigureSentry();
+        // Initialize Sentry SDK and immediately register error handlers before XAML is initialized
+        _ = InitializeSentrySdk();
+        UnhandledException += App_UnhandledException;
+        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+
         InitializeComponent();
 
         if (DeviceInfoHelper.IsXbox)
@@ -57,10 +65,13 @@ sealed partial class App : Application
         // https://learn.microsoft.com/en-us/windows/apps/design/accessibility/high-contrast-themes#setting-highcontrastadjustment-to-none
         HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
 
-        Suspending += OnSuspending;
+        _services = ConfigureServices();
+        CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(_services);
 
-        IServiceProvider services = ConfigureServices();
-        CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
+        _logger = _services.GetRequiredService<ILogger<App>>();
+        _telemetryService = _services.GetRequiredService<ITelemetryService>();
+
+        Suspending += OnSuspending;
     }
 
     [SecurityCritical]
@@ -72,22 +83,23 @@ sealed partial class App : Application
         }
         catch (Exception ex)
         {
+            // Tell Sentry this was an unhandled exception
+            ex.Data[Mechanism.HandledKey] = false;
+            ex.Data[Mechanism.MechanismKey] = "CoreApplication.UnhandledErrorDetected";
+
+            // Capture the exception
+            SentrySdk.CaptureException(ex);
+
+            // Flush the event immediately
+            SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+
             if (ex is VLCException { Message: "Could not create Direct3D11 device : No compatible adapter found." })
             {
                 WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
-                LogService.Log(ex);
             }
             else
             {
-                // Tell Sentry this was an unhandled exception
-                ex.Data[Mechanism.HandledKey] = false;
-                ex.Data[Mechanism.MechanismKey] = "CoreApplication.UnhandledErrorDetected";
-
-                // Capture the exception
-                SentrySdk.CaptureException(ex);
-
-                // Flush the event immediately
-                SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+                throw;
             }
         }
     }
@@ -102,8 +114,10 @@ sealed partial class App : Application
             // Tell Sentry this was an unhandled exception
             exception.Data[Mechanism.HandledKey] = false;
             exception.Data[Mechanism.MechanismKey] = "Application.UnhandledException";
+
             // Capture the exception
             SentrySdk.CaptureException(exception);
+
             // Flush the event immediately
             SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
         }
@@ -114,6 +128,21 @@ sealed partial class App : Application
         ServiceCollection services = new();
         ServiceHelpers.PopulateCoreServices(services);
         services.AddLivelyWallpaperServices();
+        services.AddSingleton<ITelemetryService, SentryTelemetryService>();
+        services.AddLogging(builder =>
+        {
+#if DEBUG
+            builder.AddDebug();
+            builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Debug);
+#endif
+            builder.AddSentry(options =>
+            {
+                ConfigureSentryOptions(options);
+                options.InitializeSdk = false;
+                options.MinimumEventLevel = Microsoft.Extensions.Logging.LogLevel.Error;
+                options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Information;
+            });
+        });
 
         // Services
         services.AddSingleton<IVlcDialogService, VlcDialogService>();
@@ -144,29 +173,25 @@ sealed partial class App : Application
         return services.BuildServiceProvider();
     }
 
-    private void ConfigureSentry()
+    private static IDisposable InitializeSentrySdk()
     {
-        if (string.IsNullOrEmpty(Secrets.SentryDsn))
-            return;
-
-
-        SentrySdk.Init(options =>
-        {
-            options.Dsn = Secrets.SentryDsn;
-            options.SampleRate = 1.0f;
-            options.IsGlobalModeEnabled = true;
-            options.AutoSessionTracking = true;
-            options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
-            options.DisableWinUiUnhandledExceptionIntegration();
-        });
+        var initRef = SentrySdk.Init(options => ConfigureSentryOptions(options));
 
         SentrySdk.ConfigureScope(scope =>
         {
             scope.SetTag("device_family", DeviceInfoHelper.DeviceFamily);
         });
 
-        this.UnhandledException += App_UnhandledException;
-        CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+        return initRef;
+    }
+
+    private static void ConfigureSentryOptions(SentryOptions options)
+    {
+        options.Dsn = Secrets.SentryDsn;
+        options.SampleRate = 1.0f;
+        options.IsGlobalModeEnabled = true;
+        options.AutoSessionTracking = true;
+        options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
     }
 
     private void SetMinWindowSize()
@@ -177,10 +202,7 @@ sealed partial class App : Application
 
     protected override void OnFileActivated(FileActivatedEventArgs args)
     {
-        SentrySdk.AddBreadcrumb("File activated", category: "activation", type: "user", data: new Dictionary<string, string>
-        {
-            { "PreviousExecutionState", args.PreviousExecutionState.ToString() }
-        });
+        _logger.LogInformation("File activation started. {PreviousExecutionState}", args.PreviousExecutionState);
 
         Frame rootFrame = InitRootFrame();
         if (rootFrame.Content is not MainPage)
@@ -199,11 +221,8 @@ sealed partial class App : Application
     /// <param name="e">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
     {
-        SentrySdk.AddBreadcrumb("Launched", category: "lifecycle", data: new Dictionary<string, string>
-        {
-            { "PrelaunchActivated", e.PrelaunchActivated.ToString() },
-            { "PreviousExecutionState", e.PreviousExecutionState.ToString() }
-        });
+        _logger.LogInformation("App launched. {PrelaunchActivated} {PreviousExecutionState}",
+            e.PrelaunchActivated, e.PreviousExecutionState);
 
         Frame rootFrame = InitRootFrame();
         LibVLCSharp.Shared.Core.Initialize();
@@ -255,14 +274,11 @@ sealed partial class App : Application
         SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
         try
         {
-            SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
-            var tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
-            if (!string.IsNullOrEmpty(Secrets.SentryDsn))
+            _logger.LogInformation("Application is suspending.");
+            var tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses.ToList();
+            if (_telemetryService.IsEnabled)
             {
-                // Sentry Cloud is more reliable, so we can afford to wait a bit longer to flush events
-                // If it's a self-hosted Sentry instance, we just drop the events instead of risking delaying suspension
-                var sentryTimeout = TimeSpan.FromSeconds(Secrets.SentryDsn.Contains("sentry.io") ? 2 : 0.5);
-                tasks.Append(SentrySdk.FlushAsync(sentryTimeout));
+                tasks.Add(_telemetryService.FlushAsync());
             }
 
             await Task.WhenAll(tasks);
@@ -277,16 +293,16 @@ sealed partial class App : Application
         }
     }
 
-    private static async Task StartupInitAsync()
+    private async Task StartupInitAsync()
     {
-        var dbService = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IDatabaseService>();
+        var dbService = _services.GetRequiredService<IDatabaseService>();
         try
         {
             await dbService.InitializeAsync();
         }
         catch (Exception e)
         {
-            LogService.Log(e);
+            _logger.LogError(e, "Database initialization failed at startup.");
         }
     }
 

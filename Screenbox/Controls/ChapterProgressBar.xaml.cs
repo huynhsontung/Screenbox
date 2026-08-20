@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CommunityToolkit.WinUI;
-using Screenbox.Core.Services;
+using Microsoft.Extensions.Logging;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.Media.Core;
 using Windows.System;
@@ -68,9 +69,11 @@ public sealed partial class ChapterProgressBar : UserControl
 
     private readonly DispatcherQueueTimer _chaptersUpdateTimer;
     private readonly double _chapterSpacing;
+    private readonly ILogger<ChapterProgressBar> _logger;
 
     public ChapterProgressBar()
     {
+        _logger = DefaultLogging.CreateLogger<ChapterProgressBar>();
         _chaptersUpdateTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
         ProgressItems = new ObservableCollection<ChapterViewModel>();
         this.InitializeComponent();
@@ -245,7 +248,7 @@ public sealed partial class ChapterProgressBar : UserControl
                 };
 
                 ProgressItems.Add(gapChapter);
-                LogService.Log("Chapters duration does not match with media length.");
+                _logger.LogWarning("Chapter duration does not match the media length.");
             }
 
             // Update the width of each chapter

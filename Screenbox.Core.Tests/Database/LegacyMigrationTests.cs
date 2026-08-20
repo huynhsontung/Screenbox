@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Models;
 using Screenbox.Core.Models.Serialization;
 using Screenbox.Core.Services;
@@ -39,7 +40,10 @@ public sealed class LegacyMigrationTests
         await File.WriteAllTextAsync(songsBinPath, "dummy_legacy_binary_data");
 
         // 2. Initialize DatabaseService (triggers legacy import and cleanup)
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         // 3. Verify playlist was imported into SQL database
@@ -62,7 +66,10 @@ public sealed class LegacyMigrationTests
         using var fixture = new TestDirectoryFixture();
 
         // 1. Pre-initialize DB and insert an existing playlist
-        var dbService1 = new DatabaseService(fixture.DirectoryPath);
+        var dbService1 = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService1.InitializeAsync();
 
         await dbService1.SavePlaylistAsync(new PlaylistRecordDto
@@ -89,7 +96,10 @@ public sealed class LegacyMigrationTests
         await File.WriteAllTextAsync(Path.Combine(playlistsDirPath, "Ignored.json"), json);
 
         // 3. Re-initialize DatabaseService
-        var dbService2 = new DatabaseService(fixture.DirectoryPath);
+        var dbService2 = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService2.InitializeAsync();
 
         // 4. Verify the existing playlist remains and the legacy one was NOT imported

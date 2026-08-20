@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
@@ -60,15 +61,18 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
+    private readonly ILogger<CompositeTrackPickerViewModel> _logger;
     private bool _flyoutOpened;
     private CancellationTokenSource? _cts;
 
     public CompositeTrackPickerViewModel(PlayerContext playerContext, IFilesService filesService,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ILogger<CompositeTrackPickerViewModel> logger)
     {
         _filesService = filesService;
         _settingsService = settingsService;
         _playerContext = playerContext;
+        _logger = logger;
         SubtitleTracks = new ObservableCollection<string>();
         AudioTracks = new ObservableCollection<string>();
         VideoTracks = new ObservableCollection<string>();
@@ -189,7 +193,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                _logger.LogError(e, "Failed to enumerate matching subtitle files for '{FileName}'.", sourceFile.Name);
             }
         }
         else
