@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Screenbox.Core.Services;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.Media.Core;
 using Windows.System;
@@ -19,10 +17,6 @@ namespace Screenbox.Controls;
 
 public sealed partial class ChapterProgressBar : UserControl
 {
-    private static ILogger<ChapterProgressBar> Logger =>
-        ((IServiceProvider)Ioc.Default).GetService(typeof(ILogger<ChapterProgressBar>)) as ILogger<ChapterProgressBar>
-        ?? NullLogger<ChapterProgressBar>.Instance;
-
     public static readonly DependencyProperty ChaptersProperty = DependencyProperty.Register(
         nameof(Chapters),
         typeof(IReadOnlyCollection<ChapterCue>),
@@ -75,9 +69,11 @@ public sealed partial class ChapterProgressBar : UserControl
 
     private readonly DispatcherQueueTimer _chaptersUpdateTimer;
     private readonly double _chapterSpacing;
+    private readonly ILogger<ChapterProgressBar> _logger;
 
     public ChapterProgressBar()
     {
+        _logger = DefaultLogging.CreateLogger<ChapterProgressBar>();
         _chaptersUpdateTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
         ProgressItems = new ObservableCollection<ChapterViewModel>();
         this.InitializeComponent();
@@ -252,7 +248,7 @@ public sealed partial class ChapterProgressBar : UserControl
                 };
 
                 ProgressItems.Add(gapChapter);
-                Logger.LogDebug("Chapter duration does not match the media length.");
+                _logger.LogWarning("Chapter duration does not match the media length.");
             }
 
             // Update the width of each chapter
