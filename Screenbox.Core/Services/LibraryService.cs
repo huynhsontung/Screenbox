@@ -176,6 +176,7 @@ public sealed class LibraryService : ILibraryService
             songs,
             albumFactory.Albums,
             artistFactory.Artists,
+            ExtractGenres(songs),
             albumFactory.UnknownAlbum,
             artistFactory.UnknownArtist);
 
@@ -564,8 +565,19 @@ public sealed class LibraryService : ILibraryService
             new List<MediaViewModel>(songs),
             new Dictionary<string, AlbumViewModel>(albumFactory.Albums),
             new Dictionary<string, ArtistViewModel>(artistFactory.Artists),
+            ExtractGenres(songs),
             albumFactory.UnknownAlbum,
             artistFactory.UnknownArtist);
+    }
+
+    private static IReadOnlyList<string> ExtractGenres(IEnumerable<MediaViewModel> songs)
+    {
+        return songs
+            .Select(s => s.MediaInfo.MusicProperties.Genre.Trim())
+            .Where(g => !string.IsNullOrEmpty(g))
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .OrderBy(g => g, StringComparer.CurrentCulture)
+            .ToList();
     }
 
     private async Task<IReadOnlyList<StorageFile>> FetchFilesFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
