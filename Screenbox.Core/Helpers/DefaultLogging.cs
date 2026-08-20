@@ -12,7 +12,7 @@ public static class DefaultLogging
 {
     private static ILoggerFactory? Factory => Ioc.Default.GetService<ILoggerFactory>();
 
-    public static ILogger<T> CreateLogger<T>() => Factory?.CreateLogger<T>() ?? NullLogger<T>.Instance;
+    public static ILogger<T> CreateLogger<T>() => Ioc.Default.GetService<ILogger<T>>() ?? NullLogger<T>.Instance;
 
     public static ILogger CreateLogger(string categoryName) => Factory?.CreateLogger(categoryName) ?? NullLogger.Instance;
 }

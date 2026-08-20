@@ -5,6 +5,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
@@ -53,7 +54,7 @@ public sealed partial class MainPage : Page, IContentFrame
             { "settings", typeof(SettingsPage) }
         };
 
-        _logger = Ioc.Default.GetRequiredService<ILogger<MainPage>>();
+        _logger = DefaultLogging.CreateLogger<MainPage>();
         DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ContentFrame.Navigating += ContentFrame_Navigating;
