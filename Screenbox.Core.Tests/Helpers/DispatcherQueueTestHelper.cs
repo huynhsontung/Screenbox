@@ -32,7 +32,8 @@ public static partial class DispatcherQueueTestHelper
             apartmentType = 2 // DQTAT_COM_STA
         };
 
-        CreateDispatcherQueueController(options, out _);
+        var hr = CreateDispatcherQueueController(options, out _);
+        Marshal.ThrowExceptionForHR(hr);
 
         var queue = DispatcherQueue.GetForCurrentThread();
         if (queue is not null)
