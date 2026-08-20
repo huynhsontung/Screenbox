@@ -4,6 +4,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -45,11 +46,11 @@ public sealed partial class AlbumsPage : Page
         }
     }
 
-    private void UpdateSortVisualState(string sortBy)
+    private void UpdateSortVisualState(AlbumSortOrder sortBy)
     {
         var state = sortBy switch
         {
-            "artist" => "SortByArtist",
+            AlbumSortOrder.Artist => "SortByArtist",
             _ => "SortByTitle"
         };
         VisualStateManager.GoToState(this, state, true);
@@ -60,7 +61,7 @@ public sealed partial class AlbumsPage : Page
         base.OnNavigatedTo(e);
         if (e.NavigationMode == NavigationMode.Back
             && Common.TryGetPageState(nameof(AlbumsPage), Frame.BackStackDepth, out var state)
-            && state is KeyValuePair<string, double> pair)
+            && state is KeyValuePair<AlbumSortOrder, double> pair)
         {
             ViewModel.SortBy = pair.Key;
             _contentVerticalOffset = pair.Value;
@@ -100,17 +101,17 @@ public sealed partial class AlbumsPage : Page
 
     private void SavePageState(double verticalOffset)
     {
-        Common.SavePageState(new KeyValuePair<string, double>(ViewModel.SortBy, verticalOffset), nameof(AlbumsPage),
+        Common.SavePageState(new KeyValuePair<AlbumSortOrder, double>(ViewModel.SortBy, verticalOffset), nameof(AlbumsPage),
             Frame.BackStackDepth);
     }
 
-    private string GetSortByText(string tag)
+    private string GetSortByText(AlbumSortOrder tag)
     {
-        var item = SortByFlyout.Items?.FirstOrDefault(x => (x.Tag as string) == tag) ?? SortByFlyout.Items?.FirstOrDefault();
+        var item = SortByFlyout.Items?.FirstOrDefault(x => x.Tag is AlbumSortOrder order && order == tag) ?? SortByFlyout.Items?.FirstOrDefault();
         return (item as MenuFlyoutItem)?.Text ?? string.Empty;
     }
 
-    private string GetSortByButtonAutomationName(string value)
+    private string GetSortByButtonAutomationName(AlbumSortOrder value)
     {
         var optionText = GetSortByText(value);
         return Strings.Resources.SortByAutomationName(optionText);
@@ -118,8 +119,7 @@ public sealed partial class AlbumsPage : Page
 
     private void UpdateSortByFlyout()
     {
-        if ((SortByFlyout.Items?.FirstOrDefault(x => (x.Tag as string) == ViewModel.SortBy) ??
-             SortByFlyout.Items?.FirstOrDefault()) is RadioMenuFlyoutItem radioItem)
+        if (SortByFlyout.Items?.FirstOrDefault(x => x.Tag is AlbumSortOrder order && order == ViewModel.SortBy) is RadioMenuFlyoutItem radioItem)
         {
             radioItem.IsChecked = true;
         }

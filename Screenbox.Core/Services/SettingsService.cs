@@ -32,8 +32,8 @@ public sealed class SettingsService : ISettingsService
     private const string PersistentRepeatModeKey = "Values/RepeatMode";
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
     private const string PersistentShowRemainingTimeKey = "Values/ShowRemainingTime";
-    private const string PersistentSongsSortByKey = "Values/Songs/SortBy";
-    private const string PersistentAlbumsSortByKey = "Values/Albums/SortBy";
+    private const string SongsSortOrderKey = "Values/Songs/SortOrder";
+    private const string AlbumsSortOrderKey = "Values/Albums/SortOrder";
     private const string PlayerShowChaptersKey = "Player/ShowChapters";
     private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
 
@@ -240,16 +240,16 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(PlayerGesturePressAndHoldKey, value);
     }
 
-    public string PersistentSongsSortBy
+    public SongSortOrder SongsSortOrder
     {
-        get => GetValue<string>(PersistentSongsSortByKey) is { Length: > 0 } value ? value : "title";
-        set => SetValue(PersistentSongsSortByKey, value);
+        get => (SongSortOrder)GetValue<int>(SongsSortOrderKey);
+        set => SetValue(SongsSortOrderKey, (int)value);
     }
 
-    public string PersistentAlbumsSortBy
+    public AlbumSortOrder AlbumsSortOrder
     {
-        get => GetValue<string>(PersistentAlbumsSortByKey) is { Length: > 0 } value ? value : "title";
-        set => SetValue(PersistentAlbumsSortByKey, value);
+        get => (AlbumSortOrder)GetValue<int>(AlbumsSortOrderKey);
+        set => SetValue(AlbumsSortOrderKey, (int)value);
     }
 
     public SettingsService()
@@ -269,8 +269,8 @@ public sealed class SettingsService : ISettingsService
         SetDefault(AdvancedMultipleInstancesKey, false);
         SetDefault(GlobalArgumentsKey, string.Empty);
         SetDefault(PersistentShowRemainingTimeKey, false);
-        SetDefault(PersistentSongsSortByKey, "title");
-        SetDefault(PersistentAlbumsSortByKey, "title");
+        SetDefault(SongsSortOrderKey, (int)SongSortOrder.Title);
+        SetDefault(AlbumsSortOrderKey, (int)AlbumSortOrder.Title);
         SetDefault(PlayerShowChaptersKey, true);
         SetDefault(PrivacyPersistPlaybackPosition, true);
         SetDefault(PlayerRewindStepKey, 5);

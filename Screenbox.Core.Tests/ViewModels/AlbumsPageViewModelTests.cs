@@ -1,4 +1,5 @@
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
 
@@ -9,35 +10,35 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task Constructor_ShouldInitializeSortByFromSettings()
     {
-        var settings = new TestSettingsService { PersistentAlbumsSortBy = "year" };
+        var settings = new TestSettingsService { AlbumsSortOrder = AlbumSortOrder.Year };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
-        await Assert.That(vm.SortBy).IsEqualTo("year");
+        await Assert.That(vm.SortBy).IsEqualTo(AlbumSortOrder.Year);
     }
 
     [Test]
     public async Task SortBy_WhenChanged_ShouldUpdatePersistentSettings()
     {
-        var settings = new TestSettingsService { PersistentAlbumsSortBy = "title" };
+        var settings = new TestSettingsService { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
-        vm.SortBy = "artist";
+        vm.SortBy = AlbumSortOrder.Artist;
 
-        await Assert.That(settings.PersistentAlbumsSortBy).IsEqualTo("artist");
+        await Assert.That(settings.AlbumsSortOrder).IsEqualTo(AlbumSortOrder.Artist);
     }
 
     [Test]
     public async Task SetSortByCommand_WhenExecuted_ShouldUpdateSortByAndSettings()
     {
-        var settings = new TestSettingsService { PersistentAlbumsSortBy = "title" };
+        var settings = new TestSettingsService { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
-        vm.SetSortByCommand.Execute("dateAdded");
+        vm.SetSortByCommand.Execute(AlbumSortOrder.DateAdded);
 
-        await Assert.That(vm.SortBy).IsEqualTo("dateAdded");
-        await Assert.That(settings.PersistentAlbumsSortBy).IsEqualTo("dateAdded");
+        await Assert.That(vm.SortBy).IsEqualTo(AlbumSortOrder.DateAdded);
+        await Assert.That(settings.AlbumsSortOrder).IsEqualTo(AlbumSortOrder.DateAdded);
     }
 }

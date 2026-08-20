@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -23,7 +24,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     public ObservableCollection<ObservableAlbumGroup> GroupedAlbums { get; } = [];
 
     [ObservableProperty]
-    public partial string SortBy { get; set; } = string.Empty;
+    public partial AlbumSortOrder SortBy { get; set; } = AlbumSortOrder.Title;
 
     [ObservableProperty]
     public partial AlbumViewModel? ContextAlbum { get; set; }
@@ -37,7 +38,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     {
         _libraryContext = libraryContext;
         _settingsService = settingsService;
-        SortBy = _settingsService.PersistentAlbumsSortBy;
+        SortBy = _settingsService.AlbumsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue?.CreateTimer();
 
@@ -160,13 +161,13 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         return groups;
     }
 
-    private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(LibraryContext context, string sortBy)
+    private List<IGrouping<string, AlbumViewModel>> GetCurrentGrouping(LibraryContext context, AlbumSortOrder sortBy)
     {
         return sortBy switch
         {
-            "artist" => GetArtistGrouping(context),
-            "year" => GetYearGrouping(context),
-            "dateAdded" => GetDateAddedGrouping(context),
+            AlbumSortOrder.Artist => GetArtistGrouping(context),
+            AlbumSortOrder.Year => GetYearGrouping(context),
+            AlbumSortOrder.DateAdded => GetDateAddedGrouping(context),
             _ => GetDefaultGrouping(context)
         };
     }
@@ -180,9 +181,9 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         }
     }
 
-    partial void OnSortByChanged(string value)
+    partial void OnSortByChanged(AlbumSortOrder value)
     {
-        _settingsService.PersistentAlbumsSortBy = value;
+        _settingsService.AlbumsSortOrder = value;
         var groups = GetCurrentGrouping(_libraryContext, value);
         GroupedAlbums.Clear();
         foreach (IGrouping<string, AlbumViewModel> group in groups)
@@ -192,7 +193,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     }
 
     [RelayCommand]
-    private void SetSortBy(string tag)
+    private void SetSortBy(AlbumSortOrder tag)
     {
         SortBy = tag;
     }
