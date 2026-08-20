@@ -10,7 +10,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task Constructor_ShouldInitializeSortByFromSettings()
     {
-        var settings = new TestSettingsService { AlbumsSortOrder = AlbumSortOrder.Year };
+        var settings = new TestSettingsService { PersistentAlbumsSortOrder = AlbumSortOrder.Year };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -20,25 +20,25 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task SortBy_WhenChanged_ShouldUpdatePersistentSettings()
     {
-        var settings = new TestSettingsService { AlbumsSortOrder = AlbumSortOrder.Title };
+        var settings = new TestSettingsService { PersistentAlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
         vm.SortBy = AlbumSortOrder.Artist;
 
-        await Assert.That(settings.AlbumsSortOrder).IsEqualTo(AlbumSortOrder.Artist);
+        await Assert.That(settings.PersistentAlbumsSortOrder).IsEqualTo(AlbumSortOrder.Artist);
     }
 
     [Test]
     public async Task SetSortByCommand_WhenExecuted_ShouldUpdateSortByAndSettings()
     {
-        var settings = new TestSettingsService { AlbumsSortOrder = AlbumSortOrder.Title };
+        var settings = new TestSettingsService { PersistentAlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
         vm.SetSortByCommand.Execute(AlbumSortOrder.DateAdded);
 
         await Assert.That(vm.SortBy).IsEqualTo(AlbumSortOrder.DateAdded);
-        await Assert.That(settings.AlbumsSortOrder).IsEqualTo(AlbumSortOrder.DateAdded);
+        await Assert.That(settings.PersistentAlbumsSortOrder).IsEqualTo(AlbumSortOrder.DateAdded);
     }
 }

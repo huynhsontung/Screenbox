@@ -38,6 +38,6 @@ public class TestSettingsService : ISettingsService
     public bool PlayerGestureSlideVertical { get; set; } = true;
     public bool PlayerGestureSlideHorizontal { get; set; } = true;
     public bool PlayerGesturePressAndHold { get; set; } = true;
-    public SongSortOrder SongsSortOrder { get; set; } = SongSortOrder.Title;
-    public AlbumSortOrder AlbumsSortOrder { get; set; } = AlbumSortOrder.Title;
+    public SongSortOrder PersistentSongsSortOrder { get; set; } = SongSortOrder.Title;
+    public AlbumSortOrder PersistentAlbumsSortOrder { get; set; } = AlbumSortOrder.Title;
 }

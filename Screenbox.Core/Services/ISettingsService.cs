@@ -142,10 +142,10 @@ public interface ISettingsService
     /// <summary>
     /// Gets or sets the preferred sort order for the songs page.
     /// </summary>
-    SongSortOrder SongsSortOrder { get; set; }
+    SongSortOrder PersistentSongsSortOrder { get; set; }
 
     /// <summary>
     /// Gets or sets the preferred sort order for the albums page.
     /// </summary>
-    AlbumSortOrder AlbumsSortOrder { get; set; }
+    AlbumSortOrder PersistentAlbumsSortOrder { get; set; }
 }

@@ -34,7 +34,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     {
         _libraryContext = libraryContext;
         _settingsService = settingsService;
-        SortBy = _settingsService.SongsSortOrder;
+        SortBy = _settingsService.PersistentSongsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue?.CreateTimer();
 
@@ -186,7 +186,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     partial void OnSortByChanged(SongSortOrder value)
     {
-        _settingsService.SongsSortOrder = value;
+        _settingsService.PersistentSongsSortOrder = value;
         var groups = GetCurrentGrouping(_libraryContext, value);
         GroupedSongs.Clear();
         foreach (IGrouping<string, MediaViewModel> group in groups)
