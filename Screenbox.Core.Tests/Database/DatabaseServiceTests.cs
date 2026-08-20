@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -12,7 +13,10 @@ public sealed class DatabaseServiceTests
     public async Task InitializeAsync_CreatesDatabaseAndAllRequiredTables()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
 
         await dbService.InitializeAsync();
 
@@ -37,7 +41,10 @@ public sealed class DatabaseServiceTests
     public async Task SaveMusicCacheAsync_And_LoadLibraryCacheAsync_PersistsAndRetrievesMusicRecords()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         List<string> folders = [@"C:\Music\Folder1", @"C:\Music\Folder2"];
@@ -97,7 +104,10 @@ public sealed class DatabaseServiceTests
     public async Task SaveVideoCacheAsync_And_LoadLibraryCacheAsync_PersistsAndRetrievesVideoRecords()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         List<string> folders = [@"C:\Videos\Movies"];
@@ -139,7 +149,10 @@ public sealed class DatabaseServiceTests
     public async Task SaveMusicCacheAsync_ClearsStaleRecordsOnRescan()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         // Initial save with two songs
@@ -169,7 +182,10 @@ public sealed class DatabaseServiceTests
     public async Task SaveVideoCacheAsync_ClearsStaleRecordsOnRescan()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         // Initial save with two videos
@@ -199,7 +215,10 @@ public sealed class DatabaseServiceTests
     public async Task PlaylistOperations_SaveLoadListAndDelete_BehavesCorrectly()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         var playlistDto = new PlaylistRecordDto
@@ -241,7 +260,10 @@ public sealed class DatabaseServiceTests
     public async Task PlaybackProgressOperations_SaveAndLoad_RoundtripsPositionTicks()
     {
         using var fixture = new TestDirectoryFixture();
-        var dbService = new DatabaseService(fixture.DirectoryPath);
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
         await dbService.InitializeAsync();
 
         string location = @"C:\Media\movie.mkv";

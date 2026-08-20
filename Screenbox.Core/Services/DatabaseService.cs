@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Windows.Storage;
 
 namespace Screenbox.Core.Services;
@@ -21,7 +20,7 @@ public sealed partial class DatabaseService : IDatabaseService
     /// Gets the folder path where the database and migration files are stored.
     /// Defaults to <c>ApplicationData.Current.LocalFolder.Path</c> if not specified.
     /// </summary>
-    public string DbFolderPath { get; }
+    public string DbFolderPath { get; set; } = string.Empty;
 
     private string? _connectionString;
     private readonly ILogger<DatabaseService> _logger;
@@ -31,18 +30,12 @@ public sealed partial class DatabaseService : IDatabaseService
     /// <summary>
     /// Initializes a new instance of the <see cref="DatabaseService"/> class.
     /// </summary>
-    /// <param name="dbFolderPath">Optional custom folder path for database storage. If <c>null</c>, defaults to ApplicationData LocalFolder.</param>
-    public DatabaseService(string? dbFolderPath = null, ILogger<DatabaseService>? logger = null)
+    /// <param name="logger">The logger instance to use for logging.</param>
+    public DatabaseService(ILogger<DatabaseService> logger)
     {
-        DbFolderPath = dbFolderPath ?? GetUwpFolderPath();
-        _logger = logger ?? NullLogger<DatabaseService>.Instance;
+        _logger = logger;
     }
 
-    // This method is marked NoInlining to prevent the JIT compiler from eagerly loading
-    // WinRT types (ApplicationData) when the caller (InitializeCoreAsync) is compiled.
-    // This allows the test project (which lacks WinRT support) to execute InitializeCoreAsync
-    // securely without crashing with a PlatformNotSupportedException, provided it supplies a DbFolderPath.
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static string GetUwpFolderPath()
     {
         return ApplicationData.Current.LocalFolder.Path;
@@ -51,6 +44,11 @@ public sealed partial class DatabaseService : IDatabaseService
     /// <inheritdoc/>
     public async Task InitializeAsync()
     {
+        if (string.IsNullOrEmpty(DbFolderPath))
+        {
+            DbFolderPath = GetUwpFolderPath();
+        }
+
         await EnsureInitializedAsync();
     }
 
