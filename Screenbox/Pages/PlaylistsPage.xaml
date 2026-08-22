@@ -41,7 +41,7 @@
                     CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.AddToQueueCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
@@ -58,11 +58,11 @@
                     Command="{x:Bind RenamePlaylistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Rename}"
-                    Text="{strings:Resources Key=Rename}" />
+                    Text="{x:Bind strings:Resources.Rename}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ExportPlaylistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Text="{strings:Resources Key=Export}">
+                    Text="{x:Bind strings:Resources.Export}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
                     </MenuFlyoutItem.Icon>
@@ -71,7 +71,7 @@
                     Command="{x:Bind DeletePlaylistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
-                    Text="{strings:Resources Key=Delete}" />
+                    Text="{x:Bind strings:Resources.Delete}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
@@ -117,7 +117,7 @@
             <TextBlock
                 Grid.Column="0"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=Playlists}"
+                Text="{x:Bind strings:Resources.Playlists}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
@@ -255,7 +255,7 @@
                         Style="{StaticResource AccentSplitButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE710;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=NewPlaylist}" />
+                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.NewPlaylist}" />
                         </StackPanel>
                     </sbuc:SplitButtonEx>
                 </sbuc:ContentUnavailableView.ActionContent>

@@ -80,7 +80,7 @@
             <muxc:Expander
                 Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
-                Header="{strings:Resources Key=Media}"
+                Header="{x:Bind strings:Resources.Media}"
                 IsExpanded="True">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
@@ -91,7 +91,7 @@
             <muxc:Expander
                 Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
-                Header="{strings:Resources Key=Video}"
+                Header="{x:Bind strings:Resources.Video}"
                 IsExpanded="True"
                 Visibility="{x:Bind ViewModel.VideoProperties, Converter={StaticResource CollectionVisibilityConverter}}">
                 <muxc:ItemsRepeater
@@ -103,7 +103,7 @@
             <muxc:Expander
                 Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
-                Header="{strings:Resources Key=Music}"
+                Header="{x:Bind strings:Resources.Music}"
                 IsExpanded="True"
                 Visibility="{x:Bind ViewModel.AudioProperties, Converter={StaticResource CollectionVisibilityConverter}}">
                 <muxc:ItemsRepeater
@@ -116,7 +116,7 @@
                 Margin="{StaticResource BottomLargeMargin}"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
-                Header="{strings:Resources Key=File}"
+                Header="{x:Bind strings:Resources.File}"
                 IsExpanded="True">
                 <StackPanel Orientation="Vertical">
                     <muxc:ItemsRepeater

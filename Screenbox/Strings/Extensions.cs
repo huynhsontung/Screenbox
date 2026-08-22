@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Markup;
 
 namespace Screenbox.Strings;
 
@@ -13,9 +13,5 @@ namespace Screenbox.Strings;
  */
 
 public partial class ResourcesExtension : MarkupExtension
-{
-}
-
-public partial class KeyboardResourcesExtension : MarkupExtension
 {
 }

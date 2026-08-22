@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.VolumeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -48,7 +48,7 @@
             Margin="0,0,4,0"
             d:Style="{StaticResource SmallPlayerToggleButtonStyle}"
             extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
-            AccessKey="{strings:KeyboardResources Key=PlayerMuteKey}"
+            AccessKey="{x:Bind strings:KeyboardResources.PlayerMuteKey}"
             AutomationProperties.Name="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
             Style="{x:Bind VolumeToggleButtonStyle, Mode=OneWay}">
@@ -77,8 +77,8 @@
             Grid.Column="1"
             VerticalAlignment="Center"
             d:Value="60"
-            AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
-            AutomationProperties.Name="{strings:Resources Key=VolumeSliderTooltip}"
+            AccessKey="{x:Bind strings:KeyboardResources.PlayerVolumeButtonSliderKey}"
+            AutomationProperties.Name="{x:Bind strings:Resources.VolumeSliderTooltip}"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
             PointerWheelChanged="VolumeSlider_OnPointerWheelChanged"
