@@ -46,7 +46,7 @@
             AutoPlay="False"
             IsHitTestVisible="False"
             Source="{StaticResource AnimatedPlayingVisualSource}"
-            ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
+            ToolTipService.ToolTip="{x:Bind strings:Resources.IsPlaying}"
             Visibility="Collapsed" />
 
         <TextBlock
