@@ -1,14 +1,14 @@
-﻿<ContentDialog
+<ContentDialog
     x:Class="Screenbox.Dialogs.CreatePlaylistDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="{strings:Resources Key=CreateNewPlaylist}"
-    CloseButtonText="{strings:Resources Key=Cancel}"
+    Title="{x:Bind strings:Resources.CreateNewPlaylist}"
+    CloseButtonText="{x:Bind strings:Resources.Cancel}"
     DefaultButton="Primary"
-    PrimaryButtonText="{strings:Resources Key=Create}"
+    PrimaryButtonText="{x:Bind strings:Resources.Create}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
