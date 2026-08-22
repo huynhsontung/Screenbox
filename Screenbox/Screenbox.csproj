@@ -44,7 +44,7 @@
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
     <PackageReference Include="Sentry.Extensions.Logging" Version="6.8.0" />
-    <PackageReference Include="Starpine.ReswPlus" Version="0.3.2-202605101917" />
+    <PackageReference Include="ReswPlus" Version="0.5.0" />
   </ItemGroup>
 
   <ItemGroup Label="Localization">
@@ -67,4 +67,9 @@
     <ProjectReference Include="..\Screenbox.UI\Screenbox.UI.csproj" />
     <ProjectReference Include="..\Screenbox.VideoView\Screenbox.VideoView.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Use application languages for plural rules to avoid mismatches with the system display language. -->
+    <ReswPlusUseApplicationLanguages>true</ReswPlusUseApplicationLanguages>
+  </PropertyGroup>
 </Project>
