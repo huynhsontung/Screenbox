@@ -1,0 +1,15 @@
+# Not the root‑level .editorconfig file in the hierarchy
+root = false
+
+# C# files
+[*.cs]
+
+#### .NET Coding Conventions ####
+
+# Organize usings
+file_header_template = Copyright (c) Tung Huynh and Contributors. All rights reserved.\nLicensed under the MIT License. See License.txt in the project root for license information.
+
+#### Diagnostic configuration ####
+
+# IDE0073: The file header is missing or not located at the top of the file
+dotnet_diagnostic.IDE0073.severity = suggestion

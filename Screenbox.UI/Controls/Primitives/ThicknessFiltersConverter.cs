@@ -1,5 +1,7 @@
-// Inspired by:
-// https://github.com/microsoft/microsoft-ui-xaml/pull/6829
+// Copyright (c) Tung Huynh and Contributors. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+// Inspired by https://github.com/microsoft/microsoft-ui-xaml/pull/6829
+// Original source is Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License.
 
 using System;
 using Windows.UI.Xaml;
