@@ -363,6 +363,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Abrir localização do ficheiro</value>
   </data>
+  <data name="OpenInFileExplorer" xml:space="preserve">
+    <value>Open in File Explorer</value>
+  </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Abrir com</value>
   </data>
@@ -1157,3 +1160,4 @@
     <value>Alterar</value>
   </data>
 </root>
+

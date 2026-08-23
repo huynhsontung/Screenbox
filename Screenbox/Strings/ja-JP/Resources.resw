@@ -363,6 +363,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>フォルダの場所を開く</value>
   </data>
+  <data name="OpenInFileExplorer" xml:space="preserve">
+    <value>Open in File Explorer</value>
+  </data>
   <data name="OpenWith" xml:space="preserve">
     <value>別のプログラムから開く</value>
   </data>
@@ -1158,3 +1161,4 @@
     <value>変更</value>
   </data>
 </root>
+

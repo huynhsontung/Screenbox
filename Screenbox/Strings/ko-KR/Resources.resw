@@ -363,6 +363,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>파일 위치 열기</value>
   </data>
+  <data name="OpenInFileExplorer" xml:space="preserve">
+    <value>Open in File Explorer</value>
+  </data>
   <data name="OpenWith" xml:space="preserve">
     <value>다음으로 열기</value>
   </data>
@@ -1158,3 +1161,4 @@
     <value>변경</value>
   </data>
 </root>
+
