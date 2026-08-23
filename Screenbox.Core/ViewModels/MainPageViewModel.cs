@@ -30,10 +30,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private const int TriggerSeekMultiplier = 4;
     private const int VolumeAdjustmentStep = 2;
 
-    private const int MaxSuggestionsPerCategory = 6;
-    private const int MaxTotalSuggestions = 10;
-    private const double IndexWeightFactor = 0.1;
-
     [ObservableProperty] public partial bool PlayerVisible { get; set; }
     [ObservableProperty] public partial bool ShouldUseMargin { get; set; }
     [ObservableProperty] public partial bool IsPaneOpen { get; set; }
@@ -168,42 +164,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     /// <param name="text">A search query string used to filter suggestions.</param>
     public void UpdateSearchSuggestions(string text)
     {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            SearchSuggestions.Clear();
-            return;
-        }
-
-        string queryText = text.Trim();
-        var result = _searchService.SearchLocalLibrary(_libraryContext, queryText);
-        var newSuggestions = GetSuggestItems(result, queryText).ToList();
-
-        if (newSuggestions.Count == 0)
-        {
-            newSuggestions.Add(new SearchSuggestion(SearchSuggestionType.None, queryText));
-        }
-
-        for (int i = 0; i < newSuggestions.Count; i++)
-        {
-            if (i < SearchSuggestions.Count)
-            {
-                var newItem = newSuggestions[i];
-                var oldItem = SearchSuggestions[i];
-                if (!Equals(oldItem, newItem))
-                {
-                    SearchSuggestions[i] = newItem;
-                }
-            }
-            else
-            {
-                SearchSuggestions.Add(newSuggestions[i]);
-            }
-        }
-
-        for (int i = SearchSuggestions.Count - 1; i >= newSuggestions.Count; i--)
-        {
-            SearchSuggestions.RemoveAt(i);
-        }
+        _searchService.PopulateSuggestions(SearchSuggestions, text);
     }
 
     public void SubmitSearch(string queryText)
@@ -232,50 +193,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                 _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
                 break;
         }
-    }
-
-    private IReadOnlyList<SearchSuggestion> GetSuggestItems(SearchResult result, string searchQuery)
-    {
-        if (!result.HasItems) return Array.Empty<SearchSuggestion>();
-
-        IEnumerable<SearchSuggestion> songs = result.Songs
-            .Take(MaxSuggestionsPerCategory)
-            .Select(s => new SearchSuggestion(SearchSuggestionType.Song, s.Name, s));
-        IEnumerable<SearchSuggestion> videos = result.Videos
-            .Take(MaxSuggestionsPerCategory)
-            .Select(v => new SearchSuggestion(SearchSuggestionType.Video, v.Name, v));
-        IEnumerable<SearchSuggestion> artists = result.Artists
-            .Take(MaxSuggestionsPerCategory)
-            .Select(a => new SearchSuggestion(SearchSuggestionType.Artist, a.Name, a));
-        IEnumerable<SearchSuggestion> albums = result.Albums
-            .Take(MaxSuggestionsPerCategory)
-            .Select(a => new SearchSuggestion(SearchSuggestionType.Album, a.Name, a));
-        IEnumerable<(double, SearchSuggestion)> searchResults = songs
-            .Concat(videos).Concat(artists).Concat(albums)
-            .Select(item => (GetRanking(item.Text, searchQuery), item))
-            .OrderBy(t => t.Item1)
-            .Take(MaxTotalSuggestions);
-
-        return searchResults.Select(t => t.Item2).ToArray();
-    }
-
-    private static double GetRanking(string text, string query)
-    {
-        if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(query))
-            return -1;
-
-        int index = text.IndexOf(query, StringComparison.CurrentCultureIgnoreCase);
-        if (query.Contains(' ') || index < 0)
-        {
-            return index;
-        }
-
-        string[] words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        double wordRank = words
-            .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
-            .Where(i => i >= 0)
-            .Average();
-        return (index * IndexWeightFactor) + wordRank;
     }
 
     public async Task FetchLibraries()
