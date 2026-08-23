@@ -144,7 +144,7 @@
                     CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
-                    Text="{strings:Resources Key=OpenInFileExplorer}"
+                    Text="{x:Bind strings:Resources.OpenInFileExplorer}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                 <MenuFlyoutItem
                     AccessKey="{x:Bind strings:KeyboardResources.MenuItemPropertiesKey}"
