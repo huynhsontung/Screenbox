@@ -140,11 +140,12 @@
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{StaticResource ShowInFileExplorerCommand}"
+                    Command="{StaticResource OpenInFileExplorerCommand}"
                     CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
-                    Text="{strings:Resources Key=ShowInFileExplorer}" />
+                    Text="{strings:Resources Key=OpenInFileExplorer}"
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemPropertiesKey}"
                     Command="{StaticResource ShowPropertiesCommand}"

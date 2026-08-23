@@ -363,8 +363,8 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Open file location</value>
   </data>
-  <data name="ShowInFileExplorer" xml:space="preserve">
-    <value>Show in File Explorer</value>
+  <data name="OpenInFileExplorer" xml:space="preserve">
+    <value>Open in File Explorer</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Open with</value>

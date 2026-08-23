@@ -1,36 +1,37 @@
-#nullable enable
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.Storage;
 
 namespace Screenbox.Commands;
 
 /// <summary>
-/// Represents a command that shows a media file in File Explorer,
+/// Represents a command that opens a media file in File Explorer,
 /// opening the containing folder and selecting the file.
 /// </summary>
-internal sealed partial class ShowInFileExplorerCommand : IRelayCommand<MediaViewModel>
+internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaViewModel>
 {
     public event EventHandler? CanExecuteChanged;
 
     private readonly AsyncRelayCommand<MediaViewModel> _asyncCommand;
 
-    public ShowInFileExplorerCommand()
+    public OpenInFileExplorerCommand()
     {
-        _asyncCommand = new AsyncRelayCommand<MediaViewModel>(ShowInFileExplorerAsync);
+        _asyncCommand = new AsyncRelayCommand<MediaViewModel>(OpenInFileExplorerAsync);
         _asyncCommand.CanExecuteChanged += (_, _) => NotifyCanExecuteChanged();
     }
 
     /// <inheritdoc/>
     public bool CanExecute(MediaViewModel? parameter)
     {
-        return parameter?.Source is StorageFile
+        return DeviceInfoHelper.IsDesktop
+            && (parameter?.Source is StorageFile
             || (parameter?.Source is Uri uri && uri.IsFile)
-            || parameter?.IsFromLibrary == true;
+            || parameter?.IsFromLibrary == true);
     }
 
     /// <inheritdoc/>
@@ -61,7 +62,7 @@ internal sealed partial class ShowInFileExplorerCommand : IRelayCommand<MediaVie
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private async Task ShowInFileExplorerAsync(MediaViewModel? parameter)
+    private async Task OpenInFileExplorerAsync(MediaViewModel? parameter)
     {
         if (parameter is null)
             return;
