@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-using Silk.NET.Core.Native;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls;
@@ -10,22 +9,26 @@ namespace Screenbox.Controls;
 [Guid("f92f19d2-3ade-45a6-a20c-f6f1ea90554b")]
 internal partial interface ISwapChainPanelNative
 {
-    unsafe void SetSwapChain(IUnknown* swapChain);
+    void SetSwapChain(IntPtr swapChain);
 }
 
 internal static class SwapChainPanelExtensions
 {
-    internal static unsafe void SetSwapChain(this SwapChainPanel panel, IUnknown* swapChain)
+    internal static void SetSwapChain(this SwapChainPanel panel, IntPtr swapChain)
     {
-        if (panel == null) throw new ArgumentNullException(nameof(panel));
+        ArgumentNullException.ThrowIfNull(panel);
 
         var winrtObj = panel as WinRT.IWinRTObject;
-        if (winrtObj?.NativeObject == null)
+        if (winrtObj?.NativeObject is null)
+        {
             throw new ObjectDisposedException(nameof(panel), "The underlying WinRT native object has been disposed.");
+        }
 
         IntPtr nativePtr = winrtObj.NativeObject.ThisPtr;
         if (nativePtr == IntPtr.Zero)
+        {
             throw new ObjectDisposedException(nameof(panel), "The underlying WinRT native pointer is null.");
+        }
 
         ComWrappers cw = new StrategyBasedComWrappers();
         var panelNative = (ISwapChainPanelNative)cw.GetOrCreateObjectForComInstance(nativePtr, CreateObjectFlags.None);
