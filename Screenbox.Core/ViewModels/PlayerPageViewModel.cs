@@ -104,8 +104,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _openingTimer;
     private readonly DispatcherQueueTimer _controlsVisibilityTimer;
-    private readonly DispatcherQueueTimer _statusMessageTimer;
-    private readonly DispatcherQueueTimer _playPauseBadgeTimer;
+    private readonly DispatcherQueueTimer _osdMessageTimer;
+    private readonly DispatcherQueueTimer _osdBadgeTimer;
     private readonly DispatcherQueueTimer _playPauseHoldTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
@@ -127,8 +127,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _openingTimer = _dispatcherQueue.CreateTimer();
         _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
-        _statusMessageTimer = _dispatcherQueue.CreateTimer();
-        _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
+        _osdMessageTimer = _dispatcherQueue.CreateTimer();
+        _osdBadgeTimer = _dispatcherQueue.CreateTimer();
         _playPauseHoldTimer = _dispatcherQueue.CreateTimer();
         NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         PlayerVisibility = PlayerVisibilityState.Hidden;
@@ -215,41 +215,54 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public void Receive(PlayerOsdUpdateMessage message)
     {
+        bool shouldShowMessage = message.HasMessage && PlayerVisibility == PlayerVisibilityState.Visible;
+
         CurrentPlaybackCommand = message.Kind;
         OsdMessageValue = message.Value;
 
-        // Don't show status message when player is not visible.
-        if (message.HasMessage && PlayerVisibility == PlayerVisibilityState.Visible)
+        // Message
+        _dispatcherQueue.TryEnqueue(() =>
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            _osdMessageTimer.Stop();
+
+            if (!shouldShowMessage)
             {
-                IsOsdMessageVisible = true;
+                IsOsdMessageVisible = false;
+                return;
+            }
 
-                if (message.Duration == Timeout.InfiniteTimeSpan)
-                    return;
+            IsOsdMessageVisible = true;
 
-                _statusMessageTimer.Debounce(() =>
+            if (message.Duration != Timeout.InfiniteTimeSpan)
+            {
+                _osdMessageTimer.Debounce(() =>
                 {
                     IsOsdMessageVisible = false;
                 }, message.Duration);
-            });
-        }
+            }
+        });
 
-        if (message.HasBadge)
+        // Badge
+        _dispatcherQueue.TryEnqueue(() =>
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            _osdBadgeTimer.Stop();
+
+            if (!message.HasBadge)
             {
-                IsOsdBadgeVisible = true;
+                IsOsdBadgeVisible = false;
+                return;
+            }
 
-                if (message.Duration == Timeout.InfiniteTimeSpan)
-                    return;
+            IsOsdBadgeVisible = true;
 
-                _playPauseBadgeTimer.Debounce(() =>
+            if (message.Duration != Timeout.InfiniteTimeSpan)
+            {
+                _osdBadgeTimer.Debounce(() =>
                 {
                     IsOsdBadgeVisible = false;
                 }, message.Duration);
-            });
-        }
+            }
+        });
     }
 
     public async void Receive(QueueCurrentItemChangedMessage message)
