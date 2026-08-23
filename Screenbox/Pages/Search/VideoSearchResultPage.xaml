@@ -67,6 +67,12 @@
                                        MirroredWhenRightToLeft=True}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutItem
+                    Command="{StaticResource OpenInFileExplorerCommand}"
+                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                    Icon="{ui:FontIcon Glyph=&#xEC50;}"
+                    Text="{strings:Resources Key=OpenInFileExplorer}"
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
+                <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
@@ -158,3 +164,4 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
+
