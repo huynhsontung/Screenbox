@@ -4,6 +4,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -40,16 +41,20 @@ public sealed partial class SongsPage : Page
             return;
         }
 
-        var state = ViewModel.SortBy switch
+        UpdateSortVisualState(ViewModel.SortBy);
+        SavePageState(0);
+    }
+
+    private void UpdateSortVisualState(SongSortOrder sortBy)
+    {
+        var state = sortBy switch
         {
-            "album" => "SortByAlbum",
-            "artist" => "SortByArtist",
+            SongSortOrder.Album => "SortByAlbum",
+            SongSortOrder.Artist => "SortByArtist",
             _ => "SortByTitle"
         };
 
         VisualStateManager.GoToState(this, state, true);
-        UpdateSortByFlyout();
-        SavePageState(0);
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -58,11 +63,13 @@ public sealed partial class SongsPage : Page
 
         if (e.NavigationMode == NavigationMode.Back
             && Common.TryGetPageState(nameof(SongsPage), Frame.BackStackDepth, out var state)
-            && state is KeyValuePair<string, double> pair)
+            && state is KeyValuePair<SongSortOrder, double> pair)
         {
             ViewModel.SortBy = pair.Key;
             _contentVerticalOffset = pair.Value;
         }
+
+        UpdateSortVisualState(ViewModel.SortBy);
 
         if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchSongs))
         {
@@ -105,28 +112,26 @@ public sealed partial class SongsPage : Page
 
     private void SavePageState(double verticalOffset)
     {
-        Common.SavePageState(new KeyValuePair<string, double>(ViewModel.SortBy, verticalOffset), nameof(SongsPage), Frame.BackStackDepth);
+        Common.SavePageState(new KeyValuePair<SongSortOrder, double>(ViewModel.SortBy, verticalOffset), nameof(SongsPage), Frame.BackStackDepth);
     }
 
-    private string GetSortByText(string tag)
+    private bool IsSortBy(SongSortOrder current, SongSortOrder target) => current == target;
+
+    private string GetSortByText(SongSortOrder sortBy)
     {
-        var item = SortByFlyout.Items?.FirstOrDefault(x => (x.Tag as string) == tag) ?? SortByFlyout.Items?.FirstOrDefault();
-        return (item as MenuFlyoutItem)?.Text ?? string.Empty;
+        return sortBy switch
+        {
+            SongSortOrder.Album => Strings.Resources.PropertyAlbum,
+            SongSortOrder.Artist => Strings.Resources.Artist,
+            SongSortOrder.Year => Strings.Resources.ReleasedYear,
+            SongSortOrder.DateAdded => Strings.Resources.DateAdded,
+            _ => Strings.Resources.PropertyTitle
+        };
     }
 
-    private string GetSortByButtonAutomationName(string value)
+    private string GetSortByButtonAutomationName(SongSortOrder value)
     {
         var optionText = GetSortByText(value);
         return Strings.Resources.SortByAutomationName(optionText);
-    }
-
-    private void UpdateSortByFlyout()
-    {
-        if ((SortByFlyout.Items?.FirstOrDefault(x => (x.Tag as string) == ViewModel.SortBy) ?? SortByFlyout.Items?.FirstOrDefault()) is not RadioMenuFlyoutItem radioItem)
-        {
-            return;
-        }
-
-        radioItem.IsChecked = true;
     }
 }
