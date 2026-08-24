@@ -454,8 +454,8 @@
             <FontIcon
                 x:Name="StatusBadgeBorderIcon"
                 FontSize="28"
-                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind converters:GlyphConverter.ToPlaybackCommandBadgeGlyph(ViewModel.CurrentPlaybackCommand, ViewModel.OsdMessageValue), Mode=OneWay}" />
+                Glyph="{x:Bind converters:GlyphConverter.ToPlaybackCommandBadgeGlyph(ViewModel.CurrentPlaybackCommand, ViewModel.OsdMessageValue), Mode=OneWay}"
+                MirroredWhenRightToLeft="{x:Bind ShouldMirrorBadgeIcon(ViewModel.CurrentPlaybackCommand), Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing
