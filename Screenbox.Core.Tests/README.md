@@ -40,18 +40,19 @@ This test project contains unit tests for `Screenbox.Core` focusing on SQL datab
 
 The test project relies strictly on the `x64`, `ARM64`, or `x86` build architectures to align with the Screenbox UWP environments. Standard `AnyCPU` configuration is intentionally overridden.
 
-### Using MSBuild / Visual Studio:
+### Using MSBuild / Visual Studio 2026 (18):
 ```cmd
 "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" Screenbox.Core.Tests\Screenbox.Core.Tests.csproj /p:Configuration=Release /p:Platform=x64 /restore
 ```
 
 ### Running Tests:
-```cmd
-vstest.console.exe Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
+Using `dotnet run`:
+```pwsh
+dotnet run --project Screenbox.Core.Tests/Screenbox.Core.Tests.csproj
 ```
-Or via `.NET CLI` targeting the pre-built DLL (which is how GitHub Actions CI executes it):
+Or by running the built test executable directly:
 ```cmd
-dotnet test Screenbox.Core.Tests\bin\x64\Release\*\Screenbox.Core.Tests.dll
+Screenbox.Core.Tests\bin\x64\Release\net10.0-windows10.0.26100.0\Screenbox.Core.Tests.exe
 ```
 
 ---

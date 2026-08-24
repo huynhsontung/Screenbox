@@ -12,6 +12,7 @@ applyTo: '**/*.cs'
 
 ## General Instructions
 
+- Always use MSBuild from Visual Studio 2026 (version 18) to restore and compile projects; never use `dotnet build`.
 - Make only high confidence suggestions when reviewing code changes.
 - Write code with good maintainability practices, including comments on why certain design decisions were made.
 - Handle edge cases and write clear exception handling.
