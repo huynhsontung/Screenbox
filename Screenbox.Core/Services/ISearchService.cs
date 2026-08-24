@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Screenbox.Core.Contexts;
 using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Services;
 
 public interface ISearchService
 {
-    SearchResult SearchLocalLibrary(LibraryContext context, string query);
+    SearchResult SearchLocalLibrary(string query);
 
     /// <summary>
     /// Populates the provided collection with search suggestions for the given query.

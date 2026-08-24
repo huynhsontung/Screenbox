@@ -172,7 +172,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         string searchQuery = queryText.Trim();
         if (searchQuery.Length > 0)
         {
-            SearchResult result = _searchService.SearchLocalLibrary(_libraryContext, searchQuery);
+            SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
             _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
         }
     }

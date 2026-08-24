@@ -26,27 +26,27 @@ public sealed class SearchService : ISearchService
         _libraryContext = libraryContext;
     }
 
-    public SearchResult SearchLocalLibrary(LibraryContext context, string query)
+    public SearchResult SearchLocalLibrary(string query)
     {
-        ImmutableList<MediaViewModel> songs = context.Music.Songs
+        ImmutableList<MediaViewModel> songs = _libraryContext.Music.Songs
             .Select(m => (Song: m, Index: m.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
             .Where(t => t.Index >= 0)
             .OrderBy(t => t.Index)
             .Select(t => t.Song)
             .ToImmutableList();
-        ImmutableList<AlbumViewModel> albums = context.Music.Albums
+        ImmutableList<AlbumViewModel> albums = _libraryContext.Music.Albums
             .Select(pair => (Album: pair.Value, Index: pair.Value.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
             .Where(t => t.Index >= 0)
             .OrderBy(t => t.Index)
             .Select(t => t.Album)
             .ToImmutableList();
-        ImmutableList<ArtistViewModel> artists = context.Music.Artists
+        ImmutableList<ArtistViewModel> artists = _libraryContext.Music.Artists
             .Select(pair => (Artist: pair.Value, Index: pair.Value.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
             .Where(t => t.Index >= 0)
             .OrderBy(t => t.Index)
             .Select(t => t.Artist)
             .ToImmutableList();
-        ImmutableList<MediaViewModel> videos = context.Videos.Videos
+        ImmutableList<MediaViewModel> videos = _libraryContext.Videos.Videos
             .Select(m => (Video: m, Index: m.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
             .Where(t => t.Index >= 0)
             .OrderBy(t => t.Index)
@@ -65,7 +65,7 @@ public sealed class SearchService : ISearchService
         }
 
         string queryText = text.Trim();
-        var result = SearchLocalLibrary(_libraryContext, queryText);
+        var result = SearchLocalLibrary(queryText);
         var newSuggestions = BuildSuggestions(result, queryText).ToList();
 
         if (newSuggestions.Count == 0)
