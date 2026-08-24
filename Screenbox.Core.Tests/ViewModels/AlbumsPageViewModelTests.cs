@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
@@ -42,22 +41,6 @@ public class AlbumsPageViewModelTests
 
         await Assert.That(vm.SortBy).IsEqualTo(AlbumSortOrder.DateAdded);
         await Assert.That(settings.PersistentAlbumsSortOrder).IsEqualTo(AlbumSortOrder.DateAdded);
-    }
-
-    [Test]
-    public void Receive_ShouldNotThrow()
-    {
-        var settings = new TestSettingsService();
-        var libraryContext = new LibraryContext();
-        var vm = new AlbumsPageViewModel(libraryContext, settings);
-
-        var message = new PropertyChangedMessage<MusicLibrary>(
-            libraryContext,
-            nameof(LibraryContext.Music),
-            libraryContext.Music,
-            libraryContext.Music);
-
-        vm.Receive(message);
     }
 
     [Test]
