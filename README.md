@@ -61,9 +61,9 @@ Feel free to open an issue if you want to report a bug, give feedback, or ask a 
 
 ### Quick Start for Developers
 
-1. **Prerequisites**: Visual Studio 2022 with UWP development workload
+1. **Prerequisites**: Visual Studio 2026 with UWP development workload
 2. **Clone**: `git clone https://github.com/huynhsontung/Screenbox.git`
-3. **Build**: Open `Screenbox.sln` and build the solution (Ctrl+Shift+B)
+3. **Build**: Open `Screenbox.slnx` and build the solution (Ctrl+Shift+B)
 4. **Run**: Set platform to x64 and start debugging (F5)
 
 See the [Contributing Guide](CONTRIBUTING.md) for detailed setup instructions.

@@ -57,7 +57,7 @@ When animation JSON files in `assets/animations/` are added or modified:
 2. **Generated Output Location**:
    - `Screenbox/Assets/Animations/*.cs` (e.g., `AnimatedPlayingVisualSource.cs`)
 3. **Verification**:
-   - Build `Screenbox` to ensure generated C# classes compile cleanly:
+   - Build `Screenbox` using MSBuild from Visual Studio 2026 to ensure generated C# classes compile cleanly:
      ```pwsh
      msbuild Screenbox/Screenbox.csproj /p:Configuration=Debug /p:Platform=x64 /t:Build /m
      ```

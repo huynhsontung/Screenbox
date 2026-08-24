@@ -36,7 +36,7 @@ The architecture is built around clean separation of concerns:
 The solution contains two main projects organized for clear separation of concerns:
 
 ```
-Screenbox.sln
+Screenbox.slnx
 ├── Screenbox/           # Main UWP application (UI layer)
 └── Screenbox.Core/      # Core business logic library
 ```
@@ -330,7 +330,7 @@ The following table summarizes the allowed dependency directions between layers:
 - **CommunityToolkit.Mvvm**: Modern MVVM framework with source generators and messaging
 
 ### Development and Build Tools  
-- **Visual Studio 2022**: Primary integrated development environment
+- **Visual Studio 2026**: Primary integrated development environment
 - **MSBuild**: Build system and project management
 - **XAML Styler**: XAML formatting and style enforcement
 

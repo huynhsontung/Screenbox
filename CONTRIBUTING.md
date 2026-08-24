@@ -21,7 +21,7 @@ Thank you for your interest in contributing to Screenbox! This guide will help y
 
 Before you begin, ensure you have the following installed:
 
-- **Visual Studio 2022** (Community, Professional, or Enterprise) or later
+- **Visual Studio 2026** (Community, Professional, or Enterprise) or later
   - Required workloads:
     - **WinUI application development**
   - Required optional components:
@@ -55,7 +55,7 @@ Before you begin, ensure you have the following installed:
 
 ### 2. Open and Build the Solution
 
-1. **Open the solution** in Visual Studio: `Screenbox.sln`
+1. **Open the solution** in Visual Studio: `Screenbox.slnx`
 2. **Set the platform** to match your machine's architecture (typically x64)
 3. **Build the solution** to restore NuGet packages: `F6`
 4. **Start debugging**: `F5`
@@ -67,7 +67,7 @@ Visual Studio's built-in Git integration should be sufficient for most developme
 The solution contains two main projects:
 
 ```
-Screenbox.sln
+Screenbox.slnx
 ├── Screenbox/           # Main UWP application (UI layer)
 └── Screenbox.Core/      # Core business logic library
 ```
