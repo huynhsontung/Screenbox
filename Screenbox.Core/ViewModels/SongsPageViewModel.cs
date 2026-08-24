@@ -9,8 +9,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
@@ -21,15 +23,18 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     public ObservableCollection<ObservableMediaGroup> GroupedSongs { get; } = new();
 
     [ObservableProperty] public partial MediaViewModel? ContextMedia { get; set; }
-    [ObservableProperty] public partial string SortBy { get; set; } = string.Empty;
+    [ObservableProperty] public partial SongSortOrder SortBy { get; set; } = SongSortOrder.Title;
 
     private readonly LibraryContext _libraryContext;
+    private readonly ISettingsService _settingsService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _refreshTimer;
 
-    public SongsPageViewModel(LibraryContext libraryContext)
+    public SongsPageViewModel(LibraryContext libraryContext, ISettingsService settingsService)
     {
         _libraryContext = libraryContext;
+        _settingsService = settingsService;
+        SortBy = _settingsService.PersistentSongsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
 
@@ -160,20 +165,21 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
         return sortedGroup;
     }
 
-    private List<IGrouping<string, MediaViewModel>> GetCurrentGrouping(LibraryContext context, string sortBy)
+    private List<IGrouping<string, MediaViewModel>> GetCurrentGrouping(LibraryContext context, SongSortOrder sortBy)
     {
         return sortBy switch
         {
-            "album" => GetAlbumGrouping(context),
-            "artist" => GetArtistGrouping(context),
-            "year" => GetYearGrouping(),
-            "dateAdded" => GetDateAddedGrouping(),
+            SongSortOrder.Album => GetAlbumGrouping(context),
+            SongSortOrder.Artist => GetArtistGrouping(context),
+            SongSortOrder.Year => GetYearGrouping(),
+            SongSortOrder.DateAdded => GetDateAddedGrouping(),
             _ => GetDefaultGrouping()
         };
     }
 
-    partial void OnSortByChanged(string value)
+    partial void OnSortByChanged(SongSortOrder value)
     {
+        _settingsService.PersistentSongsSortOrder = value;
         var groups = GetCurrentGrouping(_libraryContext, value);
         GroupedSongs.Clear();
         foreach (IGrouping<string, MediaViewModel> group in groups)
@@ -183,7 +189,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     }
 
     [RelayCommand]
-    private void SetSortBy(string tag)
+    private void SetSortBy(SongSortOrder tag)
     {
         SortBy = tag;
     }

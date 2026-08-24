@@ -138,4 +138,14 @@ public interface ISettingsService
     /// otherwise, <see langword="false"/>.
     /// </value>
     bool PlayerGesturePressAndHold { get; set; }
+
+    /// <summary>
+    /// Gets or sets the preferred sort order for the songs page.
+    /// </summary>
+    SongSortOrder PersistentSongsSortOrder { get; set; }
+
+    /// <summary>
+    /// Gets or sets the preferred sort order for the albums page.
+    /// </summary>
+    AlbumSortOrder PersistentAlbumsSortOrder { get; set; }
 }

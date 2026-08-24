@@ -6,6 +6,7 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enums="using:Screenbox.Core.Enums"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -103,28 +104,27 @@
                 <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="title"
+                        CommandParameter="{x:Bind enums:AlbumSortOrder.Title}"
                         GroupName="SortOrder"
-                        IsChecked="True"
-                        Tag="title"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Title), Mode=OneWay}"
                         Text="{strings:Resources Key=PropertyTitle}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="artist"
+                        CommandParameter="{x:Bind enums:AlbumSortOrder.Artist}"
                         GroupName="SortOrder"
-                        Tag="artist"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Artist), Mode=OneWay}"
                         Text="{strings:Resources Key=Artist}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="year"
+                        CommandParameter="{x:Bind enums:AlbumSortOrder.Year}"
                         GroupName="SortOrder"
-                        Tag="year"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.Year), Mode=OneWay}"
                         Text="{strings:Resources Key=ReleasedYear}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="dateAdded"
+                        CommandParameter="{x:Bind enums:AlbumSortOrder.DateAdded}"
                         GroupName="SortOrder"
-                        Tag="dateAdded"
+                        IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:AlbumSortOrder.DateAdded), Mode=OneWay}"
                         Text="{strings:Resources Key=DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
@@ -194,7 +194,7 @@
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy, Mode=OneWay}" />
+                        <behaviors:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy.ToString(), Mode=OneWay}" />
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>

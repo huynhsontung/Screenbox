@@ -56,8 +56,8 @@ internal sealed partial class GroupingOverviewBehavior : Behavior<GridView>
             var element = (FrameworkElement)child;
             element.Width = GroupType switch
             {
-                "year" => 80,
-                null or "" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 100,
+                "year" or "Year" => 80,
+                null or "" or "title" or "Title" when MediaGroupingHelpers.MaxGroupLabelLength > 1 => 100,
                 _ when AssociatedObject.HorizontalAlignment != HorizontalAlignment.Stretch => double.NaN,
                 _ => itemWidth
             };
