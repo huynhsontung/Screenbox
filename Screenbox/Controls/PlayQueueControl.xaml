@@ -49,7 +49,7 @@
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayAddGlyph}}"
-                        Text="{strings:Resources Key=PlayNext}" />
+                        Text="{x:Bind strings:Resources.PlayNext}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutSubItem x:Name="AddToPlaylistSubMenu" Text="{x:Bind strings:Resources.AddToPlaylist}">
                         <MenuFlyoutSubItem.Icon>
@@ -69,45 +69,45 @@
                         Command="{x:Bind ViewModel.RemoveCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE894;}"
-                        Text="{strings:Resources Key=Remove}" />
+                        Text="{x:Bind strings:Resources.Remove}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.MoveItemUpCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE74A;}"
-                        Text="{strings:Resources Key=MoveUp}" />
+                        Text="{x:Bind strings:Resources.MoveUp}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.MoveItemDownCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE74B;}"
-                        Text="{strings:Resources Key=MoveDown}" />
+                        Text="{x:Bind strings:Resources.MoveDown}" />
                     <MenuFlyoutItem
                         Command="{StaticResource OpenInFileExplorerCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                        Text="{strings:Resources Key=OpenInFileExplorer}"
+                        Text="{x:Bind strings:Resources.OpenInFileExplorer}"
                         Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                     <MenuFlyoutItem
                         Command="{StaticResource ShowPropertiesCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE946;}"
-                        Text="{strings:Resources Key=Properties}" />
+                        Text="{x:Bind strings:Resources.Properties}" />
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenAlbumCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                        Text="{strings:Resources Key=ShowAlbum}"
+                        Text="{x:Bind strings:Resources.ShowAlbum}"
                         Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenArtistCommand}"
                         CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                        Text="{strings:Resources Key=ShowArtist}"
+                        Text="{x:Bind strings:Resources.ShowArtist}"
                         Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                     <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                     <MenuFlyoutItem
                         CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                         Icon="{ui:SymbolIcon Symbol=Setting}"
-                        Text="{strings:Resources Key=SetPlaybackOptions}"
+                        Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                         Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                         <MenuFlyoutItem.Command>
                             <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlaySingleCommand}" />
@@ -145,8 +145,8 @@
                 <Button
                     x:Name="AddFilesButton"
                     Margin="0,0,8,0"
-                    AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                    AutomationProperties.Name="{strings:Resources Key=AddFiles}"
+                    AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.AddFiles}"
                     Command="{x:Bind ViewModel.AddFilesCommand}"
                     Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
@@ -154,14 +154,14 @@
                             Margin="{StaticResource IconButtonStandardIconMargin}"
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                             Glyph="{StaticResource FolderOpenGlyph}" />
-                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFiles}" />
                     </StackPanel>
                 </Button>
 
                 <Button
                     x:Name="ClearButton"
                     Margin="0,0,8,0"
-                    AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.CommandClearKey}"
                     AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
                     Command="{x:Bind ViewModel.ClearCommand}"
                     IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
@@ -173,7 +173,7 @@
                         <TextBlock
                             x:Name="ClearButtonLabel"
                             Margin="8,0,0,0"
-                            Text="{strings:Resources Key=Clear}" />
+                            Text="{x:Bind strings:Resources.Clear}" />
                     </StackPanel>
                 </Button>
 
@@ -198,13 +198,13 @@
                         <TextBlock
                             x:Name="AddToPlaylistButtonLabel"
                             Margin="8,0,0,0"
-                            Text="{strings:Resources Key=AddToPlaylist}" />
+                            Text="{x:Bind strings:Resources.AddToPlaylist}" />
                     </StackPanel>
                 </muxc:DropDownButton>
 
                 <ToggleButton
                     x:Name="MultiSelectToggle"
-                    AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.CommandMultiSelectKey}"
                     AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
                     IsChecked="{x:Bind ViewModel.Selection.IsSelectionModeActive, Mode=TwoWay}"
                     IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
@@ -217,7 +217,7 @@
                         <TextBlock
                             x:Name="MultiSelectToggleLabel"
                             Margin="8,0,0,0"
-                            Text="{strings:Resources Key=Multiselect}" />
+                            Text="{x:Bind strings:Resources.Multiselect}" />
                     </StackPanel>
                 </ToggleButton>
             </StackPanel>

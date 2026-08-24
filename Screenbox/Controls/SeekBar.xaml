@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.SeekBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -41,8 +41,8 @@
             x:Name="SeekBarSlider"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
-            AccessKey="{strings:KeyboardResources Key=PlayerSeekBarKey}"
-            AutomationProperties.Name="{strings:Resources Key=Seek}"
+            AccessKey="{x:Bind strings:KeyboardResources.PlayerSeekBarKey}"
+            AutomationProperties.Name="{x:Bind strings:Resources.Seek}"
             Background="{x:Bind Background, Mode=OneWay}"
             Foreground="{x:Bind Foreground, Mode=OneWay}"
             IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"

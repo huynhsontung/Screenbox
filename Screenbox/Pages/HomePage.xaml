@@ -49,7 +49,7 @@
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
@@ -80,35 +80,35 @@
                     Command="{x:Bind ViewModel.RemoveCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Clear}"
-                    Text="{strings:Resources Key=Remove}" />
+                    Text="{x:Bind strings:Resources.Remove}" />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenInFileExplorerCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                    Text="{strings:Resources Key=OpenInFileExplorer}"
+                    Text="{x:Bind strings:Resources.OpenInFileExplorer}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{x:Bind strings:Resources.ShowAlbum}"
                     Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}"
+                    Text="{x:Bind strings:Resources.ShowArtist}"
                     Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -130,15 +130,15 @@
 
             <MenuFlyout x:Key="OpenFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderOpenGlyph}}"
-                    Text="{strings:Resources Key=OpenFiles}" />
+                    Text="{x:Bind strings:Resources.OpenFiles}" />
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemFolderKey}"
                     Command="{x:Bind ViewModel.OpenFolderCommand}"
-                    Text="{strings:Resources Key=OpenFolder}">
+                    Text="{x:Bind strings:Resources.OpenFolder}">
                     <MenuFlyoutItem.Icon>
                         <FontIcon
                             x:Name="OpenMenuFlyoutFolderItemIcon"
@@ -147,10 +147,10 @@
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemUrlKey}"
                     Icon="{ui:SymbolIcon Symbol=Globe}"
                     KeyTipPlacementMode="Left"
-                    Text="{strings:Resources Key=OpenUrl}">
+                    Text="{x:Bind strings:Resources.OpenUrl}">
                     <MenuFlyoutItem.Command>
                         <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
                     </MenuFlyoutItem.Command>
@@ -175,12 +175,12 @@
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=Home}" />
+                Text="{x:Bind strings:Resources.Home}" />
             <sbuc:SplitButtonEx
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
+                AutomationProperties.HelpText="{x:Bind strings:Resources.OpenFilesToolTip}"
                 AutomationProperties.Name="{x:Bind HeaderOpenButtonText.Text}"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
@@ -198,7 +198,7 @@
                     <TextBlock
                         x:Name="HeaderOpenButtonText"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=OpenFiles}" />
+                        Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AutoFocusBehavior />
@@ -216,7 +216,7 @@
                 VerticalAlignment="Center"
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{strings:Resources Key=Recent}" />
+                Text="{x:Bind strings:Resources.Recent}" />
             <controls:SelectionBarControl
                 x:Name="SelectionBar"
                 ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"

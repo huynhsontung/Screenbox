@@ -50,7 +50,7 @@
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
@@ -81,30 +81,30 @@
                     Command="{StaticResource OpenInFileExplorerCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                    Text="{strings:Resources Key=OpenInFileExplorer}"
+                    Text="{x:Bind strings:Resources.OpenInFileExplorer}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{x:Bind strings:Resources.ShowAlbum}"
                     Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}"
+                    Text="{x:Bind strings:Resources.ShowArtist}"
                     Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -128,8 +128,8 @@
             x:Name="ShufflePlayButton"
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
-            AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+            AccessKey="{x:Bind strings:KeyboardResources.CommandShuffleAndPlayKey}"
+            AutomationProperties.Name="{x:Bind strings:Resources.ShuffleAndPlay}"
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
             <StackPanel Orientation="Horizontal">
@@ -138,7 +138,7 @@
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     Glyph="{StaticResource ShuffleGlyph}"
                     MirroredWhenRightToLeft="True" />
-                <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+                <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
             </StackPanel>
         </Button>
 
@@ -147,7 +147,7 @@
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
-            AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
+            AccessKey="{x:Bind strings:KeyboardResources.CommandSortByKey}"
             AutomationProperties.Name="{x:Bind GetSortByButtonAutomationName(ViewModel.SortBy), Mode=OneWay}"
             Background="Transparent"
             BorderBrush="Transparent">
@@ -158,36 +158,36 @@
                         CommandParameter="{x:Bind enums:SongSortOrder.Title}"
                         GroupName="SortOrder"
                         IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Title), Mode=OneWay}"
-                        Text="{strings:Resources Key=PropertyTitle}" />
+                        Text="{x:Bind strings:Resources.PropertyTitle}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Album}"
                         GroupName="SortOrder"
                         IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Album), Mode=OneWay}"
-                        Text="{strings:Resources Key=PropertyAlbum}" />
+                        Text="{x:Bind strings:Resources.PropertyAlbum}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Artist}"
                         GroupName="SortOrder"
                         IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Artist), Mode=OneWay}"
-                        Text="{strings:Resources Key=Artist}" />
+                        Text="{x:Bind strings:Resources.Artist}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.Year}"
                         GroupName="SortOrder"
                         IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.Year), Mode=OneWay}"
-                        Text="{strings:Resources Key=ReleasedYear}" />
+                        Text="{x:Bind strings:Resources.ReleasedYear}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="{x:Bind enums:SongSortOrder.DateAdded}"
                         GroupName="SortOrder"
                         IsChecked="{x:Bind IsSortBy(ViewModel.SortBy, enums:SongSortOrder.DateAdded), Mode=OneWay}"
-                        Text="{strings:Resources Key=DateAdded}" />
+                        Text="{x:Bind strings:Resources.DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">
                 <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
-                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock x:Name="SortByText"><Run Text="{x:Bind strings:Resources.SortBy}" /><Run Text=":&#160;" /></TextBlock>
                 <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
             </StackPanel>
         </muxc:DropDownButton>

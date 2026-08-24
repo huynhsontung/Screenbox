@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.PlayerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -345,8 +345,8 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
-            AccessKey="{strings:KeyboardResources Key=PlayerRestoreKey}"
-            AutomationProperties.Name="{strings:Resources Key=RestoreView}"
+            AccessKey="{x:Bind strings:KeyboardResources.PlayerRestoreKey}"
+            AutomationProperties.Name="{x:Bind strings:Resources.RestoreView}"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             KeyTipPlacementMode="Center"
             Visibility="Collapsed">
@@ -381,7 +381,7 @@
                 </muxc:AnimatedIcon.FallbackIconSource>
             </muxc:AnimatedIcon>
             <ToolTipService.ToolTip>
-                <ToolTip Content="{strings:Resources Key=RestoreView}" PlacementRect="0,6,162,90" />
+                <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
             </ToolTipService.ToolTip>
         </Button>
 

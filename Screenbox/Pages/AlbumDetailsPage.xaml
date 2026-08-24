@@ -44,7 +44,7 @@
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.AddToQueueCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
@@ -75,24 +75,24 @@
                     Command="{StaticResource OpenInFileExplorerCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                    Text="{strings:Resources Key=OpenInFileExplorer}"
+                    Text="{x:Bind strings:Resources.OpenInFileExplorer}"
                     Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}"
+                    Text="{x:Bind strings:Resources.ShowArtist}"
                     Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -226,12 +226,12 @@
                             </sbuc:CommandBarEx.Resources>
 
                             <AppBarButton
-                                AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
+                                AccessKey="{x:Bind strings:KeyboardResources.CommandPlayKey}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
                                 CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
-                                Label="{strings:Resources Key=Play}"
+                                Label="{x:Bind strings:Resources.Play}"
                                 Style="{StaticResource AccentButtonAppBarButtonStyle}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:AutoFocusBehavior />
@@ -239,12 +239,12 @@
                             </AppBarButton>
 
                             <AppBarButton
-                                AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
+                                AccessKey="{x:Bind strings:KeyboardResources.CommandShuffleAndPlayKey}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
-                                Label="{strings:Resources Key=ShuffleAndPlay}"
+                                Label="{x:Bind strings:Resources.ShuffleAndPlay}"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
                         </sbuc:CommandBarEx>
                     </Grid>
