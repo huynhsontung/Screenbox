@@ -1,4 +1,5 @@
 using System.Globalization;
+using Windows.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -10,11 +11,17 @@ namespace Screenbox.Helpers;
 public static class GlobalizationHelper
 {
     /// <summary>
+    /// Gets the effective culture for the current application language.
+    /// </summary>
+    /// <value>The <see cref="CultureInfo"/> representing the current application culture.</value>
+    public static readonly CultureInfo CurrentAppCulture = GetCurrentAppCulture();
+
+    /// <summary>
     /// Gets a value that indicates whether the text direction for the current language
     /// is right-to-left.
     /// </summary>
     /// <value><see langword="true"/> if the text direction is right-to-left; otherwise, <see langword="false"/>.</value>
-    public static readonly bool IsRightToLeftLanguage = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft;
+    public static readonly bool IsRightToLeftLanguage = CurrentAppCulture.TextInfo.IsRightToLeft;
 
     /// <summary>
     /// Gets the <see cref="FlowDirection"/> for the current application language.
@@ -56,5 +63,22 @@ public static class GlobalizationHelper
             FlyoutPlacementMode.RightEdgeAlignedBottom => FlyoutPlacementMode.LeftEdgeAlignedBottom,
             _ => placement,
         };
+    }
+
+    private static CultureInfo GetCurrentAppCulture()
+    {
+        string? primaryLanguage = ApplicationLanguages.PrimaryLanguageOverride;
+
+        if (string.IsNullOrEmpty(primaryLanguage))
+            return CultureInfo.CurrentCulture;
+
+        try
+        {
+            return new CultureInfo(primaryLanguage);
+        }
+        catch (CultureNotFoundException)
+        {
+            return CultureInfo.CurrentCulture;
+        }
     }
 }

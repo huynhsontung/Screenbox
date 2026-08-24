@@ -1,4 +1,3 @@
-using System.Globalization;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -34,7 +33,7 @@ namespace Screenbox.Extensions;
 [Windows.Foundation.Metadata.ContractVersion(typeof(Windows.Foundation.UniversalApiContract), 327680u)]
 public sealed partial class AcceleratorService
 {
-    private static readonly bool _isHebrew = CultureInfo.CurrentCulture.TwoLetterISOLanguageName is "he";
+    private static readonly bool _isHebrew = GlobalizationHelper.CurrentAppCulture.TwoLetterISOLanguageName is "he";
 
     /// <summary>
     /// Identifies the AcceleratorService.ToolTip XAML attached property.
