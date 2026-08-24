@@ -4,6 +4,7 @@
 - Use conventional prefixes for pull request titles to summarize changes effectively.
 - Reference relevant issues or user stories in the pull requests.
 - When describing changes, include the context, motivation, and impact of the changes. Do not just list the changes made.
+- **GitHub CLI (`gh`) on Windows**: When creating or updating pull requests, issues, or releases via `gh` CLI, **always pass `--body-file` (or `-F`)** pointing to a markdown file instead of inline `--body` / `-b`. Inline markdown strings in Windows shells frequently suffer from broken quoting, mangled newlines, and character escape artifacts.
 
 ## Build and test
 

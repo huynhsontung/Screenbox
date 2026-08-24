@@ -5,7 +5,7 @@ This repository maintains its canonical AI agent instructions and coding guideli
 ## 📋 General Guidelines & Workflows
 
 Refer to [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for:
-- **Git & PR Workflows**: Conventional Commits standard, PR title conventions, issue linking, and descriptive change summaries (context, motivation, impact).
+- **Git & PR Workflows**: Conventional Commits standard, PR title conventions, issue linking, descriptive change summaries (context, motivation, impact), and mandatory `--body-file` usage for GitHub CLI (`gh`) commands on Windows.
 - **Build & Test Workflows**: MSBuild commands (Visual Studio 2026 / version 18) for `Screenbox` and `Screenbox.Core` (never `dotnet build`), and `dotnet run` for running `Screenbox.Core.Tests`.
 - **Persistence Boundaries**: Ephemeral SQLite cache data (`library_folders`, `media_records`, `playback_progress`) vs. durable user data (`playlists`, `playlist_items`), and per-table database recovery rules.
 
