@@ -6,7 +6,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
-using Screenbox.Core;
+using Screenbox.Converters;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -552,7 +552,7 @@ public sealed partial class PlayerPage : Page
             PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is string timeStr => timeStr,
             PlaybackCommandKind.Volume when value is int volume => Strings.Resources.VolumeChangeStatusMessage(volume),
             PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown when value is double rate => $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}\u00D7",
-            //PlaybackCommandKind.AspectRatio when value is string ratio => $"{Strings.Resources.AspectRatio}: {Converters.ResourceNameToResourceStringConverter.FromName(ratio)}",
+            PlaybackCommandKind.AspectRatio when value is string ratio => Strings.Resources.AspectRatioStatusMessage(ItemLabelHelper.GetValueOrFallback(ResourceNameToResourceStringConverter.FromName(ratio), ratio)),
             PlaybackCommandKind.Scale when value is double scale => Strings.Resources.ScaleStatus($"{scale * 100:0.##}%"),
             PlaybackCommandKind.Subtitle when value is string label => Strings.Resources.SubtitleStatus(label),
             PlaybackCommandKind.SubtitleOff => Strings.Resources.SubtitleStatus(Strings.Resources.None),

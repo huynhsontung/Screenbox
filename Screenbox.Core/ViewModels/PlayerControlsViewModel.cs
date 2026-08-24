@@ -360,6 +360,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
 
         Messenger.Send(new ChangeAspectRatioMessage(_aspectRatio));
+        Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.AspectRatio, value: aspect).ShowMessage());
     }
 
     [RelayCommand]
