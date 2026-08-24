@@ -66,6 +66,7 @@ public sealed partial class SeekBarViewModel :
     private readonly IPlaybackProgressTracker _playbackProgressTracker;
     private TimeSpan _originalPosition;
     private TimeSpan _lastTrackedPosition;
+    private bool? _seekDirection;
     private bool _timeChangeOverride;
     private MediaViewModel? _currentItem;
 
@@ -285,7 +286,26 @@ public sealed partial class SeekBarViewModel :
     private PositionChangedResult UpdatePosition(TimeSpan position, bool isOffset, bool debounce)
     {
         TimeSpan currentPosition = Position;
-        _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
+
+        if (isOffset && position != TimeSpan.Zero)
+        {
+            bool isSeekingForward = position > TimeSpan.Zero;
+
+            // If direction changed, treat this as the start of a new seek gesture.
+            if (_seekDirection != isSeekingForward)
+            {
+                _originalPosition = currentPosition;
+                _seekDirection = isSeekingForward;
+            }
+
+            _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
+        }
+        else
+        {
+            _originalPositionTimer.Stop();
+            _originalPosition = currentPosition;
+            _seekDirection = null;
+        }
 
         // Assume UI thread
         Position = isOffset ? (currentPosition + position) switch
