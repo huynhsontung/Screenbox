@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -22,22 +23,23 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class HomePageViewModel : ObservableRecipient,
     IRecipient<QueueCurrentItemChangedMessage>
 {
-    public ObservableCollection<MediaViewModel> Recent { get; }
+    public ObservableCollection<MediaViewModel> Recent => _recentContext.Recent;
 
     public SelectionViewModel Selection { get; }
 
     [ObservableProperty]
     public partial MediaViewModel? ContextMedia { get; set; }
 
+    private readonly RecentContext _recentContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
-    private readonly Dictionary<string, string> _pathToMruMappings;
     private readonly ILogger<HomePageViewModel> _logger;
 
     public HomePageViewModel(
+        RecentContext recentContext,
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
@@ -45,14 +47,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         ILogger<HomePageViewModel> logger)
     {
         Selection = selection;
+        _recentContext = recentContext;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _settingsService = settingsService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
-        _pathToMruMappings = new Dictionary<string, string>();
-        Recent = new ObservableCollection<MediaViewModel>();
 
         Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
@@ -108,6 +109,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             lock (Recent)
             {
                 Recent.Clear();
+                _recentContext.PathToMruMappings.Clear();
+                _recentContext.TokenToMediaMappings.Clear();
+                _recentContext.IsLoaded = true;
             }
         }
     }
@@ -126,51 +130,69 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             lock (Recent)
             {
                 Recent.Clear();
+                _recentContext.PathToMruMappings.Clear();
+                _recentContext.TokenToMediaMappings.Clear();
+                _recentContext.IsLoaded = true;
             }
             return;
         }
 
-        var files = await Task.WhenAll(tokens.Select(ConvertMruTokenToStorageFileAsync));
-        var pairs = tokens.Zip(files, (t, f) => (Token: t, File: f)).ToList();
-        var pairsToRemove = pairs.Where(p => p.File == null).ToList();
+        // Fast path: for tokens already known and cached in _recentContext, reuse existing MediaViewModel and StorageFile
+        var fetchTasks = tokens.Select(async token =>
+        {
+            if (_recentContext.TokenToMediaMappings.TryGetValue(token, out var cachedMedia) &&
+                cachedMedia.Source is StorageFile cachedFile)
+            {
+                return (Token: token, File: (StorageFile?)cachedFile, Media: (MediaViewModel?)cachedMedia);
+            }
+
+            StorageFile? file = await ConvertMruTokenToStorageFileAsync(token).ConfigureAwait(false);
+            return (Token: token, File: file, Media: (MediaViewModel?)null);
+        });
+
+        var results = await Task.WhenAll(fetchTasks).ConfigureAwait(true);
+
+        var validPairs = new List<(string Token, StorageFile File, MediaViewModel Media)>();
+        var tokensToRemove = new List<string>();
+
+        foreach (var (token, file, cachedMedia) in results)
+        {
+            if (file == null)
+            {
+                tokensToRemove.Add(token);
+                continue;
+            }
+
+            // TODO: Add support for playing playlist file from home page
+            if (file.IsSupportedPlaylist())
+            {
+                continue;
+            }
+
+            MediaViewModel media = cachedMedia ?? _mediaFactory.GetOrCreate(file);
+            validPairs.Add((token, file, media));
+        }
+
+        var targetList = validPairs.Select(p => p.Media).ToList();
 
         lock (Recent)
         {
-            for (int i = 0; i < tokens.Length; i++)
+            // Update mappings for all valid pairs
+            _recentContext.PathToMruMappings.Clear();
+            _recentContext.TokenToMediaMappings.Clear();
+            foreach (var (token, _, media) in validPairs)
             {
-                var (token, file) = pairs[i];
-                if (file == null) continue;
-                // TODO: Add support for playing playlist file from home page
-                if (file.IsSupportedPlaylist()) continue;
-                if (i >= Recent.Count)
-                {
-                    MediaViewModel media = _mediaFactory.GetOrCreate(file);
-                    _pathToMruMappings[media.Location] = token;
-                    Recent.Add(media);
-                }
-                else if (Recent[i].Source is StorageFile existing)
-                {
-                    try
-                    {
-                        if (!file.IsEqual(existing)) MoveOrInsert(file, token, i);
-                    }
-                    catch (Exception)
-                    {
-                        // StorageFile.IsEqual() throws an exception
-                        // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
-                        // pass
-                    }
-                }
+                _recentContext.PathToMruMappings[media.Location] = token;
+                _recentContext.TokenToMediaMappings[token] = media;
             }
 
-            // Remove stale items
-            while (Recent.Count > tokens.Length)
-            {
-                Recent.RemoveAt(Recent.Count - 1);
-            }
+            // Sync the observable collection in-place
+            Recent.SyncItems(targetList);
+            _recentContext.IsLoaded = true;
         }
 
-        foreach (var (token, _) in pairsToRemove)
+        // Remove stale/inaccessible MRU tokens
+        foreach (string token in tokensToRemove)
         {
             try
             {
@@ -182,11 +204,26 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             }
         }
 
-        // Load media details for the remaining items
+        // Load media details & thumbnails for any items that need them
         if (!loadMediaDetails) return;
-        IEnumerable<Task> loadingTasks = Recent.Select(SafeLoadDetailsAsync);
-        loadingTasks = Recent.Select(SafeLoadThumbnailAsync).Concat(loadingTasks);
-        await Task.WhenAll(loadingTasks);
+        var loadingTasks = new List<Task>();
+        foreach (MediaViewModel media in Recent)
+        {
+            if (!media.DetailsLoaded)
+            {
+                loadingTasks.Add(SafeLoadDetailsAsync(media));
+            }
+
+            if (media.Thumbnail == null)
+            {
+                loadingTasks.Add(SafeLoadThumbnailAsync(media));
+            }
+        }
+
+        if (loadingTasks.Count > 0)
+        {
+            await Task.WhenAll(loadingTasks);
+        }
     }
 
     private async Task SafeLoadDetailsAsync(MediaViewModel media)
@@ -223,44 +260,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    private void MoveOrInsert(StorageFile file, string token, int desiredIndex)
-    {
-        // Find index of the VM of the same file
-        // There is no FindIndex method for ObservableCollection :(
-        int existingIndex = -1;
-        for (int j = desiredIndex + 1; j < Recent.Count; j++)
-        {
-            if (Recent[j].Source is not StorageFile existingFile) continue;
-            try
-            {
-                if (file.IsEqual(existingFile))
-                {
-                    existingIndex = j;
-                    break;
-                }
-            }
-            catch (Exception)
-            {
-                // StorageFile.IsEqual() can throw when the underlying MRU item is in
-                // a bad state (e.g. ArgumentException "Falscher Parameter." or
-                // "Element not found." HRESULT 0x80070490). Treat as not equal.
-            }
-        }
-
-        if (existingIndex == -1)
-        {
-            MediaViewModel media = _mediaFactory.GetOrCreate(file);
-            _pathToMruMappings[media.Location] = token;
-            Recent.Insert(desiredIndex, media);
-        }
-        else
-        {
-            MediaViewModel toInsert = Recent[existingIndex];
-            Recent.RemoveAt(existingIndex);
-            Recent.Insert(desiredIndex, toInsert);
-        }
-    }
-
     [RelayCommand]
     private void Play(MediaViewModel media)
     {
@@ -280,8 +279,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         lock (Recent)
         {
             Recent.Remove(media);
-            if (_pathToMruMappings.Remove(media.Location, out var token))
+            if (_recentContext.PathToMruMappings.Remove(media.Location, out var token))
             {
+                _recentContext.TokenToMediaMappings.Remove(token);
                 StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
             }
         }

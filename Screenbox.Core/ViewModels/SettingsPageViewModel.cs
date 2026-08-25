@@ -72,6 +72,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private readonly ISettingsService _settingsService;
     private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
+    private readonly RecentContext _recentContext;
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
@@ -94,6 +95,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         ISettingsService settingsService,
         IFilesService filesService,
         LibraryContext libraryContext,
+        RecentContext recentContext,
         ILibraryCoordinator libraryCoordinator,
         IPlaybackProgressTracker playbackProgressTracker,
         ILogger<SettingsPageViewModel> logger)
@@ -101,6 +103,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _settingsService = settingsService;
         _filesService = filesService;
         _libraryContext = libraryContext;
+        _recentContext = recentContext;
         _libraryCoordinator = libraryCoordinator;
         _playbackProgressTracker = playbackProgressTracker;
         _logger = logger;
@@ -297,6 +300,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     partial void OnShowRecentChanged(bool value)
     {
         _settingsService.ShowRecent = value;
+        if (!value)
+        {
+            ClearRecentHistory();
+        }
+
         Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent), typeof(SettingsPageViewModel)));
     }
 
@@ -458,6 +466,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [RelayCommand]
     private void ClearRecentHistory()
     {
+        _recentContext.Recent.Clear();
+        _recentContext.PathToMruMappings.Clear();
+        _recentContext.TokenToMediaMappings.Clear();
+        _recentContext.IsLoaded = true;
         StorageApplicationPermissions.MostRecentlyUsedList.Clear();
     }
 
