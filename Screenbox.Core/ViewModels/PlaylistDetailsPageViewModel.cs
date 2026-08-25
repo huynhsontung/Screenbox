@@ -66,7 +66,11 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     private void SourceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _commandRefreshTimer.Debounce(ShuffleAndPlayCommand.NotifyCanExecuteChanged, TimeSpan.FromMilliseconds(50));
+        _commandRefreshTimer.Debounce(() =>
+        {
+            PlayPlaylistCommand.NotifyCanExecuteChanged();
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+        }, TimeSpan.FromMilliseconds(50));
     }
 
     private static bool NotNull(MediaViewModel? item) => item != null;
@@ -79,6 +83,17 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         if (Source == null || item == null) return;
         var playlist = new Playlist(item, Source.Items);
         Messenger.Send(new SetQueueMessage(playlist, true));
+    }
+
+    [RelayCommand(CanExecute = nameof(NotEmpty))]
+    private void PlayPlaylist(PlaylistViewModel? playlist)
+    {
+        if (playlist?.Items is not { Count: > 0 })
+            return;
+
+        var firstItem = playlist.Items[0];
+        var queue = new Playlist(firstItem, playlist.Items);
+        Messenger.Send(new SetQueueMessage(queue, shouldPlay: true));
     }
 
     [RelayCommand(CanExecute = nameof(NotEmpty))]

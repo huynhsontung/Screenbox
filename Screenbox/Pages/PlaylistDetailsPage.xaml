@@ -199,8 +199,8 @@
 
                             <AppBarButton
                                 AccessKey="{x:Bind strings:KeyboardResources.CommandPlayKey}"
-                                Command="{x:Bind ViewModel.PlayCommand}"
-                                CommandParameter="{x:Bind ViewModel.Source.Items, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
+                                Command="{x:Bind ViewModel.PlayPlaylistCommand}"
+                                CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
                                 Label="{x:Bind strings:Resources.Play}"
