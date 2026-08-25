@@ -47,7 +47,7 @@ sealed partial class App : Application
         _ = InitializeSentrySdk();
         UnhandledException += App_UnhandledException;
         CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
-        SyncCurrentCultureWithAppLanguage();
+        GlobalizationHelper.SyncCurrentCultureWithAppLanguage();
 
         InitializeComponent();
 
@@ -172,21 +172,6 @@ sealed partial class App : Application
         ));
 
         return services.BuildServiceProvider();
-    }
-
-    private static void SyncCurrentCultureWithAppLanguage()
-    {
-        string languageOverride = Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride;
-        if (!string.IsNullOrWhiteSpace(languageOverride))
-        {
-            var culture = new System.Globalization.CultureInfo(languageOverride);
-
-            // Sync all threads to the override language
-            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
-            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
-            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
-        }
     }
 
     private static IDisposable InitializeSentrySdk()
