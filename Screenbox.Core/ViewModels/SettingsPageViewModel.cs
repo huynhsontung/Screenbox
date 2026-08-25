@@ -302,7 +302,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         _settingsService.ShowRecent = value;
         if (!value)
         {
-            ClearRecentHistory();
+            ClearRecentContext();
         }
 
         Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent), typeof(SettingsPageViewModel)));
@@ -466,11 +466,16 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [RelayCommand]
     private void ClearRecentHistory()
     {
+        ClearRecentContext();
+        StorageApplicationPermissions.MostRecentlyUsedList.Clear();
+    }
+
+    private void ClearRecentContext()
+    {
         _recentContext.Recent.Clear();
         _recentContext.PathToMruMappings.Clear();
         _recentContext.TokenToMediaMappings.Clear();
         _recentContext.IsLoaded = true;
-        StorageApplicationPermissions.MostRecentlyUsedList.Clear();
     }
 
     [RelayCommand]
