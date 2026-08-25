@@ -47,6 +47,7 @@ sealed partial class App : Application
         _ = InitializeSentrySdk();
         UnhandledException += App_UnhandledException;
         CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+        GlobalizationHelper.SyncCurrentCultureWithAppLanguage();
 
         InitializeComponent();
 

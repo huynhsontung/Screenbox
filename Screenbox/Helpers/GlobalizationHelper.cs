@@ -1,4 +1,5 @@
 using System.Globalization;
+using Windows.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -14,7 +15,26 @@ public static class GlobalizationHelper
     /// is right-to-left.
     /// </summary>
     /// <value><see langword="true"/> if the text direction is right-to-left; otherwise, <see langword="false"/>.</value>
-    public static readonly bool IsRightToLeftLanguage = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft;
+    public static bool IsRightToLeftLanguage { get; private set; } = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft;
+
+    /// <summary>
+    /// Synchronizes the current culture with the application's language override.
+    /// </summary>
+    public static void SyncCurrentCultureWithAppLanguage()
+    {
+        string languageOverride = ApplicationLanguages.PrimaryLanguageOverride;
+        if (!string.IsNullOrWhiteSpace(languageOverride))
+        {
+            var culture = new CultureInfo(languageOverride);
+
+            // Sync all threads to the override language
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+            IsRightToLeftLanguage = culture.TextInfo.IsRightToLeft;
+        }
+    }
 
     /// <summary>
     /// Gets the <see cref="FlowDirection"/> for the current application language.
