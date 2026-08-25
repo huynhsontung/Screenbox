@@ -213,6 +213,7 @@
                             <AppBarButton
                                 AccessKey="{x:Bind strings:KeyboardResources.CommandShuffleAndPlayKey}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                                CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
