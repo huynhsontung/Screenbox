@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -25,73 +26,25 @@
 
             <commands:BindableCommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
 
-            <MenuFlyout x:Key="ItemFlyout">
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.Play}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.PlayNextCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{x:Bind strings:Resources.PlayNext}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.AddToQueueCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.AddToQueue}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="AddToQueueMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutSeparator />
-                <MenuFlyoutItem
-                    Command="{StaticResource OpenWithCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
-                                       MirroredWhenRightToLeft=True}"
-                    Text="{x:Bind strings:Resources.OpenWith}" />
+            <flyouts:MediaMenuFlyout
+                x:Key="ItemFlyout"
+                AddToQueueCommand="{x:Bind Common.AddToQueueCommand}"
+                ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
+                PlayCommand="{x:Bind ViewModel.PlayCommand}"
+                PlayNextCommand="{x:Bind Common.PlayNextCommand}">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.RemoveCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Delete}"
                     Text="{x:Bind strings:Resources.Remove}" />
-                <MenuFlyoutSeparator />
-                <MenuFlyoutItem
-                    Command="{StaticResource OpenInFileExplorerCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                    Text="{x:Bind strings:Resources.OpenInFileExplorer}"
-                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
-                <MenuFlyoutItem
-                    Command="{StaticResource ShowPropertiesCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
                     Text="{x:Bind strings:Resources.ShowArtist}"
                     Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
-                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
-                <MenuFlyoutItem
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
-                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
-                    <MenuFlyoutItem.Command>
-                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
-                    </MenuFlyoutItem.Command>
-                </MenuFlyoutItem>
-            </MenuFlyout>
+            </flyouts:MediaMenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -330,17 +283,6 @@
                     <VisualState.Setters>
                         <!--<Setter Target="ItemList.Visibility" Value="Collapsed" />-->
                         <Setter Target="NoPlaylistItemsView.IsOpen" Value="True" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name="FlowDirectionStates">
-                <VisualState x:Name="RightToLeft">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
