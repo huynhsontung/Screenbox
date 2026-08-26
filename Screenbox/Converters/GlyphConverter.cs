@@ -180,7 +180,7 @@ public static partial class GlyphConverter
     /// <param name="kind">A value indicating the playback command.</param>
     /// <param name="value">An optional value associated with the command.</param>
     /// <returns>A glyph code representing the playback command.</returns>
-    public static string ToPlaybackCommandBadgeGlyph(PlaybackCommandKind kind, object? value)
+    public static string ToOsdBadgeGlyph(PlaybackCommandKind kind, object? value)
     {
         //const string StopSolidGlyph = "\uEE95";
         const string ChevronLeftMedGlyph = "\uE973";

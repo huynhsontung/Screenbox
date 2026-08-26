@@ -393,7 +393,7 @@
             Padding="11,5,11,6"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
             BorderThickness="1"
             CornerRadius="{StaticResource OverlayCornerRadius}"
@@ -403,7 +403,7 @@
                 <ctAnimations:OpacityAnimation
                     EasingType="Linear"
                     To="1"
-                    Duration="{StaticResource ControlNormalAnimationDuration}" />
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
             </ctAnimations:Implicit.ShowAnimations>
             <ctAnimations:Implicit.HideAnimations>
                 <ctAnimations:OpacityAnimation
@@ -427,18 +427,19 @@
             Margin="32"
             HorizontalAlignment="{x:Bind GetBadgeHorizontalAlignment(ViewModel.CurrentPlaybackCommand), Mode=OneWay}"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             CornerRadius="{StaticResource CircularCornerRadius}"
+            IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.IsOsdBadgeVisible, Mode=OneWay}">
             <ctAnimations:Implicit.ShowAnimations>
                 <ctAnimations:OpacityAnimation
                     EasingType="Linear"
                     To="1"
-                    Duration="{StaticResource ControlNormalAnimationDuration}" />
+                    Duration="{StaticResource ControlFasterAnimationDuration}" />
                 <ctAnimations:ScaleAnimation
                     EasingMode="EaseOut"
                     To="1"
-                    Duration="0:0:0.5" />
+                    Duration="{StaticResource ControlNormalAnimationDuration}" />
             </ctAnimations:Implicit.ShowAnimations>
             <ctAnimations:Implicit.HideAnimations>
                 <ctAnimations:OpacityAnimation
@@ -448,13 +449,12 @@
                 <ctAnimations:ScaleAnimation
                     EasingMode="EaseIn"
                     To="0"
-                    Duration="0:0:0.250" />
+                    Duration="{StaticResource ControlNormalAnimationDuration}" />
             </ctAnimations:Implicit.HideAnimations>
-
             <FontIcon
                 x:Name="StatusBadgeBorderIcon"
                 FontSize="28"
-                Glyph="{x:Bind converters:GlyphConverter.ToPlaybackCommandBadgeGlyph(ViewModel.CurrentPlaybackCommand, ViewModel.OsdMessageValue), Mode=OneWay}"
+                Glyph="{x:Bind converters:GlyphConverter.ToOsdBadgeGlyph(ViewModel.CurrentPlaybackCommand, ViewModel.OsdMessageValue), Mode=OneWay}"
                 MirroredWhenRightToLeft="{x:Bind ShouldMirrorBadgeIcon(ViewModel.CurrentPlaybackCommand), Mode=OneWay}" />
         </Border>
 
@@ -858,12 +858,12 @@
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,12" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
-                        <Setter Target="StatusMessage.Margin" Value="12,4" />
-                        <Setter Target="StatusMessage.Padding" Value="7,2,7,3" />
-                        <Setter Target="StatusMessageText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
+                        <Setter Target="StatusMessage.Margin" Value="12,8" />
+                        <Setter Target="StatusMessage.Padding" Value="7,3,7,3" />
+                        <Setter Target="StatusMessageText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="StatusBadgeBorder.Width" Value="48" />
                         <Setter Target="StatusBadgeBorder.Height" Value="48" />
-                        <Setter Target="StatusBadgeBorder.Margin" Value="16,0" />
+                        <Setter Target="StatusBadgeBorder.Margin" Value="12,0" />
                         <Setter Target="StatusBadgeBorderIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
                         <Setter Target="NotificationView.Margin" Value="4" />
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
