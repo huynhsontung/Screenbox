@@ -33,6 +33,8 @@ public sealed partial class PlayerPage : Page
 {
     internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
+    private static readonly bool _isArabicLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "ar";
+
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
@@ -549,10 +551,15 @@ public sealed partial class PlayerPage : Page
         return kind switch
         {
             //PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is TimeSpan time => Humanizer.ToDuration(time),
-            PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is string timeStr => $"\u202A{timeStr}\u202C", // Wraps the time string in LRE/PDF to prevent RTL BiDi reordering
+            // Use LRE/PDF marks to prevent RTL BiDi reordering, except for Arabic where it forces Western digit shaping.
+            PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is string timeStr
+                => _isArabicLanguage ? timeStr : $"\u202A{timeStr}\u202C",
             PlaybackCommandKind.Volume when value is int volume => Strings.Resources.VolumeChangeStatusMessage(volume),
-            PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown when value is double rate => $"\u202A{rate.ToString("0.##", CultureInfo.CurrentCulture)}×\u202C", // Wraps the number and × in LRE/PDF to prevent RTL BiDi reordering
-            PlaybackCommandKind.AspectRatio when value is string ratio => Strings.Resources.AspectRatioStatusMessage(ItemLabelHelper.GetValueOrFallback(ResourceNameToResourceStringConverter.FromName(ratio), ratio)),
+            // Use LRE/PDF marks to prevent RTL BiDi reordering, except for Arabic where it forces Western digit shaping.
+            PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown when value is double rate
+                => _isArabicLanguage ? $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×" : $"\u202A{rate.ToString("0.##", CultureInfo.CurrentCulture)}×\u202C",
+            PlaybackCommandKind.AspectRatio when value is string ratio
+                => Strings.Resources.AspectRatioStatusMessage(ItemLabelHelper.GetValueOrFallback(ResourceNameToResourceStringConverter.FromName(ratio), ratio)),
             PlaybackCommandKind.Scale when value is double scale => Strings.Resources.ScaleStatus($"{scale * 100:0.##}%"),
             PlaybackCommandKind.Subtitle when value is string label => Strings.Resources.SubtitleStatus(label),
             PlaybackCommandKind.SubtitleOff => Strings.Resources.SubtitleStatus(Strings.Resources.None),
