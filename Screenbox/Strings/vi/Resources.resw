@@ -364,7 +364,7 @@
     <value>Mở vị trí tệp</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Mở trong File Explorer</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Mở với</value>
@@ -1148,16 +1148,16 @@
     <value>Danh sách phát này hiện không có mục nào.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Ảnh chụp khung hình sẽ được lưu vào</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Vị trí ảnh chụp khung hình</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Thay đổi thư mục</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Thay đổi</value>
   </data>
 </root>
 
