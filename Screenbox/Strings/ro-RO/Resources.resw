@@ -364,7 +364,7 @@
     <value>Deschidere locație fișier</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Deschidere în Explorer</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Deschidere cu</value>
