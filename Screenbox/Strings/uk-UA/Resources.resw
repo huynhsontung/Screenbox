@@ -364,7 +364,7 @@
     <value>Відкрити розташування файлу</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Відкрити у Провіднику</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Відкрити за допомогою</value>
