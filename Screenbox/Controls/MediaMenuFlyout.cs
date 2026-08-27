@@ -46,6 +46,7 @@ public partial class MediaMenuFlyout : MenuFlyout
     private MenuFlyoutItem? _propertiesItem;
     private MenuFlyoutItem? _playbackOptionsItem;
     private MenuFlyoutSeparator? _advancedSeparator;
+    private readonly SetPlaybackOptionsCommand _playbackOptionsCommand = new();
     private bool _isInitialized;
     
     private readonly List<MenuFlyoutItemBase> _extraItems = new();
@@ -101,7 +102,12 @@ public partial class MediaMenuFlyout : MenuFlyout
         _propertiesItem = new MenuFlyoutItem { Icon = propertiesIcon, Text = Resources.Properties, Command = (ICommand)Application.Current.Resources["ShowPropertiesCommand"] };
 
         var settingsIcon = new SymbolIcon { Symbol = Symbol.Setting };
-        _playbackOptionsItem = new MenuFlyoutItem { Icon = settingsIcon, Text = Resources.SetPlaybackOptions };
+        _playbackOptionsItem = new MenuFlyoutItem
+        {
+            Icon = settingsIcon,
+            Text = Resources.SetPlaybackOptions,
+            Command = _playbackOptionsCommand
+        };
         _advancedSeparator = new MenuFlyoutSeparator();
 
         Items.Add(_playItem);
@@ -160,6 +166,6 @@ public partial class MediaMenuFlyout : MenuFlyout
         _playbackOptionsItem!.Visibility = IsAdvancedModeEnabled ? Visibility.Visible : Visibility.Collapsed;
         
         _playbackOptionsItem!.CommandParameter = ContextItem;
-        _playbackOptionsItem!.Command = new SetPlaybackOptionsCommand { PlayCommand = PlayCommand };
+        _playbackOptionsCommand.PlayCommand = PlayCommand;
     }
 }

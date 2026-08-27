@@ -56,11 +56,28 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
 
     private readonly PlaylistsContext _playlistsContext;
     private FrameworkElement? _flyoutTarget;
+    private readonly MenuFlyoutItem _createNewPlaylistItem;
+    private readonly MenuFlyoutSeparator _separator = new();
+    private readonly MenuFlyoutItem _noPlaylistsItem;
+    private readonly List<MenuFlyoutItem> _playlistItems = new();
 
     public AddToPlaylistFlyoutBehavior()
     {
         _playlistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
         CreatePlaylistCommand = new AsyncRelayCommand<IEnumerable<MediaViewModel>>(CreatePlaylistAsync);
+
+        _createNewPlaylistItem = new MenuFlyoutItem
+        {
+            Icon = new SymbolIcon(Symbol.Add),
+            Text = Strings.Resources.CreateNewPlaylist,
+            Command = CreatePlaylistCommand
+        };
+
+        _noPlaylistsItem = new MenuFlyoutItem
+        {
+            Text = Strings.Resources.NoPlaylists,
+            IsEnabled = false
+        };
     }
 
     protected override void OnAttached()
@@ -106,35 +123,62 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
             _ => [],
         };
 
-        menuItems.Clear();
-        menuItems.Add(new MenuFlyoutItem
-        {
-            Icon = new SymbolIcon(Symbol.Add),
-            Text = Strings.Resources.CreateNewPlaylist,
-            Command = CreatePlaylistCommand,
-            CommandParameter = contextItems
-        });
+        _createNewPlaylistItem.CommandParameter = contextItems;
 
-        menuItems.Add(new MenuFlyoutSeparator());
+        var playlists = _playlistsContext.Playlists.Where(p => p is not null).ToList();
 
-        if (_playlistsContext.Playlists.Count == 0)
+        if (playlists.Count == 0)
         {
-            menuItems.Add(new MenuFlyoutItem
+            if (menuItems.Count != 3 || menuItems[0] != _createNewPlaylistItem || menuItems[2] != _noPlaylistsItem)
             {
-                Text = Strings.Resources.NoPlaylists,
-                IsEnabled = false
-            });
+                menuItems.Clear();
+                menuItems.Add(_createNewPlaylistItem);
+                menuItems.Add(_separator);
+                menuItems.Add(_noPlaylistsItem);
+            }
             return;
         }
 
-        foreach (var playlist in _playlistsContext.Playlists.Where(p => p is not null))
+        while (_playlistItems.Count < playlists.Count)
         {
-            menuItems.Add(new MenuFlyoutItem
+            _playlistItems.Add(new MenuFlyoutItem());
+        }
+
+        for (int i = 0; i < playlists.Count; i++)
+        {
+            var playlist = playlists[i];
+            var item = _playlistItems[i];
+            item.Text = playlist.Name;
+            item.Command = playlist.AddItemsCommand;
+            item.CommandParameter = contextItems;
+        }
+
+        int expectedCount = 2 + playlists.Count;
+        bool needsRebuild = menuItems.Count != expectedCount ||
+                            menuItems[0] != _createNewPlaylistItem ||
+                            menuItems[1] != _separator;
+
+        if (!needsRebuild)
+        {
+            for (int i = 0; i < playlists.Count; i++)
             {
-                Text = playlist.Name,
-                Command = playlist.AddItemsCommand,
-                CommandParameter = contextItems
-            });
+                if (menuItems[i + 2] != _playlistItems[i])
+                {
+                    needsRebuild = true;
+                    break;
+                }
+            }
+        }
+
+        if (needsRebuild)
+        {
+            menuItems.Clear();
+            menuItems.Add(_createNewPlaylistItem);
+            menuItems.Add(_separator);
+            for (int i = 0; i < playlists.Count; i++)
+            {
+                menuItems.Add(_playlistItems[i]);
+            }
         }
     }
 
