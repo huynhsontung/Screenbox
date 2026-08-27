@@ -21,6 +21,9 @@ namespace Screenbox.Flyouts;
 /// </remarks>
 public sealed partial class MediaMenuFlyout : MenuFlyout
 {
+    private static readonly bool _isApiContract14Present
+        = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
+
     #region Dependency Properties
 
     /// <summary>
@@ -202,7 +205,9 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
         // AddToPlaylist MenuFlyoutSubItem
         AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
-        AddToPlaylistSubItemIcon.Glyph = GetGlyphForTextDirection("\U000F00AA", "\U000F00AB");
+        AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
+            ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
+            : "\U000F00AA";
 
         // Remove MenuFlyoutItem
         RemoveItem.Text = Strings.Resources.Remove;
