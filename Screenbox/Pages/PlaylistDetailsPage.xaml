@@ -32,18 +32,16 @@
                 ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                 IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
-                PlayNextCommand="{x:Bind Common.PlayNextCommand}">
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.RemoveCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:SymbolIcon Symbol=Delete}"
-                    Text="{x:Bind strings:Resources.Remove}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenArtistCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{x:Bind strings:Resources.ShowArtist}"
-                    Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                PlayNextCommand="{x:Bind Common.PlayNextCommand}"
+                RemoveCommand="{x:Bind ViewModel.RemoveCommand}">
+                <flyouts:MediaMenuFlyout.AdditionalItems>
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenArtistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                        Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                        Text="{x:Bind strings:Resources.ShowArtist}"
+                        Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                </flyouts:MediaMenuFlyout.AdditionalItems>
             </flyouts:MediaMenuFlyout>
         </ResourceDictionary>
     </Page.Resources>

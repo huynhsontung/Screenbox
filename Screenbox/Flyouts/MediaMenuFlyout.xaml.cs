@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Windows.Input;
 using Screenbox.Behaviors;
 using Screenbox.Commands;
@@ -60,6 +61,30 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     }
 
     /// <summary>
+    /// Identifies the <see cref="RemoveCommand"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty RemoveCommandProperty = DependencyProperty.Register(
+        nameof(RemoveCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+
+    public ICommand? RemoveCommand
+    {
+        get { return (ICommand?)GetValue(RemoveCommandProperty); }
+        set { SetValue(RemoveCommandProperty, value); }
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="SelectCommand"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty SelectCommandProperty = DependencyProperty.Register(
+        nameof(SelectCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+
+    public ICommand? SelectCommand
+    {
+        get { return (ICommand?)GetValue(SelectCommandProperty); }
+        set { SetValue(SelectCommandProperty, value); }
+    }
+
+    /// <summary>
     /// Identifies the <see cref="IsAdvancedModeEnabled"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty IsAdvancedModeEnabledProperty =
@@ -71,18 +96,29 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         set { SetValue(IsAdvancedModeEnabledProperty, value); }
     }
 
+    public IList<MenuFlyoutItemBase> AdditionalItems { get; }
+
+    private readonly SetPlaybackOptionsCommand _setPlaybackOptionsCommand = new();
+
     public MediaMenuFlyout()
     {
         this.InitializeComponent();
+
+        AdditionalItems = new List<MenuFlyoutItemBase>();
     }
 
     private void MenuFlyout_Opening(object sender, object e)
     {
-        var mediaVm = ContextItem as MediaViewModel;
-        if (ContextItem is StorageItemViewModel storageItem)
+        UpdateAdditionalItems();
+
+        // Resolve the underlying MediaViewModel regardless of whether ContextItem is a
+        // MediaViewModel directly or a StorageItemViewModel wrapping one.
+        var mediaVm = ContextItem switch
         {
-            mediaVm = storageItem.Media;
-        }
+            MediaViewModel media => media,
+            StorageItemViewModel storageItem => storageItem.Media,
+            _ => null,
+        };
 
         // MenuFlyout Behavior 
         AddToPlaylistFlyoutBehavior.TargetSubItem = AddToPlaylistSubItem;
@@ -100,13 +136,28 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
         // AddToQueue MenuFlyoutItem
         AddToQueueItem.Text = Strings.Resources.AddToQueue;
-        AddToQueueItem.Command = AddToQueueCommand;
-        AddToQueueItem.CommandParameter = ContextItem;
-        AddToQueueItemIcon.Glyph = GlobalizationHelper.IsRightToLeftLanguage ? "\U000F00C3" : "\U000F00C2";
+        AddToQueueItemIcon.Glyph = GetGlyphForTextDirection("\U000F00C2", "\U000F00C3");
+
+        if (AddToQueueCommand is not null)
+        {
+            AddToQueueItem.Command = AddToQueueCommand;
+            AddToQueueItem.CommandParameter = ContextItem;
+            AddToQueueItem.Visibility = Visibility.Visible;
+        }
 
         // AddToPlaylist MenuFlyoutSubItem
         AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
-        AddToPlaylistSubItemIcon.Glyph = GlobalizationHelper.IsRightToLeftLanguage ? "\U000F00AB" : "\U000F00AA";
+        AddToPlaylistSubItemIcon.Glyph = GetGlyphForTextDirection("\U000F00AA", "\U000F00AB");
+
+        // Remove MenuFlyoutItem
+        RemoveItem.Text = Strings.Resources.Remove;
+
+        if (RemoveCommand is not null)
+        {
+            RemoveItem.Command = RemoveCommand;
+            RemoveItem.CommandParameter = ContextItem;
+            RemoveItem.Visibility = Visibility.Visible;
+        }
 
         // OpenWith MenuFlyoutItem
         OpenWithItem.Text = Strings.Resources.OpenWith;
@@ -121,16 +172,51 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         PropertiesItem.Text = Strings.Resources.Properties;
         PropertiesItem.CommandParameter = mediaVm;
 
-        // Advanced MenuFlyoutSeparator
-        AdvancedModeSeparator.Visibility = IsAdvancedModeEnabled ? Visibility.Visible : Visibility.Collapsed;
+        // Select MenuFlyoutItem
+        SelectionItem.Text = Strings.Resources.Select;
+        SelectionItemIcon.Glyph = GetGlyphForTextDirection("\uEA20", "\uEA66");
+
+        if (SelectCommand is not null)
+        {
+            SelectionSeparator.Visibility = Visibility.Visible;
+
+            SelectionItem.Command = SelectCommand;
+            SelectionItem.CommandParameter = ContextItem;
+            SelectionItem.Visibility = Visibility.Visible;
+        }
 
         // Advanced PlaybackOptions MenuFlyoutItem
         SetPlaybackOptionsItem.Text = Strings.Resources.SetPlaybackOptions;
-        SetPlaybackOptionsItem.Command = new SetPlaybackOptionsCommand()
+        if (IsAdvancedModeEnabled)
         {
-            PlayCommand = PlayCommand,
-        };
-        SetPlaybackOptionsItem.CommandParameter = ContextItem;
-        SetPlaybackOptionsItem.Visibility = IsAdvancedModeEnabled ? Visibility.Visible : Visibility.Collapsed;
+            AdvancedModeSeparator.Visibility = Visibility.Visible;
+
+            _setPlaybackOptionsCommand.PlayCommand = PlayCommand;
+            SetPlaybackOptionsItem.Command = _setPlaybackOptionsCommand;
+            SetPlaybackOptionsItem.CommandParameter = ContextItem;
+            SetPlaybackOptionsItem.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void UpdateAdditionalItems()
+    {
+        int propertiesIndex = Items.IndexOf(PropertiesItem);
+        int insertIndex = propertiesIndex < 0 ? Items.Count : propertiesIndex + 1;
+
+        foreach (var item in AdditionalItems)
+        {
+            if (Items.Contains(item))
+            {
+                continue;
+            }
+
+            Items.Insert(insertIndex, item);
+            insertIndex++;
+        }
+    }
+
+    private static string GetGlyphForTextDirection(string leftToRightGlyph, string rightToLeftGlyph)
+    {
+        return GlobalizationHelper.IsRightToLeftLanguage ? rightToLeftGlyph : leftToRightGlyph;
     }
 }

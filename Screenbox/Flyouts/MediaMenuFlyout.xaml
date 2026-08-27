@@ -28,7 +28,7 @@
         </MenuFlyoutItem.Icon>
     </MenuFlyoutItem>
 
-    <MenuFlyoutItem x:Name="AddToQueueItem">
+    <MenuFlyoutItem x:Name="AddToQueueItem" Visibility="Collapsed">
         <MenuFlyoutItem.Icon>
             <FontIcon x:Name="AddToQueueItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
         </MenuFlyoutItem.Icon>
@@ -41,6 +41,12 @@
             <FontIcon x:Name="AddToPlaylistSubItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
         </MenuFlyoutSubItem.Icon>
     </MenuFlyoutSubItem>
+
+    <MenuFlyoutItem x:Name="RemoveItem" Visibility="Collapsed">
+        <MenuFlyoutItem.Icon>
+            <SymbolIcon Symbol="Clear" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
 
     <MenuFlyoutItem x:Name="OpenWithItem" Command="{StaticResource OpenWithCommand}">
         <MenuFlyoutItem.Icon>
@@ -63,8 +69,23 @@
         </MenuFlyoutItem.Icon>
     </MenuFlyoutItem>
 
-    <MenuFlyoutSeparator x:Name="AdvancedModeSeparator" />
-    <MenuFlyoutItem x:Name="SetPlaybackOptionsItem">
+    <!--#region Additional Items-->
+
+    <!--  Additional Items will be inserted here.  -->
+
+    <!--#endregion-->
+
+    <!--  Selection  -->
+    <MenuFlyoutSeparator x:Name="SelectionSeparator" Visibility="Collapsed" />
+    <MenuFlyoutItem x:Name="SelectionItem" Visibility="Collapsed">
+        <MenuFlyoutItem.Icon>
+            <FontIcon x:Name="SelectionItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <!--  Advanced  -->
+    <MenuFlyoutSeparator x:Name="AdvancedModeSeparator" Visibility="Collapsed" />
+    <MenuFlyoutItem x:Name="SetPlaybackOptionsItem" Visibility="Collapsed">
         <MenuFlyoutItem.Icon>
             <SymbolIcon Symbol="Setting" />
         </MenuFlyoutItem.Icon>

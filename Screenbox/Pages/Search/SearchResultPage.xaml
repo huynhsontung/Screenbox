@@ -33,18 +33,20 @@
                 IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
                 PlayNextCommand="{x:Bind Common.PlayNextCommand}">
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenAlbumCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{x:Bind strings:Resources.ShowAlbum}"
-                    Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenArtistCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{x:Bind strings:Resources.ShowArtist}"
-                    Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                <flyouts:MediaMenuFlyout.AdditionalItems>
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenAlbumCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
+                        Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                        Text="{x:Bind strings:Resources.ShowAlbum}"
+                        Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenArtistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                        Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                        Text="{x:Bind strings:Resources.ShowArtist}"
+                        Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                </flyouts:MediaMenuFlyout.AdditionalItems>
             </flyouts:MediaMenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
