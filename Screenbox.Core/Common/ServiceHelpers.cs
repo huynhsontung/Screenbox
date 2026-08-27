@@ -56,6 +56,7 @@ public static class ServiceHelpers
         // Contexts
         services.AddSingleton<PlayerContext>();
         services.AddSingleton<PlaylistsContext>();
+        services.AddSingleton<RecentContext>();
         services.AddSingleton<CastContext>();
         services.AddSingleton<LibraryContext>();
         services.AddSingleton<PlayQueueContext>();
