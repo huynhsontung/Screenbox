@@ -10,14 +10,29 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Flyouts;
 
+/// <summary>
+/// Provides a context menu for media items with shared playback and management actions.
+/// </summary>
+/// <remarks>
+/// The flyout binds to a single <see cref="ContextItem"/> and resolves either a <see cref="MediaViewModel"/>
+/// directly or the wrapped media from a <see cref="StorageItemViewModel"/>.
+/// <para>Additional actions can be injected through <see cref="AdditionalItems"/>
+/// and are inserted after the properties action when the menu opens.</para>
+/// </remarks>
 public sealed partial class MediaMenuFlyout : MenuFlyout
 {
+    #region Dependency Properties
+
     /// <summary>
     /// Identifies the <see cref="ContextItem"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContextItemProperty = DependencyProperty.Register(
         nameof(ContextItem), typeof(object), typeof(MediaMenuFlyout), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Gets or sets the media item associated with the current flyout.
+    /// </summary>
+    /// <value>The media item or storage item that the flyout should act on.</value>
     public object? ContextItem
     {
         get { return (object?)GetValue(ContextItemProperty); }
@@ -30,6 +45,10 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
         nameof(PlayCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Gets or sets the command to invoke when the play item is tapped.
+    /// </summary>
+    /// <value>The command to invoke when the play item is tapped.</value>
     public ICommand? PlayCommand
     {
         get { return (ICommand?)GetValue(PlayCommandProperty); }
@@ -42,6 +61,10 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public static readonly DependencyProperty PlayNextCommandProperty = DependencyProperty.Register(
         nameof(PlayNextCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Gets or sets the command to invoke when the play next item is tapped.
+    /// </summary>
+    /// <value>The command to invoke when the play next item is tapped.</value>
     public ICommand? PlayNextCommand
     {
         get { return (ICommand?)GetValue(PlayNextCommandProperty); }
@@ -54,6 +77,10 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public static readonly DependencyProperty AddToQueueCommandProperty = DependencyProperty.Register(
         nameof(AddToQueueCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Gets or sets the command to invoke when the add to queue item is tapped.
+    /// </summary>
+    /// <value>The command to invoke when the add to queue item is tapped.</value>
     public ICommand? AddToQueueCommand
     {
         get { return (ICommand?)GetValue(AddToQueueCommandProperty); }
@@ -66,6 +93,10 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public static readonly DependencyProperty RemoveCommandProperty = DependencyProperty.Register(
         nameof(RemoveCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Gets or sets the command to invoke when the remove item is tapped.
+    /// </summary>
+    /// <value>The command to invoke when the remove item is tapped.</value>
     public ICommand? RemoveCommand
     {
         get { return (ICommand?)GetValue(RemoveCommandProperty); }
@@ -78,6 +109,10 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public static readonly DependencyProperty SelectCommandProperty = DependencyProperty.Register(
         nameof(SelectCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Gets or sets the command to invoke when the select item is tapped.
+    /// </summary>
+    /// <value>The command to invoke when the select item is tapped.</value>
     public ICommand? SelectCommand
     {
         get { return (ICommand?)GetValue(SelectCommandProperty); }
@@ -90,16 +125,36 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public static readonly DependencyProperty IsAdvancedModeEnabledProperty =
         DependencyProperty.Register(nameof(IsAdvancedModeEnabled), typeof(bool), typeof(MediaMenuFlyout), new PropertyMetadata(false));
 
+    /// <summary>
+    /// Gets or sets a value that indicates whether advanced playback options are enabled.
+    /// </summary>
+    /// <value><see langword="true"/> if advanced playback options should be displayed; otherwise, <see langword="false"/>.</value>
     public bool IsAdvancedModeEnabled
     {
         get { return (bool)GetValue(IsAdvancedModeEnabledProperty); }
         set { SetValue(IsAdvancedModeEnabledProperty, value); }
     }
 
+    #endregion
+
+    /// <summary>
+    /// Gets the collection used to generate the additional content of the menu.
+    /// </summary>
+    /// <value>
+    /// The collection that is used to generate the additional content of the menu.
+    /// The default is an empty collection.
+    /// </value>
+    /// <remarks>
+    /// When the menu opens, each item is placed in order, directly following the
+    /// properties item.
+    /// </remarks>
     public IList<MenuFlyoutItemBase> AdditionalItems { get; }
 
     private readonly SetPlaybackOptionsCommand _setPlaybackOptionsCommand = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MediaMenuFlyout"/> class.
+    /// </summary>
     public MediaMenuFlyout()
     {
         this.InitializeComponent();
@@ -215,6 +270,12 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
     }
 
+    /// <summary>
+    /// Returns the glyph that matches the current text direction.
+    /// </summary>
+    /// <param name="leftToRightGlyph">The glyph to use in left-to-right layouts.</param>
+    /// <param name="rightToLeftGlyph">The glyph to use in right-to-left layouts.</param>
+    /// <returns>The glyph appropriate for the current UI language direction.</returns>
     private static string GetGlyphForTextDirection(string leftToRightGlyph, string rightToLeftGlyph)
     {
         return GlobalizationHelper.IsRightToLeftLanguage ? rightToLeftGlyph : leftToRightGlyph;
