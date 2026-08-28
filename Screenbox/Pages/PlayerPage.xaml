@@ -390,12 +390,10 @@
             Grid.Row="1"
             Grid.Column="0"
             Margin="32,4"
-            Padding="11,5,11,6"
+            Padding="12,6,12,7"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
-            BorderThickness="1"
             CornerRadius="{StaticResource OverlayCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.IsOsdMessageVisible, Mode=OneWay}">
@@ -859,7 +857,7 @@
                         <Setter Target="AlbumArtPanel.Margin" Value="16,12" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
                         <Setter Target="StatusMessage.Margin" Value="12,8" />
-                        <Setter Target="StatusMessage.Padding" Value="7,3,7,3" />
+                        <Setter Target="StatusMessage.Padding" Value="8,4,8,4" />
                         <Setter Target="StatusMessageText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="StatusBadgeBorder.Width" Value="48" />
                         <Setter Target="StatusBadgeBorder.Height" Value="48" />
