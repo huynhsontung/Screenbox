@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -22,10 +25,14 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     [ObservableProperty]
     public partial MediaViewModel? ContextMedia { get; set; }
 
+    [ObservableProperty]
+    public partial MediaViewModel? FirstItem { get; set; }
+
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly IMediaListFactory _mediaListFactory;
     private readonly MediaViewModelFactory _mediaFactory;
+    private readonly DispatcherQueueTimer _commandRefreshTimer;
 
     public PlaylistDetailsPageViewModel(
         IFilesService filesService,
@@ -37,16 +44,39 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         _playlistService = playlistService;
         _mediaListFactory = mediaListFactory;
         _mediaFactory = mediaFactory;
+        _commandRefreshTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
     }
 
     public void OnNavigatedTo(object? parameter)
     {
+        if (Source is not null)
+        {
+            Source.Items.CollectionChanged -= SourceItems_CollectionChanged;
+        }
+
         Source = parameter switch
         {
             NavigationMetadata { Parameter: PlaylistViewModel source } => source,
             PlaylistViewModel source => source,
             _ => throw new ArgumentException("Navigation parameter is not a playlist")
         };
+
+        if (Source is not null)
+        {
+            Source.Items.CollectionChanged += SourceItems_CollectionChanged;
+        }
+
+        FirstItem = Source?.Items.FirstOrDefault();
+    }
+
+    private void SourceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        FirstItem = Source?.Items.FirstOrDefault();
+        _commandRefreshTimer.Debounce(() =>
+        {
+            PlayCommand.NotifyCanExecuteChanged();
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+        }, TimeSpan.FromMilliseconds(50));
     }
 
     private static bool NotNull(MediaViewModel? item) => item != null;
