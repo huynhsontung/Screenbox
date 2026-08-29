@@ -389,53 +389,71 @@
             x:Name="StatusMessage"
             Grid.Row="1"
             Grid.Column="0"
-            Margin="24,4"
-            Padding="9,5,9,6"
+            Margin="32,4"
+            Padding="12,6,12,7"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            ctAnimations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
-            ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
-            d:Visibility="Visible"
-            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
-            BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
-            BorderThickness="1"
-            CornerRadius="{StaticResource ControlCornerRadius}"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
             IsHitTestVisible="False"
-            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
+            Visibility="{x:Bind ViewModel.IsOsdMessageVisible, Mode=OneWay}">
+            <ctAnimations:Implicit.ShowAnimations>
+                <ctAnimations:OpacityAnimation
+                    EasingType="Linear"
+                    To="1"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+            </ctAnimations:Implicit.ShowAnimations>
+            <ctAnimations:Implicit.HideAnimations>
+                <ctAnimations:OpacityAnimation
+                    EasingType="Linear"
+                    To="0"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+            </ctAnimations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
-                d:Text="Volume 100%"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
+                Text="{x:Bind GetMessageText(ViewModel.CurrentPlaybackCommand, ViewModel.OsdMessageValue), Mode=OneWay}" />
         </Border>
 
         <Border
-            x:Name="PlayerStateBadge"
+            x:Name="StatusBadgeBorder"
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
             Width="64"
             Height="64"
+            Margin="32"
+            HorizontalAlignment="{x:Bind GetBadgeHorizontalAlignment(ViewModel.CurrentPlaybackCommand), Mode=OneWay}"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             CornerRadius="{StaticResource CircularCornerRadius}"
-            Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
+            IsHitTestVisible="False"
+            Visibility="{x:Bind ViewModel.IsOsdBadgeVisible, Mode=OneWay}">
             <ctAnimations:Implicit.ShowAnimations>
-                <ctAnimations:OpacityAnimation To="0.8" Duration="0:0:0.03" />
-                <ctAnimations:ScaleAnimation To="1" Duration="0:0:0.03" />
+                <ctAnimations:OpacityAnimation
+                    EasingType="Linear"
+                    To="1"
+                    Duration="{StaticResource ControlFasterAnimationDuration}" />
+                <ctAnimations:ScaleAnimation
+                    EasingMode="EaseOut"
+                    To="1"
+                    Duration="{StaticResource ControlNormalAnimationDuration}" />
             </ctAnimations:Implicit.ShowAnimations>
             <ctAnimations:Implicit.HideAnimations>
-                <ctAnimations:OpacityAnimation To="0.0" Duration="0:0:0.6" />
-                <!--  1.25 is relative scale from 64px to 80px  -->
-                <ctAnimations:ScaleAnimation To="1.25" Duration="0:0:0.6" />
+                <ctAnimations:OpacityAnimation
+                    EasingType="Linear"
+                    To="0"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+                <ctAnimations:ScaleAnimation
+                    EasingMode="EaseIn"
+                    To="0"
+                    Duration="{StaticResource ControlNormalAnimationDuration}" />
             </ctAnimations:Implicit.HideAnimations>
             <FontIcon
-                x:Name="PlayerStateBadgeIcon"
-                d:Glyph="{StaticResource PlaySolidGlyph}"
-                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                FontSize="{StaticResource TitleTextBlockFontSize}"
-                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseSolidGlyph(ViewModel.IsPlayingBadge), Mode=OneWay}" />
+                x:Name="StatusBadgeBorderIcon"
+                FontSize="28"
+                Glyph="{x:Bind converters:GlyphConverter.ToOsdBadgeGlyph(ViewModel.CurrentPlaybackCommand, ViewModel.OsdMessageValue), Mode=OneWay}"
+                MirroredWhenRightToLeft="{x:Bind ShouldMirrorBadgeIcon(ViewModel.CurrentPlaybackCommand), Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing
@@ -800,9 +818,9 @@
                         <Setter Target="TitleBarTextStackPanel.Margin" Value="20,-24,0,24" />
                         <Setter Target="LivelyOptionsButton.Margin" Value="4,-40,0,2" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
-                        <Setter Target="PlayerStateBadge.Width" Value="80" />
-                        <Setter Target="PlayerStateBadge.Height" Value="80" />
-                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="32" />
+                        <Setter Target="StatusBadgeBorder.Width" Value="80" />
+                        <Setter Target="StatusBadgeBorder.Height" Value="80" />
+                        <Setter Target="StatusBadgeBorderIcon.FontSize" Value="32" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                     <Storyboard>
@@ -838,12 +856,13 @@
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,12" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
-                        <Setter Target="StatusMessage.Margin" Value="12,4" />
-                        <Setter Target="StatusMessage.Padding" Value="5,2,5,3" />
-                        <Setter Target="StatusMessageText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
-                        <Setter Target="PlayerStateBadge.Width" Value="48" />
-                        <Setter Target="PlayerStateBadge.Height" Value="48" />
-                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
+                        <Setter Target="StatusMessage.Margin" Value="12,8" />
+                        <Setter Target="StatusMessage.Padding" Value="8,4,8,4" />
+                        <Setter Target="StatusMessageText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
+                        <Setter Target="StatusBadgeBorder.Width" Value="48" />
+                        <Setter Target="StatusBadgeBorder.Height" Value="48" />
+                        <Setter Target="StatusBadgeBorder.Margin" Value="12,0" />
+                        <Setter Target="StatusBadgeBorderIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
                         <Setter Target="NotificationView.Margin" Value="4" />
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                     </VisualState.Setters>
@@ -881,9 +900,10 @@
                         <Setter Target="AlbumArt.CornerRadius" Value="{StaticResource ControlCornerRadius}" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayerStateBadge.Width" Value="48" />
-                        <Setter Target="PlayerStateBadge.Height" Value="48" />
-                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
+                        <Setter Target="StatusBadgeBorder.Width" Value="48" />
+                        <Setter Target="StatusBadgeBorder.Height" Value="48" />
+                        <Setter Target="StatusBadgeBorder.Margin" Value="0" />
+                        <Setter Target="StatusBadgeBorderIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
                         <Setter Target="NotificationView.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
@@ -913,6 +933,7 @@
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtPanel.Opacity" Value="0" />
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
+                        <Setter Target="StatusBadgeBorder.Visibility" Value="Collapsed" />
                         <Setter Target="NotificationView.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />

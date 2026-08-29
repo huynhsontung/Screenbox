@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
@@ -111,12 +113,20 @@ internal static class MessengerExtensions
         }
     }
 
-    public static void SendPositionStatus(this IMessenger messenger, TimeSpan position, TimeSpan duration, string extra = "")
+    public static void SendPositionStatus(this IMessenger messenger, TimeSpan position, TimeSpan duration, string extra = "", bool showBadge = false)
     {
-        string text = string.IsNullOrEmpty(extra)
-            ? $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)}"
-            : $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)} ({extra})";
-        messenger.Send(new UpdateStatusMessage(text));
+        bool hasExtra = !string.IsNullOrEmpty(extra);
+        var kind = hasExtra && extra.StartsWith("-", StringComparison.Ordinal)
+            ? PlaybackCommandKind.Rewind
+            : PlaybackCommandKind.FastForward;
+
+        var sb = new StringBuilder(64);
+        sb.Append(Humanizer.ToDuration(position)).Append(" / ").Append(Humanizer.ToDuration(duration));
+
+        if (hasExtra)
+            sb.Append(" (").Append(extra).Append(')');
+
+        messenger.Send(new PlayerOsdUpdateMessage(kind, value: sb.ToString()) { HasBadge = hasExtra && showBadge, HasMessage = true });
     }
 
     public static void SendSeekWithStatus(this IMessenger messenger, TimeSpan amount)
@@ -125,7 +135,17 @@ internal static class MessengerExtensions
             messenger.Send(new ChangeTimeRequestMessage(amount, true, false));
 
         TimeSpan offset = result.NewPosition - result.OriginalPosition;
-        string extra = $"{(offset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(offset)}";
-        messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
+        var sb = new StringBuilder(16);
+
+        if (offset.Ticks >= 0)
+            sb.Append('+');
+
+        sb.Append(Humanizer.ToDuration(offset));
+
+        messenger.SendPositionStatus(
+            result.NewPosition,
+            result.NaturalDuration,
+            extra: sb.ToString(),
+            showBadge: true);
     }
 }

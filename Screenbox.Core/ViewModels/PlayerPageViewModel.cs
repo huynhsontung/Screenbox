@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -27,12 +28,10 @@ using Windows.UI.Xaml.Media;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlayerPageViewModel : ObservableRecipient,
-    IRecipient<UpdateStatusMessage>,
-    IRecipient<UpdateVolumeStatusMessage>,
     IRecipient<TogglePlayerVisibilityMessage>,
+    IRecipient<PlayerOsdUpdateMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<QueueCurrentItemChangedMessage>,
-    IRecipient<ShowPlayPauseBadgeMessage>,
     IRecipient<OverrideControlsHideDelayMessage>,
     IRecipient<DragDropMessage>,
     IRecipient<VisualizerChangedMessage>,
@@ -45,16 +44,41 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private const VirtualKey VK_OEM_PERIOD = (VirtualKey)0xBE;
 
     [ObservableProperty] public partial bool ControlsHidden { get; set; }
-    [ObservableProperty] public partial string? StatusMessage { get; set; }
     [ObservableProperty] public partial bool IsPlaying { get; set; }
-    [ObservableProperty] public partial bool IsPlayingBadge { get; set; }
     [ObservableProperty] public partial bool IsOpening { get; set; }
     [ObservableProperty] public partial bool AudioOnly { get; set; }
-    [ObservableProperty] public partial bool ShowPlayPauseBadge { get; set; }
     [ObservableProperty] public partial WindowViewMode ViewMode { get; set; }
     [ObservableProperty] public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
     [ObservableProperty] public partial MediaViewModel? Media { get; set; }
     [ObservableProperty] public partial bool ShowVisualizer { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value that specifies the playback command of the on-screen display.
+    /// </summary>
+    /// <value>A value of the enumeration that indicates the playback command associated with the on-screen display.</value>
+    [ObservableProperty]
+    public partial PlaybackCommandKind CurrentPlaybackCommand { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the player OSD message is visible.
+    /// </summary>
+    /// <value><see langword="true"/> if the player OSD message is visible; otherwise, <see langword="false"/>.</value>
+    [ObservableProperty]
+    public partial bool IsOsdMessageVisible { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether the player OSD badge is visible.
+    /// </summary>
+    /// <value><see langword="true"/> if the player OSD badge is visible; otherwise, <see langword="false"/>.</value>
+    [ObservableProperty]
+    public partial bool IsOsdBadgeVisible { get; set; }
+
+    /// <summary>
+    /// Gets or sets the value for the player OSD message.
+    /// </summary>
+    /// <value>The value for the player OSD message.</value>
+    [ObservableProperty]
+    public partial object? OsdMessageValue { get; set; }
 
     /// <summary>
     /// Set to <see langword="true"/> by the view model to signal the view to close the play queue flyout.
@@ -73,16 +97,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool SeekBarPointerInteracting { get; set; }
 
-    // TODO: Temporary workaround, remove after completing the UpdateStatusMessage refactor.
-    public Func<double, string>? GetVolumeChangeStatusMessage { get; set; }
-
-    // TODO: Temporary workaround, remove after completing the UpdateStatusMessage refactor.
-    /// <summary>
-    /// Gets the scale factor for resizing the player window.
-    /// </summary>
-    /// <value>The scale factor for resizing the player window.</value>
-    public double ResizeScale { get; private set; }
-
     public bool IsPlayerVisibilityVisible => PlayerVisibility is PlayerVisibilityState.Visible;
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
@@ -90,8 +104,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _openingTimer;
     private readonly DispatcherQueueTimer _controlsVisibilityTimer;
-    private readonly DispatcherQueueTimer _statusMessageTimer;
-    private readonly DispatcherQueueTimer _playPauseBadgeTimer;
+    private readonly DispatcherQueueTimer _osdMessageTimer;
+    private readonly DispatcherQueueTimer _osdBadgeTimer;
     private readonly DispatcherQueueTimer _playPauseHoldTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
@@ -113,8 +127,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _openingTimer = _dispatcherQueue.CreateTimer();
         _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
-        _statusMessageTimer = _dispatcherQueue.CreateTimer();
-        _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
+        _osdMessageTimer = _dispatcherQueue.CreateTimer();
+        _osdBadgeTimer = _dispatcherQueue.CreateTimer();
         _playPauseHoldTimer = _dispatcherQueue.CreateTimer();
         NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         PlayerVisibility = PlayerVisibilityState.Hidden;
@@ -129,12 +143,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
-        Messenger.Register<UpdateStatusMessage>(this);
-        Messenger.Register<UpdateVolumeStatusMessage>(this);
         Messenger.Register<TogglePlayerVisibilityMessage>(this);
+        Messenger.Register<PlayerOsdUpdateMessage>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
         Messenger.Register<QueueCurrentItemChangedMessage>(this);
-        Messenger.Register<ShowPlayPauseBadgeMessage>(this);
         Messenger.Register<OverrideControlsHideDelayMessage>(this);
         Messenger.Register<DragDropMessage>(this);
         Messenger.Register<VisualizerChangedMessage>(this);
@@ -201,43 +213,56 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
     }
 
-    public void Receive(UpdateStatusMessage message)
+    public void Receive(PlayerOsdUpdateMessage message)
     {
-        // Don't show status message when player is not visible
-        if (PlayerVisibility != PlayerVisibilityState.Visible && !string.IsNullOrEmpty(message.Value)) return;
+        bool shouldShowMessage = message.HasMessage && PlayerVisibility == PlayerVisibilityState.Visible;
 
+        CurrentPlaybackCommand = message.Kind;
+        OsdMessageValue = message.Value;
+
+        // Message
         _dispatcherQueue.TryEnqueue(() =>
         {
-            StatusMessage = message.Value;
-            if (message.Value is null || message.Duration == System.Threading.Timeout.InfiniteTimeSpan)
+            _osdMessageTimer.Stop();
+
+            if (!shouldShowMessage)
             {
-                _statusMessageTimer.Stop();
+                IsOsdMessageVisible = false;
                 return;
             }
 
-            _statusMessageTimer.Debounce(() => StatusMessage = null, message.Duration);
+            IsOsdMessageVisible = true;
+
+            if (message.Duration != Timeout.InfiniteTimeSpan)
+            {
+                _osdMessageTimer.Debounce(() =>
+                {
+                    IsOsdMessageVisible = false;
+                }, message.Duration);
+            }
         });
-    }
 
-    /// <summary>
-    /// Receives a volume change message and exposes the new volume value
-    /// </summary>
-    public void Receive(UpdateVolumeStatusMessage message)
-    {
-        if (GetVolumeChangeStatusMessage == null)
-            return;
+        // Badge
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            _osdBadgeTimer.Stop();
 
-        Messenger.Send(new UpdateStatusMessage(GetVolumeChangeStatusMessage(message.Value)));
-    }
+            if (!message.HasBadge)
+            {
+                IsOsdBadgeVisible = false;
+                return;
+            }
 
-    /// <summary>
-    /// Sends a status message via the messenger.
-    /// The view layer should call this after formatting a localized status string.
-    /// </summary>
-    /// <param name="message">The formatted status message to display.</param>
-    public void SendStatusMessage(string message)
-    {
-        Messenger.Send(new UpdateStatusMessage(message));
+            IsOsdBadgeVisible = true;
+
+            if (message.Duration != Timeout.InfiniteTimeSpan)
+            {
+                _osdBadgeTimer.Debounce(() =>
+                {
+                    IsOsdBadgeVisible = false;
+                }, message.Duration);
+            }
+        });
     }
 
     public async void Receive(QueueCurrentItemChangedMessage message)
@@ -252,12 +277,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             // Process again in case media type changed after loading details
             _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
         }
-    }
-
-    public void Receive(ShowPlayPauseBadgeMessage message)
-    {
-        IsPlayingBadge = message.IsPlaying;
-        BlinkPlayPauseBadge();
     }
 
     public void Receive(OverrideControlsHideDelayMessage message)
@@ -348,7 +367,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             if (MediaPlayer.PlaybackRate != effectiveHoldingSpeed)
             {
                 Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
-                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(effectiveHoldingSpeed), System.Threading.Timeout.InfiniteTimeSpan));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, value: effectiveHoldingSpeed).SetDuration(Timeout.InfiniteTimeSpan).ShowMessage());
             }
 
             _isPlayPauseHoldActive = true;
@@ -376,7 +395,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             if (MediaPlayer is not null && MediaPlayer.PlaybackRate != _playbackRateBeforeHold)
             {
                 Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
-                Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(_playbackRateBeforeHold)));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateDown, value: _playbackRateBeforeHold).ShowMessage());
             }
 
             _isPlayPauseHoldActive = false;
@@ -415,7 +434,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             return;
 
         int newValue = Messenger.Send(new ChangeVolumeRequestMessage(delta, true));
-        Messenger.Send(new UpdateVolumeStatusMessage(newValue));
+        Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: newValue).ShowBadge().ShowMessage());
     }
 
     /// <summary>
@@ -552,7 +571,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             return;
 
         double newRate = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(MediaPlayer.PlaybackRate + delta, 0.25, 4)));
-        Messenger.Send(new UpdateStatusMessage(Humanizer.FormatPlaybackRate(newRate)));
+        Messenger.Send(
+            new PlayerOsdUpdateMessage(
+                delta > 0 ? PlaybackCommandKind.RateUp : PlaybackCommandKind.RateDown,
+                value: newRate)
+            .ShowBadge()
+            .ShowMessage());
     }
 
     /// <summary>
@@ -631,8 +655,11 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (scale is null)
             return;
 
-        ResizeScale = scale.Value;
-        ResizeWindow(desiredSize: modifiers == VirtualKeyModifiers.None ? videoSize : currentSize, scalar: scale.Value);
+        double? newScalar = ResizeWindow(desiredSize: modifiers == VirtualKeyModifiers.None ? videoSize : currentSize, scalar: scale.Value);
+        if (newScalar is null or <= 0)
+            return;
+
+        Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Scale, value: scale.Value).ShowMessage());
     }
 
     public void OnFileLaunched()
@@ -698,12 +725,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private void RestorePlayer()
     {
         PlayerVisibility = PlayerVisibilityState.Visible;
-    }
-
-    private void BlinkPlayPauseBadge()
-    {
-        ShowPlayPauseBadge = true;
-        _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
     }
 
     public bool TryHideControls(bool skipFocusCheck = false)

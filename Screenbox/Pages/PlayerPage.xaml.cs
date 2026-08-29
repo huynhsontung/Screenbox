@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
+using Screenbox.Converters;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -31,6 +33,8 @@ public sealed partial class PlayerPage : Page
 {
     internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
+    private static readonly bool _isArabicLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "ar";
+
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
@@ -39,7 +43,6 @@ public sealed partial class PlayerPage : Page
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
-        ViewModel.GetVolumeChangeStatusMessage = Strings.Resources.VolumeChangeStatusMessage;
         _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         RegisterSeekBarPointerHandlers();
@@ -513,7 +516,6 @@ public sealed partial class PlayerPage : Page
         var boundsRect = Window.Current.CoreWindow.Bounds;
 
         ViewModel.HandleResizeKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers, new Size(boundsRect.Width, boundsRect.Height));
-        ViewModel.SendStatusMessage(Strings.Resources.ScaleStatus($"{ViewModel.ResizeScale * 100:0.##}%"));
         args.Handled = true;
     }
 
@@ -542,5 +544,48 @@ public sealed partial class PlayerPage : Page
                 args.Handled = true;
                 break;
         }
+    }
+
+    private string GetMessageText(PlaybackCommandKind kind, object? value)
+    {
+        return kind switch
+        {
+            //PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is TimeSpan time => Humanizer.ToDuration(time),
+            // Use LRE/PDF marks to prevent RTL BiDi reordering, except for Arabic where it forces Western digit shaping.
+            PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward when value is string timeStr
+                => _isArabicLanguage ? timeStr : $"\u202A{timeStr}\u202C",
+            PlaybackCommandKind.Volume when value is int volume => Strings.Resources.VolumeChangeStatusMessage(volume),
+            // Use LRE/PDF marks to prevent RTL BiDi reordering, except for Arabic where it forces Western digit shaping.
+            PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown when value is double rate
+                => _isArabicLanguage ? $"{rate.ToString("0.##", CultureInfo.CurrentCulture)}×" : $"\u202A{rate.ToString("0.##", CultureInfo.CurrentCulture)}×\u202C",
+            PlaybackCommandKind.AspectRatio when value is string ratio
+                => Strings.Resources.AspectRatioStatusMessage(ItemLabelHelper.GetValueOrFallback(ResourceNameToResourceStringConverter.FromName(ratio), ratio)),
+            PlaybackCommandKind.Scale when value is double scale => Strings.Resources.ScaleStatus($"{scale * 100:0.##}%"),
+            PlaybackCommandKind.Subtitle when value is string label => Strings.Resources.SubtitleStatus(label),
+            PlaybackCommandKind.SubtitleOff => Strings.Resources.SubtitleStatus(Strings.Resources.None),
+            _ when value is string str => str,
+            _ => string.Empty,
+        };
+    }
+
+    private HorizontalAlignment GetBadgeHorizontalAlignment(PlaybackCommandKind kind)
+    {
+        if (ViewModel.PlayerVisibility == PlayerVisibilityState.Minimal)
+            return HorizontalAlignment.Center;
+
+        return kind switch
+        {
+            PlaybackCommandKind.Rewind => GlobalizationHelper.IsRightToLeftLanguage ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+            PlaybackCommandKind.FastForward => GlobalizationHelper.IsRightToLeftLanguage ? HorizontalAlignment.Left : HorizontalAlignment.Right,
+            _ => HorizontalAlignment.Center,
+        };
+    }
+
+    private bool ShouldMirrorBadgeIcon(PlaybackCommandKind kind)
+    {
+        return kind is not (PlaybackCommandKind.RateUp
+                or PlaybackCommandKind.RateDown
+                or PlaybackCommandKind.Rewind
+                or PlaybackCommandKind.FastForward);
     }
 }
