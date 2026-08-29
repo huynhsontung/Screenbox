@@ -40,6 +40,8 @@ public sealed partial class AlbumViewModel : ObservableRecipient
 
     public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
+    public IReadOnlyList<MediaViewModel> OrderedSongs => GetSortedSongs(RelatedSongs);
+
     [ObservableProperty] public partial bool IsPlaying { get; set; }
 
     private readonly string _albumArtist;
@@ -116,7 +118,9 @@ public sealed partial class AlbumViewModel : ObservableRecipient
     [RelayCommand]
     private void PlayAlbum()
     {
-        if (RelatedSongs.Count == 0) return;
+        if (RelatedSongs.Count == 0)
+            return;
+
         MediaViewModel? inQueue = RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
         if (inQueue != null)
         {
@@ -124,11 +128,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient
         }
         else
         {
-            List<MediaViewModel> songs = RelatedSongs
-            .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-                .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-                .ToList();
-
+            IReadOnlyList<MediaViewModel> songs = OrderedSongs;
             Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
         }
     }
@@ -136,24 +136,26 @@ public sealed partial class AlbumViewModel : ObservableRecipient
     [RelayCommand]
     private void PlayAlbumNext()
     {
-        if (RelatedSongs.Count == 0) return;
-        List<MediaViewModel> songs = RelatedSongs
-            .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-            .ToList();
+        if (RelatedSongs.Count == 0)
+            return;
 
-        Messenger.SendPlayNext(songs);
+        Messenger.SendPlayNext(OrderedSongs);
     }
 
     [RelayCommand]
     private void AddAlbumToQueue()
     {
-        if (RelatedSongs.Count == 0) return;
-        List<MediaViewModel> songs = RelatedSongs
+        if (RelatedSongs.Count == 0)
+            return;
+
+        Messenger.SendAddToQueue(OrderedSongs);
+    }
+
+    private static IReadOnlyList<MediaViewModel> GetSortedSongs(IEnumerable<MediaViewModel> songs)
+    {
+        return songs
             .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
             .ThenBy(m => m.Name, StringComparer.CurrentCulture)
             .ToList();
-
-        Messenger.SendAddToQueue(songs);
     }
 }

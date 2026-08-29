@@ -7,6 +7,7 @@
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enums="using:Screenbox.Core.Enums"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -29,25 +30,11 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
-            <MenuFlyout x:Key="AlbumFlyout">
-                <MenuFlyoutItem Command="{x:Bind ViewModel.ContextAlbum.PlayAlbumCommand, Mode=OneWay}" Text="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.ContextAlbum.IsPlaying), Mode=OneWay}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.ContextAlbum.IsPlaying), Mode=OneWay}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.ContextAlbum.PlayAlbumNextCommand, Mode=OneWay}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{x:Bind strings:Resources.PlayNext}" />
-                <MenuFlyoutItem Command="{x:Bind ViewModel.ContextAlbum.AddAlbumToQueueCommand, Mode=OneWay}" Text="{x:Bind strings:Resources.AddToQueue}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="AddToQueueMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
+            <flyouts:MediaMenuFlyout
+                x:Key="AlbumFlyout"
+                AddToQueueCommand="{x:Bind ViewModel.ContextAlbum.AddAlbumToQueueCommand, Mode=OneWay}"
+                PlayCommand="{x:Bind ViewModel.ContextAlbum.PlayAlbumCommand, Mode=OneWay}"
+                PlayNextCommand="{x:Bind ViewModel.ContextAlbum.PlayAlbumNextCommand, Mode=OneWay}">
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
@@ -59,7 +46,7 @@
                     CommandParameter="{x:Bind ViewModel.ContextAlbum.RelatedSongs[0].MainArtist, FallbackValue={x:Null}, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
                     Text="{x:Bind strings:Resources.ShowArtist}" />
-            </MenuFlyout>
+            </flyouts:MediaMenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -233,7 +220,6 @@
                         <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                         <Setter Target="SortByFlyout.Placement" Value="BottomEdgeAlignedLeft" />
                     </VisualState.Setters>
                 </VisualState>
