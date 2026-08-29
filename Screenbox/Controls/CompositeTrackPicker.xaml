@@ -129,7 +129,8 @@
                         Grid.Column="1"
                         Padding="{StaticResource HyperlinkButtonUniformPadding}"
                         contract14Present:AutomationProperties.AutomationControlType="Button"
-                        Command="{x:Bind ShowSubtitleOptionsCommand}">
+                        Command="{x:Bind ShowSubtitleOptionsCommand}"
+                        IsEnabled="False">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Text="{x:Bind strings:Resources.Options}"
