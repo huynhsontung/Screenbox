@@ -7,6 +7,7 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Screenbox.Flyouts;
 
@@ -165,7 +166,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         AdditionalItems = new List<MenuFlyoutItemBase>();
     }
 
-    private void MenuFlyout_Opening(object sender, object e)
+    private void OnOpening(object sender, object e)
     {
         UpdateAdditionalItems();
 
@@ -224,9 +225,13 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         OpenWithItem.CommandParameter = mediaVm;
 
         // OpenInFileExplorer MenuFlyoutItem
-        OpenInFileExplorerItem.Text = Strings.Resources.OpenInFileExplorer;
-        OpenInFileExplorerItem.CommandParameter = mediaVm;
-        OpenInFileExplorerItem.Visibility = DeviceInfoHelper.IsXbox ? Visibility.Collapsed : Visibility.Visible;
+        if (!DeviceInfoHelper.IsXbox)
+        {
+            OpenInFileExplorerItem.Text = Strings.Resources.OpenInFileExplorer;
+            OpenInFileExplorerItem.CommandParameter = mediaVm;
+            OpenInFileExplorerItem.Visibility = Visibility.Visible;
+            OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = true;
+        }
 
         // ShowProperties MenuFlyoutItem
         PropertiesItem.Text = Strings.Resources.Properties;
@@ -255,6 +260,17 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             SetPlaybackOptionsItem.Command = _setPlaybackOptionsCommand;
             SetPlaybackOptionsItem.CommandParameter = ContextItem;
             SetPlaybackOptionsItem.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void OnClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+    {
+        if (args.Cancel)
+            return;
+
+        if (!DeviceInfoHelper.IsXbox)
+        {
+            OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = false;
         }
     }
 

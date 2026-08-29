@@ -10,7 +10,8 @@
     xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    Opening="MenuFlyout_Opening"
+    Closing="OnClosing"
+    Opening="OnOpening"
     mc:Ignorable="d">
     <interactivity:Interaction.Behaviors>
         <behaviors:AddToPlaylistFlyoutBehavior x:Name="AddToPlaylistFlyoutBehavior" />
@@ -59,7 +60,10 @@
             <FontIcon Glyph="&#xEC50;" />
         </MenuFlyoutItem.Icon>
         <MenuFlyoutItem.KeyboardAccelerators>
-            <KeyboardAccelerator Key="F3" />
+            <KeyboardAccelerator
+                Key="F3"
+                x:Name="OpenInFileExplorerItemKeyboardAccelerator"
+                IsEnabled="False" />
         </MenuFlyoutItem.KeyboardAccelerators>
     </MenuFlyoutItem>
 
