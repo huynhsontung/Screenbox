@@ -100,6 +100,8 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         {
             StorageItemViewModel { Media: { } media } => [media],
             MediaViewModel vm => [vm],
+            AlbumViewModel album => album.OrderedSongs.ToArray(),
+            ArtistViewModel artist => artist.OrderedSongs.ToArray(),
             IReadOnlyList<MediaViewModel> list => list.ToArray(),
             IEnumerable<MediaViewModel> collection => collection.ToArray(),
             IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToArray(),

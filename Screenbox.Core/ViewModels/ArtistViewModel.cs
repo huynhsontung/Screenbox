@@ -18,6 +18,8 @@ public sealed partial class ArtistViewModel : ObservableRecipient
 
     public string Name { get; }
 
+    public IReadOnlyList<MediaViewModel> OrderedSongs => GetAlbumSortedSongs(RelatedSongs);
+
     [ObservableProperty] public partial bool IsPlaying { get; set; }
 
     public ArtistViewModel()
@@ -62,7 +64,9 @@ public sealed partial class ArtistViewModel : ObservableRecipient
     [RelayCommand]
     private void PlayArtist()
     {
-        if (RelatedSongs.Count == 0) return;
+        if (RelatedSongs.Count == 0)
+            return;
+
         MediaViewModel? inQueue = RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
         if (inQueue != null)
         {
@@ -70,14 +74,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient
         }
         else
         {
-            List<MediaViewModel> songs = RelatedSongs
-                .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-                .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-                .GroupBy(m => m.Album)
-                .OrderByDescending(g => g.Key?.Year ?? 0)
-                .SelectMany(g => g)
-                .ToList();
-
+            IReadOnlyList<MediaViewModel> songs = OrderedSongs;
             Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
         }
     }
@@ -85,30 +82,27 @@ public sealed partial class ArtistViewModel : ObservableRecipient
     [RelayCommand]
     private void PlayArtistNext()
     {
-        if (RelatedSongs.Count == 0) return;
-        List<MediaViewModel> songs = RelatedSongs
-            .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-            .GroupBy(m => m.Album)
-            .OrderByDescending(g => g.Key?.Year ?? 0)
-            .SelectMany(g => g)
-            .ToList();
+        if (RelatedSongs.Count == 0)
+            return;
 
-        Messenger.SendPlayNext(songs);
+        Messenger.SendPlayNext(OrderedSongs);
     }
 
     [RelayCommand]
     private void AddArtistToQueue()
     {
-        if (RelatedSongs.Count == 0) return;
-        List<MediaViewModel> songs = RelatedSongs
-            .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
-            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-            .GroupBy(m => m.Album)
-            .OrderByDescending(g => g.Key?.Year ?? 0)
-            .SelectMany(g => g)
-            .ToList();
+        if (RelatedSongs.Count == 0)
+            return;
 
-        Messenger.SendAddToQueue(songs);
+        Messenger.SendAddToQueue(OrderedSongs);
+    }
+
+    private static List<MediaViewModel> GetAlbumSortedSongs(IEnumerable<MediaViewModel> songs)
+    {
+        return songs
+            .OrderByDescending(m => m.Album?.Year ?? 0)
+            .ThenBy(m => m.MediaInfo.MusicProperties.TrackNumber)
+            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+            .ToList();
     }
 }

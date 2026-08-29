@@ -220,22 +220,27 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             RemoveItem.Visibility = Visibility.Visible;
         }
 
-        // OpenWith MenuFlyoutItem
-        OpenWithItem.Text = Strings.Resources.OpenWith;
-        OpenWithItem.CommandParameter = mediaVm;
-
-        // OpenInFileExplorer MenuFlyoutItem
-        if (!DeviceInfoHelper.IsXbox)
+        if (mediaVm is not null)
         {
-            OpenInFileExplorerItem.Text = Strings.Resources.OpenInFileExplorer;
-            OpenInFileExplorerItem.CommandParameter = mediaVm;
-            OpenInFileExplorerItem.Visibility = Visibility.Visible;
-            OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = true;
-        }
+            // OpenWith MenuFlyoutItem
+            OpenWithItem.Text = Strings.Resources.OpenWith;
+            OpenWithItem.CommandParameter = mediaVm;
+            OpenWithItem.Visibility = Visibility.Visible;
 
-        // ShowProperties MenuFlyoutItem
-        PropertiesItem.Text = Strings.Resources.Properties;
-        PropertiesItem.CommandParameter = mediaVm;
+            // OpenInFileExplorer MenuFlyoutItem
+            if (!DeviceInfoHelper.IsXbox)
+            {
+                OpenInFileExplorerItem.Text = Strings.Resources.OpenInFileExplorer;
+                OpenInFileExplorerItem.CommandParameter = mediaVm;
+                OpenInFileExplorerItem.Visibility = Visibility.Visible;
+                OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = true;
+            }
+
+            // ShowProperties MenuFlyoutItem
+            PropertiesItem.Text = Strings.Resources.Properties;
+            PropertiesItem.CommandParameter = mediaVm;
+            PropertiesItem.Visibility = Visibility.Visible;
+        }
 
         // Select MenuFlyoutItem
         SelectionItem.Text = Strings.Resources.Select;
