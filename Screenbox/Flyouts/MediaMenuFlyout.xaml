@@ -37,7 +37,7 @@
 
     <MenuFlyoutSeparator />
 
-    <MenuFlyoutSubItem x:Name="AddToPlaylistSubItem">
+    <MenuFlyoutSubItem x:Name="AddToPlaylistSubItem" Visibility="Collapsed">
         <MenuFlyoutSubItem.Icon>
             <FontIcon x:Name="AddToPlaylistSubItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
         </MenuFlyoutSubItem.Icon>

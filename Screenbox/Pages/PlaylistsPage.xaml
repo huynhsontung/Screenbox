@@ -8,6 +8,7 @@
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -27,64 +28,48 @@
                 <templates:GridViewItemTemplates />
             </ResourceDictionary.MergedDictionaries>
 
-            <MenuFlyout x:Key="ItemFlyout">
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.Play}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayNextCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{x:Bind strings:Resources.PlayNext}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.AddToQueueCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.AddToQueue}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="AddToQueueMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutSeparator />
-                <MenuFlyoutItem
-                    Command="{x:Bind RenamePlaylistCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Icon="{ui:SymbolIcon Symbol=Rename}"
-                    Text="{x:Bind strings:Resources.Rename}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind ExportPlaylistCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.Export}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind DeletePlaylistCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Icon="{ui:SymbolIcon Symbol=Delete}"
-                    Text="{x:Bind strings:Resources.Delete}" />
-                <MenuFlyoutSeparator />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.Select}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="SelectMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource SingleSelectGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-            </MenuFlyout>
+            <flyouts:MediaMenuFlyout
+                x:Key="ItemFlyout"
+                AddToQueueCommand="{x:Bind ViewModel.AddToQueueCommand}"
+                ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                IsAddToPlaylistButtonVisible="False"
+                PlayCommand="{x:Bind ViewModel.PlayCommand}"
+                PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
+                SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}">
+                <flyouts:MediaMenuFlyout.AdditionalItems>
+                    <MenuFlyoutItem
+                        Command="{x:Bind RenamePlaylistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                        Icon="{ui:SymbolIcon Symbol=Rename}"
+                        Text="{x:Bind strings:Resources.Rename}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ExportPlaylistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.Export}">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        Command="{x:Bind DeletePlaylistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                        Icon="Delete"
+                        Text="{x:Bind strings:Resources.Delete}">
+                        <MenuFlyoutItem.Resources>
+                            <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                            <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                            <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                            <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                            <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                            <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                        </MenuFlyoutItem.Resources>
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Delete" />
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </MenuFlyoutItem>
+                </flyouts:MediaMenuFlyout.AdditionalItems>
+            </flyouts:MediaMenuFlyout>
 
             <MenuFlyout x:Key="CreatePlaylistFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
                 <MenuFlyoutItem Command="{x:Bind ViewModel.ImportPlaylistCommand}" Text="{x:Bind strings:Resources.ImportPlaylist}">
@@ -325,8 +310,6 @@
                         <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
-                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                         <Setter Target="SubHeaderMultiSelectButtonIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>
