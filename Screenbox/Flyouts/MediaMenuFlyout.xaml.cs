@@ -92,6 +92,23 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     }
 
     /// <summary>
+    /// Identifies the <see cref="IsAddToPlaylistButtonVisible"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty IsAddToPlaylistButtonVisibleProperty = DependencyProperty.Register(
+        nameof(IsAddToPlaylistButtonVisible), typeof(bool), typeof(MediaMenuFlyout), new PropertyMetadata(true));
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether the add to playlist item is shown.
+    /// </summary>
+    /// <value><see langword="true"/> to show the add to playlist item. <see langword="false"/>
+    /// to hide the add to playlist item. The default is <b>true</b>.</value>
+    public bool IsAddToPlaylistButtonVisible
+    {
+        get { return (bool)GetValue(IsAddToPlaylistButtonVisibleProperty); }
+        set { SetValue(IsAddToPlaylistButtonVisibleProperty, value); }
+    }
+
+    /// <summary>
     /// Identifies the <see cref="RemoveCommand"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty RemoveCommandProperty = DependencyProperty.Register(
@@ -183,9 +200,9 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         AddToPlaylistFlyoutBehavior.TargetSubItem = AddToPlaylistSubItem;
 
         // Play MenuFlyoutItem
+        PlayItem.Text = ItemLabelHelper.GetPlayPauseLabel(mediaVm?.IsPlaying ?? false);
         PlayItem.Command = PlayCommand;
         PlayItem.CommandParameter = ContextItem;
-        PlayItem.Text = ItemLabelHelper.GetPlayPauseLabel(mediaVm?.IsPlaying ?? false);
         PlayItemIcon.Glyph = GlyphConverter.ToPlayPauseGlyph(mediaVm?.IsPlaying ?? false);
 
         // PlayNext MenuFlyoutItem
@@ -205,10 +222,14 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
 
         // AddToPlaylist MenuFlyoutSubItem
-        AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
-        AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
-            ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
-            : "\U000F00AA";
+        if (IsAddToPlaylistButtonVisible)
+        {
+            AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
+            AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
+                ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
+                : "\U000F00AA";
+            AddToPlaylistSubItem.Visibility = Visibility.Visible;
+        }
 
         // Remove MenuFlyoutItem
         RemoveItem.Text = Strings.Resources.Remove;
