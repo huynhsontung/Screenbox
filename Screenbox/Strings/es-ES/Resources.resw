@@ -363,6 +363,9 @@
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Abrir ubicación del archivo</value>
   </data>
+  <data name="OpenInFileExplorer" xml:space="preserve">
+    <value>Open in File Explorer</value>
+  </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Abrir con</value>
   </data>
@@ -1156,4 +1159,9 @@
   <data name="Change" xml:space="preserve">
     <value>Change</value>
   </data>
+  <data name="AspectRatioStatusMessage" xml:space="preserve">
+    <value>Aspect ratio: {0}</value>
+    <comment>#Format[String ratio]</comment>
+  </data>
 </root>
+

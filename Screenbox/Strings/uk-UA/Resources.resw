@@ -149,11 +149,11 @@
     <value>Загальна тривалість</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Розділ</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Розділи</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -362,6 +362,9 @@
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Відкрити розташування файлу</value>
+  </data>
+  <data name="OpenInFileExplorer" xml:space="preserve">
+    <value>Відкрити у Провіднику</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Відкрити за допомогою</value>
@@ -1111,11 +1114,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>Вибрано {0} список відтворення</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>Вибрано {0} списків відтворення</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1142,18 +1145,23 @@
     <value>Створіть свій перший список відтворення, щоб упорядкувати улюблені відео та музику.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>У цьому списку відтворення немає жодного елемента.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Знімки кадрів будуть збережені до</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Місце зберігання кадрів</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Змінити теку</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Змінити</value>
+  </data>
+  <data name="AspectRatioStatusMessage" xml:space="preserve">
+    <value>Aspect ratio: {0}</value>
+    <comment>#Format[String ratio]</comment>
   </data>
 </root>
+
