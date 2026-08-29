@@ -69,12 +69,14 @@ public sealed partial class NotificationView : UserControl
             NotificationKind.MediaLoadFailed => Strings.Resources.FailedToLoadMediaNotificationTitle,
             NotificationKind.SubtitleLoadFailed => Strings.Resources.FailedToLoadSubtitleNotificationTitle,
             NotificationKind.FrameSaveFailed => Strings.Resources.FailedToSaveFrameNotificationTitle,
+            NotificationKind.ItemDeleteFailed => Strings.Resources.FailedToDeleteItemNotificationTitle(title ?? string.Empty),
             NotificationKind.FrameSaved => Strings.Resources.FrameSavedNotificationTitle,
             NotificationKind.SubtitleAdded => Strings.Resources.SubtitleAddedNotificationTitle,
             NotificationKind.PlaylistCreated => Strings.Resources.PlaylistCreatedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistDeleted => Strings.Resources.PlaylistDeletedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistRenamed => Strings.Resources.PlaylistRenamedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistItemsAdded when numericValue is double count => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
+            NotificationKind.ItemDeleted => Strings.Resources.ItemDeletedNotificationTitle(title ?? string.Empty),
             NotificationKind.ResumePosition => Strings.Resources.ResumePositionNotificationTitle,
             _ => null,
         };
@@ -94,6 +96,7 @@ public sealed partial class NotificationView : UserControl
             NotificationKind.MediaLoadFailed => message,
             NotificationKind.SubtitleLoadFailed => message,
             NotificationKind.FrameSaveFailed => message,
+            NotificationKind.ItemDeleteFailed => message,
             NotificationKind.SubtitleAdded => message,
             _ => null,
         };

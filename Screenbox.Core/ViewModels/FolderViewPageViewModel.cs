@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -137,6 +138,40 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         // _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
         _navigationService.Navigate(typeof(FolderViewPageViewModel),
             new NavigationMetadata(NavData?.RootViewModelType ?? typeof(FolderViewPageViewModel), parameter));
+    }
+
+    /// <summary>
+    /// Deletes the file backing the given media item (moving it to the Recycle Bin)
+    /// and removes it from <see cref="Items"/>.
+    /// </summary>
+    /// <param name="media">The media item whose underlying file should be deleted.</param>
+    /// <returns><see langword="true"/> if the file was deleted; otherwise, <see langword="false"/>.</returns>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<bool> DeleteMediaAsync(MediaViewModel media)
+    {
+        if (media.Source is not StorageFile file)
+            return false;
+
+        try
+        {
+            await file.DeleteAsync();
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.ItemDeleteFailed, title: file.Name, message: e.Message));
+            return false;
+        }
+
+        StorageItemViewModel? item = Items.FirstOrDefault(i => i.Media == media);
+        if (item is not null)
+        {
+            Items.Remove(item);
+        }
+
+        _playableItems.Remove(media);
+        IsEmpty = Items.Count == 0;
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.ItemDeleted, title: file.Name));
+        return true;
     }
 
     [RelayCommand]
