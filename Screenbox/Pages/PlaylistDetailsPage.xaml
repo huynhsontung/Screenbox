@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:generic="using:System.Collections.Generic"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -199,8 +200,8 @@
 
                             <AppBarButton
                                 AccessKey="{x:Bind strings:KeyboardResources.CommandPlayKey}"
-                                Command="{x:Bind ViewModel.PlayPlaylistCommand}"
-                                CommandParameter="{x:Bind ViewModel.Source, Mode=OneWay}"
+                                Command="{x:Bind ViewModel.PlayCommand}"
+                                CommandParameter="{x:Bind ViewModel.FirstItem, Mode=OneWay}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
                                 Label="{x:Bind strings:Resources.Play}"

@@ -25,6 +25,9 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     [ObservableProperty]
     public partial MediaViewModel? ContextMedia { get; set; }
 
+    [ObservableProperty]
+    public partial MediaViewModel? FirstItem { get; set; }
+
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly IMediaListFactory _mediaListFactory;
@@ -62,13 +65,16 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         {
             Source.Items.CollectionChanged += SourceItems_CollectionChanged;
         }
+
+        FirstItem = Source?.Items.FirstOrDefault();
     }
 
     private void SourceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        FirstItem = Source?.Items.FirstOrDefault();
         _commandRefreshTimer.Debounce(() =>
         {
-            PlayPlaylistCommand.NotifyCanExecuteChanged();
+            PlayCommand.NotifyCanExecuteChanged();
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
         }, TimeSpan.FromMilliseconds(50));
     }
@@ -83,17 +89,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         if (Source == null || item == null) return;
         var playlist = new Playlist(item, Source.Items);
         Messenger.Send(new SetQueueMessage(playlist, true));
-    }
-
-    [RelayCommand(CanExecute = nameof(NotEmpty))]
-    private void PlayPlaylist(PlaylistViewModel? playlist)
-    {
-        if (playlist?.Items is not { Count: > 0 })
-            return;
-
-        var firstItem = playlist.Items[0];
-        var queue = new Playlist(firstItem, playlist.Items);
-        Messenger.Send(new SetQueueMessage(queue, shouldPlay: true));
     }
 
     [RelayCommand(CanExecute = nameof(NotEmpty))]
