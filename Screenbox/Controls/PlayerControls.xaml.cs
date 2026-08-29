@@ -1,8 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
+using Screenbox.Dialogs;
 using Screenbox.Helpers;
 using Screenbox.UI;
 using Windows.System;
@@ -62,6 +66,29 @@ public sealed partial class PlayerControls : UserControl
     public void FocusFirstButton(FocusState value = FocusState.Programmatic)
     {
         PlayPauseButton.Focus(value);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanDeleteCurrentItem))]
+    private async Task DeleteCurrentItemAsync()
+    {
+        string fileName = Path.GetFileName(ViewModel.PlayQueue.CurrentItem?.Location) ?? string.Empty;
+        var deleteConfirmation = new DeleteMediaDialog(fileName);
+        ContentDialogResult result = await deleteConfirmation.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            await ViewModel.DeleteCurrentItemAsync();
+        }
+    }
+
+    private void NormalPlayerContextMenu_OnOpened(object sender, object e)
+    {
+        DeleteCurrentItemCommand.NotifyCanExecuteChanged();
+    }
+
+    private void NormalPlayerContextMenu_OnClosed(object sender, object e)
+    {
+        DeleteCurrentItemCommand.NotifyCanExecuteChanged();
     }
 
     private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
@@ -131,6 +158,14 @@ public sealed partial class PlayerControls : UserControl
 
         ViewModel.HandleSubtitleToggleKey(args.KeyboardAccelerator.Modifiers);
         args.Handled = true;
+    }
+
+    private bool CanDeleteCurrentItem()
+    {
+        // Prevent the command from taking over the delete keyboard accelerator
+        // when it shouldn't.
+        return (PlayerContextMenu is not null && PlayerContextMenu.IsOpen || !ViewModel.IsMinimal)
+            && Common.CanDeleteMedia(ViewModel.PlayQueue.CurrentItem);
     }
 
     private Visibility GetChapterVisibility(bool isEnabled, int count)

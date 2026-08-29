@@ -75,6 +75,12 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public bool IsAdvancedModeEnabled { get; set; }
 
     /// <summary>
+    /// Gets or sets the command to invoke when the delete item is tapped.
+    /// </summary>
+    /// <value>The command to invoke when the delete item is tapped.</value>
+    public ICommand? DeleteCommand { get; set; }
+
+    /// <summary>
     /// Gets the collection used to generate the additional content of the menu.
     /// </summary>
     /// <value>
@@ -201,6 +207,18 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             SetPlaybackOptionsItem.CommandParameter = ContextItem;
             SetPlaybackOptionsItem.Visibility = Visibility.Visible;
         }
+
+        // Delete MenuFlyoutItem
+        if (DeleteCommand is not null)
+        {
+            DeleteSeparator.Visibility = Visibility.Visible;
+
+            DeleteItem.Text = Strings.Resources.Delete;
+            DeleteItem.Command = DeleteCommand;
+            DeleteItem.CommandParameter = mediaVm;
+            DeleteItem.Visibility = Visibility.Visible;
+            DeleteItemKeyboardAccelerator.IsEnabled = true;
+        }
     }
 
     private void OnClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
@@ -212,6 +230,8 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         {
             OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = false;
         }
+
+        DeleteItemKeyboardAccelerator.IsEnabled = false;
     }
 
     private void UpdateAdditionalItems()

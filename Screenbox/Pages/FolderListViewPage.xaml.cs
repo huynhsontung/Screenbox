@@ -1,7 +1,12 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using Screenbox.Behaviors;
 using Screenbox.Core.ViewModels;
+using Screenbox.Dialogs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -83,4 +88,21 @@ public sealed partial class FolderListViewPage : Page
     {
         Common.SavePageState(e.NextView.VerticalOffset, nameof(FolderListViewPage), Frame.BackStackDepth);
     }
+
+    [RelayCommand(CanExecute = nameof(CanDeleteMedia))]
+    private async Task DeleteMediaAsync(MediaViewModel? media)
+    {
+        if (media is null)
+            return;
+
+        var deleteConfirmation = new DeleteMediaDialog(Path.GetFileName(media.Location));
+        var result = await deleteConfirmation.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            await ViewModel.DeleteMediaAsync(media);
+        }
+    }
+
+    private bool CanDeleteMedia(MediaViewModel? media) => Common.CanDeleteMedia(media);
 }

@@ -1189,5 +1189,20 @@
     <value>Increase {0}</value>
     <comment>#Format[String value]</comment>
   </data>
+  <data name="DeleteItemConfirmation" xml:space="preserve">
+    <value>Delete {0}?</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="DeleteItemSubtitle" xml:space="preserve">
+    <value>This item will be moved to your recycle bin.</value>
+  </data>
+  <data name="ItemDeletedNotificationTitle" xml:space="preserve">
+    <value>"{0}" deleted</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="FailedToDeleteItemNotificationTitle" xml:space="preserve">
+    <value>Couldn't delete "{0}".</value>
+    <comment>#Format[String name]</comment>
+  </data>
 </root>
 
