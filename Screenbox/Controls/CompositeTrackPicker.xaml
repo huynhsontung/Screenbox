@@ -73,7 +73,8 @@
                         Grid.Column="1"
                         Padding="{StaticResource HyperlinkButtonUniformPadding}"
                         contract14Present:AutomationProperties.AutomationControlType="Button"
-                        Command="{x:Bind ShowAudioOptionsCommand}">
+                        Command="{x:Bind ShowAudioOptionsCommand}"
+                        IsEnabled="False">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Text="{x:Bind strings:Resources.Options}"
