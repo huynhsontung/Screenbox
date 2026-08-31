@@ -6,6 +6,7 @@ using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
+using WinRT;
 
 namespace Screenbox.Core.Services;
 
@@ -29,6 +30,7 @@ public sealed class SystemMediaTransportControlsService : ISystemMediaTransportC
         _lastUpdated = DateTime.MinValue;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task UpdateTransportControlsDisplayAsync(MediaViewModel? item)
     {
         SystemMediaTransportControlsDisplayUpdater displayUpdater = TransportControls.DisplayUpdater;

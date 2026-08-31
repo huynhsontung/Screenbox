@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Windows.Storage;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -29,6 +30,7 @@ public sealed partial class StorageItemViewModel : ObservableObject
     private readonly IFilesService _filesService;
     private readonly ILogger<StorageItemViewModel> _logger;
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public StorageItemViewModel(IFilesService filesService,
         MediaViewModelFactory mediaFactory,
         ILogger<StorageItemViewModel> logger,
@@ -54,6 +56,8 @@ public sealed partial class StorageItemViewModel : ObservableObject
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task UpdateCaptionAsync()
     {
         try

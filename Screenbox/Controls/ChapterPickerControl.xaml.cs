@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Windows.Media.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -44,6 +45,7 @@ public sealed partial class ChapterPickerControl : UserControl
     /// <value>The selected chapter. The default is <see langword="null"/>.</value>
     public ChapterCue SelectedChapter
     {
+        [DynamicWindowsRuntimeCast(typeof(ChapterCue))]
         get { return (ChapterCue)GetValue(SelectedChapterProperty); }
         set { SetValue(SelectedChapterProperty, value); }
     }
@@ -86,6 +88,7 @@ public sealed partial class ChapterPickerControl : UserControl
         ChapterList.ScrollIntoView(SelectedChapter);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ChapterCue))]
     private void ChapterList_OnItemClick(object sender, ItemClickEventArgs e)
     {
         var cue = (ChapterCue)e.ClickedItem;

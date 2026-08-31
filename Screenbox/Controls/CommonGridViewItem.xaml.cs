@@ -2,6 +2,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using WinRT;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -53,12 +54,14 @@ public sealed partial class CommonGridViewItem : UserControl
 
     public ImageSource? ThumbnailSource
     {
+        [DynamicWindowsRuntimeCast(typeof(ImageSource))]
         get => (ImageSource?)GetValue(ThumbnailSourceProperty);
         set => SetValue(ThumbnailSourceProperty, value);
     }
 
     public IconSource? PlaceholderIconSource
     {
+        [DynamicWindowsRuntimeCast(typeof(IconSource))]
         get => (IconSource?)GetValue(PlaceholderIconSourceProperty);
         set => SetValue(PlaceholderIconSourceProperty, value);
     }
@@ -77,6 +80,7 @@ public sealed partial class CommonGridViewItem : UserControl
 
     public TextAlignment HorizontalTextAlignment
     {
+        [DynamicWindowsRuntimeCast(typeof(TextAlignment))]
         get => (TextAlignment)GetValue(HorizontalTextAlignmentProperty);
         set => SetValue(HorizontalTextAlignmentProperty, value);
     }

@@ -18,6 +18,7 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.Search;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -83,6 +84,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     /// <summary>
     /// Try load a subtitle in the same directory with the same name
     /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async void Receive(QueueCurrentItemChangedMessage message)
     {
         _cts?.Cancel();

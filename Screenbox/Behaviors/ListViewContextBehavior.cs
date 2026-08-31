@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using WinRT;
 
 namespace Screenbox.Behaviors;
 
@@ -43,6 +44,7 @@ internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
     /// </value>
     public FlyoutBase? Flyout
     {
+        [DynamicWindowsRuntimeCast(typeof(FlyoutBase))]
         get => (FlyoutBase?)GetValue(FlyoutProperty);
         set => SetValue(FlyoutProperty, value);
     }
@@ -82,6 +84,7 @@ internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
         AssociatedObject.RightTapped -= OnRightTapped;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SelectorItem))]
     private void OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
     {
         if (args.OriginalSource is not SelectorItem item)
@@ -100,6 +103,8 @@ internal sealed partial class ListViewContextBehavior : Behavior<ListViewBase>
         args.Handled = true;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
+    [DynamicWindowsRuntimeCast(typeof(MenuFlyout))]
     private void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
     {
         if (e.OriginalSource is not FrameworkElement element ||

@@ -3,6 +3,7 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,6 +23,7 @@ public sealed partial class PropertiesDialog : ContentDialog, IPropertiesDialog
         set => SetValue(MediaProperty, value);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public PropertiesDialog()
     {
         this.InitializeComponent();

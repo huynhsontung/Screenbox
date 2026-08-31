@@ -24,6 +24,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -284,6 +285,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         OverrideControlsDelayHide(message.Delay);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task OnDropAsync(DataPackageView data)
     {
         try
@@ -727,6 +729,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         PlayerVisibility = PlayerVisibilityState.Visible;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Control))]
     public bool TryHideControls(bool skipFocusCheck = false)
     {
         bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;

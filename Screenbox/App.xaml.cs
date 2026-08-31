@@ -25,6 +25,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using WinRT;
 
 namespace Screenbox;
 
@@ -307,6 +308,7 @@ sealed partial class App : Application
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     private Frame InitRootFrame()
     {
         // Do not repeat app initialization when the Window already has content,

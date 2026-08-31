@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 namespace Screenbox.Dialogs;
 
@@ -10,6 +11,7 @@ public sealed partial class RenamePlaylistDialog : ContentDialog
 {
     private const int MaxPlaylistNameLength = 100;
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public RenamePlaylistDialog(string currentName)
     {
         this.DefaultStyleKey = typeof(ContentDialog);

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using WinRT;
 
 namespace Screenbox.Commands;
 
@@ -86,6 +87,8 @@ public sealed partial class SelectDeselectAllCommand : ICommand
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
+    [DynamicWindowsRuntimeCast(typeof(ListBox))]
     public bool CanExecute(object? parameter)
     {
         return parameter switch
@@ -96,6 +99,8 @@ public sealed partial class SelectDeselectAllCommand : ICommand
         };
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
+    [DynamicWindowsRuntimeCast(typeof(ListBox))]
     public void Execute(object? parameter)
     {
         switch (parameter)

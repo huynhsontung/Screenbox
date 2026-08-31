@@ -18,6 +18,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -228,6 +229,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         AltCaption = file.Name;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
         DetailsLoaded = true;
@@ -277,6 +279,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
             AltCaption = string.Empty;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadThumbnailAsync()
     {
         if (Thumbnail != null) return;
@@ -319,6 +322,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public Task<IRandomAccessStream?> GetThumbnailSourceAsync()
     {
         return Source is not StorageFile file

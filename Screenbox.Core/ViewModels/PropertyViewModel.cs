@@ -6,6 +6,7 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -47,6 +48,7 @@ public sealed partial class PropertyViewModel : ObservableObject
     /// <summary>
     /// Populates the property collections with metadata keys and values from the given <paramref name="media"/> item.
     /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public void UpdateProperties(MediaViewModel media)
     {
         switch (media.MediaType)

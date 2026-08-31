@@ -1,7 +1,8 @@
-﻿using Microsoft.Xaml.Interactivity;
+using Microsoft.Xaml.Interactivity;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 namespace Screenbox.Behaviors;
 
@@ -19,6 +20,7 @@ internal sealed partial class BringIntoViewWithOffsetBehavior : Behavior<UIEleme
         set => SetValue(FromBottomProperty, value);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -52,6 +54,7 @@ internal sealed partial class BringIntoViewWithOffsetBehavior : Behavior<UIEleme
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         if (AssociatedObject is not ListViewBase listView) return;

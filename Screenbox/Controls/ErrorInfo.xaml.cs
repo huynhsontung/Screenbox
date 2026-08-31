@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using WinRT;
 
 namespace Screenbox.Controls;
 
@@ -105,6 +106,7 @@ public sealed partial class ErrorInfo : UserControl
     /// </summary>
     public FrameworkElement QrCodeContent
     {
+        [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
         get { return (FrameworkElement)GetValue(QrCodeContentProperty); }
         set { SetValue(QrCodeContentProperty, value); }
     }

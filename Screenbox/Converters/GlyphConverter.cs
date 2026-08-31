@@ -5,6 +5,7 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.Media;
 using Windows.Storage;
+using WinRT;
 
 using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
@@ -279,6 +280,7 @@ public static partial class GlyphConverter
     /// </summary>
     /// <param name="mediaViewModel">The media view model to convert.</param>
     /// <returns>A glyph code representing the media type.</returns>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public static string ToMediaGlyph(MediaViewModel? mediaViewModel)
     {
         const string GlobeGlyph = "\uE774";

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -12,6 +13,7 @@ public sealed partial class CreatePlaylistDialog : ContentDialog
 {
     private const int MaxPlaylistNameLength = 100;
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public CreatePlaylistDialog()
     {
         this.DefaultStyleKey = typeof(ContentDialog);

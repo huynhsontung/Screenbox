@@ -13,6 +13,7 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -57,6 +58,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void Receive(SettingsChangedMessage message)
     {
         if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&

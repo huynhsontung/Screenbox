@@ -9,6 +9,7 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 namespace Screenbox.Behaviors;
 
@@ -48,6 +49,7 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
     /// <value>The target <see cref="MenuFlyoutSubItem"/>. The default is <see langword="null"/>.</value>
     public MenuFlyoutSubItem? TargetSubItem
     {
+        [DynamicWindowsRuntimeCast(typeof(MenuFlyoutSubItem))]
         get => (MenuFlyoutSubItem?)GetValue(TargetSubItemProperty);
         set => SetValue(TargetSubItemProperty, value);
     }

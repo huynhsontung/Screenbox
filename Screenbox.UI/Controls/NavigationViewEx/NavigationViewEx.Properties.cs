@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using WinRT;
 
 namespace Screenbox.UI.Controls;
 
@@ -30,6 +31,7 @@ public sealed partial class NavigationViewEx
     /// property.</remarks>
     public UIElement? Overlay
     {
+        [DynamicWindowsRuntimeCast(typeof(UIElement))]
         get => (UIElement?)GetValue(OverlayProperty);
         set => SetValue(OverlayProperty, value);
     }
@@ -73,6 +75,7 @@ public sealed partial class NavigationViewEx
     /// <value>A value of the enumeration. The default value is <b>Visible</b>.</value>
     public Visibility ContentVisibility
     {
+        [DynamicWindowsRuntimeCast(typeof(Visibility))]
         get => (Visibility)GetValue(ContentVisibilityProperty);
         set => SetValue(ContentVisibilityProperty, value);
     }
@@ -130,6 +133,7 @@ public sealed partial class NavigationViewEx
     /// <value>The Style that defines the look of the back button. The default is <see langword="null"/>.</value>
     public Style? BackButtonStyle
     {
+        [DynamicWindowsRuntimeCast(typeof(Style))]
         get => (Style?)GetValue(BackButtonStyleProperty);
         set => SetValue(BackButtonStyleProperty, value);
     }
@@ -263,6 +267,7 @@ public sealed partial class NavigationViewEx
     /// <value>The Style that defines the look of the search button. The default is <see langword="null"/>.</value>
     public Style? PaneSearchButtonStyle
     {
+        [DynamicWindowsRuntimeCast(typeof(Style))]
         get => (Style?)GetValue(PaneSearchButtonStyleProperty);
         set => SetValue(PaneSearchButtonStyleProperty, value);
     }
@@ -322,6 +327,7 @@ public sealed partial class NavigationViewEx
     /// <value>A value of the enumeration. The default is <see langword="null"/>.</value>
     public AnimationDirection? ContentTranslationDirection
     {
+        [DynamicWindowsRuntimeCast(typeof(AnimationDirection))]
         get => (AnimationDirection?)GetValue(ContentTranslationDirectionProperty);
         set => SetValue(ContentTranslationDirectionProperty, value);
     }
@@ -332,6 +338,7 @@ public sealed partial class NavigationViewEx
         navigationViewEx.OnPropertyChanged(e);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Visibility))]
     private static void OnContentVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if ((Visibility)e.NewValue != (Visibility)e.OldValue)
@@ -343,6 +350,7 @@ public sealed partial class NavigationViewEx
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(AnimationDirection))]
     private static void OnContentTranslationDirectionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if ((AnimationDirection?)e.NewValue != (AnimationDirection?)e.OldValue)

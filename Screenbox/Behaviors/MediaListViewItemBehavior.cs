@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using WinRT;
 
 namespace Screenbox.Behaviors;
 
@@ -54,6 +55,7 @@ internal sealed partial class MediaListViewItemBehavior : Behavior<Control>
         Initialize(selector);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewSelectionMode))]
     private void Initialize(SelectorItem selector)
     {
         // Listen to selector interaction events
@@ -78,6 +80,8 @@ internal sealed partial class MediaListViewItemBehavior : Behavior<Control>
         BindPlayButtonCommand(listView);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ButtonBase))]
+    [DynamicWindowsRuntimeCast(typeof(XamlUICommand))]
     private void BindPlayButtonCommand(ListViewBase listView)
     {
         if (AssociatedObject.FindDescendant("PlayButton") is ButtonBase button)
@@ -102,6 +106,7 @@ internal sealed partial class MediaListViewItemBehavior : Behavior<Control>
         _playButton?.Command?.Execute(_playButton?.CommandParameter);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Control))]
     private void SelectorOnLostFocus(object sender, RoutedEventArgs e)
     {
         Control? control = FocusManager.GetFocusedElement() as Control;
@@ -129,6 +134,7 @@ internal sealed partial class MediaListViewItemBehavior : Behavior<Control>
         _playButton?.Focus(FocusState.Programmatic);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewSelectionMode))]
     private void OnSelectionModeChanged(DependencyObject sender, DependencyProperty dp)
     {
         ListViewSelectionMode selectionMode = (ListViewSelectionMode)sender.GetValue(dp);

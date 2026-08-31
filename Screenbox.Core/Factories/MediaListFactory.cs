@@ -10,6 +10,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
+using WinRT;
 
 namespace Screenbox.Core.Factories;
 
@@ -22,6 +23,8 @@ public sealed class MediaListFactory : IMediaListFactory
         _mediaFactory = mediaFactory;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task<NextMediaList?> TryParseMediaListAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, CancellationToken cancellationToken = default)
     {
         var queue = new List<MediaViewModel>();
@@ -71,6 +74,7 @@ public sealed class MediaListFactory : IMediaListFactory
         return queue.Count > 0 ? new NextMediaList(next ?? queue[0], queue) : null;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task<NextMediaList> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default)
     {
         // Handle M3U/M3U8 sources directly without going through LibVLC media parsing.
@@ -349,6 +353,7 @@ public sealed class MediaListFactory : IMediaListFactory
     /// Handles both <see cref="StorageFile"/> sources and local <see cref="Uri"/> sources.
     /// Returns <see langword="null"/> when the source is not an M3U/M3U8 file.
     /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private static async Task<StorageFile?> TryGetM3uStorageFileAsync(object source) => source switch
     {
         StorageFile file when IsM3uPlaylist(file.FileType) => file,

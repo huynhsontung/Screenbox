@@ -4,6 +4,7 @@ using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using WinRT;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,6 +26,7 @@ public sealed partial class VolumeControl : UserControl
     /// </summary>
     public Style? VolumeToggleButtonStyle
     {
+        [DynamicWindowsRuntimeCast(typeof(Style))]
         get { return (Style?)GetValue(VolumeToggleButtonStyleProperty); }
         set { SetValue(VolumeToggleButtonStyleProperty, value); }
     }
@@ -47,6 +49,7 @@ public sealed partial class VolumeControl : UserControl
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Style))]
     private static void OnVolumeToggleButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is VolumeControl control && control.VolumeToggleButton != null)
@@ -63,6 +66,7 @@ public sealed partial class VolumeControl : UserControl
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(UIElement))]
     private void VolumeSlider_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         var pointer = e.GetCurrentPoint((UIElement)sender);

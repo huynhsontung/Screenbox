@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
+using WinRT;
 
 namespace Screenbox.Behaviors;
 
@@ -30,6 +31,7 @@ internal sealed partial class AlternatingListViewBehavior : Behavior<ListViewBas
 
     public Brush? AlternateBorderBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get => (Brush?)GetValue(AlternateBorderBrushProperty);
         set => SetValue(AlternateBorderBrushProperty, value);
     }
@@ -42,10 +44,12 @@ internal sealed partial class AlternatingListViewBehavior : Behavior<ListViewBas
 
     public Brush? AlternateBackground
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get => (Brush?)GetValue(AlternateBackgroundProperty);
         set => SetValue(AlternateBackgroundProperty, value);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SelectorItem))]
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -81,6 +85,7 @@ internal sealed partial class AlternatingListViewBehavior : Behavior<ListViewBas
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SelectorItem))]
     private void OnActualThemeChanged(FrameworkElement sender, object args)
     {
         if (AssociatedObject.Items == null) return;
@@ -93,6 +98,7 @@ internal sealed partial class AlternatingListViewBehavior : Behavior<ListViewBas
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SelectorItem))]
     private void ItemsOnVectorChanged(IObservableVector<object> sender, IVectorChangedEventArgs args)
     {
         // If the index is at the end we can ignore

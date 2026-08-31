@@ -14,6 +14,7 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -93,6 +94,8 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageLibrary))]
+    [DynamicWindowsRuntimeCast(typeof(StorageFileQueryResult))]
     private async Task FetchContentAsync(object? parameter)
     {
         switch (parameter)
@@ -159,6 +162,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     }
 
     [RelayCommand]
+    [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
     private void Click(StorageItemViewModel? item)
     {
         if (item?.Media != null)

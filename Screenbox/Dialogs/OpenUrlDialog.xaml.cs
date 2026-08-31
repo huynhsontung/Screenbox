@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -10,6 +11,7 @@ namespace Screenbox.Dialogs;
 
 public sealed partial class OpenUrlDialog : ContentDialog
 {
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public OpenUrlDialog()
     {
         this.DefaultStyleKey = typeof(ContentDialog);

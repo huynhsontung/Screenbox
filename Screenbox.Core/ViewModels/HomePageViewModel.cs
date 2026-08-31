@@ -17,6 +17,7 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
+using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -116,6 +117,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task UpdateRecentMediaListAsync(bool loadMediaDetails)
     {
         // Assume UI Thread

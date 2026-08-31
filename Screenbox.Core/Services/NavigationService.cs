@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRT;
 
 namespace Screenbox.Core.Services;
 
@@ -21,6 +22,7 @@ public sealed class NavigationService : INavigationService
         return _vmPageMapping.TryGetValue(vmType, out pageType!);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void Navigate(Type vmType, object? parameter = null)
     {
         if (!_vmPageMapping.TryGetValue(vmType, out var pageType)) return;
@@ -33,6 +35,7 @@ public sealed class NavigationService : INavigationService
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void NavigateChild(Type parentVmType, Type targetVmType, object? parameter = null)
     {
         if (!_vmPageMapping.TryGetValue(parentVmType, out var parentPageType)) return;
@@ -53,6 +56,7 @@ public sealed class NavigationService : INavigationService
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void NavigateExisting(Type vmType, object? parameter = null)
     {
         if (!_vmPageMapping.TryGetValue(vmType, out var pageType)) return;

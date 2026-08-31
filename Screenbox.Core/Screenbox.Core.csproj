@@ -11,6 +11,7 @@
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <Copyright>Copyright © 2023-2026 Tung Huynh</Copyright>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
   </PropertyGroup>
 
   <ItemGroup>

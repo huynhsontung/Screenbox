@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.Media.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using WinRT;
 
 namespace Screenbox.Converters;
 
@@ -37,6 +38,7 @@ public sealed partial class ChapterTitleConverter : DependencyObject, IValueConv
             : Strings.Resources.ChapterName(chapters.IndexOf(chapterCue) + 1);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ChapterCue))]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         return value is not ChapterCue chapter

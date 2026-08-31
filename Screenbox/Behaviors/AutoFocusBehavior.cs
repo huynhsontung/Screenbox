@@ -7,6 +7,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using WinRT;
 
 namespace Screenbox.Behaviors;
 
@@ -64,6 +65,7 @@ internal sealed partial class AutoFocusBehavior : BehaviorBase<Control>
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     protected override void OnAssociatedObjectLoaded()
     {
         // Check if Space key is still down
@@ -86,6 +88,7 @@ internal sealed partial class AutoFocusBehavior : BehaviorBase<Control>
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     private void ElementOnPreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
         FrameworkElement element = (FrameworkElement)sender;

@@ -2,6 +2,7 @@ using Screenbox.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using WinRT;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -66,6 +67,7 @@ public sealed partial class TimeDisplay : UserControl
     /// <value>The style that defines the look of the text elements. The default is <b>null</b>.</value>
     public Style TextBlockStyle
     {
+        [DynamicWindowsRuntimeCast(typeof(Style))]
         get => (Style)GetValue(TextBlockStyleProperty);
         set => SetValue(TextBlockStyleProperty, value);
     }

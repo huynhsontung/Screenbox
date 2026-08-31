@@ -13,6 +13,7 @@ using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
+using WinRT;
 
 namespace Screenbox.Core.Services;
 
@@ -615,6 +616,7 @@ public sealed class LibraryService : ILibraryService
         return Task.FromResult(true);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
     {
         var changeBatch = await changeReader.ReadBatchAsync();

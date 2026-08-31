@@ -4,6 +4,7 @@ using Screenbox.Core.Models;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
+using WinRT;
 
 namespace Screenbox.Core.Services;
 
@@ -38,6 +39,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return playlist.Items.Count > 0 && playlist.CurrentIndex >= 0;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task<PlaybackNavigationResult?> GetNeighboringNextAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
@@ -77,6 +79,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return null;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task<PlaybackNavigationResult?> GetNeighboringPreviousAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
