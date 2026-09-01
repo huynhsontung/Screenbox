@@ -3,7 +3,6 @@ using Microsoft.Xaml.Interactivity;
 using Screenbox.Core.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinRT;
 
 namespace Screenbox.Behaviors;
 

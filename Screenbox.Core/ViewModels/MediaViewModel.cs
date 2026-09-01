@@ -18,7 +18,6 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
-using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 

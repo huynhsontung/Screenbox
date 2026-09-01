@@ -14,7 +14,6 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
-using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 

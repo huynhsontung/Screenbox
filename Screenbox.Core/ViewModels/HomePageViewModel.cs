@@ -17,7 +17,6 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
-using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 

@@ -13,7 +13,6 @@ using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
-using WinRT;
 
 namespace Screenbox.Core.Services;
 

@@ -18,7 +18,6 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.Search;
-using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 

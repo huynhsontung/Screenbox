@@ -6,7 +6,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 

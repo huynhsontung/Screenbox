@@ -4,7 +4,6 @@ using Screenbox.Core.Models;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
-using WinRT;
 
 namespace Screenbox.Core.Services;
 

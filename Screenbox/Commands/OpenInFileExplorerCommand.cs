@@ -6,7 +6,6 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.Storage;
-using WinRT;
 
 namespace Screenbox.Commands;
 

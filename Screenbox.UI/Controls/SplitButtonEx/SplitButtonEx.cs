@@ -4,7 +4,6 @@ using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using WinRT;
 
 using SplitButton = Microsoft.UI.Xaml.Controls.SplitButton;
 

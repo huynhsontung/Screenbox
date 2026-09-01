@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Windows.Media.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using WinRT;
 
 namespace Screenbox.Converters;
 

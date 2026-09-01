@@ -1,7 +1,6 @@
 using CommunityToolkit.WinUI.Helpers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using WinRT;
 
 namespace Screenbox.Triggers;
 

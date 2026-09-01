@@ -10,7 +10,6 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
-using WinRT;
 
 namespace Screenbox.Core.Factories;
 

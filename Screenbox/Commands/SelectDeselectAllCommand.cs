@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using WinRT;
 
 namespace Screenbox.Commands;
 

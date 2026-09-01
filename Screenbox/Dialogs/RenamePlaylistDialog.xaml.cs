@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinRT;
 
 namespace Screenbox.Dialogs;
 

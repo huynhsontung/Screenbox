@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using WinRT;
 
 namespace Screenbox.Core.ViewModels;
 

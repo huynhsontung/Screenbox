@@ -7,7 +7,6 @@ using Screenbox.Core.Playback;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using WinRT;
 
 namespace Screenbox.Core.Services;
 

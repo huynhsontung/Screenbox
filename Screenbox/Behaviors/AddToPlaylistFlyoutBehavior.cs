@@ -9,7 +9,6 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinRT;
 
 namespace Screenbox.Behaviors;
 

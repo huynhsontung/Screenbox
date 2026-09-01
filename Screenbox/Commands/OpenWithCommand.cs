@@ -8,7 +8,6 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
 using Windows.System;
-using WinRT;
 
 namespace Screenbox.Commands;
 

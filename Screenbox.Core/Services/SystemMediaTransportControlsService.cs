@@ -6,7 +6,6 @@ using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
-using WinRT;
 
 namespace Screenbox.Core.Services;
 

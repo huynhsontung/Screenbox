@@ -22,7 +22,6 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
-using WinRT;
 
 namespace Screenbox.Core.Coordinators;
 

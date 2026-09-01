@@ -5,7 +5,6 @@ using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.Media;
 using Windows.Storage;
-using WinRT;
 
 using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
