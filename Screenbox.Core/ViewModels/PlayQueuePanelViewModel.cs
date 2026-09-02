@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -178,7 +179,6 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     /// <summary>
     /// Opens a file picker for the user to select files to add to the play queue.
-    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand]
     private async Task AddFilesAsync()
@@ -191,7 +191,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         }
         catch (Exception e)
         {
-            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.FileOpenFailed, message: e.Message));
         }
     }
 

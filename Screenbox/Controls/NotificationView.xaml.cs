@@ -55,7 +55,7 @@ public sealed partial class NotificationView : UserControl
         };
     }
 
-    private string? GetDisplayTitle(NotificationKind kind, string? title, int count)
+    private string? GetDisplayTitle(NotificationKind kind, string? title, double? numericValue)
     {
         return kind switch
         {
@@ -74,7 +74,7 @@ public sealed partial class NotificationView : UserControl
             NotificationKind.PlaylistCreated => Strings.Resources.PlaylistCreatedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistDeleted => Strings.Resources.PlaylistDeletedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistRenamed => Strings.Resources.PlaylistRenamedNotificationTitle(title ?? string.Empty),
-            NotificationKind.PlaylistItemsAdded => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
+            NotificationKind.PlaylistItemsAdded when numericValue is double count => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
             NotificationKind.ResumePosition => Strings.Resources.ResumePositionNotificationTitle,
             _ => null,
         };
