@@ -124,14 +124,14 @@
     <value/>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Moderní video přehrávač se zaměřením na výkon a snadnost používání na širokém spektru zařízení s Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value/>
     <comment>Display name for the file type ".3gp" and ".3gpp" (3rd Generation Partnership Project)</comment>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value/>
     <comment>Display name for the file type ".3g2" and ".3gp2" (3rd Generation Partnership Project 2)</comment>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
