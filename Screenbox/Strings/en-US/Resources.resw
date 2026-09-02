@@ -1055,6 +1055,12 @@
   <data name="IncreaseRate" xml:space="preserve">
     <value>Increase speed</value>
   </data>
+  <data name="NextTrack" xml:space="preserve">
+    <value>Next track</value>
+  </data>
+  <data name="PreviousTrack" xml:space="preserve">
+    <value>Previous track</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Add to playlist</value>
   </data>
