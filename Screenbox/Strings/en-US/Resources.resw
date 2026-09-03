@@ -1061,6 +1061,12 @@
   <data name="PreviousTrack" xml:space="preserve">
     <value>Previous track</value>
   </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Next chapter</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Previous chapter</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Add to playlist</value>
   </data>

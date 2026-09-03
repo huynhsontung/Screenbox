@@ -448,6 +448,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             case PlaybackActionKind.NextTrack:
                 Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Next));
                 break;
+            case PlaybackActionKind.PreviousChapter:
+                VlcMediaPlayer.PreviousChapter();
+                break;
+            case PlaybackActionKind.NextChapter:
+                VlcMediaPlayer.NextChapter();
+                break;
         }
     }
 
