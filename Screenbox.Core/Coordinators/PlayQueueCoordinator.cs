@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -48,7 +47,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     IRecipient<SetQueueMessage>,
     IRecipient<ClearQueueMessage>,
     IRecipient<QueueRequestMessage>,
-    IRecipient<TrackNavigationMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
@@ -136,7 +134,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         Messenger.Register<SetQueueMessage>(this);
         Messenger.Register<ClearQueueMessage>(this);
         Messenger.Register<QueueRequestMessage>(this);
-        Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
     }
 
@@ -286,28 +283,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
                 _dispatcherQueue.TryEnqueue(SetPlayQueue);
             }
-        }
-    }
-
-    public async void Receive(TrackNavigationMessage message)
-    {
-        if (MediaPlayer is null)
-            return;
-
-        switch (message.Direction)
-        {
-            case TrackNavigationDirection.Next:
-                if (CanNext())
-                {
-                    await NextAsync();
-                }
-                break;
-            case TrackNavigationDirection.Previous:
-                if (CanPrevious())
-                {
-                    await PreviousAsync();
-                }
-                break;
         }
     }
 
