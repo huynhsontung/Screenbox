@@ -15,8 +15,8 @@ public enum PlaybackActionKind
     IncreaseRate,
     PreviousTrack,
     NextTrack,
-    //PreviousChapter,
-    //NextChapter,
+    PreviousChapter,
+    NextChapter,
     //DecreaseBrightness,
     //IncreaseBrightness,
 }
