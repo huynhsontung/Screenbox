@@ -26,6 +26,7 @@ public sealed partial class ComboBoxWidthFromPopupBehavior : DependencyObject, I
     public DependencyObject? AssociatedObject { get; private set; }
 
     /// <inheritdoc/>
+    [DynamicWindowsRuntimeCast(typeof(ComboBox))]
     public void Attach(DependencyObject associatedObject)
     {
         AssociatedObject = associatedObject;
@@ -38,6 +39,7 @@ public sealed partial class ComboBoxWidthFromPopupBehavior : DependencyObject, I
     }
 
     /// <inheritdoc/>
+    [DynamicWindowsRuntimeCast(typeof(ComboBox))]
     public void Detach()
     {
         if (AssociatedObject is ComboBox comboBox)
@@ -51,6 +53,8 @@ public sealed partial class ComboBoxWidthFromPopupBehavior : DependencyObject, I
         AssociatedObject = null;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ComboBox))]
+    [DynamicWindowsRuntimeCast(typeof(Canvas))]
     private void OnDropDownOpened(object? sender, object e)
     {
         if (sender is ComboBox comboBox)
@@ -74,6 +78,7 @@ public sealed partial class ComboBoxWidthFromPopupBehavior : DependencyObject, I
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ComboBox))]
     private void OnDropDownClosed(object? sender, object e)
     {
         if (sender is ComboBox comboBox)
@@ -89,6 +94,8 @@ public sealed partial class ComboBoxWidthFromPopupBehavior : DependencyObject, I
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Grid))]
+    [DynamicWindowsRuntimeCast(typeof(Popup))]
     private static Popup? FindPopup(ComboBox comboBox)
     {
         if (VisualTreeHelper.GetChild(comboBox, 0) is Grid layoutRootGrid)

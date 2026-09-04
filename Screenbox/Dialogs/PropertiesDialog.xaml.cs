@@ -22,6 +22,7 @@ public sealed partial class PropertiesDialog : ContentDialog, IPropertiesDialog
         set => SetValue(MediaProperty, value);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public PropertiesDialog()
     {
         this.InitializeComponent();

@@ -105,6 +105,7 @@ public sealed partial class ErrorInfo : UserControl
     /// </summary>
     public FrameworkElement QrCodeContent
     {
+        [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
         get { return (FrameworkElement)GetValue(QrCodeContentProperty); }
         set { SetValue(QrCodeContentProperty, value); }
     }

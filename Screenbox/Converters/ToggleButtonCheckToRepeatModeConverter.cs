@@ -7,6 +7,7 @@ namespace Screenbox.Converters;
 
 internal sealed partial class ToggleButtonCheckToRepeatModeConverter : IValueConverter
 {
+    [DynamicWindowsRuntimeCast(typeof(MediaPlaybackAutoRepeatMode))]
     public object? Convert(object value, Type targetType, object parameter, string language)
     {
         Guard.IsOfType<MediaPlaybackAutoRepeatMode>(value, nameof(value));

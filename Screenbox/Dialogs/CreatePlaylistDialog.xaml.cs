@@ -12,6 +12,7 @@ public sealed partial class CreatePlaylistDialog : ContentDialog
 {
     private const int MaxPlaylistNameLength = 100;
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public CreatePlaylistDialog()
     {
         this.DefaultStyleKey = typeof(ContentDialog);

@@ -86,6 +86,8 @@ public sealed partial class SelectDeselectAllCommand : ICommand
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
+    [DynamicWindowsRuntimeCast(typeof(ListBox))]
     public bool CanExecute(object? parameter)
     {
         return parameter switch
@@ -96,6 +98,8 @@ public sealed partial class SelectDeselectAllCommand : ICommand
         };
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
+    [DynamicWindowsRuntimeCast(typeof(ListBox))]
     public void Execute(object? parameter)
     {
         switch (parameter)

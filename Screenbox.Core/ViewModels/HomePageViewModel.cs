@@ -116,6 +116,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task UpdateRecentMediaListAsync(bool loadMediaDetails)
     {
         // Assume UI Thread

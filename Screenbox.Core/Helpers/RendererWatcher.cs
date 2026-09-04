@@ -8,7 +8,7 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Helpers;
 
-public sealed class RendererWatcher : IDisposable
+public sealed partial class RendererWatcher : IDisposable
 {
     public event EventHandler<RendererFoundEventArgs>? RendererFound;
     public event EventHandler<RendererLostEventArgs>? RendererLost;

@@ -57,6 +57,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void Receive(SettingsChangedMessage message)
     {
         if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&

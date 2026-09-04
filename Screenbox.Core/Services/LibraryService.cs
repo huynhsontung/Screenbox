@@ -615,6 +615,7 @@ public sealed class LibraryService : ILibraryService
         return Task.FromResult(true);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
     {
         var changeBatch = await changeReader.ReadBatchAsync();

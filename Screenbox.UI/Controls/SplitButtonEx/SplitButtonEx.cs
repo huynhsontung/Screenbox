@@ -51,6 +51,7 @@ public sealed partial class SplitButtonEx : SplitButton
         _toolTipPlacementCallbackToken = RegisterPropertyChangedCallback(ToolTipService.PlacementProperty, OnToolTipServicePlacementChanged);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Button))]
     protected override void OnApplyTemplate()
     {
         _primaryButton = null;
@@ -155,6 +156,7 @@ public sealed partial class SplitButtonEx : SplitButton
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ToolTip))]
     private void UpdateSecondaryButtonToolTip()
     {
         var secondaryToolTip = SecondaryButtonToolTip;

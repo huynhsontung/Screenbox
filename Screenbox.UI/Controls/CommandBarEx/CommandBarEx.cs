@@ -40,6 +40,7 @@ public sealed partial class CommandBarEx : CommandBar
     /// The default is <see langword="null"/>.</value>
     public Style MoreButtonStyle
     {
+        [DynamicWindowsRuntimeCast(typeof(Style))]
         get { return (Style)GetValue(MoreButtonStyleProperty); }
         set { SetValue(MoreButtonStyleProperty, value); }
     }
@@ -54,6 +55,7 @@ public sealed partial class CommandBarEx : CommandBar
         Unloaded += OnUnloaded;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Button))]
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();

@@ -134,6 +134,8 @@ public sealed partial class TitleBar : ContentControl
         return new TitleBarAutomationPeer(this);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ColumnDefinition))]
+    [DynamicWindowsRuntimeCast(typeof(Grid))]
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -410,6 +412,7 @@ public sealed partial class TitleBar : ContentControl
         //UpdateHeight();
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SolidColorBrush))]
     private void UpdateCaptionButtonColors()
     {
         // Skip updates when not visible to prevent overwriting colors

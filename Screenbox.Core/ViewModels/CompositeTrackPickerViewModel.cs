@@ -83,6 +83,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     /// <summary>
     /// Try load a subtitle in the same directory with the same name
     /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async void Receive(QueueCurrentItemChangedMessage message)
     {
         _cts?.Cancel();

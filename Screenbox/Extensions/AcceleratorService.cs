@@ -62,6 +62,7 @@ public sealed partial class AcceleratorService
         element.SetValue(ToolTipProperty, value);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(UIElement))]
     private static void OnToolTipPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is UIElement element && e.NewValue is string value)

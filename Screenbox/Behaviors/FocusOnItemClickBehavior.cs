@@ -20,6 +20,7 @@ internal sealed partial class FocusOnItemClickBehavior : Behavior<ListViewBase>
         AssociatedObject.ItemClick -= OnItemClick;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SelectorItem))]
     private void OnItemClick(object sender, ItemClickEventArgs e)
     {
         SelectorItem? item = (SelectorItem?)AssociatedObject.ContainerFromItem(e.ClickedItem);

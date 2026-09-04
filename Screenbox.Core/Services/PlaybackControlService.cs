@@ -38,6 +38,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return playlist.Items.Count > 0 && playlist.CurrentIndex >= 0;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task<PlaybackNavigationResult?> GetNeighboringNextAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
@@ -77,6 +78,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return null;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task<PlaybackNavigationResult?> GetNeighboringPreviousAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files

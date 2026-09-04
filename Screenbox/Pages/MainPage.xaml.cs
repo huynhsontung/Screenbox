@@ -122,6 +122,7 @@ public sealed partial class MainPage : Page, IContentFrame
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     private void ContentFrame_Navigating(object sender, NavigatingCancelEventArgs e)
     {
         _logger.LogInformation("Navigation requested from {FromPage} to {ToPage} with mode {NavigationMode}.",
@@ -223,6 +224,7 @@ public sealed partial class MainPage : Page, IContentFrame
         return true;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(NavigationViewItem))]
     private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
     {
         NavView.IsBackEnabled = ContentFrame.CanGoBack;
