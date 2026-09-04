@@ -37,7 +37,7 @@
 
     <MenuFlyoutSeparator />
 
-    <MenuFlyoutSubItem x:Name="AddToPlaylistSubItem">
+    <MenuFlyoutSubItem x:Name="AddToPlaylistSubItem" Visibility="Collapsed">
         <MenuFlyoutSubItem.Icon>
             <FontIcon x:Name="AddToPlaylistSubItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
         </MenuFlyoutSubItem.Icon>
@@ -49,13 +49,19 @@
         </MenuFlyoutItem.Icon>
     </MenuFlyoutItem>
 
-    <MenuFlyoutItem x:Name="OpenWithItem" Command="{StaticResource OpenWithCommand}">
+    <MenuFlyoutItem
+        x:Name="OpenWithItem"
+        Command="{StaticResource OpenWithCommand}"
+        Visibility="Collapsed">
         <MenuFlyoutItem.Icon>
             <FontIcon Glyph="&#xE7AC;" MirroredWhenRightToLeft="True" />
         </MenuFlyoutItem.Icon>
     </MenuFlyoutItem>
 
-    <MenuFlyoutItem x:Name="OpenInFileExplorerItem" Command="{StaticResource OpenInFileExplorerCommand}">
+    <MenuFlyoutItem
+        x:Name="OpenInFileExplorerItem"
+        Command="{StaticResource OpenInFileExplorerCommand}"
+        Visibility="Collapsed">
         <MenuFlyoutItem.Icon>
             <FontIcon Glyph="&#xEC50;" />
         </MenuFlyoutItem.Icon>
@@ -67,17 +73,20 @@
         </MenuFlyoutItem.KeyboardAccelerators>
     </MenuFlyoutItem>
 
-    <MenuFlyoutItem x:Name="PropertiesItem" Command="{StaticResource ShowPropertiesCommand}">
+    <MenuFlyoutItem
+        x:Name="PropertiesItem"
+        Command="{StaticResource ShowPropertiesCommand}"
+        Visibility="Collapsed">
         <MenuFlyoutItem.Icon>
             <FontIcon Glyph="&#xE946;" />
         </MenuFlyoutItem.Icon>
     </MenuFlyoutItem>
 
-    <!--#region Additional Items-->
-
-    <!--  Additional Items will be inserted here.  -->
-
-    <!--#endregion-->
+    <!--  ┌─────────────────────────────────────────┐  -->
+    <!--  |                                         |  -->
+    <!--  | Additional Items will be inserted here. |  -->
+    <!--  |                                         |  -->
+    <!--  └─────────────────────────────────────────┘  -->
 
     <!--  Selection  -->
     <MenuFlyoutSeparator x:Name="SelectionSeparator" Visibility="Collapsed" />
