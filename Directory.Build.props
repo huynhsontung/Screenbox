@@ -8,6 +8,23 @@
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
+  <!-- Trimming configuration -->
+  <PropertyGroup>
+    <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
+    <!-- https://github.com/microsoft/CsWinRT/blob/2.3.1.260716.1/nuget/readme.md#advanced-size-saving-options -->
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <!-- https://github.com/microsoft/CsWinRT/pull/1887 -->
+    <CsWinRTEnableManifestFreeActivation>false</CsWinRTEnableManifestFreeActivation>
+    <!-- https://github.com/CommunityToolkit/dotnet/pull/911 -->
+    <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+  </PropertyGroup>
+
+  <!-- C#/WinRT is explicitly referenced to support more comprehensive AOT analysis -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
+  </ItemGroup>
+
+  <!-- Global usings -->
   <ItemGroup>
     <Using Include="WinRT" />
   </ItemGroup>
