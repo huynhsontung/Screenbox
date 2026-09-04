@@ -411,7 +411,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     /// <summary>
     /// Saves a snapshot of the current video frame to the configured folder, falling back
     /// to the Pictures library when the folder is not set or cannot be accessed.
-    /// Sends a <see cref="FailedToSaveFrameNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand(CanExecute = nameof(HasVideo))]
     private async Task SaveSnapshotAsync()
@@ -420,15 +419,19 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         try
         {
             StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
-            Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
+            Messenger.Send(new NotificationMessage(
+                NotificationLevel.Success,
+                NotificationKind.FrameSaved,
+                actionContent: file.Name,
+                actionCommand: new RelayCommand(() => _filesService.OpenFileLocationAsync(file))));
         }
         catch (UnauthorizedAccessException)
         {
-            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.PicturesLibraryAccessDenied));
         }
         catch (Exception e)
         {
-            Messenger.Send(new FailedToSaveFrameNotificationMessage(e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.FrameSaveFailed, message: e.Message));
         }
     }
 

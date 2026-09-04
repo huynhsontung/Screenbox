@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -63,13 +64,13 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
 
         // Assume sort by last updated
         Playlists.Insert(0, playlist);
-        Messenger.Send(new PlaylistCreatedNotificationMessage(displayName));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistCreated, title: displayName));
     }
 
     public async Task RenamePlaylistAsync(PlaylistViewModel playlist, string newDisplayName)
     {
         await playlist.RenameAsync(newDisplayName);
-        Messenger.Send(new PlaylistRenamedNotificationMessage(newDisplayName));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistRenamed, title: newDisplayName));
     }
 
     public async Task DeletePlaylistAsync(PlaylistViewModel playlist)
@@ -77,7 +78,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         string playlistName = playlist.Name;
         await _playlistService.DeletePlaylistAsync(playlist.Id);
         Playlists.Remove(playlist);
-        Messenger.Send(new PlaylistDeletedNotificationMessage(playlistName));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistDeleted, title: playlistName));
     }
 
     private static bool NotEmpty(PlaylistViewModel? playlist) => playlist?.ItemsCount > 0;
@@ -114,7 +115,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         playlist.Name = file.DisplayName;
         await playlist.AddItemsAsync(items);
         Playlists.Insert(0, playlist);
-        Messenger.Send(new PlaylistCreatedNotificationMessage(playlist.Name));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistCreated, title: playlist.Name));
     }
 
     public async Task ExportPlaylistAsync(PlaylistViewModel playlist, string playlistFileDisplayName = "M3U8")

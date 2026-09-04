@@ -134,7 +134,6 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     /// <summary>
     /// Opens a file picker for the user to select one or more media files to play.
-    /// Sends a <see cref="Core.Messages.FailedToOpenFilesNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand]
     private async Task OpenFilesAsync()
@@ -147,7 +146,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new FailedToOpenFilesNotificationMessage(e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.FileOpenFailed, message: e.Message));
         }
     }
 

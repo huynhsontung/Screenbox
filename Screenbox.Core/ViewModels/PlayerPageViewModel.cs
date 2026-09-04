@@ -297,7 +297,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                         MediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
                     {
                         Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
-                        Messenger.Send(new SubtitleAddedNotificationMessage(file));
+                        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.SubtitleAdded, message: file.Name));
                     }
                     else
                     {
@@ -319,7 +319,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
         catch (Exception exception)
         {
-            Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: exception.Message));
         }
     }
 

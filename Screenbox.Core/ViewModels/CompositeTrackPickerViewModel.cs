@@ -266,7 +266,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Adds a subtitle file to the current media. Sends a <see cref="Core.Messages.FailedToLoadSubtitleNotificationMessage"/> on failure.
+    /// Adds a subtitle file to the current media.
     /// </summary>
     [RelayCommand]
     private async Task AddSubtitleAsync()
@@ -278,11 +278,11 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             if (file == null) return;
 
             ItemSubtitleTrackList.AddExternalSubtitle(player, file, true);
-            Messenger.Send(new SubtitleAddedNotificationMessage(file));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.SubtitleAdded, message: file.Name));
         }
         catch (Exception e)
         {
-            Messenger.Send(new FailedToLoadSubtitleNotificationMessage(e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.SubtitleLoadFailed, message: e.Message));
         }
     }
 

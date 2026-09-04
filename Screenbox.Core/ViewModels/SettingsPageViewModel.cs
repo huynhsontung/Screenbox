@@ -591,11 +591,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
         catch (UnauthorizedAccessException)
         {
-            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MusicLibraryAccessDenied));
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(null, e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, message: e.Message));
             _logger.LogError(e, "Failed to refresh the music library from settings.");
         }
     }
@@ -608,11 +608,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
         catch (UnauthorizedAccessException)
         {
-            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.VideosLibraryAccessDenied));
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(null, e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, message: e.Message));
             _logger.LogError(e, "Failed to refresh the videos library from settings.");
         }
     }

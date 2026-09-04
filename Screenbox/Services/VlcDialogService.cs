@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
 using Screenbox.Core;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Dialogs;
@@ -33,7 +34,11 @@ public sealed class VlcDialogService : IVlcDialogService
     private Task DisplayErrorMessage(string? title, string? text)
     {
         return Task.Run(() =>
-            WeakReferenceMessenger.Default.Send(new ErrorMessage(title ?? string.Empty, text ?? string.Empty)));
+            WeakReferenceMessenger.Default.Send(new NotificationMessage(
+                NotificationLevel.Error,
+                NotificationKind.None,
+                title: title ?? string.Empty,
+                message: text ?? string.Empty)));
     }
 
     private Task DisplayProgress(Dialog dialog, string? title, string? text, bool indeterminate, float position, string? cancelText, CancellationToken token)

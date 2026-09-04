@@ -315,11 +315,11 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
         catch (UnauthorizedAccessException)
         {
-            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MusicLibraryAccessDenied));
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(null, e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, message: e.Message));
             _logger.LogError(e, "Failed to fetch the music library.");
         }
     }
@@ -332,11 +332,11 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
         catch (UnauthorizedAccessException)
         {
-            Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.VideosLibraryAccessDenied));
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(null, e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, message: e.Message));
             _logger.LogError(e, "Failed to fetch the videos library.");
         }
     }
@@ -366,7 +366,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new ErrorMessage(null, e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, message: e.Message));
             _logger.LogError(e, "Failed to fetch playlists.");
         }
     }
