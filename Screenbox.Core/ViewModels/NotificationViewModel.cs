@@ -55,19 +55,29 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         if (message.Kind == NotificationKind.ResumePosition && Severity is NotificationLevel.Error && IsOpen)
             return;
 
-        TimeSpan duration = GetNotificationDuration(message.Level);
+        TimeSpan duration = message.DurationOverride ?? GetNotificationDuration(message.Level);
 
         _dispatcherQueue.TryEnqueue(() =>
         {
             Reset();
             Severity = message.Level;
             Kind = message.Kind;
-            Title = message.Title;
-            Message = message.Message;
-            NumericValue = message.NumericValue;
-            ActionContent = message.ActionContent;
-            ActionCommand = message.ActionCommand;
 
+            if (message.Title is not null)
+                Title = message.Title;
+
+            if (message.Message is not null)
+                Message = message.Message;
+
+            if (message.NumericValue.HasValue)
+                NumericValue = message.NumericValue;
+
+            if (message.ActionContent is not null)
+                ActionContent = message.ActionContent;
+
+            if (message.ActionCommand is not null)
+                ActionCommand = message.ActionCommand;
+           
             IsOpen = true;
             _timer.Debounce(() => IsOpen = false, duration);
         });
