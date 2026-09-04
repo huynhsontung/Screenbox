@@ -166,19 +166,11 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
         switch (message.Direction)
         {
-            case TrackNavigationDirection.Next:
-                if (CanGoNext())
-                {
-                    await _coordinator.NextAsync();
-                }
-
+            case TrackNavigationDirection.Next when CanGoNext():
+                await _coordinator.NextAsync();
                 break;
-            case TrackNavigationDirection.Previous:
-                if (CanGoPrevious())
-                {
-                    await _coordinator.PreviousAsync();
-                }
-
+            case TrackNavigationDirection.Previous when CanGoPrevious():
+                await _coordinator.PreviousAsync();
                 break;
         }
     }
