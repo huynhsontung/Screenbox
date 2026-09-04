@@ -442,6 +442,18 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 double rateUp = Messenger.Send(new ChangePlaybackRateRequestMessage(Math.Clamp(playbackRate + rateDelta, 0.25, 4)));
                 Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, value: rateUp).ShowMessage());
                 break;
+            case PlaybackActionKind.PreviousTrack:
+                Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Previous));
+                break;
+            case PlaybackActionKind.NextTrack:
+                Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Next));
+                break;
+            case PlaybackActionKind.PreviousChapter:
+                VlcMediaPlayer.PreviousChapter();
+                break;
+            case PlaybackActionKind.NextChapter:
+                VlcMediaPlayer.NextChapter();
+                break;
         }
     }
 
