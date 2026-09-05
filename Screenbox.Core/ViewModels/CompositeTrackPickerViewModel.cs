@@ -58,6 +58,17 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     /// </summary>
     [ObservableProperty] public partial int VideoTrackIndex { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value that indicates whether the flyout shows audio, subtitle,
+    /// or composite options in the picker.
+    /// </summary>
+    /// <returns>
+    /// A value of the enumeration that indicates whether the flyout shows audio, subtitle,
+    /// or composite options. The default is <b><see cref="TrackPickerDisplayMode.Composite"/></b>.
+    /// </returns>
+    [ObservableProperty]
+    public partial TrackPickerDisplayMode DisplayMode { get; set; } = TrackPickerDisplayMode.Composite;
+
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
     private readonly PlayerContext _playerContext;
@@ -76,6 +87,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         SubtitleTracks = new ObservableCollection<string>();
         AudioTracks = new ObservableCollection<string>();
         VideoTracks = new ObservableCollection<string>();
+        DisplayMode = TrackPickerDisplayMode.Composite;
 
         Messenger.Register<QueueCurrentItemChangedMessage>(this);
     }
@@ -286,7 +298,6 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         }
     }
 
-
     public void OnFlyoutOpening()
     {
         UpdateSubtitleTrackList();
@@ -302,6 +313,13 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     public void OnFlyoutClosed()
     {
         _flyoutOpened = false;
+        DisplayMode = TrackPickerDisplayMode.Composite;
+    }
+
+    [RelayCommand]
+    private void SetDisplayMode(TrackPickerDisplayMode value)
+    {
+        DisplayMode = value;
     }
 
     private void UpdateAudioTrackList()
