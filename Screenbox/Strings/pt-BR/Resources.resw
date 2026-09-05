@@ -364,7 +364,7 @@
     <value>Abrir localização do arquivo</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Abrir no Explorador de Arquivos</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Abrir com</value>
@@ -588,7 +588,7 @@
     <value>Não foi possível carregar a mídia</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Proporção</value>
+    <value>Proporção de aspecto</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>Ajustar</value>
@@ -597,7 +597,7 @@
     <value>Preencher</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Proporção personalizada</value>
+    <value>Proporção de aspecto personalizada</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Velocidade de reprodução personalizada</value>
@@ -1160,7 +1160,7 @@
     <value>Alterar</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Proporção de aspecto: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>
