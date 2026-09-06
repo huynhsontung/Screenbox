@@ -8,19 +8,30 @@
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
-  <!-- Trimming configuration -->
+  <!-- Trimming switches -->
   <PropertyGroup>
     <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
-    <!-- https://github.com/microsoft/CsWinRT/blob/2.3.1.260716.1/nuget/readme.md#advanced-size-saving-options -->
+
+    <!-- C#/WinRT size‑saving options:
+         Disable dynamic object support and manifest‑free activation to reduce binary size.
+         References:
+         https://github.com/microsoft/CsWinRT/blob/2.3.1.260716.1/nuget/readme.md#advanced-size-saving-options
+         https://github.com/microsoft/CsWinRT/pull/1887
+    -->
     <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
-    <!-- https://github.com/microsoft/CsWinRT/pull/1887 -->
     <CsWinRTEnableManifestFreeActivation>false</CsWinRTEnableManifestFreeActivation>
-    <!-- https://github.com/CommunityToolkit/dotnet/pull/911 -->
+
+    <!-- WinRT does not require 'INotifyPropertyChanging' support.
+         References:
+         https://github.com/CommunityToolkit/dotnet/pull/911
+         https://github.com/microsoft/CsWinRT/pull/2358
+    -->
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
   </PropertyGroup>
 
-  <!-- C#/WinRT is explicitly referenced to support more comprehensive AOT analysis -->
   <ItemGroup>
+    <!-- Use C#/WinRT 2.3.1 directly to enable improved AOT analysis.
+         The Windows 26100 SDK uses an older version lacking these enhancements. -->
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
   </ItemGroup>
 
