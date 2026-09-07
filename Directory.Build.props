@@ -8,6 +8,11 @@
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
+  <!-- Output path configuration -->
+  <PropertyGroup>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
   <!-- Trimming switches -->
   <PropertyGroup>
     <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
