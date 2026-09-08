@@ -115,7 +115,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         }
 
         //await SaveAsync();
-        Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
     }
 
     public async Task AddItemsAtIndexAsync(IReadOnlyList<MediaViewModel> items, int insertIndex = -1)
@@ -136,7 +136,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         }
 
         //await SaveAsync();
-        Messenger.Send(new PlaylistItemsAddedNotificationMessage(Name, items.Count));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
     }
 
     private PlaylistRecordDto ToPersistentPlaylist()

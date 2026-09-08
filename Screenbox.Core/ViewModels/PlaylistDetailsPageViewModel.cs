@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -153,7 +154,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
         string playlistName = Source.Name;
         await _playlistService.DeletePlaylistAsync(Source.Id);
-        Messenger.Send(new PlaylistDeletedNotificationMessage(playlistName));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistDeleted, title: playlistName));
         return true;
     }
 
@@ -161,6 +162,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     {
         if (Source == null) return;
         await Source.RenameAsync(newDisplayName);
-        Messenger.Send(new PlaylistRenamedNotificationMessage(newDisplayName));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistRenamed, title: newDisplayName));
     }
 }

@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -76,7 +77,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         catch (Exception e)
         {
             folder = ApplicationData.Current.TemporaryFolder;
-            Messenger.Send(new ErrorMessage(null, e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, message: e.Message));
             _logger.LogError(e, "Failed to resolve the first videos folder.");
             return false;
         }
@@ -106,7 +107,6 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
 
     /// <summary>
     /// Requests adding a new folder to the Videos library.
-    /// Sends a <see cref="Core.Messages.FailedToAddFolderNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand(CanExecute = nameof(HasLibrary))]
     private async Task AddFolderAsync()
@@ -117,7 +117,7 @@ public sealed partial class VideosPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new FailedToAddFolderNotificationMessage(e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.FolderAddFailed, message: e.Message));
         }
     }
 
