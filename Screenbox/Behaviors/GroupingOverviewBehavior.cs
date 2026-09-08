@@ -40,6 +40,7 @@ internal sealed partial class GroupingOverviewBehavior : Behavior<GridView>
         UpdateGroupViewItemWidth();
     }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     private void UpdateGroupViewItemWidth()
     {
         if (AssociatedObject?.ItemsPanelRoot == null) return;

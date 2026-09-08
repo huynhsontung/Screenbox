@@ -47,6 +47,7 @@ public sealed partial class PropertyViewModel : ObservableObject
     /// <summary>
     /// Populates the property collections with metadata keys and values from the given <paramref name="media"/> item.
     /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public void UpdateProperties(MediaViewModel media)
     {
         switch (media.MediaType)

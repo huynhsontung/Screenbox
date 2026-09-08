@@ -66,6 +66,7 @@ public sealed partial class TitleBar
     /// The default is <b>null</b>.</value>
     public DataTemplate HeaderTemplate
     {
+        [DynamicWindowsRuntimeCast(typeof(DataTemplate))]
         get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
         set { SetValue(HeaderTemplateProperty, value); }
     }
@@ -87,6 +88,7 @@ public sealed partial class TitleBar
     /// to the title bar header.</value>
     public TransitionCollection HeaderTransitions
     {
+        [DynamicWindowsRuntimeCast(typeof(TransitionCollection))]
         get { return (TransitionCollection)GetValue(HeaderTransitionsProperty); }
         set { SetValue(HeaderTransitionsProperty, value); }
     }
@@ -106,6 +108,7 @@ public sealed partial class TitleBar
     /// <value>The graphic content of the title bar.</value>
     public IconElement Icon
     {
+        [DynamicWindowsRuntimeCast(typeof(IconElement))]
         get { return (IconElement)GetValue(IconProperty); }
         set { SetValue(IconProperty, value); }
     }
@@ -168,6 +171,7 @@ public sealed partial class TitleBar
     /// The default is <b>null</b>.</value>
     public DataTemplate FooterTemplate
     {
+        [DynamicWindowsRuntimeCast(typeof(DataTemplate))]
         get { return (DataTemplate)GetValue(FooterTemplateProperty); }
         set { SetValue(FooterTemplateProperty, value); }
     }
@@ -189,6 +193,7 @@ public sealed partial class TitleBar
     /// to the title bar footer.</value>
     public TransitionCollection FooterTransitions
     {
+        [DynamicWindowsRuntimeCast(typeof(TransitionCollection))]
         get { return (TransitionCollection)GetValue(FooterTransitionsProperty); }
         set { SetValue(FooterTransitionsProperty, value); }
     }
@@ -212,6 +217,7 @@ public sealed partial class TitleBar
     /// The default is <see langword="null"/>.</value>
     public Brush CaptionButtonBackgroundBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonBackgroundBrushProperty); }
         set { SetValue(CaptionButtonBackgroundBrushProperty, value); }
     }
@@ -235,6 +241,7 @@ public sealed partial class TitleBar
     /// or White (for <b>Dark</b> theme).</value>
     public Brush CaptionButtonForegroundBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonForegroundBrushProperty); }
         set { SetValue(CaptionButtonForegroundBrushProperty, value); }
     }
@@ -256,6 +263,7 @@ public sealed partial class TitleBar
     /// while the pointer is over it. The default is <see langword="null"/>.</value>
     public Brush CaptionButtonBackgroundPointerOverBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonBackgroundPointerOverBrushProperty); }
         set { SetValue(CaptionButtonBackgroundPointerOverBrushProperty, value); }
     }
@@ -279,6 +287,7 @@ public sealed partial class TitleBar
     /// (for <b>Light</b> theme) or White (for <b>Dark</b> theme).</value>
     public Brush CaptionButtonForegroundPointerOverBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonForegroundPointerOverBrushProperty); }
         set { SetValue(CaptionButtonForegroundPointerOverBrushProperty, value); }
     }
@@ -300,6 +309,7 @@ public sealed partial class TitleBar
     /// when it's pressed. The default is <see langword="null"/>.</value>
     public Brush CaptionButtonBackgroundPressedBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonBackgroundPressedBrushProperty); }
         set { SetValue(CaptionButtonBackgroundPressedBrushProperty, value); }
     }
@@ -323,6 +333,7 @@ public sealed partial class TitleBar
     /// (for <b>Light</b> theme) or Light Gray (for <b>Dark</b> theme).</value>
     public Brush CaptionButtonForegroundPressedBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonForegroundPressedBrushProperty); }
         set { SetValue(CaptionButtonForegroundPressedBrushProperty, value); }
     }
@@ -344,6 +355,7 @@ public sealed partial class TitleBar
     /// when it's inactive. The default is <see langword="null"/>.</value>
     public Brush CaptionButtonBackgroundInactiveBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonBackgroundInactiveBrushProperty); }
         set { SetValue(CaptionButtonBackgroundInactiveBrushProperty, value); }
     }
@@ -367,6 +379,7 @@ public sealed partial class TitleBar
     /// (for <b>Light</b> theme) or Dim Gray (for <b>Dark</b> theme).</value>
     public Brush CaptionButtonForegroundInactiveBrush
     {
+        [DynamicWindowsRuntimeCast(typeof(Brush))]
         get { return (Brush)GetValue(CaptionButtonForegroundInactiveBrushProperty); }
         set { SetValue(CaptionButtonForegroundInactiveBrushProperty, value); }
     }

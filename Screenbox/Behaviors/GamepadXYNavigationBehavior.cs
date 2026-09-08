@@ -3,6 +3,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 using NavigationViewPaneDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode;
@@ -14,6 +15,7 @@ namespace Screenbox.Behaviors;
 /// </summary>
 internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkElement>
 {
+    [DynamicWindowsRuntimeCast(typeof(NavigationView))]
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -30,6 +32,8 @@ internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkEl
         AssociatedObject.KeyDown -= AssociatedObjectOnKeyDown;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(NavigationViewItem))]
+    [DynamicWindowsRuntimeCast(typeof(Control))]
     private void AssociatedObjectOnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         // Exit if not a Gamepad event
@@ -67,6 +71,8 @@ internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkEl
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Control))]
+    [DynamicWindowsRuntimeCast(typeof(DependencyObject))]
     private static void UpdateXYFocus(NavigationView navView)
     {
         if (navView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top) return;

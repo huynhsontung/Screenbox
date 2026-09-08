@@ -10,6 +10,7 @@ namespace Screenbox.Dialogs;
 
 public sealed partial class OpenUrlDialog : ContentDialog
 {
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public OpenUrlDialog()
     {
         this.DefaultStyleKey = typeof(ContentDialog);

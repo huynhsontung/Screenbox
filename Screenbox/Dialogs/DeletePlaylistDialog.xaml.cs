@@ -1,4 +1,4 @@
-﻿using Screenbox.Helpers;
+using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -10,6 +10,7 @@ public sealed partial class DeletePlaylistDialog : ContentDialog
 {
     private string PlaylistName { get; }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public DeletePlaylistDialog(string playlistName)
     {
         this.DefaultStyleKey = typeof(ContentDialog);

@@ -66,6 +66,7 @@ public sealed partial class TimeDisplay : UserControl
     /// <value>The style that defines the look of the text elements. The default is <b>null</b>.</value>
     public Style TextBlockStyle
     {
+        [DynamicWindowsRuntimeCast(typeof(Style))]
         get => (Style)GetValue(TextBlockStyleProperty);
         set => SetValue(TextBlockStyleProperty, value);
     }

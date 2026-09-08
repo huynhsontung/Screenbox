@@ -101,6 +101,7 @@ public sealed partial class PlayerService : IPlayerService
         return new Media(player.LibVlc, str, FromType.FromPath, options);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private Media CreateMedia(VlcMediaPlayer player, IStorageFile file, params string[] options)
     {
         // NOTE: There have been reports of network locations not working when using the URI approach.

@@ -37,6 +37,7 @@ public sealed partial class ChapterTitleConverter : DependencyObject, IValueConv
             : Strings.Resources.ChapterName(chapters.IndexOf(chapterCue) + 1);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ChapterCue))]
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         return value is not ChapterCue chapter

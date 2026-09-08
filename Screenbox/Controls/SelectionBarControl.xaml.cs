@@ -325,6 +325,7 @@ public sealed partial class SelectionBarControl : UserControl
     /// <inheritdoc cref="CommandBar.DefaultLabelPosition"/>
     public CommandBarDefaultLabelPosition DefaultLabelPosition
     {
+        [DynamicWindowsRuntimeCast(typeof(CommandBarDefaultLabelPosition))]
         get { return (CommandBarDefaultLabelPosition)GetValue(DefaultLabelPositionProperty); }
         set { SetValue(DefaultLabelPositionProperty, value); }
     }
@@ -371,6 +372,7 @@ public sealed partial class SelectionBarControl : UserControl
         base.OnKeyDown(e);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(CommandBarDefaultLabelPosition))]
     private static void OnDefaultLabelPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var control = (SelectionBarControl)d;

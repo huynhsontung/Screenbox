@@ -130,6 +130,7 @@ public static class ListViewExtensions
         element.SetValue(ItemIsFocusEngagementEnabledProperty, value);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     private static void OnListViewBaseUnloaded(object sender, RoutedEventArgs e)
     {
         if (sender is ListViewBase listViewBase)
@@ -142,6 +143,7 @@ public static class ListViewExtensions
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     private static void OnItemCornerRadiusPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is ListViewBase listViewBase)
@@ -157,6 +159,7 @@ public static class ListViewExtensions
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     private static void OnItemMarginPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is ListViewBase listViewBase)
@@ -172,6 +175,7 @@ public static class ListViewExtensions
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     private static void OnItemMinHeightPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is ListViewBase listViewBase)
@@ -187,6 +191,7 @@ public static class ListViewExtensions
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ListViewBase))]
     private static void OnItemIsFocusEngagementEnabledPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is ListViewBase listViewBase)
@@ -290,6 +295,7 @@ public static class ListViewExtensions
     /// Get index of the item where the cursor is over when a drag event occurs.
     /// </summary>
     /// Reference: https://stackoverflow.com/a/74604730/10934913
+    [DynamicWindowsRuntimeCast(typeof(ListViewItem))]
     public static int GetDropIndex(this ListViewBase listView, DragEventArgs e)
     {
         var position = e.GetPosition(listView);

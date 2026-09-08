@@ -74,6 +74,7 @@ public sealed partial class PlayQueueControl : UserControl
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Control))]
     private void GoToCurrentItem()
     {
         if (ViewModel.Queue.CurrentItem is not null)

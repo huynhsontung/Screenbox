@@ -50,9 +50,6 @@ jobs:
 
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        platform: [x64, x86, arm64]
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -110,7 +107,7 @@ jobs:
         msbuild Screenbox\Screenbox.csproj `
           -p:RestoreConfigFile=nuget.config `
           -p:Configuration=Release `
-          -p:Platform=${{ matrix.platform }} `
+          -p:Platform=x64 `
           -p:UapAppxPackageBuildMode=$env:BuildMode `
           -p:AppxPackageDir=$env:PackageDir @sentryArgs `
           -restore
@@ -119,7 +116,7 @@ jobs:
       uses: actions/upload-artifact@v7
       if: github.ref_type == 'tag'
       with:
-        name: store-upload-${{ matrix.platform }}
+        name: store-upload
         path: |
           C:\DeployOutput\*.msixupload
           C:\DeployOutput\*.appxupload
@@ -127,86 +124,9 @@ jobs:
     - name: Create sideload artifact
       uses: actions/upload-artifact@v7
       with:
-        name: Screenbox-sideload-${{ matrix.platform }}
+        name: Screenbox-sideload
         path: |
           C:\DeployOutput\*_Test
-
-  bundle-store:
-    needs: build
-    if: github.ref_type == 'tag'
-    runs-on: windows-latest
-    steps:
-    - name: Download individual store uploads
-      uses: actions/download-artifact@v8
-      with:
-        pattern: store-upload-*
-        path: AppPackages/RawUploads
-        merge-multiple: true
-
-    - name: Extract downloaded packages
-      run: |
-        $baseOutputDir = "AppPackages\StoreUploadTemp"
-        New-Item -ItemType Directory -Force -Path "$baseOutputDir\Extracted" | Out-Null
-
-        # Expand all the .msixupload zip files
-        $uploadFiles = Get-ChildItem -Path "AppPackages\RawUploads" -Filter "*.msixupload"
-        foreach ($file in $uploadFiles) {
-            Expand-Archive -Path $file.FullName -DestinationPath "$baseOutputDir\Extracted\$($file.BaseName)" -Force
-        }
-
-    - name: Generate MSIX Bundle
-      run: |
-        $baseOutputDir = "AppPackages\StoreUploadTemp"
-        $mapFilePath = "$baseOutputDir\bundle.map"
-
-        $mapContent = @("[Files]")
-
-        # Find all extracted .msix files and add them to the MakeAppx map
-        $msixFiles = Get-ChildItem -Path "$baseOutputDir\Extracted" -Filter "*.msix" -Recurse
-        foreach ($msix in $msixFiles) {
-            $mapContent += "`"$($msix.FullName)`" `"$($msix.Name)`""
-        }
-
-        $mapContent | Out-File -Encoding utf8 -FilePath $mapFilePath
-
-        # Extract the version from the first package name (e.g., Screenbox_0.19.2.0_x86.msix -> 0.19.2.0)
-        $version = $msixFiles[0].Name.Split('_')[1]
-        $bundleName = "Screenbox_${version}_x86_x64_arm64_bundle"
-        "BUNDLE_NAME=$bundleName" >> $env:GITHUB_ENV
-
-        # Find MakeAppx.exe in the Windows SDK
-        $makeAppx = (Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\MakeAppx.exe" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
-
-        # Create the bundle and fix the version mismatch using /bv
-        $bundlePath = "$baseOutputDir\$bundleName.msixbundle"
-        & $makeAppx bundle /o /f $mapFilePath /p $bundlePath /bv $version
-
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-    - name: Compress Unified MSIX Upload
-      run: |
-        $baseOutputDir = "AppPackages\StoreUploadTemp"
-        $zipTempDir = "$baseOutputDir\ZipTemp"
-        New-Item -ItemType Directory -Force -Path $zipTempDir | Out-Null
-
-        # Add the bundle
-        Copy-Item "$baseOutputDir\${{ env.BUNDLE_NAME }}.msixbundle" -Destination $zipTempDir
-
-        # Add all crash analytics symbols
-        $symFiles = Get-ChildItem -Path "$baseOutputDir\Extracted" -Filter "*.appxsym" -Recurse
-        foreach ($sym in $symFiles) {
-            Copy-Item $sym.FullName -Destination $zipTempDir
-        }
-
-        # Zip into final msixupload
-        $finalUploadPath = "AppPackages\${{ env.BUNDLE_NAME }}.msixupload"
-        Compress-Archive -Path "$zipTempDir\*" -DestinationPath $finalUploadPath -Force
-
-    - name: Upload Unified Store Package
-      uses: actions/upload-artifact@v7
-      with:
-        name: unified-store-upload
-        path: AppPackages\Screenbox_*_bundle.msixupload
 
   release:
     needs: build
@@ -219,8 +139,7 @@ jobs:
     - name: Download package
       uses: actions/download-artifact@v8
       with:
-        pattern: Screenbox-sideload-*
-        merge-multiple: true
+        name: Screenbox-sideload
         path: download/
 
     - name: Zip artifact

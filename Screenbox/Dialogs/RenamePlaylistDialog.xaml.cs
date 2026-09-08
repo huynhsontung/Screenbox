@@ -10,6 +10,7 @@ public sealed partial class RenamePlaylistDialog : ContentDialog
 {
     private const int MaxPlaylistNameLength = 100;
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public RenamePlaylistDialog(string currentName)
     {
         this.DefaultStyleKey = typeof(ContentDialog);
