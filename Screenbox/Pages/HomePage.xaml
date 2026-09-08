@@ -10,6 +10,7 @@
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -31,102 +32,30 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <MenuFlyout x:Key="ItemFlyout">
-                <interactivity:Interaction.Behaviors>
-                    <behaviors:AddToPlaylistFlyoutBehavior TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
-                </interactivity:Interaction.Behaviors>
-
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Text="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.ContextMedia.IsPlaying), Mode=OneWay}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.ContextMedia.IsPlaying), Mode=OneWay}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.PlayNextCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{x:Bind strings:Resources.PlayNext}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.AddToQueueCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.AddToQueue}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="AddToQueueMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutSeparator />
-                <MenuFlyoutSubItem x:Name="AddToPlaylistSubMenu" Text="{x:Bind strings:Resources.AddToPlaylist}">
-                    <MenuFlyoutSubItem.Icon>
-                        <FontIcon
-                            x:Name="AddToPlaylistMenuFlyoutSubItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource PlaylistAddGlyph}" />
-                    </MenuFlyoutSubItem.Icon>
-                </MenuFlyoutSubItem>
-                <MenuFlyoutItem
-                    Command="{StaticResource OpenWithCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE7AC;,
-                                       MirroredWhenRightToLeft=True}"
-                    Text="{x:Bind strings:Resources.OpenWith}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.RemoveCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:SymbolIcon Symbol=Clear}"
-                    Text="{x:Bind strings:Resources.Remove}" />
-                <MenuFlyoutItem
-                    Command="{StaticResource OpenInFileExplorerCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xEC50;}"
-                    Text="{x:Bind strings:Resources.OpenInFileExplorer}"
-                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
-                <MenuFlyoutItem
-                    Command="{StaticResource ShowPropertiesCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{x:Bind strings:Resources.Properties}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenAlbumCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{x:Bind strings:Resources.ShowAlbum}"
-                    Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenArtistCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
-                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{x:Bind strings:Resources.ShowArtist}"
-                    Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
-                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
-                <MenuFlyoutItem
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
-                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
-                    <MenuFlyoutItem.Command>
-                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
-                    </MenuFlyoutItem.Command>
-                </MenuFlyoutItem>
-                <MenuFlyoutSeparator />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.Selection.SelectItemCommand}"
-                    CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.Select}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="SelectMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource SingleSelectGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-            </MenuFlyout>
+            <flyouts:MediaMenuFlyout
+                x:Key="ItemFlyout"
+                AddToQueueCommand="{x:Bind Common.AddToQueueCommand}"
+                ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
+                PlayCommand="{x:Bind ViewModel.PlayCommand}"
+                PlayNextCommand="{x:Bind Common.PlayNextCommand}"
+                RemoveCommand="{x:Bind ViewModel.RemoveCommand}"
+                SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}">
+                <flyouts:MediaMenuFlyout.AdditionalItems>
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenAlbumCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
+                        Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                        Text="{x:Bind strings:Resources.ShowAlbum}"
+                        Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenArtistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                        Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                        Text="{x:Bind strings:Resources.ShowArtist}"
+                        Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                </flyouts:MediaMenuFlyout.AdditionalItems>
+            </flyouts:MediaMenuFlyout>
 
             <MenuFlyout x:Key="OpenFlyout" Placement="{x:Bind helpers:GlobalizationHelper.MirrorWhenRightToLeft(primitives:FlyoutPlacementMode.BottomEdgeAlignedRight)}">
                 <MenuFlyoutItem
@@ -374,9 +303,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="OpenMenuFlyoutFolderItemIcon.Glyph" Value="{StaticResource FolderListMirroredGlyph}" />
-                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
-                        <contract13NotPresent:Setter Target="AddToPlaylistMenuFlyoutSubItemIcon.Glyph" Value="{StaticResource PlaylistAddMirroredGlyph}" />
-                        <Setter Target="SelectMenuFlyoutItemIcon.Glyph" Value="{StaticResource SingleSelectMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

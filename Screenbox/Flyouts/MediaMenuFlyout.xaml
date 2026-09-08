@@ -1,0 +1,97 @@
+<MenuFlyout
+    x:Class="Screenbox.Flyouts.MediaMenuFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Screenbox.Flyouts"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    Closing="OnClosing"
+    Opening="OnOpening"
+    mc:Ignorable="d">
+    <interactivity:Interaction.Behaviors>
+        <behaviors:AddToPlaylistFlyoutBehavior x:Name="AddToPlaylistFlyoutBehavior" />
+    </interactivity:Interaction.Behaviors>
+
+    <MenuFlyoutItem x:Name="PlayItem">
+        <MenuFlyoutItem.Icon>
+            <FontIcon x:Name="PlayItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <MenuFlyoutItem x:Name="PlayNextItem">
+        <MenuFlyoutItem.Icon>
+            <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayAddGlyph}" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <MenuFlyoutItem x:Name="AddToQueueItem" Visibility="Collapsed">
+        <MenuFlyoutItem.Icon>
+            <FontIcon x:Name="AddToQueueItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <MenuFlyoutSeparator />
+
+    <MenuFlyoutSubItem x:Name="AddToPlaylistSubItem">
+        <MenuFlyoutSubItem.Icon>
+            <FontIcon x:Name="AddToPlaylistSubItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
+        </MenuFlyoutSubItem.Icon>
+    </MenuFlyoutSubItem>
+
+    <MenuFlyoutItem x:Name="RemoveItem" Visibility="Collapsed">
+        <MenuFlyoutItem.Icon>
+            <SymbolIcon Symbol="Clear" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <MenuFlyoutItem x:Name="OpenWithItem" Command="{StaticResource OpenWithCommand}">
+        <MenuFlyoutItem.Icon>
+            <FontIcon Glyph="&#xE7AC;" MirroredWhenRightToLeft="True" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <MenuFlyoutItem x:Name="OpenInFileExplorerItem" Command="{StaticResource OpenInFileExplorerCommand}">
+        <MenuFlyoutItem.Icon>
+            <FontIcon Glyph="&#xEC50;" />
+        </MenuFlyoutItem.Icon>
+        <MenuFlyoutItem.KeyboardAccelerators>
+            <KeyboardAccelerator
+                Key="F3"
+                x:Name="OpenInFileExplorerItemKeyboardAccelerator"
+                IsEnabled="False" />
+        </MenuFlyoutItem.KeyboardAccelerators>
+    </MenuFlyoutItem>
+
+    <MenuFlyoutItem x:Name="PropertiesItem" Command="{StaticResource ShowPropertiesCommand}">
+        <MenuFlyoutItem.Icon>
+            <FontIcon Glyph="&#xE946;" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <!--#region Additional Items-->
+
+    <!--  Additional Items will be inserted here.  -->
+
+    <!--#endregion-->
+
+    <!--  Selection  -->
+    <MenuFlyoutSeparator x:Name="SelectionSeparator" Visibility="Collapsed" />
+    <MenuFlyoutItem x:Name="SelectionItem" Visibility="Collapsed">
+        <MenuFlyoutItem.Icon>
+            <FontIcon x:Name="SelectionItemIcon" FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+
+    <!--  Advanced  -->
+    <MenuFlyoutSeparator x:Name="AdvancedModeSeparator" Visibility="Collapsed" />
+    <MenuFlyoutItem x:Name="SetPlaybackOptionsItem" Visibility="Collapsed">
+        <MenuFlyoutItem.Icon>
+            <SymbolIcon Symbol="Setting" />
+        </MenuFlyoutItem.Icon>
+    </MenuFlyoutItem>
+</MenuFlyout>
