@@ -33,6 +33,11 @@
     
     <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.7.260610101</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Use application languages for plural rules to avoid mismatches with the system display language. -->
+    <ReswPlusUseApplicationLanguages>true</ReswPlusUseApplicationLanguages>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations" Version="8.2.251219" />
@@ -71,8 +76,4 @@
     <ProjectReference Include="..\Screenbox.VideoView\Screenbox.VideoView.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <!-- Use application languages for plural rules to avoid mismatches with the system display language. -->
-    <ReswPlusUseApplicationLanguages>true</ReswPlusUseApplicationLanguages>
-  </PropertyGroup>
 </Project>
