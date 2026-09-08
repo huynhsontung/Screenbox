@@ -105,12 +105,15 @@ jobs:
                         "-p:SentrySetCommits=true"
         }
         msbuild Screenbox\Screenbox.csproj `
+          -nologo `
+          -restore `
+          -v:minimal `
           -p:RestoreConfigFile=nuget.config `
+          -p:ContinuousIntegrationBuild=true `
           -p:Configuration=Release `
           -p:Platform=x64 `
           -p:UapAppxPackageBuildMode=$env:BuildMode `
-          -p:AppxPackageDir=$env:PackageDir @sentryArgs `
-          -restore
+          -p:AppxPackageDir=$env:PackageDir @sentryArgs
 
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v7
