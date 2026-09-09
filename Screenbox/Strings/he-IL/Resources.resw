@@ -1154,10 +1154,10 @@
     <value>Frame captures location</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>שנה תיקייה</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>שינוי</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
     <value>Aspect ratio: {0}</value>

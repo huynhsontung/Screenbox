@@ -364,7 +364,7 @@
     <value>打开文件位置</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>在文件资源管理器中打开</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>打开方式</value>
@@ -1160,7 +1160,7 @@
     <value>更改</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>宽高比: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>

@@ -1160,7 +1160,7 @@
     <value>Alterar</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Proporção: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>
