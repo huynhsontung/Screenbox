@@ -1,157 +1,175 @@
-name:  Windows Release Builder
+name: Windows Release Builder
 
 on:
   push:
     branches:
-    - main
+      - main
     tags:
-    - v**
+      - v**
   pull_request:
 
 jobs:
   xaml-lint:
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: '10.x'
+      - name: Install the .NET workload
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.x'
 
-    - name: Restore dotnet tools
-      run: dotnet tool restore
+      - name: Restore .NET tools
+        run: dotnet tool restore
 
-    - name: Lint XAML files
-      run: .\scripts\lint-xaml.ps1
+      - name: Run XAML style check
+        run: .\scripts\lint-xaml.ps1
 
   test:
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v3
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v3
 
-    - uses: actions/cache@v6
-      with:
-        path: ~\.nuget\packages
-        key: ${{ runner.os }}-nuget-test-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-test-
+      - uses: actions/cache@v6
+        with:
+          path: ~\.nuget\packages
+          key: ${{ runner.os }}-nuget-test-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-test-
 
-    - name: Build tests
-      run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\ -restore
+      - name: Build tests
+        run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\ -restore
 
-    - name: Run tests
-      run: C:\BuildOutput\Screenbox.Core.Tests.exe
+      - name: Run tests
+        run: C:\BuildOutput\Screenbox.Core.Tests.exe
 
   build:
     runs-on: windows-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v3
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v3
 
-    - uses: actions/cache@v6
-      with:
-        path: ~\.nuget\packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~\.nuget\packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
-    - name: Fetch Gomplate
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: gh release download v5.0.0 --repo hairyhenderson/gomplate --pattern 'gomplate_*amd64.exe' --output .\gomplate.exe
+      - name: Fetch Gomplate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download v5.0.0 --repo hairyhenderson/gomplate --pattern 'gomplate_*amd64.exe' --output .\gomplate.exe
 
-    - name: Render secrets
-      env:
-        APPCENTER_API_KEY: ${{ github.ref_type == 'tag' && secrets.APPCENTER_API_KEY || '' }}
-        SENTRY_DSN: ${{ github.ref_type == 'tag' && secrets.SENTRY_DSN || '' }}
-      run: Get-Content Screenbox/Secrets.cs.template | .\gomplate.exe | Set-Content Screenbox/Secrets.cs
+      - name: Render secrets file
+        env:
+          APPCENTER_API_KEY: ${{ github.ref_type == 'tag' && secrets.APPCENTER_API_KEY || '' }}
+          SENTRY_DSN: ${{ github.ref_type == 'tag' && secrets.SENTRY_DSN || '' }}
+        run: Get-Content Screenbox/Secrets.cs.template | .\gomplate.exe | Set-Content Screenbox/Secrets.cs
 
-    - name: Get tag version
-      id: get-tag-version
-      if: github.ref_type == 'tag'
-      run: |
-        $found = "${{ github.ref_name }}" -match 'v*(\d+.\d+.\d+)'
-        if ($found) { $match = $matches[1] }
-        "version=$match" >> $env:GITHUB_OUTPUT
+      - name: Get tag version
+        id: get-tag-version
+        if: github.ref_type == 'tag'
+        run: |
+          $found = "${{ github.ref_name }}" -match 'v*(\d+.\d+.\d+)'
+          if ($found) { $match = $matches[1] }
+          "version=$match" >> $env:GITHUB_OUTPUT
 
-    - name: Update package manifest
-      run: .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
+      - name: Update package manifest
+        run: .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
 
-    - name: Build store package
-      env:
-        BuildMode: StoreUpload
-        PackageDir: C:\DeployOutput\
-        SENTRY_ORG: starpine
-        SENTRY_PROJECT: screenbox
-        SENTRY_URL: https://sentry.io/
-        SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      run: |
-        if ('${{ github.ref_type }}' -eq 'tag') {
-          $sentryArgs = "-p:SentryUploadSymbols=true", `
-                        "-p:SentryOrg=$env:SENTRY_ORG", `
-                        "-p:SentryProject=$env:SENTRY_PROJECT", `
-                        "-p:SentryUrl=$env:SENTRY_URL", `
-                        "-p:SentryCreateRelease=true", `
-                        "-p:SentrySetCommits=true"
-        }
-        msbuild Screenbox\Screenbox.csproj `
-          -nologo `
-          -restore `
-          -v:minimal `
-          -p:RestoreConfigFile=nuget.config `
-          -p:ContinuousIntegrationBuild=true `
-          -p:Configuration=Release `
-          -p:Platform=x64 `
-          -p:UapAppxPackageBuildMode=$env:BuildMode `
-          -p:AppxPackageDir=$env:PackageDir @sentryArgs
+      - name: Build app package
+        env:
+          PackageDir: C:\DeployOutput\
+          SENTRY_ORG: starpine
+          SENTRY_PROJECT: screenbox
+          SENTRY_URL: https://sentry.io/
+          SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          if ('${{ github.ref_type }}' -eq 'tag') {
+            $buildMode = "StoreUpload"
+            $sentryArgs = "-p:SentryUploadSymbols=true", `
+                          "-p:SentryOrg=$env:SENTRY_ORG", `
+                          "-p:SentryProject=$env:SENTRY_PROJECT", `
+                          "-p:SentryUrl=$env:SENTRY_URL", `
+                          "-p:SentryCreateRelease=true", `
+                          "-p:SentrySetCommits=true"
+          }
+          else {
+            $buildMode = "SideloadOnly"
+            $sentryArgs = @()
+          }
 
-    - name: Create store-upload artifact
-      uses: actions/upload-artifact@v7
-      if: github.ref_type == 'tag'
-      with:
-        name: store-upload
-        path: |
-          C:\DeployOutput\*.msixupload
-          C:\DeployOutput\*.appxupload
+          msbuild Screenbox\Screenbox.csproj `
+            -nologo `
+            -restore `
+            -p:RestoreConfigFile=nuget.config `
+            -p:ContinuousIntegrationBuild=true `
+            -p:Configuration=Release `
+            -p:Platform=x64 `
+            -p:AppxPackageDir=$env:PackageDir `
+            -p:UapAppxPackageBuildMode=$buildMode `
+            @sentryArgs
 
-    - name: Create sideload artifact
-      uses: actions/upload-artifact@v7
-      with:
-        name: Screenbox-sideload
-        path: |
-          C:\DeployOutput\*_Test
+      - name: Upload Store submission package artifact
+        uses: actions/upload-artifact@v7
+        if: github.ref_type == 'tag'
+        with:
+          name: store-upload
+          path: |
+            C:\DeployOutput\*.msixupload
+            C:\DeployOutput\*.appxupload
+
+      - name: Upload sideload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: Screenbox-sideload
+          path: |
+            C:\DeployOutput\*_Test\*
+            !C:\DeployOutput\*_Test\*.msix
+          compression-level: 0
 
   release:
     needs: build
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Download package
-      uses: actions/download-artifact@v8
-      with:
-        name: Screenbox-sideload
-        path: download/
+      - name: Download package
+        uses: actions/download-artifact@v8
+        with:
+          name: Screenbox-sideload
+          path: download/
 
-    - name: Zip artifact
-      run: zip -r sideload.zip download/
+      - name: Zip artifact
+        run: zip -r sideload.zip download/
 
-    - name: Generate GitHub Release
-      uses: softprops/action-gh-release@v3
-      with:
-        draft: true
-        generate_release_notes: true
-        files: |
-          sideload.zip
+      - name: Generate GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            sideload.zip
