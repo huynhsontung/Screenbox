@@ -7,11 +7,11 @@
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
-  IgnorableNamespaces="uap mp uap3 desktop4">
+  IgnorableNamespaces="uap uap3 uap5 mp desktop4">
 
   <Identity
     Name="Screenbox"
-    Publisher="CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C"
+    Publisher="CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C, OID.2.25.311729368913984317654407730594956997722=1"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="13f69037-4fca-4b86-a6f5-a77c0969d41a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
