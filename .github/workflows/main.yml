@@ -139,10 +139,8 @@ jobs:
         with:
           name: Screenbox-sideload
           path: |
-            C:/DeployOutput/**/*_Test/
-            !C:/DeployOutput/**/_Test/Dependencies/arm/**
-            !C:/DeployOutput/**/_Test/Dependencies/Win32/**
-            !C:/DeployOutput/**/*_Test/*.msix
+            C:\DeployOutput\*_Test\**
+            !C:\DeployOutput\*_Test\*.msix
           compression-level: 0
 
   release:
