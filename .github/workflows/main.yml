@@ -118,7 +118,6 @@ jobs:
           }
 
           msbuild Screenbox\Screenbox.csproj `
-            -nologo `
             -restore `
             -p:RestoreConfigFile=nuget.config `
             -p:ContinuousIntegrationBuild=true `
@@ -132,17 +131,15 @@ jobs:
         uses: actions/upload-artifact@v7
         if: github.ref_type == 'tag'
         with:
-          name: store-upload
-          path: |
-            C:\DeployOutput\*.msixupload
-            C:\DeployOutput\*.appxupload
+          path: C:\DeployOutput\*.msixupload
+          archive: false
 
       - name: Upload sideload artifact
         uses: actions/upload-artifact@v7
         with:
           name: Screenbox-sideload
           path: |
-            C:\DeployOutput\*_Test\*
+            C:\DeployOutput\*_Test\**
             !C:\DeployOutput\*_Test\*.msix
           compression-level: 0
 
