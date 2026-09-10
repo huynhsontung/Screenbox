@@ -139,7 +139,7 @@ jobs:
         with:
           name: Screenbox-sideload
           path: |
-            C:\DeployOutput\*_Test\**
+            C:\DeployOutput\*_Test\
             !C:\DeployOutput\*_Test\*.msix
           compression-level: 0
 
