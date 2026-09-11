@@ -92,7 +92,12 @@ jobs:
           "version=$match" >> $env:GITHUB_OUTPUT
 
       - name: Update package manifest
-        run: .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
+        run: |
+          if ('${{ github.ref_type }}' -eq 'tag') {
+            .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
+          } else {
+            .\scripts\update-manifest.ps1
+          }
 
       - name: Build app package
         env:
