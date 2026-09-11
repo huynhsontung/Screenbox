@@ -179,6 +179,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         await ProcessPlayFilesAsync(message);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task ProcessPlayFilesAsync(PlayFilesMessage message)
     {
         var files = message.Value;
@@ -572,6 +573,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         );
     }
 
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task AddToRecent(object? source)
     {
         try
@@ -710,6 +712,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Uses a two-phase approach: start playing the first item immediately,
     /// then resolve the full media list (e.g. from a playlist file) and update the queue.
     /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task ParseAndPlayAsync(object value)
     {
         NextMediaList? result = null;

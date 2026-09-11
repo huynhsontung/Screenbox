@@ -4,7 +4,7 @@ using Screenbox.Core.Services;
 namespace Screenbox.Core.ViewModels;
 
 // To support navigation type matching
-public sealed class FolderListViewPageViewModel : FolderViewPageViewModel
+public sealed partial class FolderListViewPageViewModel : FolderViewPageViewModel
 {
     private readonly INavigationService _navigationService;
 

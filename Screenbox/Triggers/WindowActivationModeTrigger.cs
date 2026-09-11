@@ -64,6 +64,7 @@ public sealed partial class WindowActivationModeTrigger : StateTriggerBase
     /// be applied. The default is <b>None</b>.</value>
     public CoreWindowActivationMode ActivationMode
     {
+        [DynamicWindowsRuntimeCast(typeof(CoreWindowActivationMode))]
         get { return (CoreWindowActivationMode)GetValue(ActivationModeProperty); }
         set { SetValue(ActivationModeProperty, value); }
     }

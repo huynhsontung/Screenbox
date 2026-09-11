@@ -39,6 +39,7 @@ public sealed partial class VLCLoginDialog : ContentDialog, IVlcLoginDialog
 
     public bool AskStoreCredential { get; set; }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public VLCLoginDialog()
     {
         this.InitializeComponent();

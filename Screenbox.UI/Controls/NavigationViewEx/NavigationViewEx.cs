@@ -115,6 +115,8 @@ public sealed partial class NavigationViewEx : NavigationView
         SettingsItemKeyboardAccelerators = new List<KeyboardAccelerator>();
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SplitView))]
+    [DynamicWindowsRuntimeCast(typeof(Grid))]
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -390,6 +392,7 @@ public sealed partial class NavigationViewEx : NavigationView
         _overlayChildRectangle.Visibility = showLightDismissLayer ? Visibility.Visible : Visibility.Collapsed;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Button))]
     private void UpdatePaneToggleButton()
     {
         if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
@@ -421,6 +424,7 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Button))]
     private void UpdatePaneSearchButton()
     {
         if (GetTemplateChild(SearchButtonName) is Button paneSearchButton)
@@ -445,6 +449,7 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Button))]
     private void UpdateBackButton()
     {
         if (GetTemplateChild(NavViewBackButton) is Button backButton)
@@ -468,6 +473,7 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Button))]
     private void UpdateCloseButton()
     {
         if (GetTemplateChild(NavViewCloseButton) is Button closeButton)

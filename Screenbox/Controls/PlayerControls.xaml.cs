@@ -25,11 +25,16 @@ public sealed partial class PlayerControls : UserControl
 
     public BrushTransition BackgroundTransition
     {
+        [DynamicWindowsRuntimeCast(typeof(BrushTransition))]
         get => (BrushTransition)GetValue(BackgroundTransitionProperty);
         set => SetValue(BackgroundTransitionProperty, value);
     }
 
-    public MenuFlyout? PlayerContextMenu => (MenuFlyout?)MoreButton.Flyout;
+    public MenuFlyout? PlayerContextMenu
+    {
+        [DynamicWindowsRuntimeCast(typeof(MenuFlyout))]
+        get => (MenuFlyout?)MoreButton.Flyout;
+    }
 
     internal PlayerControlsViewModel ViewModel => (PlayerControlsViewModel)DataContext;
 
@@ -46,6 +51,7 @@ public sealed partial class PlayerControls : UserControl
         AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Flyout))]
     private void ShowSubtitleOptions()
     {
         AudioSubtitlePickerFlyout.Hide();
@@ -53,6 +59,7 @@ public sealed partial class PlayerControls : UserControl
         flyout.ShowAt(AudioAndCaptionButton);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Flyout))]
     private void ShowAudioOptions()
     {
         AudioSubtitlePickerFlyout.Hide();
@@ -71,6 +78,7 @@ public sealed partial class PlayerControls : UserControl
         _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Flyout))]
     private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
@@ -85,6 +93,7 @@ public sealed partial class PlayerControls : UserControl
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Flyout))]
     private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
@@ -103,6 +112,7 @@ public sealed partial class PlayerControls : UserControl
         SelectAlternatePlaybackSpeedItem(newValue);
     }
 
+    [DynamicWindowsRuntimeCast(typeof(RadioMenuFlyoutItem))]
     private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)
     {
         bool isMenuValue = (int)(playbackSpeed * 100) % 25 == 0;
@@ -129,6 +139,7 @@ public sealed partial class PlayerControls : UserControl
         return hasActiveItem;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(RadioMenuFlyoutItem))]
     private void AspectRatioTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         string aspectRatio = AspectRatioTextBox.Text;

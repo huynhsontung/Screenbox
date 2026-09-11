@@ -86,6 +86,7 @@ public sealed partial class SeekBar : UserControl
         _previewToolTip.IsOpen = true;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(ToolTip))]
     private void SeekBarSlider_OnPointerEntered(object sender, PointerRoutedEventArgs e)
     {
         if (ToolTipService.GetToolTip(SeekBarSlider) is not ToolTip)
@@ -131,6 +132,7 @@ public sealed partial class SeekBar : UserControl
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(UIElement))]
     private void SeekBarSlider_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         if (e.IsGenerated) return;

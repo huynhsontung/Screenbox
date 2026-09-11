@@ -10,7 +10,7 @@ using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Services;
 
-public sealed class PlaybackProgressTracker : ObservableRecipient, IPlaybackProgressTracker,
+public sealed partial class PlaybackProgressTracker : ObservableRecipient, IPlaybackProgressTracker,
     IRecipient<SuspendingMessage>
 {
     private const int Capacity = 64;

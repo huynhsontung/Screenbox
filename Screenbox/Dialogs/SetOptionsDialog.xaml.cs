@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,6 +22,7 @@ public sealed partial class SetOptionsDialog : ContentDialog
 
     private string[] VlcCommandLineHelpTextParts { get; }
 
+    [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
     public SetOptionsDialog(string existingOptions, bool global = false)
     {
         this.InitializeComponent();

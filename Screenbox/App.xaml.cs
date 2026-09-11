@@ -307,6 +307,7 @@ sealed partial class App : Application
         }
     }
 
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
     private Frame InitRootFrame()
     {
         // Do not repeat app initialization when the Window already has content,

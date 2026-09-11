@@ -17,7 +17,7 @@ namespace Screenbox.Core.Coordinators;
 /// <summary>
 /// Stateful coordinator that owns library watchers/timers and invokes <see cref="ILibraryService"/> operations.
 /// </summary>
-public sealed class LibraryCoordinator : ILibraryCoordinator
+public sealed partial class LibraryCoordinator : ILibraryCoordinator
 {
     private readonly LibraryContext _context;
     private readonly ILibraryService _libraryService;
