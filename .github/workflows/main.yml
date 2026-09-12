@@ -76,17 +76,7 @@ jobs:
         env:
           SENTRY_DSN: ${{ github.ref_type == 'tag' && secrets.SENTRY_DSN || '' }}
         run: |
-          $template = @"
-        namespace Screenbox;
-
-        internal static class Secrets
-        {
-            public const string SentryDsn = "{{SENTRY_DSN}}";
-        }
-        "@
-
-          $output = $template.Replace("{{SENTRY_DSN}}", $env:SENTRY_DSN)
-          Set-Content -Path Screenbox/Secrets.cs -Value $output
+          .\scripts\render-secrets.ps1 -SentryDsn "$env:SENTRY_DSN"
 
       - name: Get tag version
         id: get-tag-version
