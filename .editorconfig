@@ -47,7 +47,7 @@ indent_size = 2
 
 # Powershell files
 [*.{ps1,psd1,psm1}]
-indent_size = 2
+indent_size = 4
 
 # C# files
 [*.cs]
