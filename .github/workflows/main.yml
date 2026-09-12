@@ -105,7 +105,7 @@ jobs:
           SENTRY_ORG: starpine
           SENTRY_PROJECT: screenbox
           SENTRY_URL: https://sentry.io/
-          SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
+          SENTRY_RELEASE: screenbox@${{ steps.get-tag-version.outputs.version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           if ('${{ github.ref_type }}' -eq 'tag') {
