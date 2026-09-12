@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 
 $packageName = if ($env:ChocolateyPackageName) { $env:ChocolateyPackageName } else { "screenbox" }
 $appPackageName = "18496Starpine.Screenbox"
@@ -38,7 +38,7 @@ if ($installed) {
 }
 
 $workDir = Join-Path ([IO.Path]::GetTempPath()) ("chocolatey-screenbox-" + [guid]::NewGuid().ToString("N"))
-$bundlePath = Join-Path $workDir "Screenbox_0.21.0.0_neutral.msixbundle"
+$bundlePath = Join-Path $workDir "Screenbox.msixbundle"
 $xamlPackagePath = Join-Path $workDir "Microsoft.UI.Xaml.2.8.7.nupkg"
 $vclibsPackagePath = Join-Path $workDir "DesktopAppInstaller_Dependencies.zip"
 $xamlAppxPath = Join-Path $workDir "Microsoft.UI.Xaml.2.8.$arch.appx"
