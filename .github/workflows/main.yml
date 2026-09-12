@@ -72,16 +72,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Fetch Gomplate
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release download v5.0.0 --repo hairyhenderson/gomplate --pattern 'gomplate_*amd64.exe' --output .\gomplate.exe
-
       - name: Render secrets file
         env:
-          APPCENTER_API_KEY: ${{ github.ref_type == 'tag' && secrets.APPCENTER_API_KEY || '' }}
           SENTRY_DSN: ${{ github.ref_type == 'tag' && secrets.SENTRY_DSN || '' }}
-        run: Get-Content Screenbox/Secrets.cs.template | .\gomplate.exe | Set-Content Screenbox/Secrets.cs
+        run: |
+          $template = @"
+        namespace Screenbox;
+
+        internal static class Secrets
+        {
+            public const string SentryDsn = "{{SENTRY_DSN}}";
+        }
+        "@
+
+          $output = $template.Replace("{{SENTRY_DSN}}", $env:SENTRY_DSN)
+          Set-Content -Path Screenbox/Secrets.cs -Value $output
 
       - name: Get tag version
         id: get-tag-version
