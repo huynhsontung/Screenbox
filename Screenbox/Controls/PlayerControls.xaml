@@ -120,6 +120,11 @@
             </Flyout>
 
             <MenuFlyout x:Key="NormalPlayerContextMenu">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:AddToPlaylistFlyoutBehavior
+                        DataContext="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
+                        TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
+                </interactivity:Interaction.Behaviors>
                 <MenuFlyoutItem
                     AccessKey="{x:Bind strings:KeyboardResources.MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
@@ -139,6 +144,16 @@
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.OpenWith}" />
                 <MenuFlyoutSeparator />
+                <MenuFlyoutSubItem
+                    x:Name="AddToPlaylistSubMenu"
+                    IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.AddToPlaylist}">
+                    <MenuFlyoutSubItem.Icon>
+                        <FontIcon
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource PlaylistAddGlyph}" />
+                    </MenuFlyoutSubItem.Icon>
+                </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{StaticResource OpenInFileExplorerCommand}"
                     CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
