@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
@@ -9,8 +9,7 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PublishAot>true</PublishAot>
-    <SelfContained>true</SelfContained>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-$(Platform.ToLower())</RuntimeIdentifier>
+    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <EnableMsixTooling>true</EnableMsixTooling>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -27,12 +26,17 @@
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
+    <GenerateAppxPackageOnBuild Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</GenerateAppxPackageOnBuild>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     
     <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.7.260610101</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Use application languages for plural rules to avoid mismatches with the system display language. -->
+    <ReswPlusUseApplicationLanguages>true</ReswPlusUseApplicationLanguages>
   </PropertyGroup>
   
   <ItemGroup>
@@ -72,8 +76,4 @@
     <ProjectReference Include="..\Screenbox.VideoView\Screenbox.VideoView.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <!-- Use application languages for plural rules to avoid mismatches with the system display language. -->
-    <ReswPlusUseApplicationLanguages>true</ReswPlusUseApplicationLanguages>
-  </PropertyGroup>
 </Project>
