@@ -43,6 +43,7 @@ public static class ServiceHelpers
         services.AddTransient<PlaylistsPageViewModel>();
         services.AddTransient<SelectionViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
+        services.AddSingleton<PlaybackSessionViewModel>(); // Playback customization settings; Avoid thread lock
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
 
         // Factories
