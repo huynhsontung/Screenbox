@@ -7,6 +7,11 @@ on:
     tags:
       - v**
   pull_request:
+    paths-ignore:
+      - 'assets/**'
+      - 'docs/**'
+      - 'LICENSE'
+      - '*.md'
 
 jobs:
   xaml-lint:
@@ -38,6 +43,8 @@ jobs:
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
 
       - uses: actions/cache@v6
         with:
@@ -63,6 +70,8 @@ jobs:
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
 
       - name: Cache NuGet packages
         uses: actions/cache@v6
