@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Mandatory=$false)]
-    [ValidatePattern('^\d+\.\d+\.\d+$')]
+    [ValidatePattern('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$')]
     [string]$Version
 )
 
@@ -12,26 +12,34 @@ New-Variable -Name IdentityPublisherUnsigned -Value "$IdentityPublisher, OID.2.2
 New-Variable -Name DisplayName -Value "Screenbox" -Option Constant
 New-Variable -Name VisualDisplayName -Value "ms-resource:ManifestResources/AppDisplayName" -Option Constant
 
-$repoPath = Split-Path -Parent $PSScriptRoot
-$manifestPath = Join-Path -Path $repoPath -ChildPath "Screenbox/Package.appxmanifest"
+$repositoryPath = Split-Path -Parent $PSScriptRoot
+$manifestPath = Join-Path -Path $repositoryPath -ChildPath "Screenbox/Package.appxmanifest"
 
 [xml]$xmlDoc = Get-Content -Path $manifestPath
 $xmlDoc.Package.Identity.Name = $IdentityName
 
-if ($PSBoundParameters.ContainsKey('Version')) {
+if ($Version) {
     $xmlDoc.Package.Identity.Publisher = $IdentityPublisher
-    $xmlDoc.Package.Identity.Version = "$Version.0"
+    $xmlDoc.Package.Identity.Version = $Version
 }
 else {
+    $currentDate = Get-Date
+    $minor = [int]$currentDate.ToString("yy")
+    $build = [int]$currentDate.ToString("MMdd")
+    $revision = [int]$currentDate.ToString("HHmm")
+    $generatedVersion = "0.$minor.$build.$revision"
+
     $xmlDoc.Package.Identity.Publisher = $IdentityPublisherUnsigned
+    $xmlDoc.Package.Identity.Version = $generatedVersion
 }
 
 $xmlDoc.Package.Properties.DisplayName = $DisplayName
 $xmlDoc.Package.Applications.Application.VisualElements.DisplayName = $VisualDisplayName
 
 $settings = New-Object System.Xml.XmlWriterSettings
-$settings.Encoding = [System.Text.UTF8Encoding]::new($false)
+#$settings.Encoding = [System.Text.UTF8Encoding]::new($false)
 $settings.Indent = $true
+#$settings.NewLineChars = "`r`n"
 
 $writer = [System.Xml.XmlWriter]::Create($manifestPath, $settings)
 
