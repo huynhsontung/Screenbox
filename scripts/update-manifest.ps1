@@ -24,10 +24,10 @@ if ($Version) {
 }
 else {
     $currentDate = Get-Date
-    $minor = [int]$currentDate.ToString("yy")
-    $build = [int]$currentDate.ToString("MMdd")
-    $revision = [int]$currentDate.ToString("HHmm")
-    $generatedVersion = "0.$minor.$build.$revision"
+    $minor = [int]$currentDate.ToString("yyMM")
+    $build = [int]$currentDate.ToString("dd")
+    #$revision = [int]$currentDate.ToString("HHmm")
+    $generatedVersion = "0.$minor.$build.0"
 
     $xmlDoc.Package.Identity.Publisher = $IdentityPublisherUnsigned
     $xmlDoc.Package.Identity.Version = $generatedVersion
@@ -37,7 +37,7 @@ $xmlDoc.Package.Properties.DisplayName = $DisplayName
 $xmlDoc.Package.Applications.Application.VisualElements.DisplayName = $VisualDisplayName
 
 $settings = New-Object System.Xml.XmlWriterSettings
-#$settings.Encoding = [System.Text.UTF8Encoding]::new($false)
+$settings.Encoding = [System.Text.UTF8Encoding]::new($false)
 $settings.Indent = $true
 #$settings.NewLineChars = "`r`n"
 

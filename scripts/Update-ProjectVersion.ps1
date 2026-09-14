@@ -15,9 +15,9 @@
     current date and time using the following values:
 
     Major    = 0
-    Minor    = YY (last two digits of the year)
-    Build    = MMDD (month and day)
-    Revision = HHmm (hour and minute in 24-hour format)
+    Minor    = YYMM (last two digits of the year and month)
+    Build    = DD (day)
+    Revision = 0
 
     All generated segments are normalized to integers to ensure compatibility with
     .NET versioning rules.
@@ -48,10 +48,10 @@ if ($Version) {
 } else {
     $currentDate = Get-Date
     #$major = [int]$currentDate.ToString("yy")
-    $minor = [int]$currentDate.ToString("yy")
-    $build = [int]$currentDate.ToString("MMdd")
-    $revision = [int]$currentDate.ToString("HHmm")
-    $projectVersion = "0.$minor.$build.$revision"
+    $minor = [int]$currentDate.ToString("yyMM")
+    $build = [int]$currentDate.ToString("dd")
+    #$revision = [int]$currentDate.ToString("HHmm")
+    $projectVersion = "0.$minor.$build.0"
 }
 
 $currentYear = (Get-Date).Year
