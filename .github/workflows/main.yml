@@ -81,14 +81,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Render secrets file
+      - name: Update secrets file
+        if: github.ref_type == 'tag'
         env:
-          SENTRY_DSN: ${{ github.ref_type == 'tag' && secrets.SENTRY_DSN || '' }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
-          .\scripts\render-secrets.ps1 -SentryDsn "$env:SENTRY_DSN"
+          .\scripts\Set-Secrets.ps1 -SentryDsn "$env:SENTRY_DSN"
 
-      - name: Get tag version
-        id: get-tag-version
+      - name: Extract version from tag
+        id: tag-version
         if: github.ref_type == 'tag'
         run: |
           $found = "${{ github.ref_name }}" -match 'v*(\d+.\d+.\d+)'
@@ -98,9 +99,12 @@ jobs:
       - name: Update package manifest
         run: |
           if ('${{ github.ref_type }}' -eq 'tag') {
-            .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
+            $tagVersion = "${{ steps.tag-version.outputs.version }}"
+            .\scripts\Update-Manifest.ps1 -Version "$tagVersion.0"
+            .\scripts\Update-ProjectVersion.ps1 -Version "$tagVersion.0"
           } else {
-            .\scripts\update-manifest.ps1
+            .\scripts\Update-Manifest.ps1
+            .\scripts\Update-ProjectVersion.ps1
           }
 
       - name: Build app package
@@ -109,7 +113,7 @@ jobs:
           SENTRY_ORG: starpine
           SENTRY_PROJECT: screenbox
           SENTRY_URL: https://sentry.io/
-          SENTRY_RELEASE: screenbox@${{ steps.get-tag-version.outputs.version }}
+          SENTRY_RELEASE: screenbox@${{ steps.tag-version.outputs.version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           if ('${{ github.ref_type }}' -eq 'tag') {

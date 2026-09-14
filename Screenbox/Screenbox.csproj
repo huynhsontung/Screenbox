@@ -17,6 +17,8 @@
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <!-- Disable default PRI items to manually control which languages are included in the app package. -->
     <EnableDefaultPriItems>false</EnableDefaultPriItems>
+
+    <Copyright>Copyright © 2022-2026 Tung Huynh</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Label="Packaging">
