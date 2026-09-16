@@ -14,23 +14,23 @@ namespace Screenbox.Controls;
 public sealed partial class SelectionBarControl : UserControl
 {
     /// <summary>
-    /// Identifies the <see cref="CommandParameter"/> dependency property.
+    /// Identifies the <see cref="Selection"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
-        nameof(CommandParameter),
+    public static readonly DependencyProperty SelectionProperty = DependencyProperty.Register(
+        nameof(Selection),
         typeof(object),
         typeof(SelectionBarControl),
         new PropertyMetadata(null));
 
     /// <summary>
-    /// Gets or sets the parameter to pass to the command for the <see cref="SelectionBarControl"/> buttons.
+    /// Gets or sets the selection object used by the <see cref="SelectionBarControl"/> buttons and flyouts.
     /// </summary>
-    /// <value>The parameter to pass to the command for the <<see cref="SelectionBarControl"/> buttons.
+    /// <value>The selection object used by the <see cref="SelectionBarControl"/> buttons and flyouts.
     /// The default is <see langword="null"/>.</value>
-    public object CommandParameter
+    public object Selection
     {
-        get { return GetValue(CommandParameterProperty); }
-        set { SetValue(CommandParameterProperty, value); }
+        get { return GetValue(SelectionProperty); }
+        set { SetValue(SelectionProperty, value); }
     }
 
     #region Play Button properties
@@ -402,9 +402,9 @@ public sealed partial class SelectionBarControl : UserControl
 
         if (RemoveButtonCommand is { } cmd)
         {
-            if (cmd.CanExecute(CommandParameter))
+            if (cmd.CanExecute(Selection))
             {
-                cmd.Execute(CommandParameter);
+                cmd.Execute(Selection);
                 args.Handled = true;
             }
         }
