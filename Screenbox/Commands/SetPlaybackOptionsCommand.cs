@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
@@ -10,7 +11,7 @@ internal sealed partial class SetPlaybackOptionsCommand : IRelayCommand
 {
     public event EventHandler? CanExecuteChanged;
 
-    public IRelayCommand? PlayCommand { get; set; }
+    public ICommand? PlayCommand { get; set; }
 
     public bool CanExecute(object? parameter)
     {
