@@ -41,10 +41,10 @@
 
     <muxc:InfoBar
         x:Name="InfoBar"
-        Title="{x:Bind GetDisplayTitle(ViewModel.Kind, ViewModel.Title, ViewModel.Count), Mode=OneWay}"
+        Title="{x:Bind GetDisplayTitle(ViewModel.Kind, ViewModel.Title, ViewModel.NumericValue), Mode=OneWay}"
         HorizontalAlignment="Center"
         VerticalAlignment="Bottom"
-        ActionButton="{x:Bind GetActionButton(ViewModel.Kind, ViewModel.ActionContent, ViewModel.ActionCommand), Mode=OneWay}"
+        ActionButton="{x:Bind CreateActionButton(ViewModel.Kind, ViewModel.ActionContent, ViewModel.ActionCommand), Mode=OneWay}"
         CloseButtonCommand="{x:Bind ViewModel.CloseCommand}"
         CornerRadius="{StaticResource OverlayCornerRadius}"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
