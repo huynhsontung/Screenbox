@@ -17,6 +17,8 @@ public static partial class GlyphConverter
 {
     private const string PauseSolidGlyph = "\uE62E";
     private const string MuteGlyph = "\uE74F";
+    private const string PlayGlyph = "\uE768";
+    private const string PauseGlyph = "\uE769";
     private const string MoviesGlyph = "\uE8B2";
     private const string AudioGlyph = "\uE8D6";
     private const string PlaySolidGlyph = "\uF5B0";
@@ -127,9 +129,6 @@ public static partial class GlyphConverter
     /// </returns>
     public static string ToPlayPauseGlyph(bool value)
     {
-        const string PlayGlyph = "\uE768";
-        const string PauseGlyph = "\uE769";
-
         return value ? PauseGlyph : PlayGlyph;
     }
 
@@ -190,8 +189,8 @@ public static partial class GlyphConverter
 
         return kind switch
         {
-            PlaybackCommandKind.Play => PlaySolidGlyph,
-            PlaybackCommandKind.Pause => PauseSolidGlyph,
+            PlaybackCommandKind.Play => PlayGlyph,
+            PlaybackCommandKind.Pause => PauseGlyph,
             //PlaybackCommandKind.Stop => StopSolidGlyph,
             PlaybackCommandKind.Rewind => ChevronLeftMedGlyph,
             PlaybackCommandKind.FastForward => ChevronRightMedGlyph,
