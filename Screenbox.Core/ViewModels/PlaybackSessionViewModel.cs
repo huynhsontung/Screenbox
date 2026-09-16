@@ -113,18 +113,6 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
         PlaybackRate = rate;
     }
 
-    [RelayCommand]
-    private void AdjustAudioTimingOffset(double delta)
-    {
-        AudioTimingOffset += delta;
-    }
-
-    [RelayCommand]
-    private void AdjustSubtitleTimingOffset(double delta)
-    {
-        SubtitleTimingOffset += delta;
-    }
-
     private void OnPlayerPlaybackRateChanged(IMediaPlayer sender, ValueChangedEventArgs<double> args)
     {
         _dispatcherQueue.TryEnqueue(() =>

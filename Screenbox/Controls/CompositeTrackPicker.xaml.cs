@@ -6,7 +6,9 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
+using Windows.System;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -16,6 +18,10 @@ namespace Screenbox.Controls;
 
 public sealed partial class CompositeTrackPicker : UserControl
 {
+    public const double TimingOffsetMax = 3000d;
+    public const double TimingOffsetMin = -3000d;
+    public const double TimingOffsetStep = 50d;
+
     /// <summary>
     /// View-level subtitle track list that prepends a localized "Disable" entry to
     /// <see cref="CompositeTrackPickerViewModel.SubtitleTracks"/> and applies "Track N"
@@ -54,6 +60,35 @@ public sealed partial class CompositeTrackPicker : UserControl
         e.Handled = true;
     }
 
+    private void AddSubtitleListViewFooterItem_OnKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key is not (VirtualKey.Enter or VirtualKey.Space or VirtualKey.GamepadA))
+            return;
+
+        ViewModel.AddSubtitleCommand.Execute(null);
+        e.Handled = true;
+    }
+
+    private void DecreaseAudioTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: true, delta: -TimingOffsetStep, notificationSource: DecreaseAudioTimingOffsetButton);
+    }
+
+    private void IncreaseAudioTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: true, delta: TimingOffsetStep, notificationSource: IncreaseAudioTimingOffsetButton);
+    }
+
+    private void DecreaseSubtitleTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: false, delta: -TimingOffsetStep, notificationSource: DecreaseSubtitleTimingOffsetButton);
+    }
+
+    private void IncreaseSubtitleTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: false, delta: TimingOffsetStep, notificationSource: IncreaseSubtitleTimingOffsetButton);
+    }
+
     /// <summary>Formats a track's display name, falling back to "Track N" when the label is empty.</summary>
     private static string GetTrackDisplayName(string trackLabel, int oneBasedIndex) =>
         !string.IsNullOrEmpty(trackLabel)
@@ -88,6 +123,35 @@ public sealed partial class CompositeTrackPicker : UserControl
 
         // Avoid clearing and repopulating the existing ObservableCollection to prevent unexpected SelectedIndex change.
         VideoDisplayList.SyncItems(newList);
+    }
+
+    private void AdjustTimingOffset(bool isAudio, double delta, FrameworkElement notificationSource)
+    {
+        double currentValue = isAudio
+            ? PlaybackSession.AudioTimingOffset
+            : PlaybackSession.SubtitleTimingOffset;
+        double newValue = Math.Clamp(currentValue + delta, TimingOffsetMin, TimingOffsetMax);
+
+        if (isAudio)
+        {
+            PlaybackSession.AudioTimingOffset = newValue;
+        }
+        else
+        {
+            PlaybackSession.SubtitleTimingOffset = newValue;
+        }
+
+        string trackType = isAudio ? "Audio" : "Subtitle";
+        string direction = delta > 0 ? "Increased" : "Decreased";
+
+        var peer = FrameworkElementAutomationPeer.FromElement(notificationSource)
+            ?? FrameworkElementAutomationPeer.CreatePeerForElement(notificationSource);
+
+        peer.RaiseNotificationEvent(
+            AutomationNotificationKind.ActionCompleted,
+            AutomationNotificationProcessing.CurrentThenMostRecent,
+            $"{Strings.Resources.TimingOffset}: {newValue:0} ms",
+            $"{trackType}TimingOffset{direction}Notification");
     }
 
     private bool IsTrackPickerDisplayMode(TrackPickerDisplayMode current, TrackPickerDisplayMode target)

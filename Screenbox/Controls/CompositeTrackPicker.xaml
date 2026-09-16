@@ -5,6 +5,7 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enums="using:Screenbox.Core.Enums"
@@ -17,9 +18,6 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ctConverters:DoubleToVisibilityConverter x:Key="GreaterThanZeroVisibilityConverter" GreaterThan="0" />
-
-        <x:Double x:Key="TimingOffsetIncrement">50</x:Double>
-        <x:Double x:Key="TimingOffsetDecrement">-50</x:Double>
 
         <DataTemplate x:Key="MediaTrackItemDataTemplate" x:DataType="x:String">
             <TextBlock
@@ -92,6 +90,7 @@
                             Grid.Column="1"
                             Padding="{StaticResource HyperlinkButtonUniformPadding}"
                             contract14Present:AutomationProperties.AutomationControlType="Button"
+                            AutomationProperties.Name="{x:Bind strings:Resources.AudioOptions}"
                             Command="{x:Bind ViewModel.SetDisplayModeCommand}"
                             CommandParameter="{x:Bind enums:TrackPickerDisplayMode.Audio}"
                             Content="{x:Bind strings:Resources.Options}"
@@ -134,6 +133,7 @@
                             Grid.Column="1"
                             Padding="{StaticResource HyperlinkButtonUniformPadding}"
                             contract14Present:AutomationProperties.AutomationControlType="Button"
+                            AutomationProperties.Name="{x:Bind strings:Resources.SubtitleOptions}"
                             Command="{x:Bind ViewModel.SetDisplayModeCommand}"
                             CommandParameter="{x:Bind enums:TrackPickerDisplayMode.Subtitle}"
                             Content="{x:Bind strings:Resources.Options}"
@@ -141,14 +141,20 @@
                     </Grid>
                 </ListView.Header>
                 <ListView.Footer>
-                    <ListViewItem Content="{x:Bind strings:Resources.AddSubtitle}" Tapped="AddSubtitleListViewFooterItem_OnTapped" />
+                    <ListViewItem
+                        Content="{x:Bind strings:Resources.AddSubtitle}"
+                        KeyDown="AddSubtitleListViewFooterItem_OnKeyDown"
+                        Tapped="AddSubtitleListViewFooterItem_OnTapped" />
                 </ListView.Footer>
             </ListView>
         </StackPanel>
         <!--#endregion-->
 
         <!--#region Audio Options-->
-        <Grid x:Name="AudioOptionsGrid" Visibility="Collapsed">
+        <Grid
+            x:Name="AudioOptionsGrid"
+            AutomationProperties.Name="{x:Bind strings:Resources.AudioOptions}"
+            Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -162,6 +168,7 @@
                 Height="{StaticResource NavigationBackButtonWidth}"
                 Margin="4,2,4,2"
                 Padding="0"
+                AutomationProperties.Name="{x:Bind strings:Resources.Back}"
                 BorderThickness="0"
                 Command="{x:Bind ViewModel.SetDisplayModeCommand}"
                 CommandParameter="{x:Bind enums:TrackPickerDisplayMode.Composite}"
@@ -205,40 +212,46 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button
+                <RepeatButton
+                    x:Name="DecreaseAudioTimingOffsetButton"
                     Grid.Column="0"
-                    Width="32"
-                    Height="32"
+                    MinWidth="32"
+                    Padding="0"
+                    VerticalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}"
+                    Background="{ThemeResource SubtleButtonBackground}"
                     BorderThickness="0"
-                    Command="{x:Bind PlaybackSession.AdjustAudioTimingOffsetCommand}"
-                    CommandParameter="{StaticResource TimingOffsetDecrement}"
+                    Click="DecreaseAudioTimingOffsetButton_OnClick"
                     Content="&#xF8AB;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    Style="{StaticResource SubtleButtonStyle}" />
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}" />
 
                 <Slider
                     Grid.Column="1"
                     Margin="8,0,8,0"
+                    AutomationProperties.Name="{x:Bind strings:Resources.TimingOffset}"
                     IsThumbToolTipEnabled="False"
-                    Maximum="3000"
-                    Minimum="-3000"
+                    Maximum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMax}"
+                    Minimum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMin}"
                     SmallChange="25"
-                    StepFrequency="50"
+                    StepFrequency="{x:Bind controls:CompositeTrackPicker.TimingOffsetStep}"
                     Value="{x:Bind PlaybackSession.AudioTimingOffset, Mode=TwoWay}" />
 
-                <Button
+                <RepeatButton
+                    x:Name="IncreaseAudioTimingOffsetButton"
                     Grid.Column="2"
-                    Width="32"
-                    Height="32"
+                    MinWidth="32"
                     Padding="0"
+                    VerticalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}"
+                    Background="{ThemeResource SubtleButtonBackground}"
                     BorderThickness="0"
-                    Command="{x:Bind PlaybackSession.AdjustAudioTimingOffsetCommand}"
-                    CommandParameter="{StaticResource TimingOffsetIncrement}"
+                    Click="IncreaseAudioTimingOffsetButton_OnClick"
                     Content="&#xF8AA;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    Style="{StaticResource SubtleButtonStyle}" />
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}" />
             </Grid>
 
             <TextBlock
@@ -250,7 +263,10 @@
         <!--#endregion-->
 
         <!--#region Subtitle Options-->
-        <Grid x:Name="SubtitleOptionsGrid" Visibility="Collapsed">
+        <Grid
+            x:Name="SubtitleOptionsGrid"
+            AutomationProperties.Name="{x:Bind strings:Resources.SubtitleOptions}"
+            Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -264,6 +280,7 @@
                 Height="{StaticResource NavigationBackButtonWidth}"
                 Margin="4,2,4,2"
                 Padding="0"
+                AutomationProperties.Name="{x:Bind strings:Resources.Back}"
                 BorderThickness="0"
                 Command="{x:Bind ViewModel.SetDisplayModeCommand}"
                 CommandParameter="{x:Bind enums:TrackPickerDisplayMode.Composite}"
@@ -307,41 +324,46 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button
+                <RepeatButton
+                    x:Name="DecreaseSubtitleTimingOffsetButton"
                     Grid.Column="0"
-                    Width="32"
-                    Height="32"
+                    MinWidth="32"
                     Padding="0"
+                    VerticalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}"
+                    Background="{ThemeResource SubtleButtonBackground}"
                     BorderThickness="0"
-                    Command="{x:Bind PlaybackSession.AdjustSubtitleTimingOffsetCommand}"
-                    CommandParameter="{StaticResource TimingOffsetDecrement}"
+                    Click="DecreaseSubtitleTimingOffsetButton_OnClick"
                     Content="&#xF8AB;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    Style="{StaticResource SubtleButtonStyle}" />
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}" />
 
                 <Slider
                     Grid.Column="1"
                     Margin="8,0,8,0"
+                    AutomationProperties.Name="{x:Bind strings:Resources.TimingOffset}"
                     IsThumbToolTipEnabled="False"
-                    Maximum="3000"
-                    Minimum="-3000"
+                    Maximum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMax}"
+                    Minimum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMin}"
                     SmallChange="25"
                     StepFrequency="50"
                     Value="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=TwoWay}" />
 
-                <Button
+                <RepeatButton
+                    x:Name="IncreaseSubtitleTimingOffsetButton"
                     Grid.Column="2"
-                    Width="32"
-                    Height="32"
+                    MinWidth="32"
                     Padding="0"
+                    VerticalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}"
+                    Background="{ThemeResource SubtleButtonBackground}"
                     BorderThickness="0"
-                    Command="{x:Bind PlaybackSession.AdjustSubtitleTimingOffsetCommand}"
-                    CommandParameter="{StaticResource TimingOffsetIncrement}"
+                    Click="IncreaseSubtitleTimingOffsetButton_OnClick"
                     Content="&#xF8AA;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    Style="{StaticResource SubtleButtonStyle}" />
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}" />
             </Grid>
 
             <TextBlock
