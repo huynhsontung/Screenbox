@@ -1,4 +1,4 @@
-﻿namespace Screenbox.Core.Enums;
+namespace Screenbox.Core.Enums;
 
 /// <summary>
 /// Represents the action that was taken on the media playback.
@@ -13,10 +13,10 @@ public enum PlaybackActionKind
     IncreaseVolume,
     DecreaseRate,
     IncreaseRate,
-    //PreviousTrack,
-    //NextTrack,
-    //PreviousChapter,
-    //NextChapter,
+    PreviousTrack,
+    NextTrack,
+    PreviousChapter,
+    NextChapter,
     //DecreaseBrightness,
     //IncreaseBrightness,
 }
