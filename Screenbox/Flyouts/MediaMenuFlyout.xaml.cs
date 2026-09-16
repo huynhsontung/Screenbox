@@ -25,121 +25,53 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     private static readonly bool _isApiContract14Present
         = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
 
-    #region Dependency Properties
-
-    /// <summary>
-    /// Identifies the <see cref="ContextItem"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty ContextItemProperty = DependencyProperty.Register(
-        nameof(ContextItem), typeof(object), typeof(MediaMenuFlyout), new PropertyMetadata(null));
-
     /// <summary>
     /// Gets or sets the media item associated with the current flyout.
     /// </summary>
     /// <value>The media item or storage item that the flyout should act on.</value>
-    public object? ContextItem
-    {
-        get { return (object?)GetValue(ContextItemProperty); }
-        set { SetValue(ContextItemProperty, value); }
-    }
-
-    /// <summary>
-    /// Identifies the <see cref="PlayCommand"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
-        nameof(PlayCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+    public object? ContextItem { get; set; }
 
     /// <summary>
     /// Gets or sets the command to invoke when the play item is tapped.
     /// </summary>
     /// <value>The command to invoke when the play item is tapped.</value>
-    public ICommand? PlayCommand
-    {
-        get { return (ICommand?)GetValue(PlayCommandProperty); }
-        set { SetValue(PlayCommandProperty, value); }
-    }
-
-    /// <summary>
-    /// Identifies the <see cref="PlayNextCommand"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty PlayNextCommandProperty = DependencyProperty.Register(
-        nameof(PlayNextCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+    public ICommand? PlayCommand { get; set; }
 
     /// <summary>
     /// Gets or sets the command to invoke when the play next item is tapped.
     /// </summary>
     /// <value>The command to invoke when the play next item is tapped.</value>
-    public ICommand? PlayNextCommand
-    {
-        get { return (ICommand?)GetValue(PlayNextCommandProperty); }
-        set { SetValue(PlayNextCommandProperty, value); }
-    }
-
-    /// <summary>
-    /// Identifies the <see cref="AddToQueueCommand"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty AddToQueueCommandProperty = DependencyProperty.Register(
-        nameof(AddToQueueCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+    public ICommand? PlayNextCommand { get; set; }
 
     /// <summary>
     /// Gets or sets the command to invoke when the add to queue item is tapped.
     /// </summary>
     /// <value>The command to invoke when the add to queue item is tapped.</value>
-    public ICommand? AddToQueueCommand
-    {
-        get { return (ICommand?)GetValue(AddToQueueCommandProperty); }
-        set { SetValue(AddToQueueCommandProperty, value); }
-    }
-
+    public ICommand? AddToQueueCommand { get; set; }
     /// <summary>
-    /// Identifies the <see cref="RemoveCommand"/> dependency property.
+    /// Gets or sets a value that indicates whether the add to playlist item is shown.
     /// </summary>
-    public static readonly DependencyProperty RemoveCommandProperty = DependencyProperty.Register(
-        nameof(RemoveCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+    /// <value><see langword="true"/> to show the add to playlist item. <see langword="false"/>
+    /// to hide the add to playlist item. The default is <b>true</b>.</value>
+    public bool IsAddToPlaylistButtonVisible{ get; set; }
 
     /// <summary>
     /// Gets or sets the command to invoke when the remove item is tapped.
     /// </summary>
     /// <value>The command to invoke when the remove item is tapped.</value>
-    public ICommand? RemoveCommand
-    {
-        get { return (ICommand?)GetValue(RemoveCommandProperty); }
-        set { SetValue(RemoveCommandProperty, value); }
-    }
-
-    /// <summary>
-    /// Identifies the <see cref="SelectCommand"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty SelectCommandProperty = DependencyProperty.Register(
-        nameof(SelectCommand), typeof(ICommand), typeof(MediaMenuFlyout), new PropertyMetadata(null));
+    public ICommand? RemoveCommand { get; set; }
 
     /// <summary>
     /// Gets or sets the command to invoke when the select item is tapped.
     /// </summary>
     /// <value>The command to invoke when the select item is tapped.</value>
-    public ICommand? SelectCommand
-    {
-        get { return (ICommand?)GetValue(SelectCommandProperty); }
-        set { SetValue(SelectCommandProperty, value); }
-    }
-
-    /// <summary>
-    /// Identifies the <see cref="IsAdvancedModeEnabled"/> dependency property.
-    /// </summary>
-    public static readonly DependencyProperty IsAdvancedModeEnabledProperty =
-        DependencyProperty.Register(nameof(IsAdvancedModeEnabled), typeof(bool), typeof(MediaMenuFlyout), new PropertyMetadata(false));
+    public ICommand? SelectCommand { get; set; }
 
     /// <summary>
     /// Gets or sets a value that indicates whether advanced playback options are enabled.
     /// </summary>
     /// <value><see langword="true"/> if advanced playback options should be displayed; otherwise, <see langword="false"/>.</value>
-    public bool IsAdvancedModeEnabled
-    {
-        get { return (bool)GetValue(IsAdvancedModeEnabledProperty); }
-        set { SetValue(IsAdvancedModeEnabledProperty, value); }
-    }
-
-    #endregion
+    public bool IsAdvancedModeEnabled { get; set; }
 
     /// <summary>
     /// Gets the collection used to generate the additional content of the menu.
@@ -183,9 +115,9 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         AddToPlaylistFlyoutBehavior.TargetSubItem = AddToPlaylistSubItem;
 
         // Play MenuFlyoutItem
+        PlayItem.Text = ItemLabelHelper.GetPlayPauseLabel(mediaVm?.IsPlaying ?? false);
         PlayItem.Command = PlayCommand;
         PlayItem.CommandParameter = ContextItem;
-        PlayItem.Text = ItemLabelHelper.GetPlayPauseLabel(mediaVm?.IsPlaying ?? false);
         PlayItemIcon.Glyph = GlyphConverter.ToPlayPauseGlyph(mediaVm?.IsPlaying ?? false);
 
         // PlayNext MenuFlyoutItem
@@ -194,21 +126,24 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         PlayNextItem.CommandParameter = ContextItem;
 
         // AddToQueue MenuFlyoutItem
-        AddToQueueItem.Text = Strings.Resources.AddToQueue;
-        AddToQueueItemIcon.Glyph = GetGlyphForTextDirection("\U000F00C2", "\U000F00C3");
-
         if (AddToQueueCommand is not null)
         {
+            AddToQueueItem.Text = Strings.Resources.AddToQueue;
             AddToQueueItem.Command = AddToQueueCommand;
             AddToQueueItem.CommandParameter = ContextItem;
             AddToQueueItem.Visibility = Visibility.Visible;
+            AddToQueueItemIcon.Glyph = GetGlyphForTextDirection("\U000F00C2", "\U000F00C3");
         }
 
         // AddToPlaylist MenuFlyoutSubItem
-        AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
-        AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
-            ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
-            : "\U000F00AA";
+        if (IsAddToPlaylistButtonVisible)
+        {
+            AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
+            AddToPlaylistSubItem.Visibility = Visibility.Visible;
+            AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
+                ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
+                : "\U000F00AA";
+        }
 
         // Remove MenuFlyoutItem
         RemoveItem.Text = Strings.Resources.Remove;
@@ -220,43 +155,47 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             RemoveItem.Visibility = Visibility.Visible;
         }
 
-        // OpenWith MenuFlyoutItem
-        OpenWithItem.Text = Strings.Resources.OpenWith;
-        OpenWithItem.CommandParameter = mediaVm;
-
-        // OpenInFileExplorer MenuFlyoutItem
-        if (!DeviceInfoHelper.IsXbox)
+        if (mediaVm is not null)
         {
-            OpenInFileExplorerItem.Text = Strings.Resources.OpenInFileExplorer;
-            OpenInFileExplorerItem.CommandParameter = mediaVm;
-            OpenInFileExplorerItem.Visibility = Visibility.Visible;
-            OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = true;
+            // OpenWith MenuFlyoutItem
+            OpenWithItem.Text = Strings.Resources.OpenWith;
+            OpenWithItem.CommandParameter = mediaVm;
+            OpenWithItem.Visibility = Visibility.Visible;
+
+            // OpenInFileExplorer MenuFlyoutItem
+            if (!DeviceInfoHelper.IsXbox)
+            {
+                OpenInFileExplorerItem.Text = Strings.Resources.OpenInFileExplorer;
+                OpenInFileExplorerItem.CommandParameter = mediaVm;
+                OpenInFileExplorerItem.Visibility = Visibility.Visible;
+                OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = true;
+            }
+
+            // ShowProperties MenuFlyoutItem
+            PropertiesItem.Text = Strings.Resources.Properties;
+            PropertiesItem.CommandParameter = mediaVm;
+            PropertiesItem.Visibility = Visibility.Visible;
         }
 
-        // ShowProperties MenuFlyoutItem
-        PropertiesItem.Text = Strings.Resources.Properties;
-        PropertiesItem.CommandParameter = mediaVm;
-
         // Select MenuFlyoutItem
-        SelectionItem.Text = Strings.Resources.Select;
-        SelectionItemIcon.Glyph = GetGlyphForTextDirection("\uEA20", "\uEA66");
-
         if (SelectCommand is not null)
         {
             SelectionSeparator.Visibility = Visibility.Visible;
 
+            SelectionItem.Text = Strings.Resources.Select;
             SelectionItem.Command = SelectCommand;
             SelectionItem.CommandParameter = ContextItem;
             SelectionItem.Visibility = Visibility.Visible;
+            SelectionItemIcon.Glyph = GetGlyphForTextDirection("\uEA20", "\uEA66");
         }
 
         // Advanced PlaybackOptions MenuFlyoutItem
-        SetPlaybackOptionsItem.Text = Strings.Resources.SetPlaybackOptions;
         if (IsAdvancedModeEnabled)
         {
             AdvancedModeSeparator.Visibility = Visibility.Visible;
 
             _setPlaybackOptionsCommand.PlayCommand = PlayCommand;
+            SetPlaybackOptionsItem.Text = Strings.Resources.SetPlaybackOptions;
             SetPlaybackOptionsItem.Command = _setPlaybackOptionsCommand;
             SetPlaybackOptionsItem.CommandParameter = ContextItem;
             SetPlaybackOptionsItem.Visibility = Visibility.Visible;
