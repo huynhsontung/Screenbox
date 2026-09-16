@@ -50,12 +50,19 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
 
         if (message.OldValue is { } oldPlayer)
         {
-            oldPlayer.PlaybackRateChanged -= OnPlaybackRateChanged;
+            oldPlayer.PlaybackRateChanged -= OnPlayerPlaybackRateChanged;
         }
 
-        if (MediaPlayer is not null)
+        if (MediaPlayer is not { } newPlayer)
+            return;
+
+        newPlayer.PlaybackRateChanged += OnPlayerPlaybackRateChanged;
+        newPlayer.PlaybackRate = PlaybackRate;
+
+        if (newPlayer is VlcMediaPlayer vlcMediaPlayer)
         {
-            MediaPlayer.PlaybackRateChanged += OnPlaybackRateChanged;
+            vlcMediaPlayer.AudioDelay = AudioTimingOffset;
+            vlcMediaPlayer.SubtitleDelay = SubtitleTimingOffset;
         }
     }
 
@@ -118,7 +125,7 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
         SubtitleTimingOffset += delta;
     }
 
-    private void OnPlaybackRateChanged(IMediaPlayer sender, ValueChangedEventArgs<double> args)
+    private void OnPlayerPlaybackRateChanged(IMediaPlayer sender, ValueChangedEventArgs<double> args)
     {
         _dispatcherQueue.TryEnqueue(() =>
         {
