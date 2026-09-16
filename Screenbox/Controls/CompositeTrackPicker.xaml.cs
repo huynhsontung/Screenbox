@@ -60,20 +60,9 @@ public sealed partial class CompositeTrackPicker : UserControl
         e.Handled = true;
     }
 
-    private void AddSubtitleListViewFooterItem_OnKeyDown(object sender, KeyRoutedEventArgs e)
+    private void AddSubtitleListViewFooterItem_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key is not (VirtualKey.Enter or VirtualKey.Space))
-            return;
-
-        ViewModel.AddSubtitleCommand.Execute(null);
-        e.Handled = true;
-    }
-
-    private void AddSubtitleListViewFooterItem_OnKeyUp(object sender, KeyRoutedEventArgs e)
-    {
-        // GamepadA only works on KeyUp, it was ignored on KeyDown, and we can't process
-        // the remaining keys here since Space would toggle the play/pause command.
-        if (e.OriginalKey is not VirtualKey.GamepadA)
+        if (e.Key is not (VirtualKey.Enter or VirtualKey.Space or VirtualKey.GamepadA))
             return;
 
         ViewModel.AddSubtitleCommand.Execute(null);
