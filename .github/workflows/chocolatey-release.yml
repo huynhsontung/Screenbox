@@ -1,0 +1,231 @@
+name: Chocolatey Release
+
+# Publishes the Chocolatey package after the official GitHub release is published.
+# One-time upstream repository setup:
+#   CHOCO_API_KEY - API key for a Chocolatey maintainer authorized to push the
+#                   existing "screenbox" package.
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: read
+
+jobs:
+  chocolatey-release:
+    # Never publish from forks or prereleases. The GitHub release publication is
+    # the deployment gate, matching the existing Winget release workflow.
+    if: github.repository == 'huynhsontung/Screenbox' && github.event.release.prerelease == false
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout released source
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Resolve release version and MSIX bundle
+        id: release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ID: ${{ github.event.release.id }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          if ($env:RELEASE_TAG -notmatch '^v(\d+\.\d+\.\d+)$') {
+              throw "Chocolatey publishing requires a release tag in vX.Y.Z format. Received '$env:RELEASE_TAG'."
+          }
+
+          $version = $Matches[1]
+          $appVersion = "$version.0"
+          $expectedReleaseUrl = "https://github.com/huynhsontung/Screenbox/releases/tag/$env:RELEASE_TAG"
+          if ($env:RELEASE_URL -ne $expectedReleaseUrl) {
+              throw "Unexpected release URL '$env:RELEASE_URL'. Expected '$expectedReleaseUrl'."
+          }
+
+          $assetsJson = gh api "repos/$env:GITHUB_REPOSITORY/releases/$env:RELEASE_ID/assets?per_page=100"
+          if ($LASTEXITCODE -ne 0) {
+              throw 'Failed to query GitHub release assets.'
+          }
+
+          $assets = @($assetsJson | ConvertFrom-Json)
+          $bundles = @($assets | Where-Object { $_.name -like '*.msixbundle' })
+          if ($bundles.Count -ne 1) {
+              $found = if ($bundles.Count -eq 0) { 'none' } else { ($bundles.name -join ', ') }
+              throw "Expected exactly one .msixbundle release asset; found $($bundles.Count): $found"
+          }
+
+          $bundle = $bundles[0]
+          $expectedPrefix = "https://github.com/huynhsontung/Screenbox/releases/download/$env:RELEASE_TAG/"
+          if (-not $bundle.browser_download_url.StartsWith($expectedPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+              throw "Unexpected bundle URL '$($bundle.browser_download_url)'."
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "app_version=$appVersion" >> $env:GITHUB_OUTPUT
+          "release_tag=$env:RELEASE_TAG" >> $env:GITHUB_OUTPUT
+          "release_url=$env:RELEASE_URL" >> $env:GITHUB_OUTPUT
+          "bundle_name=$($bundle.name)" >> $env:GITHUB_OUTPUT
+          "bundle_url=$($bundle.browser_download_url)" >> $env:GITHUB_OUTPUT
+          "asset_digest=$($bundle.digest)" >> $env:GITHUB_OUTPUT
+
+      - name: Download and verify release bundle
+        id: bundle
+        shell: pwsh
+        env:
+          BUNDLE_NAME: ${{ steps.release.outputs.bundle_name }}
+          BUNDLE_URL: ${{ steps.release.outputs.bundle_url }}
+          ASSET_DIGEST: ${{ steps.release.outputs.asset_digest }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $downloadDirectory = Join-Path $env:RUNNER_TEMP 'screenbox-release'
+          New-Item -ItemType Directory -Force -Path $downloadDirectory | Out-Null
+          $bundlePath = Join-Path $downloadDirectory $env:BUNDLE_NAME
+
+          Invoke-WebRequest -Uri $env:BUNDLE_URL -OutFile $bundlePath -UseBasicParsing
+
+          $checksum = (Get-FileHash -LiteralPath $bundlePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($checksum -notmatch '^[0-9a-f]{64}$') {
+              throw 'Failed to calculate a valid SHA-256 checksum for the release bundle.'
+          }
+
+          if (-not [string]::IsNullOrWhiteSpace($env:ASSET_DIGEST)) {
+              if ($env:ASSET_DIGEST -notmatch '^sha256:([0-9A-Fa-f]{64})$') {
+                  throw "GitHub returned an unsupported release-asset digest '$env:ASSET_DIGEST'."
+              }
+
+              $githubChecksum = $Matches[1].ToLowerInvariant()
+              if ($checksum -ne $githubChecksum) {
+                  throw "Release bundle checksum mismatch. Downloaded: $checksum; GitHub: $githubChecksum"
+              }
+          }
+
+          "path=$bundlePath" >> $env:GITHUB_OUTPUT
+          "sha256=$checksum" >> $env:GITHUB_OUTPUT
+
+      - name: Generate Chocolatey package source
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          ./scripts/prepare-chocolatey-release.ps1 `
+            -Version '${{ steps.release.outputs.version }}' `
+            -AppVersion '${{ steps.release.outputs.app_version }}' `
+            -ReleaseTag '${{ steps.release.outputs.release_tag }}' `
+            -ReleaseUrl '${{ steps.release.outputs.release_url }}' `
+            -BundleUrl '${{ steps.release.outputs.bundle_url }}' `
+            -BundleChecksum '${{ steps.bundle.outputs.sha256 }}' `
+            -SourceDirectory './packaging/chocolatey' `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'chocolatey-package')
+
+      - name: Pack and verify Chocolatey package
+        id: pack
+        shell: pwsh
+        env:
+          PACKAGE_VERSION: ${{ steps.release.outputs.version }}
+          APP_VERSION: ${{ steps.release.outputs.app_version }}
+          RELEASE_URL: ${{ steps.release.outputs.release_url }}
+          BUNDLE_URL: ${{ steps.release.outputs.bundle_url }}
+          BUNDLE_SHA256: ${{ steps.bundle.outputs.sha256 }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $sourceDirectory = Join-Path $env:RUNNER_TEMP 'chocolatey-package'
+          $artifactDirectory = Join-Path $env:RUNNER_TEMP 'chocolatey-artifacts'
+          New-Item -ItemType Directory -Force -Path $artifactDirectory | Out-Null
+
+          choco pack (Join-Path $sourceDirectory 'screenbox.nuspec') `
+            --version $env:PACKAGE_VERSION `
+            --outputdirectory $artifactDirectory
+          if ($LASTEXITCODE -ne 0) {
+              throw "choco pack failed with exit code $LASTEXITCODE."
+          }
+
+          $packages = @(Get-ChildItem -LiteralPath $artifactDirectory -Filter '*.nupkg' -File)
+          if ($packages.Count -ne 1) {
+              throw "Expected exactly one generated .nupkg; found $($packages.Count)."
+          }
+
+          $package = $packages[0]
+          $expectedName = "screenbox.$($env:PACKAGE_VERSION).nupkg"
+          if ($package.Name -ne $expectedName) {
+              throw "Unexpected Chocolatey package name '$($package.Name)'. Expected '$expectedName'."
+          }
+
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $archive = [IO.Compression.ZipFile]::OpenRead($package.FullName)
+          try {
+              function Read-ArchiveText([string] $entryName) {
+                  $entry = $archive.Entries | Where-Object { $_.FullName -eq $entryName } | Select-Object -First 1
+                  if (-not $entry) {
+                      throw "Generated package is missing '$entryName'."
+                  }
+
+                  $reader = [IO.StreamReader]::new($entry.Open())
+                  try { return $reader.ReadToEnd() }
+                  finally { $reader.Dispose() }
+              }
+
+              $nuspecText = Read-ArchiveText 'screenbox.nuspec'
+              $installText = Read-ArchiveText 'tools/chocolateyInstall.ps1'
+              [xml]$nuspec = $nuspecText
+              $namespace = [Xml.XmlNamespaceManager]::new($nuspec.NameTable)
+              $namespace.AddNamespace('n', 'http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd')
+
+              $packedVersion = $nuspec.SelectSingleNode('/n:package/n:metadata/n:version', $namespace).InnerText
+              $packedReleaseNotes = $nuspec.SelectSingleNode('/n:package/n:metadata/n:releaseNotes', $namespace).InnerText
+              if ($packedVersion -ne $env:PACKAGE_VERSION) {
+                  throw "Packed nuspec version '$packedVersion' does not match '$env:PACKAGE_VERSION'."
+              }
+              if ($packedReleaseNotes -ne $env:RELEASE_URL) {
+                  throw 'Packed nuspec releaseNotes URL does not match the GitHub release.'
+              }
+
+              $requiredInstallValues = @(
+                  "`$appVersion = [version]`"$env:APP_VERSION`"",
+                  "`$bundleUrl = `"$env:BUNDLE_URL`"",
+                  "`$bundleChecksum = `"$env:BUNDLE_SHA256`""
+              )
+              foreach ($value in $requiredInstallValues) {
+                  if (-not $installText.Contains($value, [StringComparison]::Ordinal)) {
+                      throw "Generated install script is missing expected value: $value"
+                  }
+              }
+          }
+          finally {
+              $archive.Dispose()
+          }
+
+          "package=$($package.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Upload generated Chocolatey package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenbox-chocolatey-${{ steps.release.outputs.version }}
+          path: ${{ steps.pack.outputs.package }}
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Push package to Chocolatey Community Repository
+        shell: pwsh
+        env:
+          CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+          PACKAGE_PATH: ${{ steps.pack.outputs.package }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          if ([string]::IsNullOrWhiteSpace($env:CHOCO_API_KEY)) {
+              throw "CHOCO_API_KEY is not configured. Add the API key of a Chocolatey maintainer authorized for the 'screenbox' package as an upstream repository Actions secret."
+          }
+
+          choco push $env:PACKAGE_PATH `
+            --source 'https://push.chocolatey.org/' `
+            --api-key $env:CHOCO_API_KEY
+          if ($LASTEXITCODE -ne 0) {
+              throw "choco push failed with exit code $LASTEXITCODE."
+          }
