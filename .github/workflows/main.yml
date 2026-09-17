@@ -96,14 +96,13 @@ jobs:
           if ($found) { $match = $matches[1] }
           "version=$match" >> $env:GITHUB_OUTPUT
 
-      - name: Update package manifest
+      - name: Update manifest and project version
         run: |
           if ('${{ github.ref_type }}' -eq 'tag') {
-            $tagVersion = "${{ steps.tag-version.outputs.version }}"
-            .\scripts\Update-Manifest.ps1 -Version "$tagVersion.0"
-            .\scripts\Update-ProjectVersion.ps1 -Version "$tagVersion.0"
-          } else {
             .\scripts\Update-Manifest.ps1
+            .\scripts\Update-ProjectVersion.ps1 -Version "${{ steps.tag-version.outputs.version }}.0"
+          } else {
+            .\scripts\Update-Manifest.ps1 -Sideload
             .\scripts\Update-ProjectVersion.ps1
           }
 
