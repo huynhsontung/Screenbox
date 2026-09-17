@@ -1,8 +1,7 @@
 [CmdletBinding()]
 param (
-    [Parameter(Mandatory=$false)]
-    [ValidatePattern('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$')]
-    [string]$Version
+    [Parameter(Mandatory = $false)]
+    [switch]$Sideload
 )
 
 New-Variable -Name IdentityName -Value "18496Starpine.Screenbox" -Option Constant
@@ -15,23 +14,12 @@ New-Variable -Name VisualDisplayName -Value "ms-resource:ManifestResources/AppDi
 $repositoryPath = Split-Path -Parent $PSScriptRoot
 $manifestPath = Join-Path -Path $repositoryPath -ChildPath "Screenbox/Package.appxmanifest"
 
-[xml]$xmlDoc = Get-Content -Path $manifestPath
+$publisher = if (!$Sideload) { $IdentityPublisher } else { $IdentityPublisherUnsigned }
+
+[xml]$xmlDoc = Get-Content -Path $manifestPath -Raw
+
 $xmlDoc.Package.Identity.Name = $IdentityName
-
-if ($Version) {
-    $xmlDoc.Package.Identity.Publisher = $IdentityPublisher
-    $xmlDoc.Package.Identity.Version = $Version
-}
-else {
-    $currentDate = Get-Date
-    $minor = [int]$currentDate.ToString("yyMM")
-    $build = [int]$currentDate.ToString("dd")
-    #$revision = [int]$currentDate.ToString("HHmm")
-    $generatedVersion = "0.$minor.$build.0"
-
-    $xmlDoc.Package.Identity.Publisher = $IdentityPublisherUnsigned
-    $xmlDoc.Package.Identity.Version = $generatedVersion
-}
+$xmlDoc.Package.Identity.Publisher = $publisher
 
 $xmlDoc.Package.Properties.DisplayName = $DisplayName
 $xmlDoc.Package.Applications.Application.VisualElements.DisplayName = $VisualDisplayName
