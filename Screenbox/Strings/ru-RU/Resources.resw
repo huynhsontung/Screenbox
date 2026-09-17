@@ -149,11 +149,11 @@
     <value>Общая продолжительность</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Раздел</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Разделы</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -364,7 +364,7 @@
     <value>Открыть расположение файла</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Открыть в Проводнике</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Открыть с помощью</value>
@@ -1014,7 +1014,7 @@
     <value>Папка</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Нажать</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
     <value>Свайп вверх</value>
@@ -1032,7 +1032,7 @@
     <value>Включите нажатие и удерживайте для увеличения скорости воспроизведения</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>Нет</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
     <value>Пуск / пауза</value>
@@ -1114,11 +1114,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>Выбран {0} список воспроизведения</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>Выбран {0} списков воспроизведения</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1148,19 +1148,19 @@
     <value>В плейлисте нет элементов.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Снимки кадров будут сохранены в</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Место хранения кадров</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Изменить папку</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Изменить</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Соотношение сторон: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>
