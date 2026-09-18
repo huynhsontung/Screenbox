@@ -1,7 +1,37 @@
+<#
+.SYNOPSIS
+    Updates the packaged app identity metadata in the manifest to match the Store
+    or sideloaded app configuration.
+
+.DESCRIPTION
+    The Update-AppxManifest.ps1 script updates the package identity name and publisher
+    values in Package.appxmanifest, and ensures the Windows app display name uses
+    the localized manifest resource entry.
+
+.PARAMETER Unsigned
+    Indicates that Update-AppxManifest updates the app manifest for sideloaded
+    deployments by using the unsigned publisher value.
+
+.EXAMPLE
+    PS> ./Update-AppxManifest.ps1
+
+    Updates the manifest using the default signed Store identity and localized app
+    display name.
+
+.EXAMPLE
+    PS> ./Update-AppxManifest.ps1 -Unsigned
+
+    Updates the manifest using the unsigned publisher value for sideloaded
+    deployments.
+
+.NOTES
+    The script is intended for UWP projects.
+#>
+
 [CmdletBinding()]
 param (
     [Parameter(Mandatory = $false)]
-    [switch]$Sideload
+    [switch]$Unsigned
 )
 
 New-Variable -Name IdentityName -Value "18496Starpine.Screenbox" -Option Constant
@@ -14,7 +44,7 @@ New-Variable -Name VisualDisplayName -Value "ms-resource:ManifestResources/AppDi
 $repositoryPath = Split-Path -Parent $PSScriptRoot
 $manifestPath = Join-Path -Path $repositoryPath -ChildPath "Screenbox/Package.appxmanifest"
 
-$publisher = if (!$Sideload) { $IdentityPublisher } else { $IdentityPublisherUnsigned }
+$publisher = if (!$Unsigned) { $IdentityPublisher } else { $IdentityPublisherUnsigned }
 
 [xml]$xmlDoc = Get-Content -Path $manifestPath -Raw
 
