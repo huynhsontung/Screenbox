@@ -1,11 +1,16 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
+using Windows.System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -13,8 +18,9 @@ namespace Screenbox.Controls;
 
 public sealed partial class CompositeTrackPicker : UserControl
 {
-    public IRelayCommand? ShowSubtitleOptionsCommand { get; set; }
-    public IRelayCommand? ShowAudioOptionsCommand { get; set; }
+    public const double TimingOffsetMax = 3000d;
+    public const double TimingOffsetMin = -3000d;
+    public const double TimingOffsetStep = 50d;
 
     /// <summary>
     /// View-level subtitle track list that prepends a localized "Disable" entry to
@@ -35,14 +41,52 @@ public sealed partial class CompositeTrackPicker : UserControl
 
     internal CompositeTrackPickerViewModel ViewModel => (CompositeTrackPickerViewModel)DataContext;
 
+    internal PlaybackSessionViewModel PlaybackSession { get; }
+
     public CompositeTrackPicker()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<CompositeTrackPickerViewModel>();
+        PlaybackSession = Ioc.Default.GetRequiredService<PlaybackSessionViewModel>();
 
         ViewModel.SubtitleTracks.CollectionChanged += (_, _) => RebuildSubtitleDisplayList();
         ViewModel.AudioTracks.CollectionChanged += (_, _) => RebuildAudioDisplayList();
         ViewModel.VideoTracks.CollectionChanged += (_, _) => RebuildVideoDisplayList();
+    }
+
+    private void AddSubtitleListViewFooterItem_OnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        ViewModel.AddSubtitleCommand.Execute(null);
+        e.Handled = true;
+    }
+
+    private void AddSubtitleListViewFooterItem_OnKeyUp(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key is not (VirtualKey.Enter or VirtualKey.Space or VirtualKey.GamepadA))
+            return;
+
+        ViewModel.AddSubtitleCommand.Execute(null);
+        e.Handled = true;
+    }
+
+    private void DecreaseAudioTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: true, delta: -TimingOffsetStep, notificationSource: DecreaseAudioTimingOffsetButton);
+    }
+
+    private void IncreaseAudioTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: true, delta: TimingOffsetStep, notificationSource: IncreaseAudioTimingOffsetButton);
+    }
+
+    private void DecreaseSubtitleTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: false, delta: -TimingOffsetStep, notificationSource: DecreaseSubtitleTimingOffsetButton);
+    }
+
+    private void IncreaseSubtitleTimingOffsetButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AdjustTimingOffset(isAudio: false, delta: TimingOffsetStep, notificationSource: IncreaseSubtitleTimingOffsetButton);
     }
 
     /// <summary>Formats a track's display name, falling back to "Track N" when the label is empty.</summary>
@@ -79,5 +123,39 @@ public sealed partial class CompositeTrackPicker : UserControl
 
         // Avoid clearing and repopulating the existing ObservableCollection to prevent unexpected SelectedIndex change.
         VideoDisplayList.SyncItems(newList);
+    }
+
+    private void AdjustTimingOffset(bool isAudio, double delta, FrameworkElement notificationSource)
+    {
+        double currentValue = isAudio
+            ? PlaybackSession.AudioTimingOffset
+            : PlaybackSession.SubtitleTimingOffset;
+        double newValue = Math.Clamp(currentValue + delta, TimingOffsetMin, TimingOffsetMax);
+
+        if (isAudio)
+        {
+            PlaybackSession.AudioTimingOffset = newValue;
+        }
+        else
+        {
+            PlaybackSession.SubtitleTimingOffset = newValue;
+        }
+
+        string trackType = isAudio ? "Audio" : "Subtitle";
+        string direction = delta > 0 ? "Increased" : "Decreased";
+
+        var peer = FrameworkElementAutomationPeer.FromElement(notificationSource)
+            ?? FrameworkElementAutomationPeer.CreatePeerForElement(notificationSource);
+
+        peer.RaiseNotificationEvent(
+            AutomationNotificationKind.ActionCompleted,
+            AutomationNotificationProcessing.CurrentThenMostRecent,
+            $"{Strings.Resources.TimingOffset}: {newValue:0} ms",
+            $"{trackType}TimingOffset{direction}Notification");
+    }
+
+    private bool IsTrackPickerDisplayMode(TrackPickerDisplayMode current, TrackPickerDisplayMode target)
+    {
+        return current == target;
     }
 }
