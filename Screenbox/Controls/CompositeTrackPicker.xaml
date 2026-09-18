@@ -143,7 +143,7 @@
                 <ListView.Footer>
                     <ListViewItem
                         Content="{x:Bind strings:Resources.AddSubtitle}"
-                        PreviewKeyDown="AddSubtitleListViewFooterItem_OnPreviewKeyDown"
+                        KeyUp="AddSubtitleListViewFooterItem_OnKeyUp"
                         Tapped="AddSubtitleListViewFooterItem_OnTapped" />
                 </ListView.Footer>
             </ListView>

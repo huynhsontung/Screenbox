@@ -60,7 +60,7 @@ public sealed partial class CompositeTrackPicker : UserControl
         e.Handled = true;
     }
 
-    private void AddSubtitleListViewFooterItem_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    private void AddSubtitleListViewFooterItem_OnKeyUp(object sender, KeyRoutedEventArgs e)
     {
         if (e.Key is not (VirtualKey.Enter or VirtualKey.Space or VirtualKey.GamepadA))
             return;
