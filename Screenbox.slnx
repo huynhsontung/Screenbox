@@ -4,6 +4,66 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/.agents/">
+    <File Path=".agents/hooks.json" />
+  </Folder>
+  <Folder Name="/.agents/skills/" />
+  <Folder Name="/.agents/skills/build-and-test/">
+    <File Path=".agents/skills/build-and-test/SKILL.md" />
+  </Folder>
+  <Folder Name="/.agents/skills/generate-assets/">
+    <File Path=".agents/skills/generate-assets/SKILL.md" />
+  </Folder>
+  <Folder Name="/.agents/skills/github-workflow/">
+    <File Path=".agents/skills/github-workflow/SKILL.md" />
+  </Folder>
+  <Folder Name="/.config/">
+    <File Path=".config/dotnet-tools.json" />
+  </Folder>
+  <Folder Name="/.github/">
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/FUNDING.yml" />
+  </Folder>
+  <Folder Name="/.github/instructions/">
+    <File Path=".github/instructions/dotnet-uwp.instructions.md" />
+    <File Path=".github/instructions/uwp-xaml.instructions.md" />
+  </Folder>
+  <Folder Name="/.github/ISSUE_TEMPLATE/">
+    <File Path=".github/ISSUE_TEMPLATE/bug_report.md" />
+    <File Path=".github/ISSUE_TEMPLATE/feature_request.md" />
+  </Folder>
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/copilot-setup-steps.yml" />
+    <File Path=".github/workflows/crowdin-sync.yml" />
+    <File Path=".github/workflows/main.yml" />
+    <File Path=".github/workflows/winget-release.yml" />
+  </Folder>
+  <Folder Name="/.root/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="AGENTS.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="crowdin.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="PRIVACY.md" />
+    <File Path="README.md" />
+    <File Path="ResXManager.config.xml" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="docs/PROJECT_STRUCTURE.md" />
+  </Folder>
+  <Folder Name="/scripts/">
+    <File Path="scripts/format-xaml-hook.ps1" />
+    <File Path="scripts/Generate-Fonts.ps1" />
+    <File Path="scripts/generate-lottie.ps1" />
+    <File Path="scripts/lint-xaml.ps1" />
+    <File Path="scripts/Set-Secrets.ps1" />
+    <File Path="scripts/Update-AppxManifest.ps1" />
+    <File Path="scripts/Update-ProjectVersion.ps1" />
+  </Folder>
   <Project Path="Screenbox.Core.Tests/Screenbox.Core.Tests.csproj">
     <Platform Solution="*|arm64" Project="ARM64" />
     <Platform Solution="*|x64" Project="x64" />
