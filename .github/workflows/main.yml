@@ -99,10 +99,10 @@ jobs:
       - name: Update manifest and project version
         run: |
           if ('${{ github.ref_type }}' -eq 'tag') {
-            .\scripts\Update-Manifest.ps1
+            .\scripts\Update-AppxManifest.ps1
             .\scripts\Update-ProjectVersion.ps1 -Version "${{ steps.tag-version.outputs.version }}.0"
           } else {
-            .\scripts\Update-Manifest.ps1 -Sideload
+            .\scripts\Update-AppxManifest.ps1 -Unsigned
             .\scripts\Update-ProjectVersion.ps1
           }
 
