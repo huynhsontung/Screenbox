@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -55,6 +56,26 @@
             <GridView.Footer>
                 <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
+            <interactivity:Interaction.Behaviors>
+                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextArtist, Mode=TwoWay}">
+                    <behaviors:ListViewContextBehavior.Flyout>
+                        <flyouts:MediaMenuFlyout
+                            AddToQueueCommand="{x:Bind ViewModel.ContextArtist.AddArtistToQueueCommand, Mode=OneWay}"
+                            ContextItem="{x:Bind ViewModel.ContextArtist, Mode=OneWay}"
+                            IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
+                            PlayCommand="{x:Bind ViewModel.ContextArtist.PlayArtistCommand, Mode=OneWay}"
+                            PlayNextCommand="{x:Bind ViewModel.ContextArtist.PlayArtistNextCommand, Mode=OneWay}">
+                            <flyouts:MediaMenuFlyout.AdditionalItems>
+                                <MenuFlyoutItem
+                                    Command="{x:Bind Common.OpenArtistCommand}"
+                                    CommandParameter="{x:Bind ViewModel.ContextArtist, Mode=OneWay}"
+                                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                                    Text="{x:Bind strings:Resources.ShowArtist}" />
+                            </flyouts:MediaMenuFlyout.AdditionalItems>
+                        </flyouts:MediaMenuFlyout>
+                    </behaviors:ListViewContextBehavior.Flyout>
+                </behaviors:ListViewContextBehavior>
+            </interactivity:Interaction.Behaviors>
         </GridView>
 
         <VisualStateManager.VisualStateGroups>
