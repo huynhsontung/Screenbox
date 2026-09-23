@@ -149,11 +149,11 @@
     <value>Gesamtdauer</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Kapitel</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Kapitel</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -364,7 +364,7 @@
     <value>Dateipfad öffnen</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Im Datei-Explorer öffnen</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Öffnen mit</value>
@@ -1114,11 +1114,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>{0} Playlist ausgewählt</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>{0} Playlists ausgewählt</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1145,22 +1145,22 @@
     <value>Erstellen Sie Ihre erste Playlist, um Ihre Lieblingsvideos und Musik zu organisieren.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>Es sind keine Elemente in dieser Playlist vorhanden.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Bildaufnahmen werden gespeichert in</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Speicherort für Bildaufnahmen</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Ordner ändern</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Ändern</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Seitenverhältnis: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>
