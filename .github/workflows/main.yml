@@ -94,7 +94,7 @@ jobs:
           if ('${{ github.ref_type }}' -eq 'tag') {
             .\scripts\Update-AppxManifest.ps1
           } else {
-            .\scripts\Update-AppxManifest.ps1 -Unsigned
+            .\scripts\Update-AppxManifest.ps1 -Identity SideloadUnsigned
           }
 
       - name: Update project version
@@ -172,14 +172,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Download package
+      - name: Download sideload package artifact
         uses: actions/download-artifact@v8
         with:
           name: Screenbox-sideload
-          path: download/
-
-      - name: Zip artifact
-        run: zip -r sideload.zip download/
+          path: ${{ github.workspace }}/Downloads
+          skip-decompress: true
 
       - name: Generate GitHub Release
         uses: softprops/action-gh-release@v3
@@ -187,4 +185,4 @@ jobs:
           draft: true
           generate_release_notes: true
           files: |
-            sideload.zip
+            ${{ github.workspace }}/Downloads/Screenbox-sideload.zip
