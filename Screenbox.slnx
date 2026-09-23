@@ -4,41 +4,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/.agents/">
-    <File Path=".agents/hooks.json" />
-  </Folder>
-  <Folder Name="/.agents/skills/" />
-  <Folder Name="/.agents/skills/build-and-test/">
-    <File Path=".agents/skills/build-and-test/SKILL.md" />
-  </Folder>
-  <Folder Name="/.agents/skills/generate-assets/">
-    <File Path=".agents/skills/generate-assets/SKILL.md" />
-  </Folder>
-  <Folder Name="/.agents/skills/github-workflow/">
-    <File Path=".agents/skills/github-workflow/SKILL.md" />
-  </Folder>
-  <Folder Name="/.config/">
-    <File Path=".config/dotnet-tools.json" />
-  </Folder>
-  <Folder Name="/.github/">
-    <File Path=".github/copilot-instructions.md" />
-    <File Path=".github/FUNDING.yml" />
-  </Folder>
-  <Folder Name="/.github/instructions/">
-    <File Path=".github/instructions/dotnet-uwp.instructions.md" />
-    <File Path=".github/instructions/uwp-xaml.instructions.md" />
-  </Folder>
-  <Folder Name="/.github/ISSUE_TEMPLATE/">
-    <File Path=".github/ISSUE_TEMPLATE/bug_report.md" />
-    <File Path=".github/ISSUE_TEMPLATE/feature_request.md" />
-  </Folder>
-  <Folder Name="/.github/workflows/">
-    <File Path=".github/workflows/copilot-setup-steps.yml" />
-    <File Path=".github/workflows/crowdin-sync.yml" />
-    <File Path=".github/workflows/main.yml" />
-    <File Path=".github/workflows/winget-release.yml" />
-  </Folder>
-  <Folder Name="/.root/">
+  <Folder Name="/root/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
@@ -52,10 +18,44 @@
     <File Path="README.md" />
     <File Path="ResXManager.config.xml" />
   </Folder>
-  <Folder Name="/docs/">
+  <Folder Name="/root/.agents/">
+    <File Path=".agents/hooks.json" />
+  </Folder>
+  <Folder Name="/root/.agents/skills/" />
+  <Folder Name="/root/.agents/skills/build-and-test/">
+    <File Path=".agents/skills/build-and-test/SKILL.md" />
+  </Folder>
+  <Folder Name="/root/.agents/skills/generate-assets/">
+    <File Path=".agents/skills/generate-assets/SKILL.md" />
+  </Folder>
+  <Folder Name="/root/.agents/skills/github-workflow/">
+    <File Path=".agents/skills/github-workflow/SKILL.md" />
+  </Folder>
+  <Folder Name="/root/.config/">
+    <File Path=".config/dotnet-tools.json" />
+  </Folder>
+  <Folder Name="/root/.github/">
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/FUNDING.yml" />
+  </Folder>
+  <Folder Name="/root/.github/instructions/">
+    <File Path=".github/instructions/dotnet-uwp.instructions.md" />
+    <File Path=".github/instructions/uwp-xaml.instructions.md" />
+  </Folder>
+  <Folder Name="/root/.github/ISSUE_TEMPLATE/">
+    <File Path=".github/ISSUE_TEMPLATE/bug_report.md" />
+    <File Path=".github/ISSUE_TEMPLATE/feature_request.md" />
+  </Folder>
+  <Folder Name="/root/.github/workflows/">
+    <File Path=".github/workflows/copilot-setup-steps.yml" />
+    <File Path=".github/workflows/crowdin-sync.yml" />
+    <File Path=".github/workflows/main.yml" />
+    <File Path=".github/workflows/winget-release.yml" />
+  </Folder>
+  <Folder Name="/root/docs/">
     <File Path="docs/PROJECT_STRUCTURE.md" />
   </Folder>
-  <Folder Name="/scripts/">
+  <Folder Name="/root/scripts/">
     <File Path="scripts/format-xaml-hook.ps1" />
     <File Path="scripts/Generate-Fonts.ps1" />
     <File Path="scripts/generate-lottie.ps1" />

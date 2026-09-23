@@ -22,10 +22,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install the .NET workload
+      - name: Install .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.x'
+          dotnet-version: '10.0.x'
 
       - name: Restore .NET tools
         run: dotnet tool restore
@@ -41,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Add MSBuild to PATH
+      - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
         with:
           msbuild-architecture: x64
@@ -68,7 +68,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Add MSBuild to PATH
+      - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
         with:
           msbuild-architecture: x64
@@ -81,13 +81,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Update secrets file
-        if: github.ref_type == 'tag'
-        env:
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: |
-          .\scripts\Set-Secrets.ps1 -SentryDsn "$env:SENTRY_DSN"
-
       - name: Extract version from tag
         id: tag-version
         if: github.ref_type == 'tag'
@@ -96,15 +89,28 @@ jobs:
           if ($found) { $match = $matches[1] }
           "version=$match" >> $env:GITHUB_OUTPUT
 
-      - name: Update manifest and project version
+      - name: Update package manifest
         run: |
           if ('${{ github.ref_type }}' -eq 'tag') {
             .\scripts\Update-AppxManifest.ps1
-            .\scripts\Update-ProjectVersion.ps1 -Version "${{ steps.tag-version.outputs.version }}.0"
           } else {
             .\scripts\Update-AppxManifest.ps1 -Unsigned
+          }
+
+      - name: Update project version
+        run: |
+          if ('${{ github.ref_type }}' -eq 'tag') {
+            .\scripts\Update-ProjectVersion.ps1 -Version "${{ steps.tag-version.outputs.version }}.0"
+          } else {
             .\scripts\Update-ProjectVersion.ps1
           }
+
+      - name: Update secrets file
+        if: github.ref_type == 'tag'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          .\scripts\Set-Secrets.ps1 -SentryDsn "$env:SENTRY_DSN"
 
       - name: Build app package
         env:
