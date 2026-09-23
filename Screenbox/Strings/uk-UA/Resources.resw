@@ -1160,7 +1160,7 @@
     <value>Змінити</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Співвідношення сторін: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>

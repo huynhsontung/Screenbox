@@ -149,11 +149,11 @@
     <value>Całkowita długość</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Rozdział</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Rozdziały</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -232,7 +232,7 @@
     <value>Dodaj do kolejki</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Wybierz</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Zaznacz wszystko</value>
@@ -364,7 +364,7 @@
     <value>Otwórz lokalizację pliku</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Otwórz w eksploratorze plików</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Otwórz za pomocą</value>

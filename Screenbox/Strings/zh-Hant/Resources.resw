@@ -364,7 +364,7 @@
     <value>開啟檔案位置</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>在檔案總管中開啟</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>開啟方式</value>
@@ -1148,19 +1148,19 @@
     <value>播放清單中沒有項目。</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>影格圖片保存至</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>影格捕獲位置</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>更改文件夾</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>更改位置</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>縱橫比：{0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
 </root>
