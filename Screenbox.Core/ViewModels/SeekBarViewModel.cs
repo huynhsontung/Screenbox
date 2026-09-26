@@ -279,7 +279,15 @@ public sealed partial class SeekBarViewModel :
         }
         else
         {
-            Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
+            Messenger.Send(new NotificationMessage(
+                NotificationLevel.Info,
+                NotificationKind.ResumePosition,
+                actionContent: Humanizer.ToDuration(lastPosition),
+                actionCommand: new RelayCommand(() =>
+                {
+                    Messenger.Send(new CloseNotificationMessage());
+                    Messenger.Send(new ChangeTimeRequestMessage(lastPosition, debounce: false));
+                })));
         }
     }
 
