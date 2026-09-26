@@ -23,6 +23,8 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
     public ObservableCollection<MediaViewModel> Songs { get; }
     public ObservableCollection<MediaViewModel> Videos { get; }
 
+    [ObservableProperty] public partial ArtistViewModel? ContextArtist { get; set; }
+    [ObservableProperty] public partial AlbumViewModel? ContextAlbum { get; set; }
     [ObservableProperty] public partial MediaViewModel? ContextMedia { get; set; }
     [ObservableProperty] public partial bool ShowArtists { get; set; }
     [ObservableProperty] public partial bool ShowAlbums { get; set; }
