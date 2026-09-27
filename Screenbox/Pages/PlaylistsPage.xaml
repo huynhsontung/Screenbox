@@ -32,6 +32,7 @@
                 x:Key="ItemFlyout"
                 AddToQueueCommand="{x:Bind ViewModel.AddToQueueCommand}"
                 ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                DeleteCommand="{x:Bind DeletePlaylistCommand}"
                 IsAddToPlaylistButtonVisible="False"
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
                 PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
@@ -49,24 +50,6 @@
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xEDE1;" MirroredWhenRightToLeft="True" />
                         </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                    <MenuFlyoutSeparator />
-                    <MenuFlyoutItem
-                        Command="{x:Bind DeletePlaylistCommand}"
-                        CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
-                        Icon="Delete"
-                        Text="{x:Bind strings:Resources.Delete}">
-                        <MenuFlyoutItem.Resources>
-                            <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemFillColorCriticalBrush" />
-                            <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
-                            <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
-                            <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemFillColorCriticalBrush" />
-                            <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
-                            <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
-                        </MenuFlyoutItem.Resources>
-                        <MenuFlyoutItem.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="Delete" />
-                        </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
                 </flyouts:MediaMenuFlyout.AdditionalItems>
             </flyouts:MediaMenuFlyout>
