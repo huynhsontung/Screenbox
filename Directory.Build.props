@@ -3,7 +3,6 @@
   <!-- Language configuration -->
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>

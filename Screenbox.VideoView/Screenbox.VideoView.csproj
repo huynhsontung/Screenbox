@@ -10,6 +10,8 @@
     <IsAotCompatible>true</IsAotCompatible>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <Copyright>Copyright © 2026 Tung Huynh</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
