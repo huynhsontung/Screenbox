@@ -1,3 +1,5 @@
+// Inspired by https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.platformui.layoutdoubleutil.areclose
+
 using System;
 using Windows.Foundation;
 
