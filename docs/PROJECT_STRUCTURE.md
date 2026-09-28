@@ -19,7 +19,7 @@ This document provides a comprehensive overview of the Screenbox project's archi
   - [Media Playback Engine](#media-playback-engine)
   - [Data Models and Persistence](#data-models-and-persistence)
 - [🏛️ Architecture Rules](#️-architecture-rules)
-- [🛠️ Technology Stack](#️-technology-stack)
+- [🧰 Technology Stack](#️-technology-stack)
 - [📋 Development Guidelines](#-development-guidelines)
 
 ## 📖 Overview
@@ -27,25 +27,48 @@ This document provides a comprehensive overview of the Screenbox project's archi
 Screenbox is a modern media player for Windows built using the Universal Windows Platform ([UWP](https://learn.microsoft.com/en-us/windows/uwp/get-started/universal-application-platform-guide)) and LibVLCSharp. The application follows the Model-View-ViewModel ([MVVM](https://learn.microsoft.com/en-us/windows/uwp/data-binding/data-binding-and-mvvm)) design pattern with dependency injection for maintainable and testable code.
 
 The architecture is built around clean separation of concerns:
+
 - **View Layer**: XAML-based UI components and user controls
 - **ViewModel Layer**: Presentation logic and data binding with MVVM
 - **Model Layer**: Business logic, services, and media playback engine
 
 ## 🏗️ Solution Structure
 
-The solution contains two main projects organized for clear separation of concerns:
+The solution contains several projects organized for clear separation of concerns:
 
 ```
 Screenbox.slnx
-├── Screenbox/           # Main UWP application (UI layer)
-└── Screenbox.Core/      # Core business logic library
+├── Screenbox/                 # Main UWP application
+├── Screenbox.Core/            # Core services, models, view models, and playback logic
+├── Screenbox.UI/              # Shared UI components and custom controls
+├── Screenbox.VideoView/       # Video rendering helper for playback surfaces
+├── Screenbox.Lively/          # Lively Wallpaper integration support
+└── Screenbox.Core.Tests/      # Unit and integration tests for the core library
 ```
 
 ### Main Project: Screenbox
-The primary UWP application containing all user interface components, platform-specific code, and XAML resources.
+
+The main project is the user-facing Windows application. It owns the shell, pages, controls, dialogs, flyouts, localization, and app startup wiring.
 
 ### Core Library: Screenbox.Core
-Contains the business logic, services, view models, and media playback components that can be shared across different platforms.
+
+The core project contains the business logic, services, domain models, view models, contexts, coordinators, playback abstractions, and the app-wide messenger contracts.
+
+### UI Library: Screenbox.UI
+
+This library contains shared UI components, theme resources, and templated controls that can be reused across different parts of the application.
+
+### Video Rendering Helper: Screenbox.VideoView
+
+The VideoView project provides a helper for rendering video playback surfaces, abstracting the underlying video rendering implementation.
+
+### Lively Wallpaper Integration: Screenbox.Lively
+
+The Lively project provides integration support for Lively Wallpaper, allowing the application to interact with and control live wallpapers.
+
+### Core Tests: Screenbox.Core.Tests
+
+The Core.Tests project contains unit and integration tests for the core logic, ensuring the correctness and reliability of the application's business logic.
 
 ## 🎨 View Layer
 
@@ -69,8 +92,9 @@ The application organizes its content into several main page categories:
 - **`HomePage.xaml`**: Recently accessed media
 - **`VideosPage.xaml`**: Video library browsing with nested pages for categories
 - **`MusicPage.xaml`**: Music library with artist, album, and song views
-- **`NetworkPage.xaml`**: Network streaming and casting features  
-- **`PlayQueuePage.xaml`**: Current playlist and queue management
+- **`NetworkPage.xaml`**: Network streaming and casting features
+- **`PlayQueuePage.xaml`**: Current play queue and queue management
+- **`PlaylistsPage.xaml`**: Playlist creation and management
 - **`SettingsPage.xaml`**: Application configuration and preferences
 
 ### Custom Controls Architecture
@@ -78,17 +102,20 @@ The application organizes its content into several main page categories:
 Screenbox implements numerous custom controls for specialized functionality:
 
 #### Core Playback Controls
+
 - **`PlayerControls.xaml`**: Primary media control interface
 - **`SeekBar.xaml`**: Timeline scrubbing and progress indication
 - **`VolumeControl.xaml`**: Audio level management
 - **`PlayerElement.xaml`**: Main video rendering surface
 
-#### Media Display Controls  
+#### Media Display Controls
+
 - **`MediaListViewItem.xaml`**: Templated list items for media content
 - **`CommonGridViewItem.xaml`**: Grid layout for media thumbnails
-- **`PlaylistView.xaml`**: Specialized playlist display component
+- **`PlayQueueControl.xaml`**: Specialized play queue display component
 
 #### Dialogs and Overlay Controls
+
 - **`PropertiesDialog.xaml`**: Media file information display
 - **`OpenUrlDialog.xaml`**: Network URL input interface
 
@@ -101,6 +128,7 @@ Screenbox implements numerous custom controls for specialized functionality:
 Screenbox uses [data binding](https://learn.microsoft.com/en-us/windows/uwp/data-binding/data-binding-quickstart) extensively to create dynamic, responsive UI components. The application primarily uses the [x:Bind](https://learn.microsoft.com/en-us/windows/apps/develop/platform/xaml/x-bind-markup-extension) markup extension for performance benefits over the legacy [Binding](https://learn.microsoft.com/en-us/windows/apps/develop/platform/xaml/binding-markup-extension) syntax.
 
 Example of x:Bind usage in media display:
+
 ```xml
 <TextBlock Text="{x:Bind ViewModel.CurrentMedia.Title, Mode=OneWay}" />
 <ProgressBar Value="{x:Bind ViewModel.PlaybackPosition, Mode=OneWay}" />
@@ -129,18 +157,21 @@ The ViewModel layer is contained in the Screenbox.Core project and serves as the
 ### Key ViewModel Architecture
 
 #### Primary Application ViewModels
+
 - **`MainPageViewModel.cs`**: Root application state and navigation coordination
 - **`PlayerPageViewModel.cs`**: Media playback state and control logic
 - **`PlayerControlsViewModel.cs`**: Playback control interactions and state
 - **`SettingsPageViewModel.cs`**: Application configuration management
 
 #### Content Management ViewModels
+
 - **`PlayQueuePanelViewModel.cs`**: ViewModel for the play queue panel/flyout — handles item selection, reordering, and adding files or URLs to the queue
 - **`CommonViewModel.cs`**: Shared state across multiple pages
 - **`MediaViewModel.cs`**: Individual media item representation
 - **`PlaylistViewModel.cs`**: Playlist-specific functionality
 
 #### Library and Search ViewModels
+
 - **`HomePageViewModel.cs`**: Recent media
 - **`VideosPageViewModel.cs`**: Video library browsing
 - **`MusicPageViewModel.cs`**: Music library organization
@@ -158,10 +189,10 @@ ViewModels implement property change notification through the [CommunityToolkit.
 
 ```csharp
 [ObservableProperty]
-private string _currentMediaTitle;
+private partial string CurrentMediaTitle { get; set; }
 
-[ObservableProperty]  
-private TimeSpan _playbackPosition;
+[ObservableProperty]
+private partial TimeSpan PlaybackPosition { get; set; }
 ```
 
 This enables automatic UI updates when ViewModel properties change, maintaining synchronization between the data layer and user interface.
@@ -173,19 +204,22 @@ Screenbox uses the [CommunityToolkit.Mvvm messaging system](https://learn.micros
 #### Core Message Types
 
 **Playback Control Messages**
+
 - **`PlayMediaMessage.cs`**: Initiate media playback
 - **`TogglePlayPauseMessage.cs`**: Toggle playback state
 - **`ChangeTimeRequestMessage.cs`**: Seek to specific time position
 
-**UI State Messages**  
+**UI State Messages**
+
 - **`PlayerControlsVisibilityChangedMessage.cs`**: Show/hide player controls
 - **`SettingsChangedMessage.cs`**: Application setting modifications
 - **`NavigationViewDisplayModeRequestMessage.cs`**: Navigation menu state changes
+- **`NotificationMessage.cs`**: Show notifications inside the app
+- **`PlayerOsdUpdateMessage.cs`**: On-screen display updates for playback information
 
 **System Integration Messages**
+
 - **`SuspendingMessage.cs`**: Application lifecycle events
-- **`ErrorMessage.cs`**: Error reporting and handling
-- **`NotificationRaisedEventArgs.cs`**: User notification display
 
 ## 🔧 Model Layer
 
@@ -198,22 +232,25 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 #### Core Business Services
 
 **Media Management Services**
+
 - **`IFilesService`**: File system operations and media discovery
 - **`ILibraryService`**: Stateless operations for fetching and managing libraries. `FetchMusicAsync` returns a `MusicLibrary` and accepts an optional `IProgress<MusicLibrary>` for incremental batch updates; `FetchVideosAsync` works analogously with `VideosLibrary`.
 - **`ISearchService`**: Content search and filtering functionality
 
 **Playback and Streaming Services**
+
 - **`IPlayerService`**: Media player initialization and playback item management
 - **`ICastService`**: Stateless casting operations for renderer creation and configuration
 - **`ISystemMediaTransportControlsService`**: Windows media key integration
 
 **Persistence Services**
-- **`IDatabaseService`**: Low-level SQLite database management. Opens (or creates) `screenbox.db` in `ApplicationData.Current.LocalFolder`, applies the schema on first open, and exposes `CreateConnection()` for typed data access. Automatically recovers from database corruption by deleting and recreating the file — data loss is acceptable because the database is a cache layer. Registered as a singleton and initialized early at app startup.
+
+- **`IDatabaseService`**: Low-level SQLite database management. Opens (or creates) `screenbox.db` in `ApplicationData.Current.LocalFolder`, applies the schema on first open, and exposes `CreateConnection()` for typed data access. The library tables are rebuildable cache data, but playlists are durable user data. If schema initialization fails with a SQLite or I/O error, the current fallback deletes and recreates the database file, which can also erase playlists. Registered as a singleton and initialized early at app startup.
 - **`IPlaybackProgressTracker`**: Tracks and persists the playback progress for each media item, enabling resume-from-position functionality. Handles the `SuspendingMessage` to flush state to the database on app suspension.
 
 **System Integration Services**
+
 - **`ISettingsService`**: Application configuration persistence
-- **`INotificationService`**: User notification management
 - **`IWindowService`**: Window management and display operations
 
 #### Application Contexts
@@ -221,12 +258,14 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 Contexts are **observable application state holders** shared across services and ViewModels. They represent the current runtime state of a domain area and act as the single source of truth for that state within the app.
 
 Architectural rules for contexts:
+
 - **Written by**: Services and coordinators (as a side effect of use-case execution)
 - **Read/observed by**: ViewModels (via data binding and property-changed events)
 - **Must not**: Call services or coordinators back (no circular dependencies)
 - **May contain**: Messenger helper methods that broadcast state change events
 
 Available contexts:
+
 - **`PlayerContext`**: Holds the current `IMediaPlayer` instance, allowing components to observe player state changes
 - **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
 - **`LibraryContext`**: Holds library state including the `StorageLibrary` handles (`MusicStorageLibrary`, `VideosStorageLibrary`), loading flags, and the current `MusicLibrary` and `VideosLibrary` container objects. Written atomically by `LibraryCoordinator` after each fetch batch or on completion.
@@ -238,12 +277,14 @@ Available contexts:
 Some platform APIs (file system watchers, timers, device watchers) require stateful ownership to reliably subscribe/unsubscribe and to avoid duplicating watchers across views. Coordinators own these long-lived resources and orchestrate service calls in response to platform events.
 
 Architectural rules for coordinators:
+
 - **Depend on**: Services and contexts (never on ViewModels)
 - **Consumed by**: ViewModels at initialization boundaries (to start lifecycle)
 - **Must expose**: An interface (`ILibraryCoordinator`, etc.) for testability
 - **Implement**: `IDisposable` to clean up watchers/timers
 
 Available coordinators:
+
 - **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
 - **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `PlayFilesMessage`, `SetQueueMessage`, `ClearQueueMessage`, and `QueueRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Manages neighboring-file auto-enqueue when a single file is opened. Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations.
 
@@ -259,13 +300,15 @@ Helper classes provide focused utilities and lightweight wrappers for specific f
 The media playback system is built on [LibVLCSharp](https://code.videolan.org/videolan/LibVLCSharp) with custom abstractions for integration with the MVVM architecture:
 
 #### Core Playback Components
+
 - **`IMediaPlayer`**: Media player abstraction interface
 - **`VlcMediaPlayer.cs`**: VLC-based implementation of media player
 - **`PlaybackItem.cs`**: Media item wrapper with metadata and state
 
 #### Track Management System
+
 - **`PlaybackAudioTrackList.cs`**: Audio track selection and switching
-- **`PlaybackVideoTrackList.cs`**: Video track and subtitle management  
+- **`PlaybackVideoTrackList.cs`**: Video track and subtitle management
 - **`PlaybackSubtitleTrackList.cs`**: Subtitle track handling
 - **`PlaybackChapterList.cs`**: Chapter navigation support
 
@@ -274,18 +317,20 @@ The playback engine provides a clean interface for the ViewModel layer while abs
 ### Data Models and Persistence
 
 #### Media Information Models
+
 - **`MediaInfo.cs`**: Base media file information
 - **`VideoInfo.cs`**: Video-specific metadata and properties
 - **`MusicInfo.cs`**: Audio metadata and music library information
 
-#### Application State Models  
+#### Application State Models
+
 - **`MusicLibrary.cs`**: Immutable snapshot of the music library — `Songs`, `Albums`, `Artists`, `UnknownAlbum`, and `UnknownArtist`. Replaced by a new instance whenever the library is refreshed, so all relationships stay consistent. Has a static `Empty` instance used as the initial `LibraryContext.Music` value.
 - **`VideosLibrary.cs`**: Immutable snapshot of the video library — `Videos` list. Same replacement model as `MusicLibrary`.
 - **`RawMediaRecordDto.cs`**: Serializable snapshot of a media item's metadata (title, path, duration, year, type, and type-specific properties). Used as the unit of persistence for playlist items and as an intermediate representation when reading the media-records cache from the database.
 
 #### SQLite Database Schema
 
-All media-library state is stored in `screenbox.db` (SQLite, `LocalFolder`). The database acts as a **disposable cache** — the app recreates it from scratch if the file is missing or corrupted.
+The library tables in `screenbox.db` (SQLite, `LocalFolder`) are rebuildable cache data. The `playlists` and `playlist_items` tables contain durable user data and are not disposable. A missing database is created on startup; if schema initialization fails with a SQLite or I/O error, the current fallback recreates the whole file, which can also erase playlists.
 
 | Table | Purpose |
 |---|---|
@@ -321,15 +366,16 @@ The following table summarizes the allowed dependency directions between layers:
 - **Stateful coordinators** (e.g., `LibraryCoordinator`): own watchers/timers and manage subscriptions/lifetimes. Register as singletons and implement `IDisposable`.
 - **Stateful services** (e.g., `PlaybackProgressTracker`): own in-memory state but no platform subscriptions. Prefer a service interface; register as singletons.
 
-## 🛠️ Technology Stack
+## 🧰 Technology Stack
 
 - **UWP (Universal Windows Platform)**: Windows application framework providing native performance and system integration
-- **C# 10.0**: Primary programming language
+- **.NET 10**: Cross-platform runtime for building modern applications
 - **XAML**: Declarative markup for user interface definition
-- **LibVLCSharp 3.7.0**: Cross-platform media playback engine with extensive codec support
-- **CommunityToolkit.Mvvm**: Modern MVVM framework with source generators and messaging
+- **LibVLCSharp**: Cross-platform media playback engine with extensive codec support
+- **CommunityToolkit.Mvvm**: MVVM framework for property change notification, messaging, and source generation
 
-### Development and Build Tools  
+### Development and Build Tools
+
 - **Visual Studio 2026**: Primary integrated development environment
 - **MSBuild**: Build system and project management
 - **XAML Styler**: XAML formatting and style enforcement
@@ -337,19 +383,23 @@ The following table summarizes the allowed dependency directions between layers:
 ### Key Dependencies
 
 #### MVVM and UI Framework
+
 - [Microsoft.UI.Xaml](https://github.com/microsoft/microsoft-ui-xaml/) - WinUI controls and modern UI components
 - [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet/) - MVVM helpers, messaging, and source generators
 - [CommunityToolkit.Uwp](https://www.nuget.org/packages/CommunityToolkit.Uwp/) - UWP community extensions
 
 #### Dependency Injection
+
 - [Microsoft.Extensions.DependencyInjection](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/) - Service container and dependency injection
 
 #### Media and Data Processing
+
 - [LibVLCSharp](https://github.com/videolan/libvlcsharp) - VLC media player integration
 - [TagLibSharp](https://github.com/mono/taglib-sharp) - Audio metadata reading
 - [Microsoft.Data.Sqlite](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/) - SQLite database access for media library cache and playlist persistence
 
 #### Monitoring and Analytics
+
 - [Sentry](https://www.nuget.org/packages/Sentry/) - Error tracking and performance monitoring
 - [Sentry.Extensions.Logging](https://www.nuget.org/packages/Sentry.Extensions.Logging/) - Sentry provider for `Microsoft.Extensions.Logging` with breadcrumb/event integration
 - [Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/) - Unified structured logging API used across Core and app layers
@@ -357,9 +407,11 @@ The following table summarizes the allowed dependency directions between layers:
 ## 📋 Development Guidelines
 
 ### Code Organization
+
 Follow [C# coding conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) and [UWP](https://learn.microsoft.com/en-us/windows/uwp/get-started/) best practices throughout the codebase.
 
 ### Naming Conventions
+
 Adhere to [.NET naming guidelines](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines):
 
 - **PascalCase**: Classes, methods, properties, public fields, enums
@@ -369,6 +421,7 @@ Adhere to [.NET naming guidelines](https://learn.microsoft.com/en-us/dotnet/stan
 - **XAML resources**: Descriptive, consistent naming patterns
 
 ### File Organization
+
 - One class per file
 - Nested namespaces match folder structure
 - Partial classes for XAML code-behind
@@ -376,15 +429,18 @@ Adhere to [.NET naming guidelines](https://learn.microsoft.com/en-us/dotnet/stan
 ### Performance Considerations
 
 #### Asynchronous Programming
+
 - Use `async/await` for I/O operations following [async best practices](https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/async-scenarios)
 - Proper `ConfigureAwait(false)` usage in library code
 - Task-based operations for file system access
 
 #### Memory Management
+
 - Follow [.NET memory management guidelines](https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/)
 - Use weak references for event handlers where appropriate
 
 #### UI Performance
+
 - Follow [UWP performance best practices](https://learn.microsoft.com/en-us/windows/uwp/debug-test-perf/performance-and-xaml-ui)
 - Enable virtualization for large collections
 - Implement proper image caching
@@ -393,26 +449,29 @@ Adhere to [.NET naming guidelines](https://learn.microsoft.com/en-us/dotnet/stan
 ### Build Configuration and Deployment
 
 #### Supported Platforms
+
 - **x86**: 32-bit Intel/AMD processors
 - **x64**: 64-bit Intel/AMD processors
 - **ARM64**: 64-bit ARM processors
 
 #### Build Modes
+
 - **Debug**: Development builds with debugging symbols
 - **Release**: Optimized production builds
-- **StoreUpload**: Microsoft Store submission packages
 
 For detailed build configuration, see [UWP packaging documentation](https://learn.microsoft.com/en-us/windows/uwp/packaging/).
 
 ### External Resources and Documentation
 
 #### Documentation
+
 - [UWP Developer Guide](https://learn.microsoft.com/en-us/windows/uwp/)
 - [C# Programming Reference](https://learn.microsoft.com/en-us/dotnet/csharp/)
 - [MVVM Toolkit Documentation](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/)
 - [Dependency Injection in .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection)
 
 #### Best Practices and Guidelines
+
 - [XAML Performance Guidelines](https://learn.microsoft.com/en-us/windows/uwp/debug-test-perf/performance-and-xaml-ui)
 - [Async Programming Patterns](https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/async-scenarios)
 - [Accessibility Guidelines for UWP Apps](https://learn.microsoft.com/en-us/windows/uwp/accessibility/accessibility)

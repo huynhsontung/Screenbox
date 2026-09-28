@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Windows.System;
@@ -44,7 +45,6 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
 
     /// <summary>
     /// Requests adding a new folder to the Music library.
-    /// Sends a <see cref="Core.Messages.FailedToAddFolderNotificationMessage"/> on failure.
     /// </summary>
     [RelayCommand(CanExecute = nameof(LibraryLoaded))]
     private async Task AddFolderAsync()
@@ -55,7 +55,7 @@ public sealed partial class MusicPageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            Messenger.Send(new FailedToAddFolderNotificationMessage(e.Message));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.FolderAddFailed, message: e.Message));
         }
     }
 

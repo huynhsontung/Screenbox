@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -86,7 +87,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     public void SendError(string title, string message)
     {
-        Messenger.Send(new ErrorMessage(title, message));
+        Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.None, title: title, message: message));
     }
 
     public async Task LoadAsync()

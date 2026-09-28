@@ -202,7 +202,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
-                    Messenger.Send(new FailedToInitializeNotificationMessage(ex.Message));
+                    Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.InitializationFailed, message: ex.Message));
                 });
             }
         });

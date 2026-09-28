@@ -159,7 +159,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     {
         if (MediaPlayer == null)
         {
-            Messenger.Send(new MediaLoadFailedNotificationMessage("Media player is not initialized", Location));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"Media player is not initialized{Environment.NewLine}{Location}"));
             return null;
         }
 
@@ -182,7 +182,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
         catch (Exception e)
         {
-            Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{Location}{Environment.NewLine}{e.Message}"));
         }
 
         return item;

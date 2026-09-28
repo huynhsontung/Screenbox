@@ -1,8 +1,10 @@
+using System;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -20,20 +22,28 @@ public sealed partial class NotificationView : UserControl
         DataContext = Ioc.Default.GetRequiredService<NotificationViewModel>();
     }
 
-    private ButtonBase? GetActionButton(NotificationKind kind, string? actionContent, ICommand? actionCommand)
+    private ButtonBase? CreateActionButton(NotificationKind kind, string? actionContent, ICommand? actionCommand)
     {
         return kind switch
         {
-            NotificationKind.MusicLibraryAccessDenied or
-            NotificationKind.PicturesLibraryAccessDenied or
+            NotificationKind.MusicLibraryAccessDenied => new HyperlinkButton
+            {
+                Content = CreateContentWithTrailingIcon(Strings.Resources.OpenPrivacySettingsButtonText),
+                NavigateUri = new Uri("ms-settings:privacy-musiclibrary"),
+            },
+            NotificationKind.PicturesLibraryAccessDenied => new HyperlinkButton
+            {
+                Content = CreateContentWithTrailingIcon(Strings.Resources.OpenPrivacySettingsButtonText),
+                NavigateUri = new Uri("ms-settings:privacy-pictures"),
+            },
             NotificationKind.VideosLibraryAccessDenied => new HyperlinkButton
             {
-                Content = Strings.Resources.OpenPrivacySettingsButtonText,
-                Command = actionCommand,
+                Content = CreateContentWithTrailingIcon(Strings.Resources.OpenPrivacySettingsButtonText),
+                NavigateUri = new Uri("ms-settings:privacy-videos"),
             },
             NotificationKind.FrameSaved => new HyperlinkButton
             {
-                Content = actionContent,
+                Content = CreateContentWithTrailingIcon(actionContent),
                 Command = actionCommand,
             },
             NotificationKind.ResumePosition => new Button
@@ -45,7 +55,7 @@ public sealed partial class NotificationView : UserControl
         };
     }
 
-    private string? GetDisplayTitle(NotificationKind kind, string? title, int count)
+    private string? GetDisplayTitle(NotificationKind kind, string? title, double? numericValue)
     {
         return kind switch
         {
@@ -64,7 +74,7 @@ public sealed partial class NotificationView : UserControl
             NotificationKind.PlaylistCreated => Strings.Resources.PlaylistCreatedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistDeleted => Strings.Resources.PlaylistDeletedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistRenamed => Strings.Resources.PlaylistRenamedNotificationTitle(title ?? string.Empty),
-            NotificationKind.PlaylistItemsAdded => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
+            NotificationKind.PlaylistItemsAdded when numericValue is double count => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
             NotificationKind.ResumePosition => Strings.Resources.ResumePositionNotificationTitle,
             _ => null,
         };
@@ -98,5 +108,33 @@ public sealed partial class NotificationView : UserControl
             NotificationLevel.Success => InfoBarSeverity.Success,
             _ => InfoBarSeverity.Informational
         };
+    }
+
+    private static StackPanel CreateContentWithTrailingIcon(string? text, string iconGlyph = "\uE8A7")
+    {
+        var textBlock = new TextBlock
+        {
+            Text = text ?? string.Empty,
+        };
+
+        var icon = new FontIcon
+        {
+            Margin = new Thickness(8, 1.95, 0, 0.9),
+            Glyph = iconGlyph,
+            FontSize = 12.0,
+            MirroredWhenRightToLeft = true,
+        };
+
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children =
+            {
+                textBlock,
+                icon,
+            },
+        };
+
+        return panel;
     }
 }
