@@ -1,0 +1,139 @@
+name: Compare ILC output size
+
+on:
+  workflow_dispatch:
+    inputs:
+      compare_ref:
+        description: 'Enter a branch, tag, or SHA to compare against'
+        required: true
+        type: string
+        default: main
+      architecture:
+        description: 'Choose the target processor architecture'
+        required: true
+        type: choice
+        default: arm64
+        options:
+          - arm64
+          - x64
+          - x86
+      detail_level:
+        description: 'Choose MSBuild level of detail'
+        required: true
+        default: 'normal'
+        type: choice
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+          - diagnostic
+      upload_dgml:
+        description: 'Upload the generated DGML file'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  publish:
+    name: Publish ${{ matrix.artifact_name }}
+    runs-on: windows-11-vs2026-arm
+    permissions:
+      actions: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ref: main
+            checkout_path: baseline
+          - ref: ${{ inputs.compare_ref }}
+            checkout_path: compare
+    env:
+      ARCH: ${{ inputs.architecture }}
+      PROJ_PATH: Screenbox
+    steps:
+      - name: Checkout ${{ matrix.ref }}
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.ref }}
+          path: ${{ matrix.checkout_path }}
+
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: ${{ env.ARCH }}
+
+      - name: Extract target framework
+        working-directory: ${{ matrix.checkout_path }}
+        run: |
+          $tfm = msbuild "$env:PROJ_PATH/Screenbox.csproj" -nologo -getProperty:TargetFramework
+          "PROJ_TFM=$tfm" >> $env:GITHUB_ENV
+
+      - name: Publish ${{ matrix.ref }}
+        working-directory: ${{ matrix.checkout_path }}
+        run: |
+          msbuild "$env:PROJ_PATH/Screenbox.csproj" `
+            -restore `
+            -v:${{ inputs.detail_level }} `
+            -t:Publish `
+            -p:Configuration=Release `
+            -p:Platform=$env:ARCH `
+            -p:IlcGenerateMstatFile=true `
+            -p:IlcGenerateDgmlFile=true
+
+      - name: Upload ${{ matrix.checkout_path }} artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.checkout_path }}
+          path: |
+            ${{ matrix.checkout_path }}/${{ env.PROJ_PATH }}/obj/${{ env.ARCH }}/Release/${{ env.PROJ_TFM }}/win-${{ env.ARCH }}/native/*.mstat
+            ${{ inputs.upload_dgml && format('{0}/{1}/obj/{2}/Release/{3}/win-{2}/native/*.scan.dgml.xml', matrix.checkout_path, env.PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
+          if-no-files-found: error
+          retention-days: 5
+
+  compare:
+    name: Compare artifacts
+    needs: publish
+    runs-on: windows-11-vs2026-arm
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download baseline artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: baseline
+          path: Downloads
+          skip-decompress: true
+
+      - name: Download compare artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: compare
+          path: Downloads
+          skip-decompress: true
+
+      - name: Install Sizoscope CLI
+        run: dotnet tool install --tool-path Tools sizoscope-cli
+
+      - name: Compare .mstat files
+        run: |
+          & "Tools/sizoscope-cli.exe" `
+            Downloads/baseline.zip `
+            Downloads/compare.zip `
+            --output "sizoscope-diff.txt"
+
+      - name: Publish report to summary
+        run: ./scripts/ConvertTo-SizoscopeSummary.ps1 -InputPath sizoscope-diff.txt -OutputPath "$env:GITHUB_STEP_SUMMARY"
+
+      - name: Upload Sizoscope diff artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: sizoscope-diff.txt
+          if-no-files-found: error
+          retention-days: 5
+          archive: false

@@ -47,15 +47,20 @@
     <File Path=".github/ISSUE_TEMPLATE/feature_request.md" />
   </Folder>
   <Folder Name="/root/.github/workflows/">
+    <File Path=".github/workflows/build-unsigned-app.yml" />
+    <File Path=".github/workflows/cd.yml" />
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/compare-size.yml" />
     <File Path=".github/workflows/copilot-setup-steps.yml" />
     <File Path=".github/workflows/crowdin-sync.yml" />
-    <File Path=".github/workflows/main.yml" />
     <File Path=".github/workflows/winget-release.yml" />
   </Folder>
   <Folder Name="/root/docs/">
     <File Path="docs/PROJECT_STRUCTURE.md" />
   </Folder>
   <Folder Name="/root/scripts/">
+    <File Path="scripts/ConvertTo-SizoscopeSummary.ps1" />
+    <File Path="scripts/Export-InstallKit.ps1" />
     <File Path="scripts/format-xaml-hook.ps1" />
     <File Path="scripts/Generate-Fonts.ps1" />
     <File Path="scripts/generate-lottie.ps1" />
