@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
+using Screenbox.UI;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -41,6 +42,13 @@ public sealed partial class PlayerControls : UserControl
 
     internal PlaybackSessionViewModel PlaybackSession { get; }
 
+    private static readonly double[] _playbackRates =
+    [
+        PlaybackSpeedControl.Speed025, PlaybackSpeedControl.Speed050, PlaybackSpeedControl.Speed075,
+        PlaybackSpeedControl.Speed100, PlaybackSpeedControl.Speed125, PlaybackSpeedControl.Speed150, PlaybackSpeedControl.Speed175,
+        PlaybackSpeedControl.Speed200, PlaybackSpeedControl.Speed400,
+    ];
+
     private Flyout? _castFlyout;
 
     public PlayerControls()
@@ -67,14 +75,6 @@ public sealed partial class PlayerControls : UserControl
     {
         Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
         customSpeedFlyout.ShowAt(MoreButton);
-        if (SpeedSlider.Value != PlaybackSession.PlaybackRate)
-        {
-            SpeedSlider.Value = PlaybackSession.PlaybackRate;
-        }
-        else
-        {
-            SelectAlternatePlaybackSpeedItem(PlaybackSession.PlaybackRate);
-        }
     }
 
     [DynamicWindowsRuntimeCast(typeof(Flyout))]
@@ -82,35 +82,6 @@ public sealed partial class PlayerControls : UserControl
     {
         Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
         customAspectFlyout.ShowAt(MoreButton);
-    }
-
-    private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-    {
-        double newValue = Math.Max(e.NewValue, 0.05);
-        if (Math.Abs(SpeedSlider.Value - newValue) > 0.0001)
-        {
-            SpeedSlider.Value = newValue;
-        }
-
-        PlaybackSession.SetPlaybackRateCommand.Execute(newValue);
-        SelectAlternatePlaybackSpeedItem(newValue);
-    }
-
-    [DynamicWindowsRuntimeCast(typeof(RadioMenuFlyoutItem))]
-    private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)
-    {
-        bool isMenuValue = (int)(playbackSpeed * 100) % 25 == 0;
-        if (isMenuValue &&
-            PlaybackSpeedSubMenu.Items?.FirstOrDefault(x =>
-                    x.Tag is double predefinedSpeed && Math.Abs(predefinedSpeed - playbackSpeed) < 0.0001) is
-                RadioMenuFlyoutItem matchItem)
-        {
-            matchItem.IsChecked = true;
-        }
-        else
-        {
-            CustomPlaybackSpeedMenuItem.IsChecked = true;
-        }
     }
 
     private bool IsCastButtonEnabled(bool hasActiveItem)
@@ -164,5 +135,16 @@ public sealed partial class PlayerControls : UserControl
     private Visibility GetChapterVisibility(bool isEnabled, int count)
     {
         return isEnabled && count > 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private bool IsCustomPlaybackRateSelected(double currentRate)
+    {
+        foreach (double rate in _playbackRates)
+        {
+            if (DoubleHelper.AreClose(currentRate, rate))
+                return false;
+        }
+
+        return true;
     }
 }

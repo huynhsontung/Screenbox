@@ -14,6 +14,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:sbui="using:Screenbox.UI"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="128"
@@ -25,17 +26,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Styles/Flyout.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--  Preset values for playback speed options  -->
-            <x:Double x:Key="Speed025">0.25</x:Double>
-            <x:Double x:Key="Speed050">0.5</x:Double>
-            <x:Double x:Key="Speed075">0.75</x:Double>
-            <x:Double x:Key="Speed100">1.0</x:Double>
-            <x:Double x:Key="Speed125">1.25</x:Double>
-            <x:Double x:Key="Speed150">1.5</x:Double>
-            <x:Double x:Key="Speed175">1.75</x:Double>
-            <x:Double x:Key="Speed200">2.0</x:Double>
-            <x:Double x:Key="Speed400">4.0</x:Double>
 
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
 
@@ -52,22 +42,12 @@
             </Flyout>
 
             <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
-                <StackPanel
-                    Width="180"
-                    Orientation="Vertical"
-                    Spacing="8">
-                    <Slider
-                        x:Name="SpeedSlider"
-                        Header="{strings:Resources Key=CustomPlaybackSpeed}"
-                        IsThumbToolTipEnabled="False"
-                        Maximum="2"
-                        Minimum="0"
-                        SmallChange="0.01"
-                        StepFrequency="0.05"
-                        ValueChanged="SpeedSlider_OnValueChanged"
-                        Value="1.0" />
-                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
-                </StackPanel>
+                <Flyout.FlyoutPresenterStyle>
+                    <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                        <Setter Property="Padding" Value="0,0,0,15" />
+                    </Style>
+                </Flyout.FlyoutPresenterStyle>
+                <controls:PlaybackSpeedControl Width="296" />
             </Flyout>
 
             <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
@@ -128,74 +108,65 @@
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToSpeedGlyph(PlaybackSession.PlaybackRate), Mode=OneWay}" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed025MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed025MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed025}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed025}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed025), Mode=OneWay}"
                         Text="0.25 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed05MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed05MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed050}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed050}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed050), Mode=OneWay}"
                         Text="0.5 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed075MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed075MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed075}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed075}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed075), Mode=OneWay}"
                         Text="0.75 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed1MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed1MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed100}"
                         GroupName="SpeedGroup"
-                        IsChecked="True"
-                        Tag="{StaticResource Speed100}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed100), Mode=OneWay}"
                         Text="1 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed125MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed125MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed125}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed125}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed125), Mode=OneWay}"
                         Text="1.25 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed15MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed15MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed150}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed150}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed150), Mode=OneWay}"
                         Text="1.5 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed175MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed175MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed175}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed175}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed175), Mode=OneWay}"
                         Text="1.75 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed2MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed2MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed200}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed200}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed200), Mode=OneWay}"
                         Text="2 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        x:Name="PlaybackSpeed4MenuItem"
                         Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
-                        CommandParameter="{x:Bind PlaybackSpeed4MenuItem.Tag}"
+                        CommandParameter="{x:Bind controls:PlaybackSpeedControl.Speed400}"
                         GroupName="SpeedGroup"
-                        Tag="{StaticResource Speed400}"
+                        IsChecked="{x:Bind sbui:DoubleHelper.AreClose(PlaybackSession.PlaybackRate, controls:PlaybackSpeedControl.Speed400), Mode=OneWay}"
                         Text="4 ×" />
                     <MenuFlyoutSeparator />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="CustomPlaybackSpeedMenuItem"
                         Click="CustomSpeedMenuItem_OnClick"
                         GroupName="SpeedGroup"
+                        IsChecked="{x:Bind IsCustomPlaybackRateSelected(PlaybackSession.PlaybackRate), Mode=OneWay}"
                         Text="{x:Bind strings:Resources.Custom}" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
