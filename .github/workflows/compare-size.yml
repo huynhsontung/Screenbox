@@ -36,7 +36,7 @@ on:
 
 jobs:
   publish:
-    name: Publish ${{ matrix.artifact_name }}
+    name: Publish ${{ matrix.checkout_path }}
     runs-on: windows-11-vs2026-arm
     permissions:
       actions: write
