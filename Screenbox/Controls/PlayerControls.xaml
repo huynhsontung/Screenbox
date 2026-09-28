@@ -55,7 +55,6 @@
                     <TextBox
                         x:Name="AspectRatioTextBox"
                         AutomationProperties.Name="Custom aspect ratio TextBox"
-                        Header="{strings:Resources Key=CustomAspectRatio}"
                         PlaceholderText="16:9"
                         TextChanged="AspectRatioTextBox_OnTextChanged" />
                 </StackPanel>

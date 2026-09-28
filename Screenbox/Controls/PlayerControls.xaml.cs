@@ -81,6 +81,7 @@ public sealed partial class PlayerControls : UserControl
     private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
+        AspectRatioTextBox.Header = Strings.Resources.CustomAspectRatio;
         customAspectFlyout.ShowAt(MoreButton);
     }
 
