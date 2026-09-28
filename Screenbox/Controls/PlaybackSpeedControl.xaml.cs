@@ -31,8 +31,10 @@ public sealed partial class PlaybackSpeedControl : UserControl
 
         PlaybackSession = Ioc.Default.GetRequiredService<PlaybackSessionViewModel>();
 
-        ToolTipService.SetToolTip(DecreasePlaybackRateButton, Strings.Resources.DecreaseValue(Strings.Resources.PlaybackSpeed.ToLowerInvariant()));
-        ToolTipService.SetToolTip(IncreasePlaybackRateButton, Strings.Resources.IncreaseValue(Strings.Resources.PlaybackSpeed.ToLowerInvariant()));
+        string playbackSpeed = Strings.Resources.PlaybackSpeed.ToLowerInvariant();
+
+        ToolTipService.SetToolTip(DecreasePlaybackRateButton, Strings.Resources.DecreaseValue(playbackSpeed));
+        ToolTipService.SetToolTip(IncreasePlaybackRateButton, Strings.Resources.IncreaseValue(playbackSpeed));
     }
 
     private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)

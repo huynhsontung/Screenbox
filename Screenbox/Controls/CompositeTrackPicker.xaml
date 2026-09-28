@@ -224,8 +224,7 @@
                     Click="DecreaseAudioTimingOffsetButton_OnClick"
                     Content="&#xF8AB;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
 
                 <Slider
                     Grid.Column="1"
@@ -250,8 +249,7 @@
                     Click="IncreaseAudioTimingOffsetButton_OnClick"
                     Content="&#xF8AA;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
             </Grid>
 
             <TextBlock
@@ -336,8 +334,7 @@
                     Click="DecreaseSubtitleTimingOffsetButton_OnClick"
                     Content="&#xF8AB;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
 
                 <Slider
                     Grid.Column="1"
@@ -362,8 +359,7 @@
                     Click="IncreaseSubtitleTimingOffsetButton_OnClick"
                     Content="&#xF8AA;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
             </Grid>
 
             <TextBlock
