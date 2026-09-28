@@ -5,6 +5,7 @@
     xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,32 +27,19 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedArtists}" />
 
-            <MenuFlyout x:Key="ArtistFlyout">
-                <MenuFlyoutItem Command="{x:Bind ViewModel.ContextArtist.PlayArtistCommand, Mode=OneWay}" Text="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.ContextArtist.IsPlaying), Mode=OneWay}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.ContextArtist.IsPlaying), Mode=OneWay}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.ContextArtist.PlayArtistNextCommand, Mode=OneWay}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{x:Bind strings:Resources.PlayNext}" />
-                <MenuFlyoutItem Command="{x:Bind ViewModel.ContextArtist.AddArtistToQueueCommand, Mode=OneWay}" Text="{x:Bind strings:Resources.AddToQueue}">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon
-                            x:Name="AddToQueueMenuFlyoutItemIcon"
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{StaticResource PlaylistMusicAddGlyph}" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
+            <flyouts:MediaMenuFlyout
+                x:Key="ArtistFlyout"
+                AddToQueueCommand="{x:Bind ViewModel.ContextArtist.AddArtistToQueueCommand, Mode=OneWay}"
+                ContextItem="{x:Bind ViewModel.ContextArtist, Mode=OneWay}"
+                PlayCommand="{x:Bind ViewModel.ContextArtist.PlayArtistCommand, Mode=OneWay}"
+                PlayNextCommand="{x:Bind ViewModel.ContextArtist.PlayArtistNextCommand, Mode=OneWay}">
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{x:Bind ViewModel.ContextArtist, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
                     Text="{x:Bind strings:Resources.ShowArtist}" />
-            </MenuFlyout>
+            </flyouts:MediaMenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -154,17 +142,6 @@
                         <!--<Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />-->
                         <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name="FlowDirectionStates">
-                <VisualState x:Name="RightToLeft">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AddToQueueMenuFlyoutItemIcon.Glyph" Value="{StaticResource PlaylistMusicAddMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
