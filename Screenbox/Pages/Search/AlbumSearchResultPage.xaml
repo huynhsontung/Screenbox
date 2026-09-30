@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:flyouts="using:Screenbox.Flyouts"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -59,6 +60,29 @@
                 <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
+                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextAlbum, Mode=TwoWay}">
+                    <behaviors:ListViewContextBehavior.Flyout>
+                        <flyouts:MediaMenuFlyout
+                            AddToQueueCommand="{x:Bind ViewModel.ContextAlbum.AddAlbumToQueueCommand, Mode=OneWay}"
+                            ContextItem="{x:Bind ViewModel.ContextAlbum, Mode=OneWay}"
+                            IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
+                            PlayCommand="{x:Bind ViewModel.ContextAlbum.PlayAlbumCommand, Mode=OneWay}"
+                            PlayNextCommand="{x:Bind ViewModel.ContextAlbum.PlayAlbumNextCommand, Mode=OneWay}">
+                            <flyouts:MediaMenuFlyout.AdditionalItems>
+                                <MenuFlyoutItem
+                                    Command="{x:Bind Common.OpenAlbumCommand}"
+                                    CommandParameter="{x:Bind ViewModel.ContextAlbum, Mode=OneWay}"
+                                    Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                                    Text="{x:Bind strings:Resources.ShowAlbum}" />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind Common.OpenArtistCommand}"
+                                    CommandParameter="{x:Bind ViewModel.ContextAlbum.RelatedSongs[0].MainArtist, FallbackValue={x:Null}, Mode=OneWay}"
+                                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                                    Text="{x:Bind strings:Resources.ShowArtist}" />
+                            </flyouts:MediaMenuFlyout.AdditionalItems>
+                        </flyouts:MediaMenuFlyout>
+                    </behaviors:ListViewContextBehavior.Flyout>
+                </behaviors:ListViewContextBehavior>
                 <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>

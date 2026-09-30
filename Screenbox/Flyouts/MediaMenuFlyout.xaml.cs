@@ -48,12 +48,13 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     /// </summary>
     /// <value>The command to invoke when the add to queue item is tapped.</value>
     public ICommand? AddToQueueCommand { get; set; }
+
     /// <summary>
     /// Gets or sets a value that indicates whether the add to playlist item is shown.
     /// </summary>
     /// <value><see langword="true"/> to show the add to playlist item. <see langword="false"/>
     /// to hide the add to playlist item. The default is <b>true</b>.</value>
-    public bool IsAddToPlaylistButtonVisible{ get; set; }
+    public bool IsAddToPlaylistButtonVisible { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the command to invoke when the remove item is tapped.
