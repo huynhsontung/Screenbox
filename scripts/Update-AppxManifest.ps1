@@ -8,7 +8,12 @@
     and display name in Package.appxmanifest to match the specified identity configuration.
 
 .PARAMETER Identity
-    Specifies the application package identity that the manifest should use.
+    Specifies the identity to apply to the app manifest. The default value is 'Store'.
+    The acceptable values for this parameter are:
+
+    - Store. Uses the Store identity and localized app display name.
+    - Sideload. Uses the developer sideload identity and display name.
+    - SideloadUnsigned. Uses the sideload identity, and an unsigned publisher.
 
 .EXAMPLE
     PS> ./Update-AppxManifest.ps1
@@ -54,13 +59,7 @@ switch ($Identity) {
         $visualDisplayName = "ms-resource:ManifestResources/AppDisplayName"
         break
     }
-    'Sideload' {
-        $identityName = "$StoreIdentityName.Dev"
-        $displayName = "$StoreDisplayName Dev"
-        $visualDisplayName = "$StoreDisplayName Dev"
-        break
-    }
-    'SideloadUnsigned' {
+    { $_ -in 'Sideload', 'SideloadUnsigned' } {
         $identityName = "$StoreIdentityName.Dev"
         $displayName = "$StoreDisplayName Dev"
         $visualDisplayName = "$StoreDisplayName Dev"

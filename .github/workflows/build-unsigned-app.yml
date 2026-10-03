@@ -1,0 +1,64 @@
+name: Build unsigned app package
+
+on:
+  workflow_dispatch:
+    inputs:
+      detail_level:
+        description: 'Choose MSBuild level of detail'
+        required: true
+        default: 'normal'
+        type: choice
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+          - diagnostic
+
+jobs:
+  build:
+    runs-on: windows-11-vs2026-arm
+    permissions:
+      actions: write
+      contents: read
+    env:
+      PROJ_PATH: Screenbox
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: arm64
+
+      - name: Update package manifest
+        run: ./scripts/Update-AppxManifest.ps1 -Identity SideloadUnsigned
+
+      - name: Update project version
+        run: ./scripts/Update-ProjectVersion.ps1
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build app package
+        run: |
+          msbuild $env:PROJ_PATH/Screenbox.csproj `
+            -restore `
+            -v:${{ inputs.detail_level }} `
+            -p:RestoreConfigFile=nuget.config `
+            -p:ContinuousIntegrationBuild=true `
+            -p:Configuration=Release `
+            -p:Platform=ARM64 `
+            -p:UapAppxPackageBuildMode=SideloadOnly
+
+      - name: Upload app package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/*.msixbundle
+          archive: false
