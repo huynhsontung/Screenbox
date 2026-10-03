@@ -154,8 +154,14 @@ public sealed class LibraryService : ILibraryService
 
             if (SearchRemovableStorage)
             {
-                var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
-                if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+                var hasAccess = true;
+                if (SystemInformation.IsKnownFolderRequestAccessSupported)
+                {
+                    var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                    hasAccess = accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
+                }
+
+                if (hasAccess)
                 {
                     libraryQuery = CreateRemovableStorageMusicQuery();
                     await BatchFetchMusicAsync(libraryQuery, songs, albumFactory, artistFactory, cancellationToken, progress);
@@ -250,8 +256,14 @@ public sealed class LibraryService : ILibraryService
 
             if (SearchRemovableStorage)
             {
-                var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
-                if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+                var hasAccess = true;
+                if (SystemInformation.IsKnownFolderRequestAccessSupported)
+                {
+                    var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                    hasAccess = accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
+                }
+
+                if (hasAccess)
                 {
                     libraryQuery = CreateRemovableStorageVideosQuery();
                     await BatchFetchVideosAsync(libraryQuery, videos, cancellationToken, progress);
