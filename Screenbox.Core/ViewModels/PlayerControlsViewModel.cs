@@ -24,6 +24,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<SettingsChangedMessage>,
     IRecipient<TogglePlayPauseMessage>,
+    IRecipient<TrackNavigationMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
     IRecipient<PropertyChangedMessage<WindowViewMode>>
 {
@@ -103,6 +104,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
         Messenger.Register<SettingsChangedMessage>(this);
         Messenger.Register<TogglePlayPauseMessage>(this);
+        Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
     }
@@ -146,6 +148,22 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         else
         {
             PlayPause();
+        }
+    }
+
+    public async void Receive(TrackNavigationMessage message)
+    {
+        if (MediaPlayer is null)
+            return;
+
+        switch (message.Direction)
+        {
+            case TrackNavigationDirection.Next when CanGoNext():
+                await _coordinator.NextAsync();
+                break;
+            case TrackNavigationDirection.Previous when CanGoPrevious():
+                await _coordinator.PreviousAsync();
+                break;
         }
     }
 

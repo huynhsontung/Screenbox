@@ -522,6 +522,22 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         }
     }
 
+    public void NextChapter()
+    {
+        if (PlaybackItem?.Media is null || PlaybackItem.Chapters.Count == 0)
+            return;
+
+        VlcPlayer.NextChapter();
+    }
+
+    public void PreviousChapter()
+    {
+        if (PlaybackItem?.Media is null || PlaybackItem.Chapters.Count == 0)
+            return;
+
+        VlcPlayer.PreviousChapter();
+    }
+
     private void Replay()
     {
         VlcPlayer.Stop();
