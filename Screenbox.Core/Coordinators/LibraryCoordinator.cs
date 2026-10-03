@@ -8,6 +8,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
@@ -194,7 +195,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         }
 
         var hasAccess = true;
-        if (KnownFolderAccess.IsRequestAccessSupported)
+        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
         {
             var result = await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
             hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
@@ -221,7 +222,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         }
 
         var hasAccess = true;
-        if (KnownFolderAccess.IsRequestAccessSupported)
+        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
         {
             var result = await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
             hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
