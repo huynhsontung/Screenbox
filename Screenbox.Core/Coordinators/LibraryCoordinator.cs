@@ -8,6 +8,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
@@ -193,8 +194,14 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
             _musicQuery = null;
         }
 
-        var result = await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
-        if (_musicQuery is null && result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+        var hasAccess = true;
+        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
+        {
+            var result = await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
+            hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
+        }
+
+        if (_musicQuery is null && hasAccess)
         {
             _musicQuery = _libraryService.CreateMusicLibraryQuery(UseIndexer);
             _musicQuery.ContentsChanged += OnMusicQueryContentsChanged;
@@ -214,8 +221,14 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
             _videosQuery = null;
         }
 
-        var result = await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
-        if (_videosQuery is null && result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+        var hasAccess = true;
+        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
+        {
+            var result = await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
+            hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
+        }
+
+        if (_videosQuery is null && hasAccess)
         {
             _videosQuery = _libraryService.CreateVideosLibraryQuery(UseIndexer);
             _videosQuery.ContentsChanged += OnVideosQueryContentsChanged;
