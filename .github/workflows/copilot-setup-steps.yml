@@ -24,6 +24,14 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
 
+    - name: Cache NuGet packages
+      uses: actions/cache@v6
+      with:
+        path: ~\.nuget\packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Restore nuget packages
       shell: pwsh
       run: msbuild Screenbox.slnx -t:restore -p:RestoreConfigFile=nuget.config -p:RestoreLockedMode=false -p:Platform=x64 -p:Configuration=Release
