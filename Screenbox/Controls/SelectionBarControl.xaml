@@ -117,7 +117,7 @@
                 <AppBarButton
                     x:Name="PlayButton"
                     Command="{x:Bind PlayButtonCommand}"
-                    CommandParameter="{x:Bind CommandParameter}"
+                    CommandParameter="{x:Bind Selection}"
                     Label="{x:Bind strings:Resources.Play}"
                     Visibility="{x:Bind IsPlayButtonVisible, Mode=OneWay}">
                     <AppBarButton.Icon>
@@ -128,7 +128,7 @@
                 <AppBarButton
                     x:Name="PlayNextButton"
                     Command="{x:Bind PlayNextButtonCommand}"
-                    CommandParameter="{x:Bind CommandParameter}"
+                    CommandParameter="{x:Bind Selection}"
                     Label="{x:Bind strings:Resources.PlayNext}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PlayAddGlyph}" />
@@ -138,7 +138,7 @@
                 <AppBarButton
                     x:Name="AddToQueueButton"
                     Command="{x:Bind AddToQueueButtonCommand}"
-                    CommandParameter="{x:Bind CommandParameter}"
+                    CommandParameter="{x:Bind Selection}"
                     Label="{x:Bind strings:Resources.AddToQueue}"
                     Visibility="{x:Bind IsAddToQueueButtonVisible, Mode=OneWay}">
                     <AppBarButton.Icon>
@@ -169,7 +169,7 @@
                     <AppBarButton.Flyout>
                         <MenuFlyout Placement="Bottom">
                             <interactivity:Interaction.Behaviors>
-                                <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind CommandParameter}" />
+                                <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind Selection}" />
                             </interactivity:Interaction.Behaviors>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
@@ -178,7 +178,7 @@
                 <AppBarButton
                     x:Name="RemoveButton"
                     Command="{x:Bind RemoveButtonCommand}"
-                    CommandParameter="{x:Bind CommandParameter}"
+                    CommandParameter="{x:Bind Selection}"
                     Icon="Clear"
                     KeyboardAcceleratorTextOverride="{x:Bind strings:KeyboardResources.VirtualKeyDelete}"
                     Label="{x:Bind strings:Resources.Remove}"
