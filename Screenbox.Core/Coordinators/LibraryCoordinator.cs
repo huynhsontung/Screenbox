@@ -195,7 +195,9 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         }
 
         var hasAccess = true;
-        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
+        if (ApiInformation.IsMethodPresent("Windows.Storage.KnownFolders", "RequestAccessAsync")
+            && ApiInformation.IsEnumNamedValuePresent("Windows.Storage.KnownFoldersAccessStatus", "Allowed")
+            && ApiInformation.IsEnumNamedValuePresent("Windows.Storage.KnownFoldersAccessStatus", "AllowedPerAppFolder"))
         {
             var result = await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
             hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
@@ -222,7 +224,9 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         }
 
         var hasAccess = true;
-        if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
+        if (ApiInformation.IsMethodPresent("Windows.Storage.KnownFolders", "RequestAccessAsync")
+            && ApiInformation.IsEnumNamedValuePresent("Windows.Storage.KnownFoldersAccessStatus", "Allowed")
+            && ApiInformation.IsEnumNamedValuePresent("Windows.Storage.KnownFoldersAccessStatus", "AllowedPerAppFolder"))
         {
             var result = await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
             hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;

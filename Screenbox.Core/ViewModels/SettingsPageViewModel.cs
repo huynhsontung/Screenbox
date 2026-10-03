@@ -573,7 +573,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         if (SystemInformation.IsXbox)
         {
             RemovableStorageFolders.Clear();
-            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
+            if (ApiInformation.IsMethodPresent("Windows.Storage.KnownFolders", "RequestAccessAsync")
+                && ApiInformation.IsEnumNamedValuePresent("Windows.Storage.KnownFoldersAccessStatus", "Allowed"))
             {
                 var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
                 if (accessStatus != KnownFoldersAccessStatus.Allowed)
