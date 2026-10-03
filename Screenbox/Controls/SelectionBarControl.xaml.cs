@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
+using Screenbox.Core.ViewModels;
 using Windows.Foundation.Collections;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -18,7 +19,7 @@ public sealed partial class SelectionBarControl : UserControl
     /// </summary>
     public static readonly DependencyProperty SelectionProperty = DependencyProperty.Register(
         nameof(Selection),
-        typeof(object),
+        typeof(SelectionViewModel),
         typeof(SelectionBarControl),
         new PropertyMetadata(null));
 
@@ -27,9 +28,9 @@ public sealed partial class SelectionBarControl : UserControl
     /// </summary>
     /// <value>The selection object used by the <see cref="SelectionBarControl"/> buttons and flyouts.
     /// The default is <see langword="null"/>.</value>
-    public object Selection
+    public SelectionViewModel Selection
     {
-        get { return GetValue(SelectionProperty); }
+        get { return (SelectionViewModel)GetValue(SelectionProperty); }
         set { SetValue(SelectionProperty, value); }
     }
 
