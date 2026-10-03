@@ -16,7 +16,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
-using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -573,7 +572,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         if (SystemInformation.IsXbox)
         {
             RemovableStorageFolders.Clear();
-            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 10))
+            if (SystemInformation.IsKnownFolderRequestAccessSupported)
             {
                 var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
                 if (accessStatus != KnownFoldersAccessStatus.Allowed)
