@@ -1056,16 +1056,16 @@
     <value>Aumentar a velocidade</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Faixa seguinte</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Faixa anterior</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Capítulo seguinte</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Capítulo anterior</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adicionar à lista de reprodução</value>
