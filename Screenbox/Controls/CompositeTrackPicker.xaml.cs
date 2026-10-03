@@ -52,6 +52,15 @@ public sealed partial class CompositeTrackPicker : UserControl
         ViewModel.SubtitleTracks.CollectionChanged += (_, _) => RebuildSubtitleDisplayList();
         ViewModel.AudioTracks.CollectionChanged += (_, _) => RebuildAudioDisplayList();
         ViewModel.VideoTracks.CollectionChanged += (_, _) => RebuildVideoDisplayList();
+
+        string timingOffset = Strings.Resources.TimingOffset.ToLowerInvariant();
+        string decreaseTimingOffsetToolTip = Strings.Resources.DecreaseValue(timingOffset);
+        string increaseTimingOffsetToolTip = Strings.Resources.IncreaseValue(timingOffset);
+
+        ToolTipService.SetToolTip(DecreaseAudioTimingOffsetButton, decreaseTimingOffsetToolTip);
+        ToolTipService.SetToolTip(IncreaseAudioTimingOffsetButton, increaseTimingOffsetToolTip);
+        ToolTipService.SetToolTip(DecreaseSubtitleTimingOffsetButton, decreaseTimingOffsetToolTip);
+        ToolTipService.SetToolTip(IncreaseSubtitleTimingOffsetButton, increaseTimingOffsetToolTip);
     }
 
     private void AddSubtitleListViewFooterItem_OnTapped(object sender, TappedRoutedEventArgs e)
