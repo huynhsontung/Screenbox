@@ -62,7 +62,8 @@
                 Click="DecreaseRateButton_OnClick"
                 Content="&#xF8AB;"
                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                FontSize="12" />
+                FontSize="12"
+                IsTextScaleFactorEnabled="False" />
 
             <Slider
                 x:Name="SpeedSlider"
@@ -87,7 +88,8 @@
                 Click="IncreaseRateButton_OnClick"
                 Content="&#xF8AA;"
                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                FontSize="12" />
+                FontSize="12"
+                IsTextScaleFactorEnabled="False" />
         </Grid>
         <!--#endregion-->
 
