@@ -35,7 +35,9 @@ public sealed partial class TitleBarAutomationPeer : FrameworkElementAutomationP
         {
             var owner = (TitleBar)Owner;
             name = string.IsNullOrWhiteSpace(owner.Title)
-                ? AppInfo.Current.DisplayInfo.DisplayName
+                // AppInfo.Current.DisplayInfo.DisplayName is only supported starting Windows 10.0.19041.
+                // Use Package.Current.DisplayName to work with 10.0.18362
+                ? Package.Current.DisplayName
                 : owner.Title;
         }
 
