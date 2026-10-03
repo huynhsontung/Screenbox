@@ -224,7 +224,8 @@
                     Click="DecreaseAudioTimingOffsetButton_OnClick"
                     Content="&#xF8AB;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}"
+                    IsTextScaleFactorEnabled="False" />
 
                 <Slider
                     Grid.Column="1"
@@ -249,7 +250,8 @@
                     Click="IncreaseAudioTimingOffsetButton_OnClick"
                     Content="&#xF8AA;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}"
+                    IsTextScaleFactorEnabled="False" />
             </Grid>
 
             <TextBlock
@@ -334,7 +336,8 @@
                     Click="DecreaseSubtitleTimingOffsetButton_OnClick"
                     Content="&#xF8AB;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}"
+                    IsTextScaleFactorEnabled="False" />
 
                 <Slider
                     Grid.Column="1"
@@ -359,7 +362,8 @@
                     Click="IncreaseSubtitleTimingOffsetButton_OnClick"
                     Content="&#xF8AA;"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}" />
+                    FontSize="{StaticResource CaptionTextBlockFontSize}"
+                    IsTextScaleFactorEnabled="False" />
             </Grid>
 
             <TextBlock
