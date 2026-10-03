@@ -194,7 +194,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         }
 
         var hasAccess = true;
-        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+        if (KnownFolderAccess.IsRequestAccessSupported)
         {
             var result = await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
             hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
@@ -221,7 +221,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         }
 
         var hasAccess = true;
-        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+        if (KnownFolderAccess.IsRequestAccessSupported)
         {
             var result = await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
             hasAccess = result is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;

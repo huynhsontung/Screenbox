@@ -572,7 +572,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         if (SystemInformation.IsXbox)
         {
             RemovableStorageFolders.Clear();
-            if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            if (KnownFolderAccess.IsRequestAccessSupported)
             {
                 var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
                 if (accessStatus != KnownFoldersAccessStatus.Allowed)

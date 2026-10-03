@@ -155,7 +155,7 @@ public sealed class LibraryService : ILibraryService
             if (SearchRemovableStorage)
             {
                 var hasAccess = true;
-                if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                if (KnownFolderAccess.IsRequestAccessSupported)
                 {
                     var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
                     hasAccess = accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
@@ -257,7 +257,7 @@ public sealed class LibraryService : ILibraryService
             if (SearchRemovableStorage)
             {
                 var hasAccess = true;
-                if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                if (KnownFolderAccess.IsRequestAccessSupported)
                 {
                     var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
                     hasAccess = accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder;
