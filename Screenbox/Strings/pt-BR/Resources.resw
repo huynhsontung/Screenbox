@@ -364,7 +364,7 @@
     <value>Abrir localização do arquivo</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Abrir no Explorador de Arquivos</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Abrir com</value>
@@ -588,7 +588,7 @@
     <value>Não foi possível carregar a mídia</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Proporção</value>
+    <value>Proporção de aspecto</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>Ajustar</value>
@@ -597,7 +597,7 @@
     <value>Preencher</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Proporção personalizada</value>
+    <value>Proporção de aspecto personalizada</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Velocidade de reprodução personalizada</value>
@@ -1055,6 +1055,18 @@
   <data name="IncreaseRate" xml:space="preserve">
     <value>Aumentar velocidade</value>
   </data>
+  <data name="NextTrack" xml:space="preserve">
+    <value>Next track</value>
+  </data>
+  <data name="PreviousTrack" xml:space="preserve">
+    <value>Previous track</value>
+  </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Next chapter</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Previous chapter</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adicionar à playlist</value>
   </data>
@@ -1160,8 +1172,22 @@
     <value>Alterar</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Proporção de aspecto: {0}</value>
     <comment>#Format[String ratio]</comment>
+  </data>
+  <data name="AudioOptions" xml:space="preserve">
+    <value>Audio options</value>
+  </data>
+  <data name="SubtitleOptions" xml:space="preserve">
+    <value>Subtitle options</value>
+  </data>
+  <data name="DecreaseValue" xml:space="preserve">
+    <value>Decrease {0}</value>
+    <comment>#Format[String value]</comment>
+  </data>
+  <data name="IncreaseValue" xml:space="preserve">
+    <value>Increase {0}</value>
+    <comment>#Format[String value]</comment>
   </data>
 </root>
 

@@ -1055,6 +1055,18 @@
   <data name="IncreaseRate" xml:space="preserve">
     <value>Aumentar a velocidade</value>
   </data>
+  <data name="NextTrack" xml:space="preserve">
+    <value>Faixa seguinte</value>
+  </data>
+  <data name="PreviousTrack" xml:space="preserve">
+    <value>Faixa anterior</value>
+  </data>
+  <data name="NextChapter" xml:space="preserve">
+    <value>Capítulo seguinte</value>
+  </data>
+  <data name="PreviousChapter" xml:space="preserve">
+    <value>Capítulo anterior</value>
+  </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adicionar à lista de reprodução</value>
   </data>
@@ -1160,8 +1172,22 @@
     <value>Alterar</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Proporção: {0}</value>
     <comment>#Format[String ratio]</comment>
+  </data>
+  <data name="AudioOptions" xml:space="preserve">
+    <value>Opções de áudio</value>
+  </data>
+  <data name="SubtitleOptions" xml:space="preserve">
+    <value>Opções de legenda</value>
+  </data>
+  <data name="DecreaseValue" xml:space="preserve">
+    <value>Reduzir {0}</value>
+    <comment>#Format[String value]</comment>
+  </data>
+  <data name="IncreaseValue" xml:space="preserve">
+    <value>Aumentar {0}</value>
+    <comment>#Format[String value]</comment>
   </data>
 </root>
 
