@@ -111,7 +111,6 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
     private void SetPlaybackRate(double rate)
     {
         PlaybackRate = rate;
-        OnPropertyChanged(nameof(PlaybackRate));
     }
 
     private void OnPlayerPlaybackRateChanged(IMediaPlayer sender, ValueChangedEventArgs<double> args)
