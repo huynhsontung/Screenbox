@@ -18,6 +18,9 @@ public sealed class VideoViewInitializedEventArgs : EventArgs
 
 public partial class VideoView : SwapChainPanel
 {
+    private const int DxgiErrorDeviceRemoved = unchecked((int)0x887A0005);
+    private const int DxgiErrorDeviceReset = unchecked((int)0x887A0007);
+
     private ID3D11Device? _d3d11Device;
     private ID3D11DeviceContext? _d3d11Context;
     private IDXGISwapChain1? _swapChain;
@@ -41,20 +44,34 @@ public partial class VideoView : SwapChainPanel
     {
         SizeChanged += (s, e) =>
         {
-            if (_loaded)
+            try
             {
-                UpdateSize();
+                if (_loaded)
+                {
+                    UpdateSize();
+                }
+                else
+                {
+                    CreateSwapChain();
+                }
             }
-            else
+            catch (Exception exception) when (IsDeviceLost(exception))
             {
-                CreateSwapChain();
+                DestroySwapChain();
             }
         };
         CompositionScaleChanged += (s, e) =>
         {
             if (_loaded)
             {
-                UpdateScale();
+                try
+                {
+                    UpdateScale();
+                }
+                catch (Exception exception) when (IsDeviceLost(exception))
+                {
+                    DestroySwapChain();
+                }
             }
         };
         Unloaded += (s, e) => DestroySwapChain();
@@ -170,9 +187,9 @@ public partial class VideoView : SwapChainPanel
             {
                 this.SetSwapChain(IntPtr.Zero);
             }
-            catch (ObjectDisposedException)
+            catch (Exception exception) when (exception is ObjectDisposedException || IsDeviceLost(exception))
             {
-                // Safe to ignore ObjectDisposedException during teardown
+                // Safe to ignore teardown failures after the graphics device is unavailable.
             }
         }
 
@@ -184,5 +201,10 @@ public partial class VideoView : SwapChainPanel
         _d3d11Context = null;
         _d3d11Device = null;
         _loaded = false;
+    }
+
+    private static bool IsDeviceLost(Exception exception)
+    {
+        return exception.HResult is DxgiErrorDeviceRemoved or DxgiErrorDeviceReset;
     }
 }
