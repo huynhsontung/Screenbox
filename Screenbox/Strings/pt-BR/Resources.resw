@@ -1056,16 +1056,16 @@
     <value>Aumentar velocidade</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Próxima faixa</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Faixa anterior</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Próximo capítulo</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Capítulo anterior</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adicionar à playlist</value>
@@ -1176,17 +1176,17 @@
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>Opções de áudio</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>Opções de legenda</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>Diminuir {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>Aumentar {0}</value>
     <comment>#Format[String value]</comment>
   </data>
 </root>
