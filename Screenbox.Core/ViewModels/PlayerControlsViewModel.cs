@@ -187,6 +187,38 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     }
 
     /// <summary>
+    /// Handles track navigation based on keyboard input.
+    /// </summary>
+    /// <remarks>
+    /// The following keys determine the resize action:
+    /// <list type="bullet">
+    /// <item><description><see cref="VirtualKey.PageUp"/>, or <see cref="VirtualKey.P"/> with <see cref="VirtualKeyModifiers.Shift"/>: Navigate to the previous track.</description></item>
+    /// <item><description><see cref="VirtualKey.PageDown"/>, or <see cref="VirtualKey.N"/> with <see cref="VirtualKeyModifiers.Shift"/>: Navigate to the next track.</description></item>
+    /// </list>
+    /// </remarks>
+    /// <param name="key">The key that was pressed.</param>
+    /// <param name="modifiers">The modifier keys held during the key press.</param>
+    public void HandleTrackNavigationKey(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (!HasActiveItem || MediaPlayer is null)
+            return;
+
+        switch (key)
+        {
+            case VirtualKey.PageUp:
+            case VirtualKey.P when modifiers is VirtualKeyModifiers.Shift:
+                Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Previous));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Previous).ShowBadge());
+                break;
+            case VirtualKey.PageDown:
+            case VirtualKey.N when modifiers is VirtualKeyModifiers.Shift:
+                Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Next));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Next).ShowBadge());
+                break;
+        }
+    }
+
+    /// <summary>
     /// Handles toggling the subtitle track during media playback based on keyboard input.
     /// </summary>
     /// <remarks>

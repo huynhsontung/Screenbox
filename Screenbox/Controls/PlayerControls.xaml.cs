@@ -119,6 +119,12 @@ public sealed partial class PlayerControls : UserControl
         args.Handled = true;
     }
 
+    private void PreviousNextKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.HandleTrackNavigationKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
+        args.Handled = true;
+    }
+
     private void ToggleSubtitleKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
         // Ignore subtitle toggle when the key is pressed without modifiers and subtitles cannot be uniquely selected.
