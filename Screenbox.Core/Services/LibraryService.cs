@@ -386,7 +386,7 @@ public sealed class LibraryService : ILibraryService
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to create a music MediaViewModel for path '{Path}'.", record.Path);
+                _logger.LogError(e, "Failed to create a music MediaViewModel for file type '{FileType}'.", PathSanitizer.GetExtensionOrType(record.Path));
             }
         }
 
@@ -434,7 +434,7 @@ public sealed class LibraryService : ILibraryService
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to create a video MediaViewModel for path '{Path}'.", record.Path);
+                _logger.LogError(e, "Failed to create a video MediaViewModel for file type '{FileType}'.", PathSanitizer.GetExtensionOrType(record.Path));
             }
         }
 

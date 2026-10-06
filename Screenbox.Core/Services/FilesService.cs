@@ -191,7 +191,7 @@ public sealed class FilesService : IFilesService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load media metadata for '{Path}'.", file.Path);
+            _logger.LogError(e, "Failed to load media metadata for file type '{FileType}'.", file.FileType);
         }
 
         return new MediaInfo(mediaType);
