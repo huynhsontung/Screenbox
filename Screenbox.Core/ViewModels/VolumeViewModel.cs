@@ -91,9 +91,17 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
             return;
 
         MediaPlayer.IsMuted = value;
+    }
+
+    /// <summary>
+    /// Handles toggling the mute state.
+    /// </summary>
+    public void HandleMuteToggleKey()
+    {
+        IsMute = !IsMute;
         Messenger.Send(
             new PlayerOsdUpdateMessage(
-                value ? PlaybackCommandKind.Mute : PlaybackCommandKind.Volume,
+                IsMute ? PlaybackCommandKind.Mute : PlaybackCommandKind.Volume,
                 value: Volume)
             .ShowBadge());
     }

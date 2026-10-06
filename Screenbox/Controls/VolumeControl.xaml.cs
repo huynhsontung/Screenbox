@@ -79,6 +79,12 @@ public sealed partial class VolumeControl : UserControl
         UpdateIndicatorBoostWidth();
     }
 
+    private void ToggleMuteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.HandleMuteToggleKey();
+        args.Handled = true;
+    }
+
     private void UpdateIndicatorBoostWidth()
     {
         int maxVolume = ViewModel.MaxVolume;
