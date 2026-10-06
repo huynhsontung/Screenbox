@@ -115,12 +115,8 @@ public sealed partial class PlayerControls : UserControl
 
     private void PlayPauseKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        // Ignore the play/pause shortcut when the spacebar is pressed in mini-player visual state.
-        if (args.KeyboardAccelerator.Key == VirtualKey.Space && ViewModel.IsMinimal) return;
-
-        // Override default keyboard accelerator to show badge.
+        ViewModel.HandlePlaybackStateToggleKey();
         args.Handled = true;
-        ViewModel.PlayPauseWithBadge();
     }
 
     private void ToggleSubtitleKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

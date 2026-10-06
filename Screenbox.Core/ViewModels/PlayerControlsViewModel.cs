@@ -140,14 +140,17 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public void Receive(TogglePlayPauseMessage message)
     {
-        if (!HasActiveItem || MediaPlayer == null) return;
+        if (!HasActiveItem || MediaPlayer is null)
+            return;
+
+        PlayPause();
+
         if (message.ShowBadge)
         {
-            PlayPauseWithBadge();
-        }
-        else
-        {
-            PlayPause();
+            Messenger.Send(
+                new PlayerOsdUpdateMessage(
+                    IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play)
+                .ShowBadge());
         }
     }
 
@@ -173,15 +176,14 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Toggles the playback state of the active item and displays a badge indicating the new state.
+    /// Handles toggling the playback state.
     /// </summary>
-    public void PlayPauseWithBadge()
+    public void HandlePlaybackStateToggleKey()
     {
         if (!HasActiveItem)
             return;
 
-        PlayPause();
-        Messenger.Send(new PlayerOsdUpdateMessage(IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play).ShowBadge());
+        Messenger.Send(new TogglePlayPauseMessage(showBadge: true));
     }
 
     /// <summary>
