@@ -1062,10 +1062,10 @@
     <value>Previous track</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Chương tiếp theo</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Chương trước</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Thêm vào danh sách phát</value>
@@ -1172,21 +1172,21 @@
     <value>Thay đổi</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Tỷ lệ khung hình: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>Tùy chọn âm thanh</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>Tùy chọn phụ đề</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>Giảm {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>Tăng {0}</value>
     <comment>#Format[String value]</comment>
   </data>
 </root>
