@@ -202,8 +202,8 @@ public static partial class GlyphConverter
             PlaybackCommandKind.Previous => PreviousGlyph,
             PlaybackCommandKind.Volume when value is int volume => ToVolumeGlyph(isMute: false, volume),
             PlaybackCommandKind.Mute => MuteGlyph,
-            PlaybackCommandKind.RateUp => RewindGlyph,
-            PlaybackCommandKind.RateDown => FastForwardGlyph,
+            PlaybackCommandKind.RateUp => FastForwardGlyph,
+            PlaybackCommandKind.RateDown => RewindGlyph,
             _ => string.Empty,
         };
     }
