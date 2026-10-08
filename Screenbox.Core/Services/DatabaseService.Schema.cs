@@ -198,7 +198,7 @@ public sealed partial class DatabaseService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to read legacy playlist '{Path}'.", filePath);
+                _logger.LogError(ex, "Failed to read legacy playlist file of type '{FileType}'.", Path.GetExtension(filePath));
                 hasImportFailure = true;
                 continue;
             }
@@ -323,7 +323,7 @@ public sealed partial class DatabaseService
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to delete database file '{FilePath}'.", file);
+                _logger.LogWarning(ex, "Failed to delete database file of type '{FileType}'.", Path.GetExtension(file));
             }
         }
     }

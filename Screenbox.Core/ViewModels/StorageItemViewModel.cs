@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -97,7 +99,7 @@ public sealed partial class StorageItemViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to update the caption for storage item '{Path}'.", Path);
+            _logger.LogError(e, "Failed to update the caption for storage item with extension '{FileExtension}'.", System.IO.Path.GetExtension(Path));
         }
     }
 }

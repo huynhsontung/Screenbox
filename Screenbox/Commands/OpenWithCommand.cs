@@ -97,7 +97,7 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to open '{Path}' with an external application.", file.Path);
+            _logger.LogError(ex, "Failed to open file of type '{FileType}' with an external application.", file.FileType);
         }
     }
 }

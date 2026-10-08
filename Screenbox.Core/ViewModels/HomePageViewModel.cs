@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -240,7 +241,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load recent media details for '{Path}'.", media.Location);
+            _logger.LogError(e, "Failed to load recent media details for file type '{FileType}'.", Path.GetExtension(media.Location));
         }
     }
 
@@ -257,7 +258,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load a thumbnail for '{Path}'.", media.Location);
+            _logger.LogError(e, "Failed to load a thumbnail for file type '{FileType}'.", Path.GetExtension(media.Location));
         }
     }
 
