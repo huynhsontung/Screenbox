@@ -45,6 +45,14 @@
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Exclude SharpDX transitive dependencies pulled in by LibVLCSharp.UWP.
+         Screenbox uses Vortice for DirectX interop and does not use LibVLCSharp's built-in VideoView. -->
+    <PackageReference Include="SharpDX" Version="4.2.0" ExcludeAssets="all" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" ExcludeAssets="all" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" ExcludeAssets="all" />
+  </ItemGroup>
+
   <!-- Global usings -->
   <ItemGroup>
     <Using Include="WinRT" />
