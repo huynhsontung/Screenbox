@@ -140,14 +140,17 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public void Receive(TogglePlayPauseMessage message)
     {
-        if (!HasActiveItem || MediaPlayer == null) return;
+        if (!HasActiveItem || MediaPlayer is null)
+            return;
+
+        PlayPause();
+
         if (message.ShowBadge)
         {
-            PlayPauseWithBadge();
-        }
-        else
-        {
-            PlayPause();
+            Messenger.Send(
+                new PlayerOsdUpdateMessage(
+                    IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play)
+                .ShowBadge());
         }
     }
 
@@ -173,15 +176,46 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Toggles the playback state of the active item and displays a badge indicating the new state.
+    /// Handles toggling the playback state.
     /// </summary>
-    public void PlayPauseWithBadge()
+    public void HandlePlaybackStateToggleKey()
     {
         if (!HasActiveItem)
             return;
 
-        PlayPause();
-        Messenger.Send(new PlayerOsdUpdateMessage(IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play).ShowBadge());
+        Messenger.Send(new TogglePlayPauseMessage(showBadge: true));
+    }
+
+    /// <summary>
+    /// Handles track navigation based on keyboard input.
+    /// </summary>
+    /// <remarks>
+    /// The following keys determine the resize action:
+    /// <list type="bullet">
+    /// <item><description><see cref="VirtualKey.PageUp"/>, or <see cref="VirtualKey.P"/> with <see cref="VirtualKeyModifiers.Shift"/>: Navigate to the previous track.</description></item>
+    /// <item><description><see cref="VirtualKey.PageDown"/>, or <see cref="VirtualKey.N"/> with <see cref="VirtualKeyModifiers.Shift"/>: Navigate to the next track.</description></item>
+    /// </list>
+    /// </remarks>
+    /// <param name="key">The key that was pressed.</param>
+    /// <param name="modifiers">The modifier keys held during the key press.</param>
+    public void HandleTrackNavigationKey(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (!HasActiveItem || MediaPlayer is null)
+            return;
+
+        switch (key)
+        {
+            case VirtualKey.PageUp:
+            case VirtualKey.P when modifiers is VirtualKeyModifiers.Shift:
+                Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Previous));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Previous).ShowBadge());
+                break;
+            case VirtualKey.PageDown:
+            case VirtualKey.N when modifiers is VirtualKeyModifiers.Shift:
+                Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Next));
+                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Next).ShowBadge());
+                break;
+        }
     }
 
     /// <summary>

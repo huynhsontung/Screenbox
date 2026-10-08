@@ -15,10 +15,14 @@ namespace Screenbox.Converters;
 /// </summary>
 public static partial class GlyphConverter
 {
+    //private const string PreviousSolidGlyph = "\uE622";
+    //private const string NextSolidGlyph = "\uE623";
     private const string PauseSolidGlyph = "\uE62E";
     private const string MuteGlyph = "\uE74F";
     private const string PlayGlyph = "\uE768";
     private const string PauseGlyph = "\uE769";
+    private const string PreviousGlyph = "\uE892";
+    private const string NextGlyph = "\uE893";
     private const string MoviesGlyph = "\uE8B2";
     private const string AudioGlyph = "\uE8D6";
     private const string PlaySolidGlyph = "\uF5B0";
@@ -184,8 +188,8 @@ public static partial class GlyphConverter
         //const string StopSolidGlyph = "\uEE95";
         const string ChevronLeftMedGlyph = "\uE973";
         const string ChevronRightMedGlyph = "\uE974";
-        const string RewindGlyph = "\uE628";
-        const string FastForwardGlyph = "\uE627";
+        const string RewindGlyph = "\uE627";
+        const string FastForwardGlyph = "\uE628";
 
         return kind switch
         {
@@ -194,10 +198,12 @@ public static partial class GlyphConverter
             //PlaybackCommandKind.Stop => StopSolidGlyph,
             PlaybackCommandKind.Rewind => ChevronLeftMedGlyph,
             PlaybackCommandKind.FastForward => ChevronRightMedGlyph,
+            PlaybackCommandKind.Next => NextGlyph,
+            PlaybackCommandKind.Previous => PreviousGlyph,
             PlaybackCommandKind.Volume when value is int volume => ToVolumeGlyph(isMute: false, volume),
             PlaybackCommandKind.Mute => MuteGlyph,
-            PlaybackCommandKind.RateUp => RewindGlyph,
-            PlaybackCommandKind.RateDown => FastForwardGlyph,
+            PlaybackCommandKind.RateUp => FastForwardGlyph,
+            PlaybackCommandKind.RateDown => RewindGlyph,
             _ => string.Empty,
         };
     }

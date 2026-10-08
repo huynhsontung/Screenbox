@@ -46,7 +46,6 @@
             x:Name="VolumeToggleButton"
             Grid.Column="0"
             Margin="0,0,4,0"
-            d:Style="{StaticResource SmallPlayerToggleButtonStyle}"
             extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
             AccessKey="{x:Bind strings:KeyboardResources.PlayerMuteKey}"
             AutomationProperties.Name="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
@@ -57,7 +56,7 @@
                 Glyph="{x:Bind converters:GlyphConverter.ToVolumeGlyph(ViewModel.IsMute, ViewModel.Volume), Mode=OneWay}"
                 MirroredWhenRightToLeft="True" />
             <ToggleButton.KeyboardAccelerators>
-                <KeyboardAccelerator Key="M" />
+                <KeyboardAccelerator Key="M" Invoked="ToggleMuteKeyboardAccelerator_OnInvoked" />
             </ToggleButton.KeyboardAccelerators>
         </ToggleButton>
 
@@ -76,7 +75,6 @@
             x:Name="VolumeSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
-            d:Value="60"
             AccessKey="{x:Bind strings:KeyboardResources.PlayerVolumeButtonSliderKey}"
             AutomationProperties.Name="{x:Bind strings:Resources.VolumeSliderTooltip}"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
@@ -89,7 +87,6 @@
             MinWidth="28"
             Margin="12,0,0,2"
             VerticalAlignment="Center"
-            d:Text="{Binding ElementName=VolumeSlider, Path=Value}"
             AutomationProperties.AccessibilityView="Raw"
             Text="{x:Bind VolumeSlider.Value, Mode=OneWay}"
             Visibility="{x:Bind ShowValueText, Mode=OneWay}" />
