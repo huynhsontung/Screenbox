@@ -74,5 +74,15 @@ public sealed partial class PlaybackSpeedControl : UserControl
             $"PlaybackRateIncreaseActivityId");
     }
 
+    private void PlaybackRateToggleButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is ToggleButton { CommandParameter: double speed } tb)
+        {
+            // Prevent the selected playback rate button from remaining unchecked
+            // when clicking it again without changing the playback rate.
+            tb.IsChecked = DoubleHelper.AreClose(speed, PlaybackSession.PlaybackRate);
+        }
+    }
+
     private string FormatPlaybackRate(double playbackRate) => $"{playbackRate:0.##} ×";
 }

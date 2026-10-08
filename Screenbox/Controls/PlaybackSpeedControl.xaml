@@ -62,7 +62,8 @@
                 Click="DecreaseRateButton_OnClick"
                 Content="&#xF8AB;"
                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                FontSize="12" />
+                FontSize="12"
+                IsTextScaleFactorEnabled="False" />
 
             <Slider
                 x:Name="SpeedSlider"
@@ -87,7 +88,8 @@
                 Click="IncreaseRateButton_OnClick"
                 Content="&#xF8AA;"
                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                FontSize="12" />
+                FontSize="12"
+                IsTextScaleFactorEnabled="False" />
         </Grid>
         <!--#endregion-->
 
@@ -108,6 +110,7 @@
                 Grid.Column="0"
                 Padding="3,5,3,6"
                 HorizontalAlignment="Stretch"
+                Click="PlaybackRateToggleButton_OnClick"
                 Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                 CommandParameter="{x:Bind local:PlaybackSpeedControl.Speed075}"
                 Content="{x:Bind FormatPlaybackRate(local:PlaybackSpeedControl.Speed075)}"
@@ -118,6 +121,7 @@
                 Grid.Column="1"
                 Padding="3,5,3,6"
                 HorizontalAlignment="Stretch"
+                Click="PlaybackRateToggleButton_OnClick"
                 Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                 CommandParameter="{x:Bind local:PlaybackSpeedControl.Speed100}"
                 Content="{x:Bind FormatPlaybackRate(local:PlaybackSpeedControl.Speed100)}"
@@ -128,6 +132,7 @@
                 Grid.Column="2"
                 Padding="3,5,3,6"
                 HorizontalAlignment="Stretch"
+                Click="PlaybackRateToggleButton_OnClick"
                 Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                 CommandParameter="{x:Bind local:PlaybackSpeedControl.Speed150}"
                 Content="{x:Bind FormatPlaybackRate(local:PlaybackSpeedControl.Speed150)}"
@@ -138,6 +143,7 @@
                 Grid.Column="3"
                 Padding="3,5,3,6"
                 HorizontalAlignment="Stretch"
+                Click="PlaybackRateToggleButton_OnClick"
                 Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                 CommandParameter="{x:Bind local:PlaybackSpeedControl.Speed175}"
                 Content="{x:Bind FormatPlaybackRate(local:PlaybackSpeedControl.Speed175)}"
@@ -148,6 +154,7 @@
                 Grid.Column="4"
                 Padding="3,5,3,6"
                 HorizontalAlignment="Stretch"
+                Click="PlaybackRateToggleButton_OnClick"
                 Command="{x:Bind PlaybackSession.SetPlaybackRateCommand}"
                 CommandParameter="{x:Bind local:PlaybackSpeedControl.Speed200}"
                 Content="{x:Bind FormatPlaybackRate(local:PlaybackSpeedControl.Speed200)}"
