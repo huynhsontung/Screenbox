@@ -583,9 +583,8 @@ public sealed partial class PlayerPage : Page
 
     private bool ShouldMirrorBadgeIcon(PlaybackCommandKind kind)
     {
-        return kind is not (PlaybackCommandKind.RateUp
-                or PlaybackCommandKind.RateDown
-                or PlaybackCommandKind.Rewind
-                or PlaybackCommandKind.FastForward);
+        return kind is not (PlaybackCommandKind.Rewind or PlaybackCommandKind.FastForward
+                or PlaybackCommandKind.Next or PlaybackCommandKind.Previous
+                or PlaybackCommandKind.RateUp or PlaybackCommandKind.RateDown);
     }
 }
