@@ -318,6 +318,9 @@
   <data name="UnknownGenre" xml:space="preserve">
     <value>Unknown genre</value>
   </data>
+  <data name="AllGenres" xml:space="preserve">
+    <value>All genres</value>
+  </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Add folder</value>
   </data>
@@ -871,6 +874,10 @@
   <data name="SortByAutomationName" xml:space="preserve">
     <value>Sort by {0} option selected</value>
     <comment>#Format[String sortBy]</comment>
+  </data>
+  <data name="FilterByGenreAutomationName" xml:space="preserve">
+    <value>Filter by {0} option selected</value>
+    <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
