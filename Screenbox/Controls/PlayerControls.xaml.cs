@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -119,8 +118,15 @@ public sealed partial class PlayerControls : UserControl
         args.Handled = true;
     }
 
+    [DynamicWindowsRuntimeCast(typeof(SelectorItem))]
     private void PreviousNextKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
+        if (FocusManager.GetFocusedElement() is SelectorItem && args.KeyboardAccelerator.Key is VirtualKey.PageUp or VirtualKey.PageDown)
+        {
+            args.Handled = true;
+            return;
+        }
+
         ViewModel.HandleTrackNavigationKey(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
         args.Handled = true;
     }
