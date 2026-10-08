@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
@@ -16,6 +19,7 @@ public class SongsPageViewModelTests
         var vm = new SongsPageViewModel(libraryContext, settings);
 
         await Assert.That(vm.SortBy).IsEqualTo(SongSortOrder.Artist);
+        await Assert.That(vm.SelectedGenre).IsNull();
     }
 
     [Test]
@@ -44,6 +48,65 @@ public class SongsPageViewModelTests
     }
 
     [Test]
+    public async Task SetGenreCommand_WhenExecuted_ShouldUpdateSelectedGenre()
+    {
+        var settings = new TestSettingsService();
+        var libraryContext = new LibraryContext();
+        var vm = new SongsPageViewModel(libraryContext, settings);
+
+        vm.SetGenreCommand.Execute("Rock");
+        await Assert.That(vm.SelectedGenre).IsEqualTo("Rock");
+
+        vm.SetGenreCommand.Execute(string.Empty);
+        await Assert.That(vm.SelectedGenre).IsEqualTo(string.Empty);
+
+        vm.SetGenreCommand.Execute(null);
+        await Assert.That(vm.SelectedGenre).IsNull();
+    }
+
+    [Test]
+    public async Task FetchSongs_WhenFilteredByGenre_ShouldFilterSongsAndGroupedSongs()
+    {
+        var song1 = CreateSong("Song A", "Rock");
+        var song2 = CreateSong("Song B", "Pop; Rock");
+        var song3 = CreateSong("Song C", "");
+
+        var songs = new List<MediaViewModel> { song1, song2, song3 };
+        var musicLibrary = new MusicLibrary(
+            songs,
+            new Dictionary<string, AlbumViewModel>(),
+            new Dictionary<string, ArtistViewModel>(),
+            new[] { "Pop", "Rock" },
+            new AlbumViewModel(),
+            new ArtistViewModel());
+
+        var libraryContext = new LibraryContext { Music = musicLibrary };
+        var settings = new TestSettingsService();
+        var vm = new SongsPageViewModel(libraryContext, settings);
+
+        vm.FetchSongs();
+        await Assert.That(vm.Songs.Count).IsEqualTo(3);
+        await Assert.That(vm.Genres).Contains("Pop");
+        await Assert.That(vm.Genres).Contains("Rock");
+
+        vm.SelectedGenre = "Rock";
+        await Assert.That(vm.Songs.Count).IsEqualTo(2);
+        await Assert.That(vm.Songs.Select(s => s.Name)).Contains("Song A");
+        await Assert.That(vm.Songs.Select(s => s.Name)).Contains("Song B");
+
+        vm.SelectedGenre = "Pop";
+        await Assert.That(vm.Songs.Count).IsEqualTo(1);
+        await Assert.That(vm.Songs[0].Name).IsEqualTo("Song B");
+
+        vm.SelectedGenre = string.Empty;
+        await Assert.That(vm.Songs.Count).IsEqualTo(1);
+        await Assert.That(vm.Songs[0].Name).IsEqualTo("Song C");
+
+        vm.SelectedGenre = null;
+        await Assert.That(vm.Songs.Count).IsEqualTo(3);
+    }
+
+    [Test]
     public async Task FetchSongs_ShouldUpdateSongsAndGroupedSongs()
     {
         var settings = new TestSettingsService();
@@ -53,14 +116,12 @@ public class SongsPageViewModelTests
         await Assert.That(vm.Songs).IsEmpty();
         await Assert.That(vm.GroupedSongs).IsEmpty();
 
-        var song = new MediaViewModel(new PlayerContext(), new TestPlayerService(), new Uri("file:///c:/music/song.mp3"))
-        {
-            Name = "Song A"
-        };
+        var song = CreateSong("Song A", "Rock");
         var newLibrary = new MusicLibrary(
             new[] { song },
             new Dictionary<string, AlbumViewModel>(),
             new Dictionary<string, ArtistViewModel>(),
+            new[] { "Rock" },
             new AlbumViewModel(),
             new ArtistViewModel());
 
@@ -70,5 +131,16 @@ public class SongsPageViewModelTests
         await Assert.That(vm.Songs.Count).IsEqualTo(1);
         await Assert.That(vm.GroupedSongs).IsNotEmpty();
         await Assert.That(vm.GroupedSongs.SelectMany(g => g)).Contains(song);
+    }
+
+    private static MediaViewModel CreateSong(string name, string genre)
+    {
+        var info = new MediaInfo(MediaPlaybackType.Music, name);
+        info.MusicProperties.Genre = genre;
+        return new MediaViewModel(new PlayerContext(), new TestPlayerService(), new Uri($"file:///c:/music/{name}.mp3"))
+        {
+            Name = name,
+            MediaInfo = info
+        };
     }
 }
