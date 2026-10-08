@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
@@ -96,9 +98,13 @@ public sealed partial class StorageItemViewModel : ObservableObject
                     break;
             }
         }
+        catch (COMException)
+        {
+            // Shell or property provider COM failure while retrieving properties. Handled silently; don't report to Sentry.
+        }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to update the caption for storage item with extension '{FileExtension}'.", PathSanitizer.GetExtensionOrType(Path));
+            _logger.LogError(e, "Failed to update the caption for storage item with extension '{FileExtension}'.", System.IO.Path.GetExtension(Path));
         }
     }
 }

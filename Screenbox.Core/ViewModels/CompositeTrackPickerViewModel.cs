@@ -206,7 +206,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to enumerate matching subtitle files for '{FileName}'.", sourceFile.Name);
+                _logger.LogError(e, "Failed to enumerate matching subtitle files for file type '{FileType}'.", sourceFile.FileType);
             }
         }
         else

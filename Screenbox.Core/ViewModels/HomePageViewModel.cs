@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -238,9 +240,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
             // throw ArgumentException. Ignore silently — this is a known bad state.
         }
+        catch (COMException)
+        {
+            // Shell or property provider COM failure while querying media details. Ignore silently; don't report to Sentry.
+        }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load recent media details for file type '{FileType}'.", PathSanitizer.GetExtensionOrType(media.Location));
+            _logger.LogError(e, "Failed to load recent media details for file type '{FileType}'.", Path.GetExtension(media.Location));
         }
     }
 
@@ -255,9 +261,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
             // throw ArgumentException. Ignore silently — this is a known bad state.
         }
+        catch (COMException)
+        {
+            // Shell or thumbnail provider COM failure while querying thumbnail. Ignore silently; don't report to Sentry.
+        }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to load a thumbnail for file type '{FileType}'.", PathSanitizer.GetExtensionOrType(media.Location));
+            _logger.LogError(e, "Failed to load a thumbnail for file type '{FileType}'.", Path.GetExtension(media.Location));
         }
     }
 

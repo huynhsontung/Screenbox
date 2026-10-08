@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
@@ -178,6 +179,11 @@ public sealed class FilesService : IFilesService
                     MusicProperties musicProperties = await file.Properties.GetMusicPropertiesAsync();
                     return new MediaInfo(basicProperties, musicProperties);
             }
+        }
+        catch (COMException)
+        {
+            // Expected / external COM failures while querying StorageFile properties (e.g. unsupported codec or property provider error).
+            // Handled by returning a default MediaInfo; don't report to Sentry.
         }
         catch (Exception e) when (IsExpectedStoragePropertiesHResult(e.HResult))
         {

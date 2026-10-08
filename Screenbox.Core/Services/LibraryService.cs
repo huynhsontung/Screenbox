@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -386,7 +387,7 @@ public sealed class LibraryService : ILibraryService
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to create a music MediaViewModel for file type '{FileType}'.", PathSanitizer.GetExtensionOrType(record.Path));
+                _logger.LogError(e, "Failed to create a music MediaViewModel for file type '{FileType}'.", Path.GetExtension(record.Path));
             }
         }
 
@@ -434,7 +435,7 @@ public sealed class LibraryService : ILibraryService
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to create a video MediaViewModel for file type '{FileType}'.", PathSanitizer.GetExtensionOrType(record.Path));
+                _logger.LogError(e, "Failed to create a video MediaViewModel for file type '{FileType}'.", Path.GetExtension(record.Path));
             }
         }
 
