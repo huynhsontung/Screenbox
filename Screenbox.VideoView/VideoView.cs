@@ -1,6 +1,8 @@
 using System;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using LibVLCSharp.Shared;
+using SharpGen.Runtime;
 using Vortice.Direct3D;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
@@ -18,6 +20,12 @@ public sealed class VideoViewInitializedEventArgs : EventArgs
 
 public partial class VideoView : SwapChainPanel
 {
+    // Maximum 2D texture width and height for Direct3D 11 Feature Level 11_0 and 11_1
+    // (D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION = 16384, defined in d3d11.h and the Direct3D 11
+    // hardware resource limits specification). Swap chain composition buffers are 2D textures
+    // and cannot exceed this limit.
+    private const int MaxTextureDimension = 16384;
+
     private ID3D11Device? _d3d11Device;
     private ID3D11DeviceContext? _d3d11Context;
     private IDXGISwapChain1? _swapChain;
@@ -62,71 +70,91 @@ public partial class VideoView : SwapChainPanel
 
     private void CreateSwapChain()
     {
-        if (ActualHeight == 0 || ActualWidth == 0)
+        if (!double.IsFinite(ActualWidth) || !double.IsFinite(ActualHeight) ||
+            ActualWidth <= 0 || ActualHeight <= 0 ||
+            !double.IsFinite(CompositionScaleX) || !double.IsFinite(CompositionScaleY) ||
+            CompositionScaleX <= 0 || CompositionScaleY <= 0)
         {
             return;
         }
+
+        uint width = (uint)Math.Clamp(Math.Round(ActualWidth * CompositionScaleX), 1.0, MaxTextureDimension);
+        uint height = (uint)Math.Clamp(Math.Round(ActualHeight * CompositionScaleY), 1.0, MaxTextureDimension);
 
         DestroySwapChain();
 
-        // 1. Create D3D11 Device and Context
-        D3D11.D3D11CreateDevice(
-            null,
-            DriverType.Hardware,
-            DeviceCreationFlags.BgraSupport,
-            null!,
-            out _d3d11Device,
-            out _d3d11Context
-        ).CheckError();
-
-        if (_d3d11Device is null || _d3d11Context is null)
+        // Attempt hardware device creation first; fall back to WARP (software rasterizer)
+        // if hardware initialization fails (e.g. out of video memory, driver crash, or device removed).
+        if (!TryInitializeSwapChain(DriverType.Hardware, width, height) &&
+            !TryInitializeSwapChain(DriverType.Warp, width, height))
         {
-            return;
+            DestroySwapChain();
         }
+    }
 
-        // 2. Query DXGI Factory from D3D11 Device
-        using var dxgiDevice = _d3d11Device.QueryInterface<IDXGIDevice1>();
-        dxgiDevice.GetAdapter(out IDXGIAdapter adapter);
-        using (adapter)
+    private bool TryInitializeSwapChain(DriverType driverType, uint width, uint height)
+    {
+        try
         {
-            using var dxgiFactory = adapter.GetParent<IDXGIFactory2>();
+            Result result = D3D11.D3D11CreateDevice(
+                null,
+                driverType,
+                DeviceCreationFlags.BgraSupport,
+                null!,
+                out _d3d11Device,
+                out _d3d11Context);
 
-            // 3. Define Swap Chain Description
-            SwapChainDescription1 scd = new()
+            if (!result.Success || _d3d11Device is null || _d3d11Context is null)
             {
-                Width = (uint)(ActualWidth * CompositionScaleX),
-                Height = (uint)(ActualHeight * CompositionScaleY),
-                Format = Format.B8G8R8A8_UNorm,
-                Stereo = false,
-                SampleDescription = new SampleDescription(1, 0),
-                BufferUsage = Usage.RenderTargetOutput,
-                BufferCount = 2,
-                SwapEffect = SwapEffect.FlipSequential,
-                Scaling = Scaling.Stretch,
-                AlphaMode = AlphaMode.Unspecified
-            };
+                CleanUpDevice();
+                return false;
+            }
 
-            // 4. Create Swap Chain for Composition
-            _swapChain = dxgiFactory.CreateSwapChainForComposition(_d3d11Device, scd);
+            using var dxgiDevice = _d3d11Device.QueryInterface<IDXGIDevice1>();
+            dxgiDevice.GetAdapter(out IDXGIAdapter adapter);
+            using (adapter)
+            {
+                using var dxgiFactory = adapter.GetParent<IDXGIFactory2>();
+
+                SwapChainDescription1 scd = new()
+                {
+                    Width = width,
+                    Height = height,
+                    Format = Format.B8G8R8A8_UNorm,
+                    Stereo = false,
+                    SampleDescription = new SampleDescription(1, 0),
+                    BufferUsage = Usage.RenderTargetOutput,
+                    BufferCount = 2,
+                    SwapEffect = SwapEffect.FlipSequential,
+                    Scaling = Scaling.Stretch,
+                    AlphaMode = AlphaMode.Unspecified
+                };
+
+                _swapChain = dxgiFactory.CreateSwapChainForComposition(_d3d11Device, scd);
+            }
+
+            dxgiDevice.MaximumFrameLatency = 1;
+
+            this.SetSwapChain(_swapChain.NativePointer);
+
+            _loaded = true;
+            UpdateScale();
+            UpdateSize();
+
+            string[] options =
+            [
+                $"--winrt-d3dcontext=0x{_d3d11Context.NativePointer:x}",
+                $"--winrt-swapchain=0x{_swapChain.NativePointer:x}"
+            ];
+
+            Initialized?.Invoke(this, new VideoViewInitializedEventArgs(options));
+            return true;
         }
-
-        dxgiDevice.MaximumFrameLatency = 1;
-
-        // 5. Set Swap Chain on SwapChainPanel
-        this.SetSwapChain(_swapChain.NativePointer);
-
-        _loaded = true;
-        UpdateScale();
-        UpdateSize();
-
-        // Expose SwapChain options for LibVLC
-        var options = new[]
+        catch (Exception ex) when (ex is ObjectDisposedException || IsGraphicsException(ex))
         {
-            $"--winrt-d3dcontext=0x{_d3d11Context.NativePointer:x}",
-            $"--winrt-swapchain=0x{_swapChain.NativePointer:x}"
-        };
-
-        Initialized?.Invoke(this, new VideoViewInitializedEventArgs(options));
+            CleanUpDevice();
+            return false;
+        }
     }
 
     private unsafe void UpdateSize()
@@ -136,11 +164,26 @@ public partial class VideoView : SwapChainPanel
             return;
         }
 
-        int w = (int)(ActualWidth * CompositionScaleX);
-        int h = (int)(ActualHeight * CompositionScaleY);
+        if (!double.IsFinite(ActualWidth) || !double.IsFinite(ActualHeight) ||
+            ActualWidth <= 0 || ActualHeight <= 0 ||
+            !double.IsFinite(CompositionScaleX) || !double.IsFinite(CompositionScaleY) ||
+            CompositionScaleX <= 0 || CompositionScaleY <= 0)
+        {
+            return;
+        }
 
-        _swapChain.SetPrivateData(SWAPCHAIN_WIDTH, sizeof(int), new IntPtr(&w));
-        _swapChain.SetPrivateData(SWAPCHAIN_HEIGHT, sizeof(int), new IntPtr(&h));
+        int w = (int)Math.Clamp(Math.Round(ActualWidth * CompositionScaleX), 1.0, MaxTextureDimension);
+        int h = (int)Math.Clamp(Math.Round(ActualHeight * CompositionScaleY), 1.0, MaxTextureDimension);
+
+        try
+        {
+            _swapChain.SetPrivateData(SWAPCHAIN_WIDTH, sizeof(int), new IntPtr(&w));
+            _swapChain.SetPrivateData(SWAPCHAIN_HEIGHT, sizeof(int), new IntPtr(&h));
+        }
+        catch (Exception ex) when (IsGraphicsException(ex))
+        {
+            // Safe to ignore metadata update failures if the device is unavailable.
+        }
     }
 
     private void UpdateScale()
@@ -150,15 +193,28 @@ public partial class VideoView : SwapChainPanel
             return;
         }
 
-        using var swapChain2 = _swapChain.QueryInterface<IDXGISwapChain2>();
-        if (swapChain2 is not null)
+        if (!double.IsFinite(CompositionScaleX) || !double.IsFinite(CompositionScaleY) ||
+            CompositionScaleX <= 0 || CompositionScaleY <= 0)
         {
-            var matrix = new Matrix3x2(
-                1.0f / (float)CompositionScaleX, 0.0f,
-                0.0f, 1.0f / (float)CompositionScaleY,
-                0.0f, 0.0f
-            );
-            swapChain2.MatrixTransform = matrix;
+            return;
+        }
+
+        try
+        {
+            using var swapChain2 = _swapChain.QueryInterface<IDXGISwapChain2>();
+            if (swapChain2 is not null)
+            {
+                var matrix = new Matrix3x2(
+                    1.0f / (float)CompositionScaleX, 0.0f,
+                    0.0f, 1.0f / (float)CompositionScaleY,
+                    0.0f, 0.0f
+                );
+                swapChain2.MatrixTransform = matrix;
+            }
+        }
+        catch (Exception ex) when (IsGraphicsException(ex))
+        {
+            // Safe to ignore transform failures if the device is unavailable.
         }
     }
 
@@ -170,12 +226,17 @@ public partial class VideoView : SwapChainPanel
             {
                 this.SetSwapChain(IntPtr.Zero);
             }
-            catch (ObjectDisposedException)
+            catch (Exception ex) when (ex is ObjectDisposedException || IsGraphicsException(ex))
             {
-                // Safe to ignore ObjectDisposedException during teardown
+                // Safe to ignore teardown failures after the graphics device is unavailable.
             }
         }
 
+        CleanUpDevice();
+    }
+
+    private void CleanUpDevice()
+    {
         _swapChain?.Dispose();
         _d3d11Context?.Dispose();
         _d3d11Device?.Dispose();
@@ -184,5 +245,10 @@ public partial class VideoView : SwapChainPanel
         _d3d11Context = null;
         _d3d11Device = null;
         _loaded = false;
+    }
+
+    private static bool IsGraphicsException(Exception ex)
+    {
+        return ex is SharpGenException or COMException;
     }
 }
