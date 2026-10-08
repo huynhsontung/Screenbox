@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Input;
@@ -138,7 +139,8 @@ public sealed partial class SeekBar : UserControl
         if (e.IsGenerated) return;
         PointerPoint pointer = e.GetCurrentPoint((UIElement)sender);
         int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-        ViewModel.OnSeekBarPointerWheelChanged(mouseWheelDelta, e.KeyModifiers);
+        bool isTouchpad = TouchpadHelper.IsCurrentInputFromTouchpad();
+        ViewModel.OnSeekBarPointerWheelChanged(mouseWheelDelta, e.KeyModifiers, isTouchpad);
     }
 
     private void ResetPreviewToolTip()

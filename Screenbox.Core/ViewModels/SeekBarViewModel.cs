@@ -204,7 +204,9 @@ public sealed partial class SeekBarViewModel :
     /// </remarks>
     /// <param name="pointerWheelDelta">The pointer wheel delta value.</param>
     /// <param name="modifiers">A bitwise combination of the enumeration values that specifies the modifier keys held during the change.</param>
-    public void OnSeekBarPointerWheelChanged(double pointerWheelDelta, VirtualKeyModifiers modifiers)
+    /// <param name="isTouchpad"><see langword="true"/> if the input originated from a touchpad;
+    /// otherwise, <see langword="false"/>.</param>
+    public void OnSeekBarPointerWheelChanged(double pointerWheelDelta, VirtualKeyModifiers modifiers, bool isTouchpad = false)
     {
         if (!IsSeekable || MediaPlayer is null) return;
 
@@ -215,7 +217,9 @@ public sealed partial class SeekBarViewModel :
             _ => 5_000
         };
 
-        int signedDelta = pointerWheelDelta > 0 ? delta : -delta;
+        int signedDelta = isTouchpad
+            ? (pointerWheelDelta < 0 ? delta : -delta)
+            : (pointerWheelDelta > 0 ? delta : -delta);
         var result = UpdatePosition(TimeSpan.FromMilliseconds(signedDelta), isOffset: true, debounce: true);
         TimeSpan offset = result.NewPosition - result.OriginalPosition;
         string extra = $"{(offset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(offset)}";
