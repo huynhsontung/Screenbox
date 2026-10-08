@@ -791,6 +791,50 @@
                 </VisualStateGroup.Transitions>
             </VisualStateGroup>
 
+            <VisualStateGroup x:Name="AlbumArtVisibilityStates">
+                <VisualState x:Name="AlbumArtVisible" />
+
+                <VisualState x:Name="AlbumArtHidden">
+                    <VisualState.Setters>
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.2"
+                        From="AlbumArtVisible"
+                        To="AlbumArtHidden">
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="AlbumArtPanel"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0"
+                                Duration="0:0:0.2" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.2"
+                        From="AlbumArtHidden"
+                        To="AlbumArtVisible">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation
+                                Storyboard.TargetName="AlbumArtPanel"
+                                Storyboard.TargetProperty="Opacity"
+                                From="0"
+                                To="1"
+                                Duration="0:0:0.2" />
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+            </VisualStateGroup>
+
             <VisualStateGroup x:Name="PreviewWindowGroup">
                 <VisualState x:Name="NoPreview" />
 

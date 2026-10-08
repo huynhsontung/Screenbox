@@ -51,6 +51,7 @@ public sealed partial class PlayerPage : Page
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         AlbumArtImage.RegisterPropertyChangedCallback(ImageBrush.ImageSourceProperty, AlbumArtImageOnSourceChanged);
         LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
+        SizeChanged += PlayerPage_OnSizeChanged;
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -128,6 +129,13 @@ public sealed partial class PlayerPage : Page
             // Controls are disabled by default until playback is ready
             PlayerControls.FocusFirstButton();
         }
+
+        UpdateAlbumArtVisibility();
+    }
+
+    private void PlayerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateAlbumArtVisibility();
     }
 
     private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -208,11 +216,13 @@ public sealed partial class PlayerPage : Page
                 }
 
                 UpdateContentState();
+                UpdateAlbumArtVisibility();
                 break;
             case nameof(PlayerPageViewModel.AudioOnly):
                 UpdateContentState();
                 UpdateRootTheme();
                 UpdatePreviewType();
+                UpdateAlbumArtVisibility();
                 break;
             case nameof(PlayerPageViewModel.PlayerVisibility):
                 switch (ViewModel.PlayerVisibility)
@@ -236,6 +246,7 @@ public sealed partial class PlayerPage : Page
                 UpdateRootTheme();
                 UpdatePreviewType();
                 UpdateMiniPlayerMargin();
+                UpdateAlbumArtVisibility();
                 break;
             case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                 UpdateMiniPlayerMargin();
@@ -381,6 +392,12 @@ public sealed partial class PlayerPage : Page
         LayoutRoot.RequestedTheme = !ViewModel.AudioOnly && ViewModel.PlayerVisibility == PlayerVisibilityState.Visible
             ? ElementTheme.Dark
             : ElementTheme.Default;
+    }
+
+    private void UpdateAlbumArtVisibility()
+    {
+        bool shouldHideArt = ViewModel.ViewMode == WindowViewMode.Compact && ActualHeight > 0 && ActualHeight < 160;
+        VisualStateManager.GoToState(this, shouldHideArt ? "AlbumArtHidden" : "AlbumArtVisible", true);
     }
 
     private void PlayQueueFlyout_OnOpening(object sender, object e)

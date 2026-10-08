@@ -418,6 +418,7 @@
 
             <!--  Chapter  -->
             <TextBlock
+                x:Name="ChapterDotTextBlock"
                 Grid.Column="4"
                 Margin="5,0,0,2"
                 VerticalAlignment="Center"
@@ -655,6 +656,24 @@
                         <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="RepeatButton" />
                         <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="VolumeButton" />
                     </Storyboard>
+                </VisualState>
+                <VisualState x:Name="CompactNarrow">
+                    <VisualState.StateTriggers>
+                        <ui:ControlSizeTrigger
+                            x:Name="CompactNarrowControlSizeTrigger"
+                            MaxWidth="220"
+                            CanTrigger="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
+                            TargetElement="{x:Bind}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="VolumeButton.Visibility" Value="Collapsed" />
+                        <Setter Target="VolumeControl.Visibility" Value="Collapsed" />
+                        <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
+                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TimeDisplay.Visibility" Value="Collapsed" />
+                        <Setter Target="ChapterDotTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="ChapterButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="CompactOverride">
                     <VisualState.StateTriggers>

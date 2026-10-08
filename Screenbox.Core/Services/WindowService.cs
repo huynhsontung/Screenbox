@@ -13,6 +13,8 @@ namespace Screenbox.Core.Services;
 
 public sealed class WindowService : IWindowService
 {
+    public static readonly Size CompactOverlayMinSize = new(192, 76);
+
     public WindowViewMode ViewMode => _windowContext.ViewMode;
 
     private readonly WindowContext _windowContext;
@@ -29,6 +31,12 @@ public sealed class WindowService : IWindowService
         ApplicationView view = ApplicationView.GetForCurrentView();
         if (_windowContext.ViewMode == WindowViewMode.FullScreen && !view.IsFullScreenMode)
             _windowContext.ViewMode = WindowViewMode.Default;
+
+        if (_windowContext.ViewMode == WindowViewMode.Compact && view.ViewMode != ApplicationViewMode.CompactOverlay)
+        {
+            _windowContext.ViewMode = WindowViewMode.Default;
+            view.SetPreferredMinSize(new Size(0, 0));
+        }
     }
 
     public bool TryEnterFullScreen()
@@ -56,6 +64,7 @@ public sealed class WindowService : IWindowService
         ApplicationView? view = ApplicationView.GetForCurrentView();
         if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
         {
+            view.SetPreferredMinSize(new Size(0, 0));
             if (_windowContext.ViewMode == WindowViewMode.Compact)
                 _windowContext.ViewMode = WindowViewMode.Default;
             return true;
@@ -67,6 +76,7 @@ public sealed class WindowService : IWindowService
     public async Task<bool> TryEnterCompactLayoutAsync(Size viewSize)
     {
         ApplicationView? view = ApplicationView.GetForCurrentView();
+        view.SetPreferredMinSize(CompactOverlayMinSize);
         ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
         if (!viewSize.IsEmpty)
         {
@@ -80,6 +90,7 @@ public sealed class WindowService : IWindowService
             return true;
         }
 
+        view.SetPreferredMinSize(new Size(0, 0));
         return false;
     }
 
