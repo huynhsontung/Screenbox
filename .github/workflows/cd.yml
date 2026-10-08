@@ -1,0 +1,190 @@
+name: Continuous Delivery
+
+on:
+  push:
+    tags:
+      - v**
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Enter a version (e.g., v1.2.3)'
+        required: true
+        type: string
+      detail_level:
+        description: 'Choose MSBuild level of detail'
+        required: true
+        default: 'normal'
+        type: choice
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+          - diagnostic
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      actions: write
+      contents: read
+    outputs:
+      version: ${{ steps.app_version.outputs.version }}
+    env:
+      PROJ_PATH: Screenbox
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
+
+      - name: Setup Windows App Developer CLI
+        uses: microsoft/setup-WinAppCli@v0.2
+        with:
+          version: latest
+
+      - name: Determine version
+        id: app_version
+        env:
+          VERSION_REF: ${{ inputs.version || github.ref_name }}
+        run: |
+          if ($env:VERSION_REF -match '^v(\d+\.\d+\.\d+)$') {
+              $version = $Matches[1]
+          } else {
+              throw "Invalid version '$env:VERSION_REF'. The version must be specified in the format vX.Y.Z."
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Update package manifest
+        run: ./scripts/Update-AppxManifest.ps1
+
+      - name: Update project version
+        run: ./scripts/Update-ProjectVersion.ps1 -Version "${{ steps.app_version.outputs.version }}.0"
+
+      - name: Update secrets file
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: ./scripts/Set-Secrets.ps1 -SentryDsn "$env:SENTRY_DSN"
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build app package
+        env:
+          SENTRY_ORG: starpine
+          SENTRY_PROJECT: screenbox
+          SENTRY_URL: https://sentry.io/
+          SENTRY_RELEASE: screenbox@${{ steps.app_version.outputs.version }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          msbuild $env:PROJ_PATH/Screenbox.csproj `
+            -restore `
+            -v:${{ inputs.detail_level || 'normal' }} `
+            -p:RestoreConfigFile=nuget.config `
+            -p:ContinuousIntegrationBuild=true `
+            -p:Configuration=Release `
+            -p:Platform=x64 `
+            -p:UapAppxPackageBuildMode=StoreUpload `
+            -p:SentryUploadSymbols=true `
+            -p:SentryOrg=$env:SENTRY_ORG `
+            -p:SentryProject=$env:SENTRY_PROJECT `
+            -p:SentryUrl=$env:SENTRY_URL `
+            -p:SentryCreateRelease=true `
+            -p:SentrySetCommits=true
+
+      - name: Upload Store submission package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.PROJ_PATH }}/AppPackages/*.msixupload
+          archive: false
+
+      - name: Create temporary self-signed certificate
+        env:
+          TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
+          WINAPP_CLI_TELEMETRY_OPTOUT: '1'
+        run: |
+          winapp cert generate `
+            --manifest "$env:PROJ_PATH/Package.appxmanifest" `
+            --password "$env:TEMP_CERT_PASSWORD" `
+            --output "$env:PROJ_PATH/AppPackages/Screenbox_${{ steps.app_version.outputs.version }}.0_Test/Screenbox_TemporaryKey.pfx" `
+            --export-cer `
+            --install
+
+      - name: Sign sideload app package
+        env:
+          TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
+          WINAPP_CLI_TELEMETRY_OPTOUT: '1'
+        run: |
+          $packageDir = "$env:PROJ_PATH/AppPackages/Screenbox_${{ steps.app_version.outputs.version }}.0_Test"
+
+          winapp sign "$packageDir/Screenbox_${{ steps.app_version.outputs.version }}.0_x86_x64_arm64.msixbundle" "$packageDir/Screenbox_TemporaryKey.pfx" `
+            --password "$env:TEMP_CERT_PASSWORD" `
+            --timestamp "http://timestamp.acs.microsoft.com"
+
+      - name: Create sideload install kit artifact
+        run: |
+          ./scripts/Export-InstallKit.ps1 -OutputPath "$env:PROJ_PATH/AppPackages/*_Test/Screenbox-sideload.zip" -IncludeCertificate -IncludeBundle
+
+      - name: Upload sideload install kit artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/Screenbox-sideload.zip
+          archive: false
+
+  wack:
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      actions: write
+      checks: write
+    steps:
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
+
+      - name: Download sideload artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Screenbox-sideload.zip
+          path: Downloads
+
+      - name: Run the Windows App Certification Kit
+        uses: ChristopheLav/wack-certification@v1.0.3
+        with:
+          name: 'WACK report'
+          package-path: ${{ github.workspace }}\Downloads\Screenbox_${{ needs.build.outputs.version }}.0_x86_x64_arm64.msixbundle
+          report-name: 'Screenbox.Certification.xml'
+          ignore-rules: '38'
+
+  release:
+    needs: [build, wack]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - name: Download sideload package artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: Screenbox-sideload.zip
+          path: downloads
+          skip-decompress: true
+
+      - name: Generate GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{ needs.build.outputs.version }}
+          draft: true
+          generate_release_notes: true
+          files: |
+            downloads/Screenbox-sideload.zip
