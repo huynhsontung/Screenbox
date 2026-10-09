@@ -213,14 +213,24 @@ public sealed class FilesService : IFilesService
             }
             catch (Exception e) when (e is FileNotFoundException or UnauthorizedAccessException)
             {
-                // Folder was moved, deleted, or access was revoked. Fall back to the default location.
+                // Folder was moved, deleted, or access was revoked.
             }
         }
 
-        StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
-        StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
+        try
+        {
+            StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+            StorageFolder savePicturesFolder = pictureLibrary.SaveFolder;
 
-        return await defaultSaveFolder.CreateFolderAsync("Screenbox", CreationCollisionOption.OpenIfExists);
+            return await savePicturesFolder.CreateFolderAsync("Screenbox", CreationCollisionOption.OpenIfExists);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Pictures library permission missing or access denied.
+        }
+
+        // Fall back to local app storage.
+        return await ApplicationData.Current.LocalFolder.CreateFolderAsync("Captures", CreationCollisionOption.OpenIfExists);
     }
 
     private static bool IsExpectedStoragePropertiesHResult(int hresult)
