@@ -335,27 +335,7 @@
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource ImageExportGlyph}}">
                     <ctc:SettingsCard.Description>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind ViewModel.FrameCaptureFolder.Path, Mode=OneWay}" />
-                            <HyperlinkButton
-                                Padding="4,0"
-                                contract14Present:AutomationProperties.AutomationControlType="Button"
-                                AutomationProperties.Name="{x:Bind strings:Resources.ChangeFolder}"
-                                BorderThickness="0"
-                                Command="{x:Bind ViewModel.ChangeFrameCaptureLocationCommand}"
-                                Content="{x:Bind strings:Resources.Change}"
-                                FocusVisualMargin="0,-3"
-                                FontWeight="Normal">
-                                <HyperlinkButton.Resources>
-                                    <StaticResource x:Key="HyperlinkButtonBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
-                                    <StaticResource x:Key="HyperlinkButtonBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
-                                    <StaticResource x:Key="HyperlinkButtonBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
-                                </HyperlinkButton.Resources>
-                            </HyperlinkButton>
-                        </StackPanel>
+                        <TextBlock xml:space="preserve"><Run Text="{x:Bind ViewModel.FrameCaptureFolder.Path, Mode=OneWay}" /> <Hyperlink Click="ChangeFrameCaptureLocationHyperlink_OnClick" UnderlineStyle="None"><Run Text="{x:Bind strings:Resources.Change}" /></Hyperlink></TextBlock>
                     </ctc:SettingsCard.Description>
                     <Button
                         MinWidth="{StaticResource SettingsCardButtonMinWidth}"
