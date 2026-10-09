@@ -101,19 +101,19 @@ public sealed partial class FolderViewPage : Page
     }
 
     [RelayCommand(CanExecute = nameof(CanDeleteMedia))]
-    private async Task DeleteMediaAsync(MediaViewModel? media)
+    private async Task DeleteMediaAsync(StorageItemViewModel? item)
     {
-        if (media is null)
+        if (item is null)
             return;
 
-        var deleteConfirmation = new DeleteMediaDialog(Path.GetFileName(media.Location));
+        var deleteConfirmation = new DeleteMediaDialog(Path.GetFileName(item.Path));
         var result = await deleteConfirmation.ShowAsync();
 
         if (result == ContentDialogResult.Primary)
         {
-            await ViewModel.DeleteMediaAsync(media);
+            await ViewModel.DeleteMediaAsync(item);
         }
     }
 
-    private bool CanDeleteMedia(MediaViewModel? media) => Common.CanDeleteMedia(media);
+    private bool CanDeleteMedia(StorageItemViewModel? item) => Common.CanDeleteMedia(item?.Media);
 }
