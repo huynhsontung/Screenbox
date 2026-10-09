@@ -135,7 +135,7 @@ public sealed partial class PlayerPage : Page
 
     private void PlayerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        UpdateAlbumArtVisibility();
+        UpdateAlbumArtVisibility(e.NewSize.Height);
     }
 
     private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -394,9 +394,10 @@ public sealed partial class PlayerPage : Page
             : ElementTheme.Default;
     }
 
-    private void UpdateAlbumArtVisibility()
+    private void UpdateAlbumArtVisibility(double height = -1)
     {
-        bool shouldHideArt = ViewModel.ViewMode == WindowViewMode.Compact && ActualHeight > 0 && ActualHeight < 160;
+        double currentHeight = height > 0 ? height : (ActualHeight > 0 ? ActualHeight : LayoutRoot.ActualHeight);
+        bool shouldHideArt = ViewModel.ViewMode == WindowViewMode.Compact && currentHeight > 0 && currentHeight < 180;
         VisualStateManager.GoToState(this, shouldHideArt ? "AlbumArtHidden" : "AlbumArtVisible", true);
     }
 

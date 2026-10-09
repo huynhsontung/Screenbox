@@ -792,19 +792,21 @@
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="AlbumArtVisibilityStates">
-                <VisualState x:Name="AlbumArtVisible" />
+                <VisualState x:Name="AlbumArtVisible">
+                    <VisualState.Setters>
+                        <Setter Target="AlbumArtPanel.Opacity" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
 
                 <VisualState x:Name="AlbumArtHidden">
                     <VisualState.Setters>
                         <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="AlbumArtPanel.Opacity" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualStateGroup.Transitions>
-                    <VisualTransition
-                        GeneratedDuration="0:0:0.2"
-                        From="AlbumArtVisible"
-                        To="AlbumArtHidden">
+                    <VisualTransition GeneratedDuration="0:0:0.2" To="AlbumArtHidden">
                         <Storyboard>
                             <DoubleAnimation
                                 Storyboard.TargetName="AlbumArtPanel"
@@ -816,10 +818,7 @@
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualTransition>
-                    <VisualTransition
-                        GeneratedDuration="0:0:0.2"
-                        From="AlbumArtHidden"
-                        To="AlbumArtVisible">
+                    <VisualTransition GeneratedDuration="0:0:0.2" To="AlbumArtVisible">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />

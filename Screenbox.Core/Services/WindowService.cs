@@ -37,6 +37,10 @@ public sealed class WindowService : IWindowService
             _windowContext.ViewMode = WindowViewMode.Default;
             view.SetPreferredMinSize(new Size(0, 0));
         }
+        else if (_windowContext.ViewMode == WindowViewMode.Compact && view.ViewMode == ApplicationViewMode.CompactOverlay)
+        {
+            view.SetPreferredMinSize(CompactOverlayMinSize);
+        }
     }
 
     public bool TryEnterFullScreen()
@@ -86,6 +90,8 @@ public sealed class WindowService : IWindowService
 
         if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
         {
+            view = ApplicationView.GetForCurrentView();
+            view?.SetPreferredMinSize(CompactOverlayMinSize);
             _windowContext.ViewMode = WindowViewMode.Compact;
             return true;
         }
