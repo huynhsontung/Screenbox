@@ -84,6 +84,10 @@ public sealed partial class PlayerControls : UserControl
     private void NormalPlayerContextMenu_OnOpened(object sender, object e)
     {
         DeleteCurrentItemCommand.NotifyCanExecuteChanged();
+
+        // When playing videos, the item text brush can become stale after transitioning
+        // into or out of mini mode if the item is disabled in light theme, so we force a refresh.
+        DeleteMenuItem.RequestedTheme = this.ActualTheme;
     }
 
     private void NormalPlayerContextMenu_OnClosed(object sender, object e)
