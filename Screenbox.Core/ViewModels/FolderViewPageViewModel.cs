@@ -147,9 +147,9 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     /// <param name="media">The media item whose underlying file should be deleted.</param>
     /// <returns><see langword="true"/> if the file was deleted; otherwise, <see langword="false"/>.</returns>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public async Task<bool> DeleteMediaAsync(MediaViewModel media)
+    public async Task<bool> DeleteMediaAsync(StorageItemViewModel item)
     {
-        if (media.Source is not StorageFile file)
+        if (item.StorageItem is not StorageFile file)
             return false;
 
         try
@@ -162,13 +162,13 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
             return false;
         }
 
-        StorageItemViewModel? item = Items.FirstOrDefault(i => i.Media == media);
-        if (item is not null)
+        Items.Remove(item);
+
+        if (item.Media is not null)
         {
-            Items.Remove(item);
+            _playableItems.Remove(item.Media);
         }
 
-        _playableItems.Remove(media);
         IsEmpty = Items.Count == 0;
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.ItemDeleted, title: file.Name));
         return true;

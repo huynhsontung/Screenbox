@@ -215,7 +215,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
             DeleteItem.Text = Strings.Resources.Delete;
             DeleteItem.Command = DeleteCommand;
-            DeleteItem.CommandParameter = mediaVm is not null ? mediaVm : ContextItem;
+            DeleteItem.CommandParameter = ContextItem;
             DeleteItem.Visibility = Visibility.Visible;
             DeleteItemKeyboardAccelerator.IsEnabled = true;
         }
