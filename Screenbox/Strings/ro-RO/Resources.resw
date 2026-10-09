@@ -1056,16 +1056,16 @@
     <value>Mărire viteză</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Piesa următoare</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Piesa anterioară</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Capitolul următor</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Capitolul anterior</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adăugare la playlist</value>

@@ -364,7 +364,7 @@
     <value>파일 위치 열기</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>파일 탐색기로 열기</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>다음으로 열기</value>
@@ -1056,16 +1056,16 @@
     <value>속도 올리기</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>다음 트랙</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>이전 트랙</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>다음 챕터</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>이전 챕터</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>재생목록에 추가</value>
@@ -1173,21 +1173,21 @@
     <value>변경</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>화면 비율: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>오디오 옵션</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>자막 옵션</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>감소 {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>증가 {0}</value>
     <comment>#Format[String value]</comment>
   </data>
 </root>
