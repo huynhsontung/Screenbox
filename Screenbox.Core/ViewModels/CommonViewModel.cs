@@ -151,4 +151,15 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         }
     }
 
+    /// <summary>
+    /// Determines whether the file backing the given media item can be deleted.
+    /// </summary>
+    /// <param name="media">The media item to check.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="media"/> is backed by a non-read-only
+    /// <see cref="StorageFile"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public bool CanDeleteMedia(MediaViewModel? media) =>
+        media?.Source is StorageFile file && !file.Attributes.HasFlag(FileAttributes.ReadOnly);
 }

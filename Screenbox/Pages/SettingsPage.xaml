@@ -314,6 +314,14 @@
                         </interactivity:Interaction.Behaviors>
                     </ComboBox>
                 </ctc:SettingsCard>
+                <!--  Ask For Confirmation To Delete Files  -->
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsAskForPermissionToDeleteFilesDescription}"
+                    Header="{x:Bind strings:Resources.SettingsAskForPermissionToDeleteFilesHeader}"
+                    HeaderIcon="Delete">
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsAskForPermissionToDeleteFilesDescription}" IsOn="{x:Bind ViewModel.RequireDeleteConfirmation, Mode=TwoWay}" />
+                </ctc:SettingsCard>
 
                 <!--#region General Section-->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind strings:Resources.SettingsCategoryGeneral}" />

@@ -36,6 +36,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
+    public bool RequireDeleteConfirmation => _settingsService.RequireDeleteConfirmation;
+
     /// <summary>
     /// Gets a value that indicates whether the current playback item has exactly one subtitle track.
     /// </summary>
@@ -228,6 +230,38 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                 label is null ? PlaybackCommandKind.SubtitleOff : PlaybackCommandKind.Subtitle,
                 value: label)
             .ShowMessage());
+    }
+
+    /// <summary>
+    /// Deletes the file backing the currently playing item (moving it to the Recycle Bin)
+    /// and removes it from the play queue.
+    /// </summary>
+    /// <returns><see langword="true"/> if the file was deleted; otherwise, <see langword="false"/>.</returns>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<bool> DeleteCurrentItemAsync()
+    {
+        MediaViewModel? currentItem = PlayQueue.CurrentItem;
+        if (currentItem?.Source is not StorageFile file)
+            return false;
+
+        try
+        {
+            await file.DeleteAsync();
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.ItemDeleteFailed, title: file.Name, message: e.Message));
+            return false;
+        }
+
+        if (_coordinator.CanNext())
+        {
+            await _coordinator.NextAsync();
+        }
+
+        _coordinator.Remove(currentItem);
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.ItemDeleted, title: file.Name));
+        return true;
     }
 
     partial void OnIsDisplayingRemainingTimeChanged(bool value)

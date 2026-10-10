@@ -13,6 +13,7 @@ public sealed class SettingsService : ISettingsService
     private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
 
     private const string GeneralThemeKey = "General/Theme";
+    private const string PersonalizationRequireDeleteConfirmationKey = "Personalization/RequireDeleteConfirmation";
     private const string PlayerAutoResizeKey = "Player/AutoResize";
     private const string PlayerShowControlsKey = "Player/ShowControls";
     private const string PlayerControlsHideDelayKey = "Player/ControlsHideDelay";
@@ -58,6 +59,12 @@ public sealed class SettingsService : ISettingsService
     {
         get => (ThemeOption)GetValue<int>(GeneralThemeKey);
         set => SetValue(GeneralThemeKey, (int)value);
+    }
+
+    public bool RequireDeleteConfirmation
+    {
+        get => GetValue<bool>(PersonalizationRequireDeleteConfirmationKey);
+        set => SetValue(PersonalizationRequireDeleteConfirmationKey, value);
     }
 
     public PlayerAutoResizeOption PlayerAutoResize
@@ -254,6 +261,7 @@ public sealed class SettingsService : ISettingsService
 
     public SettingsService()
     {
+        SetDefault(PersonalizationRequireDeleteConfirmationKey, true);
         SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
         SetDefault(PlayerShowControlsKey, true);
         SetDefault(PlayerControlsHideDelayKey, 3);

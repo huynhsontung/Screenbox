@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -30,6 +31,8 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
 
     public StorageFolder[] BreadcrumbLocations { get; private set; } = [];
 
+    public bool RequireDeleteConfirmation => _settingsService.RequireDeleteConfirmation;
+
     internal NavigationMetadata? NavData { get; private set; }
 
     [ObservableProperty] public partial StorageItemViewModel? ContextItem { get; set; }
@@ -38,6 +41,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
 
     private readonly IFilesService _filesService;
     private readonly INavigationService _navigationService;
+    private readonly ISettingsService _settingsService;
     private readonly StorageItemViewModelFactory _storageVmFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _loadingTimer;
@@ -45,12 +49,15 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     private bool _isActive;
     private object? _source;
 
-    public FolderViewPageViewModel(IFilesService filesService, INavigationService navigationService,
+    public FolderViewPageViewModel(IFilesService filesService,
+        INavigationService navigationService,
+        ISettingsService settingsService,
         StorageItemViewModelFactory storageVmFactory)
     {
         _filesService = filesService;
         _storageVmFactory = storageVmFactory;
         _navigationService = navigationService;
+        _settingsService = settingsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _loadingTimer = _dispatcherQueue.CreateTimer();
 
@@ -137,6 +144,40 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         // _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
         _navigationService.Navigate(typeof(FolderViewPageViewModel),
             new NavigationMetadata(NavData?.RootViewModelType ?? typeof(FolderViewPageViewModel), parameter));
+    }
+
+    /// <summary>
+    /// Deletes the file backing the given media item (moving it to the Recycle Bin)
+    /// and removes it from <see cref="Items"/>.
+    /// </summary>
+    /// <param name="media">The media item whose underlying file should be deleted.</param>
+    /// <returns><see langword="true"/> if the file was deleted; otherwise, <see langword="false"/>.</returns>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<bool> DeleteMediaAsync(StorageItemViewModel item)
+    {
+        if (item.StorageItem is not StorageFile file)
+            return false;
+
+        try
+        {
+            await file.DeleteAsync();
+        }
+        catch (Exception e)
+        {
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.ItemDeleteFailed, title: file.Name, message: e.Message));
+            return false;
+        }
+
+        Items.Remove(item);
+
+        if (item.Media is not null)
+        {
+            _playableItems.Remove(item.Media);
+        }
+
+        IsEmpty = Items.Count == 0;
+        Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.ItemDeleted, title: file.Name));
+        return true;
     }
 
     [RelayCommand]
