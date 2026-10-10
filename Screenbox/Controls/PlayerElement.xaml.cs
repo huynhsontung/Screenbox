@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
-using Screenbox.Helpers;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -125,8 +124,7 @@ public sealed partial class PlayerElement : UserControl
 
         var pointer = e.GetCurrentPoint(VideoViewButton);
         var properties = pointer.Properties;
-        bool isTouchpad = TouchpadHelper.IsCurrentInputFromTouchpad();
-        ViewModel.ProcessPointerWheelInput(properties.MouseWheelDelta, properties.IsHorizontalMouseWheel, isTouchpad);
+        ViewModel.ProcessPointerWheelInput(properties.MouseWheelDelta, properties.IsHorizontalMouseWheel);
         ViewModel.OnManipulationCompleted();
         e.Handled = true;
     }

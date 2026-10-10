@@ -50,7 +50,6 @@ sealed partial class App : Application
         GlobalizationHelper.SyncCurrentCultureWithAppLanguage();
 
         InitializeComponent();
-        TouchpadHelper.RegisterTouchpadCapableThread();
 
         if (DeviceInfoHelper.IsXbox)
         {

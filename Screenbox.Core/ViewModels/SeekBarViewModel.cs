@@ -205,8 +205,8 @@ public sealed partial class SeekBarViewModel :
     /// <param name="pointerWheelDelta">The pointer wheel delta value.</param>
     /// <param name="modifiers">A bitwise combination of the enumeration values that specifies the modifier keys held during the change.</param>
     /// <param name="isTouchpad"><see langword="true"/> if the input originated from a touchpad;
-    /// otherwise, <see langword="false"/>.</param>
-    public void OnSeekBarPointerWheelChanged(double pointerWheelDelta, VirtualKeyModifiers modifiers, bool isTouchpad = false)
+    /// <see langword="false"/> if from a mouse; or <see langword="null"/> to detect automatically via delta heuristics.</param>
+    public void OnSeekBarPointerWheelChanged(double pointerWheelDelta, VirtualKeyModifiers modifiers, bool? isTouchpad = null)
     {
         if (!IsSeekable || MediaPlayer is null) return;
 
@@ -217,7 +217,8 @@ public sealed partial class SeekBarViewModel :
             _ => 5_000
         };
 
-        int signedDelta = isTouchpad
+        bool touchpad = isTouchpad ?? TouchpadHelper.IsTouchpadDelta(pointerWheelDelta);
+        int signedDelta = touchpad
             ? (pointerWheelDelta < 0 ? delta : -delta)
             : (pointerWheelDelta > 0 ? delta : -delta);
         var result = UpdatePosition(TimeSpan.FromMilliseconds(signedDelta), isOffset: true, debounce: true);

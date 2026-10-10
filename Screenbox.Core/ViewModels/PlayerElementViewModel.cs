@@ -259,12 +259,13 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// <param name="isHorizontal"><see langword="true"/> to treat the input as horizontal;
     /// otherwise, <see langword="false"/> to treat it as vertical.</param>
     /// <param name="isTouchpad"><see langword="true"/> if the input originated from a touchpad;
-    /// otherwise, <see langword="false"/>.</param>
-    public void ProcessPointerWheelInput(int delta, bool isHorizontal, bool isTouchpad = false)
+    /// <see langword="false"/> if from a mouse; or <see langword="null"/> to detect automatically via delta heuristics.</param>
+    public void ProcessPointerWheelInput(int delta, bool isHorizontal, bool? isTouchpad = null)
     {
         if (!isHorizontal)
         {
-            int volumeStep = isTouchpad ? (delta < 0 ? 2 : -2) : (delta > 0 ? 2 : -2);
+            bool touchpad = isTouchpad ?? TouchpadHelper.IsTouchpadDelta(delta);
+            int volumeStep = touchpad ? (delta < 0 ? 2 : -2) : (delta > 0 ? 2 : -2);
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeStep, true));
             Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volume).ShowMessage());
         }
