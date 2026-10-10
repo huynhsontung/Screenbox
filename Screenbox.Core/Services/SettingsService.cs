@@ -1,329 +1,222 @@
-using System;
-using System.Linq;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Helpers;
-using Windows.Foundation.Collections;
 using Windows.Media;
-using Windows.Storage;
 
 namespace Screenbox.Core.Services;
 
+/// <summary>
+/// Bridge implementation of <see cref="ISettingsService"/> delegating to domain-specific settings contexts.
+/// </summary>
 public sealed class SettingsService : ISettingsService
 {
-    private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
+    private readonly SettingsContext _settings;
 
-    private const string GeneralThemeKey = "General/Theme";
-    private const string PlayerAutoResizeKey = "Player/AutoResize";
-    private const string PlayerShowControlsKey = "Player/ShowControls";
-    private const string PlayerControlsHideDelayKey = "Player/ControlsHideDelay";
-    private const string PlayerLivelyPathKey = "Player/Lively/Path";
-    private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
-    private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
-    private const string GeneralShowRecent = "General/ShowRecent";
-    private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
-    private const string GeneralFrameCaptureFolderTokenKey = "General/FrameCaptureFolderToken";
-    private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
-    private const string AdvancedModeKey = "Advanced/IsEnabled";
-    private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
-    private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
-    private const string GlobalArgumentsKey = "Values/GlobalArguments";
-    private const string PersistentVolumeKey = "Values/Volume";
-    private const string MaxVolumeKey = "Values/MaxVolume";
-    private const string PersistentRepeatModeKey = "Values/RepeatMode";
-    private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
-    private const string PersistentShowRemainingTimeKey = "Values/ShowRemainingTime";
-    private const string PersistentSongsSortOrderKey = "Values/Songs/SortOrder";
-    private const string PersistentAlbumsSortOrderKey = "Values/Albums/SortOrder";
-    private const string PlayerShowChaptersKey = "Player/ShowChapters";
-    private const string PrivacyPersistPlaybackPosition = "Privacy/PersistPlaybackPosition";
-
-    private const string PlayerRewindStepKey = "Player/RewindStep";
-    private const string PlayerFastForwardStepKey = "Player/FastForwardStep";
-    private const string PlayerGestureTapKey = "Player/Gesture/Tap";
-    private const string PlayerGestureSwipeUpKey = "Player/Gesture/SwipeUp";
-    private const string PlayerGestureSwipeDownKey = "Player/Gesture/SwipeDown";
-    private const string PlayerGestureSwipeLeftKey = "Player/Gesture/SwipeLeft";
-    private const string PlayerGestureSwipeRightKey = "Player/Gesture/SwipeRight";
-    private const string PlayerGestureSlideVerticalKey = "Player/Gesture/SlideVertical";
-    private const string PlayerGestureSlideHorizontalKey = "Player/Gesture/SlideHorizontal";
-    private const string PlayerGesturePressAndHoldKey = "Player/Gesture/PressAndHold";
+    public SettingsService(SettingsContext settings)
+    {
+        _settings = settings;
+    }
 
     public bool UseIndexer
     {
-        get => GetValue<bool>(LibrariesUseIndexerKey);
-        set => SetValue(LibrariesUseIndexerKey, value);
+        get => _settings.Library.UseIndexer;
+        set => _settings.Library.UseIndexer = value;
     }
 
     public ThemeOption Theme
     {
-        get => (ThemeOption)GetValue<int>(GeneralThemeKey);
-        set => SetValue(GeneralThemeKey, (int)value);
+        get => _settings.General.Theme;
+        set => _settings.General.Theme = value;
     }
 
     public PlayerAutoResizeOption PlayerAutoResize
     {
-        get => (PlayerAutoResizeOption)GetValue<int>(PlayerAutoResizeKey);
-        set => SetValue(PlayerAutoResizeKey, (int)value);
+        get => _settings.Player.AutoResize;
+        set => _settings.Player.AutoResize = value;
     }
 
     public int PersistentVolume
     {
-        get => GetValue<int>(PersistentVolumeKey);
-        set => SetValue(PersistentVolumeKey, value);
+        get => _settings.Playback.Volume;
+        set => _settings.Playback.Volume = value;
     }
 
     public string PersistentSubtitleLanguage
     {
-        get => GetValue<string>(PersistentSubtitleLanguageKey) ?? string.Empty;
-        set => SetValue(PersistentSubtitleLanguageKey, value);
+        get => _settings.Playback.SubtitleLanguage;
+        set => _settings.Playback.SubtitleLanguage = value;
     }
 
     public int MaxVolume
     {
-        get => GetValue<int>(MaxVolumeKey);
-        set => SetValue(MaxVolumeKey, value);
+        get => _settings.Playback.MaxVolume;
+        set => _settings.Playback.MaxVolume = value;
     }
 
     public bool ShowRecent
     {
-        get => GetValue<bool>(GeneralShowRecent);
-        set => SetValue(GeneralShowRecent, value);
+        get => _settings.General.ShowRecent;
+        set => _settings.General.ShowRecent = value;
     }
 
     public bool EnqueueAllFilesInFolder
     {
-        get => GetValue<bool>(GeneralEnqueueAllInFolder);
-        set => SetValue(GeneralEnqueueAllInFolder, value);
+        get => _settings.General.EnqueueAllFilesInFolder;
+        set => _settings.General.EnqueueAllFilesInFolder = value;
     }
 
     public string FrameCaptureFolderToken
     {
-        get => GetValue<string>(GeneralFrameCaptureFolderTokenKey) ?? string.Empty;
-        set => SetValue(GeneralFrameCaptureFolderTokenKey, value);
+        get => _settings.General.FrameCaptureFolderToken;
+        set => _settings.General.FrameCaptureFolderToken = value;
     }
 
     public bool RestorePlaybackPosition
     {
-        get => GetValue<bool>(GeneralRestorePlaybackPosition);
-        set => SetValue(GeneralRestorePlaybackPosition, value);
+        get => _settings.Playback.RestorePlaybackPosition;
+        set => _settings.Playback.RestorePlaybackPosition = value;
     }
 
     public bool PlayerShowControls
     {
-        get => GetValue<bool>(PlayerShowControlsKey);
-        set => SetValue(PlayerShowControlsKey, value);
+        get => _settings.Player.ShowControls;
+        set => _settings.Player.ShowControls = value;
     }
 
     public int PlayerControlsHideDelay
     {
-        get => GetValue<int>(PlayerControlsHideDelayKey);
-        set => SetValue(PlayerControlsHideDelayKey, value);
+        get => _settings.Player.ControlsHideDelay;
+        set => _settings.Player.ControlsHideDelay = value;
     }
 
     public bool SearchRemovableStorage
     {
-        get => GetValue<bool>(LibrariesSearchRemovableStorageKey);
-        set => SetValue(LibrariesSearchRemovableStorageKey, value);
+        get => _settings.Library.SearchRemovableStorage;
+        set => _settings.Library.SearchRemovableStorage = value;
     }
 
     public MediaPlaybackAutoRepeatMode PersistentRepeatMode
     {
-        get => (MediaPlaybackAutoRepeatMode)GetValue<int>(PersistentRepeatModeKey);
-        set => SetValue(PersistentRepeatModeKey, (int)value);
+        get => _settings.Playback.RepeatMode;
+        set => _settings.Playback.RepeatMode = value;
     }
 
     public string GlobalArguments
     {
-        get => GetValue<string>(GlobalArgumentsKey) ?? string.Empty;
-        set => SetValue(GlobalArgumentsKey, SanitizeArguments(value));
+        get => _settings.Advanced.GlobalArguments;
+        set => _settings.Advanced.GlobalArguments = value;
     }
 
     public bool AdvancedMode
     {
-        get => GetValue<bool>(AdvancedModeKey);
-        set => SetValue(AdvancedModeKey, value);
+        get => _settings.Advanced.AdvancedMode;
+        set => _settings.Advanced.AdvancedMode = value;
     }
 
     public VideoUpscaleOption VideoUpscale
     {
-        get => (VideoUpscaleOption)GetValue<int>(AdvancedVideoUpscaleKey);
-        set => SetValue(AdvancedVideoUpscaleKey, (int)value);
+        get => _settings.Advanced.VideoUpscale;
+        set => _settings.Advanced.VideoUpscale = value;
     }
 
     public bool UseMultipleInstances
     {
-        get => GetValue<bool>(AdvancedMultipleInstancesKey);
-        set => SetValue(AdvancedMultipleInstancesKey, value);
+        get => _settings.Advanced.UseMultipleInstances;
+        set => _settings.Advanced.UseMultipleInstances = value;
     }
 
     public string LivelyActivePath
     {
-        get => GetValue<string>(PlayerLivelyPathKey) ?? string.Empty;
-        set => SetValue(PlayerLivelyPathKey, value);
+        get => _settings.Player.LivelyActivePath;
+        set => _settings.Player.LivelyActivePath = value;
     }
 
     public bool PersistentShowRemainingTime
     {
-        get => GetValue<bool>(PersistentShowRemainingTimeKey);
-        set => SetValue(PersistentShowRemainingTimeKey, value);
+        get => _settings.Playback.ShowRemainingTime;
+        set => _settings.Playback.ShowRemainingTime = value;
     }
 
     public bool PlayerShowChapters
     {
-        get => GetValue<bool>(PlayerShowChaptersKey);
-        set => SetValue(PlayerShowChaptersKey, value);
+        get => _settings.Player.ShowChapters;
+        set => _settings.Player.ShowChapters = value;
     }
 
     public bool PersistPlaybackPosition
     {
-        get => GetValue<bool>(PrivacyPersistPlaybackPosition);
-        set => SetValue(PrivacyPersistPlaybackPosition, value);
+        get => _settings.Playback.PersistPlaybackPosition;
+        set => _settings.Playback.PersistPlaybackPosition = value;
     }
 
     public int PlayerRewindStep
     {
-        get => GetValue<int>(PlayerRewindStepKey);
-        set => SetValue(PlayerRewindStepKey, value);
+        get => _settings.Player.RewindStep;
+        set => _settings.Player.RewindStep = value;
     }
 
     public int PlayerFastForwardStep
     {
-        get => GetValue<int>(PlayerFastForwardStepKey);
-        set => SetValue(PlayerFastForwardStepKey, value);
+        get => _settings.Player.FastForwardStep;
+        set => _settings.Player.FastForwardStep = value;
     }
 
     public PlaybackActionKind PlayerGestureTap
     {
-        get => (PlaybackActionKind)GetValue<int>(PlayerGestureTapKey);
-        set => SetValue(PlayerGestureTapKey, (int)value);
+        get => _settings.Player.GestureTap;
+        set => _settings.Player.GestureTap = value;
     }
 
     public PlaybackActionKind PlayerGestureSwipeUp
     {
-        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeUpKey);
-        set => SetValue(PlayerGestureSwipeUpKey, (int)value);
+        get => _settings.Player.GestureSwipeUp;
+        set => _settings.Player.GestureSwipeUp = value;
     }
 
     public PlaybackActionKind PlayerGestureSwipeDown
     {
-        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeDownKey);
-        set => SetValue(PlayerGestureSwipeDownKey, (int)value);
+        get => _settings.Player.GestureSwipeDown;
+        set => _settings.Player.GestureSwipeDown = value;
     }
 
     public PlaybackActionKind PlayerGestureSwipeLeft
     {
-        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeLeftKey);
-        set => SetValue(PlayerGestureSwipeLeftKey, (int)value);
+        get => _settings.Player.GestureSwipeLeft;
+        set => _settings.Player.GestureSwipeLeft = value;
     }
 
     public PlaybackActionKind PlayerGestureSwipeRight
     {
-        get => (PlaybackActionKind)GetValue<int>(PlayerGestureSwipeRightKey);
-        set => SetValue(PlayerGestureSwipeRightKey, (int)value);
+        get => _settings.Player.GestureSwipeRight;
+        set => _settings.Player.GestureSwipeRight = value;
     }
 
     public bool PlayerGestureSlideVertical
     {
-        get => GetValue<bool>(PlayerGestureSlideVerticalKey);
-        set => SetValue(PlayerGestureSlideVerticalKey, value);
+        get => _settings.Player.GestureSlideVertical;
+        set => _settings.Player.GestureSlideVertical = value;
     }
 
     public bool PlayerGestureSlideHorizontal
     {
-        get => GetValue<bool>(PlayerGestureSlideHorizontalKey);
-        set => SetValue(PlayerGestureSlideHorizontalKey, value);
+        get => _settings.Player.GestureSlideHorizontal;
+        set => _settings.Player.GestureSlideHorizontal = value;
     }
 
     public bool PlayerGesturePressAndHold
     {
-        get => GetValue<bool>(PlayerGesturePressAndHoldKey);
-        set => SetValue(PlayerGesturePressAndHoldKey, value);
+        get => _settings.Player.GesturePressAndHold;
+        set => _settings.Player.GesturePressAndHold = value;
     }
 
     public SongSortOrder PersistentSongsSortOrder
     {
-        get => (SongSortOrder)GetValue<int>(PersistentSongsSortOrderKey);
-        set => SetValue(PersistentSongsSortOrderKey, (int)value);
+        get => _settings.Playback.SongsSortOrder;
+        set => _settings.Playback.SongsSortOrder = value;
     }
 
     public AlbumSortOrder PersistentAlbumsSortOrder
     {
-        get => (AlbumSortOrder)GetValue<int>(PersistentAlbumsSortOrderKey);
-        set => SetValue(PersistentAlbumsSortOrderKey, (int)value);
-    }
-
-    public SettingsService()
-    {
-        SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
-        SetDefault(PlayerShowControlsKey, true);
-        SetDefault(PlayerControlsHideDelayKey, 3);
-        SetDefault(PersistentVolumeKey, 100);
-        SetDefault(MaxVolumeKey, 100);
-        SetDefault(LibrariesUseIndexerKey, true);
-        SetDefault(LibrariesSearchRemovableStorageKey, true);
-        SetDefault(GeneralFrameCaptureFolderTokenKey, string.Empty);
-        SetDefault(GeneralShowRecent, true);
-        SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
-        SetDefault(AdvancedModeKey, false);
-        SetDefault(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);
-        SetDefault(AdvancedMultipleInstancesKey, false);
-        SetDefault(GlobalArgumentsKey, string.Empty);
-        SetDefault(PersistentShowRemainingTimeKey, false);
-        SetDefault(PersistentSongsSortOrderKey, (int)SongSortOrder.Title);
-        SetDefault(PersistentAlbumsSortOrderKey, (int)AlbumSortOrder.Title);
-        SetDefault(PlayerShowChaptersKey, true);
-        SetDefault(PrivacyPersistPlaybackPosition, true);
-        SetDefault(PlayerRewindStepKey, 5);
-        SetDefault(PlayerFastForwardStepKey, 5);
-        SetDefault(PlayerGestureTapKey, (int)PlaybackActionKind.PlayPause);
-        SetDefault(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.IncreaseVolume);
-        SetDefault(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.DecreaseVolume);
-        SetDefault(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.Rewind);
-        SetDefault(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.FastForward);
-        SetDefault(PlayerGestureSlideVerticalKey, true);
-        SetDefault(PlayerGestureSlideHorizontalKey, true);
-        SetDefault(PlayerGesturePressAndHoldKey, true);
-
-        // Device family specific overrides
-        if (SystemInformation.IsXbox)
-        {
-            SetValue(PlayerShowControlsKey, true);
-            SetValue(PlayerGestureTapKey, (int)PlaybackActionKind.None);
-            SetValue(PlayerGestureSwipeUpKey, (int)PlaybackActionKind.None);
-            SetValue(PlayerGestureSwipeDownKey, (int)PlaybackActionKind.None);
-            SetValue(PlayerGestureSwipeLeftKey, (int)PlaybackActionKind.None);
-            SetValue(PlayerGestureSwipeRightKey, (int)PlaybackActionKind.None);
-            SetValue(PlayerGestureSlideVerticalKey, false);
-            SetValue(PlayerGestureSlideHorizontalKey, false);
-            SetValue(PlayerGesturePressAndHoldKey, false);
-        }
-    }
-
-    private static T? GetValue<T>(string key)
-    {
-        if (SettingsStorage.TryGetValue(key, out object? value))
-        {
-            return (T)value;
-        }
-
-        return default;
-    }
-
-    private static void SetValue<T>(string key, T value)
-    {
-        SettingsStorage[key] = value;
-    }
-
-    private static void SetDefault<T>(string key, T value)
-    {
-        if (SettingsStorage.ContainsKey(key) && SettingsStorage[key] is T) return;
-        SettingsStorage[key] = value;
-    }
-
-    private static string SanitizeArguments(string raw)
-    {
-        string[] args = raw.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Where(s => s.StartsWith('-') && s != "--").ToArray();
-        return string.Join(' ', args);
+        get => _settings.Playback.AlbumsSortOrder;
+        set => _settings.Playback.AlbumsSortOrder = value;
     }
 }
