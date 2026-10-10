@@ -258,11 +258,15 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     /// <param name="delta">The pointer wheel delta.</param>
     /// <param name="isHorizontal"><see langword="true"/> to treat the input as horizontal;
     /// otherwise, <see langword="false"/> to treat it as vertical.</param>
-    public void ProcessPointerWheelInput(int delta, bool isHorizontal)
+    /// <param name="isTouchpad"><see langword="true"/> if the input originated from a touchpad;
+    /// <see langword="false"/> if from a mouse; or <see langword="null"/> to detect automatically via delta heuristics.</param>
+    public void ProcessPointerWheelInput(int delta, bool isHorizontal, bool? isTouchpad = null)
     {
         if (!isHorizontal)
         {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(delta > 0 ? 2 : -2, true));
+            bool touchpad = isTouchpad ?? TouchpadHelper.IsTouchpadDelta(delta);
+            int volumeStep = touchpad ? (delta < 0 ? 2 : -2) : (delta > 0 ? 2 : -2);
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeStep, true));
             Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volume).ShowMessage());
         }
         else if (VlcMediaPlayer?.CanSeek ?? false)
