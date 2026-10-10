@@ -78,6 +78,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="O" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AddToPlaylistSubMenu"
@@ -112,6 +115,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="I" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="PlaybackSpeedSubMenu"
@@ -193,6 +199,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="S" Modifiers="Shift" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     AccessKey="{x:Bind strings:KeyboardResources.MenuItemCastKey}"
@@ -205,6 +214,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="K" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AspectRatioSubMenu"
@@ -296,6 +308,9 @@
                             IsEnabled="False"
                             Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     x:Name="FullscreenMenuItem"
@@ -315,6 +330,9 @@
                             x:Name="FullscreenMenuItemFnKeyboardAccelerator"
                             IsEnabled="False" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <!--  Delete  -->
                 <MenuFlyoutSeparator />
@@ -356,6 +374,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Delete" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>
