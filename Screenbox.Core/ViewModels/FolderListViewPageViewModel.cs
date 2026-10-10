@@ -10,8 +10,9 @@ public sealed partial class FolderListViewPageViewModel : FolderViewPageViewMode
 
     public FolderListViewPageViewModel(IFilesService filesService,
         INavigationService navigationService,
+        ISettingsService settingsService,
         StorageItemViewModelFactory storageVmFactory) :
-        base(filesService, navigationService, storageVmFactory)
+        base(filesService, navigationService, settingsService, storageVmFactory)
     {
         _navigationService = navigationService;
     }

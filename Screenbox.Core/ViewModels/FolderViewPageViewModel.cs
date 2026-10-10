@@ -31,6 +31,8 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
 
     public StorageFolder[] BreadcrumbLocations { get; private set; } = [];
 
+    public bool RequireDeleteConfirmation => _settingsService.RequireDeleteConfirmation;
+
     internal NavigationMetadata? NavData { get; private set; }
 
     [ObservableProperty] public partial StorageItemViewModel? ContextItem { get; set; }
@@ -39,6 +41,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
 
     private readonly IFilesService _filesService;
     private readonly INavigationService _navigationService;
+    private readonly ISettingsService _settingsService;
     private readonly StorageItemViewModelFactory _storageVmFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _loadingTimer;
@@ -46,12 +49,15 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     private bool _isActive;
     private object? _source;
 
-    public FolderViewPageViewModel(IFilesService filesService, INavigationService navigationService,
+    public FolderViewPageViewModel(IFilesService filesService,
+        INavigationService navigationService,
+        ISettingsService settingsService,
         StorageItemViewModelFactory storageVmFactory)
     {
         _filesService = filesService;
         _storageVmFactory = storageVmFactory;
         _navigationService = navigationService;
+        _settingsService = settingsService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _loadingTimer = _dispatcherQueue.CreateTimer();
 

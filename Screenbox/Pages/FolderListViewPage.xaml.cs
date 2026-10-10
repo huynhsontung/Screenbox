@@ -95,10 +95,17 @@ public sealed partial class FolderListViewPage : Page
         if (item is null)
             return;
 
-        var deleteConfirmation = new DeleteMediaDialog(Path.GetFileName(item.Path));
-        var result = await deleteConfirmation.ShowAsync();
+        if (ViewModel.RequireDeleteConfirmation)
+        {
+            var deleteConfirmation = new DeleteMediaDialog(Path.GetFileName(item.Path));
+            var result = await deleteConfirmation.ShowAsync();
 
-        if (result == ContentDialogResult.Primary)
+            if (result == ContentDialogResult.Primary)
+            {
+                await ViewModel.DeleteMediaAsync(item);
+            }
+        }
+        else
         {
             await ViewModel.DeleteMediaAsync(item);
         }

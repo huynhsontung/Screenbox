@@ -71,11 +71,18 @@ public sealed partial class PlayerControls : UserControl
     [RelayCommand(CanExecute = nameof(CanDeleteCurrentItem))]
     private async Task DeleteCurrentItemAsync()
     {
-        string fileName = Path.GetFileName(ViewModel.PlayQueue.CurrentItem?.Location) ?? string.Empty;
-        var deleteConfirmation = new DeleteMediaDialog(fileName);
-        ContentDialogResult result = await deleteConfirmation.ShowAsync();
+        if (ViewModel.RequireDeleteConfirmation)
+        {
+            string fileName = Path.GetFileName(ViewModel.PlayQueue.CurrentItem?.Location) ?? string.Empty;
+            var deleteConfirmation = new DeleteMediaDialog(fileName);
+            ContentDialogResult result = await deleteConfirmation.ShowAsync();
 
-        if (result == ContentDialogResult.Primary)
+            if (result == ContentDialogResult.Primary)
+            {
+                await ViewModel.DeleteCurrentItemAsync();
+            }
+        }
+        else
         {
             await ViewModel.DeleteCurrentItemAsync();
         }

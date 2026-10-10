@@ -36,6 +36,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
+    public bool RequireDeleteConfirmation => _settingsService.RequireDeleteConfirmation;
+
     /// <summary>
     /// Gets a value that indicates whether the current playback item has exactly one subtitle track.
     /// </summary>

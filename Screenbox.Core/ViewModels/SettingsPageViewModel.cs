@@ -43,6 +43,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial bool UseIndexer { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
     [ObservableProperty] public partial int Theme { get; set; }
+    [ObservableProperty] public partial bool RequireDeleteConfirmation { get; set; }
     [ObservableProperty] public partial bool EnqueueAllFilesInFolder { get; set; }
     [ObservableProperty] public partial bool RestorePlaybackPosition { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
@@ -146,6 +147,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         ShowRecent = _settingsService.ShowRecent;
         PersistPlaybackPosition = _settingsService.PersistPlaybackPosition;
         Theme = ((int)_settingsService.Theme + 2) % 3;
+        RequireDeleteConfirmation = _settingsService.RequireDeleteConfirmation;
         EnqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
         RestorePlaybackPosition = _settingsService.RestorePlaybackPosition;
         SearchRemovableStorage = _settingsService.SearchRemovableStorage;
@@ -176,6 +178,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         // So we need to map the value to the correct ThemeOption
         _settingsService.Theme = (ThemeOption)((value + 1) % 3);
         Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
+    }
+
+    partial void OnRequireDeleteConfirmationChanged(bool value)
+    {
+        _settingsService.RequireDeleteConfirmation = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(RequireDeleteConfirmation), typeof(SettingsPageViewModel)));
     }
 
     partial void OnSelectedLanguageChanged(int value)

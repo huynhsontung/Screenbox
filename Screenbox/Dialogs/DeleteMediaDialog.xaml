@@ -25,5 +25,21 @@
         </TextBlock>
     </ContentDialog.Title>
 
-    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind strings:Resources.DeleteItemSubtitle}" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Style="{StaticResource BodyTextBlockStyle}"
+            Text="{x:Bind strings:Resources.DeleteItemSubtitle}" />
+
+        <CheckBox
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            Content="{x:Bind strings:Resources.DontShowMessageAgain}"
+            IsChecked="{x:Bind SettingsService.RequireDeleteConfirmation, Converter={StaticResource BoolNegationConverter}, Mode=TwoWay}" />
+    </Grid>
 </ContentDialog>

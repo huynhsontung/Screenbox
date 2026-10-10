@@ -1196,6 +1196,9 @@
   <data name="DeleteItemSubtitle" xml:space="preserve">
     <value>This item will be moved to your recycle bin.</value>
   </data>
+  <data name="DontShowMessageAgain" xml:space="preserve">
+    <value>Do not show this message again</value>
+  </data>
   <data name="ItemDeletedNotificationTitle" xml:space="preserve">
     <value>"{0}" deleted</value>
     <comment>#Format[String name]</comment>
@@ -1203,6 +1206,12 @@
   <data name="FailedToDeleteItemNotificationTitle" xml:space="preserve">
     <value>Couldn't delete "{0}".</value>
     <comment>#Format[String name]</comment>
+  </data>
+  <data name="SettingsAskForPermissionToDeleteFilesHeader" xml:space="preserve">
+    <value>Ask for permission to delete files</value>
+  </data>
+  <data name="SettingsAskForPermissionToDeleteFilesDescription" xml:space="preserve">
+    <value>Show a confirmation dialog when deleting media files</value>
   </data>
 </root>
 

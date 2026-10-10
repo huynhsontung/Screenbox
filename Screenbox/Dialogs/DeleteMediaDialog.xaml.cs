@@ -1,3 +1,5 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.Services;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,6 +10,8 @@ namespace Screenbox.Dialogs;
 
 public sealed partial class DeleteMediaDialog : ContentDialog
 {
+    internal ISettingsService SettingsService { get; }
+
     private string MediaName { get; }
 
     [DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
@@ -17,6 +21,7 @@ public sealed partial class DeleteMediaDialog : ContentDialog
         this.InitializeComponent();
         FlowDirection = GlobalizationHelper.GetFlowDirection();
         RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
+        SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         MediaName = mediaName;
     }
 }

@@ -25,6 +25,16 @@ public interface ISettingsService
     string PersistentSubtitleLanguage { get; set; }
     bool ShowRecent { get; set; }
     ThemeOption Theme { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the delete media command asks
+    /// for confirmation before deleting a file.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if the delete requires confirmation; otherwise, <see langword="false"/>.
+    /// </returns>
+    bool RequireDeleteConfirmation { get; set; }
+
     bool EnqueueAllFilesInFolder { get; set; }
     bool RestorePlaybackPosition { get; set; }
     bool SearchRemovableStorage { get; set; }
