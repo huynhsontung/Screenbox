@@ -37,20 +37,17 @@
          https://github.com/microsoft/CsWinRT/pull/2358
     -->
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+
+    <!-- Suppress IL2104 (single warning for assembly producing trim warnings).
+         SharpGen.Runtime and SharpDX (transitively referenced by LibVLCSharp.UWP) produce
+         internal trim warnings that are benign for Screenbox's runtime execution. -->
+    <NoWarn>$(NoWarn);IL2104</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Use C#/WinRT 2.3.1 directly to enable improved AOT analysis.
          The Windows 26100 SDK uses an older version lacking these enhancements. -->
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Exclude SharpDX transitive dependencies pulled in by LibVLCSharp.UWP.
-         Screenbox uses Vortice for DirectX interop and does not use LibVLCSharp's built-in VideoView. -->
-    <PackageReference Include="SharpDX" Version="4.2.0" ExcludeAssets="all" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" ExcludeAssets="all" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" ExcludeAssets="all" />
   </ItemGroup>
 
   <!-- Global usings -->
