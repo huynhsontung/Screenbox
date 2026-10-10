@@ -229,8 +229,8 @@ public sealed class FilesService : IFilesService
             // Pictures library permission missing or access denied.
         }
 
-        // Fall back to local app storage.
-        return await ApplicationData.Current.LocalFolder.CreateFolderAsync("Captures", CreationCollisionOption.OpenIfExists);
+        // Fall back to captures folder.
+        return KnownFolders.AppCaptures;
     }
 
     private static bool IsExpectedStoragePropertiesHResult(int hresult)
