@@ -71,6 +71,9 @@
                 x:Name="OpenInFileExplorerItemKeyboardAccelerator"
                 IsEnabled="False" />
         </MenuFlyoutItem.KeyboardAccelerators>
+        <interactivity:Interaction.Behaviors>
+            <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+        </interactivity:Interaction.Behaviors>
     </MenuFlyoutItem>
 
     <MenuFlyoutItem
@@ -146,5 +149,8 @@
                 x:Name="DeleteItemKeyboardAccelerator"
                 IsEnabled="False" />
         </MenuFlyoutItem.KeyboardAccelerators>
+        <interactivity:Interaction.Behaviors>
+            <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+        </interactivity:Interaction.Behaviors>
     </MenuFlyoutItem>
 </MenuFlyout>
