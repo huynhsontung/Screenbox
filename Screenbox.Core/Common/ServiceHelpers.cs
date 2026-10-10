@@ -62,6 +62,12 @@ public static class ServiceHelpers
         services.AddSingleton<LibraryContext>();
         services.AddSingleton<PlayQueueContext>();
         services.AddSingleton<WindowContext>();
+        services.AddSingleton<PlayerSettingsContext>();
+        services.AddSingleton<LibrarySettingsContext>();
+        services.AddSingleton<PlaybackSettingsContext>();
+        services.AddSingleton<GeneralSettingsContext>();
+        services.AddSingleton<AdvancedSettingsContext>();
+        services.AddSingleton<SettingsContext>();
 
         // Coordinators
         services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
@@ -69,6 +75,7 @@ public static class ServiceHelpers
         services.AddSingleton<IPlaybackProgressTracker, PlaybackProgressTracker>();
 
         // Services
+        services.AddSingleton<ISettingsStorage, SettingsStorage>();
         services.AddSingleton<IDatabaseService, DatabaseService>();
         services.AddSingleton<IPlayerService, PlayerService>();
         services.AddSingleton<IFilesService, FilesService>();
