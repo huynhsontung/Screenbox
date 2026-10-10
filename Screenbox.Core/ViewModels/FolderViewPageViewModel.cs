@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -21,6 +22,8 @@ namespace Screenbox.Core.ViewModels;
 public partial class FolderViewPageViewModel : ObservableRecipient,
     IRecipient<RefreshFolderMessage>
 {
+    public GeneralSettingsContext GeneralSettings { get; }
+
     public string TitleText => BreadcrumbLocations.LastOrDefault()?.Name ?? string.Empty;
 
     public ObservableCollection<StorageItemViewModel> Items { get; } = [];
@@ -46,14 +49,17 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     private bool _isActive;
     private object? _source;
 
-    public FolderViewPageViewModel(IFilesService filesService, INavigationService navigationService,
-        StorageItemViewModelFactory storageVmFactory)
+    public FolderViewPageViewModel(IFilesService filesService,
+        INavigationService navigationService,
+        StorageItemViewModelFactory storageVmFactory,
+        GeneralSettingsContext generalSettings)
     {
         _filesService = filesService;
         _storageVmFactory = storageVmFactory;
         _navigationService = navigationService;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _loadingTimer = _dispatcherQueue.CreateTimer();
+        GeneralSettings = generalSettings;
 
         Messenger.Register<RefreshFolderMessage>(this);
     }

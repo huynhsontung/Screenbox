@@ -28,6 +28,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
     IRecipient<PropertyChangedMessage<WindowViewMode>>
 {
+    public GeneralSettingsContext GeneralSettings { get; }
+
     /// <summary>
     /// The observable play queue state. Bind to this for <c>Items</c>,
     /// <c>CurrentItem</c>, <c>ShuffleMode</c>, and <c>RepeatMode</c>.
@@ -74,6 +76,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private Size _aspectRatio;
 
     public PlayerControlsViewModel(
+        GeneralSettingsContext generalSettings,
         PlayQueueContext playQueue,
         IFilesService filesService,
         IPlayQueueCoordinator coordinator,
@@ -91,6 +94,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         IsMinimal = true;
         IsDisplayingRemainingTime = playerSettings.ShowRemainingTime;
         PlayerShowChapters = playerSettings.ShowChapters;
+        GeneralSettings = generalSettings;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
         _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;

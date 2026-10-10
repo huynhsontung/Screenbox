@@ -10,6 +10,7 @@ namespace Screenbox.Core.Contexts;
 public sealed partial class GeneralSettingsContext : SettingsContextBase<GeneralSettingsContext>
 {
     private const string ThemeKey = "General/Theme";
+    private const string RequireDeleteConfirmationKey = "Personalization/RequireDeleteConfirmation";
     private const string ShowRecentKey = "General/ShowRecent";
     private const string EnqueueAllInFolderKey = "General/EnqueueAllInFolder";
     private const string MultipleInstancesKey = "Advanced/MultipleInstances";
@@ -18,6 +19,19 @@ public sealed partial class GeneralSettingsContext : SettingsContextBase<General
     {
         get => Get(ThemeKey, ThemeOption.Auto);
         set => Set(ThemeKey, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the delete command asks for confirmation
+    /// before deleting a file.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if the delete requires confirmation; otherwise, <see langword="false"/>.
+    /// </returns>
+    public bool RequireDeleteConfirmation
+    {
+        get => Get(RequireDeleteConfirmationKey, true);
+        set => Set(RequireDeleteConfirmationKey, value);
     }
 
     public bool ShowRecent

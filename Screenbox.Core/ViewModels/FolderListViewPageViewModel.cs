@@ -1,3 +1,4 @@
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 
@@ -10,8 +11,9 @@ public sealed partial class FolderListViewPageViewModel : FolderViewPageViewMode
 
     public FolderListViewPageViewModel(IFilesService filesService,
         INavigationService navigationService,
-        StorageItemViewModelFactory storageVmFactory) :
-        base(filesService, navigationService, storageVmFactory)
+        StorageItemViewModelFactory storageVmFactory,
+        GeneralSettingsContext generalSettings) :
+        base(filesService, navigationService, storageVmFactory, generalSettings)
     {
         _navigationService = navigationService;
     }
