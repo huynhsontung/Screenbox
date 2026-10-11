@@ -72,6 +72,7 @@ public sealed partial class PlaybackSettingsContext : ObservableRecipient
         SongsSortOrder = (SongSortOrder)_storage.GetValue(PersistentSongsSortOrderKey, (int)SongSortOrder.Title);
         AlbumsSortOrder = (AlbumSortOrder)_storage.GetValue(PersistentAlbumsSortOrderKey, (int)AlbumSortOrder.Title);
         _isInitialized = true;
+        IsActive = true;
     }
 
     partial void OnVolumeChanged(int value)

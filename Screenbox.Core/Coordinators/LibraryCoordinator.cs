@@ -21,7 +21,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
 {
     private readonly LibraryContext _context;
     private readonly ILibraryService _libraryService;
-    private readonly ISettingsService _settingsService;
+    private readonly LibrarySettingsContext _librarySettings;
     private readonly ILogger<LibraryCoordinator> _logger;
 
     private readonly DispatcherQueueTimer _musicRefreshTimer;
@@ -35,24 +35,39 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
     private CancellationTokenSource? _musicFetchCts;
     private CancellationTokenSource? _videosFetchCts;
 
-    private bool UseIndexer => _settingsService.UseIndexer;
-    private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
+    private bool UseIndexer => _librarySettings.UseIndexer;
+    private bool SearchRemovableStorage => _librarySettings.SearchRemovableStorage && SystemInformation.IsXbox;
 
     public LibraryCoordinator(
         LibraryContext context,
         ILibraryService libraryService,
-        ISettingsService settingsService,
+        LibrarySettingsContext librarySettings,
         ILogger<LibraryCoordinator> logger)
     {
         _context = context;
         _libraryService = libraryService;
-        _settingsService = settingsService;
+        _librarySettings = librarySettings;
         _logger = logger;
 
         DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _musicRefreshTimer = dispatcherQueue.CreateTimer();
         _videosRefreshTimer = dispatcherQueue.CreateTimer();
         _storageDeviceRefreshTimer = dispatcherQueue.CreateTimer();
+
+        _librarySettings.PropertyChanged += async (s, e) =>
+        {
+            if (e.PropertyName is nameof(LibrarySettingsContext.UseIndexer) or nameof(LibrarySettingsContext.SearchRemovableStorage))
+            {
+                try
+                {
+                    await RefreshWatchersAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to refresh library watchers after setting change.");
+                }
+            }
+        };
 
         if (SystemInformation.IsXbox)
         {

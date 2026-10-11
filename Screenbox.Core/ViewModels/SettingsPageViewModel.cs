@@ -159,22 +159,16 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
         SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
 
-        // Wire context property change listeners for UI notifications and bridge messages
+        // Wire context property change listeners for UI notifications and relaunch checks
         GeneralSettings.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(GeneralSettingsContext.Theme))
             {
                 OnPropertyChanged(nameof(Theme));
-                Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
             }
             else if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
             {
                 if (!GeneralSettings.ShowRecent) ClearRecentContext();
-                Messenger.Send(new SettingsChangedMessage(nameof(GeneralSettings.ShowRecent), typeof(SettingsPageViewModel)));
-            }
-            else if (e.PropertyName == nameof(GeneralSettingsContext.EnqueueAllFilesInFolder))
-            {
-                Messenger.Send(new SettingsChangedMessage(nameof(GeneralSettings.EnqueueAllFilesInFolder), typeof(SettingsPageViewModel)));
             }
         };
 
@@ -183,15 +177,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             if (e.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
             {
                 OnPropertyChanged(nameof(VolumeBoost));
-                Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost), typeof(SettingsPageViewModel)));
-            }
-            else if (e.PropertyName == nameof(PlaybackSettingsContext.PersistPlaybackPosition))
-            {
-                Messenger.Send(new SettingsChangedMessage(nameof(PlaybackSettings.PersistPlaybackPosition), typeof(SettingsPageViewModel)));
-            }
-            else if (e.PropertyName == nameof(PlaybackSettingsContext.RestorePlaybackPosition))
-            {
-                Messenger.Send(new SettingsChangedMessage(nameof(PlaybackSettings.RestorePlaybackPosition), typeof(SettingsPageViewModel)));
             }
         };
 
@@ -200,24 +185,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             if (e.PropertyName == nameof(PlayerSettingsContext.AutoResize))
             {
                 OnPropertyChanged(nameof(PlayerAutoResize));
-                Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
-            }
-            else if (e.PropertyName is not null)
-            {
-                Messenger.Send(new SettingsChangedMessage(e.PropertyName, typeof(SettingsPageViewModel)));
             }
         };
 
         LibrarySettings.PropertyChanged += async (s, e) =>
         {
-            if (e.PropertyName == nameof(LibrarySettingsContext.UseIndexer))
+            if (e.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
             {
-                Messenger.Send(new SettingsChangedMessage(nameof(LibrarySettings.UseIndexer), typeof(SettingsPageViewModel)));
-                _dispatcherQueue.TryEnqueue(RefreshWatchersAsync);
-            }
-            else if (e.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
-            {
-                Messenger.Send(new SettingsChangedMessage(nameof(LibrarySettings.SearchRemovableStorage), typeof(SettingsPageViewModel)));
                 if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
                 {
                     await RefreshLibrariesAsync();
@@ -230,17 +204,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             if (e.PropertyName == nameof(AdvancedSettingsContext.VideoUpscale))
             {
                 OnPropertyChanged(nameof(VideoUpscaling));
-                Messenger.Send(new SettingsChangedMessage(nameof(VideoUpscaling), typeof(SettingsPageViewModel)));
                 CheckForRelaunch();
             }
             else if (e.PropertyName == nameof(AdvancedSettingsContext.AdvancedMode))
             {
-                Messenger.Send(new SettingsChangedMessage(nameof(AdvancedSettings.AdvancedMode), typeof(SettingsPageViewModel)));
                 CheckForRelaunch();
-            }
-            else if (e.PropertyName == nameof(AdvancedSettingsContext.UseMultipleInstances))
-            {
-                Messenger.Send(new SettingsChangedMessage(nameof(AdvancedSettings.UseMultipleInstances), typeof(SettingsPageViewModel)));
             }
             else if (e.PropertyName == nameof(AdvancedSettingsContext.GlobalArguments))
             {
@@ -266,18 +234,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         if (value >= AvailableLanguages.Count) return;
         ApplicationLanguages.PrimaryLanguageOverride = AvailableLanguages[value].LanguageTag;
         CheckForRelaunch();
-    }
-
-    private async void RefreshWatchersAsync()
-    {
-        try
-        {
-            await _libraryCoordinator.RefreshWatchersAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to refresh library watchers after updating the indexer setting.");
-        }
     }
 
     [RelayCommand]

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -22,19 +23,19 @@ namespace Screenbox.Core.Services;
 /// </summary>
 public sealed class LibraryService : ILibraryService
 {
-    private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
+    private bool SearchRemovableStorage => _librarySettings.SearchRemovableStorage && SystemInformation.IsXbox;
 
     private static readonly string[] CustomPropertyKeys = { SystemProperties.Title };
-    private readonly ISettingsService _settingsService;
+    private readonly LibrarySettingsContext _librarySettings;
     private readonly IFilesService _filesService;
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ILogger<LibraryService> _logger;
 
-    public LibraryService(ISettingsService settingsService, IFilesService filesService,
+    public LibraryService(LibrarySettingsContext librarySettings, IFilesService filesService,
         IDatabaseService databaseService, MediaViewModelFactory mediaFactory, ILogger<LibraryService> logger)
     {
-        _settingsService = settingsService;
+        _librarySettings = librarySettings;
         _filesService = filesService;
         _databaseService = databaseService;
         _mediaFactory = mediaFactory;

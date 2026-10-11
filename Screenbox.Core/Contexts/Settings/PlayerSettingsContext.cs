@@ -118,6 +118,7 @@ public sealed partial class PlayerSettingsContext : ObservableRecipient
         LivelyActivePath = _storage.GetValue(LivelyPathKey, string.Empty);
 
         _isInitialized = true;
+        IsActive = true;
     }
 
     partial void OnAutoResizeChanged(PlayerAutoResizeOption value)

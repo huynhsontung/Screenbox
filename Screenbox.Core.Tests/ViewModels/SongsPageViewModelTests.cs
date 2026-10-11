@@ -11,7 +11,7 @@ public class SongsPageViewModelTests
     [Test]
     public async Task Constructor_ShouldInitializeSortByFromSettings()
     {
-        var settings = new TestSettingsService { PersistentSongsSortOrder = SongSortOrder.Artist };
+        var settings = new PlaybackSettingsContext(new MemorySettingsStorage()) { SongsSortOrder = SongSortOrder.Artist };
         var libraryContext = new LibraryContext();
         var vm = new SongsPageViewModel(libraryContext, settings);
 
@@ -21,32 +21,32 @@ public class SongsPageViewModelTests
     [Test]
     public async Task SortBy_WhenChanged_ShouldUpdatePersistentSettings()
     {
-        var settings = new TestSettingsService { PersistentSongsSortOrder = SongSortOrder.Title };
+        var settings = new PlaybackSettingsContext(new MemorySettingsStorage()) { SongsSortOrder = SongSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new SongsPageViewModel(libraryContext, settings);
 
         vm.SortBy = SongSortOrder.Album;
 
-        await Assert.That(settings.PersistentSongsSortOrder).IsEqualTo(SongSortOrder.Album);
+        await Assert.That(settings.SongsSortOrder).IsEqualTo(SongSortOrder.Album);
     }
 
     [Test]
     public async Task SetSortByCommand_WhenExecuted_ShouldUpdateSortByAndSettings()
     {
-        var settings = new TestSettingsService { PersistentSongsSortOrder = SongSortOrder.Title };
+        var settings = new PlaybackSettingsContext(new MemorySettingsStorage()) { SongsSortOrder = SongSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new SongsPageViewModel(libraryContext, settings);
 
         vm.SetSortByCommand.Execute(SongSortOrder.DateAdded);
 
         await Assert.That(vm.SortBy).IsEqualTo(SongSortOrder.DateAdded);
-        await Assert.That(settings.PersistentSongsSortOrder).IsEqualTo(SongSortOrder.DateAdded);
+        await Assert.That(settings.SongsSortOrder).IsEqualTo(SongSortOrder.DateAdded);
     }
 
     [Test]
     public async Task FetchSongs_ShouldUpdateSongsAndGroupedSongs()
     {
-        var settings = new TestSettingsService();
+        var settings = new PlaybackSettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext();
         var vm = new SongsPageViewModel(libraryContext, settings);
 

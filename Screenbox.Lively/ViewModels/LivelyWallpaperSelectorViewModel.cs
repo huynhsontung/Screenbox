@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -42,17 +43,17 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
 
     private readonly ILivelyWallpaperService _wallpaperService;
     private readonly IFilesService _filesService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly DispatcherQueue _dispatcherQueue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LivelyWallpaperSelectorViewModel"/> class.
     /// </summary>
-    public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService)
+    public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, PlayerSettingsContext playerSettings)
     {
         _wallpaperService = wallpaperService;
         _filesService = filesService;
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         Messenger.Register<PropertyChangedMessage<LivelyWallpaperModel?>>(this);
@@ -72,7 +73,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
 
         SelectedVisualizer =
             Visualizers.FirstOrDefault(visualizer => string.Equals(visualizer.Path,
-                _settingsService.LivelyActivePath, StringComparison.OrdinalIgnoreCase)) ??
+                _playerSettings.LivelyActivePath, StringComparison.OrdinalIgnoreCase)) ??
             Visualizers[0];
     }
 
@@ -85,7 +86,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     {
         // Ignore null value. Null is only a temporary value
         if (value == null) return;
-        _settingsService.LivelyActivePath = value.Path;
+        _playerSettings.LivelyActivePath = value.Path;
         Messenger.Send(new VisualizerChangedMessage(value.Path));
     }
 

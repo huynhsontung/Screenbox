@@ -28,6 +28,7 @@ public sealed partial class LibrarySettingsContext : ObservableRecipient
         UseIndexer = _storage.GetValue(UseIndexerKey, true);
         SearchRemovableStorage = _storage.GetValue(SearchRemovableStorageKey, true);
         _isInitialized = true;
+        IsActive = true;
     }
 
     partial void OnUseIndexerChanged(bool value)

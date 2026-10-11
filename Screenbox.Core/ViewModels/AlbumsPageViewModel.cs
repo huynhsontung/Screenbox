@@ -30,15 +30,15 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     public partial AlbumViewModel? ContextAlbum { get; set; }
 
     private readonly LibraryContext _libraryContext;
-    private readonly ISettingsService _settingsService;
+    private readonly PlaybackSettingsContext _playbackSettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _refreshTimer;
 
-    public AlbumsPageViewModel(LibraryContext libraryContext, ISettingsService settingsService)
+    public AlbumsPageViewModel(LibraryContext libraryContext, PlaybackSettingsContext playbackSettings)
     {
         _libraryContext = libraryContext;
-        _settingsService = settingsService;
-        SortBy = _settingsService.PersistentAlbumsSortOrder;
+        _playbackSettings = playbackSettings;
+        SortBy = _playbackSettings.AlbumsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
 
@@ -176,7 +176,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     partial void OnSortByChanged(AlbumSortOrder value)
     {
-        _settingsService.PersistentAlbumsSortOrder = value;
+        _playbackSettings.AlbumsSortOrder = value;
         var groups = GetCurrentGrouping(_libraryContext, value);
         GroupedAlbums.Clear();
         foreach (IGrouping<string, AlbumViewModel> group in groups)

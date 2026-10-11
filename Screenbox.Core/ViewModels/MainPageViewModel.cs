@@ -45,7 +45,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     [NotifyPropertyChangedRecipients]
     public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
 
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
     private readonly LibraryContext _libraryContext;
@@ -63,12 +63,12 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     /// </value>
     public ObservableCollection<SearchSuggestion> SearchSuggestions { get; }
 
-    public MainPageViewModel(ISettingsService settingsService, ISearchService searchService, INavigationService navigationService,
+    public MainPageViewModel(PlayerSettingsContext playerSettings, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
         PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory,
         ILogger<MainPageViewModel> logger)
     {
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryContext = libraryContext;
@@ -118,8 +118,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         Playlist playlist = Messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty) return;
 
-        int rewindStep = _settingsService.PlayerRewindStep;
-        int fastForwardStep = _settingsService.PlayerFastForwardStep;
+        int rewindStep = _playerSettings.RewindStep;
+        int fastForwardStep = _playerSettings.FastForwardStep;
 
         switch (key)
         {

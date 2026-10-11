@@ -26,15 +26,15 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     [ObservableProperty] public partial SongSortOrder SortBy { get; set; } = SongSortOrder.Title;
 
     private readonly LibraryContext _libraryContext;
-    private readonly ISettingsService _settingsService;
+    private readonly PlaybackSettingsContext _playbackSettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _refreshTimer;
 
-    public SongsPageViewModel(LibraryContext libraryContext, ISettingsService settingsService)
+    public SongsPageViewModel(LibraryContext libraryContext, PlaybackSettingsContext playbackSettings)
     {
         _libraryContext = libraryContext;
-        _settingsService = settingsService;
-        SortBy = _settingsService.PersistentSongsSortOrder;
+        _playbackSettings = playbackSettings;
+        SortBy = _playbackSettings.SongsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
 
@@ -179,7 +179,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     partial void OnSortByChanged(SongSortOrder value)
     {
-        _settingsService.PersistentSongsSortOrder = value;
+        _playbackSettings.SongsSortOrder = value;
         var groups = GetCurrentGrouping(_libraryContext, value);
         GroupedSongs.Clear();
         foreach (IGrouping<string, MediaViewModel> group in groups)

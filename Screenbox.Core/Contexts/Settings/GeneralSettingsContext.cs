@@ -41,6 +41,7 @@ public sealed partial class GeneralSettingsContext : ObservableRecipient
         FrameCaptureFolderToken = _storage.GetValue(GeneralFrameCaptureFolderTokenKey, string.Empty);
         ShowRecent = _storage.GetValue(GeneralShowRecentKey, true);
         _isInitialized = true;
+        IsActive = true;
     }
 
     partial void OnThemeChanged(ThemeOption value)

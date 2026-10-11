@@ -43,6 +43,7 @@ public sealed partial class AdvancedSettingsContext : ObservableRecipient
         UseMultipleInstances = _storage.GetValue(AdvancedMultipleInstancesKey, false);
         GlobalArguments = _storage.GetValue(GlobalArgumentsKey, string.Empty);
         _isInitialized = true;
+        IsActive = true;
     }
 
     partial void OnAdvancedModeChanged(bool value)
