@@ -11,9 +11,24 @@ public sealed class SettingsService : ISettingsService
 {
     private readonly SettingsContext _settings;
 
+    public SettingsService() : this(CreateDefaultSettingsContext())
+    {
+    }
+
     public SettingsService(SettingsContext settings)
     {
         _settings = settings;
+    }
+
+    private static SettingsContext CreateDefaultSettingsContext()
+    {
+        var storage = new SettingsStorage();
+        return new SettingsContext(
+            new PlayerSettingsContext(storage),
+            new LibrarySettingsContext(storage),
+            new PlaybackSettingsContext(storage),
+            new GeneralSettingsContext(storage),
+            new AdvancedSettingsContext(storage));
     }
 
     public bool UseIndexer
