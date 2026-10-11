@@ -1,5 +1,6 @@
 using Screenbox.Core.Enums;
 using Windows.Media;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Services;
 
@@ -24,7 +25,16 @@ public interface ISettingsService
     int PersistentVolume { get; set; }
     string PersistentSubtitleLanguage { get; set; }
     bool ShowRecent { get; set; }
-    ThemeOption Theme { get; set; }
+
+    /// <summary>
+    /// Gets or sets the application theme.
+    /// </summary>
+    /// <value>
+    /// A value of the <see cref="ElementTheme"/> enumeration that specifies the theme
+    /// to use for the application UI.
+    /// </value>
+    ElementTheme Theme { get; set; }
+
     bool EnqueueAllFilesInFolder { get; set; }
     bool RestorePlaybackPosition { get; set; }
     bool SearchRemovableStorage { get; set; }

@@ -5,6 +5,7 @@ using Screenbox.Core.Helpers;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Services;
 
@@ -12,7 +13,7 @@ public sealed class SettingsService : ISettingsService
 {
     private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
 
-    private const string GeneralThemeKey = "General/Theme";
+    private const string PersonalizationThemeKey = "Personalization/Theme";
     private const string PlayerAutoResizeKey = "Player/AutoResize";
     private const string PlayerShowControlsKey = "Player/ShowControls";
     private const string PlayerControlsHideDelayKey = "Player/ControlsHideDelay";
@@ -54,10 +55,10 @@ public sealed class SettingsService : ISettingsService
         set => SetValue(LibrariesUseIndexerKey, value);
     }
 
-    public ThemeOption Theme
+    public ElementTheme Theme
     {
-        get => (ThemeOption)GetValue<int>(GeneralThemeKey);
-        set => SetValue(GeneralThemeKey, (int)value);
+        get => (ElementTheme)GetValue<int>(PersonalizationThemeKey);
+        set => SetValue(PersonalizationThemeKey, (int)value);
     }
 
     public PlayerAutoResizeOption PlayerAutoResize
@@ -254,6 +255,7 @@ public sealed class SettingsService : ISettingsService
 
     public SettingsService()
     {
+        SetDefault(PersonalizationThemeKey, (int)ElementTheme.Default);
         SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
         SetDefault(PlayerShowControlsKey, true);
         SetDefault(PlayerControlsHideDelayKey, 3);

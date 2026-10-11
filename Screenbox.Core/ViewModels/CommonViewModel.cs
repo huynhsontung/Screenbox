@@ -63,7 +63,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&
             Window.Current.Content is Frame rootFrame)
         {
-            rootFrame.RequestedTheme = _settingsService.Theme.ToElementTheme();
+            rootFrame.RequestedTheme = _settingsService.Theme;
         }
     }
 

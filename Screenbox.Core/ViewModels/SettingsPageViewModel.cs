@@ -20,6 +20,7 @@ using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -42,7 +43,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial int VolumeBoost { get; set; }
     [ObservableProperty] public partial bool UseIndexer { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
-    [ObservableProperty] public partial int Theme { get; set; }
+    [ObservableProperty] public partial ElementTheme Theme { get; set; }
     [ObservableProperty] public partial bool EnqueueAllFilesInFolder { get; set; }
     [ObservableProperty] public partial bool RestorePlaybackPosition { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
@@ -145,7 +146,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         UseIndexer = _settingsService.UseIndexer;
         ShowRecent = _settingsService.ShowRecent;
         PersistPlaybackPosition = _settingsService.PersistPlaybackPosition;
-        Theme = ((int)_settingsService.Theme + 2) % 3;
+        Theme = _settingsService.Theme;
         EnqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
         RestorePlaybackPosition = _settingsService.RestorePlaybackPosition;
         SearchRemovableStorage = _settingsService.SearchRemovableStorage;
@@ -170,11 +171,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         CheckForRelaunch();
     }
 
-    partial void OnThemeChanged(int value)
+    partial void OnThemeChanged(ElementTheme value)
     {
-        // The recommended theme option order is Light, Dark, System
-        // So we need to map the value to the correct ThemeOption
-        _settingsService.Theme = (ThemeOption)((value + 1) % 3);
+        _settingsService.Theme = value;
         Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
     }
 

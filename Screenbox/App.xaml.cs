@@ -338,7 +338,7 @@ sealed partial class App : Application
             }
 
             var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
-            rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
+            rootFrame.RequestedTheme = settings.Theme;
         }
 
         return rootFrame;
