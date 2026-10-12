@@ -14,6 +14,7 @@ public sealed class SettingsService : ISettingsService
     private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
 
     private const string PersonalizationThemeKey = "Personalization/Theme";
+    private const string PersonalizationLanguageKey = "Personalization/Language";
     private const string PlayerAutoResizeKey = "Player/AutoResize";
     private const string PlayerShowControlsKey = "Player/ShowControls";
     private const string PlayerControlsHideDelayKey = "Player/ControlsHideDelay";
@@ -59,6 +60,12 @@ public sealed class SettingsService : ISettingsService
     {
         get => (ElementTheme)GetValue<int>(PersonalizationThemeKey);
         set => SetValue(PersonalizationThemeKey, (int)value);
+    }
+
+    public string AppLanguage
+    {
+        get => GetValue<string>(PersonalizationLanguageKey) ?? string.Empty;
+        set => SetValue(PersonalizationLanguageKey, value);
     }
 
     public PlayerAutoResizeOption PlayerAutoResize
@@ -256,6 +263,7 @@ public sealed class SettingsService : ISettingsService
     public SettingsService()
     {
         SetDefault(PersonalizationThemeKey, (int)ElementTheme.Default);
+        SetDefault(PersonalizationLanguageKey, string.Empty);
         SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
         SetDefault(PlayerShowControlsKey, true);
         SetDefault(PlayerControlsHideDelayKey, 3);

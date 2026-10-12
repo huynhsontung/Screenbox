@@ -1,7 +1,9 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.Globalization;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -20,6 +22,8 @@ public sealed partial class SettingsPage : Page
 
     private string[] VlcCommandLineHelpTextParts { get; }
 
+    private readonly ObservableCollection<string> AvailableLanguages = new ObservableCollection<string>();
+
     public SettingsPage()
     {
         this.InitializeComponent();
@@ -31,9 +35,7 @@ public sealed partial class SettingsPage : Page
             ? helpText.Split("{0}").Select(s => s.Trim()).Take(2).ToArray()
             : new[] { helpText, string.Empty };
 
-        // Set the "System default" language option string
-        var systemLanguageOption = ViewModel.AvailableLanguages[0];
-        systemLanguageOption.NativeName = Strings.Resources.LanguageSystemDefault;
+        PopulateLanguageComboBox();
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -53,5 +55,23 @@ public sealed partial class SettingsPage : Page
     private async void ManageSystemIndexingCard_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
     {
         await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:search"));
+    }
+
+    private void LanguageComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ApplicationLanguages.PrimaryLanguageOverride = ViewModel.Language switch
+        {
+            "LanguageSystemDefault" => string.Empty,
+            _ => ViewModel.Language,
+        };
+    }
+
+    private void PopulateLanguageComboBox()
+    {
+        AvailableLanguages.Add("LanguageSystemDefault");
+        foreach (var language in ApplicationLanguages.ManifestLanguages)
+        {
+            AvailableLanguages.Add(language);
+        }
     }
 }

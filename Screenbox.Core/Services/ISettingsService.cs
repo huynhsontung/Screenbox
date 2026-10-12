@@ -35,6 +35,14 @@ public interface ISettingsService
     /// </value>
     ElementTheme Theme { get; set; }
 
+    /// <summary>
+    /// Gets or sets the application language.
+    /// </summary>
+    /// <value>
+    /// The language to use for the application UI.
+    /// </value>
+    string AppLanguage { get; set; }
+
     bool EnqueueAllFilesInFolder { get; set; }
     bool RestorePlaybackPosition { get; set; }
     bool SearchRemovableStorage { get; set; }

@@ -299,20 +299,21 @@
                         </interactivity:Interaction.Behaviors>
                     </ComboBox>
                 </ctc:SettingsCard>
+                <!--  App Language  -->
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
                     Header="{x:Bind strings:Resources.SettingsLanguageSelectionHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
                     <ComboBox
-                        x:Name="LanguageComboBox"
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
-                        ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
-                        SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
+                        ItemsSource="{x:Bind AvailableLanguages}"
+                        SelectedItem="{x:Bind ViewModel.Language, Mode=TwoWay}"
+                        SelectionChanged="LanguageComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:LanguageInfo">
-                                <TextBlock Text="{x:Bind NativeName}" TextAlignment="DetectFromContent" />
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind helpers:ItemLabelHelper.GetLanguageLabel((x:String)), Mode=OneWay}" TextAlignment="DetectFromContent" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>

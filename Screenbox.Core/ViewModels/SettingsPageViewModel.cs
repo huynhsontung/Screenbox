@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,10 +12,8 @@ using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
-using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -44,6 +41,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial bool UseIndexer { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
     [ObservableProperty] public partial ElementTheme Theme { get; set; }
+    [ObservableProperty] public partial string Language { get; set; }
     [ObservableProperty] public partial bool EnqueueAllFilesInFolder { get; set; }
     [ObservableProperty] public partial bool RestorePlaybackPosition { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
@@ -52,7 +50,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial bool UseMultipleInstances { get; set; }
     [ObservableProperty] public partial string GlobalArguments { get; set; }
     [ObservableProperty] public partial bool IsRelaunchRequired { get; set; }
-    [ObservableProperty] public partial int SelectedLanguage { get; set; }
     [ObservableProperty] public partial bool PersistPlaybackPosition { get; set; }
     [ObservableProperty] public partial StorageFolder? FrameCaptureFolder { get; set; }
 
@@ -61,8 +58,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public ObservableCollection<StorageFolder> VideoLocations { get; }
 
     public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
-
-    public List<LanguageInfo> AvailableLanguages { get; }
 
     public IReadOnlyList<int> PlayerSeekStepOptions { get; } = new[] { 5, 10, 15, 20, 30 };
 
@@ -84,12 +79,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private StorageLibrary? _videosLibrary;
     private StorageLibrary? _musicLibrary;
 
-    private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, int Language)
+    private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, string Language)
     {
         public string GlobalArguments { get; } = GlobalArguments;
         public bool AdvancedMode { get; } = AdvancedMode;
         public int VideoUpscaling { get; } = VideoUpscaling;
-        public int Language { get; } = Language;
+        public string Language { get; } = Language;
     }
 
     public SettingsPageViewModel(
@@ -113,12 +108,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         MusicLocations = new ObservableCollection<StorageFolder>();
         VideoLocations = new ObservableCollection<StorageFolder>();
         RemovableStorageFolders = new ObservableCollection<StorageFolder>();
-
-        IEnumerable<Language> manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l));
-        AvailableLanguages = manifestLanguages.Select(l => new LanguageInfo(l.NativeName, l.LanguageTag))
-            .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
-            .Prepend(new LanguageInfo(string.Empty, string.Empty))
-            .ToList();
 
         if (SystemInformation.IsXbox)
         {
@@ -147,6 +136,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         ShowRecent = _settingsService.ShowRecent;
         PersistPlaybackPosition = _settingsService.PersistPlaybackPosition;
         Theme = _settingsService.Theme;
+        Language = _settingsService.AppLanguage;
         EnqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
         RestorePlaybackPosition = _settingsService.RestorePlaybackPosition;
         SearchRemovableStorage = _settingsService.SearchRemovableStorage;
@@ -163,11 +153,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             _ => 0
         };
 
-        string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
-        SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
-
         // Setting initial values for relaunch check
-        _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, SelectedLanguage);
+        _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, Language);
         CheckForRelaunch();
     }
 
@@ -177,18 +164,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
     }
 
-    partial void OnSelectedLanguageChanged(int value)
+    partial void OnLanguageChanged(string value)
     {
-        if (value <= 0)
-        {
-            ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
-            CheckForRelaunch();
-            return;
-        }
-
-        // If the value is out of bounds, do nothing
-        if (value >= AvailableLanguages.Count) return;
-        ApplicationLanguages.PrimaryLanguageOverride = AvailableLanguages[value].LanguageTag;
+        _settingsService.AppLanguage = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(Language), typeof(SettingsPageViewModel)));
         CheckForRelaunch();
     }
 
@@ -627,7 +606,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
 
         // Check if app language has been changed
-        bool languageChanged = _initialValues.Language != SelectedLanguage;
+        bool languageChanged = _initialValues.Language != _settingsService.AppLanguage;
 
         // Check if global arguments have been changed
         bool argsChanged = _initialValues.GlobalArguments != _settingsService.GlobalArguments;

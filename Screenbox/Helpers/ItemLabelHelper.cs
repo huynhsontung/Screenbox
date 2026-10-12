@@ -1,6 +1,7 @@
 using System;
 using Screenbox.Core;
 using Screenbox.Core.Enums;
+using Windows.Globalization;
 
 namespace Screenbox.Helpers;
 
@@ -108,6 +109,13 @@ public static class ItemLabelHelper
         };
 
         return prefix is null ? text : string.Concat(prefix, SpaceSeparator, text);
+    }
+
+    public static string GetLanguageLabel(string languageCode)
+    {
+        return string.Equals(languageCode, "LanguageSystemDefault", StringComparison.OrdinalIgnoreCase)
+            ? Strings.Resources.LanguageSystemDefault
+            : new Language(languageCode).NativeName;
     }
 
     /// <summary>
