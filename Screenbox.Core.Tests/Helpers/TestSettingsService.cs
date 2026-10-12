@@ -1,6 +1,7 @@
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Windows.Media;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Tests.Helpers;
 
@@ -15,7 +16,8 @@ public class TestSettingsService : ISettingsService
     public int PersistentVolume { get; set; } = 100;
     public string PersistentSubtitleLanguage { get; set; } = string.Empty;
     public bool ShowRecent { get; set; } = true;
-    public ThemeOption Theme { get; set; } = ThemeOption.Auto;
+    public ElementTheme Theme { get; set; } = ElementTheme.Default;
+    public string AppLanguage { get; set; } = string.Empty;
     public bool EnqueueAllFilesInFolder { get; set; }
     public bool RestorePlaybackPosition { get; set; }
     public bool SearchRemovableStorage { get; set; } = true;
