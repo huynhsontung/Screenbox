@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CommonViewModel : ObservableRecipient,
-    IRecipient<SettingsChangedMessage>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
 {
@@ -52,19 +51,8 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 
-        Messenger.Register<SettingsChangedMessage>(this);
         Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
-    }
-
-    [DynamicWindowsRuntimeCast(typeof(Frame))]
-    public void Receive(SettingsChangedMessage message)
-    {
-        if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&
-            Window.Current.Content is Frame rootFrame)
-        {
-            rootFrame.RequestedTheme = _settingsService.Theme;
-        }
     }
 
     public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
