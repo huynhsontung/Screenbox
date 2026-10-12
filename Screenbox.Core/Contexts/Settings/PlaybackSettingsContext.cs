@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Windows.Media;
@@ -8,7 +7,7 @@ namespace Screenbox.Core.Contexts;
 /// <summary>
 /// Observable state holder for playback preferences, audio levels, and library sorting.
 /// </summary>
-public sealed partial class PlaybackSettingsContext : ObservableRecipient
+public sealed partial class PlaybackSettingsContext : SettingsContextBase
 {
     private const string PersistentVolumeKey = "Values/Volume";
     private const string MaxVolumeKey = "Values/MaxVolume";
@@ -20,103 +19,61 @@ public sealed partial class PlaybackSettingsContext : ObservableRecipient
     private const string PersistentSongsSortOrderKey = "Values/Songs/SortOrder";
     private const string PersistentAlbumsSortOrderKey = "Values/Albums/SortOrder";
 
-    private readonly ISettingsStorage _storage;
-    private readonly bool _isInitialized;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial int Volume { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial int MaxVolume { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial MediaPlaybackAutoRepeatMode RepeatMode { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial string SubtitleLanguage { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool ShowRemainingTime { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool PersistPlaybackPosition { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool RestorePlaybackPosition { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial SongSortOrder SongsSortOrder { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial AlbumSortOrder AlbumsSortOrder { get; set; }
-
-    public PlaybackSettingsContext(ISettingsStorage storage)
+    public int Volume
     {
-        _storage = storage;
-        Volume = _storage.GetValue(PersistentVolumeKey, 100);
-        MaxVolume = _storage.GetValue(MaxVolumeKey, 100);
-        RepeatMode = (MediaPlaybackAutoRepeatMode)_storage.GetValue(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
-        SubtitleLanguage = _storage.GetValue(PersistentSubtitleLanguageKey, string.Empty);
-        ShowRemainingTime = _storage.GetValue(PersistentShowRemainingTimeKey, false);
-        PersistPlaybackPosition = _storage.GetValue(PersistPlaybackPositionKey, true);
-        RestorePlaybackPosition = _storage.GetValue(RestorePlaybackPositionKey, false);
-        SongsSortOrder = (SongSortOrder)_storage.GetValue(PersistentSongsSortOrderKey, (int)SongSortOrder.Title);
-        AlbumsSortOrder = (AlbumSortOrder)_storage.GetValue(PersistentAlbumsSortOrderKey, (int)AlbumSortOrder.Title);
-        _isInitialized = true;
-        IsActive = true;
+        get => Get(PersistentVolumeKey, 100);
+        set => Set(PersistentVolumeKey, value);
     }
 
-    partial void OnVolumeChanged(int value)
+    public int MaxVolume
     {
-        if (_isInitialized) _storage.SetValue(PersistentVolumeKey, value);
+        get => Get(MaxVolumeKey, 100);
+        set => Set(MaxVolumeKey, value);
     }
 
-    partial void OnMaxVolumeChanged(int value)
+    public MediaPlaybackAutoRepeatMode RepeatMode
     {
-        if (_isInitialized) _storage.SetValue(MaxVolumeKey, value);
+        get => Get(PersistentRepeatModeKey, MediaPlaybackAutoRepeatMode.None);
+        set => Set(PersistentRepeatModeKey, value);
     }
 
-    partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
+    public string SubtitleLanguage
     {
-        if (_isInitialized) _storage.SetValue(PersistentRepeatModeKey, (int)value);
+        get => Get(PersistentSubtitleLanguageKey, string.Empty);
+        set => Set(PersistentSubtitleLanguageKey, value);
     }
 
-    partial void OnSubtitleLanguageChanged(string value)
+    public bool ShowRemainingTime
     {
-        if (_isInitialized) _storage.SetValue(PersistentSubtitleLanguageKey, value);
+        get => Get(PersistentShowRemainingTimeKey, false);
+        set => Set(PersistentShowRemainingTimeKey, value);
     }
 
-    partial void OnShowRemainingTimeChanged(bool value)
+    public bool PersistPlaybackPosition
     {
-        if (_isInitialized) _storage.SetValue(PersistentShowRemainingTimeKey, value);
+        get => Get(PersistPlaybackPositionKey, true);
+        set => Set(PersistPlaybackPositionKey, value);
     }
 
-    partial void OnPersistPlaybackPositionChanged(bool value)
+    public bool RestorePlaybackPosition
     {
-        if (_isInitialized) _storage.SetValue(PersistPlaybackPositionKey, value);
+        get => Get(RestorePlaybackPositionKey, false);
+        set => Set(RestorePlaybackPositionKey, value);
     }
 
-    partial void OnRestorePlaybackPositionChanged(bool value)
+    public SongSortOrder SongsSortOrder
     {
-        if (_isInitialized) _storage.SetValue(RestorePlaybackPositionKey, value);
+        get => Get(PersistentSongsSortOrderKey, SongSortOrder.Title);
+        set => Set(PersistentSongsSortOrderKey, value);
     }
 
-    partial void OnSongsSortOrderChanged(SongSortOrder value)
+    public AlbumSortOrder AlbumsSortOrder
     {
-        if (_isInitialized) _storage.SetValue(PersistentSongsSortOrderKey, (int)value);
+        get => Get(PersistentAlbumsSortOrderKey, AlbumSortOrder.Title);
+        set => Set(PersistentAlbumsSortOrderKey, value);
     }
 
-    partial void OnAlbumsSortOrderChanged(AlbumSortOrder value)
+    public PlaybackSettingsContext(ISettingsStorage storage) : base(storage)
     {
-        if (_isInitialized) _storage.SetValue(PersistentAlbumsSortOrderKey, (int)value);
     }
 }

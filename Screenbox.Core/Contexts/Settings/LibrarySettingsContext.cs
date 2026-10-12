@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.Contexts;
@@ -6,38 +5,24 @@ namespace Screenbox.Core.Contexts;
 /// <summary>
 /// Observable state holder for media library settings.
 /// </summary>
-public sealed partial class LibrarySettingsContext : ObservableRecipient
+public sealed partial class LibrarySettingsContext : SettingsContextBase
 {
     private const string UseIndexerKey = "Libraries/UseIndexer";
     private const string SearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
 
-    private readonly ISettingsStorage _storage;
-    private readonly bool _isInitialized;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool UseIndexer { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool SearchRemovableStorage { get; set; }
-
-    public LibrarySettingsContext(ISettingsStorage storage)
+    public bool UseIndexer
     {
-        _storage = storage;
-        UseIndexer = _storage.GetValue(UseIndexerKey, true);
-        SearchRemovableStorage = _storage.GetValue(SearchRemovableStorageKey, true);
-        _isInitialized = true;
-        IsActive = true;
+        get => Get(UseIndexerKey, true);
+        set => Set(UseIndexerKey, value);
     }
 
-    partial void OnUseIndexerChanged(bool value)
+    public bool SearchRemovableStorage
     {
-        if (_isInitialized) _storage.SetValue(UseIndexerKey, value);
+        get => Get(SearchRemovableStorageKey, true);
+        set => Set(SearchRemovableStorageKey, value);
     }
 
-    partial void OnSearchRemovableStorageChanged(bool value)
+    public LibrarySettingsContext(ISettingsStorage storage) : base(storage)
     {
-        if (_isInitialized) _storage.SetValue(SearchRemovableStorageKey, value);
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 
@@ -9,70 +8,46 @@ namespace Screenbox.Core.Contexts;
 /// <summary>
 /// Observable state holder for advanced player settings and arguments.
 /// </summary>
-public sealed partial class AdvancedSettingsContext : ObservableRecipient
+public sealed partial class AdvancedSettingsContext : SettingsContextBase
 {
     private const string AdvancedModeKey = "Advanced/IsEnabled";
     private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
     private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
     private const string GlobalArgumentsKey = "Values/GlobalArguments";
 
-    private readonly ISettingsStorage _storage;
-    private readonly bool _isInitialized;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool AdvancedMode { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial VideoUpscaleOption VideoUpscale { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool UseMultipleInstances { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial string GlobalArguments { get; set; }
-
-    public AdvancedSettingsContext(ISettingsStorage storage)
+    public bool AdvancedMode
     {
-        _storage = storage;
-        AdvancedMode = _storage.GetValue(AdvancedModeKey, false);
-        VideoUpscale = (VideoUpscaleOption)_storage.GetValue(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);
-        UseMultipleInstances = _storage.GetValue(AdvancedMultipleInstancesKey, false);
-        GlobalArguments = _storage.GetValue(GlobalArgumentsKey, string.Empty);
-        _isInitialized = true;
-        IsActive = true;
+        get => Get(AdvancedModeKey, false);
+        set => Set(AdvancedModeKey, value);
     }
 
-    partial void OnAdvancedModeChanged(bool value)
+    public VideoUpscaleOption VideoUpscale
     {
-        if (_isInitialized) _storage.SetValue(AdvancedModeKey, value);
+        get => Get(AdvancedVideoUpscaleKey, VideoUpscaleOption.Linear);
+        set => Set(AdvancedVideoUpscaleKey, value);
     }
 
-    partial void OnVideoUpscaleChanged(VideoUpscaleOption value)
+    public bool UseMultipleInstances
     {
-        if (_isInitialized) _storage.SetValue(AdvancedVideoUpscaleKey, (int)value);
+        get => Get(AdvancedMultipleInstancesKey, false);
+        set => Set(AdvancedMultipleInstancesKey, value);
     }
 
-    partial void OnUseMultipleInstancesChanged(bool value)
+    public string GlobalArguments
     {
-        if (_isInitialized) _storage.SetValue(AdvancedMultipleInstancesKey, value);
-    }
-
-    partial void OnGlobalArgumentsChanged(string value)
-    {
-        if (!_isInitialized) return;
-
-        string sanitized = SanitizeArguments(value);
-        if (sanitized != value)
+        get => Get(GlobalArgumentsKey, string.Empty);
+        set
         {
-            GlobalArguments = sanitized;
-            return;
+            string sanitized = SanitizeArguments(value);
+            if (!Set(GlobalArgumentsKey, sanitized) && sanitized != value)
+            {
+                OnPropertyChanged();
+            }
         }
+    }
 
-        _storage.SetValue(GlobalArgumentsKey, sanitized);
+    public AdvancedSettingsContext(ISettingsStorage storage) : base(storage)
+    {
     }
 
     private static string SanitizeArguments(string raw)

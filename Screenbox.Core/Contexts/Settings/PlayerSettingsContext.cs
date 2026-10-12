@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -8,7 +7,7 @@ namespace Screenbox.Core.Contexts;
 /// <summary>
 /// Observable state holder for media player settings and gesture configuration.
 /// </summary>
-public sealed partial class PlayerSettingsContext : ObservableRecipient
+public sealed partial class PlayerSettingsContext : SettingsContextBase
 {
     private const string AutoResizeKey = "Player/AutoResize";
     private const string ShowControlsKey = "Player/ShowControls";
@@ -26,173 +25,99 @@ public sealed partial class PlayerSettingsContext : ObservableRecipient
     private const string GesturePressAndHoldKey = "Player/Gesture/PressAndHold";
     private const string LivelyPathKey = "Player/Lively/Path";
 
-    private readonly ISettingsStorage _storage;
-    private readonly bool _isInitialized;
+    private static bool IsXbox => SystemInformation.IsXbox;
 
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial PlayerAutoResizeOption AutoResize { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool ShowControls { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial int ControlsHideDelay { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool ShowChapters { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial int RewindStep { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial int FastForwardStep { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial PlaybackActionKind GestureTap { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial PlaybackActionKind GestureSwipeUp { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial PlaybackActionKind GestureSwipeDown { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial PlaybackActionKind GestureSwipeLeft { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial PlaybackActionKind GestureSwipeRight { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool GestureSlideVertical { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool GestureSlideHorizontal { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool GesturePressAndHold { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial string LivelyActivePath { get; set; }
-
-    public PlayerSettingsContext(ISettingsStorage storage)
+    public PlayerAutoResizeOption AutoResize
     {
-        _storage = storage;
-
-        bool isXbox = SystemInformation.IsXbox;
-        AutoResize = (PlayerAutoResizeOption)_storage.GetValue(AutoResizeKey, (int)PlayerAutoResizeOption.Never);
-        ShowControls = _storage.GetValue(ShowControlsKey, true);
-        ControlsHideDelay = _storage.GetValue(ControlsHideDelayKey, 3);
-        ShowChapters = _storage.GetValue(ShowChaptersKey, true);
-        RewindStep = _storage.GetValue(RewindStepKey, 5);
-        FastForwardStep = _storage.GetValue(FastForwardStepKey, 5);
-
-        int defaultTap = isXbox ? (int)PlaybackActionKind.None : (int)PlaybackActionKind.PlayPause;
-        int defaultSwipeUp = isXbox ? (int)PlaybackActionKind.None : (int)PlaybackActionKind.IncreaseVolume;
-        int defaultSwipeDown = isXbox ? (int)PlaybackActionKind.None : (int)PlaybackActionKind.DecreaseVolume;
-        int defaultSwipeLeft = isXbox ? (int)PlaybackActionKind.None : (int)PlaybackActionKind.Rewind;
-        int defaultSwipeRight = isXbox ? (int)PlaybackActionKind.None : (int)PlaybackActionKind.FastForward;
-
-        GestureTap = (PlaybackActionKind)_storage.GetValue(GestureTapKey, defaultTap);
-        GestureSwipeUp = (PlaybackActionKind)_storage.GetValue(GestureSwipeUpKey, defaultSwipeUp);
-        GestureSwipeDown = (PlaybackActionKind)_storage.GetValue(GestureSwipeDownKey, defaultSwipeDown);
-        GestureSwipeLeft = (PlaybackActionKind)_storage.GetValue(GestureSwipeLeftKey, defaultSwipeLeft);
-        GestureSwipeRight = (PlaybackActionKind)_storage.GetValue(GestureSwipeRightKey, defaultSwipeRight);
-        GestureSlideVertical = _storage.GetValue(GestureSlideVerticalKey, !isXbox);
-        GestureSlideHorizontal = _storage.GetValue(GestureSlideHorizontalKey, !isXbox);
-        GesturePressAndHold = _storage.GetValue(GesturePressAndHoldKey, !isXbox);
-        LivelyActivePath = _storage.GetValue(LivelyPathKey, string.Empty);
-
-        _isInitialized = true;
-        IsActive = true;
+        get => Get(AutoResizeKey, PlayerAutoResizeOption.Never);
+        set => Set(AutoResizeKey, value);
     }
 
-    partial void OnAutoResizeChanged(PlayerAutoResizeOption value)
+    public bool ShowControls
     {
-        if (_isInitialized) _storage.SetValue(AutoResizeKey, (int)value);
+        get => Get(ShowControlsKey, true);
+        set => Set(ShowControlsKey, value);
     }
 
-    partial void OnShowControlsChanged(bool value)
+    public int ControlsHideDelay
     {
-        if (_isInitialized) _storage.SetValue(ShowControlsKey, value);
+        get => Get(ControlsHideDelayKey, 3);
+        set => Set(ControlsHideDelayKey, value);
     }
 
-    partial void OnControlsHideDelayChanged(int value)
+    public bool ShowChapters
     {
-        if (_isInitialized) _storage.SetValue(ControlsHideDelayKey, value);
+        get => Get(ShowChaptersKey, true);
+        set => Set(ShowChaptersKey, value);
     }
 
-    partial void OnShowChaptersChanged(bool value)
+    public int RewindStep
     {
-        if (_isInitialized) _storage.SetValue(ShowChaptersKey, value);
+        get => Get(RewindStepKey, 5);
+        set => Set(RewindStepKey, value);
     }
 
-    partial void OnRewindStepChanged(int value)
+    public int FastForwardStep
     {
-        if (_isInitialized) _storage.SetValue(RewindStepKey, value);
+        get => Get(FastForwardStepKey, 5);
+        set => Set(FastForwardStepKey, value);
     }
 
-    partial void OnFastForwardStepChanged(int value)
+    public PlaybackActionKind GestureTap
     {
-        if (_isInitialized) _storage.SetValue(FastForwardStepKey, value);
+        get => Get(GestureTapKey, IsXbox ? PlaybackActionKind.None : PlaybackActionKind.PlayPause);
+        set => Set(GestureTapKey, value);
     }
 
-    partial void OnGestureTapChanged(PlaybackActionKind value)
+    public PlaybackActionKind GestureSwipeUp
     {
-        if (_isInitialized) _storage.SetValue(GestureTapKey, (int)value);
+        get => Get(GestureSwipeUpKey, IsXbox ? PlaybackActionKind.None : PlaybackActionKind.IncreaseVolume);
+        set => Set(GestureSwipeUpKey, value);
     }
 
-    partial void OnGestureSwipeUpChanged(PlaybackActionKind value)
+    public PlaybackActionKind GestureSwipeDown
     {
-        if (_isInitialized) _storage.SetValue(GestureSwipeUpKey, (int)value);
+        get => Get(GestureSwipeDownKey, IsXbox ? PlaybackActionKind.None : PlaybackActionKind.DecreaseVolume);
+        set => Set(GestureSwipeDownKey, value);
     }
 
-    partial void OnGestureSwipeDownChanged(PlaybackActionKind value)
+    public PlaybackActionKind GestureSwipeLeft
     {
-        if (_isInitialized) _storage.SetValue(GestureSwipeDownKey, (int)value);
+        get => Get(GestureSwipeLeftKey, IsXbox ? PlaybackActionKind.None : PlaybackActionKind.Rewind);
+        set => Set(GestureSwipeLeftKey, value);
     }
 
-    partial void OnGestureSwipeLeftChanged(PlaybackActionKind value)
+    public PlaybackActionKind GestureSwipeRight
     {
-        if (_isInitialized) _storage.SetValue(GestureSwipeLeftKey, (int)value);
+        get => Get(GestureSwipeRightKey, IsXbox ? PlaybackActionKind.None : PlaybackActionKind.FastForward);
+        set => Set(GestureSwipeRightKey, value);
     }
 
-    partial void OnGestureSwipeRightChanged(PlaybackActionKind value)
+    public bool GestureSlideVertical
     {
-        if (_isInitialized) _storage.SetValue(GestureSwipeRightKey, (int)value);
+        get => Get(GestureSlideVerticalKey, !IsXbox);
+        set => Set(GestureSlideVerticalKey, value);
     }
 
-    partial void OnGestureSlideVerticalChanged(bool value)
+    public bool GestureSlideHorizontal
     {
-        if (_isInitialized) _storage.SetValue(GestureSlideVerticalKey, value);
+        get => Get(GestureSlideHorizontalKey, !IsXbox);
+        set => Set(GestureSlideHorizontalKey, value);
     }
 
-    partial void OnGestureSlideHorizontalChanged(bool value)
+    public bool GesturePressAndHold
     {
-        if (_isInitialized) _storage.SetValue(GestureSlideHorizontalKey, value);
+        get => Get(GesturePressAndHoldKey, !IsXbox);
+        set => Set(GesturePressAndHoldKey, value);
     }
 
-    partial void OnGesturePressAndHoldChanged(bool value)
+    public string LivelyActivePath
     {
-        if (_isInitialized) _storage.SetValue(GesturePressAndHoldKey, value);
+        get => Get(LivelyPathKey, string.Empty);
+        set => Set(LivelyPathKey, value);
     }
 
-    partial void OnLivelyActivePathChanged(string value)
+    public PlayerSettingsContext(ISettingsStorage storage) : base(storage)
     {
-        if (_isInitialized) _storage.SetValue(LivelyPathKey, value);
     }
 }

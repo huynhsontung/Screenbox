@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 
@@ -7,60 +6,38 @@ namespace Screenbox.Core.Contexts;
 /// <summary>
 /// Observable state holder for general application settings such as theme, file handling, and history.
 /// </summary>
-public sealed partial class GeneralSettingsContext : ObservableRecipient
+public sealed partial class GeneralSettingsContext : SettingsContextBase
 {
     private const string GeneralThemeKey = "General/Theme";
     private const string GeneralEnqueueAllInFolderKey = "General/EnqueueAllInFolder";
     private const string GeneralFrameCaptureFolderTokenKey = "General/FrameCaptureFolderToken";
     private const string GeneralShowRecentKey = "General/ShowRecent";
 
-    private readonly ISettingsStorage _storage;
-    private readonly bool _isInitialized;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial ThemeOption Theme { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool EnqueueAllFilesInFolder { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial string FrameCaptureFolderToken { get; set; }
-
-    [ObservableProperty]
-    [NotifyPropertyChangedRecipients]
-    public partial bool ShowRecent { get; set; }
-
-    public GeneralSettingsContext(ISettingsStorage storage)
+    public ThemeOption Theme
     {
-        _storage = storage;
-        Theme = (ThemeOption)_storage.GetValue(GeneralThemeKey, (int)ThemeOption.Auto);
-        EnqueueAllFilesInFolder = _storage.GetValue(GeneralEnqueueAllInFolderKey, false);
-        FrameCaptureFolderToken = _storage.GetValue(GeneralFrameCaptureFolderTokenKey, string.Empty);
-        ShowRecent = _storage.GetValue(GeneralShowRecentKey, true);
-        _isInitialized = true;
-        IsActive = true;
+        get => Get(GeneralThemeKey, ThemeOption.Auto);
+        set => Set(GeneralThemeKey, value);
     }
 
-    partial void OnThemeChanged(ThemeOption value)
+    public bool EnqueueAllFilesInFolder
     {
-        if (_isInitialized) _storage.SetValue(GeneralThemeKey, (int)value);
+        get => Get(GeneralEnqueueAllInFolderKey, false);
+        set => Set(GeneralEnqueueAllInFolderKey, value);
     }
 
-    partial void OnEnqueueAllFilesInFolderChanged(bool value)
+    public string FrameCaptureFolderToken
     {
-        if (_isInitialized) _storage.SetValue(GeneralEnqueueAllInFolderKey, value);
+        get => Get(GeneralFrameCaptureFolderTokenKey, string.Empty);
+        set => Set(GeneralFrameCaptureFolderTokenKey, value);
     }
 
-    partial void OnFrameCaptureFolderTokenChanged(string value)
+    public bool ShowRecent
     {
-        if (_isInitialized) _storage.SetValue(GeneralFrameCaptureFolderTokenKey, value);
+        get => Get(GeneralShowRecentKey, true);
+        set => Set(GeneralShowRecentKey, value);
     }
 
-    partial void OnShowRecentChanged(bool value)
+    public GeneralSettingsContext(ISettingsStorage storage) : base(storage)
     {
-        if (_isInitialized) _storage.SetValue(GeneralShowRecentKey, value);
     }
 }
