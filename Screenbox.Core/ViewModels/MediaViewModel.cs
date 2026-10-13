@@ -77,7 +77,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
     [ObservableProperty] public partial string AltCaption { get; set; } = string.Empty;   // For player page subtitle
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Duration))]
     [NotifyPropertyChangedFor(nameof(TrackNumberText))]
     public partial MediaInfo MediaInfo { get; set; }
 

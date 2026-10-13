@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,12 +27,6 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     [ObservableProperty]
     public partial MediaViewModel? ContextMedia { get; set; }
 
-    [ObservableProperty]
-    public partial int ItemsCount { get; private set; }
-
-    [ObservableProperty]
-    public partial TimeSpan TotalDuration { get; private set; }
-
     /// <summary>The observable play queue state for data binding.</summary>
     public PlayQueueContext Queue { get; }
 
@@ -49,7 +42,6 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private readonly IPlayQueueCoordinator _coordinator;
     private readonly IFilesService _filesService;
-    private readonly List<MediaViewModel> _trackedItems = [];
 
     public PlayQueuePanelViewModel(
         PlayQueueContext queue,
@@ -61,15 +53,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         _coordinator = coordinator;
         Selection = selection;
         _filesService = filesService;
-        ItemsCount = queue.Items.Count;
-        TotalDuration = GetTotalDuration(queue.Items);
-        _hasItems = ItemsCount > 0;
-        foreach (MediaViewModel item in queue.Items)
-        {
-            item.PropertyChanged += ItemOnPropertyChanged;
-            _trackedItems.Add(item);
-        }
-
+        _hasItems = queue.Items.Count > 0;
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
         Selection.SetItemsSource(Queue.Items);
@@ -78,73 +62,11 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private void ItemsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        UpdateTrackedItems(e);
-        ItemsCount = Queue.Items.Count;
-        TotalDuration = GetTotalDuration(Queue.Items);
-        HasItems = ItemsCount > 0;
+        HasItems = Queue.Items.Count > 0;
         if (!HasItems)
         {
             Selection.IsSelectionModeActive = false;
         }
-    }
-
-    private void ItemOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(MediaViewModel.Duration))
-        {
-            TotalDuration = GetTotalDuration(Queue.Items);
-        }
-    }
-
-    private void UpdateTrackedItems(NotifyCollectionChangedEventArgs e)
-    {
-        if (e.Action == NotifyCollectionChangedAction.Move) return;
-
-        if (e.Action == NotifyCollectionChangedAction.Reset)
-        {
-            foreach (MediaViewModel item in _trackedItems)
-            {
-                item.PropertyChanged -= ItemOnPropertyChanged;
-            }
-
-            _trackedItems.Clear();
-            foreach (MediaViewModel item in Queue.Items)
-            {
-                item.PropertyChanged += ItemOnPropertyChanged;
-                _trackedItems.Add(item);
-            }
-
-            return;
-        }
-
-        if (e.OldItems is not null)
-        {
-            foreach (MediaViewModel item in e.OldItems)
-            {
-                item.PropertyChanged -= ItemOnPropertyChanged;
-                _trackedItems.Remove(item);
-            }
-        }
-
-        if (e.NewItems is not null)
-        {
-            foreach (MediaViewModel item in e.NewItems)
-            {
-                item.PropertyChanged += ItemOnPropertyChanged;
-                _trackedItems.Add(item);
-            }
-        }
-    }
-
-    private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)
-    {
-        TimeSpan duration = TimeSpan.Zero;
-        foreach (MediaViewModel item in items)
-        {
-            duration += item.Duration;
-        }
-
-        return duration;
     }
 
     private void Selection_SelectedRangesChanged(object? sender, NotifyCollectionChangedEventArgs e)

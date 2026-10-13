@@ -176,7 +176,7 @@
                 VerticalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{x:Bind GetSubtext(ViewModel.ItemsCount, ViewModel.TotalDuration), Mode=OneWay}"
+                Text="{x:Bind GetSubtext(ViewModel.Queue.Items), Mode=OneWay}"
                 TextWrapping="NoWrap">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:OverflowTextToolTipBehavior />
