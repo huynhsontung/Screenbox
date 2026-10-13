@@ -1056,10 +1056,10 @@
     <value>加速</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>下一首</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>上一首</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
     <value>Next chapter</value>
