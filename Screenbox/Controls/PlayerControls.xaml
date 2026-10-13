@@ -47,7 +47,7 @@
                         <Setter Property="Padding" Value="0,0,0,15" />
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
-                <controls:PlaybackSpeedControl Width="296" />
+                <controls:PlaybackSpeedControl MinWidth="296" />
             </Flyout>
 
             <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
