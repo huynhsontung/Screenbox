@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-11-vs2026-arm
+    runs-on: windows-latest
     permissions:
       actions: write
       contents: read

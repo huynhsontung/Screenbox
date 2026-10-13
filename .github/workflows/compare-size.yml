@@ -12,7 +12,7 @@ on:
         description: 'Choose the target processor architecture'
         required: true
         type: choice
-        default: arm64
+        default: x64
         options:
           - arm64
           - x64
@@ -37,7 +37,7 @@ on:
 jobs:
   publish:
     name: Publish ${{ matrix.checkout_path }}
-    runs-on: windows-11-vs2026-arm
+    runs-on: windows-latest
     permissions:
       actions: write
       contents: read
@@ -95,7 +95,7 @@ jobs:
   compare:
     name: Compare artifacts
     needs: publish
-    runs-on: windows-11-vs2026-arm
+    runs-on: windows-latest
     permissions:
       actions: write
       contents: read
