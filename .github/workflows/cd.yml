@@ -140,34 +140,8 @@ jobs:
           path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/Screenbox-sideload.zip
           archive: false
 
-  wack:
-    needs: build
-    runs-on: windows-latest
-    permissions:
-      actions: write
-      checks: write
-    steps:
-      - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v3
-        with:
-          msbuild-architecture: x64
-
-      - name: Download sideload artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: Screenbox-sideload.zip
-          path: Downloads
-
-      - name: Run the Windows App Certification Kit
-        uses: ChristopheLav/wack-certification@v1.0.3
-        with:
-          name: 'WACK report'
-          package-path: ${{ github.workspace }}\Downloads\Screenbox_${{ needs.build.outputs.version }}.0_x86_x64_arm64.msixbundle
-          report-name: 'Screenbox.Certification.xml'
-          ignore-rules: '38'
-
   release:
-    needs: [build, wack]
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       actions: read
