@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Commands;
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
@@ -72,6 +73,13 @@ public sealed partial class PlayQueueControl : UserControl
         {
             e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
         }
+    }
+
+    private string GetSubtext(int itemsCount, TimeSpan duration)
+    {
+        string itemsCountText = Strings.Resources.ItemsCount(itemsCount);
+        string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
+        return $"{itemsCountText} • {runTime}";
     }
 
     [DynamicWindowsRuntimeCast(typeof(Control))]
