@@ -31,6 +31,7 @@ public partial class VideoView : SwapChainPanel
     private IDXGISwapChain1? _swapChain;
 
     private bool _loaded;
+    private bool _isRecreating;
     private static readonly Guid SWAPCHAIN_WIDTH = new("f1b59347-1643-411a-ad6b-c780177a06b6");
     private static readonly Guid SWAPCHAIN_HEIGHT = new("6ea976a0-9d60-4bb7-a5a9-7dd1187fc9bd");
 
@@ -51,7 +52,7 @@ public partial class VideoView : SwapChainPanel
         {
             if (_loaded)
             {
-                UpdateSize();
+                TryExecuteUpdate(UpdateSize);
             }
             else
             {
@@ -62,10 +63,41 @@ public partial class VideoView : SwapChainPanel
         {
             if (_loaded)
             {
-                UpdateScale();
+                TryExecuteUpdate(UpdateScale);
             }
         };
         Unloaded += (s, e) => DestroySwapChain();
+    }
+
+    private void TryExecuteUpdate(Action updateAction)
+    {
+        try
+        {
+            updateAction();
+        }
+        catch (Exception ex) when (ex is ObjectDisposedException || IsGraphicsException(ex))
+        {
+            RecoverSwapChain();
+        }
+    }
+
+    private void RecoverSwapChain()
+    {
+        if (_isRecreating)
+        {
+            return;
+        }
+
+        _isRecreating = true;
+        try
+        {
+            DestroySwapChain();
+            CreateSwapChain();
+        }
+        finally
+        {
+            _isRecreating = false;
+        }
     }
 
     private void CreateSwapChain()
@@ -175,15 +207,8 @@ public partial class VideoView : SwapChainPanel
         int w = (int)Math.Clamp(Math.Round(ActualWidth * CompositionScaleX), 1.0, MaxTextureDimension);
         int h = (int)Math.Clamp(Math.Round(ActualHeight * CompositionScaleY), 1.0, MaxTextureDimension);
 
-        try
-        {
-            _swapChain.SetPrivateData(SWAPCHAIN_WIDTH, sizeof(int), new IntPtr(&w));
-            _swapChain.SetPrivateData(SWAPCHAIN_HEIGHT, sizeof(int), new IntPtr(&h));
-        }
-        catch (Exception ex) when (IsGraphicsException(ex))
-        {
-            // Safe to ignore metadata update failures if the device is unavailable.
-        }
+        _swapChain.SetPrivateData(SWAPCHAIN_WIDTH, sizeof(int), new IntPtr(&w));
+        _swapChain.SetPrivateData(SWAPCHAIN_HEIGHT, sizeof(int), new IntPtr(&h));
     }
 
     private void UpdateScale()
@@ -199,22 +224,15 @@ public partial class VideoView : SwapChainPanel
             return;
         }
 
-        try
+        using var swapChain2 = _swapChain.QueryInterface<IDXGISwapChain2>();
+        if (swapChain2 is not null)
         {
-            using var swapChain2 = _swapChain.QueryInterface<IDXGISwapChain2>();
-            if (swapChain2 is not null)
-            {
-                var matrix = new Matrix3x2(
-                    1.0f / (float)CompositionScaleX, 0.0f,
-                    0.0f, 1.0f / (float)CompositionScaleY,
-                    0.0f, 0.0f
-                );
-                swapChain2.MatrixTransform = matrix;
-            }
-        }
-        catch (Exception ex) when (IsGraphicsException(ex))
-        {
-            // Safe to ignore transform failures if the device is unavailable.
+            var matrix = new Matrix3x2(
+                1.0f / (float)CompositionScaleX, 0.0f,
+                0.0f, 1.0f / (float)CompositionScaleY,
+                0.0f, 0.0f
+            );
+            swapChain2.MatrixTransform = matrix;
         }
     }
 
