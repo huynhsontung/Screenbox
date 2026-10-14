@@ -1062,10 +1062,10 @@
     <value>上一首</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>下一章</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>上一章</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>添加到播放列表</value>
