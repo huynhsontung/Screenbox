@@ -150,7 +150,7 @@
                     <MenuFlyout x:Name="GenreFlyout" Placement="BottomEdgeAlignedRight" />
                 </muxc:DropDownButton.Flyout>
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="0,0,8,0" Glyph="{StaticResource FiltersGlyph}" />
+                    <FontIcon Margin="0,0,8,0" Glyph="&#xE71C;" />
                     <TextBlock x:Name="GenreText"><Run Text="{x:Bind strings:Resources.PropertyGenre}" /><Run Text=":&#160;" /></TextBlock>
                     <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetGenreText(ViewModel.SelectedGenre), Mode=OneWay}" />
                 </StackPanel>
