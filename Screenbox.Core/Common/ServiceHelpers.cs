@@ -67,6 +67,8 @@ public static class ServiceHelpers
         services.AddSingleton<PlaybackSettingsContext>();
         services.AddSingleton<GeneralSettingsContext>();
         services.AddSingleton<AdvancedSettingsContext>();
+        services.AddSingleton<PrivacySettingsContext>();
+        services.AddSingleton<PersonalizationSettingsContext>();
         services.AddSingleton<SettingsContext>();
 
         // Coordinators

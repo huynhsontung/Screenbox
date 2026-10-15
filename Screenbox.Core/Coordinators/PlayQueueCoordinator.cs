@@ -58,6 +58,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly PlaybackSettingsContext _playbackSettings;
+    private readonly PrivacySettingsContext _privacySettings;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly PlayerContext _playerContext;
@@ -90,6 +91,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
         PlaybackSettingsContext playbackSettings,
+        PrivacySettingsContext privacySettings,
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
         PlayerContext playerContext,
@@ -102,6 +104,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _filesService = filesService;
         _generalSettings = generalSettings;
         _playbackSettings = playbackSettings;
+        _privacySettings = privacySettings;
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
         _playerContext = playerContext;
@@ -570,7 +573,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         RaiseCanNavigateChanged();
 
         await Task.WhenAll(
-            _generalSettings.ShowRecent ? AddToRecent(value?.Source) : Task.CompletedTask,
+            _privacySettings.ShowRecent ? AddToRecent(value?.Source) : Task.CompletedTask,
             _transportControlsService.UpdateTransportControlsDisplayAsync(value),
             UpdateMediaBufferAsync()
         );

@@ -66,8 +66,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly IWindowService _windowService;
     private readonly PlayerSettingsContext _playerSettings;
-    private readonly GeneralSettingsContext _generalSettings;
-    private readonly PlaybackSettingsContext _playbackSettings;
     private readonly AdvancedSettingsContext _advancedSettings;
     private readonly PlayerContext _playerContext;
     private readonly IFilesService _filesService;
@@ -80,8 +78,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         IFilesService filesService,
         IPlayQueueCoordinator coordinator,
         PlayerSettingsContext playerSettings,
-        GeneralSettingsContext generalSettings,
-        PlaybackSettingsContext playbackSettings,
         AdvancedSettingsContext advancedSettings,
         IWindowService windowService,
         PlayerContext playerContext)
@@ -89,15 +85,13 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _windowService = windowService;
         _playerSettings = playerSettings;
-        _generalSettings = generalSettings;
-        _playbackSettings = playbackSettings;
         _advancedSettings = advancedSettings;
         _playerContext = playerContext;
         _filesService = filesService;
         _coordinator = coordinator;
         IsAdvancedModeActive = advancedSettings.AdvancedMode;
         IsMinimal = true;
-        IsDisplayingRemainingTime = playbackSettings.ShowRemainingTime;
+        IsDisplayingRemainingTime = playerSettings.ShowRemainingTime;
         PlayerShowChapters = playerSettings.ShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
@@ -242,7 +236,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     partial void OnIsDisplayingRemainingTimeChanged(bool value)
     {
-        _playbackSettings.ShowRemainingTime = value;
+        _playerSettings.ShowRemainingTime = value;
     }
 
     private void PlayQueueOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -433,7 +427,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                 throw new Exception("VLC failed to save snapshot");
 
             StorageFile file = (await tempFolder.GetFilesAsync())[0];
-            StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_generalSettings.FrameCaptureFolderToken);
+            StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_playerSettings.FrameCaptureFolderToken);
             return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
                 NameCollisionOption.GenerateUniqueName);
         }

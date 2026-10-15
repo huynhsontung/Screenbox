@@ -57,7 +57,7 @@ public sealed partial class SeekBarViewModel :
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
-    private readonly PlaybackSettingsContext _playbackSettings;
+    private readonly PrivacySettingsContext _privacySettings;
     private readonly PlayerContext _playerContext;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _bufferingTimer;
@@ -70,10 +70,10 @@ public sealed partial class SeekBarViewModel :
     private bool _timeChangeOverride;
     private MediaViewModel? _currentItem;
 
-    public SeekBarViewModel(PlaybackSettingsContext playbackSettings, IPlaybackProgressTracker playbackProgressTracker,
+    public SeekBarViewModel(PrivacySettingsContext privacySettings, IPlaybackProgressTracker playbackProgressTracker,
         PlayerContext playerContext)
     {
-        _playbackSettings = playbackSettings;
+        _privacySettings = privacySettings;
         _playbackProgressTracker = playbackProgressTracker;
         _playerContext = playerContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -260,11 +260,11 @@ public sealed partial class SeekBarViewModel :
 
     private void RestoreLastPosition(MediaViewModel media)
     {
-        if (!_playbackSettings.PersistPlaybackPosition) return;
+        if (!_privacySettings.PersistPlaybackPosition) return;
 
         TimeSpan lastPosition = _playbackProgressTracker.GetPosition(media.Location);
         if (lastPosition <= TimeSpan.Zero) return;
-        if (_playbackSettings.RestorePlaybackPosition)
+        if (_privacySettings.RestorePlaybackPosition)
         {
             if (media.IsPlaying)
             {
@@ -466,7 +466,7 @@ public sealed partial class SeekBarViewModel :
 
     private void UpdateProgress(TimeSpan position)
     {
-        if (!_playbackSettings.PersistPlaybackPosition ||
+        if (!_privacySettings.PersistPlaybackPosition ||
             _currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
             DateTimeOffset.Now - _playbackProgressTracker.LastUpdated <= TimeSpan.FromSeconds(3))
             return;

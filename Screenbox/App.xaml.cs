@@ -338,7 +338,7 @@ sealed partial class App : Application
                 rootFrame.FlowDirection = FlowDirection.RightToLeft;
             }
 
-            var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<GeneralSettingsContext>();
+            var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<PersonalizationSettingsContext>();
             rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
         }
 

@@ -10,18 +10,24 @@ public sealed class SettingsContext
     public PlaybackSettingsContext Playback { get; }
     public GeneralSettingsContext General { get; }
     public AdvancedSettingsContext Advanced { get; }
+    public PrivacySettingsContext Privacy { get; }
+    public PersonalizationSettingsContext Personalization { get; }
 
     public SettingsContext(
         PlayerSettingsContext player,
         LibrarySettingsContext library,
         PlaybackSettingsContext playback,
         GeneralSettingsContext general,
-        AdvancedSettingsContext advanced)
+        AdvancedSettingsContext advanced,
+        PrivacySettingsContext privacy,
+        PersonalizationSettingsContext personalization)
     {
         Player = player;
         Library = library;
         Playback = playback;
         General = general;
         Advanced = advanced;
+        Privacy = privacy;
+        Personalization = personalization;
     }
 }

@@ -680,7 +680,7 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.GeneralSettings.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.PrivacySettings.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
@@ -689,7 +689,7 @@
                     <ToggleSwitch
                         x:Name="ShowRecentToggleSwitch"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsShowRecentDescription}"
-                        IsOn="{x:Bind ViewModel.GeneralSettings.ShowRecent, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.PrivacySettings.ShowRecent, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsClearRecentCard"
@@ -711,13 +711,13 @@
                     <interactivity:Interaction.Behaviors>
                         <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PlaybackSettings.PersistPlaybackPosition, Mode=TwoWay}" />
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PrivacySettings.PersistPlaybackPosition, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             Description="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}"
                             Header="{x:Bind strings:Resources.SettingsRestorePlaybackPositionHeader}"
-                            IsEnabled="{x:Bind ViewModel.PlaybackSettings.PersistPlaybackPosition, Mode=OneWay}">
-                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PlaybackSettings.RestorePlaybackPosition, Mode=TwoWay}" />
+                            IsEnabled="{x:Bind ViewModel.PrivacySettings.PersistPlaybackPosition, Mode=OneWay}">
+                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PrivacySettings.RestorePlaybackPosition, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard AutomationProperties.Name="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}" Header="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}">
                             <Button

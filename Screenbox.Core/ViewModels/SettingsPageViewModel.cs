@@ -32,11 +32,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public PlaybackSettingsContext PlaybackSettings => Settings.Playback;
     public GeneralSettingsContext GeneralSettings => Settings.General;
     public AdvancedSettingsContext AdvancedSettings => Settings.Advanced;
+    public PrivacySettingsContext PrivacySettings => Settings.Privacy;
+    public PersonalizationSettingsContext PersonalizationSettings => Settings.Personalization;
 
     public int Theme
     {
-        get => ((int)GeneralSettings.Theme + 2) % 3;
-        set => GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
+        get => ((int)PersonalizationSettings.Theme + 2) % 3;
+        set => PersonalizationSettings.Theme = (ThemeOption)((value + 1) % 3);
     }
 
     public int VolumeBoost
@@ -166,6 +168,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         PlayerSettings.PropertyChanged += OnPlayerSettingsPropertyChanged;
         LibrarySettings.PropertyChanged += OnLibrarySettingsPropertyChanged;
         AdvancedSettings.PropertyChanged += OnAdvancedSettingsPropertyChanged;
+        PrivacySettings.PropertyChanged += OnPrivacySettingsPropertyChanged;
+        PersonalizationSettings.PropertyChanged += OnPersonalizationSettingsPropertyChanged;
 
         // Setting initial values for relaunch check
         _initialValues ??= new InitialValues(AdvancedSettings.GlobalArguments, AdvancedSettings.AdvancedMode, VideoUpscaling, SelectedLanguage);
@@ -240,14 +244,14 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         StorageFolder? folder = await _filesService.PickFolderAsync();
         if (folder is null) return;
 
-        string oldToken = GeneralSettings.FrameCaptureFolderToken;
+        string oldToken = PlayerSettings.FrameCaptureFolderToken;
         if (!string.IsNullOrEmpty(oldToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(oldToken))
         {
             StorageApplicationPermissions.FutureAccessList.Remove(oldToken);
         }
 
         string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder, "frame-capture");
-        GeneralSettings.FrameCaptureFolderToken = newToken;
+        PlayerSettings.FrameCaptureFolderToken = newToken;
         FrameCaptureFolder = folder;
     }
 
@@ -301,6 +305,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         PlayerSettings.PropertyChanged -= OnPlayerSettingsPropertyChanged;
         LibrarySettings.PropertyChanged -= OnLibrarySettingsPropertyChanged;
         AdvancedSettings.PropertyChanged -= OnAdvancedSettingsPropertyChanged;
+        PrivacySettings.PropertyChanged -= OnPrivacySettingsPropertyChanged;
+        PersonalizationSettings.PropertyChanged -= OnPersonalizationSettingsPropertyChanged;
 
         if (_videosLibrary != null)
         {
@@ -322,13 +328,21 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     private void OnGeneralSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(GeneralSettingsContext.Theme))
+    }
+
+    private void OnPersonalizationSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(PersonalizationSettingsContext.Theme))
         {
             OnPropertyChanged(nameof(Theme));
         }
-        else if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
+    }
+
+    private void OnPrivacySettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(PrivacySettingsContext.ShowRecent))
         {
-            if (!GeneralSettings.ShowRecent) ClearRecentContext();
+            if (!PrivacySettings.ShowRecent) ClearRecentContext();
         }
     }
 
@@ -405,7 +419,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         try
         {
-            FrameCaptureFolder = await _filesService.GetFrameCaptureFolderAsync(GeneralSettings.FrameCaptureFolderToken);
+            FrameCaptureFolder = await _filesService.GetFrameCaptureFolderAsync(PlayerSettings.FrameCaptureFolderToken);
         }
         catch (Exception e)
         {

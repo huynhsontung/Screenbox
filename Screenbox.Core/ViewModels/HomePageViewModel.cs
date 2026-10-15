@@ -34,7 +34,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly RecentContext _recentContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
-    private readonly GeneralSettingsContext _generalSettings;
+    private readonly PrivacySettingsContext _privacySettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly ILogger<HomePageViewModel> _logger;
@@ -44,14 +44,14 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
-        GeneralSettingsContext generalSettings,
+        PrivacySettingsContext privacySettings,
         ILogger<HomePageViewModel> logger)
     {
         Selection = selection;
         _recentContext = recentContext;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
-        _generalSettings = generalSettings;
+        _privacySettings = privacySettings;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
@@ -64,7 +64,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     public void Receive(QueueCurrentItemChangedMessage message)
     {
-        if (_generalSettings.ShowRecent)
+        if (_privacySettings.ShowRecent)
         {
             _changeDebounceTimer.Debounce(DebouncedAction, TimeSpan.FromMilliseconds(100));
 
@@ -101,7 +101,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private async Task UpdateContentAsync()
     {
         // Update recent media
-        if (_generalSettings.ShowRecent)
+        if (_privacySettings.ShowRecent)
         {
             await UpdateRecentMediaListAsync(true);
         }

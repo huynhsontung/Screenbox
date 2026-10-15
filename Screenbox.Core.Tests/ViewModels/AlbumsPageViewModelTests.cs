@@ -11,7 +11,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task Constructor_ShouldInitializeSortByFromSettings()
     {
-        var settings = new PlaybackSettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Year };
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Year };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -21,7 +21,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task SortBy_WhenChanged_ShouldUpdatePersistentSettings()
     {
-        var settings = new PlaybackSettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -33,7 +33,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task SetSortByCommand_WhenExecuted_ShouldUpdateSortByAndSettings()
     {
-        var settings = new PlaybackSettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -46,7 +46,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task FetchAlbums_ShouldUpdateGroupedAlbums()
     {
-        var settings = new PlaybackSettingsContext(new MemorySettingsStorage());
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 

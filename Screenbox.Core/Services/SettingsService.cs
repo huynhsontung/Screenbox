@@ -30,7 +30,9 @@ public sealed class SettingsService : ISettingsService
             new LibrarySettingsContext(storage),
             new PlaybackSettingsContext(storage),
             new GeneralSettingsContext(storage),
-            new AdvancedSettingsContext(storage));
+            new AdvancedSettingsContext(storage),
+            new PrivacySettingsContext(storage),
+            new PersonalizationSettingsContext(storage));
     }
 
     public bool UseIndexer
@@ -41,8 +43,8 @@ public sealed class SettingsService : ISettingsService
 
     public ThemeOption Theme
     {
-        get => _settings.General.Theme;
-        set => _settings.General.Theme = value;
+        get => _settings.Personalization.Theme;
+        set => _settings.Personalization.Theme = value;
     }
 
     public PlayerAutoResizeOption PlayerAutoResize
@@ -71,8 +73,8 @@ public sealed class SettingsService : ISettingsService
 
     public bool ShowRecent
     {
-        get => _settings.General.ShowRecent;
-        set => _settings.General.ShowRecent = value;
+        get => _settings.Privacy.ShowRecent;
+        set => _settings.Privacy.ShowRecent = value;
     }
 
     public bool EnqueueAllFilesInFolder
@@ -83,14 +85,14 @@ public sealed class SettingsService : ISettingsService
 
     public string FrameCaptureFolderToken
     {
-        get => _settings.General.FrameCaptureFolderToken;
-        set => _settings.General.FrameCaptureFolderToken = value;
+        get => _settings.Player.FrameCaptureFolderToken;
+        set => _settings.Player.FrameCaptureFolderToken = value;
     }
 
     public bool RestorePlaybackPosition
     {
-        get => _settings.Playback.RestorePlaybackPosition;
-        set => _settings.Playback.RestorePlaybackPosition = value;
+        get => _settings.Privacy.RestorePlaybackPosition;
+        set => _settings.Privacy.RestorePlaybackPosition = value;
     }
 
     public bool PlayerShowControls
@@ -149,8 +151,8 @@ public sealed class SettingsService : ISettingsService
 
     public bool PersistentShowRemainingTime
     {
-        get => _settings.Playback.ShowRemainingTime;
-        set => _settings.Playback.ShowRemainingTime = value;
+        get => _settings.Player.ShowRemainingTime;
+        set => _settings.Player.ShowRemainingTime = value;
     }
 
     public bool PlayerShowChapters
@@ -161,8 +163,8 @@ public sealed class SettingsService : ISettingsService
 
     public bool PersistPlaybackPosition
     {
-        get => _settings.Playback.PersistPlaybackPosition;
-        set => _settings.Playback.PersistPlaybackPosition = value;
+        get => _settings.Privacy.PersistPlaybackPosition;
+        set => _settings.Privacy.PersistPlaybackPosition = value;
     }
 
     public int PlayerRewindStep
@@ -227,13 +229,13 @@ public sealed class SettingsService : ISettingsService
 
     public SongSortOrder PersistentSongsSortOrder
     {
-        get => _settings.Playback.SongsSortOrder;
-        set => _settings.Playback.SongsSortOrder = value;
+        get => _settings.Library.SongsSortOrder;
+        set => _settings.Library.SongsSortOrder = value;
     }
 
     public AlbumSortOrder PersistentAlbumsSortOrder
     {
-        get => _settings.Playback.AlbumsSortOrder;
-        set => _settings.Playback.AlbumsSortOrder = value;
+        get => _settings.Library.AlbumsSortOrder;
+        set => _settings.Library.AlbumsSortOrder = value;
     }
 }

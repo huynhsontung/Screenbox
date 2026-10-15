@@ -5,7 +5,7 @@ using Screenbox.Core.Services;
 namespace Screenbox.Core.Contexts;
 
 /// <summary>
-/// Observable state holder for media player settings and gesture configuration.
+/// Observable state holder for media player settings, controls, and gesture configuration.
 /// </summary>
 public sealed partial class PlayerSettingsContext : SettingsContextBase
 {
@@ -13,8 +13,10 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase
     private const string ShowControlsKey = "Player/ShowControls";
     private const string ControlsHideDelayKey = "Player/ControlsHideDelay";
     private const string ShowChaptersKey = "Player/ShowChapters";
+    private const string PersistentShowRemainingTimeKey = "Values/ShowRemainingTime";
     private const string RewindStepKey = "Player/RewindStep";
     private const string FastForwardStepKey = "Player/FastForwardStep";
+    private const string GeneralFrameCaptureFolderTokenKey = "General/FrameCaptureFolderToken";
     private const string GestureTapKey = "Player/Gesture/Tap";
     private const string GestureSwipeUpKey = "Player/Gesture/SwipeUp";
     private const string GestureSwipeDownKey = "Player/Gesture/SwipeDown";
@@ -51,6 +53,12 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase
         set => Set(ShowChaptersKey, value);
     }
 
+    public bool ShowRemainingTime
+    {
+        get => Get(PersistentShowRemainingTimeKey, false);
+        set => Set(PersistentShowRemainingTimeKey, value);
+    }
+
     public int RewindStep
     {
         get => Get(RewindStepKey, 5);
@@ -61,6 +69,12 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase
     {
         get => Get(FastForwardStepKey, 5);
         set => Set(FastForwardStepKey, value);
+    }
+
+    public string FrameCaptureFolderToken
+    {
+        get => Get(GeneralFrameCaptureFolderTokenKey, string.Empty);
+        set => Set(GeneralFrameCaptureFolderTokenKey, value);
     }
 
     public PlaybackActionKind GestureTap

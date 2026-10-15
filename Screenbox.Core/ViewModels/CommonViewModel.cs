@@ -33,7 +33,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly GeneralSettingsContext _generalSettings;
+    private readonly PersonalizationSettingsContext _personalizationSettings;
     private readonly AdvancedSettingsContext _advancedSettings;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
@@ -41,14 +41,14 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        GeneralSettingsContext generalSettings,
+        PersonalizationSettingsContext personalizationSettings,
         AdvancedSettingsContext advancedSettings,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _generalSettings = generalSettings;
+        _personalizationSettings = personalizationSettings;
         _advancedSettings = advancedSettings;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
@@ -74,7 +74,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
     [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void Receive(PropertyChangedMessage<ThemeOption> message)
     {
-        if (message.Sender is GeneralSettingsContext &&
+        if (message.Sender is PersonalizationSettingsContext &&
             Window.Current.Content is Frame rootFrame)
         {
             rootFrame.RequestedTheme = message.NewValue.ToElementTheme();
