@@ -133,6 +133,60 @@ public class SongsPageViewModelTests
         await Assert.That(vm.GroupedSongs.SelectMany(g => g)).Contains(song);
     }
 
+    [Test]
+    public async Task FetchSongs_WhenLoadingMusicPartialSnapshot_ShouldNotResetMissingGenre()
+    {
+        var settings = new TestSettingsService();
+        var libraryContext = new LibraryContext
+        {
+            IsLoadingMusic = true,
+            Music = new MusicLibrary(
+                new[] { CreateSong("Song A", "Pop") },
+                new Dictionary<string, AlbumViewModel>(),
+                new Dictionary<string, ArtistViewModel>(),
+                new[] { "Pop" },
+                new AlbumViewModel(),
+                new ArtistViewModel())
+        };
+
+        var vm = new SongsPageViewModel(libraryContext, settings)
+        {
+            SelectedGenre = "Jazz"
+        };
+
+        vm.FetchSongs();
+
+        // During a partial rescan, SelectedGenre must not be cleared even if not in the partial snapshot
+        await Assert.That(vm.SelectedGenre).IsEqualTo("Jazz");
+    }
+
+    [Test]
+    public async Task FetchSongs_WhenLoadingComplete_ShouldResetMissingGenre()
+    {
+        var settings = new TestSettingsService();
+        var libraryContext = new LibraryContext
+        {
+            IsLoadingMusic = false,
+            Music = new MusicLibrary(
+                new[] { CreateSong("Song A", "Pop") },
+                new Dictionary<string, AlbumViewModel>(),
+                new Dictionary<string, ArtistViewModel>(),
+                new[] { "Pop" },
+                new AlbumViewModel(),
+                new ArtistViewModel())
+        };
+
+        var vm = new SongsPageViewModel(libraryContext, settings)
+        {
+            SelectedGenre = "Jazz"
+        };
+
+        vm.FetchSongs();
+
+        // Once loading has finished, a genre not present in the library must be reset to null
+        await Assert.That(vm.SelectedGenre).IsNull();
+    }
+
     private static MediaViewModel CreateSong(string name, string genre)
     {
         var info = new MediaInfo(MediaPlaybackType.Music, name);

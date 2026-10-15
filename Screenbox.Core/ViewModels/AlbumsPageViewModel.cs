@@ -67,7 +67,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         IsLoading = _libraryContext.IsLoadingMusic;
         Genres = _libraryContext.Music.Genres;
 
-        if (SelectedGenre is not null && SelectedGenre != string.Empty && !Genres.Contains(SelectedGenre, StringComparer.CurrentCultureIgnoreCase))
+        if (!_libraryContext.IsLoadingMusic && SelectedGenre is not null && SelectedGenre != string.Empty && !Genres.Contains(SelectedGenre, StringComparer.CurrentCultureIgnoreCase))
         {
             SelectedGenre = null;
             return;

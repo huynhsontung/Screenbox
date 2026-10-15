@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -133,7 +134,7 @@ public sealed partial class SongsPage : Page
             {
                 Text = genre,
                 GroupName = "GenreFilter",
-                IsChecked = ViewModel.SelectedGenre == genre,
+                IsChecked = string.Equals(ViewModel.SelectedGenre, genre, StringComparison.CurrentCultureIgnoreCase),
                 Command = ViewModel.SetGenreCommand,
                 CommandParameter = genre
             };
@@ -148,7 +149,7 @@ public sealed partial class SongsPage : Page
             item.IsChecked = item.CommandParameter switch
             {
                 null => ViewModel.SelectedGenre is null,
-                string param => param == ViewModel.SelectedGenre,
+                string param => string.Equals(param, ViewModel.SelectedGenre, StringComparison.CurrentCultureIgnoreCase),
                 _ => false
             };
         }

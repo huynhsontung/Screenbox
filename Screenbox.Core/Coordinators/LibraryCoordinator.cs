@@ -96,6 +96,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
                 _context.Music = report;
             });
             var result = await _libraryService.FetchMusicAsync(_context.MusicStorageLibrary, _musicQuery, useCache, cts.Token, progress);
+            _context.IsLoadingMusic = false;
             _context.Music = result;
         }
         catch (OperationCanceledException)
@@ -128,6 +129,7 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
                 _context.Videos = report;
             });
             var result = await _libraryService.FetchVideosAsync(_context.VideosStorageLibrary, _videosQuery, useCache, cts.Token, progress);
+            _context.IsLoadingVideos = false;
             _context.Videos = result;
         }
         catch (OperationCanceledException)
