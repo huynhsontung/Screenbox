@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -160,62 +161,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
 
         // Wire context property change listeners for UI notifications and relaunch checks
-        GeneralSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(GeneralSettingsContext.Theme))
-            {
-                OnPropertyChanged(nameof(Theme));
-            }
-            else if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
-            {
-                if (!GeneralSettings.ShowRecent) ClearRecentContext();
-            }
-        };
-
-        PlaybackSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
-            {
-                OnPropertyChanged(nameof(VolumeBoost));
-            }
-        };
-
-        PlayerSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(PlayerSettingsContext.AutoResize))
-            {
-                OnPropertyChanged(nameof(PlayerAutoResize));
-            }
-        };
-
-        LibrarySettings.PropertyChanged += async (s, e) =>
-        {
-            if (e.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
-            {
-                if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
-                {
-                    await RefreshLibrariesAsync();
-                }
-            }
-        };
-
-        AdvancedSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(AdvancedSettingsContext.VideoUpscale))
-            {
-                OnPropertyChanged(nameof(VideoUpscaling));
-                CheckForRelaunch();
-            }
-            else if (e.PropertyName == nameof(AdvancedSettingsContext.AdvancedMode))
-            {
-                CheckForRelaunch();
-            }
-            else if (e.PropertyName == nameof(AdvancedSettingsContext.GlobalArguments))
-            {
-                OnPropertyChanged(nameof(GlobalArguments));
-                CheckForRelaunch();
-            }
-        };
+        GeneralSettings.PropertyChanged += OnGeneralSettingsPropertyChanged;
+        PlaybackSettings.PropertyChanged += OnPlaybackSettingsPropertyChanged;
+        PlayerSettings.PropertyChanged += OnPlayerSettingsPropertyChanged;
+        LibrarySettings.PropertyChanged += OnLibrarySettingsPropertyChanged;
+        AdvancedSettings.PropertyChanged += OnAdvancedSettingsPropertyChanged;
 
         // Setting initial values for relaunch check
         _initialValues ??= new InitialValues(AdvancedSettings.GlobalArguments, AdvancedSettings.AdvancedMode, VideoUpscaling, SelectedLanguage);
@@ -346,8 +296,85 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public void OnNavigatedFrom()
     {
-        if (SystemInformation.IsXbox)
-            _portableStorageDeviceWatcher?.Stop();
+        GeneralSettings.PropertyChanged -= OnGeneralSettingsPropertyChanged;
+        PlaybackSettings.PropertyChanged -= OnPlaybackSettingsPropertyChanged;
+        PlayerSettings.PropertyChanged -= OnPlayerSettingsPropertyChanged;
+        LibrarySettings.PropertyChanged -= OnLibrarySettingsPropertyChanged;
+        AdvancedSettings.PropertyChanged -= OnAdvancedSettingsPropertyChanged;
+
+        if (_videosLibrary != null)
+        {
+            _videosLibrary.DefinitionChanged -= LibraryOnDefinitionChanged;
+        }
+
+        if (_musicLibrary != null)
+        {
+            _musicLibrary.DefinitionChanged -= LibraryOnDefinitionChanged;
+        }
+
+        if (SystemInformation.IsXbox && _portableStorageDeviceWatcher != null)
+        {
+            _portableStorageDeviceWatcher.Updated -= OnPortableStorageDeviceChanged;
+            _portableStorageDeviceWatcher.Removed -= OnPortableStorageDeviceChanged;
+            _portableStorageDeviceWatcher.Stop();
+        }
+    }
+
+    private void OnGeneralSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(GeneralSettingsContext.Theme))
+        {
+            OnPropertyChanged(nameof(Theme));
+        }
+        else if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
+        {
+            if (!GeneralSettings.ShowRecent) ClearRecentContext();
+        }
+    }
+
+    private void OnPlaybackSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
+        {
+            OnPropertyChanged(nameof(VolumeBoost));
+        }
+    }
+
+    private void OnPlayerSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(PlayerSettingsContext.AutoResize))
+        {
+            OnPropertyChanged(nameof(PlayerAutoResize));
+        }
+    }
+
+    private async void OnLibrarySettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
+        {
+            if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
+            {
+                await RefreshLibrariesAsync();
+            }
+        }
+    }
+
+    private void OnAdvancedSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(AdvancedSettingsContext.VideoUpscale))
+        {
+            OnPropertyChanged(nameof(VideoUpscaling));
+            CheckForRelaunch();
+        }
+        else if (e.PropertyName == nameof(AdvancedSettingsContext.AdvancedMode))
+        {
+            CheckForRelaunch();
+        }
+        else if (e.PropertyName == nameof(AdvancedSettingsContext.GlobalArguments))
+        {
+            OnPropertyChanged(nameof(GlobalArguments));
+            CheckForRelaunch();
+        }
     }
 
     public async Task LoadLibraryLocations()

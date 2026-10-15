@@ -1,3 +1,4 @@
+using System;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Windows.Media;
@@ -7,6 +8,7 @@ namespace Screenbox.Core.Services;
 /// <summary>
 /// Bridge implementation of <see cref="ISettingsService"/> delegating to domain-specific settings contexts.
 /// </summary>
+[Obsolete("Use domain-specific settings contexts instead.")]
 public sealed class SettingsService : ISettingsService
 {
     private readonly SettingsContext _settings;
