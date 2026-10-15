@@ -65,6 +65,10 @@ public partial class VideoView : SwapChainPanel
             {
                 TryExecuteUpdate(UpdateScale);
             }
+            else
+            {
+                CreateSwapChain();
+            }
         };
         Unloaded += (s, e) => DestroySwapChain();
     }
@@ -184,7 +188,7 @@ public partial class VideoView : SwapChainPanel
         }
         catch (Exception ex) when (ex is ObjectDisposedException || IsGraphicsException(ex))
         {
-            CleanUpDevice();
+            DestroySwapChain();
             return false;
         }
     }
@@ -238,16 +242,13 @@ public partial class VideoView : SwapChainPanel
 
     private void DestroySwapChain()
     {
-        if (_loaded)
+        try
         {
-            try
-            {
-                this.SetSwapChain(IntPtr.Zero);
-            }
-            catch (Exception ex) when (ex is ObjectDisposedException || IsGraphicsException(ex))
-            {
-                // Safe to ignore teardown failures after the graphics device is unavailable.
-            }
+            this.SetSwapChain(IntPtr.Zero);
+        }
+        catch (Exception ex) when (ex is ObjectDisposedException || IsGraphicsException(ex))
+        {
+            // Safe to ignore teardown failures after the graphics device is unavailable.
         }
 
         CleanUpDevice();
