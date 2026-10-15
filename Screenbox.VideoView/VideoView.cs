@@ -268,6 +268,6 @@ public partial class VideoView : SwapChainPanel
 
     private static bool IsGraphicsException(Exception ex)
     {
-        return ex is SharpGenException or COMException;
+        return ex is SharpGenException or COMException or OutOfMemoryException;
     }
 }
