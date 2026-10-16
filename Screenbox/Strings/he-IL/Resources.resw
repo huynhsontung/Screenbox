@@ -367,7 +367,7 @@
     <value>פתח את מיקום הקובץ</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>פתח בסייר הקבצים</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>פתח באמצעות</value>
@@ -1063,16 +1063,16 @@
     <value>הגבר מהירות</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>הרצועה הבאה</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>הרצועה הקודמת</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>הפרק הבא</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>הפרק הקודם</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>הוסף לרשימת השמעה</value>
@@ -1090,10 +1090,10 @@
     <value>יצא</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>פריט נבחר</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>פריטים נבחרים</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
     <value>אין רשימות השמעה</value>
@@ -1133,11 +1133,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>{0} רשימת השמעה נבחרה</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>{0} רשימות השמעה נבחרו</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1179,14 +1179,14 @@
     <value>שינוי</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>יחס גובה-רוחב: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>אפשרויות אודיו</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>אפשרויות כתוביות</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
     <value>Decrease {0}</value>
