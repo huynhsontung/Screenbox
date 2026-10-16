@@ -66,7 +66,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly IWindowService _windowService;
     private readonly PlayerSettingsContext _playerSettings;
-    private readonly AdvancedSettingsContext _advancedSettings;
     private readonly PlayerContext _playerContext;
     private readonly IFilesService _filesService;
     private readonly IPlayQueueCoordinator _coordinator;
@@ -78,18 +77,16 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         IFilesService filesService,
         IPlayQueueCoordinator coordinator,
         PlayerSettingsContext playerSettings,
-        AdvancedSettingsContext advancedSettings,
         IWindowService windowService,
         PlayerContext playerContext)
     {
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _windowService = windowService;
         _playerSettings = playerSettings;
-        _advancedSettings = advancedSettings;
         _playerContext = playerContext;
         _filesService = filesService;
         _coordinator = coordinator;
-        IsAdvancedModeActive = advancedSettings.AdvancedMode;
+        IsAdvancedModeActive = playerSettings.AdvancedMode;
         IsMinimal = true;
         IsDisplayingRemainingTime = playerSettings.ShowRemainingTime;
         PlayerShowChapters = playerSettings.ShowChapters;
@@ -97,19 +94,15 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
         _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
 
-        _advancedSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(AdvancedSettingsContext.AdvancedMode))
-            {
-                IsAdvancedModeActive = _advancedSettings.AdvancedMode;
-            }
-        };
-
         _playerSettings.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(PlayerSettingsContext.ShowChapters))
             {
                 PlayerShowChapters = _playerSettings.ShowChapters;
+            }
+            else if (e.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+            {
+                IsAdvancedModeActive = _playerSettings.AdvancedMode;
             }
         };
 

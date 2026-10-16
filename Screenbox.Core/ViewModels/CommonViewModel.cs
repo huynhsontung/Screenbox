@@ -24,7 +24,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 {
     public Dictionary<Type, string> NavigationStates { get; }
 
-    public bool IsAdvancedModeEnabled => _advancedSettings.AdvancedMode;
+    public bool IsAdvancedModeEnabled => _playerSettings.AdvancedMode;
 
     [ObservableProperty] public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
     [ObservableProperty] public partial Thickness ScrollBarMargin { get; set; }
@@ -33,39 +33,36 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly PersonalizationSettingsContext _personalizationSettings;
-    private readonly AdvancedSettingsContext _advancedSettings;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
     private readonly Dictionary<string, object> _pageStates;
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        PersonalizationSettingsContext personalizationSettings,
-        AdvancedSettingsContext advancedSettings,
+        PlayerSettingsContext playerSettings,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _personalizationSettings = personalizationSettings;
-        _advancedSettings = advancedSettings;
+        _playerSettings = playerSettings;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
         NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 
-        _advancedSettings.PropertyChanged += OnAdvancedSettingsPropertyChanged;
+        _playerSettings.PropertyChanged += OnPlayerSettingsPropertyChanged;
 
         Messenger.Register<PropertyChangedMessage<ThemeOption>>(this);
         Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
     }
 
-    private void OnAdvancedSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnPlayerSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(AdvancedSettingsContext.AdvancedMode))
+        if (e.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
         {
             OnPropertyChanged(nameof(IsAdvancedModeEnabled));
         }
@@ -74,7 +71,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
     [DynamicWindowsRuntimeCast(typeof(Frame))]
     public void Receive(PropertyChangedMessage<ThemeOption> message)
     {
-        if (message.Sender is PersonalizationSettingsContext &&
+        if (message.Sender is GeneralSettingsContext &&
             Window.Current.Content is Frame rootFrame)
         {
             rootFrame.RequestedTheme = message.NewValue.ToElementTheme();

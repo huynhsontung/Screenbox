@@ -4,7 +4,8 @@ using Screenbox.Core.Services;
 namespace Screenbox.Core.Contexts;
 
 /// <summary>
-/// Observable state holder for media library settings and sorting preferences.
+/// Observable state holder for media library indexing, removable storage scanning,
+/// and collection sorting preferences.
 /// </summary>
 public sealed partial class LibrarySettingsContext : SettingsContextBase
 {

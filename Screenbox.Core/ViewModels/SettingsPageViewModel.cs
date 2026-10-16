@@ -31,14 +31,11 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public LibrarySettingsContext LibrarySettings => Settings.Library;
     public PlaybackSettingsContext PlaybackSettings => Settings.Playback;
     public GeneralSettingsContext GeneralSettings => Settings.General;
-    public AdvancedSettingsContext AdvancedSettings => Settings.Advanced;
-    public PrivacySettingsContext PrivacySettings => Settings.Privacy;
-    public PersonalizationSettingsContext PersonalizationSettings => Settings.Personalization;
 
     public int Theme
     {
-        get => ((int)PersonalizationSettings.Theme + 2) % 3;
-        set => PersonalizationSettings.Theme = (ThemeOption)((value + 1) % 3);
+        get => ((int)GeneralSettings.Theme + 2) % 3;
+        set => GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
     }
 
     public int VolumeBoost
@@ -67,20 +64,20 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public int VideoUpscaling
     {
-        get => (int)AdvancedSettings.VideoUpscale;
-        set => AdvancedSettings.VideoUpscale = (VideoUpscaleOption)value;
+        get => (int)PlayerSettings.VideoUpscale;
+        set => PlayerSettings.VideoUpscale = (VideoUpscaleOption)value;
     }
 
     public string GlobalArguments
     {
-        get => AdvancedSettings.GlobalArguments;
-        set => AdvancedSettings.GlobalArguments = value;
+        get => PlayerSettings.GlobalArguments;
+        set => PlayerSettings.GlobalArguments = value;
     }
 
     public bool AdvancedMode
     {
-        get => AdvancedSettings.AdvancedMode;
-        set => AdvancedSettings.AdvancedMode = value;
+        get => PlayerSettings.AdvancedMode;
+        set => PlayerSettings.AdvancedMode = value;
     }
 
     public bool PlayerShowChapters
@@ -167,12 +164,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         PlaybackSettings.PropertyChanged += OnPlaybackSettingsPropertyChanged;
         PlayerSettings.PropertyChanged += OnPlayerSettingsPropertyChanged;
         LibrarySettings.PropertyChanged += OnLibrarySettingsPropertyChanged;
-        AdvancedSettings.PropertyChanged += OnAdvancedSettingsPropertyChanged;
-        PrivacySettings.PropertyChanged += OnPrivacySettingsPropertyChanged;
-        PersonalizationSettings.PropertyChanged += OnPersonalizationSettingsPropertyChanged;
 
         // Setting initial values for relaunch check
-        _initialValues ??= new InitialValues(AdvancedSettings.GlobalArguments, AdvancedSettings.AdvancedMode, VideoUpscaling, SelectedLanguage);
+        _initialValues ??= new InitialValues(PlayerSettings.GlobalArguments, PlayerSettings.AdvancedMode, VideoUpscaling, SelectedLanguage);
         CheckForRelaunch();
     }
 
@@ -304,9 +298,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         PlaybackSettings.PropertyChanged -= OnPlaybackSettingsPropertyChanged;
         PlayerSettings.PropertyChanged -= OnPlayerSettingsPropertyChanged;
         LibrarySettings.PropertyChanged -= OnLibrarySettingsPropertyChanged;
-        AdvancedSettings.PropertyChanged -= OnAdvancedSettingsPropertyChanged;
-        PrivacySettings.PropertyChanged -= OnPrivacySettingsPropertyChanged;
-        PersonalizationSettings.PropertyChanged -= OnPersonalizationSettingsPropertyChanged;
 
         if (_videosLibrary != null)
         {
@@ -328,21 +319,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     private void OnGeneralSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-    }
-
-    private void OnPersonalizationSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(PersonalizationSettingsContext.Theme))
+        if (e.PropertyName == nameof(GeneralSettingsContext.Theme))
         {
             OnPropertyChanged(nameof(Theme));
         }
-    }
-
-    private void OnPrivacySettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(PrivacySettingsContext.ShowRecent))
+        else if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
         {
-            if (!PrivacySettings.ShowRecent) ClearRecentContext();
+            if (!GeneralSettings.ShowRecent) ClearRecentContext();
         }
     }
 
@@ -360,6 +343,20 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         {
             OnPropertyChanged(nameof(PlayerAutoResize));
         }
+        else if (e.PropertyName == nameof(PlayerSettingsContext.VideoUpscale))
+        {
+            OnPropertyChanged(nameof(VideoUpscaling));
+            CheckForRelaunch();
+        }
+        else if (e.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+        {
+            CheckForRelaunch();
+        }
+        else if (e.PropertyName == nameof(PlayerSettingsContext.GlobalArguments))
+        {
+            OnPropertyChanged(nameof(GlobalArguments));
+            CheckForRelaunch();
+        }
     }
 
     private async void OnLibrarySettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -370,24 +367,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
             {
                 await RefreshLibrariesAsync();
             }
-        }
-    }
-
-    private void OnAdvancedSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(AdvancedSettingsContext.VideoUpscale))
-        {
-            OnPropertyChanged(nameof(VideoUpscaling));
-            CheckForRelaunch();
-        }
-        else if (e.PropertyName == nameof(AdvancedSettingsContext.AdvancedMode))
-        {
-            CheckForRelaunch();
-        }
-        else if (e.PropertyName == nameof(AdvancedSettingsContext.GlobalArguments))
-        {
-            OnPropertyChanged(nameof(GlobalArguments));
-            CheckForRelaunch();
         }
     }
 
@@ -518,12 +497,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
         bool languageChanged = _initialValues.Language != SelectedLanguage;
-        bool argsChanged = _initialValues.GlobalArguments != AdvancedSettings.GlobalArguments;
-        bool modeChanged = _initialValues.AdvancedMode != AdvancedSettings.AdvancedMode;
-        bool hasArgs = AdvancedSettings.GlobalArguments.Length > 0;
-        bool whenOn = modeChanged && AdvancedSettings.AdvancedMode && hasArgs;
-        bool whenOff = modeChanged && !AdvancedSettings.AdvancedMode && ((!hasArgs && argsChanged) || hasArgs);
-        bool whenOnAndChanged = AdvancedSettings.AdvancedMode && argsChanged;
+        bool argsChanged = _initialValues.GlobalArguments != PlayerSettings.GlobalArguments;
+        bool modeChanged = _initialValues.AdvancedMode != PlayerSettings.AdvancedMode;
+        bool hasArgs = PlayerSettings.GlobalArguments.Length > 0;
+        bool whenOn = modeChanged && PlayerSettings.AdvancedMode && hasArgs;
+        bool whenOff = modeChanged && !PlayerSettings.AdvancedMode && ((!hasArgs && argsChanged) || hasArgs);
+        bool whenOnAndChanged = PlayerSettings.AdvancedMode && argsChanged;
 
         IsRelaunchRequired = upscalingChanged || languageChanged || whenOn || whenOff || whenOnAndChanged;
     }

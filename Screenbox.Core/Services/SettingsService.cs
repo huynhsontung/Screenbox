@@ -29,10 +29,7 @@ public sealed class SettingsService : ISettingsService
             new PlayerSettingsContext(storage),
             new LibrarySettingsContext(storage),
             new PlaybackSettingsContext(storage),
-            new GeneralSettingsContext(storage),
-            new AdvancedSettingsContext(storage),
-            new PrivacySettingsContext(storage),
-            new PersonalizationSettingsContext(storage));
+            new GeneralSettingsContext(storage));
     }
 
     public bool UseIndexer
@@ -43,8 +40,8 @@ public sealed class SettingsService : ISettingsService
 
     public ThemeOption Theme
     {
-        get => _settings.Personalization.Theme;
-        set => _settings.Personalization.Theme = value;
+        get => _settings.General.Theme;
+        set => _settings.General.Theme = value;
     }
 
     public PlayerAutoResizeOption PlayerAutoResize
@@ -73,8 +70,8 @@ public sealed class SettingsService : ISettingsService
 
     public bool ShowRecent
     {
-        get => _settings.Privacy.ShowRecent;
-        set => _settings.Privacy.ShowRecent = value;
+        get => _settings.General.ShowRecent;
+        set => _settings.General.ShowRecent = value;
     }
 
     public bool EnqueueAllFilesInFolder
@@ -91,8 +88,8 @@ public sealed class SettingsService : ISettingsService
 
     public bool RestorePlaybackPosition
     {
-        get => _settings.Privacy.RestorePlaybackPosition;
-        set => _settings.Privacy.RestorePlaybackPosition = value;
+        get => _settings.Playback.RestorePlaybackPosition;
+        set => _settings.Playback.RestorePlaybackPosition = value;
     }
 
     public bool PlayerShowControls
@@ -121,26 +118,26 @@ public sealed class SettingsService : ISettingsService
 
     public string GlobalArguments
     {
-        get => _settings.Advanced.GlobalArguments;
-        set => _settings.Advanced.GlobalArguments = value;
+        get => _settings.Player.GlobalArguments;
+        set => _settings.Player.GlobalArguments = value;
     }
 
     public bool AdvancedMode
     {
-        get => _settings.Advanced.AdvancedMode;
-        set => _settings.Advanced.AdvancedMode = value;
+        get => _settings.Player.AdvancedMode;
+        set => _settings.Player.AdvancedMode = value;
     }
 
     public VideoUpscaleOption VideoUpscale
     {
-        get => _settings.Advanced.VideoUpscale;
-        set => _settings.Advanced.VideoUpscale = value;
+        get => _settings.Player.VideoUpscale;
+        set => _settings.Player.VideoUpscale = value;
     }
 
     public bool UseMultipleInstances
     {
-        get => _settings.Advanced.UseMultipleInstances;
-        set => _settings.Advanced.UseMultipleInstances = value;
+        get => _settings.General.UseMultipleInstances;
+        set => _settings.General.UseMultipleInstances = value;
     }
 
     public string LivelyActivePath
@@ -163,8 +160,8 @@ public sealed class SettingsService : ISettingsService
 
     public bool PersistPlaybackPosition
     {
-        get => _settings.Privacy.PersistPlaybackPosition;
-        set => _settings.Privacy.PersistPlaybackPosition = value;
+        get => _settings.Playback.PersistPlaybackPosition;
+        set => _settings.Playback.PersistPlaybackPosition = value;
     }
 
     public int PlayerRewindStep

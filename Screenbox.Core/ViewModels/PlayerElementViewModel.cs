@@ -53,7 +53,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private readonly IPlayerService _playerService;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly PlayerSettingsContext _playerSettings;
-    private readonly AdvancedSettingsContext _advancedSettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _clickTimer;
     private readonly DispatcherQueueTimer _pointerWheelTimer;
@@ -71,14 +70,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         PlayerContext playerContext,
         IPlayerService playerService,
         PlayerSettingsContext playerSettings,
-        AdvancedSettingsContext advancedSettings,
         ISystemMediaTransportControlsService transportControlsService,
         ILogger<PlayerElementViewModel> logger)
     {
         _playerContext = playerContext;
         _playerService = playerService;
         _playerSettings = playerSettings;
-        _advancedSettings = advancedSettings;
         _transportControlsService = transportControlsService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -140,14 +137,14 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             try
             {
                 var args = new List<string>();
-                if (_advancedSettings.GlobalArguments.Length > 0)
+                if (_playerSettings.GlobalArguments.Length > 0)
                 {
-                    args.AddRange(_advancedSettings.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                    args.AddRange(_playerSettings.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
                 }
 
-                if (_advancedSettings.VideoUpscale != VideoUpscaleOption.Linear)
+                if (_playerSettings.VideoUpscale != VideoUpscaleOption.Linear)
                 {
-                    args.Add($"--d3d11-upscale-mode={_advancedSettings.VideoUpscale.ToString().ToLower()}");
+                    args.Add($"--d3d11-upscale-mode={_playerSettings.VideoUpscale.ToString().ToLower()}");
                 }
 
                 args.AddRange(swapChainOptions);

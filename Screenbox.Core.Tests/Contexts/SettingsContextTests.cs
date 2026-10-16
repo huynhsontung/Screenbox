@@ -33,10 +33,10 @@ public class SettingsContextTests
     }
 
     [Test]
-    public async Task PersonalizationSettingsContext_WhenThemeChanged_UpdatesStorageAndBroadcastsMessage()
+    public async Task GeneralSettingsContext_WhenThemeChanged_UpdatesStorageAndBroadcastsMessage()
     {
         var storage = new MemorySettingsStorage();
-        var context = new PersonalizationSettingsContext(storage);
+        var context = new GeneralSettingsContext(storage);
 
         PropertyChangedMessage<ThemeOption>? receivedMessage = null;
         object recipient = new();
@@ -66,28 +66,25 @@ public class SettingsContextTests
     }
 
     [Test]
-    public async Task PrivacySettingsContext_WhenPropertyChanged_UpdatesStorage()
+    public async Task PlaybackSettingsContext_WhenPositionTrackingChanged_UpdatesStorage()
     {
         var storage = new MemorySettingsStorage();
-        var context = new PrivacySettingsContext(storage);
+        var context = new PlaybackSettingsContext(storage);
 
-        context.ShowRecent = false;
         context.PersistPlaybackPosition = false;
         context.RestorePlaybackPosition = true;
 
-        await Assert.That(context.ShowRecent).IsFalse();
         await Assert.That(context.PersistPlaybackPosition).IsFalse();
         await Assert.That(context.RestorePlaybackPosition).IsTrue();
-        await Assert.That(storage.GetValue("General/ShowRecent", true)).IsFalse();
         await Assert.That(storage.GetValue("Privacy/PersistPlaybackPosition", true)).IsFalse();
         await Assert.That(storage.GetValue("General/RestorePlaybackPosition", false)).IsTrue();
     }
 
     [Test]
-    public async Task AdvancedSettingsContext_GlobalArguments_SanitizesValue()
+    public async Task PlayerSettingsContext_GlobalArguments_SanitizesValue()
     {
         var storage = new MemorySettingsStorage();
-        var context = new AdvancedSettingsContext(storage);
+        var context = new PlayerSettingsContext(storage);
 
         context.GlobalArguments = "invalid -v --network-caching=1000 -- trailing";
 
@@ -103,10 +100,7 @@ public class SettingsContextTests
             new PlayerSettingsContext(storage),
             new LibrarySettingsContext(storage),
             new PlaybackSettingsContext(storage),
-            new GeneralSettingsContext(storage),
-            new AdvancedSettingsContext(storage),
-            new PrivacySettingsContext(storage),
-            new PersonalizationSettingsContext(storage)
+            new GeneralSettingsContext(storage)
         );
         var service = new SettingsService(settingsContext);
 
@@ -115,7 +109,7 @@ public class SettingsContextTests
         service.UseIndexer = false;
 
         await Assert.That(settingsContext.Player.RewindStep).IsEqualTo(20);
-        await Assert.That(settingsContext.Personalization.Theme).IsEqualTo(ThemeOption.Light);
+        await Assert.That(settingsContext.General.Theme).IsEqualTo(ThemeOption.Light);
         await Assert.That(settingsContext.Library.UseIndexer).IsFalse();
         await Assert.That(storage.GetValue("Libraries/UseIndexer", true)).IsFalse();
     }

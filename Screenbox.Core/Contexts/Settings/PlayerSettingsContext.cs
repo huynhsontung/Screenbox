@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -5,7 +7,9 @@ using Screenbox.Core.Services;
 namespace Screenbox.Core.Contexts;
 
 /// <summary>
-/// Observable state holder for media player settings, controls, and gesture configuration.
+/// Observable state holder for media player UI presentation, transport controls, seek intervals,
+/// touch and pointer gestures, frame capture location, Lively audio visualizer, video upscaling,
+/// and LibVLC engine configuration.
 /// </summary>
 public sealed partial class PlayerSettingsContext : SettingsContextBase
 {
@@ -26,6 +30,9 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase
     private const string GestureSlideHorizontalKey = "Player/Gesture/SlideHorizontal";
     private const string GesturePressAndHoldKey = "Player/Gesture/PressAndHold";
     private const string LivelyPathKey = "Player/Lively/Path";
+    private const string AdvancedModeKey = "Advanced/IsEnabled";
+    private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
+    private const string GlobalArgumentsKey = "Values/GlobalArguments";
 
     private static bool IsXbox => SystemInformation.IsXbox;
 
@@ -131,7 +138,39 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase
         set => Set(LivelyPathKey, value);
     }
 
+    public bool AdvancedMode
+    {
+        get => Get(AdvancedModeKey, false);
+        set => Set(AdvancedModeKey, value);
+    }
+
+    public VideoUpscaleOption VideoUpscale
+    {
+        get => Get(AdvancedVideoUpscaleKey, VideoUpscaleOption.Linear);
+        set => Set(AdvancedVideoUpscaleKey, value);
+    }
+
+    public string GlobalArguments
+    {
+        get => Get(GlobalArgumentsKey, string.Empty);
+        set
+        {
+            string sanitized = SanitizeArguments(value);
+            if (!Set(GlobalArgumentsKey, sanitized) && sanitized != value)
+            {
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public PlayerSettingsContext(ISettingsStorage storage) : base(storage)
     {
+    }
+
+    private static string SanitizeArguments(string raw)
+    {
+        string[] args = raw.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Where(s => s.StartsWith('-') && s != "--").ToArray();
+        return string.Join(' ', args);
     }
 }
