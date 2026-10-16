@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -36,13 +37,20 @@ public sealed partial class SongsPage : Page
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(SongsPageViewModel.SortBy))
+        if (e.PropertyName == nameof(SongsPageViewModel.SortBy))
         {
-            return;
+            UpdateSortVisualState(ViewModel.SortBy);
+            SavePageState(0);
         }
-
-        UpdateSortVisualState(ViewModel.SortBy);
-        SavePageState(0);
+        else if (e.PropertyName == nameof(SongsPageViewModel.Genres))
+        {
+            UpdateGenreFlyoutItems();
+        }
+        else if (e.PropertyName == nameof(SongsPageViewModel.SelectedGenre))
+        {
+            UpdateGenreFlyoutSelection();
+            SavePageState(0);
+        }
     }
 
     private void UpdateSortVisualState(SongSortOrder sortBy)
@@ -62,11 +70,19 @@ public sealed partial class SongsPage : Page
         base.OnNavigatedTo(e);
 
         if (e.NavigationMode == NavigationMode.Back
-            && Common.TryGetPageState(nameof(SongsPage), Frame.BackStackDepth, out var state)
-            && state is KeyValuePair<SongSortOrder, double> pair)
+            && Common.TryGetPageState(nameof(SongsPage), Frame.BackStackDepth, out var state))
         {
-            ViewModel.SortBy = pair.Key;
-            _contentVerticalOffset = pair.Value;
+            if (state is PageState pageState)
+            {
+                ViewModel.SortBy = pageState.SortBy;
+                ViewModel.SelectedGenre = pageState.SelectedGenre;
+                _contentVerticalOffset = pageState.VerticalOffset;
+            }
+            else if (state is KeyValuePair<SongSortOrder, double> pair)
+            {
+                ViewModel.SortBy = pair.Key;
+                _contentVerticalOffset = pair.Value;
+            }
         }
 
         UpdateSortVisualState(ViewModel.SortBy);
@@ -76,6 +92,7 @@ public sealed partial class SongsPage : Page
             ViewModel.FetchSongs();
         }
 
+        UpdateGenreFlyoutItems();
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
     }
 
@@ -85,6 +102,57 @@ public sealed partial class SongsPage : Page
 
         ViewModel.OnNavigatedFrom();
         ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+    }
+
+    private void UpdateGenreFlyoutItems()
+    {
+        GenreFlyout.Items.Clear();
+
+        var allGenresItem = new RadioMenuFlyoutItem
+        {
+            Text = Strings.Resources.AllGenres,
+            GroupName = "GenreFilter",
+            IsChecked = ViewModel.SelectedGenre is null,
+            Command = ViewModel.SetGenreCommand,
+            CommandParameter = null
+        };
+        GenreFlyout.Items.Add(allGenresItem);
+
+        var unknownGenreItem = new RadioMenuFlyoutItem
+        {
+            Text = Strings.Resources.UnknownGenre,
+            GroupName = "GenreFilter",
+            IsChecked = ViewModel.SelectedGenre == string.Empty,
+            Command = ViewModel.SetGenreCommand,
+            CommandParameter = string.Empty
+        };
+        GenreFlyout.Items.Add(unknownGenreItem);
+
+        foreach (string genre in ViewModel.Genres)
+        {
+            var genreItem = new RadioMenuFlyoutItem
+            {
+                Text = genre,
+                GroupName = "GenreFilter",
+                IsChecked = string.Equals(ViewModel.SelectedGenre, genre, StringComparison.CurrentCultureIgnoreCase),
+                Command = ViewModel.SetGenreCommand,
+                CommandParameter = genre
+            };
+            GenreFlyout.Items.Add(genreItem);
+        }
+    }
+
+    private void UpdateGenreFlyoutSelection()
+    {
+        foreach (var item in GenreFlyout.Items.OfType<RadioMenuFlyoutItem>())
+        {
+            item.IsChecked = item.CommandParameter switch
+            {
+                null => ViewModel.SelectedGenre is null,
+                string param => string.Equals(param, ViewModel.SelectedGenre, StringComparison.CurrentCultureIgnoreCase),
+                _ => false
+            };
+        }
     }
 
     private void SongListView_OnLoaded(object sender, RoutedEventArgs e)
@@ -110,9 +178,11 @@ public sealed partial class SongsPage : Page
         SavePageState(e.NextView.VerticalOffset);
     }
 
+    private record PageState(SongSortOrder SortBy, string? SelectedGenre, double VerticalOffset);
+
     private void SavePageState(double verticalOffset)
     {
-        Common.SavePageState(new KeyValuePair<SongSortOrder, double>(ViewModel.SortBy, verticalOffset), nameof(SongsPage), Frame.BackStackDepth);
+        Common.SavePageState(new PageState(ViewModel.SortBy, ViewModel.SelectedGenre, verticalOffset), nameof(SongsPage), Frame.BackStackDepth);
     }
 
     private bool IsSortBy(SongSortOrder current, SongSortOrder target) => current == target;
@@ -133,5 +203,21 @@ public sealed partial class SongsPage : Page
     {
         var optionText = GetSortByText(value);
         return Strings.Resources.SortByAutomationName(optionText);
+    }
+
+    private string GetGenreText(string? genre)
+    {
+        return genre switch
+        {
+            null => Strings.Resources.AllGenres,
+            "" => Strings.Resources.UnknownGenre,
+            _ => genre
+        };
+    }
+
+    private string GetGenreButtonAutomationName(string? genre)
+    {
+        var optionText = GetGenreText(genre);
+        return Strings.Resources.FilterByGenreAutomationName(optionText);
     }
 }

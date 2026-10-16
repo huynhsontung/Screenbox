@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -70,13 +71,22 @@ public sealed partial class VolumeControl : UserControl
     {
         var pointer = e.GetCurrentPoint((UIElement)sender);
         int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-        int volumeChange = mouseWheelDelta > 0 ? 5 : -5;
+        bool isTouchpad = TouchpadHelper.IsTouchpadDelta(mouseWheelDelta);
+        int volumeChange = isTouchpad
+            ? (mouseWheelDelta < 0 ? 5 : -5)
+            : (mouseWheelDelta > 0 ? 5 : -5);
         ViewModel.SetVolume(volumeChange, true);
     }
 
     private void VolumeControl_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         UpdateIndicatorBoostWidth();
+    }
+
+    private void ToggleMuteKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.HandleMuteToggleKey();
+        args.Handled = true;
     }
 
     private void UpdateIndicatorBoostWidth()

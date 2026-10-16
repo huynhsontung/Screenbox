@@ -433,6 +433,10 @@
     <value>CS</value>
     <comment>{Range="A-Z"}{Limit=2}Access key for sorting options. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
+  <data name="CommandFilterByGenreKey" xml:space="preserve">
+    <value>CG</value>
+    <comment>{Range="A-Z"}{Limit=2}Access key for filtering by genre options. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
+  </data>
   <data name="CommandPlayKey" xml:space="preserve">
     <value>CP</value>
     <comment>{Range="A-Z"}{Limit=2}Access key for playing. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>

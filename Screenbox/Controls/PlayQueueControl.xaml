@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Screenbox.Controls.PlayQueueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -78,8 +78,14 @@
             Margin="{StaticResource BottomLargeMargin}"
             Padding="{x:Bind Padding, Mode=OneWay}"
             KeyTipPlacementMode="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
             <StackPanel
                 x:Name="ActionButtonPanel"
+                Grid.Column="0"
                 Padding="0,8,0,8"
                 Orientation="Horizontal">
                 <Button
@@ -162,8 +168,25 @@
                 </ToggleButton>
             </StackPanel>
 
+            <TextBlock
+                x:Name="CaptionText"
+                Grid.Column="1"
+                Margin="12,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Text="{x:Bind GetSubtext(ViewModel.Queue.Items), Mode=OneWay}"
+                TextWrapping="NoWrap">
+                <interactivity:Interaction.Behaviors>
+                    <behaviors:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+
             <controls:SelectionBarControl
                 x:Name="SelectionBar"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
                 ctAnimations:Implicit.HideAnimations="{StaticResource SelectionBarExitImplicitAnimation}"
                 ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionBarEntranceImplicitAnimation}"
                 CheckBoxCommand="{StaticResource SelectDeselectAllCommand}"
@@ -245,6 +268,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ActionButtonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="CaptionText.Visibility" Value="Collapsed" />
                         <Setter Target="SelectionBar.Visibility" Value="Visible" />
                         <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
                     </VisualState.Setters>
