@@ -23,6 +23,7 @@
             x:Key="ItemFlyout"
             AddToQueueCommand="{x:Bind ViewModel.AddToQueueCommand}"
             ContextItem="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
+            DeleteCommand="{x:Bind DeleteMediaCommand}"
             IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
             PlayCommand="{x:Bind ViewModel.PlayCommand}"
             PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}" />

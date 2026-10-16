@@ -60,7 +60,10 @@
                 </StackPanel>
             </Flyout>
 
-            <MenuFlyout x:Key="NormalPlayerContextMenu">
+            <MenuFlyout
+                x:Key="NormalPlayerContextMenu"
+                Closed="NormalPlayerContextMenu_OnClosed"
+                Opened="NormalPlayerContextMenu_OnOpened">
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AddToPlaylistFlyoutBehavior DataContext="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}" TargetSubItem="{x:Bind AddToPlaylistSubMenu}" />
                 </interactivity:Interaction.Behaviors>
@@ -75,6 +78,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="O" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AddToPlaylistSubMenu"
@@ -109,6 +115,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="I" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="PlaybackSpeedSubMenu"
@@ -190,6 +199,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="S" Modifiers="Shift" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     AccessKey="{x:Bind strings:KeyboardResources.MenuItemCastKey}"
@@ -202,6 +214,9 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="K" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AspectRatioSubMenu"
@@ -293,6 +308,9 @@
                             IsEnabled="False"
                             Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     x:Name="FullscreenMenuItem"
@@ -312,6 +330,53 @@
                             x:Name="FullscreenMenuItemFnKeyboardAccelerator"
                             IsEnabled="False" />
                     </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
+                </MenuFlyoutItem>
+                <!--  Delete  -->
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    x:Name="DeleteMenuItem"
+                    Command="{x:Bind DeleteCurrentItemCommand}"
+                    Icon="Delete"
+                    Text="{x:Bind strings:Resources.Delete}">
+                    <MenuFlyoutItem.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Default">
+                                    <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+                                    <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemFillColorCriticalBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemFillColorCriticalBrush" />
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="HighContrast">
+                                    <StaticResource x:Key="MenuFlyoutItemForeground" ResourceKey="SystemColorButtonTextColorBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemForegroundPointerOver" ResourceKey="SystemColorHighlightTextColorBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemForegroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForeground" ResourceKey="SystemColorButtonTextColorBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPointerOver" ResourceKey="SystemColorHighlightTextColorBrush" />
+                                    <StaticResource x:Key="MenuFlyoutItemKeyboardAcceleratorTextForegroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </MenuFlyoutItem.Resources>
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Delete" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:MenuFlyoutItemAcceleratorTextAlignmentBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </MenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>

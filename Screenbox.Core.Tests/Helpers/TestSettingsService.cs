@@ -16,6 +16,7 @@ public class TestSettingsService : ISettingsService
     public string PersistentSubtitleLanguage { get; set; } = string.Empty;
     public bool ShowRecent { get; set; } = true;
     public ThemeOption Theme { get; set; } = ThemeOption.Auto;
+    public bool RequireDeleteConfirmation { get; set; } = true;
     public bool EnqueueAllFilesInFolder { get; set; }
     public bool RestorePlaybackPosition { get; set; }
     public bool SearchRemovableStorage { get; set; } = true;
