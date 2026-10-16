@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,7 +14,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 
@@ -44,7 +41,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ISettingsService _settingsService;
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
-    private readonly LibraryContext _libraryContext;
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
@@ -67,7 +63,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _settingsService = settingsService;
         _searchService = searchService;
         _navigationService = navigationService;
-        _libraryContext = libraryContext;
         _libraryCoordinator = libraryCoordinator;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;

@@ -290,6 +290,18 @@
                         <GridView.Resources>
                             <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayPlaylistCommand, FallbackValue={x:Null}}" />
                         </GridView.Resources>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=TwoWay}">
+                                <behaviors:ListViewContextBehavior.Flyout>
+                                    <flyouts:MediaMenuFlyout
+                                        AddToQueueCommand="{x:Bind PlaylistsViewModel.AddToQueueCommand}"
+                                        ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                                        IsAddToPlaylistButtonVisible="False"
+                                        PlayCommand="{x:Bind PlaylistsViewModel.PlayCommand}"
+                                        PlayNextCommand="{x:Bind PlaylistsViewModel.PlayNextCommand}" />
+                                </behaviors:ListViewContextBehavior.Flyout>
+                            </behaviors:ListViewContextBehavior>
+                        </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>
 
