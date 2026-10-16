@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Commands;
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
@@ -72,6 +73,29 @@ public sealed partial class PlayQueueControl : UserControl
         {
             e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
         }
+    }
+
+    // Intentionally only recalculate the runtime when the collection is updated,
+    // without listening to duration changes on each media item for simplicity.
+    private string GetSubtext(IReadOnlyCollection<MediaViewModel> items)
+    {
+        int itemsCount = items.Count;
+        TimeSpan duration = GetTotalDuration(items);
+
+        string itemsCountText = Strings.Resources.ItemsCount(itemsCount);
+        string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
+        return $"{itemsCountText} • {runTime}";
+    }
+
+    private static TimeSpan GetTotalDuration(IReadOnlyCollection<MediaViewModel> items)
+    {
+        TimeSpan duration = TimeSpan.Zero;
+        foreach (MediaViewModel item in items)
+        {
+            duration += item.Duration;
+        }
+
+        return duration;
     }
 
     [DynamicWindowsRuntimeCast(typeof(Control))]

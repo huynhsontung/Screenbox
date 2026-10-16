@@ -47,7 +47,7 @@
                         <Setter Property="Padding" Value="0,0,0,15" />
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
-                <controls:PlaybackSpeedControl Width="296" />
+                <controls:PlaybackSpeedControl MinWidth="296" />
             </Flyout>
 
             <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
@@ -449,8 +449,11 @@
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE892;" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="PageUp" />
-                    <KeyboardAccelerator Key="P" Modifiers="Shift" />
+                    <KeyboardAccelerator
+                        Key="P"
+                        Invoked="PreviousNextKeyboardAccelerator_OnInvoked"
+                        Modifiers="Shift" />
+                    <KeyboardAccelerator Key="PageUp" Invoked="PreviousNextKeyboardAccelerator_OnInvoked" />
                 </Button.KeyboardAccelerators>
             </Button>
             <Button
@@ -464,8 +467,11 @@
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE893;" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="PageDown" />
-                    <KeyboardAccelerator Key="N" Modifiers="Shift" />
+                    <KeyboardAccelerator
+                        Key="N"
+                        Invoked="PreviousNextKeyboardAccelerator_OnInvoked"
+                        Modifiers="Shift" />
+                    <KeyboardAccelerator Key="PageDown" Invoked="PreviousNextKeyboardAccelerator_OnInvoked" />
                 </Button.KeyboardAccelerators>
             </Button>
 
