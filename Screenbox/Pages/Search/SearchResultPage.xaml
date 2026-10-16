@@ -229,7 +229,10 @@
                     </ListView>
                 </StackPanel>
                 <!--  Videos Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowVideos}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowVideos}">
                     <Grid
                         x:Name="VideosResultHeader"
                         MinHeight="32"
@@ -263,6 +266,32 @@
                         </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>
+                <!--  Playlists Section  -->
+                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowPlaylists}">
+                    <Grid
+                        x:Name="PlaylistsResultHeader"
+                        MinHeight="32"
+                        Margin="{StaticResource BottomMediumMargin}"
+                        Padding="{StaticResource ContentPagePadding}">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="{x:Bind strings:Resources.Playlists}" />
+                    </Grid>
+                    <GridView
+                        x:Name="PlaylistGridView"
+                        Padding="{StaticResource GridViewContentPagePadding}"
+                        ui:ListViewExtensions.Command="{x:Bind Common.OpenPlaylistCommand}"
+                        IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
+                        ItemTemplate="{StaticResource PlaylistGridViewItemTemplate}"
+                        ItemsSource="{x:Bind ViewModel.Playlists}"
+                        SelectionMode="None">
+                        <GridView.Resources>
+                            <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayPlaylistCommand, FallbackValue={x:Null}}" />
+                        </GridView.Resources>
+                    </GridView>
+                </StackPanel>
 
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </StackPanel>
@@ -286,6 +315,8 @@
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="VideosResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="PlaylistsResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="PlaylistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

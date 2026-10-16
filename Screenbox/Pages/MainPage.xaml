@@ -39,7 +39,10 @@
                 <templates:SearchSuggestionTemplateSelector.ItemTemplate>
                     <DataTemplate x:DataType="models:SearchSuggestion">
                         <StackPanel AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleSearchSuggestionName(Type, Text)}" Orientation="Horizontal">
-                            <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}" />
+                            <FontIcon
+                                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                FontSize="{StaticResource StandardIconFontSize}"
+                                Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}" />
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind Text}" />
                         </StackPanel>
                     </DataTemplate>

@@ -192,6 +192,9 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case ArtistViewModel artist:
                 _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
                 break;
+            case PlaylistViewModel playlist:
+                _navigationService.Navigate(typeof(PlaylistDetailsPageViewModel), playlist);
+                break;
         }
     }
 

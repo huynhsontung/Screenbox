@@ -16,16 +16,24 @@ public sealed class SearchService : ISearchService
     private const double IndexWeightFactor = 0.1;
 
     private readonly LibraryContext _libraryContext;
+    private readonly PlaylistsContext _playlistsContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SearchService"/> class.
     /// </summary>
     /// <param name="libraryContext">The library context to search within.</param>
-    public SearchService(LibraryContext libraryContext)
+    /// <param name="playlistsContext">The playlists context to search within.</param>
+    public SearchService(LibraryContext libraryContext, PlaylistsContext playlistsContext)
     {
         _libraryContext = libraryContext;
+        _playlistsContext = playlistsContext;
     }
 
+    /// <summary>
+    /// Searches the local music, video, and playlist collections.
+    /// </summary>
+    /// <param name="query">The text to search for.</param>
+    /// <returns>The matching library items grouped by category.</returns>
     public SearchResult SearchLocalLibrary(string query)
     {
         ImmutableList<MediaViewModel> songs = _libraryContext.Music.Songs
@@ -52,10 +60,21 @@ public sealed class SearchService : ISearchService
             .OrderBy(t => t.Index)
             .Select(t => t.Video)
             .ToImmutableList();
+        ImmutableList<PlaylistViewModel> playlists = _playlistsContext.Playlists
+            .Select(p => (Playlist: p, Index: p.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))
+            .Where(t => t.Index >= 0)
+            .OrderBy(t => t.Index)
+            .Select(t => t.Playlist)
+            .ToImmutableList();
 
-        return new SearchResult(query, songs, videos, artists, albums);
+        return new SearchResult(query, songs, videos, artists, albums, playlists);
     }
 
+    /// <summary>
+    /// Updates a collection with suggestions for the specified search text.
+    /// </summary>
+    /// <param name="suggestions">The collection to update.</param>
+    /// <param name="text">The search query text.</param>
     public void PopulateSuggestions(IList<SearchSuggestion> suggestions, string text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -112,8 +131,11 @@ public sealed class SearchService : ISearchService
         IEnumerable<SearchSuggestion> albums = result.Albums
             .Take(MaxSuggestionsPerCategory)
             .Select(a => new SearchSuggestion(SearchSuggestionType.Album, a.Name, a));
+        IEnumerable<SearchSuggestion> playlists = result.Playlists
+            .Take(MaxSuggestionsPerCategory)
+            .Select(p => new SearchSuggestion(SearchSuggestionType.Playlist, p.Name, p));
         IEnumerable<(double, SearchSuggestion)> searchResults = songs
-            .Concat(videos).Concat(artists).Concat(albums)
+            .Concat(videos).Concat(artists).Concat(albums).Concat(playlists)
             .Select(item => (GetRanking(item.Text, searchQuery), item))
             .OrderBy(t => t.Item1)
             .Take(MaxTotalSuggestions);

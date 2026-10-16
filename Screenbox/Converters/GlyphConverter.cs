@@ -223,8 +223,8 @@ public static partial class GlyphConverter
     public static string ToSearchSuggestionGlyph(SearchSuggestionType value)
     {
         const string ContactGlyph = "\uE77B";
-        const string MusicInfoGlyph = "\uE90B";
         const string MusicAlbumGlyph = "\uE93C";
+        const string PlaylistGlyph = "\U000F00A8";
 
         return value switch
         {
@@ -232,7 +232,7 @@ public static partial class GlyphConverter
             SearchSuggestionType.Album => MusicAlbumGlyph,
             SearchSuggestionType.Artist => ContactGlyph,
             SearchSuggestionType.Video => MoviesGlyph,
-            SearchSuggestionType.Playlist => MusicInfoGlyph,
+            SearchSuggestionType.Playlist => PlaylistGlyph,
             _ => string.Empty,
         };
     }
