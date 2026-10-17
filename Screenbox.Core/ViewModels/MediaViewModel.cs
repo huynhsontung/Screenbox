@@ -32,11 +32,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     public bool DetailsLoaded { get; private set; }
 
-    /// <summary>
-    /// Gets a value indicating whether media properties have been populated from a media parser or probe.
-    /// </summary>
-    public bool IsMediaInfoParsed { get; private set; }
-
     public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
     public Lazy<PlaybackItem?> Item { get; internal set; }
@@ -72,7 +67,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly IPlayerService _playerService;
-    private readonly IMediaProbeService _mediaProbeService;
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
 
@@ -101,7 +95,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public MediaViewModel(MediaViewModel source)
     {
         _playerService = source._playerService;
-        _mediaProbeService = source._mediaProbeService;
         _playerContext = source._playerContext;
         Name = source.Name;
         _thumbnailRef = source._thumbnailRef;
@@ -117,19 +110,11 @@ public sealed partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         DateAdded = source.DateAdded;
         IsFromLibrary = source.IsFromLibrary;
-        DetailsLoaded = source.DetailsLoaded;
-        IsMediaInfoParsed = source.IsMediaInfoParsed;
     }
 
-    private MediaViewModel(
-        object source,
-        MediaInfo mediaInfo,
-        PlayerContext playerContext,
-        IPlayerService playerService,
-        IMediaProbeService mediaProbeService)
+    private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
     {
         _playerService = playerService;
-        _mediaProbeService = mediaProbeService;
         _playerContext = playerContext;
         Source = source;
         Location = string.Empty;
@@ -142,36 +127,24 @@ public sealed partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
     }
 
-    public MediaViewModel(
-        PlayerContext playerContext,
-        IPlayerService playerService,
-        IMediaProbeService mediaProbeService,
-        StorageFile file)
-        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService, mediaProbeService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, StorageFile file)
+        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
     {
         Location = file.Path;
         Name = file.Name;
         AltCaption = file.Name;
     }
 
-    public MediaViewModel(
-        PlayerContext playerContext,
-        IPlayerService playerService,
-        IMediaProbeService mediaProbeService,
-        Uri uri)
-        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService, mediaProbeService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Uri uri)
+        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
     {
         Guard.IsTrue(uri.IsAbsoluteUri);
         Location = uri.OriginalString;
         Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
     }
 
-    public MediaViewModel(
-        PlayerContext playerContext,
-        IPlayerService playerService,
-        IMediaProbeService mediaProbeService,
-        Media media)
-        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService, mediaProbeService)
+    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Media media)
+        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
     {
         Location = media.Mrl;
 
@@ -258,74 +231,54 @@ public sealed partial class MediaViewModel : ObservableRecipient
     }
 
     /// <summary>
-    /// Merges parsed media properties into <see cref="MediaInfo"/>, preferring non-empty and non-zero parsed values.
-    /// </summary>
-    /// <param name="parsedInfo">The parsed media information.</param>
-    public void UpdateParsedMediaInfo(MediaInfo parsedInfo)
-    {
-        IsMediaInfoParsed = true;
-        MediaInfo = MediaInfo.Merge(MediaInfo, parsedInfo);
-    }
-
-    /// <summary>
-    /// Loads basic and extended file properties using the platform file service,
-    /// and opportunistically probes media properties when the playback item has been created.
+    /// Loads basic and extended file properties using the platform file service for fast indexing.
     /// </summary>
     /// <param name="filesService">The platform file service.</param>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
-        if (!DetailsLoaded)
+        DetailsLoaded = true;
+        MediaInfo? winrtInfo = null;
+        switch (Source)
         {
-            DetailsLoaded = true;
-            MediaInfo? winrtInfo = null;
-            switch (Source)
-            {
-                case StorageFile file:
-                    winrtInfo = await filesService.GetMediaInfoAsync(file);
-                    break;
-                case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
-                    UpdateSource(uriFile);
-                    winrtInfo = await filesService.GetMediaInfoAsync(uriFile);
-                    break;
-            }
-
-            if (winrtInfo is not null)
-            {
-                MediaInfo = IsMediaInfoParsed
-                    ? MediaInfo.Merge(winrtInfo, MediaInfo)
-                    : MediaInfo.Merge(MediaInfo, winrtInfo);
-            }
+            case StorageFile file:
+                winrtInfo = await filesService.GetMediaInfoAsync(file);
+                break;
+            case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
+                UpdateSource(uriFile);
+                winrtInfo = await filesService.GetMediaInfoAsync(uriFile);
+                break;
         }
 
-        if (Item.IsValueCreated && !IsMediaInfoParsed)
+        if (winrtInfo is not null)
         {
-            await ParseDetailsAsync();
+            MediaInfo = MediaInfo.Merge(winrtInfo, MediaInfo);
         }
     }
 
     /// <summary>
-    /// Probes the media source using <see cref="IMediaProbeService"/> and merges the parsed properties into <see cref="MediaInfo"/>.
+    /// Probes the media source using <paramref name="mediaProbeService"/> and merges the parsed properties into <see cref="MediaInfo"/>.
     /// </summary>
+    /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
     /// <param name="cancellationToken">A token to cancel the probe operation.</param>
-    public async Task ParseDetailsAsync(CancellationToken cancellationToken = default)
+    public async Task LoadDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
     {
-        if (IsMediaInfoParsed)
+        if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } uriFile)
         {
-            return;
+            UpdateSource(uriFile);
         }
 
         object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
             ? activeItem
             : Source;
-        MediaInfo? parsedInfo = await _mediaProbeService.ProbeMediaAsync(
+        MediaInfo? parsedInfo = await mediaProbeService.ProbeMediaAsync(
             probeSource,
             _options.Count > 0 ? _options.ToArray() : null,
             cancellationToken);
 
         if (parsedInfo is not null)
         {
-            UpdateParsedMediaInfo(parsedInfo);
+            MediaInfo = MediaInfo.Merge(MediaInfo, parsedInfo);
         }
     }
 

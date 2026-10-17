@@ -27,12 +27,14 @@ public sealed partial class PropertyViewModel : ObservableObject
     public partial bool CanNavigateToFile { get; set; }
 
     private readonly IFilesService _filesService;
+    private readonly IMediaProbeService _mediaProbeService;
     private StorageFile? _mediaFile;
     private Uri? _mediaUri;
 
-    public PropertyViewModel(IFilesService filesService)
+    public PropertyViewModel(IFilesService filesService, IMediaProbeService mediaProbeService)
     {
         _filesService = filesService;
+        _mediaProbeService = mediaProbeService;
         MediaProperties = new ObservableCollection<MediaMetadata>();
         VideoProperties = new ObservableCollection<MediaMetadata>();
         AudioProperties = new ObservableCollection<MediaMetadata>();
@@ -60,11 +62,7 @@ public sealed partial class PropertyViewModel : ObservableObject
             UpdateProperties(media);
         }
 
-        if (!media.IsMediaInfoParsed)
-        {
-            await media.ParseDetailsAsync();
-        }
-
+        await media.LoadDetailsAsync(_mediaProbeService);
         UpdateProperties(media);
     }
 

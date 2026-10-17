@@ -1,5 +1,3 @@
-using System;
-using System.Runtime.CompilerServices;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 
@@ -9,8 +7,7 @@ public class TestPlayerService : IPlayerService
 {
     public IMediaPlayer Initialize(string[] swapChainOptions) => throw new NotImplementedException();
 
-    public PlaybackItem CreatePlaybackItem(IMediaPlayer player, object source, params string[] options) =>
-        (PlaybackItem)RuntimeHelpers.GetUninitializedObject(typeof(PlaybackItem));
+    public PlaybackItem CreatePlaybackItem(IMediaPlayer player, object source, params string[] options) => throw new NotImplementedException();
 
     public void DisposePlaybackItem(PlaybackItem item) { }
 

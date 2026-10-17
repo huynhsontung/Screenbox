@@ -35,11 +35,11 @@ public class PropertyViewModelTests
             Bitrate = 256000
         };
         var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
-        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), probeService, uri)
+        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)
         {
             MediaInfo = new MediaInfo(MediaPlaybackType.Music)
         };
-        var vm = new PropertyViewModel(new DummyFilesService());
+        var vm = new PropertyViewModel(new DummyFilesService(), probeService);
 
         vm.UpdateProperties(media);
         await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Title).Value).IsEqualTo(string.Empty);
@@ -61,12 +61,12 @@ public class PropertyViewModelTests
     public async Task UpdateProperties_WhenCalledMultipleTimes_ShouldUpdateCollectionsInPlaceWithoutDuplicates()
     {
         var uri = new Uri("file:///c:/videos/clip.mp4");
-        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), new TestMediaProbeService(), uri)
+        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)
         {
             MediaInfo = new MediaInfo(MediaPlaybackType.Video, "Initial Title")
         };
 
-        var vm = new PropertyViewModel(new DummyFilesService());
+        var vm = new PropertyViewModel(new DummyFilesService(), new TestMediaProbeService());
 
         vm.UpdateProperties(media);
         int initialMediaCount = vm.MediaProperties.Count;
@@ -80,7 +80,7 @@ public class PropertyViewModelTests
             Height = 1080,
             Bitrate = 8000000
         };
-        media.UpdateParsedMediaInfo(new MediaInfo(MediaPlaybackType.Video, new MusicInfo { Bitrate = 192000 }, updatedVideo));
+        await media.LoadDetailsAsync(new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo { Bitrate = 192000 }, updatedVideo)));
         vm.UpdateProperties(media);
 
         await Assert.That(vm.MediaProperties.Count).IsEqualTo(initialMediaCount);

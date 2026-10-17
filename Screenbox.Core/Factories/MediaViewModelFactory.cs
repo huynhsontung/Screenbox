@@ -13,18 +13,12 @@ namespace Screenbox.Core.Factories;
 public sealed class MediaViewModelFactory
 {
     private readonly IPlayerService _playerService;
-    private readonly IMediaProbeService _mediaProbeService;
     private readonly PlayerContext _playerContext;
     private readonly LibraryContext _libraryContext;
 
-    public MediaViewModelFactory(
-        IPlayerService playerService,
-        IMediaProbeService mediaProbeService,
-        PlayerContext playerContext,
-        LibraryContext libraryContext)
+    public MediaViewModelFactory(IPlayerService playerService, PlayerContext playerContext, LibraryContext libraryContext)
     {
         _playerService = playerService;
-        _mediaProbeService = mediaProbeService;
         _playerContext = playerContext;
         _libraryContext = libraryContext;
     }
@@ -35,7 +29,7 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel Create(StorageFile file)
     {
-        return new MediaViewModel(_playerContext, _playerService, _mediaProbeService, file);
+        return new MediaViewModel(_playerContext, _playerService, file);
     }
 
     /// <summary>
@@ -43,7 +37,7 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel Create(Uri uri)
     {
-        return new MediaViewModel(_playerContext, _playerService, _mediaProbeService, uri);
+        return new MediaViewModel(_playerContext, _playerService, uri);
     }
 
     /// <summary>
@@ -52,10 +46,10 @@ public sealed class MediaViewModelFactory
     public MediaViewModel Create(Media media)
     {
         if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri? uri))
-            return new MediaViewModel(_playerContext, _playerService, _mediaProbeService, media);
+            return new MediaViewModel(_playerContext, _playerService, media);
 
         // Prefer URI source for easier clean up
-        MediaViewModel vm = new(_playerContext, _playerService, _mediaProbeService, uri)
+        MediaViewModel vm = new(_playerContext, _playerService, uri)
         {
             Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media))
         };
@@ -82,7 +76,7 @@ public sealed class MediaViewModelFactory
             return existing;
         }
 
-        return new MediaViewModel(_playerContext, _playerService, _mediaProbeService, file);
+        return new MediaViewModel(_playerContext, _playerService, file);
     }
 
     /// <summary>
@@ -94,7 +88,7 @@ public sealed class MediaViewModelFactory
         string location = uri.OriginalString;
         var existing = FindByLocation(_libraryContext.Music.Songs, location)
                        ?? FindByLocation(_libraryContext.Videos.Videos, location);
-        return existing ?? new MediaViewModel(_playerContext, _playerService, _mediaProbeService, uri);
+        return existing ?? new MediaViewModel(_playerContext, _playerService, uri);
     }
 
     public bool TryGetOrCreate(StorageFile file, out MediaViewModel? mediaViewModel)
@@ -104,7 +98,7 @@ public sealed class MediaViewModelFactory
                          ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (mediaViewModel == null)
         {
-            mediaViewModel = new MediaViewModel(_playerContext, _playerService, _mediaProbeService, file);
+            mediaViewModel = new MediaViewModel(_playerContext, _playerService, file);
             return false;
         }
 
@@ -118,7 +112,7 @@ public sealed class MediaViewModelFactory
                          ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (mediaViewModel == null)
         {
-            mediaViewModel = new MediaViewModel(_playerContext, _playerService, _mediaProbeService, uri);
+            mediaViewModel = new MediaViewModel(_playerContext, _playerService, uri);
             return false;
         }
 
