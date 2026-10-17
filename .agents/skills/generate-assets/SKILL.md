@@ -26,14 +26,14 @@ When font definitions in `assets/fonts/` are modified or new glyph icons are add
 
 1. **Run the Font Generation Script**:
    ```pwsh
-   pwsh ./scripts/Generate-Fonts.ps1
+   pwsh ./scripts/Generate-Fonts.ps1 -Publish
    ```
 2. **Generated Output Location**:
    - `Screenbox/Assets/Fonts/ScreenboxFluentIcons.ttf`
    - `Screenbox/Assets/Fonts/ScreenboxMDL2Assets.ttf`
 3. **Verification**:
    - Verify generated `.ttf` files under `Screenbox/Assets/Fonts/`.
-   - Ensure the new glyphs match the character codes referenced in XAML or code (e.g., `GlyphConverter.cs`).
+   - Ensure the new glyphs match the character codes referenced in XAML or code (e.g., `GlyphConverter.cs`, `Icon.xaml`).
 
 ---
 
@@ -43,7 +43,7 @@ When animation JSON files in `assets/animations/` are added or modified:
 
 1. **Run the Lottie Generation Script**:
    ```pwsh
-   pwsh ./scripts/generate-lottie.ps1
+   pwsh ./scripts/ConvertFrom-Lottie.ps1
    ```
    This script runs `LottieGen` with parameters:
    - `-GenerateColorBindings`

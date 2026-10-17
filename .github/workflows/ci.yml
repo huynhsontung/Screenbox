@@ -1,0 +1,147 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'assets/**'
+      - 'docs/**'
+      - 'LICENSE'
+      - '*.md'
+  pull_request:
+    paths-ignore:
+      - 'assets/**'
+      - 'docs/**'
+      - 'LICENSE'
+      - '*.md'
+
+jobs:
+  xaml-lint:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      - name: Run XAML style check
+        run: ./scripts/lint-xaml.ps1
+
+  test:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-test-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-test-
+
+      - name: Build tests
+        run: msbuild Screenbox.Core.Tests\Screenbox.Core.Tests.csproj -p:Configuration=Release -p:Platform=x64 -p:OutDir=C:\BuildOutput\ -restore
+
+      - name: Run tests
+        run: C:\BuildOutput\Screenbox.Core.Tests.exe
+
+  build:
+    runs-on: windows-latest
+    permissions:
+      actions: write
+      contents: read
+    env:
+      PROJ_PATH: Screenbox
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
+
+      - name: Setup Windows App Developer CLI
+        uses: microsoft/setup-WinAppCli@v0.2
+        with:
+          version: latest
+
+      - name: Update package manifest
+        run: ./scripts/Update-AppxManifest.ps1 -Identity Sideload
+
+      - name: Update project version
+        run: ./scripts/Update-ProjectVersion.ps1
+
+      - name: Create self-signed certificate
+        env:
+          TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
+          WINAPP_CLI_TELEMETRY_OPTOUT: '1'
+        run: |
+          winapp cert generate `
+            --manifest "$env:PROJ_PATH/Package.appxmanifest" `
+            --password "$env:TEMP_CERT_PASSWORD" `
+            --output "$env:PROJ_PATH/Screenbox_TemporaryKey.pfx" `
+            --install
+
+      - name: Extract self-signed certificate thumbprint
+        id: cert_thumb
+        env:
+          TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
+        run: |
+          $cert = Get-PfxCertificate `
+            -FilePath "$env:PROJ_PATH/Screenbox_TemporaryKey.pfx" `
+            -Password (ConvertTo-SecureString $env:TEMP_CERT_PASSWORD -AsPlainText -Force)
+          "thumbprint=$($cert.Thumbprint)" >> $env:GITHUB_OUTPUT
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build app package
+        run: |
+          msbuild $env:PROJ_PATH/Screenbox.csproj `
+            -restore `
+            -p:RestoreConfigFile=nuget.config `
+            -p:ContinuousIntegrationBuild=true `
+            -p:Configuration=Release `
+            -p:Platform=x64 `
+            -p:UapAppxPackageBuildMode=SideloadOnly `
+            -p:AppxPackageSigningEnabled=True `
+            -p:PackageCertificateThumbprint=${{ steps.cert_thumb.outputs.thumbprint }}
+
+      - name: Upload sideload app package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/*.msixbundle
+          archive: false
+
+      - name: Create pre-install kit artifact
+        run: ./scripts/Export-InstallKit.ps1 -OutputPath "$env:PROJ_PATH/AppPackages/*_Test/Screenbox-PreInstallKit.zip" -IncludeCertificate
+
+      - name: Upload pre-install kit artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/Screenbox-PreInstallKit.zip
+          archive: false
