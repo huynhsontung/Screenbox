@@ -22,11 +22,6 @@ public class PropertyViewModelTests
     public async Task LoadPropertiesAsync_ShouldProbeMediaAndPopulateUpdatedProperties()
     {
         var uri = new Uri("file:///c:/music/song.ogg");
-        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)
-        {
-            MediaInfo = new MediaInfo(MediaPlaybackType.Music)
-        };
-
         var probedMusic = new MusicInfo
         {
             Title = "Probed Ogg Title",
@@ -39,8 +34,12 @@ public class PropertyViewModelTests
             Duration = TimeSpan.FromSeconds(195),
             Bitrate = 256000
         };
-        var probeService = new FakeMediaProbeService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
-        var vm = new PropertyViewModel(new DummyFilesService(), probeService);
+        var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
+        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), probeService, uri)
+        {
+            MediaInfo = new MediaInfo(MediaPlaybackType.Music)
+        };
+        var vm = new PropertyViewModel(new DummyFilesService());
 
         vm.UpdateProperties(media);
         await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Title).Value).IsEqualTo(string.Empty);
@@ -62,12 +61,12 @@ public class PropertyViewModelTests
     public async Task UpdateProperties_WhenCalledMultipleTimes_ShouldUpdateCollectionsInPlaceWithoutDuplicates()
     {
         var uri = new Uri("file:///c:/videos/clip.mp4");
-        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)
+        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), new TestMediaProbeService(), uri)
         {
             MediaInfo = new MediaInfo(MediaPlaybackType.Video, "Initial Title")
         };
 
-        var vm = new PropertyViewModel(new DummyFilesService(), new FakeMediaProbeService(null));
+        var vm = new PropertyViewModel(new DummyFilesService());
 
         vm.UpdateProperties(media);
         int initialMediaCount = vm.MediaProperties.Count;
@@ -91,24 +90,6 @@ public class PropertyViewModelTests
         await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.Resolution).Value).IsEqualTo("1920×1080");
         await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.BitRate).Value).IsEqualTo("8000 kbps");
         await Assert.That(vm.AudioProperties.First(p => p.Key == MediaProperty.BitRate).Value).IsEqualTo("192 kbps");
-    }
-
-    private sealed class FakeMediaProbeService : IMediaProbeService
-    {
-        private readonly MediaInfo? _result;
-
-        public int CallCount { get; private set; }
-
-        public FakeMediaProbeService(MediaInfo? result)
-        {
-            _result = result;
-        }
-
-        public Task<MediaInfo?> ProbeMediaAsync(object source, string[]? options = null, CancellationToken cancellationToken = default)
-        {
-            CallCount++;
-            return Task.FromResult(_result);
-        }
     }
 
     private sealed class DummyFilesService : IFilesService

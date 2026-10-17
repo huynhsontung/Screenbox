@@ -18,7 +18,6 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
@@ -73,9 +72,9 @@ public sealed partial class MediaViewModel : ObservableRecipient
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly IPlayerService _playerService;
+    private readonly IMediaProbeService _mediaProbeService;
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
-    private readonly DispatcherQueue? _dispatcherQueue;
 
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsMediaActive { get; set; }
@@ -98,16 +97,14 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public partial bool IsPlaying { get; set; }
 
     private WeakReference<BitmapImage>? _thumbnailRef;
-    private Uri? _artworkUri;
 
     public MediaViewModel(MediaViewModel source)
     {
         _playerService = source._playerService;
+        _mediaProbeService = source._mediaProbeService;
         _playerContext = source._playerContext;
-        _dispatcherQueue = source._dispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
         Name = source.Name;
         _thumbnailRef = source._thumbnailRef;
-        _artworkUri = source._artworkUri;
         MediaInfo = source.MediaInfo;
         Artists = source.Artists;
         Album = source.Album;
@@ -124,11 +121,16 @@ public sealed partial class MediaViewModel : ObservableRecipient
         IsMediaInfoParsed = source.IsMediaInfoParsed;
     }
 
-    private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
+    private MediaViewModel(
+        object source,
+        MediaInfo mediaInfo,
+        PlayerContext playerContext,
+        IPlayerService playerService,
+        IMediaProbeService mediaProbeService)
     {
         _playerService = playerService;
+        _mediaProbeService = mediaProbeService;
         _playerContext = playerContext;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Source = source;
         Location = string.Empty;
         DateAdded = DateTimeOffset.Now;
@@ -140,35 +142,41 @@ public sealed partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
     }
 
-    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, StorageFile file)
-        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
+    public MediaViewModel(
+        PlayerContext playerContext,
+        IPlayerService playerService,
+        IMediaProbeService mediaProbeService,
+        StorageFile file)
+        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService, mediaProbeService)
     {
         Location = file.Path;
         Name = file.Name;
         AltCaption = file.Name;
     }
 
-    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Uri uri)
-        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
+    public MediaViewModel(
+        PlayerContext playerContext,
+        IPlayerService playerService,
+        IMediaProbeService mediaProbeService,
+        Uri uri)
+        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService, mediaProbeService)
     {
         Guard.IsTrue(uri.IsAbsoluteUri);
         Location = uri.OriginalString;
         Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
     }
 
-    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Media media)
-        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
+    public MediaViewModel(
+        PlayerContext playerContext,
+        IPlayerService playerService,
+        IMediaProbeService mediaProbeService,
+        Media media)
+        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService, mediaProbeService)
     {
         Location = media.Mrl;
 
         // Media is already loaded, create PlaybackItem
-        SetPlaybackItem(new PlaybackItem(media, media));
-    }
-
-    internal void SetPlaybackItem(PlaybackItem item)
-    {
-        _playerService.WatchPlaybackItem(item, OnPlaybackItemMediaParsed);
-        Item = new Lazy<PlaybackItem?>(item);
+        Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media));
     }
 
     partial void OnMediaInfoChanged(MediaInfo value)
@@ -206,50 +214,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
             Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{Location}{Environment.NewLine}{e.Message}"));
         }
 
-        if (item is not null)
-        {
-            _playerService.WatchPlaybackItem(item, OnPlaybackItemMediaParsed);
-        }
-
         return item;
-    }
-
-    private void OnPlaybackItemMediaParsed(MediaInfo parsedInfo, Uri? artworkUri)
-    {
-        if (_dispatcherQueue is { HasThreadAccess: false })
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                UpdateParsedMediaInfo(parsedInfo);
-                UpdateArtworkUri(artworkUri);
-            });
-        }
-        else
-        {
-            UpdateParsedMediaInfo(parsedInfo);
-            UpdateArtworkUri(artworkUri);
-        }
-    }
-
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private void UpdateArtworkUri(Uri? artworkUri)
-    {
-        if (artworkUri is null)
-        {
-            return;
-        }
-
-        _artworkUri = artworkUri;
-        if (_dispatcherQueue is { HasThreadAccess: true } &&
-            Thumbnail is null &&
-            Source is not StorageFile)
-        {
-            Thumbnail = new BitmapImage(artworkUri)
-            {
-                DecodePixelType = DecodePixelType.Logical,
-                DecodePixelHeight = 300
-            };
-        }
     }
 
     public override string ToString()
@@ -303,40 +268,47 @@ public sealed partial class MediaViewModel : ObservableRecipient
     }
 
     /// <summary>
-    /// Loads basic and extended file properties using the platform file service.
-    /// Preserves any properties that have already been parsed by the media engine.
+    /// Loads basic and extended file properties using the platform file service,
+    /// and opportunistically probes media properties when the playback item has been created.
     /// </summary>
     /// <param name="filesService">The platform file service.</param>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
-        DetailsLoaded = true;
-        MediaInfo? winrtInfo = null;
-        switch (Source)
+        if (!DetailsLoaded)
         {
-            case StorageFile file:
-                winrtInfo = await filesService.GetMediaInfoAsync(file);
-                break;
-            case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
-                UpdateSource(uriFile);
-                winrtInfo = await filesService.GetMediaInfoAsync(uriFile);
-                break;
+            DetailsLoaded = true;
+            MediaInfo? winrtInfo = null;
+            switch (Source)
+            {
+                case StorageFile file:
+                    winrtInfo = await filesService.GetMediaInfoAsync(file);
+                    break;
+                case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
+                    UpdateSource(uriFile);
+                    winrtInfo = await filesService.GetMediaInfoAsync(uriFile);
+                    break;
+            }
+
+            if (winrtInfo is not null)
+            {
+                MediaInfo = IsMediaInfoParsed
+                    ? MediaInfo.Merge(winrtInfo, MediaInfo)
+                    : MediaInfo.Merge(MediaInfo, winrtInfo);
+            }
         }
 
-        if (winrtInfo is not null)
+        if (Item.IsValueCreated && !IsMediaInfoParsed)
         {
-            MediaInfo = IsMediaInfoParsed
-                ? MediaInfo.Merge(winrtInfo, MediaInfo)
-                : MediaInfo.Merge(MediaInfo, winrtInfo);
+            await ParseDetailsAsync();
         }
     }
 
     /// <summary>
-    /// Probes the media source on demand using <paramref name="mediaProbeService"/> and merges the parsed properties into <see cref="MediaInfo"/>.
+    /// Probes the media source using <see cref="IMediaProbeService"/> and merges the parsed properties into <see cref="MediaInfo"/>.
     /// </summary>
-    /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
     /// <param name="cancellationToken">A token to cancel the probe operation.</param>
-    public async Task ParseDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
+    public async Task ParseDetailsAsync(CancellationToken cancellationToken = default)
     {
         if (IsMediaInfoParsed)
         {
@@ -346,7 +318,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
             ? activeItem
             : Source;
-        MediaInfo? parsedInfo = await mediaProbeService.ProbeMediaAsync(
+        MediaInfo? parsedInfo = await _mediaProbeService.ProbeMediaAsync(
             probeSource,
             _options.Count > 0 ? _options.ToArray() : null,
             cancellationToken);
@@ -388,9 +360,11 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
             Thumbnail = image;
         }
-        else if (_artworkUri is not null)
+        else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
+                 media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
+                 Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri))
         {
-            Thumbnail = new BitmapImage(_artworkUri)
+            Thumbnail = new BitmapImage(artworkUri)
             {
                 DecodePixelType = DecodePixelType.Logical,
                 DecodePixelHeight = 300

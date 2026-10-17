@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.Logging;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -19,7 +17,6 @@ public sealed partial class PlayerService : IPlayerService
     private readonly ILogger _vlcLogger;
     private readonly bool _useFal;
     private readonly Dictionary<string, int> _tokenReferences = new();
-    private readonly Dictionary<PlaybackItem, EventHandler<MediaParsedChangedEventArgs>> _parsedHandlers = new();
 
     public PlayerService(
         IVlcDialogService vlcDialogService,
@@ -69,42 +66,8 @@ public sealed partial class PlayerService : IPlayerService
         return new PlaybackItem(source, media);
     }
 
-    public void WatchPlaybackItem(PlaybackItem item, Action<MediaInfo, Uri?> onMediaParsed)
-    {
-        Media media = item.Media;
-        if ((media.IsParsed && media.ParsedStatus == MediaParsedStatus.Done) || media.Tracks.Length > 0)
-        {
-            onMediaParsed(media.GetMediaInfo(), GetArtworkUri(media));
-            if (media.IsParsed && media.ParsedStatus == MediaParsedStatus.Done)
-            {
-                return;
-            }
-        }
-
-        UnwatchPlaybackItem(item);
-
-        void OnParsedChanged(object? sender, MediaParsedChangedEventArgs args)
-        {
-            if (args.ParsedStatus != MediaParsedStatus.Done)
-            {
-                return;
-            }
-
-            UnwatchPlaybackItem(item);
-            onMediaParsed(media.GetMediaInfo(), GetArtworkUri(media));
-        }
-
-        lock (_parsedHandlers)
-        {
-            _parsedHandlers[item] = OnParsedChanged;
-        }
-
-        media.ParsedChanged += OnParsedChanged;
-    }
-
     public void DisposePlaybackItem(PlaybackItem item)
     {
-        UnwatchPlaybackItem(item);
         DisposeMedia(item.Media);
     }
 
@@ -180,28 +143,6 @@ public sealed partial class PlayerService : IPlayerService
         }
 
         media.Dispose();
-    }
-
-    private void UnwatchPlaybackItem(PlaybackItem item)
-    {
-        EventHandler<MediaParsedChangedEventArgs>? handler;
-        lock (_parsedHandlers)
-        {
-            if (!_parsedHandlers.Remove(item, out handler))
-            {
-                return;
-            }
-        }
-
-        item.Media.ParsedChanged -= handler;
-    }
-
-    private static Uri? GetArtworkUri(Media media)
-    {
-        return media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-               Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri)
-            ? artworkUri
-            : null;
     }
 
     private string IncrementRefCount(IStorageFile file)

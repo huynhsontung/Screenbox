@@ -209,7 +209,7 @@ public class AlbumsPageViewModelTests
     {
         var info = new MediaInfo(MediaPlaybackType.Music, name);
         info.MusicProperties.Genre = genre;
-        return new MediaViewModel(new PlayerContext(), new TestPlayerService(), new Uri($"file:///c:/music/{name}.mp3"))
+        return new MediaViewModel(new PlayerContext(), new TestPlayerService(), new TestMediaProbeService(), new Uri($"file:///c:/music/{name}.mp3"))
         {
             Name = name,
             MediaInfo = info
