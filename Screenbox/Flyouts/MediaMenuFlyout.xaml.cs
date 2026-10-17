@@ -112,14 +112,23 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             _ => null,
         };
 
+        bool isPlaying = ContextItem switch
+        {
+            AlbumViewModel album => album.IsPlaying,
+            ArtistViewModel artist => artist.IsPlaying,
+            PlaylistViewModel playlist => playlist.IsPlaying,
+            MediaViewModel media => media.IsPlaying,
+            _ => false,
+        };
+
         // MenuFlyout Behavior 
         AddToPlaylistFlyoutBehavior.TargetSubItem = AddToPlaylistSubItem;
 
         // Play MenuFlyoutItem
-        PlayItem.Text = ItemLabelHelper.GetPlayPauseLabel(mediaVm?.IsPlaying ?? false);
+        PlayItem.Text = ItemLabelHelper.GetPlayPauseLabel(isPlaying);
         PlayItem.Command = PlayCommand;
         PlayItem.CommandParameter = ContextItem;
-        PlayItemIcon.Glyph = GlyphConverter.ToPlayPauseGlyph(mediaVm?.IsPlaying ?? false);
+        PlayItemIcon.Glyph = GlyphConverter.ToPlayPauseGlyph(isPlaying);
 
         // PlayNext MenuFlyoutItem
         PlayNextItem.Text = Strings.Resources.PlayNext;
