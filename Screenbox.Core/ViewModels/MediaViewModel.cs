@@ -232,19 +232,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
     }
 
     /// <summary>
-    /// Loads basic and extended file properties using the platform file service for fast indexing.
-    /// </summary>
-    /// <param name="filesService">The platform file service.</param>
-    public async Task LoadDetailsAsync(IFilesService filesService)
-    {
-        DetailsLoaded = true;
-        if (await EnsureStorageFileSourceAsync() is { } file)
-        {
-            MediaInfo = await filesService.GetMediaInfoAsync(file);
-        }
-    }
-
-    /// <summary>
     /// Probes the media source using <paramref name="mediaProbeService"/> and updates <see cref="MediaInfo"/>.
     /// </summary>
     /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
@@ -256,7 +243,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
         object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
             ? activeItem
-            : Source;
+            : (object?)file ?? Source;
         if (await mediaProbeService.ProbeMediaAsync(
                 probeSource,
                 _options.Count > 0 ? _options.ToArray() : null,
@@ -273,7 +260,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
                 parsedInfo.MediaType = fileType;
             }
 
-            if (file is { IsAvailable: true })
+            if (file is { IsAvailable: true } && (parsedInfo.Size == 0 || parsedInfo.DateModified == default))
             {
                 try
                 {

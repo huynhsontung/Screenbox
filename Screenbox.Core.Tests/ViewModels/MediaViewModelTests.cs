@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
 
@@ -93,5 +94,48 @@ public class MediaViewModelTests
         await Assert.That(vm.MediaInfo.VideoProperties.Height).IsEqualTo(2160U);
         await Assert.That(vm.MediaInfo.VideoProperties.Bitrate).IsEqualTo(15000000U);
         await Assert.That(vm.MediaInfo.MusicProperties.Bitrate).IsEqualTo(448000U);
+    }
+
+    [Test]
+    public async Task LoadDetailsAsync_WithStorageMediaProbeService_ShouldAcceptConcreteImplementation()
+    {
+        var probedMusic = new MusicInfo
+        {
+            Title = "Storage Song",
+            Artist = "Storage Artist",
+            Album = "Storage Album",
+            Duration = TimeSpan.FromMinutes(3)
+        };
+        var probedInfo = new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo())
+        {
+            Size = 10_000_000,
+            DateModified = DateTimeOffset.UtcNow
+        };
+        var storageProber = new MockStorageMediaProbeService(probedInfo);
+        var vm = new MediaViewModel(new PlayerContext(), new TestPlayerService(), new Uri("file:///c:/music/test.mp3"));
+
+        await vm.LoadDetailsAsync(storageProber);
+
+        await Assert.That(storageProber.CallCount).IsEqualTo(1);
+        await Assert.That(vm.DetailsLoaded).IsTrue();
+        await Assert.That(vm.Name).IsEqualTo("Storage Song");
+        await Assert.That(vm.Caption).IsEqualTo("Storage Artist");
+    }
+
+    private sealed class MockStorageMediaProbeService : StorageMediaProbeService
+    {
+        private readonly MediaInfo? _infoToReturn;
+        public int CallCount { get; private set; }
+
+        public MockStorageMediaProbeService(MediaInfo? infoToReturn) : base(Microsoft.Extensions.Logging.Abstractions.NullLogger<StorageMediaProbeService>.Instance)
+        {
+            _infoToReturn = infoToReturn;
+        }
+
+        public override Task<MediaInfo?> ProbeMediaAsync(object source, string[]? options = null, System.Threading.CancellationToken cancellationToken = default)
+        {
+            CallCount++;
+            return Task.FromResult(_infoToReturn);
+        }
     }
 }

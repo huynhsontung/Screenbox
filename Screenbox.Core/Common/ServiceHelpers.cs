@@ -81,5 +81,6 @@ public static class ServiceHelpers
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
         services.AddSingleton<IPlaylistService, PlaylistService>();
         services.AddSingleton<IMediaProbeService, MediaProbeService>();
+        services.AddSingleton<StorageMediaProbeService>();
     }
 }

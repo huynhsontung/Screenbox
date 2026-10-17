@@ -106,7 +106,6 @@ public class PropertyViewModelTests
         public Task OpenFileLocationAsync(string path) => Task.CompletedTask;
         public Task OpenFileLocationAsync(StorageFile file) => Task.CompletedTask;
         public void AddToRecent(IStorageItem item) { }
-        public Task<MediaInfo> GetMediaInfoAsync(StorageFile file) => Task.FromResult(new MediaInfo(MediaPlaybackType.Unknown));
         public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token) => throw new NotImplementedException();
     }
 }
