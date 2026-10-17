@@ -21,6 +21,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlayerControlsViewModel : ObservableRecipient,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<TogglePlayPauseMessage>,
     IRecipient<TrackNavigationMessage>,
@@ -94,29 +95,30 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
         _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
 
-        _playerSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(PlayerSettingsContext.ShowChapters))
-            {
-                PlayerShowChapters = _playerSettings.ShowChapters;
-            }
-            else if (e.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
-            {
-                IsAdvancedModeActive = _playerSettings.AdvancedMode;
-            }
-        };
-
         if (MediaPlayer != null)
         {
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
         Messenger.Register<TogglePlayPauseMessage>(this);
         Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
+    }
+
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
+    {
+        if (message.PropertyName == nameof(PlayerSettingsContext.ShowChapters))
+        {
+            PlayerShowChapters = message.NewValue;
+        }
+        else if (message.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+        {
+            IsAdvancedModeActive = message.NewValue;
+        }
     }
 
     public void Receive(PropertyChangedMessage<IMediaPlayer?> message)

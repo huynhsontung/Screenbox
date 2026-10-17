@@ -7,7 +7,7 @@ namespace Screenbox.Core.Contexts;
 /// Observable state holder for audio and media stream playback state, volume and volume boost,
 /// repeat mode, subtitle language preferences, and playback position persistence and resume.
 /// </summary>
-public sealed partial class PlaybackSettingsContext : SettingsContextBase
+public sealed partial class PlaybackSettingsContext : SettingsContextBase<PlaybackSettingsContext>
 {
     private const string PersistentVolumeKey = "Values/Volume";
     private const string MaxVolumeKey = "Values/MaxVolume";

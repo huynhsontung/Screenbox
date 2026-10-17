@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
 
@@ -39,6 +40,7 @@ public class SettingsContextTests
         var context = new GeneralSettingsContext(storage);
 
         PropertyChangedMessage<ThemeOption>? receivedMessage = null;
+        SettingChangedMessage<GeneralSettingsContext, ThemeOption>? receivedDomainMessage = null;
         object recipient = new();
         WeakReferenceMessenger.Default.Register<PropertyChangedMessage<ThemeOption>>(
             recipient,
@@ -47,6 +49,15 @@ public class SettingsContextTests
                 if (ReferenceEquals(m.Sender, context))
                 {
                     receivedMessage = m;
+                }
+            });
+        WeakReferenceMessenger.Default.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(
+            recipient,
+            (r, m) =>
+            {
+                if (ReferenceEquals(m.Context, context))
+                {
+                    receivedDomainMessage = m;
                 }
             });
 
@@ -58,6 +69,36 @@ public class SettingsContextTests
             await Assert.That(storage.GetValue("General/Theme", 0)).IsEqualTo((int)ThemeOption.Dark);
             await Assert.That(receivedMessage).IsNotNull();
             await Assert.That(receivedMessage!.NewValue).IsEqualTo(ThemeOption.Dark);
+            await Assert.That(receivedDomainMessage).IsNotNull();
+            await Assert.That(receivedDomainMessage!.NewValue).IsEqualTo(ThemeOption.Dark);
+            await Assert.That(receivedDomainMessage!.PropertyName).IsEqualTo(nameof(GeneralSettingsContext.Theme));
+        }
+        finally
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(recipient);
+        }
+    }
+
+    [Test]
+    public async Task SettingChangedMessage_RoutesExclusivelyToMatchingContextDomain()
+    {
+        var storage = new MemorySettingsStorage();
+        var playerContext = new PlayerSettingsContext(storage);
+        var generalContext = new GeneralSettingsContext(storage);
+
+        int playerCount = 0;
+        object recipient = new();
+        WeakReferenceMessenger.Default.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(
+            recipient,
+            (r, m) => playerCount++);
+
+        try
+        {
+            generalContext.ShowRecent = false;
+            await Assert.That(playerCount).IsEqualTo(0);
+
+            playerContext.AdvancedMode = true;
+            await Assert.That(playerCount).IsEqualTo(1);
         }
         finally
         {

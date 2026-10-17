@@ -11,7 +11,7 @@ namespace Screenbox.Core.Contexts;
 /// touch and pointer gestures, frame capture location, Lively audio visualizer, video upscaling,
 /// and LibVLC engine configuration.
 /// </summary>
-public sealed partial class PlayerSettingsContext : SettingsContextBase
+public sealed partial class PlayerSettingsContext : SettingsContextBase<PlayerSettingsContext>
 {
     private const string AutoResizeKey = "Player/AutoResize";
     private const string ShowControlsKey = "Player/ShowControls";

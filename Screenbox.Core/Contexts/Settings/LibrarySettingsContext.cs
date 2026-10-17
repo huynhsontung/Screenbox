@@ -7,7 +7,7 @@ namespace Screenbox.Core.Contexts;
 /// Observable state holder for media library indexing, removable storage scanning,
 /// and collection sorting preferences.
 /// </summary>
-public sealed partial class LibrarySettingsContext : SettingsContextBase
+public sealed partial class LibrarySettingsContext : SettingsContextBase<LibrarySettingsContext>
 {
     private const string UseIndexerKey = "Libraries/UseIndexer";
     private const string SearchRemovableStorageKey = "Libraries/SearchRemovableStorage";

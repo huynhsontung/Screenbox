@@ -12,6 +12,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class VolumeViewModel : ObservableRecipient,
+    IRecipient<SettingChangedMessage<PlaybackSettingsContext, int>>,
     IRecipient<ChangeVolumeRequestMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
@@ -34,22 +35,23 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
         IsMute = Volume == 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        _playbackSettings.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
-            {
-                MaxVolume = _playbackSettings.MaxVolume;
-            }
-        };
-
         if (MediaPlayer != null)
         {
             MediaPlayer.VolumeChanged += OnVolumeChanged;
             MediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }
 
+        Messenger.Register<SettingChangedMessage<PlaybackSettingsContext, int>>(this);
         Messenger.Register<ChangeVolumeRequestMessage>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
+    }
+
+    public void Receive(SettingChangedMessage<PlaybackSettingsContext, int> message)
+    {
+        if (message.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
+        {
+            MaxVolume = message.NewValue;
+        }
     }
 
     public void Receive(PropertyChangedMessage<IMediaPlayer?> message)

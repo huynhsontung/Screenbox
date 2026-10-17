@@ -7,7 +7,7 @@ namespace Screenbox.Core.Contexts;
 /// Observable state holder for general application settings, shell appearance, history,
 /// instance lifecycle, and catch-all preferences that do not belong to a more specific domain.
 /// </summary>
-public sealed partial class GeneralSettingsContext : SettingsContextBase
+public sealed partial class GeneralSettingsContext : SettingsContextBase<GeneralSettingsContext>
 {
     private const string ThemeKey = "General/Theme";
     private const string ShowRecentKey = "General/ShowRecent";

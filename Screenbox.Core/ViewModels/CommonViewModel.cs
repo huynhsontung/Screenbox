@@ -18,7 +18,8 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CommonViewModel : ObservableRecipient,
-    IRecipient<PropertyChangedMessage<ThemeOption>>,
+    IRecipient<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
 {
@@ -53,28 +54,26 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 
-        _playerSettings.PropertyChanged += OnPlayerSettingsPropertyChanged;
-
-        Messenger.Register<PropertyChangedMessage<ThemeOption>>(this);
+        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(this);
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
         Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
     }
 
-    private void OnPlayerSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
+    public void Receive(SettingChangedMessage<GeneralSettingsContext, ThemeOption> message)
     {
-        if (e.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+        if (Window.Current.Content is Frame rootFrame)
         {
-            OnPropertyChanged(nameof(IsAdvancedModeEnabled));
+            rootFrame.RequestedTheme = message.NewValue.ToElementTheme();
         }
     }
 
-    [DynamicWindowsRuntimeCast(typeof(Frame))]
-    public void Receive(PropertyChangedMessage<ThemeOption> message)
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
     {
-        if (message.Sender is GeneralSettingsContext &&
-            Window.Current.Content is Frame rootFrame)
+        if (message.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
         {
-            rootFrame.RequestedTheme = message.NewValue.ToElementTheme();
+            OnPropertyChanged(nameof(IsAdvancedModeEnabled));
         }
     }
 
