@@ -49,10 +49,8 @@ public sealed class MediaViewModelFactory
             return new MediaViewModel(_playerContext, _playerService, media);
 
         // Prefer URI source for easier clean up
-        MediaViewModel vm = new(_playerContext, _playerService, uri)
-        {
-            Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media))
-        };
+        MediaViewModel vm = new(_playerContext, _playerService, uri);
+        vm.SetPlaybackItem(new PlaybackItem(media, media));
 
         if (media.Meta(MetadataType.Title) is { } name && !string.IsNullOrEmpty(name))
             vm.Name = name;

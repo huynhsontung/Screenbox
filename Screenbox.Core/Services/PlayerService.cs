@@ -68,6 +68,7 @@ public sealed partial class PlayerService : IPlayerService
 
     public void DisposePlaybackItem(PlaybackItem item)
     {
+        item.Clean();
         DisposeMedia(item.Media);
     }
 

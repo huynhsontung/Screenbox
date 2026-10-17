@@ -400,6 +400,8 @@ public sealed class VlcMediaPlayer : IMediaPlayer
             NaturalVideoHeight = py;
             NaturalVideoSizeChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        PlaybackItem?.NotifyTrackInfoLoaded();
     }
 
     private void VlcPlayer_EndReached(object? sender, EventArgs e)

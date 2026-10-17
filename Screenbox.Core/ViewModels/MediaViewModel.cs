@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,6 +18,7 @@ using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
@@ -30,6 +32,11 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public bool IsFromLibrary { get; set; }
 
     public bool DetailsLoaded { get; private set; }
+
+    /// <summary>
+    /// Gets a value indicating whether media properties have been populated from a media parser or probe.
+    /// </summary>
+    public bool IsMediaInfoParsed { get; private set; }
 
     public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
@@ -68,6 +75,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     private readonly IPlayerService _playerService;
     private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
+    private readonly DispatcherQueue? _dispatcherQueue;
 
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsMediaActive { get; set; }
@@ -78,6 +86,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TrackNumberText))]
+    [NotifyPropertyChangedFor(nameof(Duration))]
+    [NotifyPropertyChangedFor(nameof(MediaType))]
     public partial MediaInfo MediaInfo { get; set; }
 
     [ObservableProperty]
@@ -93,6 +103,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     {
         _playerService = source._playerService;
         _playerContext = source._playerContext;
+        _dispatcherQueue = source._dispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
         Name = source.Name;
         _thumbnailRef = source._thumbnailRef;
         MediaInfo = source.MediaInfo;
@@ -108,12 +119,14 @@ public sealed partial class MediaViewModel : ObservableRecipient
         DateAdded = source.DateAdded;
         IsFromLibrary = source.IsFromLibrary;
         DetailsLoaded = source.DetailsLoaded;
+        IsMediaInfoParsed = source.IsMediaInfoParsed;
     }
 
     private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
     {
         _playerService = playerService;
         _playerContext = playerContext;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Source = source;
         Location = string.Empty;
         DateAdded = DateTimeOffset.Now;
@@ -147,7 +160,13 @@ public sealed partial class MediaViewModel : ObservableRecipient
         Location = media.Mrl;
 
         // Media is already loaded, create PlaybackItem
-        Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media));
+        SetPlaybackItem(new PlaybackItem(media, media));
+    }
+
+    internal void SetPlaybackItem(PlaybackItem item)
+    {
+        AttachPlaybackItem(item);
+        Item = new Lazy<PlaybackItem?>(item);
     }
 
     partial void OnMediaInfoChanged(MediaInfo value)
@@ -185,7 +204,62 @@ public sealed partial class MediaViewModel : ObservableRecipient
             Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{Location}{Environment.NewLine}{e.Message}"));
         }
 
+        if (item is not null)
+        {
+            AttachPlaybackItem(item);
+        }
+
         return item;
+    }
+
+    private void AttachPlaybackItem(PlaybackItem item)
+    {
+        item.MediaParsed -= OnPlaybackItemMediaParsed;
+        item.MediaParsed += OnPlaybackItemMediaParsed;
+        if (item.IsParsed)
+        {
+            UpdateParsedMediaInfo(item.GetMediaInfo());
+        }
+    }
+
+    private void DetachPlaybackItem(PlaybackItem item)
+    {
+        item.MediaParsed -= OnPlaybackItemMediaParsed;
+    }
+
+    private void OnPlaybackItemMediaParsed(PlaybackItem sender, EventArgs args)
+    {
+        MediaInfo parsedInfo = sender.GetMediaInfo();
+        Uri? artworkUri = sender.ArtworkUri;
+        if (_dispatcherQueue is { HasThreadAccess: false })
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateParsedMediaInfo(parsedInfo);
+                TrySetArtworkThumbnail(artworkUri);
+            });
+        }
+        else
+        {
+            UpdateParsedMediaInfo(parsedInfo);
+            TrySetArtworkThumbnail(artworkUri);
+        }
+    }
+
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    private void TrySetArtworkThumbnail(Uri? artworkUri)
+    {
+        if (_dispatcherQueue is { HasThreadAccess: true } &&
+            Thumbnail is null &&
+            Source is not StorageFile &&
+            artworkUri is not null)
+        {
+            Thumbnail = new BitmapImage(artworkUri)
+            {
+                DecodePixelType = DecodePixelType.Logical,
+                DecodePixelHeight = 300
+            };
+        }
     }
 
     public override string ToString()
@@ -219,6 +293,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         PlaybackItem? item = Item.Value;
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         if (item == null) return;
+        DetachPlaybackItem(item);
         _playerService.DisposePlaybackItem(item);
     }
 
@@ -228,54 +303,80 @@ public sealed partial class MediaViewModel : ObservableRecipient
         AltCaption = file.Name;
     }
 
+    /// <summary>
+    /// Merges parsed media properties into <see cref="MediaInfo"/>, preferring non-empty and non-zero parsed values.
+    /// </summary>
+    /// <param name="parsedInfo">The parsed media information.</param>
+    public void UpdateParsedMediaInfo(MediaInfo parsedInfo)
+    {
+        IsMediaInfoParsed = true;
+        MediaInfo = MediaInfo.Merge(MediaInfo, parsedInfo);
+    }
+
+    /// <summary>
+    /// Loads basic and extended file properties using the platform file service.
+    /// Preserves any properties that have already been parsed by the media engine.
+    /// </summary>
+    /// <param name="filesService">The platform file service.</param>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
+        if (Item is { IsValueCreated: true, Value: { IsParsed: true } playbackItem } && !IsMediaInfoParsed)
+        {
+            UpdateParsedMediaInfo(playbackItem.GetMediaInfo());
+        }
+
         DetailsLoaded = true;
+        MediaInfo? winrtInfo = null;
         switch (Source)
         {
             case StorageFile file:
-                MediaInfo = await filesService.GetMediaInfoAsync(file);
+                winrtInfo = await filesService.GetMediaInfoAsync(file);
                 break;
             case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
                 UpdateSource(uriFile);
-                MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
+                winrtInfo = await filesService.GetMediaInfoAsync(uriFile);
                 break;
         }
 
-        switch (MediaType)
+        if (winrtInfo is not null)
         {
-            case MediaPlaybackType.Unknown when Item is { IsValueCreated: true, Value: { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done } }:
-                // Update media type when it was previously set Unknown. Usually when source is a URI.
-                // We don't want to init PlaybackItem just for this.
-                MediaInfo.MediaType = MediaPlaybackType.Music;
-                break;
-            case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
-                Name = MediaInfo.MusicProperties.Title;
-                break;
-            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title):
-                Name = MediaInfo.VideoProperties.Title;
-                break;
+            MediaInfo = IsMediaInfoParsed
+                ? MediaInfo.Merge(winrtInfo, MediaInfo)
+                : MediaInfo.Merge(MediaInfo, winrtInfo);
         }
+    }
 
-        if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
+    /// <summary>
+    /// Probes the media source on demand using <paramref name="mediaProbeService"/> and merges the parsed properties into <see cref="MediaInfo"/>.
+    /// </summary>
+    /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
+    /// <param name="cancellationToken">A token to cancel the probe operation.</param>
+    public async Task ParseDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
+    {
+        if (IsMediaInfoParsed)
         {
-            if (Source is not IStorageItem &&
-                media.Meta(MetadataType.Title) is { } title &&
-                !string.IsNullOrEmpty(title) &&
-                !Guid.TryParse(title, out Guid _))
-            {
-                Name = title;
-            }
-
-            VideoInfo videoProperties = MediaInfo.VideoProperties;
-            videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
-            videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
-            videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
+            return;
         }
 
-        if (Name == AltCaption)
-            AltCaption = string.Empty;
+        if (Item is { IsValueCreated: true, Value: { IsParsed: true } parsedItem })
+        {
+            UpdateParsedMediaInfo(parsedItem.GetMediaInfo());
+            return;
+        }
+
+        object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
+            ? activeItem
+            : Source;
+        MediaInfo? parsedInfo = await mediaProbeService.ProbeMediaAsync(
+            probeSource,
+            _options.Count > 0 ? _options.ToArray() : null,
+            cancellationToken);
+
+        if (parsedInfo is not null)
+        {
+            UpdateParsedMediaInfo(parsedInfo);
+        }
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
@@ -309,9 +410,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
             Thumbnail = image;
         }
-        else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
-                 media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-                 Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri))
+        else if (Item is { IsValueCreated: true, Value.ArtworkUri: { } artworkUri })
         {
             Thumbnail = new BitmapImage(artworkUri)
             {
@@ -359,6 +458,19 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private void UpdateCaptions()
     {
+        string title = MediaType switch
+        {
+            MediaPlaybackType.Video => MediaInfo.VideoProperties.Title,
+            _ => !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title)
+                ? MediaInfo.MusicProperties.Title
+                : MediaInfo.VideoProperties.Title
+        };
+
+        if (!string.IsNullOrEmpty(title))
+        {
+            Name = title;
+        }
+
         if (Duration > TimeSpan.Zero)
         {
             Caption = Humanizer.ToDuration(Duration);
@@ -377,18 +489,9 @@ public sealed partial class MediaViewModel : ObservableRecipient
             AltCaption = musicProperties.Album;
         }
 
-        if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
+        if (Name == AltCaption)
         {
-            string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
-            if (!string.IsNullOrEmpty(artist))
-            {
-                Caption = artist;
-            }
-
-            if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
-            {
-                AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
-            }
+            AltCaption = string.Empty;
         }
     }
 

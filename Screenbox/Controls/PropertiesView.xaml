@@ -32,7 +32,7 @@
                         Margin="0,0,8,0"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind helpers:ItemLabelHelper.GetMediaPropertyResourceString(Key)}"
+                        Text="{x:Bind helpers:ItemLabelHelper.GetMediaPropertyResourceString(Key), Mode=OneWay}"
                         TextTrimming="CharacterEllipsis" />
 
                     <TextBlock
@@ -40,7 +40,7 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         IsTextSelectionEnabled="True"
-                        Text="{x:Bind Value}"
+                        Text="{x:Bind Value, Mode=OneWay}"
                         TextWrapping="Wrap" />
 
                     <VisualStateManager.VisualStateGroups>
@@ -93,7 +93,7 @@
                 HorizontalAlignment="Stretch"
                 Header="{x:Bind strings:Resources.Video}"
                 IsExpanded="True"
-                Visibility="{x:Bind ViewModel.VideoProperties, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{x:Bind ViewModel.VideoProperties, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoProperties}"
@@ -105,7 +105,7 @@
                 HorizontalAlignment="Stretch"
                 Header="{x:Bind strings:Resources.Music}"
                 IsExpanded="True"
-                Visibility="{x:Bind ViewModel.AudioProperties, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{x:Bind ViewModel.AudioProperties, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.AudioProperties}"
@@ -123,7 +123,7 @@
                         ItemTemplate="{StaticResource PropertyItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.FileProperties}"
                         Layout="{StaticResource PropertyStackLayout}"
-                        Visibility="{x:Bind ViewModel.FileProperties, Converter={StaticResource CollectionVisibilityConverter}}" />
+                        Visibility="{x:Bind ViewModel.FileProperties, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}" />
 
                     <TextBlock
                         x:Name="LocationTitleText"

@@ -699,6 +699,27 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
     }
 
+    partial void OnMediaChanged(MediaViewModel? oldValue, MediaViewModel? newValue)
+    {
+        if (oldValue is not null)
+        {
+            oldValue.PropertyChanged -= OnMediaPropertyChanged;
+        }
+
+        if (newValue is not null)
+        {
+            newValue.PropertyChanged += OnMediaPropertyChanged;
+        }
+    }
+
+    private void OnMediaPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MediaViewModel.MediaType) && ReferenceEquals(sender, Media))
+        {
+            _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(Media));
+        }
+    }
+
     [RelayCommand]
     public void GoBack()
     {
