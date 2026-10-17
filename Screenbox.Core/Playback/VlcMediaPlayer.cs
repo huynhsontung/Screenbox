@@ -285,6 +285,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     internal LibVLC LibVlc { get; }
 
+    private const long MaxSupportedMilliseconds = long.MaxValue / TimeSpan.TicksPerMillisecond;
     private readonly Rect _defaultSourceRect;
     private ChapterCue? _chapter;
     private Rect _normalizedSourceRect;
@@ -333,7 +334,14 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void VlcPlayer_TimeChanged(object? sender, MediaPlayerTimeChangedEventArgs e)
     {
-        TimeSpan newValue = TimeSpan.FromMilliseconds(e.Time);
+        if (e.Time < 0)
+        {
+            return;
+        }
+
+        TimeSpan newValue = e.Time > MaxSupportedMilliseconds
+            ? TimeSpan.MaxValue
+            : TimeSpan.FromMilliseconds(e.Time);
         if (newValue != _position)
         {
             TimeSpan oldValue = _position;
@@ -382,7 +390,15 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void VlcPlayer_LengthChanged(object? sender, MediaPlayerLengthChangedEventArgs e)
     {
-        NaturalDuration = TimeSpan.FromMilliseconds(e.Length);
+        if (e.Length <= 0)
+        {
+            NaturalDuration = TimeSpan.Zero;
+            return;
+        }
+
+        NaturalDuration = e.Length > MaxSupportedMilliseconds
+            ? TimeSpan.MaxValue
+            : TimeSpan.FromMilliseconds(e.Length);
     }
 
     private void VlcPlayer_Playing(object? sender, EventArgs e)
