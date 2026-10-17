@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -59,6 +60,22 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
+
+        if (e.OldItems is not null)
+        {
+            foreach (MediaViewModel media in e.OldItems.OfType<MediaViewModel>())
+            {
+                media.PropertyChanged -= Media_OnPropertyChanged;
+            }
+        }
+
+        if (e.NewItems is not null)
+        {
+            foreach (MediaViewModel media in e.NewItems.OfType<MediaViewModel>())
+            {
+                media.PropertyChanged += Media_OnPropertyChanged;
+            }
+        }
 
         _playlistSaveTimer.Debounce(async () =>
         {
@@ -121,6 +138,12 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(HasItems))]
     private void Play()
     {
+        if (Items.Any(media => media.IsMediaActive))
+        {
+            Messenger.Send(new TogglePlayPauseMessage(showBadge: false));
+            return;
+        }
+
         Messenger.Send(new SetQueueMessage(ToPlaylist(), true));
     }
 
@@ -168,6 +191,14 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
 
         //await SaveAsync();
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
+    }
+
+    private void Media_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
+        {
+            IsPlaying = media.IsPlaying;
+        }
     }
 
     private PlaylistRecordDto ToPersistentPlaylist()
