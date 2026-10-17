@@ -124,13 +124,6 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
         Messenger.SendQueueAndPlay(media, SearchResult.Songs);
     }
 
-    [RelayCommand]
-    private void PlayPlaylist(PlaylistViewModel playlist)
-    {
-        var playlistModel = playlist.ToPlaylist();
-        Messenger.Send(new SetQueueMessage(playlistModel, true));
-    }
-
     [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreArtists))]
     private void SeeAllArtists()
     {

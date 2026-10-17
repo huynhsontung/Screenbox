@@ -83,6 +83,7 @@
             AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, ItemsCount)}"
             Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+            PlayCommand="{x:Bind PlayCommand}"
             PlayCommandParameter="{x:Bind}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
             <controls:CommonGridViewItem.PlaceholderIconSource>

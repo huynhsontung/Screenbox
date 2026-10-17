@@ -17,14 +17,12 @@ public sealed partial class SearchResultPage : Page
     internal SearchResultPageViewModel ViewModel => (SearchResultPageViewModel)DataContext;
 
     internal CommonViewModel Common { get; }
-    internal PlaylistsPageViewModel PlaylistsViewModel { get; }
 
     public SearchResultPage()
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<SearchResultPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-        PlaylistsViewModel = Ioc.Default.GetRequiredService<PlaylistsPageViewModel>();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)

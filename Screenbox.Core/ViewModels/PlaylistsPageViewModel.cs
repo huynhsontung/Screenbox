@@ -81,27 +81,6 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistDeleted, title: playlistName));
     }
 
-    private static bool NotEmpty(PlaylistViewModel? playlist) => playlist?.ItemsCount > 0;
-
-    [RelayCommand(CanExecute = nameof(NotEmpty))]
-    private void Play(PlaylistViewModel playlistVm)
-    {
-        var playlist = playlistVm.ToPlaylist();
-        Messenger.Send(new SetQueueMessage(playlist, true));
-    }
-
-    [RelayCommand(CanExecute = nameof(NotEmpty))]
-    private void PlayNext(PlaylistViewModel playlistVm)
-    {
-        Messenger.SendPlayNext(playlistVm.Items);
-    }
-
-    [RelayCommand(CanExecute = nameof(NotEmpty))]
-    private void AddToQueue(PlaylistViewModel playlistVm)
-    {
-        Messenger.SendAddToQueue(playlistVm.Items);
-    }
-
     [RelayCommand]
     private async Task ImportPlaylistAsync()
     {
