@@ -21,8 +21,8 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlayerControlsViewModel : ObservableRecipient,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
-    IRecipient<SettingsChangedMessage>,
     IRecipient<TogglePlayPauseMessage>,
     IRecipient<TrackNavigationMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
@@ -66,7 +66,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly IWindowService _windowService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly PlayerContext _playerContext;
     private readonly IFilesService _filesService;
     private readonly IPlayQueueCoordinator _coordinator;
@@ -77,20 +77,20 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         PlayQueueContext playQueue,
         IFilesService filesService,
         IPlayQueueCoordinator coordinator,
-        ISettingsService settingsService,
+        PlayerSettingsContext playerSettings,
         IWindowService windowService,
         PlayerContext playerContext)
     {
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _windowService = windowService;
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _playerContext = playerContext;
         _filesService = filesService;
         _coordinator = coordinator;
-        IsAdvancedModeActive = settingsService.AdvancedMode;
+        IsAdvancedModeActive = playerSettings.AdvancedMode;
         IsMinimal = true;
-        IsDisplayingRemainingTime = settingsService.PersistentShowRemainingTime;
-        PlayerShowChapters = settingsService.PlayerShowChapters;
+        IsDisplayingRemainingTime = playerSettings.ShowRemainingTime;
+        PlayerShowChapters = playerSettings.ShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
         _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
@@ -101,24 +101,23 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
             MediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
-        Messenger.Register<SettingsChangedMessage>(this);
         Messenger.Register<TogglePlayPauseMessage>(this);
         Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
     }
 
-    public void Receive(SettingsChangedMessage message)
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
     {
-        switch (message.SettingsName)
+        if (message.PropertyName == nameof(PlayerSettingsContext.ShowChapters))
         {
-            case nameof(SettingsPageViewModel.AdvancedMode):
-                IsAdvancedModeActive = _settingsService.AdvancedMode;
-                break;
-            case nameof(SettingsPageViewModel.PlayerShowChapters):
-                PlayerShowChapters = _settingsService.PlayerShowChapters;
-                break;
+            PlayerShowChapters = message.NewValue;
+        }
+        else if (message.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+        {
+            IsAdvancedModeActive = message.NewValue;
         }
     }
 
@@ -266,7 +265,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     partial void OnIsDisplayingRemainingTimeChanged(bool value)
     {
-        _settingsService.PersistentShowRemainingTime = value;
+        _playerSettings.ShowRemainingTime = value;
     }
 
     private void PlayQueueOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -457,7 +456,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                 throw new Exception("VLC failed to save snapshot");
 
             StorageFile file = (await tempFolder.GetFilesAsync())[0];
-            StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_settingsService.FrameCaptureFolderToken);
+            StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_playerSettings.FrameCaptureFolderToken);
             return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
                 NameCollisionOption.GenerateUniqueName);
         }

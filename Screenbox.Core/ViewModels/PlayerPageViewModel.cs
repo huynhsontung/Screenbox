@@ -108,7 +108,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _osdBadgeTimer;
     private readonly DispatcherQueueTimer _playPauseHoldTimer;
     private readonly IWindowService _windowService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly IFilesService _filesService;
     private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
@@ -117,11 +117,11 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private double _playbackRateBeforeHold;
 
     public PlayerPageViewModel(IWindowService windowService,
-        ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext,
+        PlayerSettingsContext playerSettings, IFilesService filesService, PlayerContext playerContext,
         INavigationService navigationService)
     {
         _windowService = windowService;
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _filesService = filesService;
         _playerContext = playerContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -326,7 +326,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public bool OnPlayerClick()
     {
-        if (!ControlsHidden) return (_settingsService.PlayerGestureTap == PlaybackActionKind.None) && TryHideControls(true);
+        if (!ControlsHidden) return (_playerSettings.GestureTap == PlaybackActionKind.None) && TryHideControls(true);
         ControlsHidden = false;
         DelayHideControls();
         return true;
@@ -355,7 +355,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         const double HoldingSpeed = 2.0;
 
-        if (!_settingsService.PlayerGesturePressAndHold ||
+        if (!_playerSettings.GesturePressAndHold ||
             _isPlayPauseHoldActive ||
             MediaPlayer is null || MediaPlayer.PlaybackState is MediaPlaybackState.Paused)
             return;
@@ -466,10 +466,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         bool isPlayerVisible = PlayerVisibility == PlayerVisibilityState.Visible;
         int step = key switch
         {
-            VirtualKey.Left when isPlayerVisible => -_settingsService.PlayerRewindStep,
-            VirtualKey.Right when isPlayerVisible => _settingsService.PlayerFastForwardStep,
-            VirtualKey.J => -_settingsService.PlayerRewindStep,
-            VirtualKey.L => _settingsService.PlayerFastForwardStep,
+            VirtualKey.Left when isPlayerVisible => -_playerSettings.RewindStep,
+            VirtualKey.Right when isPlayerVisible => _playerSettings.FastForwardStep,
+            VirtualKey.J => -_playerSettings.RewindStep,
+            VirtualKey.L => _playerSettings.FastForwardStep,
             _ => 0,
         };
 
@@ -665,7 +665,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public void OnFileLaunched()
     {
-        if (_settingsService.PlayerAutoResize == PlayerAutoResizeOption.OnLaunch)
+        if (_playerSettings.AutoResize == PlayerAutoResizeOption.OnLaunch)
             _resizeNext = true;
     }
 
@@ -731,7 +731,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     [DynamicWindowsRuntimeCast(typeof(Control))]
     public bool TryHideControls(bool skipFocusCheck = false)
     {
-        bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;
+        bool shouldCheckPlaying = _playerSettings.ShowControls && !IsPlaying;
         if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
             SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
@@ -759,7 +759,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly) return;
 
-        int delayInSeconds = _settingsService.PlayerControlsHideDelay;
+        int delayInSeconds = _playerSettings.ControlsHideDelay;
         _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));
     }
 
@@ -780,11 +780,11 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         Media = current;
         AudioOnly = current == null || current.MediaType == MediaPlaybackType.Music;
-        ShowVisualizer = current != null && AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
+        ShowVisualizer = current != null && AudioOnly && !string.IsNullOrEmpty(_playerSettings.LivelyActivePath);
         if (current != null)
         {
             // Auto-resize player window
-            bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
+            bool shouldBeVisible = _playerSettings.AutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
             if (PlayerVisibility != PlayerVisibilityState.Visible)
             {
                 PlayerVisibility = shouldBeVisible ? PlayerVisibilityState.Visible : PlayerVisibilityState.Minimal;
@@ -817,12 +817,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             IsPlaying = state == MediaPlaybackState.Playing;
             IsOpening = false;
 
-            if (!IsPlaying && _settingsService.PlayerShowControls)
+            if (!IsPlaying && _playerSettings.ShowControls)
             {
                 ControlsHidden = false;
             }
 
-            if (!IsPlaying && !_settingsService.PlayerShowControls)
+            if (!IsPlaying && !_playerSettings.ShowControls)
             {
                 DelayHideControls();
             }
@@ -836,7 +836,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     private void OnNaturalVideoSizeChanged(IMediaPlayer sender, EventArgs args)
     {
-        if (!_resizeNext && _settingsService.PlayerAutoResize != PlayerAutoResizeOption.Always) return;
+        if (!_resizeNext && _playerSettings.AutoResize != PlayerAutoResizeOption.Always) return;
         _resizeNext = false;
 
         _dispatcherQueue.TryEnqueue(() =>

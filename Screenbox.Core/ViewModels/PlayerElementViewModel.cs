@@ -26,8 +26,7 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlayerElementViewModel : ObservableRecipient,
-    IRecipient<ChangeAspectRatioMessage>,
-    IRecipient<SettingsChangedMessage>
+    IRecipient<ChangeAspectRatioMessage>
 {
     private const double GestureStepAmount = 5.0;
 
@@ -53,7 +52,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private readonly PlayerContext _playerContext;
     private readonly IPlayerService _playerService;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _clickTimer;
     private readonly DispatcherQueueTimer _pointerWheelTimer;
@@ -63,16 +62,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     private Size _viewSize;
     private Size _aspectRatio;
     private TimeSpan _timeBeforeManipulation;
-    private int _playerRewindStep;
-    private int _playerFastForwardStep;
-    private PlaybackActionKind _playerGestureTap;
-    private PlaybackActionKind _playerGestureSwipeUp;
-    private PlaybackActionKind _playerGestureSwipeDown;
-    private PlaybackActionKind _playerGestureSwipeLeft;
-    private PlaybackActionKind _playerGestureSwipeRight;
-    private bool _playerGestureSlideVertical;
-    private bool _playerGestureSlideHorizontal;
-    private bool _playerGesturePressAndHold;
     private double _playbackRateBeforeHold;
     private SlideOrientation _slideOrientation;
     private double _rawPixelsPerViewPixel = 1.0;
@@ -80,31 +69,24 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     public PlayerElementViewModel(
         PlayerContext playerContext,
         IPlayerService playerService,
-        ISettingsService settingsService,
+        PlayerSettingsContext playerSettings,
         ISystemMediaTransportControlsService transportControlsService,
         ILogger<PlayerElementViewModel> logger)
     {
         _playerContext = playerContext;
         _playerService = playerService;
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _transportControlsService = transportControlsService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _clickTimer = _dispatcherQueue.CreateTimer();
         _pointerWheelTimer = _dispatcherQueue.CreateTimer();
         _requestTracker = new DisplayRequestTracker();
-        LoadSettings();
 
         transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
         transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
 
         Messenger.Register<ChangeAspectRatioMessage>(this);
-        Messenger.Register<SettingsChangedMessage>(this);
-    }
-
-    public void Receive(SettingsChangedMessage message)
-    {
-        LoadSettings();
     }
 
     public void Receive(ChangeAspectRatioMessage message)
@@ -155,14 +137,14 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             try
             {
                 var args = new List<string>();
-                if (_settingsService.GlobalArguments.Length > 0)
+                if (_playerSettings.GlobalArguments.Length > 0)
                 {
-                    args.AddRange(_settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                    args.AddRange(_playerSettings.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
                 }
 
-                if (_settingsService.VideoUpscale != VideoUpscaleOption.Linear)
+                if (_playerSettings.VideoUpscale != VideoUpscaleOption.Linear)
                 {
-                    args.Add($"--d3d11-upscale-mode={_settingsService.VideoUpscale.ToString().ToLower()}");
+                    args.Add($"--d3d11-upscale-mode={_playerSettings.VideoUpscale.ToString().ToLower()}");
                 }
 
                 args.AddRange(swapChainOptions);
@@ -227,7 +209,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnClick()
     {
-        if (_settingsService.PlayerGestureTap is PlaybackActionKind.None || VlcMediaPlayer?.PlaybackItem == null)
+        if (_playerSettings.GestureTap is PlaybackActionKind.None || VlcMediaPlayer?.PlaybackItem == null)
         {
             return;
         }
@@ -238,7 +220,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             return;
         }
 
-        _clickTimer.Debounce(() => ProcessPlayerGesture(_playerGestureTap, GestureStepAmount), TimeSpan.FromMilliseconds(200));
+        _clickTimer.Debounce(() => ProcessPlayerGesture(_playerSettings.GestureTap, GestureStepAmount), TimeSpan.FromMilliseconds(200));
     }
 
     public void OnManipulationCompleted()
@@ -297,13 +279,13 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         double absoluteCumulativeY = Math.Abs(cumulative.Y);
         var gesture = PlaybackActionKind.None;
 
-        if (absoluteCumulativeX > absoluteCumulativeY && absoluteCumulativeX >= SwipeThreshold && !_playerGestureSlideHorizontal)
+        if (absoluteCumulativeX > absoluteCumulativeY && absoluteCumulativeX >= SwipeThreshold && !_playerSettings.GestureSlideHorizontal)
         {
-            gesture = cumulative.X > 0 ? _playerGestureSwipeRight : _playerGestureSwipeLeft;
+            gesture = cumulative.X > 0 ? _playerSettings.GestureSwipeRight : _playerSettings.GestureSwipeLeft;
         }
-        else if (absoluteCumulativeY > absoluteCumulativeX && absoluteCumulativeY >= SwipeThreshold && !_playerGestureSlideVertical)
+        else if (absoluteCumulativeY > absoluteCumulativeX && absoluteCumulativeY >= SwipeThreshold && !_playerSettings.GestureSlideVertical)
         {
-            gesture = cumulative.Y > 0 ? _playerGestureSwipeDown : _playerGestureSwipeUp;
+            gesture = cumulative.Y > 0 ? _playerSettings.GestureSwipeDown : _playerSettings.GestureSwipeUp;
         }
 
         if (gesture is PlaybackActionKind.None) return;
@@ -332,11 +314,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
         if (_slideOrientation is SlideOrientation.None)
         {
-            if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerGestureSlideVertical)
+            if (absCumulativeY > absCumulativeX && absCumulativeY >= 50 && _playerSettings.GestureSlideVertical)
             {
                 _slideOrientation = SlideOrientation.Vertical;
             }
-            else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerGestureSlideHorizontal)
+            else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerSettings.GestureSlideHorizontal)
             {
                 _slideOrientation = SlideOrientation.Horizontal;
                 if (VlcMediaPlayer != null)
@@ -368,7 +350,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         const double HoldingSpeed = 2.0;
 
-        if (!_playerGesturePressAndHold || VlcMediaPlayer is null) return;
+        if (!_playerSettings.GesturePressAndHold || VlcMediaPlayer is null) return;
         if (!IsHolding && VlcMediaPlayer.PlaybackState is MediaPlaybackState.Paused) return;
 
         switch (holdingState)
@@ -417,7 +399,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 {
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
-                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-_playerRewindStep), true)).Response.NewPosition;
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-_playerSettings.RewindStep), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
                 }
                 break;
@@ -426,7 +408,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 {
                     _timeBeforeManipulation = VlcMediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
-                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(_playerFastForwardStep), true)).Response.NewPosition;
+                    var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(_playerSettings.FastForwardStep), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
                 }
                 break;
@@ -542,20 +524,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
             VlcMediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
         }
-    }
-
-    private void LoadSettings()
-    {
-        _playerRewindStep = _settingsService.PlayerRewindStep;
-        _playerFastForwardStep = _settingsService.PlayerFastForwardStep;
-        _playerGestureTap = _settingsService.PlayerGestureTap;
-        _playerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
-        _playerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
-        _playerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
-        _playerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
-        _playerGestureSlideVertical = _settingsService.PlayerGestureSlideVertical;
-        _playerGestureSlideHorizontal = _settingsService.PlayerGestureSlideHorizontal;
-        _playerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
     }
 
     private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)

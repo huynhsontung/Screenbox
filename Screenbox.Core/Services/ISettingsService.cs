@@ -1,8 +1,13 @@
+using System;
 using Screenbox.Core.Enums;
 using Windows.Media;
 
 namespace Screenbox.Core.Services;
 
+/// <summary>
+/// Legacy settings service interface.
+/// </summary>
+[Obsolete("Use domain-specific settings contexts instead.")]
 public interface ISettingsService
 {
     PlayerAutoResizeOption PlayerAutoResize { get; set; }

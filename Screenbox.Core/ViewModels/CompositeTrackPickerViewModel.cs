@@ -70,18 +70,18 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     public partial TrackPickerDisplayMode DisplayMode { get; set; } = TrackPickerDisplayMode.Composite;
 
     private readonly IFilesService _filesService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlaybackSettingsContext _playbackSettings;
     private readonly PlayerContext _playerContext;
     private readonly ILogger<CompositeTrackPickerViewModel> _logger;
     private bool _flyoutOpened;
     private CancellationTokenSource? _cts;
 
     public CompositeTrackPickerViewModel(PlayerContext playerContext, IFilesService filesService,
-        ISettingsService settingsService,
+        PlaybackSettingsContext playbackSettings,
         ILogger<CompositeTrackPickerViewModel> logger)
     {
         _filesService = filesService;
-        _settingsService = settingsService;
+        _playbackSettings = playbackSettings;
         _playerContext = playerContext;
         _logger = logger;
         SubtitleTracks = new ObservableCollection<string>();
@@ -136,7 +136,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             }
         }
 
-        TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _settingsService.PersistentSubtitleLanguage);
+        TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _playbackSettings.SubtitleLanguage);
     }
 
     private static void TrySetSubtitleFromLanguage(PlaybackSubtitleTrackList subtitleTrackList, string persistentLanguage)
@@ -256,12 +256,12 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
         if (value < 0)
         {
-            _settingsService.PersistentSubtitleLanguage = string.Empty;
+            _playbackSettings.SubtitleLanguage = string.Empty;
         }
         else if (value < SubtitleTracks.Count)
         {
             var subtitle = ItemSubtitleTrackList[value];
-            _settingsService.PersistentSubtitleLanguage =
+            _playbackSettings.SubtitleLanguage =
                 $"{subtitle.LanguageTag},{subtitle.Language},{LanguageHelper.GetPreferredLanguage().Substring(0, 2)}";
         }
     }

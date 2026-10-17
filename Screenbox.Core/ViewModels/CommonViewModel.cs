@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -17,13 +18,14 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CommonViewModel : ObservableRecipient,
-    IRecipient<SettingsChangedMessage>,
+    IRecipient<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
 {
     public Dictionary<Type, string> NavigationStates { get; }
 
-    public bool IsAdvancedModeEnabled => _settingsService.AdvancedMode;
+    public bool IsAdvancedModeEnabled => _playerSettings.AdvancedMode;
 
     [ObservableProperty] public partial NavigationViewDisplayMode NavigationViewDisplayMode { get; set; }
     [ObservableProperty] public partial Thickness ScrollBarMargin { get; set; }
@@ -32,38 +34,46 @@ public sealed partial class CommonViewModel : ObservableRecipient,
 
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
     private readonly Dictionary<string, object> _pageStates;
 
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
-        ISettingsService settingsService,
+        PlayerSettingsContext playerSettings,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
         NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 
-        Messenger.Register<SettingsChangedMessage>(this);
+        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(this);
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
         Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
     }
 
     [DynamicWindowsRuntimeCast(typeof(Frame))]
-    public void Receive(SettingsChangedMessage message)
+    public void Receive(SettingChangedMessage<GeneralSettingsContext, ThemeOption> message)
     {
-        if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&
-            Window.Current.Content is Frame rootFrame)
+        if (Window.Current.Content is Frame rootFrame)
         {
-            rootFrame.RequestedTheme = _settingsService.Theme.ToElementTheme();
+            rootFrame.RequestedTheme = message.NewValue.ToElementTheme();
+        }
+    }
+
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
+    {
+        if (message.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+        {
+            OnPropertyChanged(nameof(IsAdvancedModeEnabled));
         }
     }
 

@@ -12,8 +12,8 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class VolumeViewModel : ObservableRecipient,
+    IRecipient<SettingChangedMessage<PlaybackSettingsContext, int>>,
     IRecipient<ChangeVolumeRequestMessage>,
-    IRecipient<SettingsChangedMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>
 {
     [ObservableProperty] public partial int MaxVolume { get; set; }
@@ -23,15 +23,15 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly DispatcherQueue _dispatcherQueue;
-    private readonly ISettingsService _settingsService;
+    private readonly PlaybackSettingsContext _playbackSettings;
     private readonly PlayerContext _playerContext;
 
-    public VolumeViewModel(ISettingsService settingsService, PlayerContext playerContext)
+    public VolumeViewModel(PlaybackSettingsContext playbackSettings, PlayerContext playerContext)
     {
-        _settingsService = settingsService;
+        _playbackSettings = playbackSettings;
         _playerContext = playerContext;
-        Volume = settingsService.PersistentVolume;
-        MaxVolume = settingsService.MaxVolume;
+        Volume = playbackSettings.Volume;
+        MaxVolume = playbackSettings.MaxVolume;
         IsMute = Volume == 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
@@ -41,9 +41,17 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
             MediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }
 
+        Messenger.Register<SettingChangedMessage<PlaybackSettingsContext, int>>(this);
         Messenger.Register<ChangeVolumeRequestMessage>(this);
-        Messenger.Register<SettingsChangedMessage>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
+    }
+
+    public void Receive(SettingChangedMessage<PlaybackSettingsContext, int> message)
+    {
+        if (message.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
+        {
+            MaxVolume = message.NewValue;
+        }
     }
 
     public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
@@ -63,12 +71,6 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
         }
     }
 
-    public void Receive(SettingsChangedMessage message)
-    {
-        if (message.SettingsName != nameof(SettingsPageViewModel.VolumeBoost)) return;
-        MaxVolume = _settingsService.MaxVolume;
-    }
-
     public void Receive(ChangeVolumeRequestMessage message)
     {
         SetVolume(message.Value, message.IsOffset);
@@ -82,7 +84,7 @@ public sealed partial class VolumeViewModel : ObservableRecipient,
         // bool stayMute = IsMute && newValue - MediaPlayer.Volume < 0.005;
         MediaPlayer.Volume = newValue;
         if (value > 0) IsMute = false;
-        _settingsService.PersistentVolume = value;
+        _playbackSettings.Volume = value;
     }
 
     partial void OnIsMuteChanged(bool value)

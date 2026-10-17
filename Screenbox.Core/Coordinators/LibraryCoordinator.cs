@@ -1,10 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
@@ -17,11 +19,12 @@ namespace Screenbox.Core.Coordinators;
 /// <summary>
 /// Stateful coordinator that owns library watchers/timers and invokes <see cref="ILibraryService"/> operations.
 /// </summary>
-public sealed partial class LibraryCoordinator : ILibraryCoordinator
+public sealed partial class LibraryCoordinator : ILibraryCoordinator,
+    IRecipient<SettingChangedMessage<LibrarySettingsContext, bool>>
 {
     private readonly LibraryContext _context;
     private readonly ILibraryService _libraryService;
-    private readonly ISettingsService _settingsService;
+    private readonly LibrarySettingsContext _librarySettings;
     private readonly ILogger<LibraryCoordinator> _logger;
 
     private readonly DispatcherQueueTimer _musicRefreshTimer;
@@ -35,18 +38,18 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
     private CancellationTokenSource? _musicFetchCts;
     private CancellationTokenSource? _videosFetchCts;
 
-    private bool UseIndexer => _settingsService.UseIndexer;
-    private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
+    private bool UseIndexer => _librarySettings.UseIndexer;
+    private bool SearchRemovableStorage => _librarySettings.SearchRemovableStorage && SystemInformation.IsXbox;
 
     public LibraryCoordinator(
         LibraryContext context,
         ILibraryService libraryService,
-        ISettingsService settingsService,
+        LibrarySettingsContext librarySettings,
         ILogger<LibraryCoordinator> logger)
     {
         _context = context;
         _libraryService = libraryService;
-        _settingsService = settingsService;
+        _librarySettings = librarySettings;
         _logger = logger;
 
         DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -54,11 +57,28 @@ public sealed partial class LibraryCoordinator : ILibraryCoordinator
         _videosRefreshTimer = dispatcherQueue.CreateTimer();
         _storageDeviceRefreshTimer = dispatcherQueue.CreateTimer();
 
+        WeakReferenceMessenger.Default.Register<SettingChangedMessage<LibrarySettingsContext, bool>>(this);
+
         if (SystemInformation.IsXbox)
         {
             _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
             _portableStorageDeviceWatcher.Removed += OnPortableStorageDeviceChanged;
             _portableStorageDeviceWatcher.Updated += OnPortableStorageDeviceChanged;
+        }
+    }
+
+    public async void Receive(SettingChangedMessage<LibrarySettingsContext, bool> message)
+    {
+        if (message.PropertyName is nameof(LibrarySettingsContext.UseIndexer) or nameof(LibrarySettingsContext.SearchRemovableStorage))
+        {
+            try
+            {
+                await RefreshWatchersAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to refresh library watchers after setting change.");
+            }
         }
     }
 

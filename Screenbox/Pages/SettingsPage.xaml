@@ -165,7 +165,7 @@
                     <ToggleSwitch
                         x:Name="SearchRemovableStorageToggle"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSearchRemovableStorageDescription}"
-                        IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.LibrarySettings.SearchRemovableStorage, Mode=TwoWay}" />
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
@@ -252,7 +252,7 @@
                                 <CheckBox
                                     AutomationProperties.FullDescription="{x:Bind SettingsUseIndexerDescriptionText.Text}"
                                     Content="{x:Bind strings:Resources.SettingsUseIndexerHeader}"
-                                    IsChecked="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
+                                    IsChecked="{x:Bind ViewModel.LibrarySettings.UseIndexer, Mode=TwoWay}" />
                                 <TextBlock
                                     x:Name="SettingsUseIndexerDescriptionText"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -325,7 +325,7 @@
                     Header="{x:Bind strings:Resources.SettingsEnqueueAllFilesInFolderHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FolderListGlyph}}">
-                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.GeneralSettings.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
                 <!--  Frame Capture Location  -->
                 <ctc:SettingsCard
@@ -398,7 +398,7 @@
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRewindDescription}"
                         ItemTemplate="{StaticResource IntegerToSecondsCountResourceStringTemplate}"
                         ItemsSource="{x:Bind ViewModel.PlayerSeekStepOptions}"
-                        SelectedItem="{x:Bind ViewModel.PlayerRewindStep, Mode=TwoWay}">
+                        SelectedItem="{x:Bind ViewModel.PlayerSettings.RewindStep, Mode=TwoWay}">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
@@ -415,7 +415,7 @@
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsFastForwardDescription}"
                         ItemTemplate="{StaticResource IntegerToSecondsCountResourceStringTemplate}"
                         ItemsSource="{x:Bind ViewModel.PlayerSeekStepOptions}"
-                        SelectedItem="{x:Bind ViewModel.PlayerFastForwardStep, Mode=TwoWay}">
+                        SelectedItem="{x:Bind ViewModel.PlayerSettings.FastForwardStep, Mode=TwoWay}">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
@@ -429,10 +429,10 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xE75A;}">
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowControlsHeader}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSettings.ShowControls, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowChaptersHeader}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSettings.ShowChapters, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}">
                             <ComboBox
@@ -440,7 +440,7 @@
                                 AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}"
                                 ItemTemplate="{StaticResource IntegerToSecondsCountResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.PlayerControlsHideDelayOptions, Mode=OneWay}"
-                                SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.ControlsHideDelay, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -460,7 +460,7 @@
                                 MinWidth="150"
                                 ItemTemplate="{StaticResource PlaybackActionKindToResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureTap, Mode=TwoWay}">
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GestureTap, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -469,10 +469,10 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeUpHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                IsEnabled="{x:Bind ViewModel.PlayerGestureSlideVertical, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                                IsEnabled="{x:Bind ViewModel.PlayerSettings.GestureSlideVertical, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                                 ItemTemplate="{StaticResource PlaybackActionKindToResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeUp, Mode=TwoWay}">
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GestureSwipeUp, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -481,10 +481,10 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeDownHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                IsEnabled="{x:Bind ViewModel.PlayerGestureSlideVertical, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                                IsEnabled="{x:Bind ViewModel.PlayerSettings.GestureSlideVertical, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                                 ItemTemplate="{StaticResource PlaybackActionKindToResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeDown, Mode=TwoWay}">
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GestureSwipeDown, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -493,10 +493,10 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeLeftHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                IsEnabled="{x:Bind ViewModel.PlayerGestureSlideHorizontal, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                                IsEnabled="{x:Bind ViewModel.PlayerSettings.GestureSlideHorizontal, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                                 ItemTemplate="{StaticResource PlaybackActionKindToResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeLeft, Mode=TwoWay}">
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GestureSwipeLeft, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>
@@ -505,23 +505,23 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSwipeRightHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                IsEnabled="{x:Bind ViewModel.PlayerGestureSlideHorizontal, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                                IsEnabled="{x:Bind ViewModel.PlayerSettings.GestureSlideHorizontal, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                                 ItemTemplate="{StaticResource PlaybackActionKindToResourceStringTemplate}"
                                 ItemsSource="{x:Bind ViewModel.GestureOptions}"
-                                SelectedItem="{x:Bind ViewModel.PlayerGestureSwipeRight, Mode=TwoWay}">
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GestureSwipeRight, Mode=TwoWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <behaviors:ComboBoxWidthFromPopupBehavior />
                                 </interactivity:Interaction.Behaviors>
                             </ComboBox>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureVolume}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureSlideVertical, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSettings.GestureSlideVertical, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGestureSeek}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGestureSlideHorizontal, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSettings.GestureSlideHorizontal, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGesturePressAndHoldHeader}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerGesturePressAndHold, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSettings.GesturePressAndHold, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
@@ -610,7 +610,7 @@
                     <ToggleSwitch
                         x:Name="UseMultipleInstancesToggleSwitch"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsUseMultipleInstancesDescription}"
-                        IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.GeneralSettings.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <ctc:SettingsExpander
@@ -625,7 +625,7 @@
                     <ToggleSwitch
                         x:Name="AdvancedModeToggleSwitch"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsAdvancedModeDescription}"
-                        IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.PlayerSettings.AdvancedMode, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsGlobalArgumentsCard"
@@ -642,9 +642,9 @@
                         <ctc:SettingsCard
                             Header="{x:Bind strings:Resources.ActiveArguments}"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind ViewModel.PlayerSettings.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
                             <ctc:SettingsCard.Description>
-                                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
+                                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.PlayerSettings.GlobalArguments, Mode=OneWay}" />
                             </ctc:SettingsCard.Description>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -660,7 +660,7 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.GeneralSettings.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
@@ -669,7 +669,7 @@
                     <ToggleSwitch
                         x:Name="ShowRecentToggleSwitch"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsShowRecentDescription}"
-                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.GeneralSettings.ShowRecent, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsClearRecentCard"
@@ -691,13 +691,13 @@
                     <interactivity:Interaction.Behaviors>
                         <behaviors:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PersistPlaybackPosition, Mode=TwoWay}" />
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PlaybackSettings.PersistPlaybackPosition, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             Description="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}"
                             Header="{x:Bind strings:Resources.SettingsRestorePlaybackPositionHeader}"
-                            IsEnabled="{x:Bind ViewModel.PersistPlaybackPosition, Mode=OneWay}">
-                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
+                            IsEnabled="{x:Bind ViewModel.PlaybackSettings.PersistPlaybackPosition, Mode=OneWay}">
+                            <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.PlaybackSettings.RestorePlaybackPosition, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard AutomationProperties.Name="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}" Header="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}">
                             <Button
