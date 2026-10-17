@@ -176,7 +176,7 @@ internal static class VlcMediaExtensions
         return new MediaInfo(mediaType, musicInfo, videoInfo);
     }
 
-    internal static string NormalizeTitle(string? rawTitle, string? mrl)
+    private static string NormalizeTitle(string? rawTitle, string? mrl)
     {
         if (string.IsNullOrWhiteSpace(rawTitle) || Guid.TryParse(rawTitle, out _))
         {
@@ -197,7 +197,7 @@ internal static class VlcMediaExtensions
         return rawTitle;
     }
 
-    internal static uint ParseTrackNumber(string? rawTrackNumber)
+    private static uint ParseTrackNumber(string? rawTrackNumber)
     {
         if (string.IsNullOrWhiteSpace(rawTrackNumber))
         {
@@ -216,7 +216,7 @@ internal static class VlcMediaExtensions
             : 0;
     }
 
-    internal static uint ParseYear(string? rawDate)
+    private static uint ParseYear(string? rawDate)
     {
         if (string.IsNullOrWhiteSpace(rawDate))
         {

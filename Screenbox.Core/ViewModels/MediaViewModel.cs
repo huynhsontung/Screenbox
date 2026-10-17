@@ -239,13 +239,12 @@ public sealed partial class MediaViewModel : ObservableRecipient
         DetailsLoaded = true;
         if (await EnsureStorageFileSourceAsync() is { } file)
         {
-            MediaInfo winrtInfo = await filesService.GetMediaInfoAsync(file);
-            MediaInfo = MediaInfo.Merge(winrtInfo, MediaInfo);
+            MediaInfo = await filesService.GetMediaInfoAsync(file);
         }
     }
 
     /// <summary>
-    /// Probes the media source using <paramref name="mediaProbeService"/> and merges the parsed properties into <see cref="MediaInfo"/>.
+    /// Probes the media source using <paramref name="mediaProbeService"/> and updates <see cref="MediaInfo"/>.
     /// </summary>
     /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
     /// <param name="cancellationToken">A token to cancel the probe operation.</param>
@@ -257,14 +256,12 @@ public sealed partial class MediaViewModel : ObservableRecipient
         object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
             ? activeItem
             : Source;
-        MediaInfo? parsedInfo = await mediaProbeService.ProbeMediaAsync(
-            probeSource,
-            _options.Count > 0 ? _options.ToArray() : null,
-            cancellationToken);
-
-        if (parsedInfo is not null)
+        if (await mediaProbeService.ProbeMediaAsync(
+                probeSource,
+                _options.Count > 0 ? _options.ToArray() : null,
+                cancellationToken) is { } parsedInfo)
         {
-            MediaInfo = MediaInfo.Merge(MediaInfo, parsedInfo);
+            MediaInfo = parsedInfo;
         }
     }
 

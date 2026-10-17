@@ -12,20 +12,12 @@ namespace Screenbox.Core.Tests.ViewModels;
 public class MediaViewModelTests
 {
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_ShouldMergePropertiesAndUpdateCaptions()
+    public async Task LoadDetailsAsync_WithMediaProbeService_ShouldUpdateMediaInfoAndCaptions()
     {
         var vm = new MediaViewModel(
             new PlayerContext(),
             new TestPlayerService(),
-            new Uri("file:///c:/music/track01.flac"))
-        {
-            MediaInfo = new MediaInfo(
-                MediaPlaybackType.Music,
-                new MusicInfo(),
-                new VideoInfo(),
-                42_000_000,
-                new DateTimeOffset(2025, 1, 15, 0, 0, 0, TimeSpan.Zero))
-        };
+            new Uri("file:///c:/music/track01.flac"));
 
         var changedProperties = new List<string>();
         vm.PropertyChanged += (_, e) =>
@@ -46,12 +38,17 @@ public class MediaViewModelTests
             Duration = TimeSpan.FromMinutes(4),
             Bitrate = 1000000
         };
-        var parsedInfo = new MediaInfo(MediaPlaybackType.Music, parsedMusic, new VideoInfo());
+        var parsedInfo = new MediaInfo(MediaPlaybackType.Music, parsedMusic, new VideoInfo())
+        {
+            Size = 42_000_000,
+            DateModified = new DateTimeOffset(2025, 1, 15, 0, 0, 0, TimeSpan.Zero)
+        };
         var probeService = new TestMediaProbeService(parsedInfo);
 
         await vm.LoadDetailsAsync(probeService);
 
         await Assert.That(probeService.CallCount).IsEqualTo(1);
+        await Assert.That(vm.DetailsLoaded).IsTrue();
         await Assert.That(vm.MediaType).IsEqualTo(MediaPlaybackType.Music);
         await Assert.That(vm.Name).IsEqualTo("Parsed Song");
         await Assert.That(vm.Caption).IsEqualTo("Parsed Artist");
@@ -66,7 +63,7 @@ public class MediaViewModelTests
     }
 
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_ForVideo_ShouldMergeVideoAndAudioProperties()
+    public async Task LoadDetailsAsync_WithMediaProbeService_ForVideo_ShouldUpdateVideoAndAudioProperties()
     {
         var uri = new Uri("file:///c:/videos/movie.mkv");
         var probedVideo = new VideoInfo
@@ -89,6 +86,7 @@ public class MediaViewModelTests
         await vm.LoadDetailsAsync(probeService);
 
         await Assert.That(probeService.CallCount).IsEqualTo(1);
+        await Assert.That(vm.DetailsLoaded).IsTrue();
         await Assert.That(vm.MediaType).IsEqualTo(MediaPlaybackType.Video);
         await Assert.That(vm.Name).IsEqualTo("Probed Movie");
         await Assert.That(vm.MediaInfo.VideoProperties.Width).IsEqualTo(3840U);

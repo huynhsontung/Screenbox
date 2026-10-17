@@ -12,9 +12,9 @@ public sealed class MediaInfo
 
     public MusicInfo MusicProperties { get; }
 
-    public ulong Size { get; }
+    public ulong Size { get; set; }
 
-    public DateTimeOffset DateModified { get; }
+    public DateTimeOffset DateModified { get; set; }
 
     public MediaInfo(MediaPlaybackType mediaType, string title = "", uint year = default, TimeSpan duration = default)
     {
@@ -69,37 +69,10 @@ public sealed class MediaInfo
         VideoProperties = new VideoInfo(videoProperties);
     }
 
-    public MediaInfo(
-        MediaPlaybackType mediaType,
-        MusicInfo musicProperties,
-        VideoInfo videoProperties,
-        ulong size = default,
-        DateTimeOffset dateModified = default)
+    public MediaInfo(MediaPlaybackType mediaType, MusicInfo musicProperties, VideoInfo videoProperties)
     {
         MediaType = mediaType;
         MusicProperties = musicProperties;
         VideoProperties = videoProperties;
-        Size = size;
-        DateModified = dateModified;
-    }
-
-    /// <summary>
-    /// Merges two <see cref="MediaInfo"/> instances into a new <see cref="MediaInfo"/> instance,
-    /// preferring non-empty and non-zero values from <paramref name="preferred"/> while falling back to <paramref name="baseInfo"/>.
-    /// </summary>
-    /// <param name="baseInfo">The fallback media information (e.g., from WinRT file properties or initial defaults).</param>
-    /// <param name="preferred">The preferred media information (e.g., from media probe or parser).</param>
-    /// <returns>A new <see cref="MediaInfo"/> instance containing the merged properties.</returns>
-    public static MediaInfo Merge(MediaInfo baseInfo, MediaInfo preferred)
-    {
-        MediaPlaybackType mediaType = baseInfo.MediaType != MediaPlaybackType.Unknown
-            ? baseInfo.MediaType
-            : preferred.MediaType;
-        ulong size = preferred.Size > 0 ? preferred.Size : baseInfo.Size;
-        DateTimeOffset dateModified = preferred.DateModified != default ? preferred.DateModified : baseInfo.DateModified;
-        MusicInfo musicInfo = MusicInfo.Merge(baseInfo.MusicProperties, preferred.MusicProperties);
-        VideoInfo videoInfo = VideoInfo.Merge(baseInfo.VideoProperties, preferred.VideoProperties);
-
-        return new MediaInfo(mediaType, musicInfo, videoInfo, size, dateModified);
     }
 }

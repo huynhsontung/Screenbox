@@ -42,27 +42,45 @@ public sealed class MediaProbeService : IMediaProbeService
         string[]? options = null,
         CancellationToken cancellationToken = default)
     {
-        Task<MediaInfo?> fileInfoTask = TryGetFileMediaInfoAsync(source);
+        Task<StorageFile?> fileTask = TryResolveStorageFileAsync(source);
         Task<MediaInfo?> parsedInfoTask = ProbeVlcSourceAsync(source, options, cancellationToken);
 
-        await Task.WhenAll(fileInfoTask, parsedInfoTask);
+        await Task.WhenAll(fileTask, parsedInfoTask);
 
-        MediaInfo? fileInfo = await fileInfoTask;
+        StorageFile? file = await fileTask;
         MediaInfo? parsedInfo = await parsedInfoTask;
 
-        return (fileInfo, parsedInfo) switch
+        if (file is null)
         {
-            (not null, not null) => MediaInfo.Merge(fileInfo, parsedInfo),
-            (not null, null) => fileInfo,
-            (null, not null) => parsedInfo,
-            (null, null) => null
-        };
+            return parsedInfo;
+        }
+
+        if (parsedInfo is null)
+        {
+            return await _filesService.GetMediaInfoAsync(file);
+        }
+
+        if (file.IsAvailable)
+        {
+            try
+            {
+                var basicProperties = await file.GetBasicPropertiesAsync();
+                parsedInfo.Size = basicProperties.Size;
+                parsedInfo.DateModified = basicProperties.DateModified;
+            }
+            catch (Exception)
+            {
+                // Ignore transient file property failures after media has been parsed.
+            }
+        }
+
+        return parsedInfo;
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task<MediaInfo?> TryGetFileMediaInfoAsync(object source)
+    private static async Task<StorageFile?> TryResolveStorageFileAsync(object source)
     {
-        StorageFile? file = source switch
+        return source switch
         {
             StorageFile sf => sf,
             PlaybackItem { OriginalSource: StorageFile sf } => sf,
@@ -72,10 +90,6 @@ public sealed class MediaProbeService : IMediaProbeService
                 await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString),
             _ => null
         };
-
-        return file is not null
-            ? await _filesService.GetMediaInfoAsync(file)
-            : null;
     }
 
     private async Task<MediaInfo?> ProbeVlcSourceAsync(
