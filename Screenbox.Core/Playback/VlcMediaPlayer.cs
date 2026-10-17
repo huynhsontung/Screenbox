@@ -333,7 +333,14 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void VlcPlayer_TimeChanged(object? sender, MediaPlayerTimeChangedEventArgs e)
     {
-        TimeSpan newValue = TimeSpan.FromMilliseconds(e.Time);
+        if (e.Time < 0)
+        {
+            return;
+        }
+
+        TimeSpan newValue = e.Time > (long)TimeSpan.MaxValue.TotalMilliseconds
+            ? TimeSpan.MaxValue
+            : TimeSpan.FromMilliseconds(e.Time);
         if (newValue != _position)
         {
             TimeSpan oldValue = _position;
@@ -382,7 +389,26 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void VlcPlayer_LengthChanged(object? sender, MediaPlayerLengthChangedEventArgs e)
     {
-        NaturalDuration = TimeSpan.FromMilliseconds(e.Length);
+        if (e.Length <= 0)
+        {
+            NaturalDuration = TimeSpan.Zero;
+            return;
+        }
+
+        if (e.Length > (long)TimeSpan.MaxValue.TotalMilliseconds)
+        {
+            NaturalDuration = TimeSpan.MaxValue;
+            return;
+        }
+
+        try
+        {
+            NaturalDuration = TimeSpan.FromMilliseconds(e.Length);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            NaturalDuration = TimeSpan.Zero;
+        }
     }
 
     private void VlcPlayer_Playing(object? sender, EventArgs e)
