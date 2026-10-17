@@ -112,10 +112,10 @@ public sealed partial class ChapterProgressBar : UserControl
         {
             if (view.ProgressItems[0].Width == 0)
             {
-                view.ProgressItems[0].Width = Math.Max(0, view.ActualWidth);
+                view.ProgressItems[0].Width = view.ActualWidth;
             }
 
-            view.ProgressItems[0].Maximum = Math.Max(0, (double)e.NewValue);
+            view.ProgressItems[0].Maximum = (double)e.NewValue;
         }
         else if (view.ProgressItems.Count > 1)
         {
@@ -127,7 +127,7 @@ public sealed partial class ChapterProgressBar : UserControl
     {
         if (ProgressItems.Count == 1)
         {
-            ProgressItems[0].Width = Math.Max(0, ActualWidth);
+            ProgressItems[0].Width = ActualWidth;
         }
         else if (ProgressItems.Count > 1)
         {
@@ -282,8 +282,8 @@ public sealed partial class ChapterProgressBar : UserControl
         ChapterIndex = 0;
         ProgressItems.Add(new ChapterViewModel
         {
-            Maximum = Math.Max(0, Maximum),
-            Width = Math.Max(0, ActualWidth)
+            Maximum = Maximum,
+            Width = ActualWidth
         });
     }
 
@@ -297,11 +297,6 @@ public sealed partial class ChapterProgressBar : UserControl
         const int AlignmentAdjustment = 1; // Tested value to make the items aligned visually
         var totalChapterSpacing = chapterCount > 0 ? _chapterSpacing * (chapterCount - 1) : 0;
         double availableWidth = ActualWidth - totalChapterSpacing - AlignmentAdjustment;
-        if (availableWidth <= 0)
-        {
-            return 0;
-        }
-
-        return Math.Max(0, durationMs / Maximum * availableWidth);
+        return availableWidth > 0 ? durationMs / Maximum * availableWidth : 0;
     }
 }

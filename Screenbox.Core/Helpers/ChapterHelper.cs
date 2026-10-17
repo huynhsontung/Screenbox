@@ -105,11 +105,6 @@ public static class ChapterHelper
                 duration = maxAllowedDuration.Value;
             }
 
-            if (duration < TimeSpan.Zero)
-            {
-                duration = TimeSpan.Zero;
-            }
-
             sanitized.Add(new ChapterCue
             {
                 Title = current.Title ?? string.Empty,
