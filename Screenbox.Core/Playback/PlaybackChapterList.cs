@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LibVLCSharp.Shared.Structures;
+using Screenbox.Core.Helpers;
 using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
@@ -10,16 +11,12 @@ namespace Screenbox.Core.Playback;
 public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
 {
     private readonly List<ChapterCue> _chapters;
-    private readonly PlaybackItem? _item;
+    private readonly PlaybackItem _item;
 
-    internal PlaybackChapterList() : base(new List<ChapterCue>())
-    {
-        _chapters = (List<ChapterCue>)Items;
-    }
-
-    internal PlaybackChapterList(PlaybackItem item) : this()
+    internal PlaybackChapterList(PlaybackItem item) : base(new List<ChapterCue>())
     {
         _item = item;
+        _chapters = (List<ChapterCue>)Items;
     }
 
     public void Load(IMediaPlayer player)
@@ -55,73 +52,10 @@ public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
         vlcPlayer.Chapter = _chapters.FirstOrDefault();
     }
 
-    internal void Load(IEnumerable<ChapterDescription>? vlcChapters, TimeSpan naturalDuration)
+    private void Load(IEnumerable<ChapterDescription> vlcChapters, TimeSpan naturalDuration)
     {
+        List<ChapterCue> chapterCues = ChapterHelper.FromVlcDescriptions(vlcChapters, naturalDuration);
         _chapters.Clear();
-        if (vlcChapters is null)
-        {
-            return;
-        }
-
-        List<ChapterDescription> validChapters = vlcChapters
-            .Where(c => c.TimeOffset >= 0)
-            .OrderBy(c => c.TimeOffset)
-            .ToList();
-
-        if (naturalDuration > TimeSpan.Zero)
-        {
-            validChapters.RemoveAll(c => c.TimeOffset >= naturalDuration.TotalMilliseconds);
-        }
-
-        List<ChapterCue> chapterCues = new(validChapters.Count);
-        for (int i = 0; i < validChapters.Count; i++)
-        {
-            ChapterDescription c = validChapters[i];
-            TimeSpan startTime = TimeSpan.FromMilliseconds(c.TimeOffset);
-            TimeSpan duration = TimeSpan.FromMilliseconds(c.Duration);
-
-            if (duration <= TimeSpan.Zero)
-            {
-                if (i + 1 < validChapters.Count)
-                {
-                    duration = TimeSpan.FromMilliseconds(validChapters[i + 1].TimeOffset - c.TimeOffset);
-                }
-                else if (naturalDuration > TimeSpan.Zero)
-                {
-                    duration = naturalDuration - startTime;
-                }
-                else
-                {
-                    duration = TimeSpan.Zero;
-                }
-            }
-
-            if (i + 1 < validChapters.Count)
-            {
-                TimeSpan maxAllowedDuration = TimeSpan.FromMilliseconds(validChapters[i + 1].TimeOffset - c.TimeOffset);
-                if (duration > maxAllowedDuration)
-                {
-                    duration = maxAllowedDuration;
-                }
-            }
-            else if (naturalDuration > TimeSpan.Zero && startTime + duration > naturalDuration)
-            {
-                duration = naturalDuration - startTime;
-            }
-
-            if (duration < TimeSpan.Zero)
-            {
-                duration = TimeSpan.Zero;
-            }
-
-            chapterCues.Add(new ChapterCue
-            {
-                Title = c.Name ?? string.Empty,
-                Duration = duration,
-                StartTime = startTime
-            });
-        }
-
         _chapters.AddRange(chapterCues);
     }
 }

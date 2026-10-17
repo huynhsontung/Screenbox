@@ -228,10 +228,7 @@ public sealed partial class ChapterProgressBar : UserControl
         {
             ChapterIndex = -1;
             var maxTime = TimeSpan.FromMilliseconds(Maximum);
-            var validChapters = Chapters
-                .Where(cue => cue.StartTime >= TimeSpan.Zero && cue.StartTime < maxTime)
-                .OrderBy(cue => cue.StartTime)
-                .ToList();
+            var validChapters = ChapterHelper.Sanitize(Chapters, maxTime);
 
             if (validChapters.Count > 0)
             {
@@ -252,41 +249,9 @@ public sealed partial class ChapterProgressBar : UserControl
                         ProgressItems.Add(gapChapter);
                     }
 
-                    TimeSpan duration = cue.Duration;
-                    if (duration <= TimeSpan.Zero)
-                    {
-                        if (i + 1 < validChapters.Count)
-                        {
-                            duration = validChapters[i + 1].StartTime - cue.StartTime;
-                        }
-                        else
-                        {
-                            duration = maxTime - cue.StartTime;
-                        }
-                    }
-
-                    if (i + 1 < validChapters.Count)
-                    {
-                        TimeSpan maxAllowedDuration = validChapters[i + 1].StartTime - cue.StartTime;
-                        if (duration > maxAllowedDuration)
-                        {
-                            duration = maxAllowedDuration;
-                        }
-                    }
-                    else if (cue.StartTime + duration > maxTime)
-                    {
-                        duration = maxTime - cue.StartTime;
-                    }
-
-                    if (duration < TimeSpan.Zero)
-                    {
-                        duration = TimeSpan.Zero;
-                    }
-
-                    var chapterEndTime = cue.StartTime + duration;
-                    lastChapterEndTime = chapterEndTime;
+                    lastChapterEndTime = cue.StartTime + cue.Duration;
                     var startTime = cue.StartTime.TotalMilliseconds;
-                    var endTime = chapterEndTime.TotalMilliseconds;
+                    var endTime = lastChapterEndTime.TotalMilliseconds;
                     ChapterViewModel chapter = new()
                     {
                         Minimum = startTime,
