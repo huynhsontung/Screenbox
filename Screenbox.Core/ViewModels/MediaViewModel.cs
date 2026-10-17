@@ -234,24 +234,12 @@ public sealed partial class MediaViewModel : ObservableRecipient
     /// Loads basic and extended file properties using the platform file service for fast indexing.
     /// </summary>
     /// <param name="filesService">The platform file service.</param>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
         DetailsLoaded = true;
-        MediaInfo? winrtInfo = null;
-        switch (Source)
+        if (await EnsureStorageFileSourceAsync() is { } file)
         {
-            case StorageFile file:
-                winrtInfo = await filesService.GetMediaInfoAsync(file);
-                break;
-            case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
-                UpdateSource(uriFile);
-                winrtInfo = await filesService.GetMediaInfoAsync(uriFile);
-                break;
-        }
-
-        if (winrtInfo is not null)
-        {
+            MediaInfo winrtInfo = await filesService.GetMediaInfoAsync(file);
             MediaInfo = MediaInfo.Merge(winrtInfo, MediaInfo);
         }
     }
@@ -263,10 +251,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
     /// <param name="cancellationToken">A token to cancel the probe operation.</param>
     public async Task LoadDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
     {
-        if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } uriFile)
-        {
-            UpdateSource(uriFile);
-        }
+        DetailsLoaded = true;
+        await EnsureStorageFileSourceAsync();
 
         object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
             ? activeItem
@@ -282,16 +268,10 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadThumbnailAsync()
     {
         if (Thumbnail != null) return;
-        if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } storageFile)
-        {
-            UpdateSource(storageFile);
-        }
-
-        if (Source is StorageFile file)
+        if (await EnsureStorageFileSourceAsync() is { } file)
         {
             using var source = await GetThumbnailSourceAsync(file);
             if (source == null) return;
@@ -400,13 +380,19 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
     }
 
-    private static async Task<StorageFile?> TryGetStorageFileFromUri(Uri uri)
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    private async Task<StorageFile?> EnsureStorageFileSourceAsync()
     {
-        if (uri is { IsFile: true, IsLoopback: true, IsAbsoluteUri: true })
+        switch (Source)
         {
-            return await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString);
+            case StorageFile file:
+                return file;
+            case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri
+                when await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString) is { } uriFile:
+                UpdateSource(uriFile);
+                return uriFile;
+            default:
+                return null;
         }
-
-        return null;
     }
 }

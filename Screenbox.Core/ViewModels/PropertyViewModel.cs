@@ -50,18 +50,12 @@ public sealed partial class PropertyViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Loads platform file details and probes media properties on demand for the specified <paramref name="media"/> item,
-    /// refreshing the property collections as data becomes available.
+    /// Probes media properties on demand for the specified <paramref name="media"/> item
+    /// and refreshes the property collections.
     /// </summary>
     /// <param name="media">The media view model whose properties are being inspected.</param>
     public async Task LoadPropertiesAsync(MediaViewModel media)
     {
-        if (!media.DetailsLoaded)
-        {
-            await media.LoadDetailsAsync(_filesService);
-            UpdateProperties(media);
-        }
-
         await media.LoadDetailsAsync(_mediaProbeService);
         UpdateProperties(media);
     }
