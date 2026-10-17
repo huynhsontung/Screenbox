@@ -34,6 +34,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly RecentContext _recentContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
+    private readonly StorageMediaProbeService _storageMediaProbeService;
     private readonly ISettingsService _settingsService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
@@ -44,6 +45,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
+        StorageMediaProbeService storageMediaProbeService,
         ISettingsService settingsService,
         ILogger<HomePageViewModel> logger)
     {
@@ -51,6 +53,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _recentContext = recentContext;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
+        _storageMediaProbeService = storageMediaProbeService;
         _settingsService = settingsService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -232,7 +235,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         try
         {
-            await media.LoadDetailsAsync(_filesService);
+            await media.LoadDetailsAsync(_storageMediaProbeService);
         }
         catch (ArgumentException)
         {

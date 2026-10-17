@@ -109,7 +109,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _playPauseHoldTimer;
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
-    private readonly IFilesService _filesService;
+    private readonly IMediaProbeService _mediaProbeService;
     private readonly PlayerContext _playerContext;
     private bool _visibilityOverride;
     private bool _resizeNext;
@@ -117,12 +117,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private double _playbackRateBeforeHold;
 
     public PlayerPageViewModel(IWindowService windowService,
-        ISettingsService settingsService, IFilesService filesService, PlayerContext playerContext,
+        ISettingsService settingsService, IMediaProbeService mediaProbeService, PlayerContext playerContext,
         INavigationService navigationService)
     {
         _windowService = windowService;
         _settingsService = settingsService;
-        _filesService = filesService;
+        _mediaProbeService = mediaProbeService;
         _playerContext = playerContext;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _openingTimer = _dispatcherQueue.CreateTimer();
@@ -271,7 +271,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
         if (current != null)
         {
-            await current.LoadDetailsAsync(_filesService);
+            await current.LoadDetailsAsync(_mediaProbeService);
             await current.LoadThumbnailAsync();
 
             // Process again in case media type changed after loading details
