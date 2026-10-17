@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -133,38 +134,15 @@ public sealed partial class PropertyViewModel : ObservableObject
                 break;
         }
 
-        SyncCollection(MediaProperties, mediaEntries);
-        SyncCollection(VideoProperties, videoEntries);
-        SyncCollection(AudioProperties, audioEntries);
-        SyncCollection(FileProperties, fileEntries);
+        MediaProperties.SyncItems(mediaEntries);
+        VideoProperties.SyncItems(videoEntries);
+        AudioProperties.SyncItems(audioEntries);
+        FileProperties.SyncItems(fileEntries);
 
         OnPropertyChanged(nameof(MediaProperties));
         OnPropertyChanged(nameof(VideoProperties));
         OnPropertyChanged(nameof(AudioProperties));
         OnPropertyChanged(nameof(FileProperties));
-    }
-
-    private static void SyncCollection(ObservableCollection<MediaMetadata> target, IReadOnlyList<MediaMetadata> source)
-    {
-        for (int i = 0; i < source.Count; i++)
-        {
-            if (i < target.Count)
-            {
-                if (target[i] != source[i])
-                {
-                    target[i] = source[i];
-                }
-            }
-            else
-            {
-                target.Add(source[i]);
-            }
-        }
-
-        while (target.Count > source.Count)
-        {
-            target.RemoveAt(target.Count - 1);
-        }
     }
 
     [RelayCommand(CanExecute = nameof(CanNavigateToFile))]
