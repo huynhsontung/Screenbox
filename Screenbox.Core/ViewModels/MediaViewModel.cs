@@ -110,6 +110,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         DateAdded = source.DateAdded;
         IsFromLibrary = source.IsFromLibrary;
+        DetailsLoaded = source.DetailsLoaded;
     }
 
     private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
@@ -251,7 +252,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public async Task LoadDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
     {
         DetailsLoaded = true;
-        await EnsureStorageFileSourceAsync();
+        StorageFile? file = await EnsureStorageFileSourceAsync();
 
         object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
             ? activeItem
@@ -261,6 +262,31 @@ public sealed partial class MediaViewModel : ObservableRecipient
                 _options.Count > 0 ? _options.ToArray() : null,
                 cancellationToken) is { } parsedInfo)
         {
+            if (MediaType != MediaPlaybackType.Unknown)
+            {
+                parsedInfo.MediaType = MediaType;
+            }
+            else if (file is not null &&
+                     FilesHelpers.GetMediaTypeForFile(file) is var fileType &&
+                     fileType != MediaPlaybackType.Unknown)
+            {
+                parsedInfo.MediaType = fileType;
+            }
+
+            if (file is { IsAvailable: true })
+            {
+                try
+                {
+                    BasicProperties basicProperties = await file.GetBasicPropertiesAsync();
+                    parsedInfo.Size = basicProperties.Size;
+                    parsedInfo.DateModified = basicProperties.DateModified;
+                }
+                catch (Exception)
+                {
+                    // Ignore transient file property failures after media has been parsed.
+                }
+            }
+
             MediaInfo = parsedInfo;
         }
     }

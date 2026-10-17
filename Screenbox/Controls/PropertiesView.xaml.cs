@@ -43,9 +43,5 @@ public sealed partial class PropertiesView : UserControl
         if (media == null) return;
 
         view.ViewModel.UpdateProperties(media);
-        if (view.IsLoaded)
-        {
-            view.ViewModel.OnLoaded(media);
-        }
     }
 }

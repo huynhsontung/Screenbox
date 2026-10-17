@@ -130,11 +130,6 @@ public sealed partial class PropertyViewModel : ObservableObject
         VideoProperties.SyncItems(videoEntries);
         AudioProperties.SyncItems(audioEntries);
         FileProperties.SyncItems(fileEntries);
-
-        OnPropertyChanged(nameof(MediaProperties));
-        OnPropertyChanged(nameof(VideoProperties));
-        OnPropertyChanged(nameof(AudioProperties));
-        OnPropertyChanged(nameof(FileProperties));
     }
 
     [RelayCommand(CanExecute = nameof(CanNavigateToFile))]

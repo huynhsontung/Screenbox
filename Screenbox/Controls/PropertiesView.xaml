@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,6 +14,8 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <ctConverters:DoubleToVisibilityConverter x:Key="GreaterThanZeroVisibilityConverter" GreaterThan="0" />
+
         <DataTemplate x:Key="PropertyItemTemplate" x:DataType="models:MediaMetadata">
             <UserControl>
                 <Grid>
@@ -32,7 +35,7 @@
                         Margin="0,0,8,0"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind helpers:ItemLabelHelper.GetMediaPropertyResourceString(Key), Mode=OneWay}"
+                        Text="{x:Bind helpers:ItemLabelHelper.GetMediaPropertyResourceString(Key)}"
                         TextTrimming="CharacterEllipsis" />
 
                     <TextBlock
@@ -40,7 +43,7 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         IsTextSelectionEnabled="True"
-                        Text="{x:Bind Value, Mode=OneWay}"
+                        Text="{x:Bind Value}"
                         TextWrapping="Wrap" />
 
                     <VisualStateManager.VisualStateGroups>
@@ -93,7 +96,7 @@
                 HorizontalAlignment="Stretch"
                 Header="{x:Bind strings:Resources.Video}"
                 IsExpanded="True"
-                Visibility="{x:Bind ViewModel.VideoProperties, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{x:Bind ViewModel.VideoProperties.Count, Mode=OneWay, Converter={StaticResource GreaterThanZeroVisibilityConverter}}">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoProperties}"
@@ -105,7 +108,7 @@
                 HorizontalAlignment="Stretch"
                 Header="{x:Bind strings:Resources.Music}"
                 IsExpanded="True"
-                Visibility="{x:Bind ViewModel.AudioProperties, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{x:Bind ViewModel.AudioProperties.Count, Mode=OneWay, Converter={StaticResource GreaterThanZeroVisibilityConverter}}">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.AudioProperties}"
@@ -123,7 +126,7 @@
                         ItemTemplate="{StaticResource PropertyItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.FileProperties}"
                         Layout="{StaticResource PropertyStackLayout}"
-                        Visibility="{x:Bind ViewModel.FileProperties, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}" />
+                        Visibility="{x:Bind ViewModel.FileProperties.Count, Mode=OneWay, Converter={StaticResource GreaterThanZeroVisibilityConverter}}" />
 
                     <TextBlock
                         x:Name="LocationTitleText"

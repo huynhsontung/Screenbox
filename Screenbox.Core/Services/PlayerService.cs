@@ -80,7 +80,7 @@ public sealed partial class PlayerService : IPlayerService
         }
     }
 
-    internal Media CreateMedia(VlcMediaPlayer player, object source, params string[] options)
+    private Media CreateMedia(VlcMediaPlayer player, object source, params string[] options)
     {
         return source switch
         {
@@ -126,7 +126,7 @@ public sealed partial class PlayerService : IPlayerService
         return new Media(player.LibVlc, uri, options);
     }
 
-    internal void DisposeMedia(Media media)
+    private void DisposeMedia(Media media)
     {
         string mrl = media.Mrl;
         if (mrl.StartsWith("winrt://"))
