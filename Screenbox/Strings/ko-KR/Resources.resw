@@ -319,7 +319,7 @@
     <value>알 수 없는 장르</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>모든 장르</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>폴더 추가</value>
@@ -876,7 +876,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>선택한 {0} 장르로 필터링</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
