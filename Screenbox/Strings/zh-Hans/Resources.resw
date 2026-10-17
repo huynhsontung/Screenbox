@@ -318,6 +318,9 @@
   <data name="UnknownGenre" xml:space="preserve">
     <value>未知流派</value>
   </data>
+  <data name="AllGenres" xml:space="preserve">
+    <value>All genres</value>
+  </data>
   <data name="AddFolder" xml:space="preserve">
     <value>添加文件夹</value>
   </data>
@@ -872,6 +875,10 @@
     <value>按所选 {0} 选项排序</value>
     <comment>#Format[String sortBy]</comment>
   </data>
+  <data name="FilterByGenreAutomationName" xml:space="preserve">
+    <value>Filter by {0} genre selected</value>
+    <comment>#Format[String genre]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>艺术家</value>
   </data>
@@ -1056,16 +1063,16 @@
     <value>加速</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>下一首</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>上一首</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>下一章</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>上一章</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>添加到播放列表</value>
