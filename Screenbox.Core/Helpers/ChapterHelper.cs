@@ -12,6 +12,8 @@ namespace Screenbox.Core.Helpers;
 /// </summary>
 public static class ChapterHelper
 {
+    private const long MaxSupportedMilliseconds = long.MaxValue / TimeSpan.TicksPerMillisecond;
+
     /// <summary>
     /// Converts and sanitizes a sequence of LibVLC <see cref="ChapterDescription"/> items into a validated list of <see cref="ChapterCue"/> instances.
     /// </summary>
@@ -25,10 +27,21 @@ public static class ChapterHelper
             return [];
         }
 
-        IEnumerable<ChapterInfo> rawChapters = vlcChapters.Select(c => new ChapterInfo(
-            TimeSpan.FromMilliseconds(c.TimeOffset),
-            TimeSpan.FromMilliseconds(c.Duration),
-            c.Name));
+        List<ChapterInfo> rawChapters = [];
+        foreach (ChapterDescription c in vlcChapters)
+        {
+            if (c.TimeOffset < 0 || c.TimeOffset > MaxSupportedMilliseconds)
+            {
+                continue;
+            }
+
+            TimeSpan startTime = TimeSpan.FromMilliseconds(c.TimeOffset);
+            TimeSpan duration = c.Duration > 0 && c.Duration <= MaxSupportedMilliseconds
+                ? TimeSpan.FromMilliseconds(c.Duration)
+                : TimeSpan.Zero;
+
+            rawChapters.Add(new ChapterInfo(startTime, duration, c.Name));
+        }
 
         return Sanitize(rawChapters, naturalDuration);
     }
@@ -66,14 +79,9 @@ public static class ChapterHelper
         }
 
         List<ChapterInfo> validChapters = chapters
-            .Where(c => c.StartTime >= TimeSpan.Zero)
+            .Where(c => c.StartTime >= TimeSpan.Zero && (naturalDuration <= TimeSpan.Zero || c.StartTime < naturalDuration))
             .OrderBy(c => c.StartTime)
             .ToList();
-
-        if (naturalDuration > TimeSpan.Zero)
-        {
-            validChapters.RemoveAll(c => c.StartTime >= naturalDuration);
-        }
 
         List<ChapterCue> sanitized = new(validChapters.Count);
         for (int i = 0; i < validChapters.Count; i++)
@@ -82,33 +90,19 @@ public static class ChapterHelper
             TimeSpan startTime = current.StartTime;
             TimeSpan duration = current.Duration;
 
+            TimeSpan? maxAllowedDuration = i + 1 < validChapters.Count
+                ? validChapters[i + 1].StartTime - startTime
+                : naturalDuration > TimeSpan.Zero
+                    ? naturalDuration - startTime
+                    : null;
+
             if (duration <= TimeSpan.Zero)
             {
-                if (i + 1 < validChapters.Count)
-                {
-                    duration = validChapters[i + 1].StartTime - startTime;
-                }
-                else if (naturalDuration > TimeSpan.Zero)
-                {
-                    duration = naturalDuration - startTime;
-                }
-                else
-                {
-                    duration = TimeSpan.Zero;
-                }
+                duration = maxAllowedDuration ?? TimeSpan.Zero;
             }
-
-            if (i + 1 < validChapters.Count)
+            else if (maxAllowedDuration.HasValue && duration > maxAllowedDuration.Value)
             {
-                TimeSpan maxAllowedDuration = validChapters[i + 1].StartTime - startTime;
-                if (duration > maxAllowedDuration)
-                {
-                    duration = maxAllowedDuration;
-                }
-            }
-            else if (naturalDuration > TimeSpan.Zero && startTime + duration > naturalDuration)
-            {
-                duration = naturalDuration - startTime;
+                duration = maxAllowedDuration.Value;
             }
 
             if (duration < TimeSpan.Zero)

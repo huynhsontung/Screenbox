@@ -132,4 +132,51 @@ public class ChapterHelperTests
 
         await Assert.That(result).IsEmpty();
     }
+
+    [Test]
+    public async Task Sanitize_ChapterCuesOverload_SanitizesAndReturnsCues()
+    {
+        ChapterCue[] cues =
+        [
+            new() { Title = "Intro", StartTime = TimeSpan.Zero, Duration = TimeSpan.FromMinutes(5) },
+            new() { Title = "OutOfBounds", StartTime = TimeSpan.FromHours(2), Duration = TimeSpan.FromMinutes(5) }
+        ];
+
+        List<ChapterCue> result = ChapterHelper.Sanitize(cues, TimeSpan.FromMinutes(30));
+
+        await Assert.That(result.Count).IsEqualTo(1);
+        await Assert.That(result[0].Title).IsEqualTo("Intro");
+    }
+
+    [Test]
+    public async Task Sanitize_ZeroNaturalDuration_CalculatesDurationBetweenChaptersAndSetsLastToZero()
+    {
+        ChapterInfo[] chapters =
+        [
+            new(TimeSpan.Zero, TimeSpan.Zero, "Part 1"),
+            new(TimeSpan.FromMinutes(10), TimeSpan.Zero, "Part 2")
+        ];
+
+        List<ChapterCue> result = ChapterHelper.Sanitize(chapters, TimeSpan.Zero);
+
+        await Assert.That(result.Count).IsEqualTo(2);
+        await Assert.That(result[0].Duration).IsEqualTo(TimeSpan.FromMinutes(10));
+        await Assert.That(result[1].Duration).IsEqualTo(TimeSpan.Zero);
+    }
+
+    [Test]
+    public async Task Sanitize_IdenticalStartTimes_CalculatesZeroDurationForFirst()
+    {
+        ChapterInfo[] chapters =
+        [
+            new(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10), "Duplicate 1"),
+            new(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), "Duplicate 2")
+        ];
+
+        List<ChapterCue> result = ChapterHelper.Sanitize(chapters, TimeSpan.FromMinutes(20));
+
+        await Assert.That(result.Count).IsEqualTo(2);
+        await Assert.That(result[0].Duration).IsEqualTo(TimeSpan.Zero);
+        await Assert.That(result[1].Duration).IsEqualTo(TimeSpan.FromMinutes(5));
+    }
 }

@@ -108,19 +108,16 @@ public sealed partial class ChapterProgressBar : UserControl
     private static void OnMaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ChapterProgressBar view = (ChapterProgressBar)d;
-        if (view.ProgressItems.Count <= 1)
+        if (view.ProgressItems.Count == 1)
         {
-            if (view.ProgressItems.Count == 1)
+            if (view.ProgressItems[0].Width == 0)
             {
-                if (view.ProgressItems[0].Width == 0)
-                {
-                    view.ProgressItems[0].Width = Math.Max(0, view.ActualWidth);
-                }
-
-                view.ProgressItems[0].Maximum = Math.Max(0, (double)e.NewValue);
+                view.ProgressItems[0].Width = Math.Max(0, view.ActualWidth);
             }
+
+            view.ProgressItems[0].Maximum = Math.Max(0, (double)e.NewValue);
         }
-        else
+        else if (view.ProgressItems.Count > 1)
         {
             view.PopulateProgressItems();
         }
@@ -128,14 +125,11 @@ public sealed partial class ChapterProgressBar : UserControl
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (ProgressItems.Count <= 1)
+        if (ProgressItems.Count == 1)
         {
-            if (ProgressItems.Count == 1)
-            {
-                ProgressItems[0].Width = Math.Max(0, ActualWidth);
-            }
+            ProgressItems[0].Width = Math.Max(0, ActualWidth);
         }
-        else
+        else if (ProgressItems.Count > 1)
         {
             foreach (ChapterViewModel item in ProgressItems)
             {
@@ -255,7 +249,7 @@ public sealed partial class ChapterProgressBar : UserControl
                     ChapterViewModel chapter = new()
                     {
                         Minimum = startTime,
-                        Maximum = Math.Max(startTime, endTime),
+                        Maximum = endTime,
                     };
 
                     ProgressItems.Add(chapter);
