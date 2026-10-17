@@ -55,10 +55,11 @@ public class MediaViewModelTests
     }
 
     [Test]
-    public async Task PlaybackItem_WhenMediaParsedEventFires_ShouldOpportunisticallyUpdateMediaInfo()
+    public async Task WatchPlaybackItem_WhenMediaParsedCallbackFires_ShouldOpportunisticallyUpdateMediaInfo()
     {
         var uri = new Uri("http://example.com/stream.mp3");
-        var vm = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri);
+        var playerService = new TestPlayerService();
+        var vm = new MediaViewModel(new PlayerContext(), playerService, uri);
         var parsedMusic = new MusicInfo
         {
             Title = "Live Stream Track",
@@ -68,12 +69,12 @@ public class MediaViewModelTests
             Bitrate = 256000
         };
         var parsedInfo = new MediaInfo(MediaPlaybackType.Music, parsedMusic, new VideoInfo());
-        var playbackItem = new PlaybackItem(uri, parsedInfo, isParsed: false);
+        var playbackItem = playerService.CreatePlaybackItem(null!, uri);
 
         vm.SetPlaybackItem(playbackItem);
         await Assert.That(vm.IsMediaInfoParsed).IsFalse();
 
-        playbackItem.NotifyTrackInfoLoaded();
+        playerService.SimulateMediaParsed(parsedInfo);
 
         await Assert.That(vm.IsMediaInfoParsed).IsTrue();
         await Assert.That(vm.MediaType).IsEqualTo(MediaPlaybackType.Music);

@@ -48,25 +48,26 @@ public sealed class MediaProbeService : IMediaProbeService
                     return await ProbeMediaInternalAsync(existingMedia, cancellationToken);
 
                 default:
-                    if (_playerContext.MediaPlayer is not { } mediaPlayer)
+                    if (_playerContext.MediaPlayer is not VlcMediaPlayer vlcMediaPlayer ||
+                        _playerService is not PlayerService playerService)
                     {
                         return null;
                     }
 
-                    PlaybackItem? tempItem = null;
+                    Media? tempMedia = null;
                     try
                     {
-                        tempItem = _playerService.CreatePlaybackItem(
-                            mediaPlayer,
+                        tempMedia = playerService.CreateMedia(
+                            vlcMediaPlayer,
                             source,
                             options ?? Array.Empty<string>());
-                        return await ProbeMediaInternalAsync(tempItem.Media, cancellationToken);
+                        return await ProbeMediaInternalAsync(tempMedia, cancellationToken);
                     }
                     finally
                     {
-                        if (tempItem is not null)
+                        if (tempMedia is not null)
                         {
-                            _playerService.DisposePlaybackItem(tempItem);
+                            playerService.DisposeMedia(tempMedia);
                         }
                     }
             }

@@ -98,6 +98,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public partial bool IsPlaying { get; set; }
 
     private WeakReference<BitmapImage>? _thumbnailRef;
+    private Uri? _artworkUri;
 
     public MediaViewModel(MediaViewModel source)
     {
@@ -106,6 +107,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
         _dispatcherQueue = source._dispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
         Name = source.Name;
         _thumbnailRef = source._thumbnailRef;
+        _artworkUri = source._artworkUri;
         MediaInfo = source.MediaInfo;
         Artists = source.Artists;
         Album = source.Album;
@@ -165,7 +167,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     internal void SetPlaybackItem(PlaybackItem item)
     {
-        AttachPlaybackItem(item);
+        _playerService.WatchPlaybackItem(item, OnPlaybackItemMediaParsed);
         Item = new Lazy<PlaybackItem?>(item);
     }
 
@@ -206,53 +208,41 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
         if (item is not null)
         {
-            AttachPlaybackItem(item);
+            _playerService.WatchPlaybackItem(item, OnPlaybackItemMediaParsed);
         }
 
         return item;
     }
 
-    private void AttachPlaybackItem(PlaybackItem item)
+    private void OnPlaybackItemMediaParsed(MediaInfo parsedInfo, Uri? artworkUri)
     {
-        item.MediaParsed -= OnPlaybackItemMediaParsed;
-        item.MediaParsed += OnPlaybackItemMediaParsed;
-        if (item.IsParsed)
-        {
-            UpdateParsedMediaInfo(item.GetMediaInfo());
-        }
-    }
-
-    private void DetachPlaybackItem(PlaybackItem item)
-    {
-        item.MediaParsed -= OnPlaybackItemMediaParsed;
-    }
-
-    private void OnPlaybackItemMediaParsed(PlaybackItem sender, EventArgs args)
-    {
-        MediaInfo parsedInfo = sender.GetMediaInfo();
-        Uri? artworkUri = sender.ArtworkUri;
         if (_dispatcherQueue is { HasThreadAccess: false })
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
                 UpdateParsedMediaInfo(parsedInfo);
-                TrySetArtworkThumbnail(artworkUri);
+                UpdateArtworkUri(artworkUri);
             });
         }
         else
         {
             UpdateParsedMediaInfo(parsedInfo);
-            TrySetArtworkThumbnail(artworkUri);
+            UpdateArtworkUri(artworkUri);
         }
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private void TrySetArtworkThumbnail(Uri? artworkUri)
+    private void UpdateArtworkUri(Uri? artworkUri)
     {
+        if (artworkUri is null)
+        {
+            return;
+        }
+
+        _artworkUri = artworkUri;
         if (_dispatcherQueue is { HasThreadAccess: true } &&
             Thumbnail is null &&
-            Source is not StorageFile &&
-            artworkUri is not null)
+            Source is not StorageFile)
         {
             Thumbnail = new BitmapImage(artworkUri)
             {
@@ -293,7 +283,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
         PlaybackItem? item = Item.Value;
         Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         if (item == null) return;
-        DetachPlaybackItem(item);
         _playerService.DisposePlaybackItem(item);
     }
 
@@ -321,11 +310,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
-        if (Item is { IsValueCreated: true, Value: { IsParsed: true } playbackItem } && !IsMediaInfoParsed)
-        {
-            UpdateParsedMediaInfo(playbackItem.GetMediaInfo());
-        }
-
         DetailsLoaded = true;
         MediaInfo? winrtInfo = null;
         switch (Source)
@@ -356,12 +340,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
     {
         if (IsMediaInfoParsed)
         {
-            return;
-        }
-
-        if (Item is { IsValueCreated: true, Value: { IsParsed: true } parsedItem })
-        {
-            UpdateParsedMediaInfo(parsedItem.GetMediaInfo());
             return;
         }
 
@@ -410,9 +388,9 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
             Thumbnail = image;
         }
-        else if (Item is { IsValueCreated: true, Value.ArtworkUri: { } artworkUri })
+        else if (_artworkUri is not null)
         {
-            Thumbnail = new BitmapImage(artworkUri)
+            Thumbnail = new BitmapImage(_artworkUri)
             {
                 DecodePixelType = DecodePixelType.Logical,
                 DecodePixelHeight = 300
