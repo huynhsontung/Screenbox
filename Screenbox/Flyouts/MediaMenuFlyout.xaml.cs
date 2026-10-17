@@ -116,8 +116,9 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         {
             AlbumViewModel album => album.IsPlaying,
             ArtistViewModel artist => artist.IsPlaying,
-            PlaylistViewModel playlist => playlist.IsPlaying,
             MediaViewModel media => media.IsPlaying,
+            PlaylistViewModel playlist => playlist.IsPlaying,
+            StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
             _ => false,
         };
 
