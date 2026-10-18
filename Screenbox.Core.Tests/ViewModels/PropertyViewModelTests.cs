@@ -58,7 +58,7 @@ public class PropertyViewModelTests
     }
 
     [Test]
-    public async Task UpdateProperties_WhenCalledMultipleTimes_ShouldUpdateCollectionsInPlaceWithoutDuplicates()
+    public async Task UpdateProperties_WhenCalledMultipleTimes_ShouldUpdatePropertiesWithoutDuplicates()
     {
         var uri = new Uri("file:///c:/videos/clip.mp4");
         var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)

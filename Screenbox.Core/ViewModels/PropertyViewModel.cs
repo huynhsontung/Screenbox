@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,13 +13,13 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PropertyViewModel : ObservableObject
 {
-    public ObservableCollection<MediaMetadata> MediaProperties { get; }
+    public IReadOnlyList<MediaMetadata> MediaProperties { get; private set; } = Array.Empty<MediaMetadata>();
 
-    public ObservableCollection<MediaMetadata> VideoProperties { get; }
+    public IReadOnlyList<MediaMetadata> VideoProperties { get; private set; } = Array.Empty<MediaMetadata>();
 
-    public ObservableCollection<MediaMetadata> AudioProperties { get; }
+    public IReadOnlyList<MediaMetadata> AudioProperties { get; private set; } = Array.Empty<MediaMetadata>();
 
-    public ObservableCollection<MediaMetadata> FileProperties { get; }
+    public IReadOnlyList<MediaMetadata> FileProperties { get; private set; } = Array.Empty<MediaMetadata>();
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(OpenFileLocationCommand))]
@@ -35,18 +34,6 @@ public sealed partial class PropertyViewModel : ObservableObject
     {
         _filesService = filesService;
         _mediaProbeService = mediaProbeService;
-        MediaProperties = new ObservableCollection<MediaMetadata>();
-        VideoProperties = new ObservableCollection<MediaMetadata>();
-        AudioProperties = new ObservableCollection<MediaMetadata>();
-        FileProperties = new ObservableCollection<MediaMetadata>();
-    }
-
-    /// <summary>
-    /// Loads detailed media information for the given <paramref name="media"/> item when the view loads.
-    /// </summary>
-    public async void OnLoaded(MediaViewModel media)
-    {
-        await LoadPropertiesAsync(media);
     }
 
     /// <summary>
@@ -126,10 +113,10 @@ public sealed partial class PropertyViewModel : ObservableObject
                 break;
         }
 
-        MediaProperties.SyncItems(mediaEntries);
-        VideoProperties.SyncItems(videoEntries);
-        AudioProperties.SyncItems(audioEntries);
-        FileProperties.SyncItems(fileEntries);
+        MediaProperties = mediaEntries;
+        VideoProperties = videoEntries;
+        AudioProperties = audioEntries;
+        FileProperties = fileEntries;
     }
 
     [RelayCommand(CanExecute = nameof(CanNavigateToFile))]
