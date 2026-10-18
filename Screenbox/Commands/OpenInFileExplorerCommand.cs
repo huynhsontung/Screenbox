@@ -71,23 +71,13 @@ internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaVie
 
         var filesService = Ioc.Default.GetRequiredService<IFilesService>();
 
-        if (parameter.Source is StorageFile file)
+        if (await parameter.EnsureStorageFileSourceAsync() is { } file)
         {
             await filesService.OpenFileLocationAsync(file);
         }
         else if (!string.IsNullOrEmpty(parameter.Location))
         {
-            // Load details to try to resolve the file from a URI or path.
-            var probeService = Ioc.Default.GetRequiredService<StorageMediaProbeService>();
-            await parameter.LoadDetailsAsync(probeService);
-            if (parameter.Source is StorageFile resolvedFile)
-            {
-                await filesService.OpenFileLocationAsync(resolvedFile);
-            }
-            else
-            {
-                await filesService.OpenFileLocationAsync(parameter.Location);
-            }
+            await filesService.OpenFileLocationAsync(parameter.Location);
         }
     }
 }

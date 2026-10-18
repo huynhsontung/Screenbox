@@ -228,6 +228,29 @@ public class MediaViewModelTests
         await Assert.That(vm.MediaInfo.MusicProperties.Bitrate).IsEqualTo(192_000U);
     }
 
+    [Test]
+    public async Task EnsureStorageFileSourceAsync_WhenSourceIsNonFileUri_ShouldReturnNull()
+    {
+        var httpUri = new Uri("https://example.com/stream.m3u8");
+        var vm = new MediaViewModel(new PlayerContext(), new TestPlayerService(), httpUri);
+
+        var file = await vm.EnsureStorageFileSourceAsync();
+
+        await Assert.That(file).IsNull();
+        await Assert.That(vm.Source).IsEqualTo(httpUri);
+    }
+
+    [Test]
+    public async Task EnsureStorageFileSourceAsync_WhenFileDoesNotExist_ShouldReturnNull()
+    {
+        var nonExistentUri = new Uri("file:///c:/nonexistent_folder_abc123/video.mp4");
+        var vm = new MediaViewModel(new PlayerContext(), new TestPlayerService(), nonExistentUri);
+
+        var file = await vm.EnsureStorageFileSourceAsync();
+
+        await Assert.That(file).IsNull();
+    }
+
     private sealed class MockStorageMediaProbeService : StorageMediaProbeService
     {
         private readonly MediaInfo? _infoToReturn;

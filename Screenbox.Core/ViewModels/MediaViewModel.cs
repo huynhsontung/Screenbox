@@ -397,15 +397,19 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// Ensures the underlying media source is resolved to a <see cref="StorageFile"/> if it represents a local file.
+    /// </summary>
+    /// <returns>The resolved <see cref="StorageFile"/>, or <see langword="null"/> if not resolvable.</returns>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task<StorageFile?> EnsureStorageFileSourceAsync()
+    public async Task<StorageFile?> EnsureStorageFileSourceAsync()
     {
         switch (Source)
         {
             case StorageFile file:
                 return file;
             case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri
-                when await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString) is { } uriFile:
+                when await FilesHelpers.TryGetFileFromPathAsync(uri.LocalPath) is { } uriFile:
                 UpdateSource(uriFile);
                 return uriFile;
             default:

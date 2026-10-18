@@ -1,10 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
 using Windows.System;
@@ -72,15 +70,8 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
         if (parameter == null)
             return;
 
-        if (parameter.Source is not StorageFile file)
-        {
-            var probeService = Ioc.Default.GetRequiredService<StorageMediaProbeService>();
-            await parameter.LoadDetailsAsync(probeService);
-            if (parameter.Source is not StorageFile loadedFile)
-                return;
-
-            file = loadedFile;
-        }
+        if (await parameter.EnsureStorageFileSourceAsync() is not { } file)
+            return;
 
         try
         {
