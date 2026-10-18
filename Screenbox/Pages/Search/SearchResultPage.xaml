@@ -277,6 +277,11 @@
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
                             Text="{x:Bind strings:Resources.Playlists}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Right"
+                            Command="{x:Bind ViewModel.SeeAllPlaylistsCommand}"
+                            Content="{x:Bind strings:Resources.SeeAll}"
+                            Visibility="{x:Bind ViewModel.HasMorePlaylists, Mode=OneWay}" />
                     </Grid>
                     <GridView
                         x:Name="PlaylistGridView"

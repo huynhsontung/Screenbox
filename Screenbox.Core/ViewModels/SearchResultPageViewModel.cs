@@ -37,6 +37,7 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
     [ObservableProperty] public partial bool HasMoreAlbums { get; set; }
     [ObservableProperty] public partial bool HasMoreSongs { get; set; }
     [ObservableProperty] public partial bool HasMoreVideos { get; set; }
+    [ObservableProperty] public partial bool HasMorePlaylists { get; set; }
 
     private readonly INavigationService _navigationService;
 
@@ -109,6 +110,7 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
         HasMoreAlbums = Albums.Count < searchResult.Albums.Count;
         HasMoreSongs = Songs.Count < searchResult.Songs.Count;
         HasMoreVideos = Videos.Count < searchResult.Videos.Count;
+        HasMorePlaylists = Playlists.Count < searchResult.Playlists.Count;
     }
 
     [RelayCommand]
@@ -146,6 +148,12 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
     private void SeeAllVideos()
     {
         _navigationService.Navigate(typeof(VideoSearchResultPageViewModel), this);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasMorePlaylists))]
+    private void SeeAllPlaylists()
+    {
+        _navigationService.Navigate(typeof(PlaylistSearchResultPageViewModel), this);
     }
 
     private static void SyncCollection<T>(IList<T> target, IReadOnlyList<T> source, int desiredCount)
