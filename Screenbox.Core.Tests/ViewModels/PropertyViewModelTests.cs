@@ -63,7 +63,7 @@ public class PropertyViewModelTests
         var uri = new Uri("file:///c:/videos/clip.mp4");
         var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)
         {
-            MediaInfo = new MediaInfo(MediaPlaybackType.Video, "Initial Title")
+            MediaInfo = new MediaInfo(MediaPlaybackType.Video)
         };
 
         var vm = new PropertyViewModel(new DummyFilesService(), new TestMediaProbeService());
@@ -90,6 +90,38 @@ public class PropertyViewModelTests
         await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.Resolution).Value).IsEqualTo("1920×1080");
         await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.BitRate).Value).IsEqualTo("8000 kbps");
         await Assert.That(vm.AudioProperties.First(p => p.Key == MediaProperty.BitRate).Value).IsEqualTo("192 kbps");
+    }
+
+    [Test]
+    public async Task LoadPropertiesAsync_WhenMediaAlreadyHasStorageProperties_ShouldNotResetPropertiesToEmpty()
+    {
+        var uri = new Uri("file:///c:/videos/movie.mp4");
+        var videoInfo = new VideoInfo
+        {
+            Title = "Storage Title",
+            Bitrate = 5000000,
+            Producers = "Storage Producer"
+        };
+        var media = new MediaViewModel(new PlayerContext(), new TestPlayerService(), uri)
+        {
+            MediaInfo = new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), videoInfo)
+        };
+
+        // VLC probe returns empty title, 0 bitrate, empty producers, but has resolution
+        var vlcVideo = new VideoInfo
+        {
+            Width = 1920,
+            Height = 1080,
+            Bitrate = 0
+        };
+        var vm = new PropertyViewModel(new DummyFilesService(), new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), vlcVideo)));
+
+        await vm.LoadPropertiesAsync(media);
+
+        await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Title).Value).IsEqualTo("Storage Title");
+        await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Producers).Value).IsEqualTo("Storage Producer");
+        await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.BitRate).Value).IsEqualTo("5000 kbps");
+        await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.Resolution).Value).IsEqualTo("1920×1080");
     }
 
     private sealed class DummyFilesService : IFilesService
