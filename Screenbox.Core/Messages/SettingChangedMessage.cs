@@ -14,7 +14,7 @@ namespace Screenbox.Core.Messages;
 /// <param name="NewValue">The new value of the setting.</param>
 public sealed record SettingChangedMessage<TContext, TValue>(
     TContext Context,
-    string? PropertyName,
+    string PropertyName,
     TValue OldValue,
     TValue NewValue)
     where TContext : SettingsContextBase;

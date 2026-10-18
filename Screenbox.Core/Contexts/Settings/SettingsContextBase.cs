@@ -48,7 +48,7 @@ public abstract partial class SettingsContextBase<TSelf> : SettingsContextBase
         return loaded;
     }
 
-    protected bool Set<T>(string key, T value, [CallerMemberName] string? propertyName = null)
+    protected bool Set<T>(string key, T value, [CallerMemberName] string propertyName = "")
     {
         if (_cache.TryGetValue(key, out object? cached) && cached is T current)
         {
