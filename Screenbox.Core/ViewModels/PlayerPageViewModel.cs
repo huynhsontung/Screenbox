@@ -347,7 +347,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// </summary>
     /// <remarks>
     /// If the media is currently <see cref="MediaPlaybackState.Paused"/> and
-    /// <see cref="ISettingsService.PlayerGesturePressAndHold"/> is not enabled,
+    /// <see cref="PlayerSettingsContext.GesturePressAndHold"/> is not enabled,
     /// the hold behavior is not available. To activate the hold behavior, the play/pause
     /// key needs to be pressed and held down for at least 500 milliseconds.
     /// </remarks>
@@ -453,8 +453,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <item><description><see cref="VirtualKeyModifiers.Control"/>: Seek using double (<c>2×</c>) the configured interval.</description></item>
     /// <item><description><see cref="VirtualKeyModifiers.Shift"/>: Seek using one-fifth (<c>1/5</c>) of the configured interval.</description></item>
     /// </list>
-    /// The default seek intervals are based on the configured <see cref="ISettingsService.PlayerRewindStep"/>
-    /// and <see cref="ISettingsService.PlayerFastForwardStep"/> values.
+    /// The default seek intervals are based on the configured <see cref="PlayerSettingsContext.RewindStep"/>
+    /// and <see cref="PlayerSettingsContext.FastForwardStep"/> values.
     /// </remarks>
     /// <param name="key">A value of the enumeration that specifies the key that was pressed.</param>
     /// <param name="modifiers">A bitwise combination of the enumeration values that specifies the modifier keys held during the key press.</param>

@@ -1,5 +1,6 @@
 using System;
 using Screenbox;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Services;
 using Screenbox.Helpers;
 using Windows.ApplicationModel;
@@ -23,11 +24,11 @@ public static class Program
         else
         {
             AppInstance instance;
-            var settingsService = new SettingsService();
+            var generalSettings = new GeneralSettingsContext(new SettingsStorage());
             var registeredInstances = AppInstance.GetInstances();
             IActivatedEventArgs? activatedArgs = AppInstance.GetActivatedEventArgs();    // This is null on Xbox
             bool isFileActivated = activatedArgs?.Kind == ActivationKind.File;
-            bool isFeatureEnabled = settingsService.UseMultipleInstances;
+            bool isFeatureEnabled = generalSettings.UseMultipleInstances;
             bool isXbox = DeviceInfoHelper.IsXbox;
             if ((!isXbox && isFeatureEnabled && isFileActivated) || registeredInstances.Count == 0)
             {

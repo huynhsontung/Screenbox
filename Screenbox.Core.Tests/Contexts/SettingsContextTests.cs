@@ -132,26 +132,4 @@ public class SettingsContextTests
         await Assert.That(context.GlobalArguments).IsEqualTo("-v --network-caching=1000");
         await Assert.That(storage.GetValue("Values/GlobalArguments", string.Empty)).IsEqualTo("-v --network-caching=1000");
     }
-
-    [Test]
-    public async Task SettingsService_DelegatesToContexts()
-    {
-        var storage = new MemorySettingsStorage();
-        var settingsContext = new SettingsContext(
-            new PlayerSettingsContext(storage),
-            new LibrarySettingsContext(storage),
-            new PlaybackSettingsContext(storage),
-            new GeneralSettingsContext(storage)
-        );
-        var service = new SettingsService(settingsContext);
-
-        service.PlayerRewindStep = 20;
-        service.Theme = ThemeOption.Light;
-        service.UseIndexer = false;
-
-        await Assert.That(settingsContext.Player.RewindStep).IsEqualTo(20);
-        await Assert.That(settingsContext.General.Theme).IsEqualTo(ThemeOption.Light);
-        await Assert.That(settingsContext.Library.UseIndexer).IsFalse();
-        await Assert.That(storage.GetValue("Libraries/UseIndexer", true)).IsFalse();
-    }
 }

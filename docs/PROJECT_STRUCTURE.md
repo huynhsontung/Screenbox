@@ -212,7 +212,7 @@ Screenbox uses the [CommunityToolkit.Mvvm messaging system](https://learn.micros
 **UI State Messages**
 
 - **`PlayerControlsVisibilityChangedMessage.cs`**: Show/hide player controls
-- **`SettingsChangedMessage.cs`**: Application setting modifications
+- **`SettingChangedMessage.cs`**: Strongly-typed domain setting modification notifications
 - **`NavigationViewDisplayModeRequestMessage.cs`**: Navigation menu state changes
 - **`NotificationMessage.cs`**: Show notifications inside the app
 - **`PlayerOsdUpdateMessage.cs`**: On-screen display updates for playback information
@@ -250,7 +250,7 @@ Screenbox implements a comprehensive service-oriented architecture using [Micros
 
 **System Integration Services**
 
-- **`ISettingsService`**: Application configuration persistence
+- **`ISettingsStorage`**: Low-level application configuration persistence
 - **`IWindowService`**: Window management and display operations
 
 #### Application Contexts
