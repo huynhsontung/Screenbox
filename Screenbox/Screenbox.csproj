@@ -29,7 +29,7 @@
     <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     
-    <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.7.260610101</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
+    <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.7.260930100</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -45,11 +45,11 @@
     <PackageReference Include="CommunityToolkit.Uwp.Converters" Version="8.2.251219" />
     <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
     <PackageReference Include="LibVLC.UWP" Version="3.0.23-2608082208" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.13" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
-    <PackageReference Include="Sentry.Extensions.Logging" Version="6.8.0" />
+    <PackageReference Include="Sentry.Extensions.Logging" Version="6.12.1" />
     <PackageReference Include="ReswPlus" Version="0.5.0" />
   </ItemGroup>
 
