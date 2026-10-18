@@ -57,6 +57,7 @@
                         <flyouts:MediaMenuFlyout
                             AddToQueueCommand="{x:Bind ViewModel.ContextPlaylist.AddToQueueCommand, Mode=OneWay}"
                             ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                            IsAddToPlaylistButtonVisible="False"
                             IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                             PlayCommand="{x:Bind ViewModel.ContextPlaylist.PlayCommand, Mode=OneWay}"
                             PlayNextCommand="{x:Bind ViewModel.ContextPlaylist.PlayNextCommand, Mode=OneWay}" />
