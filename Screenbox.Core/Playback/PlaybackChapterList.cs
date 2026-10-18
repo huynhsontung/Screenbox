@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LibVLCSharp.Shared.Structures;
+using Screenbox.Core.Helpers;
 using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
@@ -21,35 +22,39 @@ public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
     public void Load(IMediaPlayer player)
     {
         if (player is not VlcMediaPlayer vlcPlayer || player.PlaybackItem != _item)
+        {
             return;
+        }
 
         if (vlcPlayer.VlcPlayer.ChapterCount > 0)
         {
             List<ChapterDescription> chapterDescriptions = new();
             for (int i = 0; i < vlcPlayer.VlcPlayer.TitleCount; i++)
             {
-                chapterDescriptions.AddRange(vlcPlayer.VlcPlayer.FullChapterDescriptions(i));
+                ChapterDescription[]? descriptions = vlcPlayer.VlcPlayer.FullChapterDescriptions(i);
+                if (descriptions is not null)
+                {
+                    chapterDescriptions.AddRange(descriptions);
+                }
             }
 
-            Load(chapterDescriptions);
+            Load(chapterDescriptions, player.NaturalDuration);
         }
         else
         {
-            Load(vlcPlayer.VlcPlayer.FullChapterDescriptions());
+            ChapterDescription[]? descriptions = vlcPlayer.VlcPlayer.FullChapterDescriptions();
+            if (descriptions is not null)
+            {
+                Load(descriptions, player.NaturalDuration);
+            }
         }
 
         vlcPlayer.Chapter = _chapters.FirstOrDefault();
     }
 
-    private void Load(IEnumerable<ChapterDescription> vlcChapters)
+    private void Load(IEnumerable<ChapterDescription> vlcChapters, TimeSpan naturalDuration)
     {
-        IEnumerable<ChapterCue> chapterCues = vlcChapters.Select(c => new ChapterCue
-        {
-            Title = c.Name ?? string.Empty,
-            Duration = TimeSpan.FromMilliseconds(c.Duration),
-            StartTime = TimeSpan.FromMilliseconds(c.TimeOffset)
-        });
-
+        List<ChapterCue> chapterCues = ChapterHelper.FromVlcDescriptions(vlcChapters, naturalDuration);
         _chapters.Clear();
         _chapters.AddRange(chapterCues);
     }

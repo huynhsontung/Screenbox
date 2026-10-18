@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Helpers;
@@ -110,9 +111,15 @@ public sealed partial class ChapterProgressBar : UserControl
         if (view.ProgressItems.Count == 1)
         {
             if (view.ProgressItems[0].Width == 0)
+            {
                 view.ProgressItems[0].Width = view.ActualWidth;
+            }
 
             view.ProgressItems[0].Maximum = (double)e.NewValue;
+        }
+        else if (view.ProgressItems.Count > 1)
+        {
+            view.PopulateProgressItems();
         }
     }
 
@@ -122,7 +129,7 @@ public sealed partial class ChapterProgressBar : UserControl
         {
             ProgressItems[0].Width = ActualWidth;
         }
-        else
+        else if (ProgressItems.Count > 1)
         {
             foreach (ChapterViewModel item in ProgressItems)
             {
@@ -138,6 +145,11 @@ public sealed partial class ChapterProgressBar : UserControl
 
     private void UpdateProgress()
     {
+        if (ProgressItems.Count == 0)
+        {
+            return;
+        }
+
         if (ProgressItems.Count == 1)
         {
             ProgressItems[0].Value = Value;
@@ -206,73 +218,85 @@ public sealed partial class ChapterProgressBar : UserControl
     private void PopulateProgressItems()
     {
         ProgressItems.Clear();
-        if (Chapters?.Count > 0)
+        if (Chapters?.Count > 0 && Maximum > 0)
         {
             ChapterIndex = -1;
-            var lastChapterEndTime = TimeSpan.Zero;
-            foreach (ChapterCue cue in Chapters)
+            var maxTime = TimeSpan.FromMilliseconds(Maximum);
+            var validChapters = ChapterHelper.Sanitize(Chapters, maxTime);
+
+            if (validChapters.Count > 0)
             {
-                var gap = cue.StartTime - lastChapterEndTime;
-                if (gap > TimeSpan.FromMilliseconds(500))
+                var lastChapterEndTime = TimeSpan.Zero;
+                for (int i = 0; i < validChapters.Count; i++)
                 {
-                    // If there is a gap between chapters, we need to add a dummy chapter
+                    ChapterCue cue = validChapters[i];
+                    var gap = cue.StartTime - lastChapterEndTime;
+                    if (gap > TimeSpan.FromMilliseconds(500))
+                    {
+                        // If there is a gap between chapters, we need to add a dummy chapter
+                        ChapterViewModel gapChapter = new()
+                        {
+                            Minimum = lastChapterEndTime.TotalMilliseconds,
+                            Maximum = cue.StartTime.TotalMilliseconds,
+                        };
+
+                        ProgressItems.Add(gapChapter);
+                    }
+
+                    lastChapterEndTime = cue.StartTime + cue.Duration;
+                    var startTime = cue.StartTime.TotalMilliseconds;
+                    var endTime = lastChapterEndTime.TotalMilliseconds;
+                    ChapterViewModel chapter = new()
+                    {
+                        Minimum = startTime,
+                        Maximum = endTime,
+                    };
+
+                    ProgressItems.Add(chapter);
+                }
+
+                // Check if the last chapter end time matches the media length
+                if (Maximum - lastChapterEndTime.TotalMilliseconds > 500)
+                {
+                    // If not, we need to add a dummy chapter to fill the gap
                     ChapterViewModel gapChapter = new()
                     {
                         Minimum = lastChapterEndTime.TotalMilliseconds,
-                        Maximum = cue.StartTime.TotalMilliseconds,
+                        Maximum = Maximum,
                     };
 
                     ProgressItems.Add(gapChapter);
+                    _logger.LogWarning("Chapter duration does not match the media length.");
                 }
 
-                lastChapterEndTime = cue.StartTime + cue.Duration;
-                var startTime = cue.StartTime.TotalMilliseconds;
-                var endTime = (cue.Duration + cue.StartTime).TotalMilliseconds;
-                ChapterViewModel chapter = new()
+                // Update the width of each chapter
+                foreach (ChapterViewModel item in ProgressItems)
                 {
-                    Minimum = startTime,
-                    Maximum = endTime,
-                };
+                    item.Width = GetItemWidth(item.Maximum - item.Minimum, ProgressItems.Count);
+                }
 
-                ProgressItems.Add(chapter);
-            }
-
-            // Check if the last chapter end time matches the media length
-            if (Maximum - lastChapterEndTime.TotalMilliseconds > 500)
-            {
-                // If not, we need to add a dummy chapter to fill the gap
-                ChapterViewModel gapChapter = new()
-                {
-                    Minimum = lastChapterEndTime.TotalMilliseconds,
-                    Maximum = Maximum,
-                };
-
-                ProgressItems.Add(gapChapter);
-                _logger.LogWarning("Chapter duration does not match the media length.");
-            }
-
-            // Update the width of each chapter
-            foreach (ChapterViewModel item in ProgressItems)
-            {
-                item.Width = GetItemWidth(item.Maximum - item.Minimum, ProgressItems.Count);
+                return;
             }
         }
-        else
+
+        ChapterIndex = 0;
+        ProgressItems.Add(new ChapterViewModel
         {
-            ChapterIndex = 0;
-            ProgressItems.Add(new ChapterViewModel
-            {
-                Maximum = Maximum,
-                Width = ActualWidth
-            });
-        }
+            Maximum = Maximum,
+            Width = ActualWidth
+        });
     }
 
     private double GetItemWidth(double durationMs, int chapterCount)
     {
+        if (Maximum <= 0 || durationMs <= 0)
+        {
+            return 0;
+        }
+
         const int AlignmentAdjustment = 1; // Tested value to make the items aligned visually
         var totalChapterSpacing = chapterCount > 0 ? _chapterSpacing * (chapterCount - 1) : 0;
         double availableWidth = ActualWidth - totalChapterSpacing - AlignmentAdjustment;
-        return Maximum > 0 ? durationMs / Maximum * availableWidth : 0;
+        return availableWidth > 0 ? durationMs / Maximum * availableWidth : 0;
     }
 }
