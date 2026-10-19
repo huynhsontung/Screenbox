@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -78,6 +79,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TrackNumberText))]
+    [NotifyPropertyChangedFor(nameof(Duration))]
+    [NotifyPropertyChangedFor(nameof(MediaType))]
     public partial MediaInfo MediaInfo { get; set; }
 
     [ObservableProperty]
@@ -228,66 +231,64 @@ public sealed partial class MediaViewModel : ObservableRecipient
         AltCaption = file.Name;
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public async Task LoadDetailsAsync(IFilesService filesService)
+    /// <summary>
+    /// Probes the media source using <paramref name="mediaProbeService"/> and updates <see cref="MediaInfo"/>.
+    /// </summary>
+    /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
+    /// <param name="cancellationToken">A token to cancel the probe operation.</param>
+    public async Task LoadDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
     {
         DetailsLoaded = true;
-        switch (Source)
-        {
-            case StorageFile file:
-                MediaInfo = await filesService.GetMediaInfoAsync(file);
-                break;
-            case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
-                UpdateSource(uriFile);
-                MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
-                break;
-        }
+        StorageFile? file = await EnsureStorageFileSourceAsync();
 
-        switch (MediaType)
+        object probeSource = Item is { IsValueCreated: true, Value: { } activeItem }
+            ? activeItem
+            : (object?)file ?? Source;
+        if (await mediaProbeService.ProbeMediaAsync(
+                probeSource,
+                _options.Count > 0 ? _options.ToArray() : null,
+                cancellationToken) is { } parsedInfo)
         {
-            case MediaPlaybackType.Unknown when Item is { IsValueCreated: true, Value: { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done } }:
-                // Update media type when it was previously set Unknown. Usually when source is a URI.
-                // We don't want to init PlaybackItem just for this.
-                MediaInfo.MediaType = MediaPlaybackType.Music;
-                break;
-            case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
-                Name = MediaInfo.MusicProperties.Title;
-                break;
-            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title):
-                Name = MediaInfo.VideoProperties.Title;
-                break;
-        }
-
-        if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
-        {
-            if (Source is not IStorageItem &&
-                media.Meta(MetadataType.Title) is { } title &&
-                !string.IsNullOrEmpty(title) &&
-                !Guid.TryParse(title, out Guid _))
+            if (MediaType != MediaPlaybackType.Unknown)
             {
-                Name = title;
+                parsedInfo.MediaType = MediaType;
+            }
+            else if (file is not null &&
+                     FilesHelpers.GetMediaTypeForFile(file) is var fileType &&
+                     fileType != MediaPlaybackType.Unknown)
+            {
+                parsedInfo.MediaType = fileType;
             }
 
-            VideoInfo videoProperties = MediaInfo.VideoProperties;
-            videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
-            videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
-            videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
-        }
+            if (file is { IsAvailable: true } && (parsedInfo.Size == 0 || parsedInfo.DateModified == default))
+            {
+                try
+                {
+                    BasicProperties basicProperties = await file.GetBasicPropertiesAsync();
+                    parsedInfo.Size = basicProperties.Size;
+                    parsedInfo.DateModified = basicProperties.DateModified;
+                }
+                catch (Exception)
+                {
+                    // Ignore transient file property failures after media has been parsed.
+                }
+            }
 
-        if (Name == AltCaption)
-            AltCaption = string.Empty;
+            if (mediaProbeService is not StorageMediaProbeService)
+            {
+                MediaInfo = MediaInfo.MergeSelective(parsedInfo);
+            }
+            else
+            {
+                MediaInfo = parsedInfo;
+            }
+        }
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task LoadThumbnailAsync()
     {
         if (Thumbnail != null) return;
-        if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } storageFile)
-        {
-            UpdateSource(storageFile);
-        }
-
-        if (Source is StorageFile file)
+        if (await EnsureStorageFileSourceAsync() is { } file)
         {
             using var source = await GetThumbnailSourceAsync(file);
             if (source == null) return;
@@ -359,6 +360,19 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private void UpdateCaptions()
     {
+        string title = MediaType switch
+        {
+            MediaPlaybackType.Video => MediaInfo.VideoProperties.Title,
+            _ => !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title)
+                ? MediaInfo.MusicProperties.Title
+                : MediaInfo.VideoProperties.Title
+        };
+
+        if (!string.IsNullOrEmpty(title))
+        {
+            Name = title;
+        }
+
         if (Duration > TimeSpan.Zero)
         {
             Caption = Humanizer.ToDuration(Duration);
@@ -377,28 +391,29 @@ public sealed partial class MediaViewModel : ObservableRecipient
             AltCaption = musicProperties.Album;
         }
 
-        if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
+        if (Name == AltCaption)
         {
-            string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
-            if (!string.IsNullOrEmpty(artist))
-            {
-                Caption = artist;
-            }
-
-            if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
-            {
-                AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
-            }
+            AltCaption = string.Empty;
         }
     }
 
-    private static async Task<StorageFile?> TryGetStorageFileFromUri(Uri uri)
+    /// <summary>
+    /// Ensures the underlying media source is resolved to a <see cref="StorageFile"/> if it represents a local file.
+    /// </summary>
+    /// <returns>The resolved <see cref="StorageFile"/>, or <see langword="null"/> if not resolvable.</returns>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<StorageFile?> EnsureStorageFileSourceAsync()
     {
-        if (uri is { IsFile: true, IsLoopback: true, IsAbsoluteUri: true })
+        switch (Source)
         {
-            return await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString);
+            case StorageFile file:
+                return file;
+            case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri
+                when await FilesHelpers.TryGetFileFromPathAsync(uri.LocalPath) is { } uriFile:
+                UpdateSource(uriFile);
+                return uriFile;
+            default:
+                return null;
         }
-
-        return null;
     }
 }

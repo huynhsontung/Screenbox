@@ -26,16 +26,16 @@ public sealed class LibraryService : ILibraryService
 
     private static readonly string[] CustomPropertyKeys = { SystemProperties.Title };
     private readonly ISettingsService _settingsService;
-    private readonly IFilesService _filesService;
+    private readonly StorageMediaProbeService _storageMediaProbeService;
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ILogger<LibraryService> _logger;
 
-    public LibraryService(ISettingsService settingsService, IFilesService filesService,
+    public LibraryService(ISettingsService settingsService, StorageMediaProbeService storageMediaProbeService,
         IDatabaseService databaseService, MediaViewModelFactory mediaFactory, ILogger<LibraryService> logger)
     {
         _settingsService = settingsService;
-        _filesService = filesService;
+        _storageMediaProbeService = storageMediaProbeService;
         _databaseService = databaseService;
         _mediaFactory = mediaFactory;
         _logger = logger;
@@ -522,7 +522,7 @@ public sealed class LibraryService : ILibraryService
                 cancellationToken.ThrowIfCancellationRequested();
                 MediaViewModel song = _mediaFactory.Create(file);
                 song.IsFromLibrary = true;
-                await song.LoadDetailsAsync(_filesService);
+                await song.LoadDetailsAsync(_storageMediaProbeService);
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
                 song.Album = albumFactory.SongsToAlbums[song];
@@ -558,7 +558,7 @@ public sealed class LibraryService : ILibraryService
                 cancellationToken.ThrowIfCancellationRequested();
                 MediaViewModel video = _mediaFactory.Create(file);
                 video.IsFromLibrary = true;
-                await video.LoadDetailsAsync(_filesService);
+                await video.LoadDetailsAsync(_storageMediaProbeService);
                 target.Add(video);
             }
 

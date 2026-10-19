@@ -30,6 +30,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     public partial MediaViewModel? FirstItem { get; set; }
 
     private readonly IFilesService _filesService;
+    private readonly StorageMediaProbeService _storageMediaProbeService;
     private readonly IPlaylistService _playlistService;
     private readonly IMediaListFactory _mediaListFactory;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -37,11 +38,13 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     public PlaylistDetailsPageViewModel(
         IFilesService filesService,
+        StorageMediaProbeService storageMediaProbeService,
         IPlaylistService playlistService,
         IMediaListFactory mediaListFactory,
         MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
+        _storageMediaProbeService = storageMediaProbeService;
         _playlistService = playlistService;
         _mediaListFactory = mediaListFactory;
         _mediaFactory = mediaFactory;
@@ -121,7 +124,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         var mediaList = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetOrCreate).ToList();
         if (mediaList.Count == 0) return;
 
-        await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
+        await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_storageMediaProbeService)));
         await Source.AddItemsAsync(mediaList);
     }
 
