@@ -36,19 +36,84 @@ public abstract partial class SettingsContextBase<TSelf> : SettingsContextBase
     {
     }
 
-    protected T Get<T>(string key, T defaultValue)
+    protected bool Get(string key, bool defaultValue) => GetCore(key, defaultValue);
+
+    protected bool Set(string key, bool value, [CallerMemberName] string propertyName = "") =>
+        SetCore(key, value, propertyName);
+
+    protected int Get(string key, int defaultValue) => GetCore(key, defaultValue);
+
+    protected bool Set(string key, int value, [CallerMemberName] string propertyName = "") =>
+        SetCore(key, value, propertyName);
+
+    protected double Get(string key, double defaultValue) => GetCore(key, defaultValue);
+
+    protected bool Set(string key, double value, [CallerMemberName] string propertyName = "") =>
+        SetCore(key, value, propertyName);
+
+    protected string Get(string key, string defaultValue) => GetCore(key, defaultValue);
+
+    protected bool Set(string key, string value, [CallerMemberName] string propertyName = "") =>
+        SetCore(key, value, propertyName);
+
+    protected TEnum Get<TEnum>(string key, TEnum defaultValue)
+        where TEnum : struct, Enum
+    {
+        if (_cache.TryGetValue(key, out object? cached) && cached is TEnum current)
+        {
+            return current;
+        }
+
+        int defaultInt = (int)(object)defaultValue;
+        int raw = Storage.GetValue(key, defaultInt);
+        TEnum loaded = (TEnum)(object)raw;
+        _cache[key] = loaded;
+        return loaded;
+    }
+
+    protected bool Set<TEnum>(string key, TEnum value, [CallerMemberName] string propertyName = "")
+        where TEnum : struct, Enum
+    {
+        int rawValue = (int)(object)value;
+
+        if (_cache.TryGetValue(key, out object? cached) && cached is TEnum current)
+        {
+            if (EqualityComparer<TEnum>.Default.Equals(current, value))
+            {
+                return false;
+            }
+
+            _cache[key] = value;
+            Storage.SetValue(key, rawValue);
+            OnPropertyChanged(propertyName);
+            Messenger.Send(new PropertyChangedMessage<TEnum>(this, propertyName, current, value));
+            Messenger.Send(new SettingChangedMessage<TSelf, TEnum>((TSelf)this, propertyName, current, value));
+            return true;
+        }
+
+        int previousRaw = Storage.GetValue(key, 0);
+        TEnum previous = (TEnum)(object)previousRaw;
+        _cache[key] = value;
+        Storage.SetValue(key, rawValue);
+        OnPropertyChanged(propertyName);
+        Messenger.Send(new PropertyChangedMessage<TEnum>(this, propertyName, previous, value));
+        Messenger.Send(new SettingChangedMessage<TSelf, TEnum>((TSelf)this, propertyName, previous, value));
+        return true;
+    }
+
+    private T GetCore<T>(string key, T defaultValue)
     {
         if (_cache.TryGetValue(key, out object? cached) && cached is T current)
         {
             return current;
         }
 
-        T loaded = ReadFromStorage(key, defaultValue);
+        T loaded = Storage.GetValue(key, defaultValue);
         _cache[key] = loaded;
         return loaded;
     }
 
-    protected bool Set<T>(string key, T value, [CallerMemberName] string propertyName = "")
+    private bool SetCore<T>(string key, T value, string propertyName)
     {
         if (_cache.TryGetValue(key, out object? cached) && cached is T current)
         {
@@ -58,44 +123,19 @@ public abstract partial class SettingsContextBase<TSelf> : SettingsContextBase
             }
 
             _cache[key] = value;
-            WriteToStorage(key, value);
+            Storage.SetValue(key, value);
             OnPropertyChanged(propertyName);
             Messenger.Send(new PropertyChangedMessage<T>(this, propertyName, current, value));
             Messenger.Send(new SettingChangedMessage<TSelf, T>((TSelf)this, propertyName, current, value));
             return true;
         }
 
-        T previous = ReadFromStorage<T>(key, default!);
+        T previous = Storage.GetValue<T>(key, default!);
         _cache[key] = value;
-        WriteToStorage(key, value);
+        Storage.SetValue(key, value);
         OnPropertyChanged(propertyName);
         Messenger.Send(new PropertyChangedMessage<T>(this, propertyName, previous, value));
         Messenger.Send(new SettingChangedMessage<TSelf, T>((TSelf)this, propertyName, previous, value));
         return true;
-    }
-
-    private T ReadFromStorage<T>(string key, T defaultValue)
-    {
-        if (typeof(T).IsEnum)
-        {
-            int defaultInt = defaultValue is not null ? (int)(object)defaultValue : 0;
-            int raw = Storage.GetValue(key, defaultInt);
-            return (T)(object)raw;
-        }
-
-        return Storage.GetValue(key, defaultValue);
-    }
-
-    private void WriteToStorage<T>(string key, T value)
-    {
-        if (typeof(T).IsEnum)
-        {
-            int raw = value is not null ? (int)(object)value : 0;
-            Storage.SetValue(key, raw);
-        }
-        else
-        {
-            Storage.SetValue(key, value);
-        }
     }
 }

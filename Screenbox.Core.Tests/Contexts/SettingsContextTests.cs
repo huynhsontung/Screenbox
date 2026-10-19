@@ -8,7 +8,7 @@ using Screenbox.Core.Tests.Helpers;
 
 namespace Screenbox.Core.Tests.Contexts;
 
-public class SettingsContextTests
+public partial class SettingsContextTests
 {
     [Test]
     public async Task PlayerSettingsContext_WhenPropertyChanged_UpdatesStorageAndNotifies()
@@ -131,5 +131,30 @@ public class SettingsContextTests
 
         await Assert.That(context.GlobalArguments).IsEqualTo("-v --network-caching=1000");
         await Assert.That(storage.GetValue("Values/GlobalArguments", string.Empty)).IsEqualTo("-v --network-caching=1000");
+    }
+
+    private sealed partial class DummySettingsContext : SettingsContextBase<DummySettingsContext>
+    {
+        public DummySettingsContext(ISettingsStorage storage) : base(storage)
+        {
+        }
+
+        public double Scale
+        {
+            get => Get("Dummy/Scale", 1.0);
+            set => Set("Dummy/Scale", value);
+        }
+    }
+
+    [Test]
+    public async Task SettingsContextBase_DoubleOverload_PersistsAndNotifies()
+    {
+        var storage = new MemorySettingsStorage();
+        var context = new DummySettingsContext(storage);
+
+        context.Scale = 1.5;
+
+        await Assert.That(context.Scale).IsEqualTo(1.5);
+        await Assert.That(storage.GetValue("Dummy/Scale", 0.0)).IsEqualTo(1.5);
     }
 }
