@@ -24,13 +24,20 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class SettingsPageViewModel : ObservableRecipient
+public sealed partial class SettingsPageViewModel : ObservableRecipient,
+    IRecipient<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>,
+    IRecipient<SettingChangedMessage<GeneralSettingsContext, bool>>,
+    IRecipient<SettingChangedMessage<PlaybackSettingsContext, int>>,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, PlayerAutoResizeOption>>,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, VideoUpscaleOption>>,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
+    IRecipient<SettingChangedMessage<PlayerSettingsContext, string>>,
+    IRecipient<SettingChangedMessage<LibrarySettingsContext, bool>>
 {
-    public SettingsContext Settings { get; }
-    public PlayerSettingsContext PlayerSettings => Settings.Player;
-    public LibrarySettingsContext LibrarySettings => Settings.Library;
-    public PlaybackSettingsContext PlaybackSettings => Settings.Playback;
-    public GeneralSettingsContext GeneralSettings => Settings.General;
+    public PlayerSettingsContext PlayerSettings { get; }
+    public LibrarySettingsContext LibrarySettings { get; }
+    public PlaybackSettingsContext PlaybackSettings { get; }
+    public GeneralSettingsContext GeneralSettings { get; }
 
     public int Theme
     {
@@ -129,7 +136,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     }
 
     public SettingsPageViewModel(
-        SettingsContext settingsContext,
+        PlayerSettingsContext playerSettings,
+        LibrarySettingsContext librarySettings,
+        PlaybackSettingsContext playbackSettings,
+        GeneralSettingsContext generalSettings,
         IFilesService filesService,
         LibraryContext libraryContext,
         RecentContext recentContext,
@@ -137,7 +147,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         IPlaybackProgressTracker playbackProgressTracker,
         ILogger<SettingsPageViewModel> logger)
     {
-        Settings = settingsContext;
+        PlayerSettings = playerSettings;
+        LibrarySettings = librarySettings;
+        PlaybackSettings = playbackSettings;
+        GeneralSettings = generalSettings;
         _filesService = filesService;
         _libraryContext = libraryContext;
         _recentContext = recentContext;
@@ -167,11 +180,14 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
         SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
 
-        // Wire context property change listeners for UI notifications and relaunch checks
-        GeneralSettings.PropertyChanged += OnGeneralSettingsPropertyChanged;
-        PlaybackSettings.PropertyChanged += OnPlaybackSettingsPropertyChanged;
-        PlayerSettings.PropertyChanged += OnPlayerSettingsPropertyChanged;
-        LibrarySettings.PropertyChanged += OnLibrarySettingsPropertyChanged;
+        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(this);
+        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, bool>>(this);
+        Messenger.Register<SettingChangedMessage<PlaybackSettingsContext, int>>(this);
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, PlayerAutoResizeOption>>(this);
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, VideoUpscaleOption>>(this);
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
+        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, string>>(this);
+        Messenger.Register<SettingChangedMessage<LibrarySettingsContext, bool>>(this);
 
         // Setting initial values for relaunch check
         _initialValues ??= new InitialValues(PlayerSettings.GlobalArguments, PlayerSettings.AdvancedMode, VideoUpscaling, SelectedLanguage);
@@ -302,10 +318,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public void OnNavigatedFrom()
     {
-        GeneralSettings.PropertyChanged -= OnGeneralSettingsPropertyChanged;
-        PlaybackSettings.PropertyChanged -= OnPlaybackSettingsPropertyChanged;
-        PlayerSettings.PropertyChanged -= OnPlayerSettingsPropertyChanged;
-        LibrarySettings.PropertyChanged -= OnLibrarySettingsPropertyChanged;
+        Messenger.UnregisterAll(this);
 
         if (_videosLibrary != null)
         {
@@ -325,55 +338,74 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
     }
 
-    private void OnGeneralSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public void Receive(SettingChangedMessage<GeneralSettingsContext, ThemeOption> message)
     {
-        if (e.PropertyName == nameof(GeneralSettingsContext.Theme))
+        if (message.PropertyName == nameof(GeneralSettingsContext.Theme))
         {
             OnPropertyChanged(nameof(Theme));
         }
-        else if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
+    }
+
+    public void Receive(SettingChangedMessage<GeneralSettingsContext, bool> message)
+    {
+        if (message.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
         {
-            if (!GeneralSettings.ShowRecent) ClearRecentContext();
+            if (!GeneralSettings.ShowRecent)
+            {
+                ClearRecentContext();
+            }
         }
     }
 
-    private void OnPlaybackSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public void Receive(SettingChangedMessage<PlaybackSettingsContext, int> message)
     {
-        if (e.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
+        if (message.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
         {
             OnPropertyChanged(nameof(VolumeBoost));
         }
     }
 
-    private void OnPlayerSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, PlayerAutoResizeOption> message)
     {
-        if (e.PropertyName == nameof(PlayerSettingsContext.AutoResize))
+        if (message.PropertyName == nameof(PlayerSettingsContext.AutoResize))
         {
             OnPropertyChanged(nameof(PlayerAutoResize));
         }
-        else if (e.PropertyName == nameof(PlayerSettingsContext.VideoUpscale))
+    }
+
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, VideoUpscaleOption> message)
+    {
+        if (message.PropertyName == nameof(PlayerSettingsContext.VideoUpscale))
         {
             OnPropertyChanged(nameof(VideoUpscaling));
             CheckForRelaunch();
         }
-        else if (e.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
+    }
+
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
+    {
+        if (message.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
         {
             CheckForRelaunch();
         }
-        else if (e.PropertyName == nameof(PlayerSettingsContext.GlobalArguments))
+    }
+
+    public void Receive(SettingChangedMessage<PlayerSettingsContext, string> message)
+    {
+        if (message.PropertyName == nameof(PlayerSettingsContext.GlobalArguments))
         {
             OnPropertyChanged(nameof(GlobalArguments));
             CheckForRelaunch();
         }
     }
 
-    private async void OnLibrarySettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public void Receive(SettingChangedMessage<LibrarySettingsContext, bool> message)
     {
-        if (e.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
+        if (message.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
         {
             if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
             {
-                await RefreshLibrariesAsync();
+                _dispatcherQueue.TryEnqueue(async () => await RefreshLibrariesAsync());
             }
         }
     }

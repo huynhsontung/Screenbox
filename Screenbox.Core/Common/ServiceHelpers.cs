@@ -66,7 +66,6 @@ public static class ServiceHelpers
         services.AddSingleton<LibrarySettingsContext>();
         services.AddSingleton<PlaybackSettingsContext>();
         services.AddSingleton<GeneralSettingsContext>();
-        services.AddSingleton<SettingsContext>();
 
         // Coordinators
         services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
