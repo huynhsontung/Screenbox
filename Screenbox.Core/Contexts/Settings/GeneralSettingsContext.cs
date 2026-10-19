@@ -10,6 +10,7 @@ namespace Screenbox.Core.Contexts;
 public sealed partial class GeneralSettingsContext : SettingsContextBase<GeneralSettingsContext>
 {
     private const string ThemeKey = "General/Theme";
+    private const string LanguageKey = "General/Language";
     private const string ShowRecentKey = "General/ShowRecent";
     private const string EnqueueAllInFolderKey = "General/EnqueueAllInFolder";
     private const string MultipleInstancesKey = "Advanced/MultipleInstances";
@@ -18,6 +19,12 @@ public sealed partial class GeneralSettingsContext : SettingsContextBase<General
     {
         get => Get(ThemeKey, ElementTheme.Default);
         set => Set(ThemeKey, value);
+    }
+
+    public string Language
+    {
+        get => Get(LanguageKey, string.Empty);
+        set => Set(LanguageKey, value);
     }
 
     public bool ShowRecent

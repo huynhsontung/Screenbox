@@ -1,8 +1,10 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
+using Windows.Globalization;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Navigation;
@@ -16,11 +18,21 @@ namespace Screenbox.Pages;
 /// </summary>
 public sealed partial class SettingsPage : Page
 {
+    private const string SystemDefaultLanguage = "LanguageSystemDefault";
+
     internal SettingsPageViewModel ViewModel => (SettingsPageViewModel)DataContext;
 
     internal CommonViewModel Common { get; }
 
     private string[] VlcCommandLineHelpTextParts { get; }
+
+    private string SelectedLanguage
+    {
+        get => string.IsNullOrEmpty(ViewModel.Language) ? SystemDefaultLanguage : ViewModel.Language;
+        set => ViewModel.Language = value == SystemDefaultLanguage ? string.Empty : value;
+    }
+
+    private readonly ObservableCollection<string> AvailableLanguages = new ObservableCollection<string>();
 
     public SettingsPage()
     {
@@ -33,9 +45,7 @@ public sealed partial class SettingsPage : Page
             ? helpText.Split("{0}").Select(s => s.Trim()).Take(2).ToArray()
             : new[] { helpText, string.Empty };
 
-        // Set the "System default" language option string
-        var systemLanguageOption = ViewModel.AvailableLanguages[0];
-        systemLanguageOption.NativeName = Strings.Resources.LanguageSystemDefault;
+        PopulateLanguageComboBox();
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -66,8 +76,22 @@ public sealed partial class SettingsPage : Page
         }
     }
 
+    private void LanguageComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ApplicationLanguages.PrimaryLanguageOverride = ViewModel.Language;
+    }
+
     private void ChangeFrameCaptureLocationHyperlink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
     {
         ViewModel.ChangeFrameCaptureLocationCommand.Execute(null);
+    }
+
+    private void PopulateLanguageComboBox()
+    {
+        AvailableLanguages.Add(SystemDefaultLanguage);
+        foreach (string? language in ApplicationLanguages.ManifestLanguages)
+        {
+            AvailableLanguages.Add(language);
+        }
     }
 }
