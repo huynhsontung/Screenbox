@@ -24,47 +24,18 @@ public class StorageMediaProbeService : IMediaProbeService
         _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Probes Windows Storage properties from the specified <paramref name="file"/>.
+    /// </summary>
+    /// <param name="file">The storage file to probe.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled.</returns>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public virtual async Task<MediaInfo?> ProbeMediaAsync(
-        object source,
-        string[]? options = null,
+        StorageFile file,
         CancellationToken cancellationToken = default)
     {
-        StorageFile? file = source switch
-        {
-            StorageFile storageFile => storageFile,
-            PlaybackItem { OriginalSource: StorageFile activeFile } => activeFile,
-            _ => null
-        };
-
-        if (file is null && source is string path && !string.IsNullOrEmpty(path))
-        {
-            try
-            {
-                file = await StorageFile.GetFileFromPathAsync(path);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        else if (file is null && source is Uri { IsFile: true } uri)
-        {
-            try
-            {
-                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        if (file is null)
-        {
-            return null;
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         MediaPlaybackType mediaType = FilesHelpers.GetMediaTypeForFile(file);
         if (!file.IsAvailable)
@@ -108,6 +79,51 @@ public class StorageMediaProbeService : IMediaProbeService
         }
 
         return new MediaInfo(mediaType);
+    }
+
+    /// <inheritdoc/>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public virtual async Task<MediaInfo?> ProbeMediaAsync(
+        object source,
+        string[]? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        StorageFile? file = source switch
+        {
+            StorageFile storageFile => storageFile,
+            PlaybackItem { OriginalSource: StorageFile activeFile } => activeFile,
+            _ => null
+        };
+
+        if (file is null && source is string path && !string.IsNullOrEmpty(path))
+        {
+            try
+            {
+                file = await StorageFile.GetFileFromPathAsync(path);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        else if (file is null && source is Uri { IsFile: true } uri)
+        {
+            try
+            {
+                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        if (file is null)
+        {
+            return null;
+        }
+
+        return await ProbeMediaAsync(file, cancellationToken);
     }
 
     private static bool IsExpectedStoragePropertiesHResult(int hresult)
