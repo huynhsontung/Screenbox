@@ -1,12 +1,9 @@
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
@@ -57,66 +54,32 @@ public class MediaProbeServiceTests
     }
 
     [Test]
-    public async Task ProbeMediaAsync_WhenMediaPlayerNotInitialized_ShouldReturnNullGracefully()
+    public async Task ProbeMediaAsync_WhenMediaPlayerNotInitialized_ShouldReturnNull()
     {
         var service = new MediaProbeService(new PlayerContext(), new TestPlayerService(), NullLogger<MediaProbeService>.Instance);
-        var result = await service.ProbeMediaAsync(new Uri("https://example.com/stream.m3u8"));
-        await Assert.That(result).IsNull();
+        var uri = new Uri("https://example.com/stream.m3u8");
+
+        var typedResult = await service.ProbeMediaAsync(uri);
+        var polymorphicResult = await service.ProbeMediaAsync((object)uri);
+
+        await Assert.That(typedResult).IsNull();
+        await Assert.That(polymorphicResult).IsNull();
     }
 
     [Test]
-    public async Task ProbeMediaAsync_PolymorphicObjectDispatch_RoutesToUriOverload()
-    {
-        var testService = new TestableMediaProbeService();
-        var uri = new Uri("https://example.com/test.mp4");
-
-        var result = await testService.ProbeMediaAsync((object)uri);
-
-        await Assert.That(testService.UriOverloadCalled).IsTrue();
-        await Assert.That(result).IsNotNull();
-    }
-
-    [Test]
-    public async Task ProbeMediaAsync_PolymorphicObjectDispatch_RoutesToStorageFileOverload()
+    public async Task ProbeMediaAsync_WithStorageFile_WhenMediaPlayerNotInitialized_ShouldReturnNull()
     {
         using var fixture = new TestDirectoryFixture();
         string filePath = Path.Combine(fixture.DirectoryPath, "sample.mp4");
         await File.WriteAllBytesAsync(filePath, [0, 1, 2, 3]);
         StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
 
-        var testService = new TestableMediaProbeService();
-        var result = await testService.ProbeMediaAsync((object)file);
+        var service = new MediaProbeService(new PlayerContext(), new TestPlayerService(), NullLogger<MediaProbeService>.Instance);
 
-        await Assert.That(testService.StorageFileOverloadCalled).IsTrue();
-        await Assert.That(result).IsNotNull();
-    }
+        var typedResult = await service.ProbeMediaAsync(file);
+        var polymorphicResult = await service.ProbeMediaAsync((object)file);
 
-    private sealed class TestableMediaProbeService : MediaProbeService
-    {
-        public bool UriOverloadCalled { get; private set; }
-        public bool StorageFileOverloadCalled { get; private set; }
-
-        public TestableMediaProbeService()
-            : base(new PlayerContext(), new TestPlayerService(), NullLogger<MediaProbeService>.Instance)
-        {
-        }
-
-        public override Task<MediaInfo?> ProbeMediaAsync(
-            Uri uri,
-            string[]? options = null,
-            CancellationToken cancellationToken = default)
-        {
-            UriOverloadCalled = true;
-            return Task.FromResult<MediaInfo?>(new MediaInfo(MediaPlaybackType.Video));
-        }
-
-        public override Task<MediaInfo?> ProbeMediaAsync(
-            StorageFile file,
-            string[]? options = null,
-            CancellationToken cancellationToken = default)
-        {
-            StorageFileOverloadCalled = true;
-            return Task.FromResult<MediaInfo?>(new MediaInfo(MediaPlaybackType.Video));
-        }
+        await Assert.That(typedResult).IsNull();
+        await Assert.That(polymorphicResult).IsNull();
     }
 }

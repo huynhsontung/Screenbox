@@ -15,7 +15,7 @@ namespace Screenbox.Core.Services;
 /// <summary>
 /// Fast media probe service backed by Windows Storage file properties (WinRT).
 /// </summary>
-public class StorageMediaProbeService : IMediaProbeService
+public sealed class StorageMediaProbeService : IMediaProbeService
 {
     private readonly ILogger<StorageMediaProbeService> _logger;
 
@@ -31,7 +31,7 @@ public class StorageMediaProbeService : IMediaProbeService
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled.</returns>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public virtual async Task<MediaInfo?> ProbeMediaAsync(
+    public async Task<MediaInfo?> ProbeMediaAsync(
         StorageFile file,
         CancellationToken cancellationToken = default)
     {
@@ -83,7 +83,7 @@ public class StorageMediaProbeService : IMediaProbeService
 
     /// <inheritdoc/>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public virtual async Task<MediaInfo?> ProbeMediaAsync(
+    public async Task<MediaInfo?> ProbeMediaAsync(
         object source,
         string[]? options = null,
         CancellationToken cancellationToken = default)

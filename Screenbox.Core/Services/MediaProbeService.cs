@@ -14,7 +14,7 @@ namespace Screenbox.Core.Services;
 /// <summary>
 /// Default <see cref="IMediaProbeService"/> implementation backed by LibVLC media parsing.
 /// </summary>
-public class MediaProbeService : IMediaProbeService
+public sealed class MediaProbeService : IMediaProbeService
 {
     private static readonly TimeSpan DefaultProbeTimeout = TimeSpan.FromSeconds(10);
 
@@ -38,7 +38,7 @@ public class MediaProbeService : IMediaProbeService
     /// <param name="media">The LibVLC media to probe.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled or failed.</returns>
-    public virtual async Task<MediaInfo?> ProbeMediaAsync(
+    public async Task<MediaInfo?> ProbeMediaAsync(
         Media media,
         CancellationToken cancellationToken = default)
     {
@@ -65,7 +65,7 @@ public class MediaProbeService : IMediaProbeService
     /// <param name="item">The playback item to probe.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled or failed.</returns>
-    public virtual Task<MediaInfo?> ProbeMediaAsync(
+    public Task<MediaInfo?> ProbeMediaAsync(
         PlaybackItem item,
         CancellationToken cancellationToken = default)
     {
@@ -81,7 +81,7 @@ public class MediaProbeService : IMediaProbeService
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled or failed.</returns>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public virtual Task<MediaInfo?> ProbeMediaAsync(
+    public Task<MediaInfo?> ProbeMediaAsync(
         StorageFile file,
         string[]? options = null,
         CancellationToken cancellationToken = default)
@@ -97,7 +97,7 @@ public class MediaProbeService : IMediaProbeService
     /// <param name="options">Optional LibVLC media options.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled or failed.</returns>
-    public virtual Task<MediaInfo?> ProbeMediaAsync(
+    public Task<MediaInfo?> ProbeMediaAsync(
         Uri uri,
         string[]? options = null,
         CancellationToken cancellationToken = default)
@@ -108,7 +108,7 @@ public class MediaProbeService : IMediaProbeService
 
     /// <inheritdoc/>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public virtual async Task<MediaInfo?> ProbeMediaAsync(
+    public async Task<MediaInfo?> ProbeMediaAsync(
         object source,
         string[]? options = null,
         CancellationToken cancellationToken = default)

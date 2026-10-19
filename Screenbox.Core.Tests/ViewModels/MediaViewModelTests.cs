@@ -97,32 +97,6 @@ public class MediaViewModelTests
     }
 
     [Test]
-    public async Task LoadDetailsAsync_WithStorageMediaProbeService_ShouldAcceptConcreteImplementation()
-    {
-        var probedMusic = new MusicInfo
-        {
-            Title = "Storage Song",
-            Artist = "Storage Artist",
-            Album = "Storage Album",
-            Duration = TimeSpan.FromMinutes(3)
-        };
-        var probedInfo = new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo())
-        {
-            Size = 10_000_000,
-            DateModified = DateTimeOffset.UtcNow
-        };
-        var storageProber = new MockStorageMediaProbeService(probedInfo);
-        var vm = new MediaViewModel(new PlayerContext(), new TestPlayerService(), new Uri("file:///c:/music/test.mp3"));
-
-        await vm.LoadDetailsAsync(storageProber);
-
-        await Assert.That(storageProber.CallCount).IsEqualTo(1);
-        await Assert.That(vm.DetailsLoaded).IsTrue();
-        await Assert.That(vm.Name).IsEqualTo("Storage Song");
-        await Assert.That(vm.Caption).IsEqualTo("Storage Artist");
-    }
-
-    [Test]
     public async Task LoadDetailsAsync_WithMediaProbeService_WhenFieldsAlreadyPopulatedByStorage_ShouldOnlyUpdateEmptyFields()
     {
         var uri = new Uri("file:///c:/videos/movie.mp4");
@@ -149,7 +123,7 @@ public class MediaViewModelTests
             Size = 1_500_000_000,
             DateModified = new DateTimeOffset(2025, 6, 1, 12, 0, 0, TimeSpan.Zero)
         };
-        await vm.LoadDetailsAsync(new MockStorageMediaProbeService(storageInfo));
+        await vm.LoadDetailsAsync(new TestMediaProbeService(storageInfo));
 
         await Assert.That(vm.MediaInfo.VideoProperties.Title).IsEqualTo("Storage Movie Title");
         await Assert.That(vm.MediaInfo.VideoProperties.Bitrate).IsEqualTo(5_000_000U);
@@ -205,7 +179,7 @@ public class MediaViewModelTests
             Height = 0
         };
         var storageInfo = new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), storageVideo);
-        await vm.LoadDetailsAsync(new MockStorageMediaProbeService(storageInfo));
+        await vm.LoadDetailsAsync(new TestMediaProbeService(storageInfo));
 
         var vlcVideo = new VideoInfo
         {
@@ -249,22 +223,5 @@ public class MediaViewModelTests
         var file = await vm.EnsureStorageFileSourceAsync();
 
         await Assert.That(file).IsNull();
-    }
-
-    private sealed class MockStorageMediaProbeService : StorageMediaProbeService
-    {
-        private readonly MediaInfo? _infoToReturn;
-        public int CallCount { get; private set; }
-
-        public MockStorageMediaProbeService(MediaInfo? infoToReturn) : base(Microsoft.Extensions.Logging.Abstractions.NullLogger<StorageMediaProbeService>.Instance)
-        {
-            _infoToReturn = infoToReturn;
-        }
-
-        public override Task<MediaInfo?> ProbeMediaAsync(object source, string[]? options = null, System.Threading.CancellationToken cancellationToken = default)
-        {
-            CallCount++;
-            return Task.FromResult(_infoToReturn);
-        }
     }
 }
