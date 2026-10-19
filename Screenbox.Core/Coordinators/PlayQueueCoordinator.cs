@@ -56,7 +56,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly IPlaybackControlService _playbackControlService;
     private readonly IMediaListFactory _mediaListFactory;
     private readonly IFilesService _filesService;
-    private readonly ISettingsService _settingsService;
+    private readonly GeneralSettingsContext _generalSettings;
+    private readonly PlaybackSettingsContext _playbackSettings;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly PlayerContext _playerContext;
@@ -87,7 +88,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         IPlaybackControlService playbackControlService,
         IMediaListFactory mediaListFactory,
         IFilesService filesService,
-        ISettingsService settingsService,
+        GeneralSettingsContext generalSettings,
+        PlaybackSettingsContext playbackSettings,
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
         PlayerContext playerContext,
@@ -98,7 +100,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _playbackControlService = playbackControlService;
         _mediaListFactory = mediaListFactory;
         _filesService = filesService;
-        _settingsService = settingsService;
+        _generalSettings = generalSettings;
+        _playbackSettings = playbackSettings;
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
         _playerContext = playerContext;
@@ -109,7 +112,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         // Initialize context with persisted repeat mode.
         _settingContextFromCoordinator = true;
-        _context.RepeatMode = settingsService.PersistentRepeatMode;
+        _context.RepeatMode = playbackSettings.RepeatMode;
         _settingContextFromCoordinator = false;
 
         // React to UI-initiated shuffle/repeat changes (TwoWay bindings write to context).
@@ -188,7 +191,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         // Enqueue neighboring files in the same folder if the setting is enabled
         // and only a single file was opened (avoids expanding explicit multi-selections).
-        if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
+        if (_playlist.Items.Count == 1 && _generalSettings.EnqueueAllFilesInFolder)
         {
             if (_neighboringFilesQuery is null && files[0] is StorageFile file)
             {
@@ -343,7 +346,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         Messenger.Send(new RepeatModeChangedMessage(value));
         _transportControlsService.TransportControls.AutoRepeatMode = value;
-        _settingsService.PersistentRepeatMode = value;
+        _playbackSettings.RepeatMode = value;
         RaiseCanNavigateChanged();
     }
 
@@ -567,7 +570,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         RaiseCanNavigateChanged();
 
         await Task.WhenAll(
-            _settingsService.ShowRecent ? AddToRecent(value?.Source) : Task.CompletedTask,
+            _generalSettings.ShowRecent ? AddToRecent(value?.Source) : Task.CompletedTask,
             _transportControlsService.UpdateTransportControlsDisplayAsync(value),
             UpdateMediaBufferAsync()
         );

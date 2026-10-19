@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -53,13 +54,13 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     private MediaViewModel? _media;
 
     private readonly ILivelyWallpaperService _livelyService;
-    private readonly ISettingsService _settingsService;
+    private readonly PlayerSettingsContext _playerSettings;
     private readonly DispatcherQueueTimer _timer;
 
-    public LivelyWallpaperPlayerViewModel(ILivelyWallpaperService livelyService, ISettingsService settingsService)
+    public LivelyWallpaperPlayerViewModel(ILivelyWallpaperService livelyService, PlayerSettingsContext playerSettings)
     {
         _livelyService = livelyService;
-        _settingsService = settingsService;
+        _playerSettings = playerSettings;
         _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         Messenger.Register<PropertyChangedMessage<LivelyWallpaperModel?>>(this);
@@ -93,7 +94,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     public async Task LoadAsync()
     {
         var allVisualizers = await _livelyService.GetAvailableVisualizersAsync();
-        var activeVisualizerPath = _settingsService.LivelyActivePath;
+        var activeVisualizerPath = _playerSettings.LivelyActivePath;
 
         var selectedVisualizer =
             allVisualizers.FirstOrDefault(visualizer =>

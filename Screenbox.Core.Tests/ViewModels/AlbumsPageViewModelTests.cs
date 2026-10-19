@@ -14,7 +14,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task Constructor_ShouldInitializeSortByFromSettings()
     {
-        var settings = new TestSettingsService { PersistentAlbumsSortOrder = AlbumSortOrder.Year };
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Year };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -25,32 +25,32 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task SortBy_WhenChanged_ShouldUpdatePersistentSettings()
     {
-        var settings = new TestSettingsService { PersistentAlbumsSortOrder = AlbumSortOrder.Title };
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
         vm.SortBy = AlbumSortOrder.Artist;
 
-        await Assert.That(settings.PersistentAlbumsSortOrder).IsEqualTo(AlbumSortOrder.Artist);
+        await Assert.That(settings.AlbumsSortOrder).IsEqualTo(AlbumSortOrder.Artist);
     }
 
     [Test]
     public async Task SetSortByCommand_WhenExecuted_ShouldUpdateSortByAndSettings()
     {
-        var settings = new TestSettingsService { PersistentAlbumsSortOrder = AlbumSortOrder.Title };
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
         vm.SetSortByCommand.Execute(AlbumSortOrder.DateAdded);
 
         await Assert.That(vm.SortBy).IsEqualTo(AlbumSortOrder.DateAdded);
-        await Assert.That(settings.PersistentAlbumsSortOrder).IsEqualTo(AlbumSortOrder.DateAdded);
+        await Assert.That(settings.AlbumsSortOrder).IsEqualTo(AlbumSortOrder.DateAdded);
     }
 
     [Test]
     public async Task SetGenreCommand_WhenExecuted_ShouldUpdateSelectedGenre()
     {
-        var settings = new TestSettingsService();
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -96,7 +96,7 @@ public class AlbumsPageViewModelTests
             new ArtistViewModel());
 
         var libraryContext = new LibraryContext { Music = musicLibrary };
-        var settings = new TestSettingsService();
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
         vm.FetchAlbums();
@@ -128,7 +128,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task FetchAlbums_ShouldUpdateGroupedAlbums()
     {
-        var settings = new TestSettingsService();
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext();
         var vm = new AlbumsPageViewModel(libraryContext, settings);
 
@@ -154,7 +154,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task FetchAlbums_WhenLoadingMusicPartialSnapshot_ShouldNotResetMissingGenre()
     {
-        var settings = new TestSettingsService();
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext
         {
             IsLoadingMusic = true,
@@ -181,7 +181,7 @@ public class AlbumsPageViewModelTests
     [Test]
     public async Task FetchAlbums_WhenLoadingComplete_ShouldResetMissingGenre()
     {
-        var settings = new TestSettingsService();
+        var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext
         {
             IsLoadingMusic = false,

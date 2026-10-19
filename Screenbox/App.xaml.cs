@@ -9,6 +9,7 @@ using LibVLCSharp.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -337,7 +338,7 @@ sealed partial class App : Application
                 rootFrame.FlowDirection = FlowDirection.RightToLeft;
             }
 
-            var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
+            var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<GeneralSettingsContext>();
             rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
         }
 

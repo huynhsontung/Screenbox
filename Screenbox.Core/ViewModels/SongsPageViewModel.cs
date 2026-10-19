@@ -28,15 +28,15 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     [ObservableProperty] public partial IReadOnlyList<string> Genres { get; set; } = [];
 
     private readonly LibraryContext _libraryContext;
-    private readonly ISettingsService _settingsService;
+    private readonly LibrarySettingsContext _librarySettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _refreshTimer;
 
-    public SongsPageViewModel(LibraryContext libraryContext, ISettingsService settingsService)
+    public SongsPageViewModel(LibraryContext libraryContext, LibrarySettingsContext librarySettings)
     {
         _libraryContext = libraryContext;
-        _settingsService = settingsService;
-        SortBy = _settingsService.PersistentSongsSortOrder;
+        _librarySettings = librarySettings;
+        SortBy = _librarySettings.SongsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
 
@@ -200,7 +200,7 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
 
     partial void OnSortByChanged(SongSortOrder value)
     {
-        _settingsService.PersistentSongsSortOrder = value;
+        _librarySettings.SongsSortOrder = value;
         UpdateGrouping();
     }
 

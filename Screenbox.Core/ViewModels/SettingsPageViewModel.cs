@@ -25,34 +25,21 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class SettingsPageViewModel : ObservableRecipient
 {
+    public PlayerSettingsContext PlayerSettings { get; }
+    public LibrarySettingsContext LibrarySettings { get; }
+    public PlaybackSettingsContext PlaybackSettings { get; }
+    public GeneralSettingsContext GeneralSettings { get; }
+
     [ObservableProperty] public partial int PlayerAutoResize { get; set; }
-    [ObservableProperty] public partial int PlayerRewindStep { get; set; }
-    [ObservableProperty] public partial int PlayerFastForwardStep { get; set; }
-    [ObservableProperty] public partial PlaybackActionKind PlayerGestureTap { get; set; }
-    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeUp { get; set; }
-    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeDown { get; set; }
-    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeLeft { get; set; }
-    [ObservableProperty] public partial PlaybackActionKind PlayerGestureSwipeRight { get; set; }
-    [ObservableProperty] public partial bool PlayerGestureSlideVertical { get; set; }
-    [ObservableProperty] public partial bool PlayerGestureSlideHorizontal { get; set; }
-    [ObservableProperty] public partial bool PlayerGesturePressAndHold { get; set; }
-    [ObservableProperty] public partial bool PlayerShowControls { get; set; }
-    [ObservableProperty] public partial bool PlayerShowChapters { get; set; }
-    [ObservableProperty] public partial int PlayerControlsHideDelay { get; set; }
     [ObservableProperty] public partial int VolumeBoost { get; set; }
-    [ObservableProperty] public partial bool UseIndexer { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
     [ObservableProperty] public partial int Theme { get; set; }
-    [ObservableProperty] public partial bool EnqueueAllFilesInFolder { get; set; }
-    [ObservableProperty] public partial bool RestorePlaybackPosition { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
     [ObservableProperty] public partial int VideoUpscaling { get; set; }
-    [ObservableProperty] public partial bool UseMultipleInstances { get; set; }
-    [ObservableProperty] public partial string GlobalArguments { get; set; }
+    [ObservableProperty] public partial string GlobalArguments { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsRelaunchRequired { get; set; }
     [ObservableProperty] public partial int SelectedLanguage { get; set; }
-    [ObservableProperty] public partial bool PersistPlaybackPosition { get; set; }
     [ObservableProperty] public partial StorageFolder? FrameCaptureFolder { get; set; }
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
@@ -69,7 +56,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = Enum.GetValues<PlaybackActionKind>();
 
-    private readonly ISettingsService _settingsService;
     private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
     private readonly RecentContext _recentContext;
@@ -92,7 +78,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     }
 
     public SettingsPageViewModel(
-        ISettingsService settingsService,
+        PlayerSettingsContext playerSettings,
+        LibrarySettingsContext librarySettings,
+        PlaybackSettingsContext playbackSettings,
+        GeneralSettingsContext generalSettings,
         IFilesService filesService,
         LibraryContext libraryContext,
         RecentContext recentContext,
@@ -100,7 +89,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         IPlaybackProgressTracker playbackProgressTracker,
         ILogger<SettingsPageViewModel> logger)
     {
-        _settingsService = settingsService;
+        PlayerSettings = playerSettings;
+        LibrarySettings = librarySettings;
+        PlaybackSettings = playbackSettings;
+        GeneralSettings = generalSettings;
         _filesService = filesService;
         _libraryContext = libraryContext;
         _recentContext = recentContext;
@@ -128,32 +120,14 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
 
         // Load values
-        PlayerAutoResize = (int)_settingsService.PlayerAutoResize;
-        PlayerRewindStep = _settingsService.PlayerRewindStep;
-        PlayerFastForwardStep = _settingsService.PlayerFastForwardStep;
-        PlayerGestureTap = _settingsService.PlayerGestureTap;
-        PlayerGestureSwipeUp = _settingsService.PlayerGestureSwipeUp;
-        PlayerGestureSwipeDown = _settingsService.PlayerGestureSwipeDown;
-        PlayerGestureSwipeLeft = _settingsService.PlayerGestureSwipeLeft;
-        PlayerGestureSwipeRight = _settingsService.PlayerGestureSwipeRight;
-        PlayerGestureSlideVertical = _settingsService.PlayerGestureSlideVertical;
-        PlayerGestureSlideHorizontal = _settingsService.PlayerGestureSlideHorizontal;
-        PlayerGesturePressAndHold = _settingsService.PlayerGesturePressAndHold;
-        PlayerShowControls = _settingsService.PlayerShowControls;
-        PlayerShowChapters = _settingsService.PlayerShowChapters;
-        PlayerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
-        UseIndexer = _settingsService.UseIndexer;
-        ShowRecent = _settingsService.ShowRecent;
-        PersistPlaybackPosition = _settingsService.PersistPlaybackPosition;
-        Theme = ((int)_settingsService.Theme + 2) % 3;
-        EnqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
-        RestorePlaybackPosition = _settingsService.RestorePlaybackPosition;
-        SearchRemovableStorage = _settingsService.SearchRemovableStorage;
-        AdvancedMode = _settingsService.AdvancedMode;
-        UseMultipleInstances = _settingsService.UseMultipleInstances;
-        VideoUpscaling = (int)_settingsService.VideoUpscale;
-        GlobalArguments = _settingsService.GlobalArguments;
-        int maxVolume = _settingsService.MaxVolume;
+        PlayerAutoResize = (int)PlayerSettings.AutoResize;
+        ShowRecent = GeneralSettings.ShowRecent;
+        Theme = ((int)GeneralSettings.Theme + 2) % 3;
+        SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
+        AdvancedMode = PlayerSettings.AdvancedMode;
+        VideoUpscaling = (int)PlayerSettings.VideoUpscale;
+        GlobalArguments = PlayerSettings.GlobalArguments;
+        int maxVolume = PlaybackSettings.MaxVolume;
         VolumeBoost = maxVolume switch
         {
             >= 200 => 3,
@@ -174,8 +148,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         // The recommended theme option order is Light, Dark, System
         // So we need to map the value to the correct ThemeOption
-        _settingsService.Theme = (ThemeOption)((value + 1) % 3);
-        Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
+        GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
     }
 
     partial void OnSelectedLanguageChanged(int value)
@@ -195,190 +168,61 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     partial void OnPlayerAutoResizeChanged(int value)
     {
-        _settingsService.PlayerAutoResize = (PlayerAutoResizeOption)value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerRewindStepChanged(int value)
-    {
-        _settingsService.PlayerRewindStep = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerRewindStep), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerFastForwardStepChanged(int value)
-    {
-        _settingsService.PlayerFastForwardStep = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerFastForwardStep), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureTapChanged(PlaybackActionKind value)
-    {
-        _settingsService.PlayerGestureTap = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureTap), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureSwipeUpChanged(PlaybackActionKind value)
-    {
-        _settingsService.PlayerGestureSwipeUp = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeUp), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureSwipeDownChanged(PlaybackActionKind value)
-    {
-        _settingsService.PlayerGestureSwipeDown = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeDown), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureSwipeLeftChanged(PlaybackActionKind value)
-    {
-        _settingsService.PlayerGestureSwipeLeft = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeLeft), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureSwipeRightChanged(PlaybackActionKind value)
-    {
-        _settingsService.PlayerGestureSwipeRight = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSwipeRight), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureSlideVerticalChanged(bool value)
-    {
-        _settingsService.PlayerGestureSlideVertical = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSlideVertical), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGestureSlideHorizontalChanged(bool value)
-    {
-        _settingsService.PlayerGestureSlideHorizontal = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGestureSlideHorizontal), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerGesturePressAndHoldChanged(bool value)
-    {
-        _settingsService.PlayerGesturePressAndHold = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerGesturePressAndHold), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerShowControlsChanged(bool value)
-    {
-        _settingsService.PlayerShowControls = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowControls), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerShowChaptersChanged(bool value)
-    {
-        _settingsService.PlayerShowChapters = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowChapters), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnPlayerControlsHideDelayChanged(int value)
-    {
-        _settingsService.PlayerControlsHideDelay = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PlayerControlsHideDelay), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnUseIndexerChanged(bool value)
-    {
-        _settingsService.UseIndexer = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(UseIndexer), typeof(SettingsPageViewModel)));
-
-        _dispatcherQueue.TryEnqueue(RefreshWatchersAsync);
-
-        async void RefreshWatchersAsync()
-        {
-            try
-            {
-                await _libraryCoordinator.RefreshWatchersAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Failed to refresh library watchers after updating the indexer setting.");
-            }
-        }
+        PlayerSettings.AutoResize = (PlayerAutoResizeOption)value;
     }
 
     partial void OnShowRecentChanged(bool value)
     {
-        _settingsService.ShowRecent = value;
+        GeneralSettings.ShowRecent = value;
         if (!value)
         {
             ClearRecentContext();
         }
-
-        Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent), typeof(SettingsPageViewModel)));
     }
 
-    partial void OnEnqueueAllFilesInFolderChanged(bool value)
+    partial void OnSearchRemovableStorageChanged(bool value)
     {
-        _settingsService.EnqueueAllFilesInFolder = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(EnqueueAllFilesInFolder), typeof(SettingsPageViewModel)));
-    }
-
-    partial void OnRestorePlaybackPositionChanged(bool value)
-    {
-        _settingsService.RestorePlaybackPosition = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(RestorePlaybackPosition), typeof(SettingsPageViewModel)));
-    }
-
-    async partial void OnSearchRemovableStorageChanged(bool value)
-    {
-        _settingsService.SearchRemovableStorage = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(SearchRemovableStorage), typeof(SettingsPageViewModel)));
-
+        LibrarySettings.SearchRemovableStorage = value;
         if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
         {
-            await RefreshLibrariesAsync();
+            _dispatcherQueue.TryEnqueue(async () => await RefreshLibrariesAsync());
         }
     }
 
     partial void OnVolumeBoostChanged(int value)
     {
-        _settingsService.MaxVolume = value switch
+        PlaybackSettings.MaxVolume = value switch
         {
             3 => 200,
             2 => 150,
             1 => 125,
             _ => 100
         };
-        Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost), typeof(SettingsPageViewModel)));
     }
 
     partial void OnAdvancedModeChanged(bool value)
     {
-        _settingsService.AdvancedMode = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode), typeof(SettingsPageViewModel)));
+        PlayerSettings.AdvancedMode = value;
         CheckForRelaunch();
     }
 
     partial void OnVideoUpscalingChanged(int value)
     {
-        _settingsService.VideoUpscale = (VideoUpscaleOption)value;
-        Messenger.Send(new SettingsChangedMessage(nameof(VideoUpscaling), typeof(SettingsPageViewModel)));
+        PlayerSettings.VideoUpscale = (VideoUpscaleOption)value;
         CheckForRelaunch();
-    }
-
-    partial void OnUseMultipleInstancesChanged(bool value)
-    {
-        _settingsService.UseMultipleInstances = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances), typeof(SettingsPageViewModel)));
     }
 
     partial void OnGlobalArgumentsChanged(string value)
     {
-        // No need to broadcast SettingsChangedMessage for this option
-        if (value != _settingsService.GlobalArguments)
+        string sanitized = VlcArgumentHelper.SanitizeArguments(value);
+        if (sanitized != value)
         {
-            _settingsService.GlobalArguments = value;
+            GlobalArguments = sanitized;
+            return;
         }
 
-        GlobalArguments = _settingsService.GlobalArguments;
+        PlayerSettings.GlobalArguments = sanitized;
         CheckForRelaunch();
-    }
-
-    partial void OnPersistPlaybackPositionChanged(bool value)
-    {
-        _settingsService.PersistPlaybackPosition = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(PersistPlaybackPosition), typeof(SettingsPageViewModel)));
     }
 
     [RelayCommand]
@@ -438,14 +282,14 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         if (folder is null) return;
 
         // Release the previous entry so the FutureAccessList (capped at 1000 items) doesn't accumulate stale folders.
-        string oldToken = _settingsService.FrameCaptureFolderToken;
+        string oldToken = PlayerSettings.FrameCaptureFolderToken;
         if (!string.IsNullOrEmpty(oldToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(oldToken))
         {
             StorageApplicationPermissions.FutureAccessList.Remove(oldToken);
         }
 
         string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder, "frame-capture");
-        _settingsService.FrameCaptureFolderToken = newToken;
+        PlayerSettings.FrameCaptureFolderToken = newToken;
         FrameCaptureFolder = folder;
     }
 
@@ -526,7 +370,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         try
         {
-            FrameCaptureFolder = await _filesService.GetFrameCaptureFolderAsync(_settingsService.FrameCaptureFolderToken);
+            FrameCaptureFolder = await _filesService.GetFrameCaptureFolderAsync(PlayerSettings.FrameCaptureFolderToken);
         }
         catch (Exception e)
         {
@@ -631,13 +475,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         bool languageChanged = _initialValues.Language != SelectedLanguage;
 
         // Check if global arguments have been changed
-        bool argsChanged = _initialValues.GlobalArguments != _settingsService.GlobalArguments;
+        bool argsChanged = _initialValues.GlobalArguments != GlobalArguments;
 
         // Check if advanced mode has been changed
         bool modeChanged = _initialValues.AdvancedMode != AdvancedMode;
 
         // Check if there are any global arguments set
-        bool hasArgs = _settingsService.GlobalArguments.Length > 0;
+        bool hasArgs = GlobalArguments.Length > 0;
 
         // Check if advanced mode is on, and if global arguments are set
         bool whenOn = modeChanged && AdvancedMode && hasArgs;
