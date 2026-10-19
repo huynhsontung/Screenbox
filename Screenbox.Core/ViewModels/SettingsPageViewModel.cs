@@ -71,7 +71,15 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public string GlobalArguments
     {
         get => PlayerSettings.GlobalArguments;
-        set => PlayerSettings.GlobalArguments = value;
+        set
+        {
+            string sanitized = VlcArgumentHelper.SanitizeArguments(value);
+            PlayerSettings.GlobalArguments = sanitized;
+            if (sanitized != value)
+            {
+                OnPropertyChanged();
+            }
+        }
     }
 
     public bool AdvancedMode

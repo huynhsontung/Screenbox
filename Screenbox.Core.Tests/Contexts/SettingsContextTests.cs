@@ -122,12 +122,12 @@ public class SettingsContextTests
     }
 
     [Test]
-    public async Task PlayerSettingsContext_GlobalArguments_SanitizesValue()
+    public async Task PlayerSettingsContext_GlobalArguments_PersistsValue()
     {
         var storage = new MemorySettingsStorage();
         var context = new PlayerSettingsContext(storage);
 
-        context.GlobalArguments = "invalid -v --network-caching=1000 -- trailing";
+        context.GlobalArguments = "-v --network-caching=1000";
 
         await Assert.That(context.GlobalArguments).IsEqualTo("-v --network-caching=1000");
         await Assert.That(storage.GetValue("Values/GlobalArguments", string.Empty)).IsEqualTo("-v --network-caching=1000");

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -153,24 +152,10 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase<PlayerSe
     public string GlobalArguments
     {
         get => Get(GlobalArgumentsKey, string.Empty);
-        set
-        {
-            string sanitized = SanitizeArguments(value);
-            if (!Set(GlobalArgumentsKey, sanitized) && sanitized != value)
-            {
-                OnPropertyChanged();
-            }
-        }
+        set => Set(GlobalArgumentsKey, value);
     }
 
     public PlayerSettingsContext(ISettingsStorage storage) : base(storage)
     {
-    }
-
-    private static string SanitizeArguments(string raw)
-    {
-        string[] args = raw.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Where(s => s.StartsWith('-') && s != "--").ToArray();
-        return string.Join(' ', args);
     }
 }
