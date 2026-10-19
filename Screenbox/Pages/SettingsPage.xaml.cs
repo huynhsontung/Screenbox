@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Navigation;
@@ -54,6 +55,15 @@ public sealed partial class SettingsPage : Page
     private async void ManageSystemIndexingCard_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
     {
         await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:search"));
+    }
+
+    [DynamicWindowsRuntimeCast(typeof(Frame))]
+    private void ThemeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (Window.Current.Content is Frame rootFrame)
+        {
+            rootFrame.RequestedTheme = ViewModel.Theme;
+        }
     }
 
     private void ChangeFrameCaptureLocationHyperlink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)

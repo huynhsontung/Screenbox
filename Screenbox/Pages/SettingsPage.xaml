@@ -279,18 +279,25 @@
                     Header="{x:Bind strings:Resources.SettingsThemeSelectionHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FiltersGlyph}}">
+                    <!--  App Theme  -->
                     <ComboBox
                         MinWidth="150"
-                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
-                        SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsThemeSelectionDescription}"
+                        SelectedItem="{x:Bind ViewModel.Theme, Mode=TwoWay}"
+                        SelectionChanged="ThemeComboBox_OnSelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="ElementTheme">
+                                <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((ElementTheme))}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <!--  The app settings guidelines recommend theme options to follow this order.  -->
+                        <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
+                        <ElementTheme>Light</ElementTheme>
+                        <ElementTheme>Dark</ElementTheme>
+                        <ElementTheme>Default</ElementTheme>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
-                        <!--  The app settings guidelines recommend theme options to follow this order.  -->
-                        <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
-                        <x:String>ThemeLight</x:String>
-                        <x:String>ThemeDark</x:String>
-                        <x:String>ThemeAuto</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
                 <ctc:SettingsCard

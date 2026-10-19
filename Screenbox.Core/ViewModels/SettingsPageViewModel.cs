@@ -20,6 +20,7 @@ using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -33,7 +34,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial int PlayerAutoResize { get; set; }
     [ObservableProperty] public partial int VolumeBoost { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
-    [ObservableProperty] public partial int Theme { get; set; }
+    [ObservableProperty] public partial ElementTheme Theme { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
     [ObservableProperty] public partial int VideoUpscaling { get; set; }
@@ -122,7 +123,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         // Load values
         PlayerAutoResize = (int)PlayerSettings.AutoResize;
         ShowRecent = GeneralSettings.ShowRecent;
-        Theme = ((int)GeneralSettings.Theme + 2) % 3;
+        Theme = GeneralSettings.Theme;
         SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
         AdvancedMode = PlayerSettings.AdvancedMode;
         VideoUpscaling = (int)PlayerSettings.VideoUpscale;
@@ -144,11 +145,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         CheckForRelaunch();
     }
 
-    partial void OnThemeChanged(int value)
+    partial void OnThemeChanged(ElementTheme value)
     {
-        // The recommended theme option order is Light, Dark, System
-        // So we need to map the value to the correct ThemeOption
-        GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
+        GeneralSettings.Theme = value;
     }
 
     partial void OnSelectedLanguageChanged(int value)

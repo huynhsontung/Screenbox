@@ -1,5 +1,5 @@
-using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Contexts;
 
@@ -14,9 +14,9 @@ public sealed partial class GeneralSettingsContext : SettingsContextBase<General
     private const string EnqueueAllInFolderKey = "General/EnqueueAllInFolder";
     private const string MultipleInstancesKey = "Advanced/MultipleInstances";
 
-    public ThemeOption Theme
+    public ElementTheme Theme
     {
-        get => Get(ThemeKey, ThemeOption.Auto);
+        get => Get(ThemeKey, ElementTheme.Default);
         set => Set(ThemeKey, value);
     }
 

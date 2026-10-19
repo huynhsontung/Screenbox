@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,7 +17,6 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class CommonViewModel : ObservableRecipient,
-    IRecipient<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>,
     IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
     IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
@@ -54,19 +52,9 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         NavigationStates = new Dictionary<Type, string>();
         _pageStates = new Dictionary<string, object>();
 
-        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(this);
         Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
         Messenger.Register<PropertyChangedMessage<NavigationViewDisplayMode>>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
-    }
-
-    [DynamicWindowsRuntimeCast(typeof(Frame))]
-    public void Receive(SettingChangedMessage<GeneralSettingsContext, ThemeOption> message)
-    {
-        if (Window.Current.Content is Frame rootFrame)
-        {
-            rootFrame.RequestedTheme = message.NewValue.ToElementTheme();
-        }
     }
 
     public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
