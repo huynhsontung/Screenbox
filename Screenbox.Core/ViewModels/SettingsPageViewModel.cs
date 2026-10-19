@@ -24,83 +24,21 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class SettingsPageViewModel : ObservableRecipient,
-    IRecipient<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>,
-    IRecipient<SettingChangedMessage<GeneralSettingsContext, bool>>,
-    IRecipient<SettingChangedMessage<PlaybackSettingsContext, int>>,
-    IRecipient<SettingChangedMessage<PlayerSettingsContext, PlayerAutoResizeOption>>,
-    IRecipient<SettingChangedMessage<PlayerSettingsContext, VideoUpscaleOption>>,
-    IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
-    IRecipient<SettingChangedMessage<PlayerSettingsContext, string>>,
-    IRecipient<SettingChangedMessage<LibrarySettingsContext, bool>>
+public sealed partial class SettingsPageViewModel : ObservableRecipient
 {
     public PlayerSettingsContext PlayerSettings { get; }
     public LibrarySettingsContext LibrarySettings { get; }
     public PlaybackSettingsContext PlaybackSettings { get; }
     public GeneralSettingsContext GeneralSettings { get; }
 
-    public int Theme
-    {
-        get => ((int)GeneralSettings.Theme + 2) % 3;
-        set => GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
-    }
-
-    public int VolumeBoost
-    {
-        get => PlaybackSettings.MaxVolume switch
-        {
-            >= 200 => 3,
-            >= 150 => 2,
-            >= 125 => 1,
-            _ => 0
-        };
-        set => PlaybackSettings.MaxVolume = value switch
-        {
-            3 => 200,
-            2 => 150,
-            1 => 125,
-            _ => 100
-        };
-    }
-
-    public int PlayerAutoResize
-    {
-        get => (int)PlayerSettings.AutoResize;
-        set => PlayerSettings.AutoResize = (PlayerAutoResizeOption)value;
-    }
-
-    public int VideoUpscaling
-    {
-        get => (int)PlayerSettings.VideoUpscale;
-        set => PlayerSettings.VideoUpscale = (VideoUpscaleOption)value;
-    }
-
-    public string GlobalArguments
-    {
-        get => PlayerSettings.GlobalArguments;
-        set
-        {
-            string sanitized = VlcArgumentHelper.SanitizeArguments(value);
-            PlayerSettings.GlobalArguments = sanitized;
-            if (sanitized != value)
-            {
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    public bool AdvancedMode
-    {
-        get => PlayerSettings.AdvancedMode;
-        set => PlayerSettings.AdvancedMode = value;
-    }
-
-    public bool PlayerShowChapters
-    {
-        get => PlayerSettings.ShowChapters;
-        set => PlayerSettings.ShowChapters = value;
-    }
-
+    [ObservableProperty] public partial int Theme { get; set; }
+    [ObservableProperty] public partial int VolumeBoost { get; set; }
+    [ObservableProperty] public partial int PlayerAutoResize { get; set; }
+    [ObservableProperty] public partial int VideoUpscaling { get; set; }
+    [ObservableProperty] public partial string GlobalArguments { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool AdvancedMode { get; set; }
+    [ObservableProperty] public partial bool ShowRecent { get; set; }
+    [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool IsRelaunchRequired { get; set; }
     [ObservableProperty] public partial int SelectedLanguage { get; set; }
     [ObservableProperty] public partial StorageFolder? FrameCaptureFolder { get; set; }
@@ -180,18 +118,88 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient,
         string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
         SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
 
-        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(this);
-        Messenger.Register<SettingChangedMessage<GeneralSettingsContext, bool>>(this);
-        Messenger.Register<SettingChangedMessage<PlaybackSettingsContext, int>>(this);
-        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, PlayerAutoResizeOption>>(this);
-        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, VideoUpscaleOption>>(this);
-        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
-        Messenger.Register<SettingChangedMessage<PlayerSettingsContext, string>>(this);
-        Messenger.Register<SettingChangedMessage<LibrarySettingsContext, bool>>(this);
+        Theme = ((int)GeneralSettings.Theme + 2) % 3;
+        VolumeBoost = PlaybackSettings.MaxVolume switch
+        {
+            >= 200 => 3,
+            >= 150 => 2,
+            >= 125 => 1,
+            _ => 0
+        };
+        PlayerAutoResize = (int)PlayerSettings.AutoResize;
+        VideoUpscaling = (int)PlayerSettings.VideoUpscale;
+        GlobalArguments = PlayerSettings.GlobalArguments;
+        AdvancedMode = PlayerSettings.AdvancedMode;
+        ShowRecent = GeneralSettings.ShowRecent;
+        SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
 
         // Setting initial values for relaunch check
-        _initialValues ??= new InitialValues(PlayerSettings.GlobalArguments, PlayerSettings.AdvancedMode, VideoUpscaling, SelectedLanguage);
+        _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, SelectedLanguage);
         CheckForRelaunch();
+    }
+
+    partial void OnThemeChanged(int value)
+    {
+        GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
+    }
+
+    partial void OnVolumeBoostChanged(int value)
+    {
+        PlaybackSettings.MaxVolume = value switch
+        {
+            3 => 200,
+            2 => 150,
+            1 => 125,
+            _ => 100
+        };
+    }
+
+    partial void OnPlayerAutoResizeChanged(int value)
+    {
+        PlayerSettings.AutoResize = (PlayerAutoResizeOption)value;
+    }
+
+    partial void OnVideoUpscalingChanged(int value)
+    {
+        PlayerSettings.VideoUpscale = (VideoUpscaleOption)value;
+        CheckForRelaunch();
+    }
+
+    partial void OnGlobalArgumentsChanged(string value)
+    {
+        string sanitized = VlcArgumentHelper.SanitizeArguments(value);
+        if (sanitized != value)
+        {
+            GlobalArguments = sanitized;
+            return;
+        }
+
+        PlayerSettings.GlobalArguments = sanitized;
+        CheckForRelaunch();
+    }
+
+    partial void OnAdvancedModeChanged(bool value)
+    {
+        PlayerSettings.AdvancedMode = value;
+        CheckForRelaunch();
+    }
+
+    partial void OnShowRecentChanged(bool value)
+    {
+        GeneralSettings.ShowRecent = value;
+        if (!value)
+        {
+            ClearRecentContext();
+        }
+    }
+
+    partial void OnSearchRemovableStorageChanged(bool value)
+    {
+        LibrarySettings.SearchRemovableStorage = value;
+        if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
+        {
+            _dispatcherQueue.TryEnqueue(async () => await RefreshLibrariesAsync());
+        }
     }
 
     partial void OnSelectedLanguageChanged(int value)
@@ -338,78 +346,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient,
         }
     }
 
-    public void Receive(SettingChangedMessage<GeneralSettingsContext, ThemeOption> message)
-    {
-        if (message.PropertyName == nameof(GeneralSettingsContext.Theme))
-        {
-            OnPropertyChanged(nameof(Theme));
-        }
-    }
-
-    public void Receive(SettingChangedMessage<GeneralSettingsContext, bool> message)
-    {
-        if (message.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
-        {
-            if (!GeneralSettings.ShowRecent)
-            {
-                ClearRecentContext();
-            }
-        }
-    }
-
-    public void Receive(SettingChangedMessage<PlaybackSettingsContext, int> message)
-    {
-        if (message.PropertyName == nameof(PlaybackSettingsContext.MaxVolume))
-        {
-            OnPropertyChanged(nameof(VolumeBoost));
-        }
-    }
-
-    public void Receive(SettingChangedMessage<PlayerSettingsContext, PlayerAutoResizeOption> message)
-    {
-        if (message.PropertyName == nameof(PlayerSettingsContext.AutoResize))
-        {
-            OnPropertyChanged(nameof(PlayerAutoResize));
-        }
-    }
-
-    public void Receive(SettingChangedMessage<PlayerSettingsContext, VideoUpscaleOption> message)
-    {
-        if (message.PropertyName == nameof(PlayerSettingsContext.VideoUpscale))
-        {
-            OnPropertyChanged(nameof(VideoUpscaling));
-            CheckForRelaunch();
-        }
-    }
-
-    public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
-    {
-        if (message.PropertyName == nameof(PlayerSettingsContext.AdvancedMode))
-        {
-            CheckForRelaunch();
-        }
-    }
-
-    public void Receive(SettingChangedMessage<PlayerSettingsContext, string> message)
-    {
-        if (message.PropertyName == nameof(PlayerSettingsContext.GlobalArguments))
-        {
-            OnPropertyChanged(nameof(GlobalArguments));
-            CheckForRelaunch();
-        }
-    }
-
-    public void Receive(SettingChangedMessage<LibrarySettingsContext, bool> message)
-    {
-        if (message.PropertyName == nameof(LibrarySettingsContext.SearchRemovableStorage))
-        {
-            if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
-            {
-                _dispatcherQueue.TryEnqueue(async () => await RefreshLibrariesAsync());
-            }
-        }
-    }
-
     public async Task LoadLibraryLocations()
     {
         if (_videosLibrary == null)
@@ -537,12 +473,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient,
 
         bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
         bool languageChanged = _initialValues.Language != SelectedLanguage;
-        bool argsChanged = _initialValues.GlobalArguments != PlayerSettings.GlobalArguments;
-        bool modeChanged = _initialValues.AdvancedMode != PlayerSettings.AdvancedMode;
-        bool hasArgs = PlayerSettings.GlobalArguments.Length > 0;
-        bool whenOn = modeChanged && PlayerSettings.AdvancedMode && hasArgs;
-        bool whenOff = modeChanged && !PlayerSettings.AdvancedMode && ((!hasArgs && argsChanged) || hasArgs);
-        bool whenOnAndChanged = PlayerSettings.AdvancedMode && argsChanged;
+        bool argsChanged = _initialValues.GlobalArguments != GlobalArguments;
+        bool modeChanged = _initialValues.AdvancedMode != AdvancedMode;
+        bool hasArgs = GlobalArguments.Length > 0;
+        bool whenOn = modeChanged && AdvancedMode && hasArgs;
+        bool whenOff = modeChanged && !AdvancedMode && ((!hasArgs && argsChanged) || hasArgs);
+        bool whenOnAndChanged = AdvancedMode && argsChanged;
 
         IsRelaunchRequired = upscalingChanged || languageChanged || whenOn || whenOff || whenOnAndChanged;
     }

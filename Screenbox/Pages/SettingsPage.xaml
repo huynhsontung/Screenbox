@@ -165,7 +165,7 @@
                     <ToggleSwitch
                         x:Name="SearchRemovableStorageToggle"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSearchRemovableStorageDescription}"
-                        IsOn="{x:Bind ViewModel.LibrarySettings.SearchRemovableStorage, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
@@ -645,7 +645,7 @@
                     <ToggleSwitch
                         x:Name="AdvancedModeToggleSwitch"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsAdvancedModeDescription}"
-                        IsOn="{x:Bind ViewModel.PlayerSettings.AdvancedMode, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsGlobalArgumentsCard"
@@ -662,9 +662,9 @@
                         <ctc:SettingsCard
                             Header="{x:Bind strings:Resources.ActiveArguments}"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.PlayerSettings.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
                             <ctc:SettingsCard.Description>
-                                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.PlayerSettings.GlobalArguments, Mode=OneWay}" />
+                                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
                             </ctc:SettingsCard.Description>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -680,7 +680,7 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.GeneralSettings.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
@@ -689,7 +689,7 @@
                     <ToggleSwitch
                         x:Name="ShowRecentToggleSwitch"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsShowRecentDescription}"
-                        IsOn="{x:Bind ViewModel.GeneralSettings.ShowRecent, Mode=TwoWay}" />
+                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsClearRecentCard"
