@@ -80,7 +80,28 @@ public sealed class SearchService : ISearchService
 
         string queryText = query.Trim();
         SearchResult result = SearchLocalLibrary(queryText);
-        var suggestions = BuildSuggestions(result, queryText).ToList();
+
+        var candidates = new List<SearchSuggestion>();
+        candidates.AddRange(result.Songs
+            .Take(MaxSuggestionsPerCategory)
+            .Select(s => new SearchSuggestion(SearchSuggestionType.Song, s.Name, s)));
+        candidates.AddRange(result.Videos
+            .Take(MaxSuggestionsPerCategory)
+            .Select(v => new SearchSuggestion(SearchSuggestionType.Video, v.Name, v)));
+        candidates.AddRange(result.Artists
+            .Take(MaxSuggestionsPerCategory)
+            .Select(a => new SearchSuggestion(SearchSuggestionType.Artist, a.Name, a)));
+        candidates.AddRange(result.Albums
+            .Take(MaxSuggestionsPerCategory)
+            .Select(a => new SearchSuggestion(SearchSuggestionType.Album, a.Name, a)));
+        candidates.AddRange(result.Playlists
+            .Take(MaxSuggestionsPerCategory)
+            .Select(p => new SearchSuggestion(SearchSuggestionType.Playlist, p.Name, p)));
+
+        List<SearchSuggestion> suggestions = candidates
+            .OrderBy(item => GetRanking(item.Text, queryText))
+            .Take(MaxTotalSuggestions)
+            .ToList();
 
         if (suggestions.Count == 0)
         {
@@ -88,34 +109,6 @@ public sealed class SearchService : ISearchService
         }
 
         return suggestions;
-    }
-
-    private static IReadOnlyList<SearchSuggestion> BuildSuggestions(SearchResult result, string searchQuery)
-    {
-        if (!result.HasItems) return Array.Empty<SearchSuggestion>();
-
-        IEnumerable<SearchSuggestion> songs = result.Songs
-            .Take(MaxSuggestionsPerCategory)
-            .Select(s => new SearchSuggestion(SearchSuggestionType.Song, s.Name, s));
-        IEnumerable<SearchSuggestion> videos = result.Videos
-            .Take(MaxSuggestionsPerCategory)
-            .Select(v => new SearchSuggestion(SearchSuggestionType.Video, v.Name, v));
-        IEnumerable<SearchSuggestion> artists = result.Artists
-            .Take(MaxSuggestionsPerCategory)
-            .Select(a => new SearchSuggestion(SearchSuggestionType.Artist, a.Name, a));
-        IEnumerable<SearchSuggestion> albums = result.Albums
-            .Take(MaxSuggestionsPerCategory)
-            .Select(a => new SearchSuggestion(SearchSuggestionType.Album, a.Name, a));
-        IEnumerable<SearchSuggestion> playlists = result.Playlists
-            .Take(MaxSuggestionsPerCategory)
-            .Select(p => new SearchSuggestion(SearchSuggestionType.Playlist, p.Name, p));
-        IEnumerable<(double, SearchSuggestion)> searchResults = songs
-            .Concat(videos).Concat(artists).Concat(albums).Concat(playlists)
-            .Select(item => (GetRanking(item.Text, searchQuery), item))
-            .OrderBy(t => t.Item1)
-            .Take(MaxTotalSuggestions);
-
-        return searchResults.Select(t => t.Item2).ToArray();
     }
 
     private static double GetRanking(string text, string query)

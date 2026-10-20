@@ -162,6 +162,14 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         SearchSuggestions.ReplaceWith(_searchService.GetSuggestions(text));
     }
 
+    /// <summary>
+    /// Clears the <see cref="SearchSuggestions"/> collection.
+    /// </summary>
+    public void ClearSearchSuggestions()
+    {
+        SearchSuggestions.Clear();
+    }
+
     public void SubmitSearch(string queryText)
     {
         string searchQuery = queryText.Trim();
