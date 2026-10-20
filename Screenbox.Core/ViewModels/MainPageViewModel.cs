@@ -159,7 +159,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     /// <param name="text">A search query string used to filter suggestions.</param>
     public void UpdateSearchSuggestions(string text)
     {
-        _searchService.PopulateSuggestions(SearchSuggestions, text);
+        SearchSuggestions.ReplaceWith(_searchService.GetSuggestions(text));
     }
 
     public void SubmitSearch(string queryText)

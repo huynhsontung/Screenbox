@@ -8,9 +8,9 @@ public interface ISearchService
     SearchResult SearchLocalLibrary(string query);
 
     /// <summary>
-    /// Populates the provided collection with search suggestions for the given query.
+    /// Gets search suggestions for the specified query text.
     /// </summary>
-    /// <param name="suggestions">The collection to populate with suggestions.</param>
-    /// <param name="text">The search query text.</param>
-    void PopulateSuggestions(IList<SearchSuggestion> suggestions, string text);
+    /// <param name="query">The search query text.</param>
+    /// <returns>The search suggestions.</returns>
+    IReadOnlyList<SearchSuggestion> GetSuggestions(string query);
 }

@@ -70,49 +70,24 @@ public sealed class SearchService : ISearchService
         return new SearchResult(query, songs, videos, artists, albums, playlists);
     }
 
-    /// <summary>
-    /// Updates a collection with suggestions for the specified search text.
-    /// </summary>
-    /// <param name="suggestions">The collection to update.</param>
-    /// <param name="text">The search query text.</param>
-    public void PopulateSuggestions(IList<SearchSuggestion> suggestions, string text)
+    /// <inheritdoc/>
+    public IReadOnlyList<SearchSuggestion> GetSuggestions(string query)
     {
-        if (string.IsNullOrWhiteSpace(text))
+        if (string.IsNullOrWhiteSpace(query))
         {
-            suggestions.Clear();
-            return;
+            return Array.Empty<SearchSuggestion>();
         }
 
-        string queryText = text.Trim();
-        var result = SearchLocalLibrary(queryText);
-        var newSuggestions = BuildSuggestions(result, queryText).ToList();
+        string queryText = query.Trim();
+        SearchResult result = SearchLocalLibrary(queryText);
+        var suggestions = BuildSuggestions(result, queryText).ToList();
 
-        if (newSuggestions.Count == 0)
+        if (suggestions.Count == 0)
         {
-            newSuggestions.Add(new SearchSuggestion(SearchSuggestionType.None, queryText));
+            suggestions.Add(new SearchSuggestion(SearchSuggestionType.None, queryText));
         }
 
-        for (int i = 0; i < newSuggestions.Count; i++)
-        {
-            if (i < suggestions.Count)
-            {
-                var newItem = newSuggestions[i];
-                var oldItem = suggestions[i];
-                if (!Equals(oldItem, newItem))
-                {
-                    suggestions[i] = newItem;
-                }
-            }
-            else
-            {
-                suggestions.Add(newSuggestions[i]);
-            }
-        }
-
-        for (int i = suggestions.Count - 1; i >= newSuggestions.Count; i--)
-        {
-            suggestions.RemoveAt(i);
-        }
+        return suggestions;
     }
 
     private static IReadOnlyList<SearchSuggestion> BuildSuggestions(SearchResult result, string searchQuery)
