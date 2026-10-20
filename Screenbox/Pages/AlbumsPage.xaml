@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Screenbox.Pages.AlbumsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -33,6 +33,7 @@
             <flyouts:MediaMenuFlyout
                 x:Key="AlbumFlyout"
                 AddToQueueCommand="{x:Bind ViewModel.ContextAlbum.AddAlbumToQueueCommand, Mode=OneWay}"
+                ContextItem="{x:Bind ViewModel.ContextAlbum, Mode=OneWay}"
                 PlayCommand="{x:Bind ViewModel.ContextAlbum.PlayAlbumCommand, Mode=OneWay}"
                 PlayNextCommand="{x:Bind ViewModel.ContextAlbum.PlayAlbumNextCommand, Mode=OneWay}">
                 <MenuFlyoutSeparator />
