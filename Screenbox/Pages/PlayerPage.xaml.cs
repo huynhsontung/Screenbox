@@ -130,6 +130,16 @@ public sealed partial class PlayerPage : Page
         }
     }
 
+    private void LayoutRoot_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+       Microsoft.UI.Xaml.Media.RevealBrush.SetState(LayoutRoot, Microsoft.UI.Xaml.Media.RevealBrushState.PointerOver);
+    }
+
+    private void LayoutRoot_OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        Microsoft.UI.Xaml.Media.RevealBrush.SetState(LayoutRoot, Microsoft.UI.Xaml.Media.RevealBrushState.Normal);
+    }
+
     private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         double overshoot = 200;   // extra space for animation

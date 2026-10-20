@@ -34,6 +34,11 @@
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#2C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
 
+                    <media:RevealBorderBrush
+                        x:Key="MiniPlayerRevealBorderBrush"
+                        TargetTheme="Dark"
+                        Color="{StaticResource SystemRevealListLowColor}" />
+
                     <LinearGradientBrush x:Key="PlayerTitleBarBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.GradientStops>
                             <GradientStop Offset="0" Color="{StaticResource SystemAltMediumColor}" />
@@ -52,6 +57,11 @@
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#F9F9F9</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.15</x:Double>
+
+                    <media:RevealBorderBrush
+                        x:Key="MiniPlayerRevealBorderBrush"
+                        TargetTheme="Light"
+                        Color="{StaticResource SystemRevealListLowColor}" />
 
                     <LinearGradientBrush x:Key="PlayerTitleBarBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.GradientStops>
@@ -75,6 +85,8 @@
                     <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorButtonTextColorBrush" />
                     <Thickness x:Key="ProgressBarBorderThemeThickness">0</Thickness>
 
+                    <StaticResource x:Key="MiniPlayerRevealBorderBrush" ResourceKey="SystemColorWindowTextColorBrush" />
+
                     <StaticResource x:Key="PlayerTitleBarBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                     <StaticResource x:Key="PlayerControlsBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                 </ResourceDictionary>
@@ -87,6 +99,8 @@
     <Grid
         x:Name="LayoutRoot"
         KeyboardAcceleratorPlacementMode="Hidden"
+        PointerEntered="LayoutRoot_OnPointerEntered"
+        PointerExited="LayoutRoot_OnPointerExited"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         PreviewKeyDown="LayoutRoot_OnPreviewKeyDown"
         PreviewKeyUp="LayoutRoot_OnPreviewKeyUp"
@@ -877,7 +891,7 @@
                 <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
-                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
+                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource MiniPlayerRevealBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
                         <Setter Target="LayoutRoot.CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
                         <Setter Target="LayoutRoot.Height" Value="128" />
