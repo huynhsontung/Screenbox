@@ -10,19 +10,33 @@ using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
 
 namespace Screenbox.Core.Playback;
 
-public partial class VlcPlaybackItem : PlaybackItem
+public partial class VlcPlaybackItem : IPlaybackItem
 {
     internal Media Media { get; }
 
-    public override PlaybackAudioTrackList AudioTracks { get; }
+    public IMediaSource Source { get; }
 
-    public override PlaybackVideoTrackList VideoTracks { get; }
+    public bool IsDisabledInPlaybackList { get; set; }
 
-    public override PlaybackSubtitleTrackList SubtitleTracks { get; }
+    public TimeSpan StartTime { get; set; }
 
-    public override PlaybackChapterList Chapters { get; }
+    public TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
 
-    public override TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
+    public PlaybackAudioTrackList AudioTracks { get; }
+
+    public PlaybackVideoTrackList VideoTracks { get; }
+
+    public PlaybackSubtitleTrackList SubtitleTracks { get; }
+
+    public PlaybackChapterList Chapters { get; }
+
+    ISingleSelectMediaTrackList<AudioTrack> IPlaybackItem.AudioTracks => AudioTracks;
+
+    ISingleSelectMediaTrackList<VideoTrack> IPlaybackItem.VideoTracks => VideoTracks;
+
+    ISubtitleTrackList IPlaybackItem.SubtitleTracks => SubtitleTracks;
+
+    IPlaybackChapterList IPlaybackItem.Chapters => Chapters;
 
     private readonly Action<Media>? _disposeCallback;
     private readonly IMediaSourceFactory? _sourceFactory;
@@ -33,8 +47,8 @@ public partial class VlcPlaybackItem : PlaybackItem
         Media media,
         Action<Media>? disposeCallback = null,
         IMediaSourceFactory? sourceFactory = null)
-        : base(source)
     {
+        Source = source ?? throw new ArgumentNullException(nameof(source));
         Media = media ?? throw new ArgumentNullException(nameof(media));
         _disposeCallback = disposeCallback;
         _sourceFactory = sourceFactory;
@@ -42,14 +56,15 @@ public partial class VlcPlaybackItem : PlaybackItem
         VideoTracks = new PlaybackVideoTrackList(media);
         SubtitleTracks = new PlaybackSubtitleTrackList(media);
         Chapters = new PlaybackChapterList(this);
+        StartTime = TimeSpan.Zero;
     }
 
-    public override async Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
+    public async Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         await Media.WaitForParsed(timeout, cancellationToken);
     }
 
-    public override async Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         if (!Media.CheckParsed())
         {
@@ -73,23 +88,20 @@ public partial class VlcPlaybackItem : PlaybackItem
         return results;
     }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
         if (_isDisposed) return;
         _isDisposed = true;
 
-        if (disposing)
+        if (_disposeCallback != null)
         {
-            if (_disposeCallback != null)
-            {
-                _disposeCallback(Media);
-            }
-            else
-            {
-                Media.Dispose();
-            }
+            _disposeCallback(Media);
+        }
+        else
+        {
+            Media.Dispose();
         }
 
-        base.Dispose(disposing);
+        GC.SuppressFinalize(this);
     }
 }
