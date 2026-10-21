@@ -265,7 +265,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             foreach (var item in _bufferedPlaybackItems.Values)
             {
-                _playerService.DisposePlaybackItem(item);
+                item.Dispose();
             }
             foreach (var vm in _bufferedPlaybackItems.Keys)
             {
@@ -534,7 +534,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         if (sender is MediaViewModel vm && _bufferedPlaybackItems.Remove(vm, out var oldItem))
         {
             vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
-            _playerService.DisposePlaybackItem(oldItem);
+            oldItem.Dispose();
             if (_context.CurrentItem == vm && MediaPlayer is not null)
             {
                 var newItem = GetOrCreatePlaybackItem(vm);
@@ -548,11 +548,16 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         if (_bufferedPlaybackItems.Remove(vm, out var item))
         {
             vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
-            _playerService.DisposePlaybackItem(item);
+            item.Dispose();
         }
     }
 
     private void PlaySingle(MediaViewModel vm)
+    {
+        PlayInternal(vm, allowExpand: true);
+    }
+
+    private void PlayInternal(MediaViewModel vm, bool allowExpand)
     {
         if (MediaPlayer is null)
         {
@@ -560,15 +565,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             return;
         }
 
-        if (vm.Source is IExpandableMediaSource expandable)
+        if (allowExpand && vm.Source is IExpandableMediaSource expandable)
         {
             _ = ExpandAndPlayAsync(vm, expandable);
             return;
         }
 
         SetCurrentItem(vm);
-        var playbackItem = GetOrCreatePlaybackItem(vm);
-        MediaPlayer.PlaybackItem = playbackItem;
         MediaPlayer.Play();
     }
 
@@ -579,21 +582,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             var expandedItems = await expandable.ExpandAsync();
             if (expandedItems.Count == 0)
             {
-                _logger.LogWarning("Expanded playlist contains 0 items: {Location}", placeholder.Location);
+                _logger.LogInformation("Expandable media source yielded 0 items, playing directly: {Location}", placeholder.Location);
+                PlayInternal(placeholder, allowExpand: false);
                 return;
             }
 
-            var newVms = expandedItems.Select(item =>
-            {
-                var vm = _mediaFactory.Create(item.Source);
-                if (!string.IsNullOrEmpty(item.Title)) vm.Name = item.Title;
-                if (item.Duration.HasValue && item.Duration.Value > TimeSpan.Zero)
-                {
-                    vm.MediaInfo.MusicProperties.Duration = item.Duration.Value;
-                    vm.MediaInfo.VideoProperties.Duration = item.Duration.Value;
-                }
-                return vm;
-            }).ToList();
+            var newVms = expandedItems.Select(_mediaFactory.Create).ToList();
 
             int index = _context.Items.IndexOf(placeholder);
             if (index >= 0)
@@ -634,17 +628,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     if (_context.CurrentItem != vm) return;
 
-                    var newVms = subItems.Select(item =>
-                    {
-                        var childVm = _mediaFactory.Create(item.Source);
-                        if (!string.IsNullOrEmpty(item.Title)) childVm.Name = item.Title;
-                        if (item.Duration.HasValue && item.Duration.Value > TimeSpan.Zero)
-                        {
-                            childVm.MediaInfo.MusicProperties.Duration = item.Duration.Value;
-                            childVm.MediaInfo.VideoProperties.Duration = item.Duration.Value;
-                        }
-                        return childVm;
-                    }).ToList();
+                    var newVms = subItems.Select(_mediaFactory.Create).ToList();
 
                     int index = _context.Items.IndexOf(vm);
                     if (index >= 0)
@@ -685,6 +669,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// </summary>
     private void SetCurrentItem(MediaViewModel? value)
     {
+        if (value is not null && _context.CurrentItem == value && MediaPlayer?.PlaybackItem is not null)
+        {
+            return;
+        }
+
         if (MediaPlayer is not null)
         {
             MediaPlayer.PlaybackItem = value is not null ? GetOrCreatePlaybackItem(value) : null;
@@ -742,7 +731,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         );
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task AddToRecent(IMediaSource? source)
     {
         try
@@ -829,7 +817,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         foreach (var item in _bufferedPlaybackItems.Values)
         {
-            _playerService.DisposePlaybackItem(item);
+            item.Dispose();
         }
         foreach (var vm in _bufferedPlaybackItems.Keys)
         {
@@ -874,10 +862,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         foreach (var media in newBuffer)
         {
-            if (media.Source is not IExpandableMediaSource)
-            {
-                GetOrCreatePlaybackItem(media);
-            }
+            GetOrCreatePlaybackItem(media);
         }
 
         _mediaBuffer = newBuffer;

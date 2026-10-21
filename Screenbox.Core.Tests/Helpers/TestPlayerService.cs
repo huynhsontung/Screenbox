@@ -10,7 +10,5 @@ public class TestPlayerService : IPlayerService
 
     public IPlaybackItem CreatePlaybackItem(IMediaPlayer player, IMediaSource source, params string[] options) => throw new NotImplementedException();
 
-    public void DisposePlaybackItem(IPlaybackItem item) { }
-
     public void DisposePlayer(IMediaPlayer player) { }
 }

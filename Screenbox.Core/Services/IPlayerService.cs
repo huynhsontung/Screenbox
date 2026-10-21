@@ -9,7 +9,5 @@ public interface IPlayerService
 
     IPlaybackItem CreatePlaybackItem(IMediaPlayer player, IMediaSource source, params string[] options);
 
-    void DisposePlaybackItem(IPlaybackItem item);
-
     void DisposePlayer(IMediaPlayer player);
 }

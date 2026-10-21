@@ -70,11 +70,6 @@ public sealed partial class PlayerService : IPlayerService
         return new VlcPlaybackItem(source, media, DisposeMedia, _mediaSourceFactory);
     }
 
-    public void DisposePlaybackItem(IPlaybackItem item)
-    {
-        item.Dispose();
-    }
-
     public void DisposePlayer(IMediaPlayer player)
     {
         if (player is VlcMediaPlayer vlcMediaPlayer)

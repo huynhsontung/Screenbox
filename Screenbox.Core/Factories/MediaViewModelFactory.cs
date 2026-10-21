@@ -28,6 +28,26 @@ public sealed class MediaViewModelFactory
     }
 
     /// <summary>
+    /// Creates a new <see cref="MediaViewModel"/> populated from an <see cref="ExpandedMediaItem"/>.
+    /// </summary>
+    public MediaViewModel Create(ExpandedMediaItem item)
+    {
+        var vm = Create(item.Source);
+        if (!string.IsNullOrEmpty(item.Title))
+        {
+            vm.Name = item.Title;
+        }
+
+        if (item.Duration.HasValue && item.Duration.Value > TimeSpan.Zero)
+        {
+            vm.MediaInfo.MusicProperties.Duration = item.Duration.Value;
+            vm.MediaInfo.VideoProperties.Duration = item.Duration.Value;
+        }
+
+        return vm;
+    }
+
+    /// <summary>
     /// Always creates a new <see cref="MediaViewModel"/> without any lookup.
     /// Use this when building a library snapshot.
     /// </summary>
