@@ -302,8 +302,9 @@ The media playback system is built on [LibVLCSharp](https://code.videolan.org/vi
 #### Core Playback Components
 
 - **`IMediaPlayer`**: Media player abstraction interface
+- **`IPlaybackItem`**: Playback item interface with track, chapter, and timing abstractions
 - **`VlcMediaPlayer.cs`**: VLC-based implementation of media player
-- **`PlaybackItem.cs`**: Media item wrapper with metadata and state
+- **`VlcPlaybackItem.cs`**: VLC-backed implementation of playback item
 
 #### Track Management System
 
