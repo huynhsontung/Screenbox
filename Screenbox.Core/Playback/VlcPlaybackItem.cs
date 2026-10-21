@@ -61,23 +61,37 @@ public partial class VlcPlaybackItem : IPlaybackItem
 
     public async Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
+        if (_isDisposed)
+        {
+            return Array.Empty<ExpandedMediaItem>();
+        }
+
         if (!Media.CheckParsed())
         {
             await Media.ParseAsync(timeout, cancellationToken);
         }
 
-        if (Media.SubItems.Count == 0 || _sourceFactory == null)
+        if (_isDisposed)
         {
             return Array.Empty<ExpandedMediaItem>();
         }
 
-        var results = new List<ExpandedMediaItem>(Media.SubItems.Count);
-        foreach (var subItem in Media.SubItems)
+        using var subItems = Media.SubItems;
+        if (subItems == null || subItems.Count == 0 || _sourceFactory == null)
         {
-            var source = _sourceFactory.Create(subItem.Mrl);
-            string? title = subItem.Meta(MetadataType.Title);
-            TimeSpan? duration = subItem.Duration > 0 ? TimeSpan.FromMilliseconds(subItem.Duration) : null;
-            results.Add(new ExpandedMediaItem(source, title, duration));
+            return Array.Empty<ExpandedMediaItem>();
+        }
+
+        var results = new List<ExpandedMediaItem>(subItems.Count);
+        foreach (var subItem in subItems)
+        {
+            using (subItem)
+            {
+                var source = _sourceFactory.Create(subItem.Mrl);
+                string? title = subItem.Meta(MetadataType.Title);
+                TimeSpan? duration = subItem.Duration > 0 ? TimeSpan.FromMilliseconds(subItem.Duration) : null;
+                results.Add(new ExpandedMediaItem(source, title, duration));
+            }
         }
 
         return results;

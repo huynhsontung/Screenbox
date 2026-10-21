@@ -1,4 +1,3 @@
-using Screenbox.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -11,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
@@ -581,6 +581,34 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         MediaPlayer.Play();
     }
 
+    private bool ReplaceItemInQueue(MediaViewModel target, IReadOnlyList<MediaViewModel> replacements)
+    {
+        int index = _context.Items.IndexOf(target);
+        if (index < 0) return false;
+
+        try
+        {
+            _deferCollectionChanged = true;
+            _context.Items.RemoveAt(index);
+            for (int i = 0; i < replacements.Count; i++)
+            {
+                _context.Items.Insert(index + i, replacements[i]);
+            }
+
+            _context.CurrentIndex = _context.CurrentItem is not null
+                ? _context.Items.IndexOf(_context.CurrentItem)
+                : -1;
+            _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+        }
+        finally
+        {
+            _deferCollectionChanged = false;
+        }
+
+        RaiseCanNavigateChanged();
+        return true;
+    }
+
     private async Task ExpandAndPlayAsync(MediaViewModel placeholder, IExpandableMediaSource expandable)
     {
         try
@@ -595,36 +623,22 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             var newVms = expandedItems.Select(_mediaFactory.Create).ToList();
 
-            try
-            {
-                _deferCollectionChanged = true;
-                int index = _context.Items.IndexOf(placeholder);
-                if (index >= 0)
-                {
-                    _context.Items.RemoveAt(index);
-                    for (int i = 0; i < newVms.Count; i++)
-                    {
-                        _context.Items.Insert(index + i, newVms[i]);
-                    }
-                }
-                else
-                {
-                    _context.Items.Clear();
-                    foreach (var vm in newVms)
-                    {
-                        _context.Items.Add(vm);
-                    }
-                }
+            // Track whether the placeholder was the currently playing or targeted item before replacing.
+            bool shouldAutoPlay = _context.CurrentItem == placeholder || _context.CurrentItem is null;
 
-                _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
-            }
-            finally
+            if (ReplaceItemInQueue(placeholder, newVms))
             {
-                _deferCollectionChanged = false;
+                // Only start playback of the first child if the placeholder was the active/target item.
+                // If the user already switched to another track while expanding, preserve their current playback.
+                if (shouldAutoPlay)
+                {
+                    PlaySingle(newVms[0]);
+                }
             }
-
-            RaiseCanNavigateChanged();
-            PlaySingle(newVms[0]);
+            else
+            {
+                _logger.LogInformation("Placeholder {Location} is no longer in the queue after expansion; aborting playback.", placeholder.Location);
+            }
         }
         catch (Exception ex)
         {
@@ -644,30 +658,21 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     if (_context.CurrentItem != vm) return;
 
-                    int index = _context.Items.IndexOf(vm);
-                    if (index < 0) return;
-
                     var newVms = subItems.Select(_mediaFactory.Create).ToList();
-
-                    try
+                    if (ReplaceItemInQueue(vm, newVms))
                     {
-                        _deferCollectionChanged = true;
-                        _context.Items.RemoveAt(index);
-                        for (int i = 0; i < newVms.Count; i++)
-                        {
-                            _context.Items.Insert(index + i, newVms[i]);
-                        }
-                        _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+                        PlaySingle(newVms[0]);
                     }
-                    finally
-                    {
-                        _deferCollectionChanged = false;
-                    }
-
-                    RaiseCanNavigateChanged();
-                    PlaySingle(newVms[0]);
                 });
             }
+        }
+        catch (ObjectDisposedException)
+        {
+            // Expected if playback item was evicted from buffer or disposed while waiting
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected on timeout or cancellation
         }
         catch (Exception ex)
         {
