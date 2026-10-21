@@ -457,16 +457,11 @@ public sealed partial class SeekBarViewModel :
     {
         Chapters.Clear();
         if (chapterList == null) return;
-        if (MediaPlayer != null)
-        {
-            chapterList.Load(MediaPlayer);
-        }
 
         foreach (ChapterCue chapterCue in chapterList)
         {
             Chapters.Add(chapterCue);
         }
-        // Chapters.SyncItems(chapterList);
     }
 
     private void UpdateProgress(TimeSpan position)

@@ -30,16 +30,20 @@ public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
         try
         {
             var storageFile = await GetStorageFileAsync();
+            var isM3u8 = (!string.IsNullOrEmpty(Path) && Path.EndsWith(".m3u8", StringComparison.OrdinalIgnoreCase)) ||
+                         (storageFile != null && storageFile.FileType.Equals(".m3u8", StringComparison.OrdinalIgnoreCase));
+            var encoding = isM3u8 ? System.Text.Encoding.UTF8 : System.Text.Encoding.Default;
+
             if (storageFile != null)
             {
                 using var stream = await storageFile.OpenStreamForReadAsync();
-                using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
+                using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: true);
                 content = await reader.ReadToEndAsync(cancellationToken);
             }
             else if (!string.IsNullOrEmpty(Path) && File.Exists(Path))
             {
                 using var stream = File.OpenRead(Path);
-                using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
+                using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: true);
                 content = await reader.ReadToEndAsync(cancellationToken);
             }
             else

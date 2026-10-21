@@ -111,16 +111,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
         AltCaption = source.Name;
     }
 
-    public MediaViewModel(StorageFile file)
-        : this(new FileMediaSource(file))
-    {
-    }
-
-    public MediaViewModel(Uri uri)
-        : this(new UriMediaSource(uri))
-    {
-    }
-
     partial void OnMediaInfoChanged(MediaInfo value)
     {
         UpdateCaptions();

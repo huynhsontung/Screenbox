@@ -1,19 +1,15 @@
-using CommunityToolkit.Diagnostics;
-using LibVLCSharp.Shared;
+using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
 
 public sealed partial class AudioTrack : MediaTrack
 {
-    internal int VlcTrackId { get; }
-
     public string Name { get; }
 
-    public AudioTrack(LibVLCSharp.Shared.MediaTrack audioTrack) : base(audioTrack)
+    public AudioTrack(string id, string name, string? label = null, string language = "")
+        : base(MediaTrackKind.Audio, id, label ?? name, language)
     {
-        Guard.IsTrue(audioTrack.TrackType == TrackType.Audio, nameof(audioTrack.TrackType));
-        VlcTrackId = audioTrack.Id;
-        Name = audioTrack.Description ?? audioTrack.Language ?? audioTrack.Id.ToString();
+        Name = name;
     }
 
     public AudioTrack(Windows.Media.Core.AudioTrack audioTrack) : base(audioTrack)

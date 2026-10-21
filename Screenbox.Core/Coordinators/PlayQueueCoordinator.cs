@@ -239,7 +239,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         var playNext = message.Value.CurrentItem;
         if (message.ShouldPlay && playNext is not null)
         {
-            PlaySingle(playNext);
+            MediaPlayer?.Play();
         }
     }
 
@@ -316,7 +316,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <see cref="PlayQueueContext.RepeatMode"/> changes initiated from the UI
     /// (the coordinator suppresses its own updates via <see cref="_settingContextFromCoordinator"/>).
     /// </summary>
-        private void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (_settingContextFromCoordinator) return;
 
@@ -373,13 +373,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public bool CanNext()
     {
-        return _playbackControlService.CanNext(_playlist, _context.RepeatMode) || _neighboringFilesQuery is not null;
+        return _playbackControlService.CanNext(_playlist, _context.RepeatMode, _neighboringFilesQuery is not null);
     }
 
     /// <inheritdoc/>
     public bool CanPrevious()
     {
-        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode) || _neighboringFilesQuery is not null;
+        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode, _neighboringFilesQuery is not null);
     }
 
     /// <inheritdoc/>
@@ -396,9 +396,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 // Playlist was replaced by neighboring-file navigation.
                 ApplyQueueSnapshot(result.UpdatedPlaylist);
+                MediaPlayer?.Play();
             }
-
-            PlaySingle(result.NextItem);
+            else
+            {
+                PlaySingle(result.NextItem);
+            }
         }
     }
 
@@ -431,9 +434,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 // Playlist was replaced by neighboring-file navigation.
                 ApplyQueueSnapshot(result.UpdatedPlaylist);
+                MediaPlayer?.Play();
             }
-
-            PlaySingle(result.NextItem);
+            else
+            {
+                PlaySingle(result.NextItem);
+            }
         }
         else
         {
@@ -589,25 +595,35 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             var newVms = expandedItems.Select(_mediaFactory.Create).ToList();
 
-            int index = _context.Items.IndexOf(placeholder);
-            if (index >= 0)
+            try
             {
-                _context.Items.RemoveAt(index);
-                for (int i = 0; i < newVms.Count; i++)
+                _deferCollectionChanged = true;
+                int index = _context.Items.IndexOf(placeholder);
+                if (index >= 0)
                 {
-                    _context.Items.Insert(index + i, newVms[i]);
+                    _context.Items.RemoveAt(index);
+                    for (int i = 0; i < newVms.Count; i++)
+                    {
+                        _context.Items.Insert(index + i, newVms[i]);
+                    }
                 }
+                else
+                {
+                    _context.Items.Clear();
+                    foreach (var vm in newVms)
+                    {
+                        _context.Items.Add(vm);
+                    }
+                }
+
+                _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
             }
-            else
+            finally
             {
-                _context.Items.Clear();
-                foreach (var vm in newVms)
-                {
-                    _context.Items.Add(vm);
-                }
+                _deferCollectionChanged = false;
             }
 
-            _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+            RaiseCanNavigateChanged();
             PlaySingle(newVms[0]);
         }
         catch (Exception ex)
@@ -628,19 +644,28 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     if (_context.CurrentItem != vm) return;
 
+                    int index = _context.Items.IndexOf(vm);
+                    if (index < 0) return;
+
                     var newVms = subItems.Select(_mediaFactory.Create).ToList();
 
-                    int index = _context.Items.IndexOf(vm);
-                    if (index >= 0)
+                    try
                     {
+                        _deferCollectionChanged = true;
                         _context.Items.RemoveAt(index);
                         for (int i = 0; i < newVms.Count; i++)
                         {
                             _context.Items.Insert(index + i, newVms[i]);
                         }
                         _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
-                        PlaySingle(newVms[0]);
                     }
+                    finally
+                    {
+                        _deferCollectionChanged = false;
+                    }
+
+                    RaiseCanNavigateChanged();
+                    PlaySingle(newVms[0]);
                 });
             }
         }
@@ -669,11 +694,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// </summary>
     private void SetCurrentItem(MediaViewModel? value)
     {
-        if (value is not null && _context.CurrentItem == value && MediaPlayer?.PlaybackItem is not null)
-        {
-            return;
-        }
-
         if (MediaPlayer is not null)
         {
             MediaPlayer.PlaybackItem = value is not null ? GetOrCreatePlaybackItem(value) : null;
@@ -932,7 +952,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             var playlist = new Playlist(result.NextItem, result.Items);
             ApplyQueueSnapshot(playlist);
-            PlaySingle(result.NextItem);
+            MediaPlayer?.Play();
         }
     }
 
@@ -940,7 +960,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
         ApplyQueueSnapshot(playlist);
-        PlaySingle(nextItem);
+        MediaPlayer?.Play();
     }
 
     #endregion
@@ -988,9 +1008,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     // Playlist was replaced by neighboring-file navigation.
                     ApplyQueueSnapshot(result.UpdatedPlaylist);
+                    MediaPlayer?.Play();
                 }
-
-                PlaySingle(result.NextItem);
+                else
+                {
+                    PlaySingle(result.NextItem);
+                }
             }
             else if (_context.RepeatMode == MediaPlaybackAutoRepeatMode.Track)
             {
