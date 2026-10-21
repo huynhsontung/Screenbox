@@ -378,9 +378,12 @@ public sealed class VlcMediaPlayer : IMediaPlayer
             return;
         }
 
-        NaturalDuration = e.Length > MaxSupportedMilliseconds
+        var duration = e.Length > MaxSupportedMilliseconds
             ? TimeSpan.MaxValue
             : TimeSpan.FromMilliseconds(e.Length);
+
+        _playbackItem?.Chapters.Load(this);
+        NaturalDuration = duration;
     }
 
     private void VlcPlayer_Playing(object? sender, EventArgs e)
@@ -388,6 +391,11 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         PlaybackState = MediaPlaybackState.Playing;
         if (!_updateMediaProperties) return;
         _updateMediaProperties = false;
+
+        if (_playbackItem?.Chapters.Count == 0)
+        {
+            _playbackItem.Chapters.Load(this);
+        }
 
         // Update video dimension
         uint px = 0, py = 0;
@@ -448,22 +456,37 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void AudioTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
-        PlaybackAudioTrackList trackList = (PlaybackAudioTrackList)sender;
-        VlcPlayer.SetAudioTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
+        VlcAudioTrackList trackList = (VlcAudioTrackList)sender;
+        int trackId = -1;
+        if (sender.SelectedIndex >= 0 && int.TryParse(trackList[sender.SelectedIndex].Id, out int id))
+        {
+            trackId = id;
+        }
+        VlcPlayer.SetAudioTrack(trackId);
     }
 
     private void VideoTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
-        PlaybackVideoTrackList trackList = (PlaybackVideoTrackList)sender;
-        VlcPlayer.SetVideoTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
+        VlcVideoTrackList trackList = (VlcVideoTrackList)sender;
+        int trackId = -1;
+        if (sender.SelectedIndex >= 0 && int.TryParse(trackList[sender.SelectedIndex].Id, out int id))
+        {
+            trackId = id;
+        }
+        VlcPlayer.SetVideoTrack(trackId);
     }
 
     private void SubtitleTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
-        PlaybackSubtitleTrackList trackList = (PlaybackSubtitleTrackList)sender;
-        if (sender.SelectedIndex < 0) VlcPlayer.SetSpu(-1);
-        else if (trackList[sender.SelectedIndex].VlcSpu >= 0)   // VlcSpu < 0 on lazy load
-            VlcPlayer.SetSpu(trackList[sender.SelectedIndex].VlcSpu);
+        VlcSubtitleTrackList trackList = (VlcSubtitleTrackList)sender;
+        if (sender.SelectedIndex < 0)
+        {
+            VlcPlayer.SetSpu(-1);
+        }
+        else if (int.TryParse(trackList[sender.SelectedIndex].Id, out int spu) && spu >= 0)
+        {
+            VlcPlayer.SetSpu(spu);
+        }
     }
 
     public void AddSubtitle(IStorageFile file, bool select = true)

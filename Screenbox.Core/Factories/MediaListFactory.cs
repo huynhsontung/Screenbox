@@ -109,15 +109,4 @@ public sealed class MediaListFactory : IMediaListFactory
         var media = _mediaFactory.GetOrCreate(uri);
         return await ParseMediaListAsync(media, cancellationToken);
     }
-
-    public async Task<List<MediaViewModel>> ParseSubMediaRecursiveAsync(MediaViewModel source, CancellationToken cancellationToken = default)
-    {
-        if (source.Source is IExpandableMediaSource expandable)
-        {
-            var items = await expandable.ExpandAsync(cancellationToken);
-            return items.Select(_mediaFactory.Create).ToList();
-        }
-
-        return new List<MediaViewModel>();
-    }
 }

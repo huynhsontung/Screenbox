@@ -5,5 +5,4 @@ namespace Screenbox.Core.Playback;
 
 public interface IPlaybackChapterList : IReadOnlyList<ChapterCue>
 {
-    void Load(IMediaPlayer player);
 }

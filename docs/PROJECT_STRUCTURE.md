@@ -308,10 +308,10 @@ The media playback system is built on [LibVLCSharp](https://code.videolan.org/vi
 
 #### Track Management System
 
-- **`PlaybackAudioTrackList.cs`**: Audio track selection and switching
-- **`PlaybackVideoTrackList.cs`**: Video track and subtitle management
-- **`PlaybackSubtitleTrackList.cs`**: Subtitle track handling
-- **`PlaybackChapterList.cs`**: Chapter navigation support
+- **VlcAudioTrackList.cs**: Audio track selection and switching
+- **VlcVideoTrackList.cs**: Video track and subtitle management
+- **VlcSubtitleTrackList.cs**: Subtitle track handling
+- **VlcChapterList.cs**: Chapter navigation support
 
 The playback engine provides a clean interface for the ViewModel layer while abstracting the complexities of the underlying VLC media framework.
 

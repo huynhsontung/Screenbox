@@ -12,10 +12,6 @@ public interface IPlaybackItem : IDisposable
 {
     IMediaSource Source { get; }
 
-    bool IsDisabledInPlaybackList { get; set; }
-
-    TimeSpan StartTime { get; set; }
-
     TimeSpan? Duration { get; }
 
     ISingleSelectMediaTrackList<AudioTrack> AudioTracks { get; }

@@ -16,19 +16,15 @@ public partial class VlcPlaybackItem : IPlaybackItem
 
     public IMediaSource Source { get; }
 
-    public bool IsDisabledInPlaybackList { get; set; }
-
-    public TimeSpan StartTime { get; set; }
-
     public TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
 
-    public PlaybackAudioTrackList AudioTracks { get; }
+    public VlcAudioTrackList AudioTracks { get; }
 
-    public PlaybackVideoTrackList VideoTracks { get; }
+    public VlcVideoTrackList VideoTracks { get; }
 
-    public PlaybackSubtitleTrackList SubtitleTracks { get; }
+    public VlcSubtitleTrackList SubtitleTracks { get; }
 
-    public PlaybackChapterList Chapters { get; }
+    public VlcChapterList Chapters { get; }
 
     ISingleSelectMediaTrackList<AudioTrack> IPlaybackItem.AudioTracks => AudioTracks;
 
@@ -52,11 +48,10 @@ public partial class VlcPlaybackItem : IPlaybackItem
         Media = media ?? throw new ArgumentNullException(nameof(media));
         _disposeCallback = disposeCallback;
         _sourceFactory = sourceFactory;
-        AudioTracks = new PlaybackAudioTrackList(media);
-        VideoTracks = new PlaybackVideoTrackList(media);
-        SubtitleTracks = new PlaybackSubtitleTrackList(media);
-        Chapters = new PlaybackChapterList(this);
-        StartTime = TimeSpan.Zero;
+        AudioTracks = new VlcAudioTrackList(media);
+        VideoTracks = new VlcVideoTrackList(media);
+        SubtitleTracks = new VlcSubtitleTrackList(media);
+        Chapters = new VlcChapterList(this);
     }
 
     public async Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default)

@@ -33,9 +33,4 @@ public interface IMediaListFactory
     /// Create a playlist from a URI
     /// </summary>
     Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Parse sub-media items recursively (for playlist files)
-    /// </summary>
-    Task<List<MediaViewModel>> ParseSubMediaRecursiveAsync(MediaViewModel source, CancellationToken cancellationToken = default);
 }

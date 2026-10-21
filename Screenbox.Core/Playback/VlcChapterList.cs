@@ -8,20 +8,20 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
 
-public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>, IPlaybackChapterList
+public sealed partial class VlcChapterList : ReadOnlyCollection<ChapterCue>, IPlaybackChapterList
 {
     private readonly List<ChapterCue> _chapters;
     private readonly IPlaybackItem _item;
 
-    internal PlaybackChapterList(IPlaybackItem item) : base(new List<ChapterCue>())
+    internal VlcChapterList(IPlaybackItem item) : base(new List<ChapterCue>())
     {
         _item = item;
         _chapters = (List<ChapterCue>)Items;
     }
 
-    public void Load(IMediaPlayer player)
+    public void Load(VlcMediaPlayer vlcPlayer)
     {
-        if (player is not VlcMediaPlayer vlcPlayer || player.PlaybackItem != _item)
+        if (vlcPlayer.PlaybackItem != _item)
         {
             return;
         }
@@ -38,14 +38,14 @@ public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
                 }
             }
 
-            Load(chapterDescriptions, player.NaturalDuration);
+            Load(chapterDescriptions, vlcPlayer.NaturalDuration);
         }
         else
         {
             ChapterDescription[]? descriptions = vlcPlayer.VlcPlayer.FullChapterDescriptions();
             if (descriptions is not null)
             {
-                Load(descriptions, player.NaturalDuration);
+                Load(descriptions, vlcPlayer.NaturalDuration);
             }
         }
 

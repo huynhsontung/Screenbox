@@ -5,6 +5,7 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.Tests.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Tests.ViewModels;
@@ -191,7 +192,7 @@ public class SongsPageViewModelTests
     {
         var info = new MediaInfo(MediaPlaybackType.Music, name);
         info.MusicProperties.Genre = genre;
-        return new MediaViewModel(new Uri($"file:///c:/music/{name}.mp3"))
+        return new MediaViewModel(new UriMediaSource(new Uri($"file:///c:/music/{name}.mp3")))
         {
             Name = name,
             MediaInfo = info
