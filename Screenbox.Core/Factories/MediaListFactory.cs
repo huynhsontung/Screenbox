@@ -51,17 +51,7 @@ public sealed class MediaListFactory : IMediaListFactory
                             var expandedItems = await expandable.ExpandAsync(cancellationToken);
                             if (expandedItems.Count > 0)
                             {
-                                var childVms = expandedItems.Select(exp =>
-                                {
-                                    var child = _mediaFactory.Create(exp.Source);
-                                    if (!string.IsNullOrEmpty(exp.Title)) child.Name = exp.Title;
-                                    if (exp.Duration.HasValue && exp.Duration.Value > TimeSpan.Zero)
-                                    {
-                                        child.MediaInfo.MusicProperties.Duration = exp.Duration.Value;
-                                        child.MediaInfo.VideoProperties.Duration = exp.Duration.Value;
-                                    }
-                                    return child;
-                                }).ToList();
+                                var childVms = expandedItems.Select(_mediaFactory.Create).ToList();
 
                                 if (isPlayNext)
                                     next = childVms[0];
@@ -100,17 +90,7 @@ public sealed class MediaListFactory : IMediaListFactory
             var items = await expandable.ExpandAsync(cancellationToken);
             if (items.Count > 0)
             {
-                var vms = items.Select(exp =>
-                {
-                    var vm = _mediaFactory.Create(exp.Source);
-                    if (!string.IsNullOrEmpty(exp.Title)) vm.Name = exp.Title;
-                    if (exp.Duration.HasValue && exp.Duration.Value > TimeSpan.Zero)
-                    {
-                        vm.MediaInfo.MusicProperties.Duration = exp.Duration.Value;
-                        vm.MediaInfo.VideoProperties.Duration = exp.Duration.Value;
-                    }
-                    return vm;
-                }).ToList();
+                var vms = items.Select(_mediaFactory.Create).ToList();
                 return new NextMediaList(vms[0], vms);
             }
         }
@@ -135,17 +115,7 @@ public sealed class MediaListFactory : IMediaListFactory
         if (source.Source is IExpandableMediaSource expandable)
         {
             var items = await expandable.ExpandAsync(cancellationToken);
-            return items.Select(exp =>
-            {
-                var vm = _mediaFactory.Create(exp.Source);
-                if (!string.IsNullOrEmpty(exp.Title)) vm.Name = exp.Title;
-                if (exp.Duration.HasValue && exp.Duration.Value > TimeSpan.Zero)
-                {
-                    vm.MediaInfo.MusicProperties.Duration = exp.Duration.Value;
-                    vm.MediaInfo.VideoProperties.Duration = exp.Duration.Value;
-                }
-                return vm;
-            }).ToList();
+            return items.Select(_mediaFactory.Create).ToList();
         }
 
         return new List<MediaViewModel>();
