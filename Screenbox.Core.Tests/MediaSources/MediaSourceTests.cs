@@ -94,4 +94,54 @@ public class MediaSourceTests
         await Assert.That(FilesHelpers.IsSupportedPlaylist(".m3u8")).IsTrue();
         await Assert.That(FilesHelpers.IsSupportedPlaylist(".ts")).IsFalse();
     }
+    [Test]
+    public async Task M3uPlaylistMediaSource_ExpandAsync_ParsesExtInfAndResolvesRelativePaths()
+    {
+        string tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(tempDir);
+        string playlistPath = Path.Combine(tempDir, "test.m3u");
+        try
+        {
+            await File.WriteAllTextAsync(playlistPath, "#EXTM3U\n#EXTINF:180,Artist One - Song One\nsong1.mp3\n#EXTINF:240,Song Two\nhttps://example.com/song2.mp3");
+            var source = (M3uPlaylistMediaSource)_factory.Create(playlistPath);
+            var items = await source.ExpandAsync();
+
+            await Assert.That(items.Count).IsEqualTo(2);
+            await Assert.That(items[0].Title).IsEqualTo("Artist One - Song One");
+            await Assert.That(items[0].Duration).IsEqualTo(TimeSpan.FromSeconds(180));
+            await Assert.That(items[0].Source.Location).IsEqualTo(Path.Combine(tempDir, "song1.mp3"));
+
+            await Assert.That(items[1].Title).IsEqualTo("Song Two");
+            await Assert.That(items[1].Duration).IsEqualTo(TimeSpan.FromSeconds(240));
+            await Assert.That(items[1].Source.Location).IsEqualTo("https://example.com/song2.mp3");
+        }
+        finally
+        {
+            if (Directory.Exists(tempDir))
+            {
+                Directory.Delete(tempDir, true);
+            }
+        }
+    }
+
+    [Test]
+    public async Task M3uPlaylistMediaSource_ExpandAsync_HlsStreamManifest_ReturnsEmptyForDirectPlayback()
+    {
+        string tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.m3u8");
+        try
+        {
+            await File.WriteAllTextAsync(tempFile, "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXTINF:10,\nsegment1.ts");
+            var source = (M3uPlaylistMediaSource)_factory.Create(tempFile);
+            var items = await source.ExpandAsync();
+
+            await Assert.That(items.Count).IsEqualTo(0);
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+        }
+    }
 }
