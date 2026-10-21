@@ -32,7 +32,7 @@ public partial class VlcPlaybackItem : IPlaybackItem
 
     ISubtitleTrackList IPlaybackItem.SubtitleTracks => SubtitleTracks;
 
-    IPlaybackChapterList IPlaybackItem.Chapters => Chapters;
+    IReadOnlyList<ChapterCue> IPlaybackItem.Chapters => Chapters;
 
     private readonly Action<Media>? _disposeCallback;
     private readonly IMediaSourceFactory? _sourceFactory;
