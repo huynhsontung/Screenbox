@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
@@ -30,8 +31,7 @@ internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaVie
     public bool CanExecute(MediaViewModel? parameter)
     {
         return DeviceInfoHelper.IsDesktop
-            && (parameter?.Source is StorageFile
-            || (parameter?.Source is Uri uri && uri.IsFile)
+            && (parameter?.Source is IFileMediaSource
             || parameter?.IsFromLibrary == true);
     }
 
@@ -71,23 +71,21 @@ internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaVie
 
         var filesService = Ioc.Default.GetRequiredService<IFilesService>();
 
-        if (parameter.Source is StorageFile file)
+        if (parameter.Source is IFileMediaSource fileSource)
         {
-            await filesService.OpenFileLocationAsync(file);
-        }
-        else if (!string.IsNullOrEmpty(parameter.Location))
-        {
-            // Load details to try to resolve the file from a URI or path.
-            await parameter.LoadDetailsAsync(filesService);
-            if (parameter.Source is StorageFile resolvedFile)
+            var file = await fileSource.GetStorageFileAsync();
+            if (file != null)
             {
-                await filesService.OpenFileLocationAsync(resolvedFile);
+                await filesService.OpenFileLocationAsync(file);
             }
             else
             {
-                await filesService.OpenFileLocationAsync(parameter.Location);
+                await filesService.OpenFileLocationAsync(fileSource.Path);
             }
+        }
+        else if (!string.IsNullOrEmpty(parameter.Location))
+        {
+            await filesService.OpenFileLocationAsync(parameter.Location);
         }
     }
 }
-

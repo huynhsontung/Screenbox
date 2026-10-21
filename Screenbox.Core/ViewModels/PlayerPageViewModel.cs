@@ -295,9 +295,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 if (items.Count > 0)
                 {
                     if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
-                        MediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
+                        MediaPlayer?.PlaybackItem?.SubtitleTracks is { } subtitleTracks)
                     {
-                        Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
+                        subtitleTracks.AddExternalSubtitle(file, true);
                         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.SubtitleAdded, message: file.Name));
                     }
                     else

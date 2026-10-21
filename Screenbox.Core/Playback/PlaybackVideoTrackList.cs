@@ -37,7 +37,7 @@ public sealed partial class PlaybackVideoTrackList : SingleSelectTrackList<Video
         SelectedIndexChanged += OnSelectedIndexChanged;
     }
 
-    public void Refresh()
+    public override void Refresh()
     {
         if (_source == null) return;
         TrackList.Clear();

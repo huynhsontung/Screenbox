@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.Services;
@@ -6,9 +7,9 @@ public interface IPlayerService
 {
     IMediaPlayer Initialize(string[] swapChainOptions);
 
-    PlaybackItem CreatePlaybackItem(IMediaPlayer player, object source, params string[] options);
+    IPlaybackItem CreatePlaybackItem(IMediaPlayer player, IMediaSource source, params string[] options);
 
-    void DisposePlaybackItem(PlaybackItem item);
+    void DisposePlaybackItem(IPlaybackItem item);
 
     void DisposePlayer(IMediaPlayer player);
 }

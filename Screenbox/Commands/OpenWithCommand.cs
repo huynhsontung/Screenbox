@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
@@ -33,7 +34,7 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public bool CanExecute(MediaViewModel? parameter)
     {
-        return parameter?.Source is StorageFile
+        return parameter?.Source is IFileMediaSource
             || (parameter?.IsFromLibrary == true
             && _asyncCommand.CanExecute(parameter));
     }
@@ -72,15 +73,14 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
         if (parameter == null)
             return;
 
-        if (parameter.Source is not StorageFile file)
+        StorageFile? file = null;
+        if (parameter.Source is IFileMediaSource fileSource)
         {
-            var filesService = Ioc.Default.GetRequiredService<IFilesService>();
-            await parameter.LoadDetailsAsync(filesService);
-            if (parameter.Source is not StorageFile loadedFile)
-                return;
-
-            file = loadedFile;
+            file = await fileSource.GetStorageFileAsync();
         }
+
+        if (file == null)
+            return;
 
         try
         {

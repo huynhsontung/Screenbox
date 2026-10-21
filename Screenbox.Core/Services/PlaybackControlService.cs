@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System.Threading.Tasks;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
@@ -42,7 +43,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
     public async Task<PlaybackNavigationResult?> GetNeighboringNextAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
-        if (playlist.Items.Count == 1 && playlist.CurrentItem?.Source is StorageFile file)
+        if (playlist.Items.Count == 1 && playlist.CurrentItem?.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
         {
             var nextFile = await _filesService.GetNextFileAsync(file, neighboringFilesQuery);
             if (nextFile != null)
@@ -82,7 +83,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
     public async Task<PlaybackNavigationResult?> GetNeighboringPreviousAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
-        if (playlist.Items.Count == 1 && playlist.CurrentItem?.Source is StorageFile file)
+        if (playlist.Items.Count == 1 && playlist.CurrentItem?.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
         {
             var previousFile = await _filesService.GetPreviousFileAsync(file, neighboringFilesQuery);
             if (previousFile != null)
@@ -140,3 +141,4 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return null;
     }
 }
+

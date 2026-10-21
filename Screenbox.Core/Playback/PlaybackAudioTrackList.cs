@@ -37,7 +37,7 @@ public sealed partial class PlaybackAudioTrackList : SingleSelectTrackList<Audio
         SelectedIndexChanged += OnSelectedIndexChanged;
     }
 
-    public void Refresh()
+    public override void Refresh()
     {
         if (_source == null) return;
         TrackList.Clear();

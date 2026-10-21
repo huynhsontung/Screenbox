@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -143,7 +144,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var fetchTasks = tokens.Select(async token =>
         {
             if (_recentContext.TokenToMediaMappings.TryGetValue(token, out var cachedMedia) &&
-                cachedMedia.Source is StorageFile cachedFile)
+                cachedMedia.Source is IFileMediaSource { StorageFile: { } cachedFile })
             {
                 return (Token: token, File: (StorageFile?)cachedFile, Media: (MediaViewModel?)cachedMedia);
             }
@@ -373,4 +374,5 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }
+
 

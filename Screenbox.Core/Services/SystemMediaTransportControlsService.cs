@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System;
 using System.Threading.Tasks;
 using Screenbox.Core.Helpers;
@@ -42,7 +43,7 @@ public sealed class SystemMediaTransportControlsService : ISystemMediaTransportC
 
         try
         {
-            if (item.Source is StorageFile file)
+            if (item.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
             {
                 if (file.IsSupportedAudio())
                 {
@@ -124,3 +125,4 @@ public sealed class SystemMediaTransportControlsService : ISystemMediaTransportC
         TransportControls.DisplayUpdater.ClearAll();
     }
 }
+

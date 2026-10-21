@@ -453,7 +453,7 @@ public sealed partial class SeekBarViewModel :
         }
     }
 
-    private void UpdateChapters(PlaybackChapterList? chapterList)
+    private void UpdateChapters(IPlaybackChapterList? chapterList)
     {
         Chapters.Clear();
         if (chapterList == null) return;
