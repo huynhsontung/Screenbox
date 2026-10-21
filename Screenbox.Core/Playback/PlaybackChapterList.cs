@@ -11,9 +11,9 @@ namespace Screenbox.Core.Playback;
 public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>, IPlaybackChapterList
 {
     private readonly List<ChapterCue> _chapters;
-    private readonly PlaybackItem _item;
+    private readonly IPlaybackItem _item;
 
-    internal PlaybackChapterList(PlaybackItem item) : base(new List<ChapterCue>())
+    internal PlaybackChapterList(IPlaybackItem item) : base(new List<ChapterCue>())
     {
         _item = item;
         _chapters = (List<ChapterCue>)Items;

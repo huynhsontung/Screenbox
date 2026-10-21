@@ -236,8 +236,8 @@ public sealed class VlcMediaPlayer : IMediaPlayer
             }
             else
             {
-                if (value is not PlaybackItem vlcItem)
-                    throw new NotSupportedException("Only PlaybackItem is supported by VlcMediaPlayer.");
+                if (value is not VlcPlaybackItem vlcItem)
+                    throw new NotSupportedException("Only VlcPlaybackItem is supported by VlcMediaPlayer.");
 
                 if (_playbackItem != null) RemoveItemHandlers(_playbackItem);
                 _playbackItem = vlcItem;
@@ -276,7 +276,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     private TimeSpan _naturalDuration;
     private TimeSpan _position;
     private MediaPlaybackState _playbackState;
-    private PlaybackItem? _playbackItem;
+    private VlcPlaybackItem? _playbackItem;
 
     public VlcMediaPlayer(LibVLC libVlc)
     {
@@ -431,14 +431,14 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         }
     }
 
-    private void RemoveItemHandlers(PlaybackItem item)
+    private void RemoveItemHandlers(VlcPlaybackItem item)
     {
         item.SubtitleTracks.SelectedIndexChanged -= SubtitleTracksOnSelectedIndexChanged;
         item.AudioTracks.SelectedIndexChanged -= AudioTracksOnSelectedIndexChanged;
         item.VideoTracks.SelectedIndexChanged -= VideoTracksOnSelectedIndexChanged;
     }
 
-    private void RegisterItemHandlers(PlaybackItem item)
+    private void RegisterItemHandlers(VlcPlaybackItem item)
     {
         RemoveItemHandlers(item);
         item.SubtitleTracks.SelectedIndexChanged += SubtitleTracksOnSelectedIndexChanged;
