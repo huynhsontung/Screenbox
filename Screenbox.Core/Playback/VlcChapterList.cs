@@ -8,7 +8,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
 
-public sealed partial class VlcChapterList : ReadOnlyCollection<ChapterCue>, IPlaybackChapterList
+public sealed partial class VlcChapterList : ReadOnlyCollection<ChapterCue>
 {
     private readonly List<ChapterCue> _chapters;
     private readonly IPlaybackItem _item;

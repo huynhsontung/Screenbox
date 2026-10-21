@@ -20,7 +20,7 @@ public interface IPlaybackItem : IDisposable
 
     ISubtitleTrackList SubtitleTracks { get; }
 
-    IPlaybackChapterList Chapters { get; }
+    IReadOnlyList<ChapterCue> Chapters { get; }
 
     Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
 
