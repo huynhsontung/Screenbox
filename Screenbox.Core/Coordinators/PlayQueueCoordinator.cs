@@ -1,3 +1,4 @@
+using Screenbox.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -61,6 +63,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly PlayerContext _playerContext;
+    private readonly IPlayerService _playerService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly ILogger<PlayQueueCoordinator> _logger;
 
@@ -69,6 +72,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private Playlist _playlist;
 
     private List<MediaViewModel> _mediaBuffer = new();
+    private readonly Dictionary<MediaViewModel, IPlaybackItem> _bufferedPlaybackItems = new();
     private object? _delayPlay;
 
     // When true, collection-changed events are deferred to avoid excessive
@@ -93,6 +97,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
         PlayerContext playerContext,
+        IPlayerService playerService,
         ILogger<PlayQueueCoordinator> logger)
     {
         _context = context;
@@ -105,6 +110,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
         _playerContext = playerContext;
+        _playerService = playerService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
@@ -256,6 +262,16 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             oldPlayer.MediaFailed -= OnMediaFailed;
             oldPlayer.MediaEnded -= OnEndReached;
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+
+            foreach (var item in _bufferedPlaybackItems.Values)
+            {
+                _playerService.DisposePlaybackItem(item);
+            }
+            foreach (var vm in _bufferedPlaybackItems.Keys)
+            {
+                vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
+            }
+            _bufferedPlaybackItems.Clear();
         }
 
         if (MediaPlayer is not null)
@@ -298,12 +314,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Reacts to observable property changes on <see cref="PlayQueueContext"/>.
     /// Only handles <see cref="PlayQueueContext.ShuffleMode"/> and
     /// <see cref="PlayQueueContext.RepeatMode"/> changes initiated from the UI
-    /// (TwoWay bindings); coordinator-initiated writes are suppressed via
-    /// <see cref="_settingContextFromCoordinator"/>.
+    /// (the coordinator suppresses its own updates via <see cref="_settingContextFromCoordinator"/>).
     /// </summary>
-    private void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        // Skip reactions to writes made by the coordinator itself.
         if (_settingContextFromCoordinator) return;
 
         switch (e.PropertyName)
@@ -332,7 +346,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             }
             else
             {
-                // No backup available — reshuffle and immediately discard the shuffle state.
                 playlist = _playlistService.ShufflePlaylist(_playlist, _context.CurrentIndex);
                 playlist.ShuffleMode = false;
                 playlist.ShuffleBackup = null;
@@ -352,7 +365,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #endregion
 
-    #region Public Methods (Navigation)
+    #region IPlayQueueCoordinator Implementation
 
     /// <inheritdoc/>
     public event EventHandler? CanNavigateChanged;
@@ -360,13 +373,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public bool CanNext()
     {
-        return _playbackControlService.CanNext(_playlist, _context.RepeatMode, hasNeighbor: _neighboringFilesQuery is not null);
+        return _playbackControlService.CanNext(_playlist, _context.RepeatMode) || _neighboringFilesQuery is not null;
     }
 
     /// <inheritdoc/>
     public bool CanPrevious()
     {
-        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode, hasNeighbor: _neighboringFilesQuery is not null);
+        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode) || _neighboringFilesQuery is not null;
     }
 
     /// <inheritdoc/>
@@ -470,6 +483,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             SetCurrentItem(null);
         }
 
+        CleanPlaybackItem(item);
         _context.Items.Remove(item);
     }
 
@@ -492,6 +506,52 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #region Private Methods
 
+    private IPlaybackItem? GetOrCreatePlaybackItem(MediaViewModel vm)
+    {
+        if (MediaPlayer is null) return null;
+
+        if (!_bufferedPlaybackItems.TryGetValue(vm, out var item))
+        {
+            try
+            {
+                item = _playerService.CreatePlaybackItem(MediaPlayer, vm.Source, vm.Options.ToArray());
+                _bufferedPlaybackItems[vm] = item;
+                vm.OptionsChanged += OnMediaViewModelOptionsChanged;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to create playback item for {Location}", vm.Location);
+                Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{vm.Location}{Environment.NewLine}{e.Message}"));
+                return null;
+            }
+        }
+
+        return item;
+    }
+
+    private void OnMediaViewModelOptionsChanged(object? sender, EventArgs e)
+    {
+        if (sender is MediaViewModel vm && _bufferedPlaybackItems.Remove(vm, out var oldItem))
+        {
+            vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
+            _playerService.DisposePlaybackItem(oldItem);
+            if (_context.CurrentItem == vm && MediaPlayer is not null)
+            {
+                var newItem = GetOrCreatePlaybackItem(vm);
+                MediaPlayer.PlaybackItem = newItem;
+            }
+        }
+    }
+
+    private void CleanPlaybackItem(MediaViewModel vm)
+    {
+        if (_bufferedPlaybackItems.Remove(vm, out var item))
+        {
+            vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
+            _playerService.DisposePlaybackItem(item);
+        }
+    }
+
     private void PlaySingle(MediaViewModel vm)
     {
         if (MediaPlayer is null)
@@ -500,9 +560,110 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             return;
         }
 
+        if (vm.Source is IExpandableMediaSource expandable)
+        {
+            _ = ExpandAndPlayAsync(vm, expandable);
+            return;
+        }
+
         SetCurrentItem(vm);
-        MediaPlayer.PlaybackItem = vm.Item.Value;
+        var playbackItem = GetOrCreatePlaybackItem(vm);
+        MediaPlayer.PlaybackItem = playbackItem;
         MediaPlayer.Play();
+    }
+
+    private async Task ExpandAndPlayAsync(MediaViewModel placeholder, IExpandableMediaSource expandable)
+    {
+        try
+        {
+            var expandedItems = await expandable.ExpandAsync();
+            if (expandedItems.Count == 0)
+            {
+                _logger.LogWarning("Expanded playlist contains 0 items: {Location}", placeholder.Location);
+                return;
+            }
+
+            var newVms = expandedItems.Select(item =>
+            {
+                var vm = _mediaFactory.Create(item.Source);
+                if (!string.IsNullOrEmpty(item.Title)) vm.Name = item.Title;
+                if (item.Duration.HasValue && item.Duration.Value > TimeSpan.Zero)
+                {
+                    vm.MediaInfo.MusicProperties.Duration = item.Duration.Value;
+                    vm.MediaInfo.VideoProperties.Duration = item.Duration.Value;
+                }
+                return vm;
+            }).ToList();
+
+            int index = _context.Items.IndexOf(placeholder);
+            if (index >= 0)
+            {
+                _context.Items.RemoveAt(index);
+                for (int i = 0; i < newVms.Count; i++)
+                {
+                    _context.Items.Insert(index + i, newVms[i]);
+                }
+            }
+            else
+            {
+                _context.Items.Clear();
+                foreach (var vm in newVms)
+                {
+                    _context.Items.Add(vm);
+                }
+            }
+
+            _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+            PlaySingle(newVms[0]);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to expand playlist: {Location}", placeholder.Location);
+            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{placeholder.Location}{Environment.NewLine}{ex.Message}"));
+        }
+    }
+
+    private async Task CheckSubItemsAsync(MediaViewModel vm, IPlaybackItem playbackItem)
+    {
+        try
+        {
+            var subItems = await playbackItem.ExpandSubItemsAsync(TimeSpan.FromSeconds(5));
+            if (subItems.Count > 0 && _context.CurrentItem == vm)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    if (_context.CurrentItem != vm) return;
+
+                    var newVms = subItems.Select(item =>
+                    {
+                        var childVm = _mediaFactory.Create(item.Source);
+                        if (!string.IsNullOrEmpty(item.Title)) childVm.Name = item.Title;
+                        if (item.Duration.HasValue && item.Duration.Value > TimeSpan.Zero)
+                        {
+                            childVm.MediaInfo.MusicProperties.Duration = item.Duration.Value;
+                            childVm.MediaInfo.VideoProperties.Duration = item.Duration.Value;
+                        }
+                        return childVm;
+                    }).ToList();
+
+                    int index = _context.Items.IndexOf(vm);
+                    if (index >= 0)
+                    {
+                        _context.Items.RemoveAt(index);
+                        for (int i = 0; i < newVms.Count; i++)
+                        {
+                            _context.Items.Insert(index + i, newVms[i]);
+                        }
+                        _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+                        PlaySingle(newVms[0]);
+                    }
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Sub-item parsing completed without additional items for {Location}", vm.Location);
+        }
     }
 
     /// <summary>
@@ -526,7 +687,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (MediaPlayer is not null)
         {
-            MediaPlayer.PlaybackItem = value?.Item.Value;
+            MediaPlayer.PlaybackItem = value is not null ? GetOrCreatePlaybackItem(value) : null;
         }
 
         if (_context.CurrentItem is not null)
@@ -544,6 +705,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             value.IsMediaActive = true;
             _context.CurrentIndex = _context.Items.IndexOf(value);
             _playlist.CurrentIndex = _context.CurrentIndex;
+
+            if (value.Source is IUriMediaSource && MediaPlayer?.PlaybackItem is { } currentPlaybackItem)
+            {
+                _ = CheckSubItemsAsync(value, currentPlaybackItem);
+            }
         }
         else
         {
@@ -577,19 +743,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task AddToRecent(object? source)
+    private async Task AddToRecent(IMediaSource? source)
     {
         try
         {
-            switch (source)
+            if (source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
             {
-                case StorageFile file:
-                    _filesService.AddToRecent(file);
-                    break;
-                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                    var fileFromPath = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    _filesService.AddToRecent(fileFromPath);
-                    break;
+                _filesService.AddToRecent(file);
             }
         }
         catch
@@ -667,10 +827,16 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void ClearQueue()
     {
-        foreach (var item in _context.Items)
+        foreach (var item in _bufferedPlaybackItems.Values)
         {
-            item.Clean();
+            _playerService.DisposePlaybackItem(item);
         }
+        foreach (var vm in _bufferedPlaybackItems.Keys)
+        {
+            vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
+        }
+        _bufferedPlaybackItems.Clear();
+        _mediaBuffer.Clear();
 
         try
         {
@@ -698,12 +864,20 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         var bufferIndices = _playlistService.GetMediaBufferIndices(_playlist.CurrentIndex, _playlist.Items.Count, _context.RepeatMode);
         var newBuffer = bufferIndices.Select(i => _playlist.Items[i]).ToList();
 
-        var toLoad = newBuffer.Except(_mediaBuffer);
-        var toClean = _mediaBuffer.Except(newBuffer);
+        var toLoad = newBuffer.Except(_mediaBuffer).ToList();
+        var toClean = _mediaBuffer.Except(newBuffer).ToList();
 
         foreach (var media in toClean)
         {
-            media.Clean();
+            CleanPlaybackItem(media);
+        }
+
+        foreach (var media in newBuffer)
+        {
+            if (media.Source is not IExpandableMediaSource)
+            {
+                GetOrCreatePlaybackItem(media);
+            }
         }
 
         _mediaBuffer = newBuffer;
@@ -724,7 +898,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
                 var fileMedia = _mediaFactory.GetOrCreate(file);
-                CreateQueueAndPlay(fileMedia);
+                if (fileMedia.Source is not IExpandableMediaSource)
+                {
+                    CreateQueueAndPlay(fileMedia);
+                }
                 // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
                 // same object reference. Calling ParseMediaListAsync(file) would create a second VM
                 // via GetOrCreate, making result.NextItem a different instance from fileMedia.
@@ -738,18 +915,27 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             case StorageFile file:
                 var fileMedia0 = _mediaFactory.GetOrCreate(file);
-                CreateQueueAndPlay(fileMedia0);
+                if (fileMedia0.Source is not IExpandableMediaSource)
+                {
+                    CreateQueueAndPlay(fileMedia0);
+                }
                 result = await _mediaListFactory.ParseMediaListAsync(fileMedia0);
                 break;
 
             case Uri uri:
                 var uriMedia = _mediaFactory.Create(uri);
-                CreateQueueAndPlay(uriMedia);
+                if (uriMedia.Source is not IExpandableMediaSource)
+                {
+                    CreateQueueAndPlay(uriMedia);
+                }
                 result = await _mediaListFactory.ParseMediaListAsync(uriMedia);
                 break;
 
             case MediaViewModel media:
-                CreateQueueAndPlay(media);
+                if (media.Source is not IExpandableMediaSource)
+                {
+                    CreateQueueAndPlay(media);
+                }
                 result = await _mediaListFactory.ParseMediaListAsync(media);
                 break;
 
@@ -931,3 +1117,4 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #endregion
 }
+

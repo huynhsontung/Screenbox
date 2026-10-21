@@ -7,10 +7,12 @@ using Windows.Storage;
 
 namespace Screenbox.Core.Playback;
 
-public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
+public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>, ISubtitleTrackList
 {
     private readonly Media _media;
     private readonly List<LazySubtitleTrack> _pendingSubtitleTracks;
+
+    internal VlcMediaPlayer? Player { get; set; }
 
     private class LazySubtitleTrack
     {
@@ -18,9 +20,9 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
 
         public StorageFile File { get; }
 
-        public VlcMediaPlayer Player { get; }
+        public VlcMediaPlayer? Player { get; }
 
-        public LazySubtitleTrack(VlcMediaPlayer player, StorageFile file)
+        public LazySubtitleTrack(VlcMediaPlayer? player, StorageFile file)
         {
             Player = player;
             File = file;
@@ -79,15 +81,38 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
     private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
         if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
-            _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack &&
-            (selectedTrack.VlcSpu == -1 || lazyTrack.Player.VlcPlayer.SpuCount < selectedTrack.VlcSpu))
+            _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack)
         {
-            selectedTrack.VlcSpu = -1;
-            lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
+            var player = lazyTrack.Player ?? Player;
+            if (player != null && (selectedTrack.VlcSpu == -1 || player.VlcPlayer.SpuCount < selectedTrack.VlcSpu))
+            {
+                selectedTrack.VlcSpu = -1;
+                player.AddSubtitle(lazyTrack.File, true);
+            }
+        }
+    }
+
+    public void AddExternalSubtitle(IStorageFile file, bool select = true)
+    {
+        if (file is StorageFile storageFile)
+        {
+            if (Player != null)
+            {
+                AddExternalSubtitle(Player, storageFile, select);
+            }
+            else
+            {
+                AddExternalSubtitleInternal(null, storageFile, select);
+            }
         }
     }
 
     public void AddExternalSubtitle(VlcMediaPlayer player, StorageFile file, bool select)
+    {
+        AddExternalSubtitleInternal(player, file, select);
+    }
+
+    private void AddExternalSubtitleInternal(VlcMediaPlayer? player, StorageFile file, bool select)
     {
         string filePath = file.Path;
 

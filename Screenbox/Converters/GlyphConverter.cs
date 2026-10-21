@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
@@ -284,16 +285,19 @@ public static partial class GlyphConverter
     /// </summary>
     /// <param name="mediaViewModel">The media view model to convert.</param>
     /// <returns>A glyph code representing the media type.</returns>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public static string ToMediaGlyph(MediaViewModel? mediaViewModel)
+        public static string ToMediaGlyph(MediaViewModel? mediaViewModel)
     {
         const string GlobeGlyph = "\uE774";
+        const string DocumentGlyph = "\uE8A5";
 
         return mediaViewModel switch
         {
-            { Source: StorageFile file } => ToStorageItemGlyph(file),
+            { Source: IFileMediaSource fileSource } when FilesHelpers.IsSupportedVideo(fileSource.FileType) => MoviesGlyph,
+            { Source: IFileMediaSource fileSource } when FilesHelpers.IsSupportedAudio(fileSource.FileType) => AudioGlyph,
+            { Source: IFileMediaSource } => DocumentGlyph,
             { IsFromLibrary: true } => ToMediaTypeGlyph(mediaViewModel.MediaType),
             _ => GlobeGlyph,
         };
     }
 }
+

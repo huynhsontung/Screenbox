@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using LibVLCSharp.Shared;
-using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
-using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -23,17 +20,15 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class MediaViewModel : ObservableRecipient
 {
-    public string Location { get; }
+    public string Location => Source.Location;
 
-    public object Source { get; private set; }
+    public IMediaSource Source { get; }
 
     public bool IsFromLibrary { get; set; }
 
     public bool DetailsLoaded { get; private set; }
 
     public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
-
-    public Lazy<PlaybackItem?> Item { get; internal set; }
 
     public IReadOnlyList<string> Options { get; }
 
@@ -63,11 +58,9 @@ public sealed partial class MediaViewModel : ObservableRecipient
         }
     }
 
-    private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
-
-    private readonly IPlayerService _playerService;
-    private readonly PlayerContext _playerContext;
     private readonly List<string> _options;
+
+    public event EventHandler? OptionsChanged;
 
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsMediaActive { get; set; }
@@ -91,8 +84,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     public MediaViewModel(MediaViewModel source)
     {
-        _playerService = source._playerService;
-        _playerContext = source._playerContext;
         Name = source.Name;
         _thumbnailRef = source._thumbnailRef;
         MediaInfo = source.MediaInfo;
@@ -102,90 +93,37 @@ public sealed partial class MediaViewModel : ObservableRecipient
         AltCaption = source.AltCaption;
         _options = new List<string>(source.Options);
         Options = new ReadOnlyCollection<string>(_options);
-        Location = source.Location;
         Source = source.Source;
-        Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         DateAdded = source.DateAdded;
         IsFromLibrary = source.IsFromLibrary;
         DetailsLoaded = source.DetailsLoaded;
     }
 
-    private MediaViewModel(object source, MediaInfo mediaInfo, PlayerContext playerContext, IPlayerService playerService)
+    public MediaViewModel(IMediaSource source, MediaInfo? mediaInfo = null)
     {
-        _playerService = playerService;
-        _playerContext = playerContext;
         Source = source;
-        Location = string.Empty;
         DateAdded = DateTimeOffset.Now;
-        Name = string.Empty;
-        MediaInfo = mediaInfo;
+        Name = source.Name;
+        MediaInfo = mediaInfo ?? new MediaInfo(source.MediaType);
         Artists = Array.Empty<ArtistViewModel>();
         _options = new List<string>();
         Options = new ReadOnlyCollection<string>(_options);
-        Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
+        AltCaption = source.Name;
     }
 
-    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, StorageFile file)
-        : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), playerContext, playerService)
+    public MediaViewModel(StorageFile file)
+        : this(new FileMediaSource(file))
     {
-        Location = file.Path;
-        Name = file.Name;
-        AltCaption = file.Name;
     }
 
-    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Uri uri)
-        : this(uri, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
+    public MediaViewModel(Uri uri)
+        : this(new UriMediaSource(uri))
     {
-        Guard.IsTrue(uri.IsAbsoluteUri);
-        Location = uri.OriginalString;
-        Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
-    }
-
-    public MediaViewModel(PlayerContext playerContext, IPlayerService playerService, Media media)
-        : this(media, new MediaInfo(MediaPlaybackType.Unknown), playerContext, playerService)
-    {
-        Location = media.Mrl;
-
-        // Media is already loaded, create PlaybackItem
-        Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media));
     }
 
     partial void OnMediaInfoChanged(MediaInfo value)
     {
         UpdateCaptions();
-    }
-
-    private PlaybackItem? CreatePlaybackItem()
-    {
-        if (MediaPlayer == null)
-        {
-            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"Media player is not initialized{Environment.NewLine}{Location}"));
-            return null;
-        }
-
-        PlaybackItem? item = null;
-        try
-        {
-            if (Source is Media mediaSource)
-            {
-                item = new PlaybackItem(mediaSource, mediaSource);
-            }
-            else
-            {
-                item = _playerService.CreatePlaybackItem(MediaPlayer, Source, _options.ToArray());
-            }
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            // Coding error. Rethrow.
-            throw;
-        }
-        catch (Exception e)
-        {
-            Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{Location}{Environment.NewLine}{e.Message}"));
-        }
-
-        return item;
     }
 
     public override string ToString()
@@ -207,24 +145,15 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
         _options.Clear();
         _options.AddRange(opts);
-
-        if (!Item.IsValueCreated) return;
-        Clean();
-    }
-
-    public void Clean()
-    {
-        // If source is Media then there is no way to recreate. Don't clean up.
-        if (Source is Media || !Item.IsValueCreated) return;
-        PlaybackItem? item = Item.Value;
-        Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
-        if (item == null) return;
-        _playerService.DisposePlaybackItem(item);
+        OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void UpdateSource(StorageFile file)
     {
-        Source = file;
+        if (Source is IFileMediaSource fileSource)
+        {
+            fileSource.UpdateStorageFile(file);
+        }
         AltCaption = file.Name;
     }
 
@@ -232,24 +161,15 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public async Task LoadDetailsAsync(IFilesService filesService)
     {
         DetailsLoaded = true;
-        switch (Source)
+        if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
         {
-            case StorageFile file:
-                MediaInfo = await filesService.GetMediaInfoAsync(file);
-                break;
-            case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
-                UpdateSource(uriFile);
-                MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
-                break;
+            MediaInfo = await filesService.GetMediaInfoAsync(file);
         }
 
         switch (MediaType)
         {
-            case MediaPlaybackType.Unknown when Item is { IsValueCreated: true, Value: { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done } }:
-                // Update media type when it was previously set Unknown. Usually when source is a URI.
-                // We don't want to init PlaybackItem just for this.
-                MediaInfo.MediaType = MediaPlaybackType.Music;
-                break;
+            // TODO: Rework engine-discovered metadata fetching
+            // case MediaPlaybackType.Unknown ...
             case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
                 Name = MediaInfo.MusicProperties.Title;
                 break;
@@ -258,21 +178,22 @@ public sealed partial class MediaViewModel : ObservableRecipient
                 break;
         }
 
-        if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
-        {
-            if (Source is not IStorageItem &&
-                media.Meta(MetadataType.Title) is { } title &&
-                !string.IsNullOrEmpty(title) &&
-                !Guid.TryParse(title, out Guid _))
-            {
-                Name = title;
-            }
-
-            VideoInfo videoProperties = MediaInfo.VideoProperties;
-            videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
-            videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
-            videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
-        }
+        // TODO: Rework engine-discovered metadata fetching
+        // if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
+        // {
+        //     if (Source is not IStorageItem &&
+        //         media.Meta(MetadataType.Title) is { } title &&
+        //         !string.IsNullOrEmpty(title) &&
+        //         !Guid.TryParse(title, out Guid _))
+        //     {
+        //         Name = title;
+        //     }
+        //
+        //     VideoInfo videoProperties = MediaInfo.VideoProperties;
+        //     videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
+        //     videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
+        //     videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
+        // }
 
         if (Name == AltCaption)
             AltCaption = string.Empty;
@@ -282,12 +203,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public async Task LoadThumbnailAsync()
     {
         if (Thumbnail != null) return;
-        if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } storageFile)
-        {
-            UpdateSource(storageFile);
-        }
 
-        if (Source is StorageFile file)
+        if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
         {
             using var source = await GetThumbnailSourceAsync(file);
             if (source == null) return;
@@ -309,24 +226,35 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
             Thumbnail = image;
         }
-        else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
-                 media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-                 Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri))
-        {
-            Thumbnail = new BitmapImage(artworkUri)
-            {
-                DecodePixelType = DecodePixelType.Logical,
-                DecodePixelHeight = 300
-            };
-        }
+        // TODO: Rework engine-discovered metadata fetching
+        // else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
+        //          media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
+        //          Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri))
+        // {
+        //     Thumbnail = new BitmapImage(artworkUri)
+        //     {
+        //         DecodePixelType = DecodePixelType.Logical,
+        //         DecodePixelHeight = 300
+        //     };
+        // }
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public Task<IRandomAccessStream?> GetThumbnailSourceAsync()
     {
-        return Source is not StorageFile file
-            ? Task.FromResult<IRandomAccessStream?>(null)
-            : GetThumbnailSourceAsync(file);
+        return Source is IFileMediaSource fileSource && fileSource.StorageFile is { } file
+            ? GetThumbnailSourceAsync(file)
+            : GetThumbnailSourceLazyAsync();
+    }
+
+    private async Task<IRandomAccessStream?> GetThumbnailSourceLazyAsync()
+    {
+        if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+        {
+            return await GetThumbnailSourceAsync(file);
+        }
+
+        return null;
     }
 
     private static async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
@@ -377,28 +305,19 @@ public sealed partial class MediaViewModel : ObservableRecipient
             AltCaption = musicProperties.Album;
         }
 
-        if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
-        {
-            string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
-            if (!string.IsNullOrEmpty(artist))
-            {
-                Caption = artist;
-            }
-
-            if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
-            {
-                AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
-            }
-        }
-    }
-
-    private static async Task<StorageFile?> TryGetStorageFileFromUri(Uri uri)
-    {
-        if (uri is { IsFile: true, IsLoopback: true, IsAbsoluteUri: true })
-        {
-            return await FilesHelpers.TryGetFileFromPathAsync(uri.OriginalString);
-        }
-
-        return null;
+        // TODO: Rework engine-discovered metadata fetching
+        // if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
+        // {
+        //     string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
+        //     if (!string.IsNullOrEmpty(artist))
+        //     {
+        //         Caption = artist;
+        //     }
+        //
+        //     if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
+        //     {
+        //         AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
+        //     }
+        // }
     }
 }

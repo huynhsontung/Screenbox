@@ -8,7 +8,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
 
-public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>
+public sealed partial class PlaybackChapterList : ReadOnlyCollection<ChapterCue>, IPlaybackChapterList
 {
     private readonly List<ChapterCue> _chapters;
     private readonly PlaybackItem _item;

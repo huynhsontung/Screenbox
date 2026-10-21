@@ -30,7 +30,7 @@ public sealed class PlaylistService : IPlaylistService
     public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default)
     {
         var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-        var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, cancellationToken);
+        var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
         if (result?.Items.Count > 0)
         {

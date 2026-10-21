@@ -15,7 +15,7 @@ public interface IMediaPlayer
     event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
     event TypedEventHandler<IMediaPlayer, EventArgs>? IsMutedChanged;
     event TypedEventHandler<IMediaPlayer, EventArgs>? VolumeChanged;
-    event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<PlaybackItem?>>? PlaybackItemChanged;
+    event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<IPlaybackItem?>>? PlaybackItemChanged;
     event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingProgressChanged;
     event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingStarted;
     event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
@@ -26,6 +26,8 @@ public interface IMediaPlayer
     event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
     event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
     event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
+    event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? AudioDelayChanged;
+    event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? SubtitleDelayChanged;
 
     bool CanPause { get; }
     bool CanSeek { get; }
@@ -40,9 +42,11 @@ public interface IMediaPlayer
     TimeSpan NaturalDuration { get; }
     ChapterCue? Chapter { get; }
     double PlaybackRate { get; set; }
+    double AudioDelay { get; set; }
+    double SubtitleDelay { get; set; }
     Rect NormalizedSourceRect { get; set; }
     double Volume { get; set; }
-    public PlaybackItem? PlaybackItem { get; set; }
+    IPlaybackItem? PlaybackItem { get; set; }
 
     void Close();
     void Play();
@@ -50,4 +54,7 @@ public interface IMediaPlayer
     void StepForwardOneFrame();
     void StepBackwardOneFrame();
     void AddSubtitle(IStorageFile file, bool select = true);
+    bool NextChapter();
+    bool PreviousChapter();
+    bool TryTakeSnapshot(string destinationFolderPath, uint width = 0, uint height = 0);
 }
