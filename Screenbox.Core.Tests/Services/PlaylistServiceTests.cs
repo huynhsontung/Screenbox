@@ -28,9 +28,11 @@ public class PlaylistServiceTests
         var shuffled = _service.ShufflePlaylist(playlist, preserveIndex: 0);
 
         await Assert.That(shuffled.ShuffleMode).IsTrue();
-        await Assert.That(shuffled.ShuffleBackup).IsNotNull();
-        await Assert.That(shuffled.ShuffleBackup!.OriginalPlaylist.Count).IsEqualTo(3);
+        await Assert.That(shuffled.CanRestoreFromShuffle).IsTrue();
         await Assert.That(shuffled.Items[0]).IsEqualTo(item1);
+
+        var restored = _service.RestoreFromShuffle(shuffled);
+        await Assert.That(restored.Items.Count).IsEqualTo(3);
     }
 
     [Test]
@@ -61,8 +63,6 @@ public class PlaylistServiceTests
         var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item2, 1);
         _service.UpdateShuffleBackup(shuffled, args);
 
-        await Assert.That(shuffled.ShuffleBackup!.Removals.Contains(item2)).IsTrue();
-
         var restored = _service.RestoreFromShuffle(shuffled);
         await Assert.That(restored.Items.Contains(item2)).IsFalse();
         await Assert.That(restored.Items.Count).IsEqualTo(2);
@@ -80,8 +80,9 @@ public class PlaylistServiceTests
         var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, item1, 0);
         _service.UpdateShuffleBackup(shuffled, args);
 
-        await Assert.That(shuffled.ShuffleBackup!.OriginalPlaylist.Contains(newItem)).IsTrue();
-        await Assert.That(shuffled.ShuffleBackup.OriginalPlaylist.Contains(item1)).IsFalse();
+        var restored = _service.RestoreFromShuffle(shuffled);
+        await Assert.That(restored.Items.Contains(newItem)).IsTrue();
+        await Assert.That(restored.Items.Contains(item1)).IsFalse();
     }
 
     [Test]
@@ -95,7 +96,7 @@ public class PlaylistServiceTests
         var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
         _service.UpdateShuffleBackup(shuffled, args);
 
-        await Assert.That(shuffled.ShuffleBackup).IsNull();
+        await Assert.That(shuffled.CanRestoreFromShuffle).IsFalse();
     }
 
     [Test]

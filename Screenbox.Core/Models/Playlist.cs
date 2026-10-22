@@ -11,6 +11,10 @@ public class Playlist
     public List<MediaViewModel> Items { get; }
     public int CurrentIndex { get; set; }
     public bool ShuffleMode { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether this playlist has a shuffle backup that can be restored.
+    /// </summary>
+    public bool CanRestoreFromShuffle => ShuffleBackup is not null;
     internal ShuffleBackup? ShuffleBackup { get; set; }
 
     public Playlist() : this(new List<MediaViewModel>()) { }
