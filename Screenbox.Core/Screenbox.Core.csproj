@@ -22,4 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Screenbox.Core.Tests" />
+  </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -72,6 +73,7 @@ public static class ServiceHelpers
         // Coordinators
         services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
         services.AddSingleton<IPlayQueueCoordinator, PlayQueueCoordinator>();
+        services.AddSingleton<IPlayQueueBufferManager, PlayQueueBufferManager>();
         services.AddSingleton<IPlaybackProgressTracker, PlaybackProgressTracker>();
 
         // Services

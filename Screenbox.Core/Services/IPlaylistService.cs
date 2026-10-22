@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
@@ -28,6 +29,11 @@ public interface IPlaylistService
     /// Restore playlist from shuffle backup
     /// </summary>
     Playlist RestoreFromShuffle(Playlist playlist);
+
+    /// <summary>
+    /// Synchronizes shuffle backup state when items are added, removed, or replaced in the playlist.
+    /// </summary>
+    void UpdateShuffleBackup(Playlist playlist, NotifyCollectionChangedEventArgs e);
 
     /// <summary>
     /// Get media buffer indices around current position
