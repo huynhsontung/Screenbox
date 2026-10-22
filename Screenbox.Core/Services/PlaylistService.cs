@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -103,6 +104,65 @@ public sealed class PlaylistService : IPlaylistService
         return playlist.CurrentItem != null
             ? new Playlist(playlist.CurrentItem, backup)
             : new Playlist(backup);
+    }
+
+    public void UpdateShuffleBackup(Playlist playlist, NotifyCollectionChangedEventArgs e)
+    {
+        if (playlist.Items.Count <= 1)
+        {
+            playlist.ShuffleBackup = null;
+            return;
+        }
+
+        ShuffleBackup? backup = playlist.ShuffleBackup;
+        if (!playlist.ShuffleMode || backup is null)
+        {
+            return;
+        }
+
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Remove when e.OldItems?.Count > 0:
+                foreach (object item in e.OldItems)
+                {
+                    if (item is MediaViewModel vm)
+                    {
+                        backup.Removals.Add(vm);
+                    }
+                }
+                break;
+
+            case NotifyCollectionChangedAction.Replace when e is
+            {
+                OldItems: { Count: { } oldCount }, NewItems: { Count: { } newCount }
+            } && oldCount == newCount && newCount > 0:
+                for (int i = 0; i < oldCount; i++)
+                {
+                    if (e.OldItems[i] is not MediaViewModel oldItem) continue;
+                    if (e.NewItems[i] is not MediaViewModel newItem) continue;
+                    int backupIndex = backup.OriginalPlaylist.IndexOf(oldItem);
+                    if (backupIndex >= 0)
+                    {
+                        backup.OriginalPlaylist[backupIndex] = newItem;
+                    }
+                }
+                break;
+
+            case NotifyCollectionChangedAction.Add when e.NewItems is not null:
+                foreach (object item in e.NewItems)
+                {
+                    if (item is MediaViewModel vm && !backup.Removals.Remove(vm))
+                    {
+                        playlist.ShuffleBackup = null;
+                        break;
+                    }
+                }
+                break;
+
+            case NotifyCollectionChangedAction.Reset:
+                playlist.ShuffleBackup = null;
+                break;
+        }
     }
 
     public IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5)

@@ -64,7 +64,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly PlayerContext _playerContext;
-    private readonly IPlayerService _playerService;
+    private readonly IPlayQueueBufferManager _bufferManager;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly ILogger<PlayQueueCoordinator> _logger;
 
@@ -72,8 +72,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     // Tracks shuffle backup, current index, and provides a snapshot for service calls.
     private Playlist _playlist;
 
-    private List<MediaViewModel> _mediaBuffer = new();
-    private readonly Dictionary<MediaViewModel, IPlaybackItem> _bufferedPlaybackItems = new();
     private object? _delayPlay;
 
     // When true, collection-changed events are deferred to avoid excessive
@@ -98,7 +96,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
         PlayerContext playerContext,
-        IPlayerService playerService,
+        IPlayQueueBufferManager bufferManager,
         ILogger<PlayQueueCoordinator> logger)
     {
         _context = context;
@@ -111,7 +109,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
         _playerContext = playerContext;
-        _playerService = playerService;
+        _bufferManager = bufferManager;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
@@ -283,11 +281,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             oldPlayer.MediaEnded -= OnEndReached;
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
 
-            foreach (var item in _bufferedPlaybackItems.Values)
-            {
-                item.Dispose();
-            }
-            _bufferedPlaybackItems.Clear();
+            _bufferManager.Clear();
         }
 
         if (MediaPlayer is not null)
@@ -532,35 +526,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #region Private Methods
 
-    private IPlaybackItem? GetOrCreatePlaybackItem(MediaViewModel vm)
-    {
-        if (MediaPlayer is null) return null;
+    private IPlaybackItem? GetOrCreatePlaybackItem(MediaViewModel vm) =>
+        _bufferManager.GetOrCreatePlaybackItem(MediaPlayer, vm);
 
-        if (!_bufferedPlaybackItems.TryGetValue(vm, out var item))
-        {
-            try
-            {
-                item = _playerService.CreatePlaybackItem(MediaPlayer, vm.Source, vm.Options.ToArray());
-                _bufferedPlaybackItems[vm] = item;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Failed to create playback item for {Location}", vm.Location);
-                Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{vm.Location}{Environment.NewLine}{e.Message}"));
-                return null;
-            }
-        }
-
-        return item;
-    }
-
-    private void CleanPlaybackItem(MediaViewModel vm)
-    {
-        if (_bufferedPlaybackItems.Remove(vm, out var item))
-        {
-            item.Dispose();
-        }
-    }
+    private void CleanPlaybackItem(MediaViewModel vm) =>
+        _bufferManager.CleanPlaybackItem(vm);
 
     private void PlaySingle(MediaViewModel vm)
     {
@@ -844,12 +814,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void ClearQueue()
     {
-        foreach (var item in _bufferedPlaybackItems.Values)
-        {
-            item.Dispose();
-        }
-        _bufferedPlaybackItems.Clear();
-        _mediaBuffer.Clear();
+        _bufferManager.Clear();
 
         try
         {
@@ -872,27 +837,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Pre-loads thumbnails for items near the current position and releases
     /// thumbnails for items that are no longer in the buffer window.
     /// </summary>
-    private async Task UpdateMediaBufferAsync()
-    {
-        var bufferIndices = _playlistService.GetMediaBufferIndices(_playlist.CurrentIndex, _playlist.Items.Count, _context.RepeatMode);
-        var newBuffer = bufferIndices.Select(i => _playlist.Items[i]).ToList();
-
-        var toLoad = newBuffer.Except(_mediaBuffer).ToList();
-        var toClean = _mediaBuffer.Except(newBuffer).ToList();
-
-        foreach (var media in toClean)
-        {
-            CleanPlaybackItem(media);
-        }
-
-        foreach (var media in newBuffer)
-        {
-            GetOrCreatePlaybackItem(media);
-        }
-
-        _mediaBuffer = newBuffer;
-        await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
-    }
+    private Task UpdateMediaBufferAsync() =>
+        _bufferManager.UpdateBufferAsync(MediaPlayer, _playlist, _context.RepeatMode);
 
     /// <summary>
     /// Parses the given value into a media list and starts playback.
@@ -1072,60 +1018,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
         RaiseCanNavigateChanged();
 
-        if (_context.Items.Count <= 1)
-        {
-            _playlist.ShuffleBackup = null;
-            return;
-        }
-
-        // Maintain the shuffle backup so that unshuffle can restore the original order.
-        ShuffleBackup? backup = _playlist.ShuffleBackup;
-        if (_context.ShuffleMode && backup is not null)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Remove when e.OldItems?.Count > 0:
-                    foreach (object item in e.OldItems)
-                    {
-                        backup.Removals.Add((MediaViewModel)item);
-                    }
-
-                    break;
-
-                case NotifyCollectionChangedAction.Replace when e is
-                {
-                    OldItems: { Count: { } oldCount }, NewItems: { Count: { } newCount }
-                } && oldCount == newCount && newCount > 0:
-                    for (int i = 0; i < oldCount; i++)
-                    {
-                        if (e.OldItems[i] is not MediaViewModel oldItem) continue;
-                        if (e.NewItems[i] is not MediaViewModel newItem) continue;
-                        int backupIndex = backup.OriginalPlaylist.IndexOf(oldItem);
-                        if (backupIndex >= 0)
-                        {
-                            backup.OriginalPlaylist[backupIndex] = newItem;
-                        }
-                    }
-
-                    break;
-
-                case NotifyCollectionChangedAction.Add when e.NewItems is { }:
-                    foreach (object item in e.NewItems)
-                    {
-                        if (!backup.Removals.Remove((MediaViewModel)item))
-                        {
-                            _playlist.ShuffleBackup = null;
-                            break;
-                        }
-                    }
-
-                    break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    _playlist.ShuffleBackup = null;
-                    break;
-            }
-        }
+        _playlistService.UpdateShuffleBackup(_playlist, e);
     }
 
     #endregion
