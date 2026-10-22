@@ -21,17 +21,26 @@ on:
           - normal
           - detailed
           - diagnostic
+      architecture:
+        description: 'Choose the processor architecture'
+        required: true
+        default: x64
+        type: choice
+        options:
+          - arm64
+          - x64
+          - x86
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ inputs.architecture == 'arm64' && 'windows-11-vs2026-arm' || 'windows-latest' }}
     permissions:
       actions: write
       contents: read
     outputs:
       version: ${{ steps.app_version.outputs.version }}
     env:
-      PROJ_PATH: Screenbox
+      APP_PROJ_PATH: Screenbox
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -39,7 +48,7 @@ jobs:
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
         with:
-          msbuild-architecture: x64
+          msbuild-architecture: ${{ inputs.architecture }}
 
       - name: Setup Windows App Developer CLI
         uses: microsoft/setup-WinAppCli@v0.2
@@ -86,13 +95,13 @@ jobs:
           SENTRY_RELEASE: screenbox@${{ steps.app_version.outputs.version }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
-          msbuild $env:PROJ_PATH/Screenbox.csproj `
+          msbuild $env:APP_PROJ_PATH/Screenbox.csproj `
             -restore `
             -v:${{ inputs.detail_level || 'normal' }} `
             -p:RestoreConfigFile=nuget.config `
             -p:ContinuousIntegrationBuild=true `
             -p:Configuration=Release `
-            -p:Platform=x64 `
+            -p:Platform=${{ inputs.architecture }} `
             -p:UapAppxPackageBuildMode=StoreUpload `
             -p:SentryUploadSymbols=true `
             -p:SentryOrg=$env:SENTRY_ORG `
@@ -104,7 +113,8 @@ jobs:
       - name: Upload Store submission package artifact
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ env.PROJ_PATH }}/AppPackages/*.msixupload
+          path: ${{ env.APP_PROJ_PATH }}/AppPackages/*.msixupload
+          retention-days: 5
           archive: false
 
       - name: Create temporary self-signed certificate
@@ -113,9 +123,9 @@ jobs:
           WINAPP_CLI_TELEMETRY_OPTOUT: '1'
         run: |
           winapp cert generate `
-            --manifest "$env:PROJ_PATH/Package.appxmanifest" `
+            --manifest "$env:APP_PROJ_PATH/Package.appxmanifest" `
             --password "$env:TEMP_CERT_PASSWORD" `
-            --output "$env:PROJ_PATH/AppPackages/Screenbox_${{ steps.app_version.outputs.version }}.0_Test/Screenbox_TemporaryKey.pfx" `
+            --output "$env:APP_PROJ_PATH/AppPackages/Screenbox_${{ steps.app_version.outputs.version }}.0_Test/Screenbox_TemporaryKey.pfx" `
             --export-cer `
             --install
 
@@ -124,7 +134,7 @@ jobs:
           TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
           WINAPP_CLI_TELEMETRY_OPTOUT: '1'
         run: |
-          $packageDir = "$env:PROJ_PATH/AppPackages/Screenbox_${{ steps.app_version.outputs.version }}.0_Test"
+          $packageDir = "$env:APP_PROJ_PATH/AppPackages/Screenbox_${{ steps.app_version.outputs.version }}.0_Test"
 
           winapp sign "$packageDir/Screenbox_${{ steps.app_version.outputs.version }}.0_x86_x64_arm64.msixbundle" "$packageDir/Screenbox_TemporaryKey.pfx" `
             --password "$env:TEMP_CERT_PASSWORD" `
@@ -132,12 +142,12 @@ jobs:
 
       - name: Create sideload install kit artifact
         run: |
-          ./scripts/Export-InstallKit.ps1 -OutputPath "$env:PROJ_PATH/AppPackages/*_Test/Screenbox-sideload.zip" -IncludeCertificate -IncludeBundle
+          ./scripts/Export-InstallKit.ps1 -OutputPath "$env:APP_PROJ_PATH/AppPackages/*_Test/Screenbox-sideload.zip" -IncludeCertificate -IncludeBundle
 
       - name: Upload sideload install kit artifact
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/Screenbox-sideload.zip
+          path: ${{ env.APP_PROJ_PATH }}/AppPackages/*_Test/Screenbox-sideload.zip
           archive: false
 
   release:
