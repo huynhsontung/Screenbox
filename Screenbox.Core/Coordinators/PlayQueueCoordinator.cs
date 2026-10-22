@@ -49,7 +49,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     IRecipient<SetQueueMessage>,
     IRecipient<ClearQueueMessage>,
     IRecipient<QueueRequestMessage>,
-    IRecipient<PropertyChangedMessage<IMediaPlayer?>>
+    IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
+    IRecipient<UpdateMediaOptionsMessage>
 {
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
@@ -144,6 +145,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         Messenger.Register<ClearQueueMessage>(this);
         Messenger.Register<QueueRequestMessage>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
+        Messenger.Register<UpdateMediaOptionsMessage>(this);
     }
 
     #region Message Handlers
@@ -243,6 +245,24 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
     }
 
+    /// <summary>
+    /// Handles an update to playback options for a media item.
+    /// Updates the media's options and invalidates any cached playback item
+    /// if the item is not currently active.
+    /// </summary>
+    public void Receive(UpdateMediaOptionsMessage message)
+    {
+        var (media, options) = message;
+        media.SetOptions(options);
+
+        // If the item is pre-buffered but not currently playing,
+        // evict it so it will be freshly created with new options when played.
+        if (media != _context.CurrentItem)
+        {
+            CleanPlaybackItem(media);
+        }
+    }
+
     /// <summary>Returns a snapshot copy of the current queue to the requester.</summary>
     public void Receive(QueueRequestMessage message)
     {
@@ -266,10 +286,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             foreach (var item in _bufferedPlaybackItems.Values)
             {
                 item.Dispose();
-            }
-            foreach (var vm in _bufferedPlaybackItems.Keys)
-            {
-                vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
             }
             _bufferedPlaybackItems.Clear();
         }
@@ -505,6 +521,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         var item = _context.CurrentItem;
         SetCurrentItem(null);
+        if (item is not null)
+        {
+            CleanPlaybackItem(item);
+        }
         SetCurrentItem(item);
     }
 
@@ -522,7 +542,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 item = _playerService.CreatePlaybackItem(MediaPlayer, vm.Source, vm.Options.ToArray());
                 _bufferedPlaybackItems[vm] = item;
-                vm.OptionsChanged += OnMediaViewModelOptionsChanged;
             }
             catch (Exception e)
             {
@@ -535,25 +554,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         return item;
     }
 
-    private void OnMediaViewModelOptionsChanged(object? sender, EventArgs e)
-    {
-        if (sender is MediaViewModel vm && _bufferedPlaybackItems.Remove(vm, out var oldItem))
-        {
-            vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
-            oldItem.Dispose();
-            if (_context.CurrentItem == vm && MediaPlayer is not null)
-            {
-                var newItem = GetOrCreatePlaybackItem(vm);
-                MediaPlayer.PlaybackItem = newItem;
-            }
-        }
-    }
-
     private void CleanPlaybackItem(MediaViewModel vm)
     {
         if (_bufferedPlaybackItems.Remove(vm, out var item))
         {
-            vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
             item.Dispose();
         }
     }
@@ -843,10 +847,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         foreach (var item in _bufferedPlaybackItems.Values)
         {
             item.Dispose();
-        }
-        foreach (var vm in _bufferedPlaybackItems.Keys)
-        {
-            vm.OptionsChanged -= OnMediaViewModelOptionsChanged;
         }
         _bufferedPlaybackItems.Clear();
         _mediaBuffer.Clear();
