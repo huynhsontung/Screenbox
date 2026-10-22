@@ -350,7 +350,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
         else
         {
-            if (_playlist.ShuffleBackup is not null)
+            if (_playlist.CanRestoreFromShuffle)
             {
                 playlist = _playlistService.RestoreFromShuffle(_playlist);
             }
