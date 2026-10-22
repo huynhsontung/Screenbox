@@ -60,8 +60,6 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private readonly List<string> _options;
 
-    public event EventHandler? OptionsChanged;
-
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsMediaActive { get; set; }
     [ObservableProperty] public partial bool IsAvailable { get; set; } = true;
@@ -127,15 +125,13 @@ public sealed partial class MediaViewModel : ObservableRecipient
             .Where(o => o.StartsWith(":") && o.Length > 1).ToArray();
 
         // Check if new options and existing options are the same
-        if (opts.Length == _options.Count)
+        if (opts.Length == _options.Count && opts.SequenceEqual(_options))
         {
-            bool same = !opts.Where((o, i) => o != _options[i]).Any();
-            if (same) return;
+            return;
         }
 
         _options.Clear();
         _options.AddRange(opts);
-        OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void UpdateSource(StorageFile file)
