@@ -1,5 +1,5 @@
 using Microsoft.Xaml.Interactivity;
-using Windows.System;
+using Screenbox.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -19,7 +19,8 @@ internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkEl
     protected override void OnAttached()
     {
         base.OnAttached();
-        AssociatedObject.KeyDown += AssociatedObjectOnKeyDown;
+        AssociatedObject.KeyDown += AssociatedObject_OnKeyDown;
+
         if (AssociatedObject is NavigationView navView)
         {
             UpdateXYFocus(navView);
@@ -29,42 +30,29 @@ internal sealed partial class GamepadXYNavigationBehavior : Behavior<FrameworkEl
     protected override void OnDetaching()
     {
         base.OnDetaching();
-        AssociatedObject.KeyDown -= AssociatedObjectOnKeyDown;
+        AssociatedObject.KeyDown -= AssociatedObject_OnKeyDown;
     }
 
     [DynamicWindowsRuntimeCast(typeof(NavigationViewItem))]
     [DynamicWindowsRuntimeCast(typeof(Control))]
-    private void AssociatedObjectOnKeyDown(object sender, KeyRoutedEventArgs e)
+    private void AssociatedObject_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        // Exit if not a Gamepad event
-        if (e.OriginalKey is not ((>= VirtualKey.GamepadDPadUp and <= VirtualKey.GamepadDPadRight)
-            or (>= VirtualKey.GamepadLeftThumbstickUp and <= VirtualKey.GamepadLeftThumbstickLeft)))
+        FocusNavigationDirection direction = XboxHelper.GetNavigationDirection(e.OriginalKey);
+
+        if (direction is FocusNavigationDirection.None)
             return;
 
-        DependencyObject? candidate = null;
-        FindNextElementOptions options = new()
+        bool isNavView = FocusManager.GetFocusedElement() is NavigationViewItem;
+        if (direction is FocusNavigationDirection.Left or FocusNavigationDirection.Right && isNavView)
+            return;
+
+        var options = new FindNextElementOptions()
         {
             SearchRoot = AssociatedObject,
-            XYFocusNavigationStrategyOverride = XYFocusNavigationStrategyOverride.Projection
+            XYFocusNavigationStrategyOverride = XYFocusNavigationStrategyOverride.Projection,
         };
 
-        bool isNavView = FocusManager.GetFocusedElement() is NavigationViewItem;
-        switch (e.Key)
-        {
-            case VirtualKey.Up:
-                candidate = FocusManager.FindNextElement(FocusNavigationDirection.Up, options);
-                break;
-            case VirtualKey.Down:
-                candidate = FocusManager.FindNextElement(FocusNavigationDirection.Down, options);
-                break;
-            case VirtualKey.Left when !isNavView:
-                candidate = FocusManager.FindNextElement(FocusNavigationDirection.Left, options);
-                break;
-            case VirtualKey.Right when !isNavView:
-                candidate = FocusManager.FindNextElement(FocusNavigationDirection.Right, options);
-                break;
-        }
-
+        var candidate = FocusManager.FindNextElement(direction, options);
         if (candidate is Control control)
         {
             e.Handled = control.Focus(FocusState.Keyboard);

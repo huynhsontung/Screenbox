@@ -8,6 +8,7 @@ using Screenbox.Core;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
+using Screenbox.UI.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
@@ -74,7 +75,11 @@ public sealed partial class MainPage : Page, IContentFrame
 
     protected override void OnKeyDown(KeyRoutedEventArgs e)
     {
-        ViewModel.ProcessGamepadKeyDown(e.Key);
+        if (XboxHelper.IsGamepadNavigationInput(e.Key))
+        {
+            ViewModel.HandleGamepadKey(e.Key);
+        }
+
         base.OnKeyDown(e);
     }
 

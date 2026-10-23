@@ -100,11 +100,27 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
     }
 
-    public void ProcessGamepadKeyDown(VirtualKey key)
+    /// <summary>
+    /// Interprets supported gamepad input and executes the corresponding playback command.
+    /// </summary>
+    /// <remarks>
+    /// The following gamepad keys are handled:
+    /// <list type="bullet">
+    /// <item><description><see cref="VirtualKey.GamepadRightThumbstickLeft"/> and <see cref="VirtualKey.GamepadLeftShoulder"/>: Rewind the playback by the configured rewind step.</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadRightThumbstickRight"/> and <see cref="VirtualKey.GamepadRightShoulder"/>: Fast forward the playback by the configured fast forward step.</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadLeftTrigger"/> when <see cref="PlayerVisible"/>: Rewind the playback by the configured rewind step multiplied by the trigger seek multiplier (<c>4×</c>).</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadRightTrigger"/> when <see cref="PlayerVisible"/>: Fast forward the playback by the configured fast forward step multiplied by the trigger seek multiplier (<c>4×</c>).</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadRightThumbstickUp"/>: Increase the volume by <c>2</c>.</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadRightThumbstickDown"/>: Decrease the volume by <c>2</c>.</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadX"/>: Toggle play/pause.</description></item>
+    /// <item><description><see cref="VirtualKey.GamepadView"/> when <see cref="PlayerVisible"/> or <see cref="NavigationViewDisplayMode"/> is <see cref="NavigationViewDisplayMode.Expanded"/>: Toggle player visibility.</description></item>
+    /// </list>
+    /// The default seek intervals are based on the configured <see cref="PlayerSettingsContext.RewindStep"/>
+    /// and <see cref="PlayerSettingsContext.FastForwardStep"/> values.
+    /// </remarks>
+    /// <param name="key">The virtual key that was pressed.</param>
+    public void HandleGamepadKey(VirtualKey key)
     {
-        // All Gamepad keys are in the range of [195, 218]
-        if ((int)key < 195 || (int)key > 218) return;
-
         QueueSession queue = Messenger.Send(new QueueRequestMessage());
         if (queue.IsEmpty) return;
 
