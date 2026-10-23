@@ -21,19 +21,10 @@ on:
           - normal
           - detailed
           - diagnostic
-      architecture:
-        description: 'Choose the processor architecture'
-        required: true
-        default: x64
-        type: choice
-        options:
-          - arm64
-          - x64
-          - x86
 
 jobs:
   build:
-    runs-on: ${{ inputs.architecture == 'arm64' && 'windows-11-vs2026-arm' || 'windows-latest' }}
+    runs-on: windows-latest
     permissions:
       actions: write
       contents: read
@@ -48,7 +39,7 @@ jobs:
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
         with:
-          msbuild-architecture: ${{ inputs.architecture }}
+          msbuild-architecture: x64
 
       - name: Setup Windows App Developer CLI
         uses: microsoft/setup-WinAppCli@v0.2
@@ -101,7 +92,7 @@ jobs:
             -p:RestoreConfigFile=nuget.config `
             -p:ContinuousIntegrationBuild=true `
             -p:Configuration=Release `
-            -p:Platform=${{ inputs.architecture }} `
+            -p:Platform=x64 `
             -p:UapAppxPackageBuildMode=StoreUpload `
             -p:SentryUploadSymbols=true `
             -p:SentryOrg=$env:SENTRY_ORG `
