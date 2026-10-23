@@ -46,46 +46,6 @@ public static class CollectionExtensions
         }
     }
 
-    /// <summary>
-    /// Replaces the contents of the target collection with the items from the
-    /// specified source collection.
-    /// </summary>
-    /// <typeparam name="T">The type of elements contained in the collection.</typeparam>
-    /// <param name="target">The collection to update.</param>
-    /// <param name="reference">The reference collection.</param>
-    /// <remarks>
-    /// This method updates the existing collection instance in place by:
-    /// <list type="bullet">
-    /// <item><description>Replacing differing items at matching indexes.</description></item>
-    /// <item><description>Adding items that are present in <paramref name="reference"/> but missing from <paramref name="target"/>.</description></item>
-    /// <item><description>Removing items that are no longer present beyond the bounds of <paramref name="reference"/>.</description></item>
-    /// </list>
-    /// The resulting contents and order of <paramref name="target"/> will match <paramref name="reference"/>.
-    /// </remarks>
-    public static void ReplaceWith<T>(this IList<T> target, IReadOnlyList<T> reference)
-    {
-        for (int i = 0; i < reference.Count; i++)
-        {
-            T item = reference[i];
-            if (i < target.Count)
-            {
-                if (!Equals(target[i], item))
-                {
-                    target[i] = item;
-                }
-            }
-            else
-            {
-                target.Add(item);
-            }
-        }
-
-        for (int i = target.Count - 1; i >= reference.Count; i--)
-        {
-            target.RemoveAt(i);
-        }
-    }
-
     public static void SyncObservableGroups<TKey, TValue>(this IList<ObservableGroup<TKey, TValue>> target,
         IReadOnlyList<IGrouping<TKey, TValue>> reference) where TKey : notnull =>
         target.SyncObservableGroups(reference, (key, items) =>

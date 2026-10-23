@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -159,7 +160,30 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     /// <param name="text">A search query string used to filter suggestions.</param>
     public void UpdateSearchSuggestions(string text)
     {
-        SearchSuggestions.ReplaceWith(_searchService.GetSuggestions(text));
+        IReadOnlyList<SearchSuggestion> suggestions = _searchService.GetSuggestions(text);
+
+        // Special case: prevent AutoSuggestBox suggestion list animations when there are no results.
+        for (int i = 0; i < suggestions.Count; i++)
+        {
+            SearchSuggestion newItem = suggestions[i];
+            if (i < SearchSuggestions.Count)
+            {
+                SearchSuggestion oldItem = SearchSuggestions[i];
+                if (!Equals(oldItem, newItem))
+                {
+                    SearchSuggestions[i] = newItem;
+                }
+            }
+            else
+            {
+                SearchSuggestions.Add(newItem);
+            }
+        }
+
+        for (int i = SearchSuggestions.Count - 1; i >= suggestions.Count; i--)
+        {
+            SearchSuggestions.RemoveAt(i);
+        }
     }
 
     /// <summary>
