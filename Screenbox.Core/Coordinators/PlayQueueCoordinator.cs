@@ -273,7 +273,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Re-subscribes to media events on the new player and replays any
     /// deferred play request that arrived before the player was ready.
     /// </summary>
-    public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
+    public async void Receive(PropertyChangedMessage<IMediaPlayer?> message)
     {
         if (message.Sender is not PlayerContext) return;
         if (message.OldValue is { } oldPlayer)
@@ -295,12 +295,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 var pending = _delayPlay;
                 _delayPlay = null;
-                ProcessDelayPlay(pending);
+                await ProcessDelayPlayAsync(pending);
             }
         }
     }
 
-    private async void ProcessDelayPlay(object pendingPlay)
+    private async Task ProcessDelayPlayAsync(object pendingPlay)
     {
         try
         {
@@ -723,7 +723,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _dispatcherQueue.TryEnqueue(UpdateState);
         }
 
-        ProcessCurrentItemChanged(value);
+        _ = ProcessCurrentItemChangedAsync(value);
     }
 
     /// <summary>
@@ -731,7 +731,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// breadcrumb logging, sub-item discovery, and concurrent updates to recent files,
     /// transport controls display, and the media thumbnail buffer.
     /// </summary>
-    private async void ProcessCurrentItemChanged(MediaViewModel? value)
+    private async Task ProcessCurrentItemChangedAsync(MediaViewModel? value)
     {
         _currentItemCts?.Cancel();
         _currentItemCts?.Dispose();
