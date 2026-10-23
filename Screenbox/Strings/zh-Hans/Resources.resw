@@ -319,7 +319,7 @@
     <value>未知流派</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>所有类型</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>添加文件夹</value>
@@ -876,7 +876,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>按已选类型 {0} 筛选</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
