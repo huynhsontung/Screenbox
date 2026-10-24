@@ -563,7 +563,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultPlaylistHeader" xml:space="preserve">
-    <value>Playlist results for "{0}"</value>
+    <value>Resultados de listas de reprodução para "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
