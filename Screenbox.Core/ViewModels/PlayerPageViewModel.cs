@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -111,6 +112,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly PlayerSettingsContext _playerSettings;
     private readonly IFilesService _filesService;
     private readonly PlayerContext _playerContext;
+    private readonly MediaViewModelFactory _mediaFactory;
     private bool _visibilityOverride;
     private bool _resizeNext;
     private bool _isPlayPauseHoldActive;
@@ -118,12 +120,13 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public PlayerPageViewModel(IWindowService windowService,
         PlayerSettingsContext playerSettings, IFilesService filesService, PlayerContext playerContext,
-        INavigationService navigationService)
+        INavigationService navigationService, MediaViewModelFactory mediaFactory)
     {
         _windowService = windowService;
         _playerSettings = playerSettings;
         _filesService = filesService;
         _playerContext = playerContext;
+        _mediaFactory = mediaFactory;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _openingTimer = _dispatcherQueue.CreateTimer();
         _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -295,9 +298,9 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 if (items.Count > 0)
                 {
                     if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
-                        MediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
+                        MediaPlayer?.PlaybackItem?.SubtitleTracks is { } subtitleTracks)
                     {
-                        Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
+                        subtitleTracks.AddExternalSubtitle(file, true);
                         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.SubtitleAdded, message: file.Name));
                     }
                     else
@@ -314,7 +317,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 Uri? uri = await data.GetWebLinkAsync();
                 if (uri.IsFile)
                 {
-                    Messenger.Send(new PlayMediaMessage(uri));
+                    Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(uri)));
                 }
             }
         }

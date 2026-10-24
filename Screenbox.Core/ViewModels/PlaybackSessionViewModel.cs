@@ -59,10 +59,10 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
         newPlayer.PlaybackRateChanged += OnPlayerPlaybackRateChanged;
         newPlayer.PlaybackRate = PlaybackRate;
 
-        if (newPlayer is VlcMediaPlayer vlcMediaPlayer)
+        if (newPlayer is not null)
         {
-            vlcMediaPlayer.AudioDelay = AudioTimingOffset;
-            vlcMediaPlayer.SubtitleDelay = SubtitleTimingOffset;
+            newPlayer.AudioDelay = AudioTimingOffset;
+            newPlayer.SubtitleDelay = SubtitleTimingOffset;
         }
     }
 
@@ -90,10 +90,7 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
         if (MediaPlayer is null)
             return;
 
-        if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
-        {
-            vlcMediaPlayer.AudioDelay = value;
-        }
+        MediaPlayer.AudioDelay = value;
     }
 
     partial void OnSubtitleTimingOffsetChanged(double value)
@@ -101,10 +98,7 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
         if (MediaPlayer is null)
             return;
 
-        if (MediaPlayer is VlcMediaPlayer vlcMediaPlayer)
-        {
-            vlcMediaPlayer.SubtitleDelay = value;
-        }
+        MediaPlayer.SubtitleDelay = value;
     }
 
     [RelayCommand]
@@ -127,3 +121,6 @@ public sealed partial class PlaybackSessionViewModel : ObservableRecipient,
         SubtitleTimingOffset = 0.0;
     }
 }
+
+
+

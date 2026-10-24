@@ -234,7 +234,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         if (MediaPlayer?.PlaybackItem is null)
             return;
 
-        PlaybackSubtitleTrackList tracks = MediaPlayer.PlaybackItem.SubtitleTracks;
+        ISubtitleTrackList tracks = MediaPlayer.PlaybackItem.SubtitleTracks;
         int count = tracks.Count;
         if (count == 0 || (count > 1 && modifiers == VirtualKeyModifiers.None))
             return;
@@ -441,19 +441,14 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     private async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
     {
-        if (mediaPlayer is not VlcMediaPlayer player)
-        {
-            throw new NotImplementedException("Not supported on non VLC players");
-        }
-
         StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
             $"snapshot_{DateTimeOffset.Now.Ticks}",
             CreationCollisionOption.FailIfExists);
 
         try
         {
-            if (!player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
-                throw new Exception("VLC failed to save snapshot");
+            if (!mediaPlayer.TryTakeSnapshot(tempFolder.Path))
+                throw new Exception("Media player failed to save snapshot");
 
             StorageFile file = (await tempFolder.GetFilesAsync())[0];
             StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_playerSettings.FrameCaptureFolderToken);
@@ -466,3 +461,4 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 }
+

@@ -5,7 +5,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback;
 
-public partial class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList where T : IMediaTrack
+public partial class SingleSelectTrackList<T> : ISingleSelectMediaTrackList<T> where T : IMediaTrack
 {
     public event TypedEventHandler<ISingleSelectMediaTrackList, object?>? SelectedIndexChanged;
 
@@ -32,6 +32,10 @@ public partial class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectM
     {
         TrackList = new List<T>();
         _selectedIndex = -1;
+    }
+
+    public virtual void Refresh()
+    {
     }
 
     public IEnumerator<T> GetEnumerator()

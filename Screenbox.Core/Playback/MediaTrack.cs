@@ -1,5 +1,3 @@
-using System;
-using LibVLCSharp.Shared;
 using Screenbox.Core.Helpers;
 using Windows.Globalization;
 using Windows.Media.Core;
@@ -21,18 +19,11 @@ public abstract partial class MediaTrack : IMediaTrack
 
     public MediaTrackKind TrackKind { get; }
 
-    internal MediaTrack(MediaTrackKind trackKind, string language = "")
+    protected MediaTrack(MediaTrackKind trackKind, string id, string? label, string language = "")
     {
         TrackKind = trackKind;
-        _languageStr = language;
-        Id = string.Empty;
-        Label = string.Empty;
-    }
-
-    protected MediaTrack(LibVLCSharp.Shared.MediaTrack track)
-    {
-        TrackKind = Convert(track.TrackType);
-        _languageStr = track.Language ?? string.Empty;
+        Id = id ?? string.Empty;
+        _languageStr = language ?? string.Empty;
         if (Windows.Globalization.Language.IsWellFormed(_languageStr))
         {
             if (LanguageHelper.TryConvertISO6392ToISO6391(_languageStr, out string bc47Tag))
@@ -40,13 +31,13 @@ public abstract partial class MediaTrack : IMediaTrack
             _language = new Language(_languageStr);
         }
 
-        Id = track.Id.ToString();
-        Label = GetFullLabel(track.Description, Language);
+        Label = GetFullLabel(label, Language);
     }
 
     protected MediaTrack(IMediaTrack track)
     {
-        _languageStr = track.Language;
+        TrackKind = track.TrackKind;
+        _languageStr = track.Language ?? string.Empty;
         if (Windows.Globalization.Language.IsWellFormed(_languageStr))
         {
             _language = new Language(_languageStr);
@@ -56,7 +47,7 @@ public abstract partial class MediaTrack : IMediaTrack
         Label = GetFullLabel(track.Label, Language);
     }
 
-    private static string GetFullLabel(string? label, string language)
+    internal static string GetFullLabel(string? label, string language)
     {
         if (string.IsNullOrEmpty(label))
         {
@@ -68,16 +59,5 @@ public abstract partial class MediaTrack : IMediaTrack
         }
 
         return label ?? string.Empty;
-    }
-
-    private static MediaTrackKind Convert(TrackType trackType)
-    {
-        return trackType switch
-        {
-            TrackType.Audio => MediaTrackKind.Audio,
-            TrackType.Video => MediaTrackKind.Video,
-            TrackType.Text => MediaTrackKind.TimedMetadata,
-            _ => throw new ArgumentOutOfRangeException(nameof(trackType), trackType, null)
-        };
     }
 }

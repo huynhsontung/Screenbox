@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LibVLCSharp.Shared;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Playback;
-using Screenbox.Core.Services;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
 
@@ -12,15 +10,41 @@ namespace Screenbox.Core.Factories;
 
 public sealed class MediaViewModelFactory
 {
-    private readonly IPlayerService _playerService;
-    private readonly PlayerContext _playerContext;
+    private readonly IMediaSourceFactory _sourceFactory;
     private readonly LibraryContext _libraryContext;
 
-    public MediaViewModelFactory(IPlayerService playerService, PlayerContext playerContext, LibraryContext libraryContext)
+    public MediaViewModelFactory(IMediaSourceFactory sourceFactory, LibraryContext libraryContext)
     {
-        _playerService = playerService;
-        _playerContext = playerContext;
+        _sourceFactory = sourceFactory;
         _libraryContext = libraryContext;
+    }
+
+    /// <summary>
+    /// Always creates a new <see cref="MediaViewModel"/> without any lookup.
+    /// </summary>
+    public MediaViewModel Create(IMediaSource source)
+    {
+        return new MediaViewModel(source);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="MediaViewModel"/> populated from an <see cref="ExpandedMediaItem"/>.
+    /// </summary>
+    public MediaViewModel Create(ExpandedMediaItem item)
+    {
+        var vm = Create(item.Source);
+        if (!string.IsNullOrEmpty(item.Title))
+        {
+            vm.Name = item.Title;
+        }
+
+        if (item.Duration.HasValue && item.Duration.Value > TimeSpan.Zero)
+        {
+            vm.MediaInfo.MusicProperties.Duration = item.Duration.Value;
+            vm.MediaInfo.VideoProperties.Duration = item.Duration.Value;
+        }
+
+        return vm;
     }
 
     /// <summary>
@@ -29,7 +53,7 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel Create(StorageFile file)
     {
-        return new MediaViewModel(_playerContext, _playerService, file);
+        return new MediaViewModel(_sourceFactory.Create(file));
     }
 
     /// <summary>
@@ -37,27 +61,15 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel Create(Uri uri)
     {
-        return new MediaViewModel(_playerContext, _playerService, uri);
+        return new MediaViewModel(_sourceFactory.Create(uri));
     }
 
     /// <summary>
     /// Always creates a new <see cref="MediaViewModel"/> without any lookup.
     /// </summary>
-    public MediaViewModel Create(Media media)
+    public MediaViewModel Create(string pathOrUri)
     {
-        if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri? uri))
-            return new MediaViewModel(_playerContext, _playerService, media);
-
-        // Prefer URI source for easier clean up
-        MediaViewModel vm = new(_playerContext, _playerService, uri)
-        {
-            Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media))
-        };
-
-        if (media.Meta(MetadataType.Title) is { } name && !string.IsNullOrEmpty(name))
-            vm.Name = name;
-
-        return vm;
+        return new MediaViewModel(_sourceFactory.Create(pathOrUri));
     }
 
     /// <summary>
@@ -71,12 +83,12 @@ public sealed class MediaViewModelFactory
                        ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (existing != null)
         {
-            if (existing.Source is not IStorageFile)
-                existing.UpdateSource(file);
+            if (existing.Source is IFileMediaSource fileSource && fileSource.StorageFile is null)
+                fileSource.UpdateStorageFile(file);
             return existing;
         }
 
-        return new MediaViewModel(_playerContext, _playerService, file);
+        return Create(file);
     }
 
     /// <summary>
@@ -85,10 +97,21 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel GetOrCreate(Uri uri)
     {
-        string location = uri.OriginalString;
+        string location = uri.IsFile ? uri.LocalPath : uri.OriginalString;
         var existing = FindByLocation(_libraryContext.Music.Songs, location)
                        ?? FindByLocation(_libraryContext.Videos.Videos, location);
-        return existing ?? new MediaViewModel(_playerContext, _playerService, uri);
+        return existing ?? Create(uri);
+    }
+
+    /// <summary>
+    /// Returns an existing <see cref="MediaViewModel"/> from the current library state if found,
+    /// otherwise creates a new one.
+    /// </summary>
+    public MediaViewModel GetOrCreate(string pathOrUri)
+    {
+        var existing = FindByLocation(_libraryContext.Music.Songs, pathOrUri)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, pathOrUri);
+        return existing ?? Create(pathOrUri);
     }
 
     public bool TryGetOrCreate(StorageFile file, out MediaViewModel? mediaViewModel)
@@ -98,21 +121,24 @@ public sealed class MediaViewModelFactory
                          ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (mediaViewModel == null)
         {
-            mediaViewModel = new MediaViewModel(_playerContext, _playerService, file);
+            mediaViewModel = Create(file);
             return false;
         }
+
+        if (mediaViewModel.Source is IFileMediaSource fileSource && fileSource.StorageFile is null)
+            fileSource.UpdateStorageFile(file);
 
         return true;
     }
 
     public bool TryGetOrCreate(Uri uri, out MediaViewModel? mediaViewModel)
     {
-        string location = uri.OriginalString;
+        string location = uri.IsFile ? uri.LocalPath : uri.OriginalString;
         mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
                          ?? FindByLocation(_libraryContext.Videos.Videos, location);
         if (mediaViewModel == null)
         {
-            mediaViewModel = new MediaViewModel(_playerContext, _playerService, uri);
+            mediaViewModel = Create(uri);
             return false;
         }
 
@@ -125,4 +151,3 @@ public sealed class MediaViewModelFactory
             vm.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
     }
 }
-

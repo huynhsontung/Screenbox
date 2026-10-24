@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -95,7 +96,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private void OpenUrl(Uri? url)
     {
         if (url == null) return;
-        Messenger.Send(new PlayMediaMessage(url));
+        Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(url)));
     }
 
     private async Task UpdateContentAsync()
@@ -143,7 +144,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var fetchTasks = tokens.Select(async token =>
         {
             if (_recentContext.TokenToMediaMappings.TryGetValue(token, out var cachedMedia) &&
-                cachedMedia.Source is StorageFile cachedFile)
+                cachedMedia.Source is IFileMediaSource { StorageFile: { } cachedFile })
             {
                 return (Token: token, File: (StorageFile?)cachedFile, Media: (MediaViewModel?)cachedMedia);
             }
@@ -297,7 +298,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
         IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
         if (files.Length == 0) return;
-        Messenger.Send(new PlayMediaMessage(files));
+        Messenger.Send(new PlayFilesMessage(files));
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -373,4 +374,5 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }
+
 

@@ -302,15 +302,16 @@ The media playback system is built on [LibVLCSharp](https://code.videolan.org/vi
 #### Core Playback Components
 
 - **`IMediaPlayer`**: Media player abstraction interface
+- **`IPlaybackItem`**: Playback item interface with track, chapter, and timing abstractions
 - **`VlcMediaPlayer.cs`**: VLC-based implementation of media player
-- **`PlaybackItem.cs`**: Media item wrapper with metadata and state
+- **`VlcPlaybackItem.cs`**: VLC-backed implementation of playback item
 
 #### Track Management System
 
-- **`PlaybackAudioTrackList.cs`**: Audio track selection and switching
-- **`PlaybackVideoTrackList.cs`**: Video track and subtitle management
-- **`PlaybackSubtitleTrackList.cs`**: Subtitle track handling
-- **`PlaybackChapterList.cs`**: Chapter navigation support
+- **VlcAudioTrackList.cs**: Audio track selection and switching
+- **VlcVideoTrackList.cs**: Video track and subtitle management
+- **VlcSubtitleTrackList.cs**: Subtitle track handling
+- **VlcChapterList.cs**: Chapter navigation support
 
 The playback engine provides a clean interface for the ViewModel layer while abstracting the complexities of the underlying VLC media framework.
 
