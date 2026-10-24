@@ -334,7 +334,7 @@ public sealed partial class MainPage : Page, IContentFrame
         }
 
         ViewModel.SearchQuery = string.Empty;
-        ViewModel.SearchSuggestions.Clear();
+        ViewModel.ClearSearchSuggestions();
         if (NavView.IsPaneOpen && NavView.DisplayMode != NavigationViewDisplayMode.Expanded)
         {
             ViewModel.IsPaneOpen = false;

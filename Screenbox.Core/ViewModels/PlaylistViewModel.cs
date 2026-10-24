@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,6 +12,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -30,6 +32,8 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
     [ObservableProperty] public partial DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
 
     public string Id => _id.ToString();
+
+    private bool HasItems => Items.Count > 0;
 
     private Guid _id = Guid.NewGuid();
 
@@ -57,12 +61,38 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
     {
         OnPropertyChanged(nameof(ItemsCount));
 
-        // Ensures the playlist is up to date when items are reordered, as the ListViewBase
-        // reorder operation sends Remove/Add actions instead of a Move action.
-        if (e.Action == NotifyCollectionChangedAction.Add)
+        if (e.OldItems is not null)
         {
-            _playlistSaveTimer.Debounce(() => UpdatePlaylist(), TimeSpan.FromMilliseconds(100));
+            foreach (MediaViewModel media in e.OldItems.OfType<MediaViewModel>())
+            {
+                media.PropertyChanged -= Media_OnPropertyChanged;
+            }
         }
+
+        if (e.NewItems is not null)
+        {
+            foreach (MediaViewModel media in e.NewItems.OfType<MediaViewModel>())
+            {
+                media.PropertyChanged += Media_OnPropertyChanged;
+            }
+        }
+
+        _playlistSaveTimer.Debounce(async () =>
+        {
+            // Ensures the playlist is up to date when items are reordered.
+            try
+            {
+                await SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
+            }
+
+            PlayCommand.NotifyCanExecuteChanged();
+            PlayNextCommand.NotifyCanExecuteChanged();
+            AddToQueueCommand.NotifyCanExecuteChanged();
+        }, TimeSpan.FromMilliseconds(50));
     }
 
     public Playlist ToPlaylist()
@@ -105,6 +135,30 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         await SaveAsync();
     }
 
+    [RelayCommand(CanExecute = nameof(HasItems))]
+    private void Play()
+    {
+        if (Items.Any(media => media.IsMediaActive))
+        {
+            Messenger.Send(new TogglePlayPauseMessage(showBadge: false));
+            return;
+        }
+
+        Messenger.Send(new SetQueueMessage(ToPlaylist(), true));
+    }
+
+    [RelayCommand(CanExecute = nameof(HasItems))]
+    private void PlayNext()
+    {
+        Messenger.SendPlayNext(Items);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasItems))]
+    private void AddToQueue()
+    {
+        Messenger.SendAddToQueue(Items);
+    }
+
     [RelayCommand]
     public async Task AddItemsAsync(IReadOnlyList<MediaViewModel> items)
     {
@@ -137,6 +191,14 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
 
         //await SaveAsync();
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
+    }
+
+    private void Media_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
+        {
+            IsPlaying = media.IsPlaying;
+        }
     }
 
     private PlaylistRecordDto ToPersistentPlaylist()
@@ -262,23 +324,5 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         }
 
         return new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
-    }
-
-    private void UpdatePlaylist()
-    {
-        if (_dispatcherQueue.HasThreadAccess)
-        {
-            _dispatcherQueue.TryEnqueue(async () =>
-            {
-                try
-                {
-                    await SaveAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
-                }
-            });
-        }
     }
 }

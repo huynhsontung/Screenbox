@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Screenbox.Behaviors"
-    xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -30,11 +29,11 @@
 
             <flyouts:MediaMenuFlyout
                 x:Key="ItemFlyout"
-                AddToQueueCommand="{x:Bind ViewModel.AddToQueueCommand}"
+                AddToQueueCommand="{x:Bind ViewModel.ContextPlaylist.AddToQueueCommand, Mode=OneWay}"
                 ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
                 IsAddToPlaylistButtonVisible="False"
-                PlayCommand="{x:Bind ViewModel.PlayCommand}"
-                PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
+                PlayCommand="{x:Bind ViewModel.ContextPlaylist.PlayCommand, Mode=OneWay}"
+                PlayNextCommand="{x:Bind ViewModel.ContextPlaylist.PlayNextCommand, Mode=OneWay}"
                 SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}">
                 <flyouts:MediaMenuFlyout.AdditionalItems>
                     <MenuFlyoutItem
@@ -190,9 +189,6 @@
             ItemsSource="{x:Bind ViewModel.Playlists}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionMode="None">
-            <GridView.Resources>
-                <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
-            </GridView.Resources>
             <GridView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="A"

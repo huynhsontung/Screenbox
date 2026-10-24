@@ -22,18 +22,22 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
     public ObservableCollection<AlbumViewModel> Albums { get; }
     public ObservableCollection<MediaViewModel> Songs { get; }
     public ObservableCollection<MediaViewModel> Videos { get; }
+    public ObservableCollection<PlaylistViewModel> Playlists { get; }
 
     [ObservableProperty] public partial ArtistViewModel? ContextArtist { get; set; }
     [ObservableProperty] public partial AlbumViewModel? ContextAlbum { get; set; }
     [ObservableProperty] public partial MediaViewModel? ContextMedia { get; set; }
+    [ObservableProperty] public partial PlaylistViewModel? ContextPlaylist { get; set; }
     [ObservableProperty] public partial bool ShowArtists { get; set; }
     [ObservableProperty] public partial bool ShowAlbums { get; set; }
     [ObservableProperty] public partial bool ShowSongs { get; set; }
     [ObservableProperty] public partial bool ShowVideos { get; set; }
+    [ObservableProperty] public partial bool ShowPlaylists { get; set; }
     [ObservableProperty] public partial bool HasMoreArtists { get; set; }
     [ObservableProperty] public partial bool HasMoreAlbums { get; set; }
     [ObservableProperty] public partial bool HasMoreSongs { get; set; }
     [ObservableProperty] public partial bool HasMoreVideos { get; set; }
+    [ObservableProperty] public partial bool HasMorePlaylists { get; set; }
 
     private readonly INavigationService _navigationService;
 
@@ -45,6 +49,7 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
         Albums = new ObservableCollection<AlbumViewModel>();
         Songs = new ObservableCollection<MediaViewModel>();
         Videos = new ObservableCollection<MediaViewModel>();
+        Playlists = new ObservableCollection<PlaylistViewModel>();
     }
 
     public void Load(SearchResult searchResult)
@@ -79,6 +84,15 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
             }
         }
 
+        if (searchResult.Playlists.Count > 0)
+        {
+            ShowPlaylists = true;
+            foreach (PlaylistViewModel playlist in searchResult.Playlists.Take(6))
+            {
+                Playlists.Add(playlist);
+            }
+        }
+
         UpdateHasMoreProperties(searchResult);
     }
 
@@ -96,6 +110,7 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
         HasMoreAlbums = Albums.Count < searchResult.Albums.Count;
         HasMoreSongs = Songs.Count < searchResult.Songs.Count;
         HasMoreVideos = Videos.Count < searchResult.Videos.Count;
+        HasMorePlaylists = Playlists.Count < searchResult.Playlists.Count;
     }
 
     [RelayCommand]
@@ -133,6 +148,12 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
     private void SeeAllVideos()
     {
         _navigationService.Navigate(typeof(VideoSearchResultPageViewModel), this);
+    }
+
+    [RelayCommand(CanExecute = nameof(HasMorePlaylists))]
+    private void SeeAllPlaylists()
+    {
+        _navigationService.Navigate(typeof(PlaylistSearchResultPageViewModel), this);
     }
 
     private static void SyncCollection<T>(IList<T> target, IReadOnlyList<T> source, int desiredCount)
