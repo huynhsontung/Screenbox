@@ -309,7 +309,7 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
-                        ItemsSource="{x:Bind AvailableLanguages}"
+                        ItemsSource="{x:Bind LanguageOptions}"
                         SelectedItem="{x:Bind SelectedLanguage, Mode=TwoWay}"
                         SelectionChanged="LanguageComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>

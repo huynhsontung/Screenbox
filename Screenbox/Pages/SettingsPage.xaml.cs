@@ -1,5 +1,4 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
@@ -24,15 +23,19 @@ public sealed partial class SettingsPage : Page
 
     internal CommonViewModel Common { get; }
 
-    private string[] VlcCommandLineHelpTextParts { get; }
-
+    // The view model uses an empty string for "system default". Using that value directly in the
+    // ComboBox would result in a blank selected item on first launch.
     private string SelectedLanguage
     {
         get => string.IsNullOrEmpty(ViewModel.Language) ? SystemDefaultLanguage : ViewModel.Language;
-        set => ViewModel.Language = value == SystemDefaultLanguage ? string.Empty : value;
+        set => ViewModel.Language = value.Equals(SystemDefaultLanguage) ? string.Empty : value;
     }
 
-    private readonly ObservableCollection<string> AvailableLanguages = new ObservableCollection<string>();
+    private string[] VlcCommandLineHelpTextParts { get; }
+
+    private string[] LanguageOptions => _languageOptions;
+
+    private static readonly string[] _languageOptions = [SystemDefaultLanguage, .. ApplicationLanguages.ManifestLanguages];
 
     public SettingsPage()
     {
@@ -44,8 +47,6 @@ public sealed partial class SettingsPage : Page
         VlcCommandLineHelpTextParts = helpText.Contains("{0}")
             ? helpText.Split("{0}").Select(s => s.Trim()).Take(2).ToArray()
             : new[] { helpText, string.Empty };
-
-        PopulateLanguageComboBox();
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -84,14 +85,5 @@ public sealed partial class SettingsPage : Page
     private void ChangeFrameCaptureLocationHyperlink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
     {
         ViewModel.ChangeFrameCaptureLocationCommand.Execute(null);
-    }
-
-    private void PopulateLanguageComboBox()
-    {
-        AvailableLanguages.Add(SystemDefaultLanguage);
-        foreach (string? language in ApplicationLanguages.ManifestLanguages)
-        {
-            AvailableLanguages.Add(language);
-        }
     }
 }

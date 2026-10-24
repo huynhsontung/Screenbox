@@ -28,10 +28,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public PlaybackSettingsContext PlaybackSettings { get; }
     public GeneralSettingsContext GeneralSettings { get; }
 
+    [ObservableProperty] public partial string Language { get; set; }
     [ObservableProperty] public partial int PlayerAutoResize { get; set; }
     [ObservableProperty] public partial int VolumeBoost { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
-    [ObservableProperty] public partial string Language { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
     [ObservableProperty] public partial int VideoUpscaling { get; set; }
@@ -109,9 +109,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
 
         // Load values
+        Language = GeneralSettings.Language;
         PlayerAutoResize = (int)PlayerSettings.AutoResize;
         ShowRecent = GeneralSettings.ShowRecent;
-        Language = GeneralSettings.Language;
         SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
         AdvancedMode = PlayerSettings.AdvancedMode;
         VideoUpscaling = (int)PlayerSettings.VideoUpscale;

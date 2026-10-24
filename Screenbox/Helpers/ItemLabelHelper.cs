@@ -111,9 +111,14 @@ public static class ItemLabelHelper
         return prefix is null ? text : string.Concat(prefix, SpaceSeparator, text);
     }
 
+    /// <summary>
+    /// Gets the display name for a language option.
+    /// </summary>
+    /// <param name="languageCode">The language tag, or the special value <c>LanguageSystemDefault</c> for the system default option.</param>
+    /// <returns>The localized label for the system default option; otherwise, the native name of the language.</returns>
     public static string GetLanguageLabel(string languageCode)
     {
-        return string.Equals(languageCode, "LanguageSystemDefault", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(languageCode)
+        return string.Equals(languageCode, "LanguageSystemDefault", StringComparison.OrdinalIgnoreCase)
             ? Strings.Resources.LanguageSystemDefault
             : new Language(languageCode).NativeName;
     }
