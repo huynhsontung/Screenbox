@@ -1,6 +1,9 @@
 using System;
+using System.Globalization;
 using Screenbox.Core;
 using Screenbox.Core.Enums;
+using Windows.Globalization;
+using Windows.Globalization.NumberFormatting;
 
 namespace Screenbox.Helpers;
 
@@ -111,6 +114,18 @@ public static class ItemLabelHelper
     }
 
     /// <summary>
+    /// Gets the display name for a language option.
+    /// </summary>
+    /// <param name="languageCode">The language tag, or the special value <c>LanguageSystemDefault</c> for the system default option.</param>
+    /// <returns>The localized label for the system default option; otherwise, the native name of the language.</returns>
+    public static string GetLanguageLabel(string languageCode)
+    {
+        return string.Equals(languageCode, "LanguageSystemDefault", StringComparison.OrdinalIgnoreCase)
+            ? Strings.Resources.LanguageSystemDefault
+            : new Language(languageCode).NativeName;
+    }
+
+    /// <summary>
     /// Gets the localized label for a media property.
     /// </summary>
     /// <param name="property">The media property to localize.</param>
@@ -164,6 +179,21 @@ public static class ItemLabelHelper
     public static string GetStorageItemCaption(bool isFile, string fileInfo, uint itemCount)
     {
         return isFile ? fileInfo : Strings.Resources.ItemsCount(itemCount);
+    }
+
+    /// <summary>
+    /// Gets the label for a maximum volume option.
+    /// </summary>
+    /// <param name="maxVolume">The maximum volume percentage.</param>
+    /// <returns>
+    /// The localized "None" label if <paramref name="maxVolume"/> is 100 or less (no boost);
+    /// otherwise, the percentage followed by a percent sign.
+    /// </returns>
+    public static string GetVolumeBoostLabel(int maxVolume)
+    {
+        return maxVolume <= 100
+            ? Strings.Resources.None
+            : new PercentFormatter { FractionDigits = 0 }.Format(maxVolume / 100.0);
     }
 
     /// <summary>
