@@ -318,6 +318,9 @@
   <data name="UnknownGenre" xml:space="preserve">
     <value>Gen necunoscut</value>
   </data>
+  <data name="AllGenres" xml:space="preserve">
+    <value>Toate genurile</value>
+  </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Adăugare folder</value>
   </data>
@@ -872,6 +875,10 @@
     <value>Sortare după opțiunea {0} selectată</value>
     <comment>#Format[String sortBy]</comment>
   </data>
+  <data name="FilterByGenreAutomationName" xml:space="preserve">
+    <value>Filtrare după genul {0} selectat</value>
+    <comment>#Format[String genre]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
   </data>
@@ -1056,16 +1063,16 @@
     <value>Mărire viteză</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Piesa următoare</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Piesa anterioară</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Capitolul următor</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Capitolul anterior</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Adăugare la playlist</value>

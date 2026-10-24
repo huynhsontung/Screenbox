@@ -318,6 +318,9 @@
   <data name="UnknownGenre" xml:space="preserve">
     <value>Unbekanntes Genre</value>
   </data>
+  <data name="AllGenres" xml:space="preserve">
+    <value>Alle Genres</value>
+  </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Ordner hinzufügen</value>
   </data>
@@ -872,6 +875,10 @@
     <value>Wird nach {0} sortiert</value>
     <comment>#Format[String sortBy]</comment>
   </data>
+  <data name="FilterByGenreAutomationName" xml:space="preserve">
+    <value>Filtern nach {0} ausgewählten Genres</value>
+    <comment>#Format[String genre]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Künstler</value>
   </data>
@@ -1056,16 +1063,16 @@
     <value>Geschwindigkeit erhöhen</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Nächster Titel</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Vorheriger Titel</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Nächstes Kapitel</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Vorheriges Kapitel</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Zu Playlist hinzufügen</value>
@@ -1176,17 +1183,17 @@
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>Audio-Optionen</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>Untertitel-Optionen</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>Verringere {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>Erhöhe {0}</value>
     <comment>#Format[String value]</comment>
   </data>
 </root>

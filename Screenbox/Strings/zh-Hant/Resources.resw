@@ -318,6 +318,9 @@
   <data name="UnknownGenre" xml:space="preserve">
     <value>未知的內容類型</value>
   </data>
+  <data name="AllGenres" xml:space="preserve">
+    <value>All genres</value>
+  </data>
   <data name="AddFolder" xml:space="preserve">
     <value>新增資料夾</value>
   </data>
@@ -872,6 +875,10 @@
     <value>依選取的 {0} 選項排序</value>
     <comment>#Format[String sortBy]</comment>
   </data>
+  <data name="FilterByGenreAutomationName" xml:space="preserve">
+    <value>Filter by {0} genre selected</value>
+    <comment>#Format[String genre]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>演出者</value>
   </data>
@@ -1056,16 +1063,16 @@
     <value>增加速度</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>下一首曲目</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>上一首曲目</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>下一章</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>上一章</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>加入播放清單</value>
@@ -1176,17 +1183,17 @@
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>音訊選項</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>字幕選項</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>减少 {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>增加 {0}</value>
     <comment>#Format[String value]</comment>
   </data>
 </root>
