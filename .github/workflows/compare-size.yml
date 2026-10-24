@@ -96,9 +96,9 @@ jobs:
         with:
           name: ${{ matrix.checkout_path }}
           path: |
-            ${{ matrix.checkout_path }}/${{ env.APP_PROJ_PATH }}/obj/${{ env.ARCH }}/Release/${{ env.PROJ_TFM }}/win-${{ env.ARCH }}/native/*.mstat
-            ${{ inputs.upload_dgml && format('{0}/{1}/obj/{2}/Release/{3}/win-{2}/native/*.dgml.xml', matrix.checkout_path, env.APP_PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
-            ${{ inputs.upload_map && format('{0}/{1}/obj/{2}/Release/{3}/win-{2}/native/*.map.xml', matrix.checkout_path, env.APP_PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
+            ${{ matrix.checkout_path }}/${{ env.APP_PROJ_PATH }}/obj/${{ env.ARCH }}/Release/${{ env.PROJ_TFM }}/native/*.mstat
+            ${{ inputs.upload_dgml && format('{0}/{1}/obj/{2}/Release/{3}/native/*.dgml.xml', matrix.checkout_path, env.APP_PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
+            ${{ inputs.upload_map && format('{0}/{1}/obj/{2}/Release/{3}/native/*.map.xml', matrix.checkout_path, env.APP_PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
           if-no-files-found: error
           retention-days: 5
 
