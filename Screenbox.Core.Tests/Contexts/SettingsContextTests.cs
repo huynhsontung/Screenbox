@@ -34,15 +34,15 @@ public partial class SettingsContextTests
     }
 
     [Test]
-    public async Task GeneralSettingsContext_WhenThemeChanged_UpdatesStorageAndBroadcastsMessage()
+    public async Task GeneralSettingsContext_WhenAdvancedModeChanged_UpdatesStorageAndBroadcastsMessage()
     {
         var storage = new MemorySettingsStorage();
-        var context = new GeneralSettingsContext(storage);
+        var context = new PlayerSettingsContext(storage);
 
-        PropertyChangedMessage<ThemeOption>? receivedMessage = null;
-        SettingChangedMessage<GeneralSettingsContext, ThemeOption>? receivedDomainMessage = null;
+        PropertyChangedMessage<bool>? receivedMessage = null;
+        SettingChangedMessage<PlayerSettingsContext, bool>? receivedDomainMessage = null;
         object recipient = new();
-        WeakReferenceMessenger.Default.Register<PropertyChangedMessage<ThemeOption>>(
+        WeakReferenceMessenger.Default.Register<PropertyChangedMessage<bool>>(
             recipient,
             (r, m) =>
             {
@@ -51,7 +51,7 @@ public partial class SettingsContextTests
                     receivedMessage = m;
                 }
             });
-        WeakReferenceMessenger.Default.Register<SettingChangedMessage<GeneralSettingsContext, ThemeOption>>(
+        WeakReferenceMessenger.Default.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(
             recipient,
             (r, m) =>
             {
@@ -63,15 +63,15 @@ public partial class SettingsContextTests
 
         try
         {
-            context.Theme = ThemeOption.Dark;
+            context.AdvancedMode = true;
 
-            await Assert.That(context.Theme).IsEqualTo(ThemeOption.Dark);
-            await Assert.That(storage.GetValue("General/Theme", 0)).IsEqualTo((int)ThemeOption.Dark);
+            await Assert.That(context.AdvancedMode).IsTrue()    ;
+            await Assert.That(storage.GetValue("Advanced/IsEnabled", false)).IsTrue();
             await Assert.That(receivedMessage).IsNotNull();
-            await Assert.That(receivedMessage!.NewValue).IsEqualTo(ThemeOption.Dark);
+            await Assert.That(receivedMessage!.NewValue).IsTrue();
             await Assert.That(receivedDomainMessage).IsNotNull();
-            await Assert.That(receivedDomainMessage!.NewValue).IsEqualTo(ThemeOption.Dark);
-            await Assert.That(receivedDomainMessage!.PropertyName).IsEqualTo(nameof(GeneralSettingsContext.Theme));
+            await Assert.That(receivedDomainMessage!.NewValue).IsTrue();
+            await Assert.That(receivedDomainMessage!.PropertyName).IsEqualTo(nameof(PlayerSettingsContext.AdvancedMode));
         }
         finally
         {

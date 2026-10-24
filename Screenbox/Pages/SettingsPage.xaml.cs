@@ -72,7 +72,7 @@ public sealed partial class SettingsPage : Page
     {
         if (Window.Current.Content is Frame rootFrame)
         {
-            rootFrame.RequestedTheme = ViewModel.Theme;
+            rootFrame.RequestedTheme = ViewModel.GeneralSettings.Theme;
         }
     }
 

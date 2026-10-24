@@ -31,7 +31,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [ObservableProperty] public partial int PlayerAutoResize { get; set; }
     [ObservableProperty] public partial int VolumeBoost { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
-    [ObservableProperty] public partial ElementTheme Theme { get; set; }
     [ObservableProperty] public partial string Language { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
@@ -112,7 +111,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         // Load values
         PlayerAutoResize = (int)PlayerSettings.AutoResize;
         ShowRecent = GeneralSettings.ShowRecent;
-        Theme = GeneralSettings.Theme;
         Language = GeneralSettings.Language;
         SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
         AdvancedMode = PlayerSettings.AdvancedMode;
@@ -130,11 +128,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         // Setting initial values for relaunch check
         _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, Language);
         CheckForRelaunch();
-    }
-
-    partial void OnThemeChanged(ElementTheme value)
-    {
-        GeneralSettings.Theme = value;
     }
 
     partial void OnLanguageChanged(string value)

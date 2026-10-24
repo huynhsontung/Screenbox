@@ -283,7 +283,7 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsThemeSelectionDescription}"
-                        SelectedItem="{x:Bind ViewModel.Theme, Mode=TwoWay}"
+                        SelectedItem="{x:Bind ViewModel.GeneralSettings.Theme, Mode=TwoWay}"
                         SelectionChanged="ThemeComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="ElementTheme">
