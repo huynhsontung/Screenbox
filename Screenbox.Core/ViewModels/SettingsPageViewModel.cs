@@ -30,7 +30,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     [ObservableProperty] public partial string Language { get; set; }
     [ObservableProperty] public partial int PlayerAutoResize { get; set; }
-    [ObservableProperty] public partial int VolumeBoost { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
@@ -45,11 +44,15 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
+    public IReadOnlyList<int> VolumeBoostOptions { get; } = _volumeOptions;
+
     public IReadOnlyList<int> PlayerSeekStepOptions { get; } = new[] { 5, 10, 15, 20, 30 };
 
     public IReadOnlyList<int> PlayerControlsHideDelayOptions { get; } = new[] { 1, 2, 3, 4, 5 };
 
     public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = Enum.GetValues<PlaybackActionKind>();
+
+    private static readonly int[] _volumeOptions = [100, 125, 150, 200];
 
     private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
@@ -116,14 +119,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         AdvancedMode = PlayerSettings.AdvancedMode;
         VideoUpscaling = (int)PlayerSettings.VideoUpscale;
         GlobalArguments = PlayerSettings.GlobalArguments;
-        int maxVolume = PlaybackSettings.MaxVolume;
-        VolumeBoost = maxVolume switch
-        {
-            >= 200 => 3,
-            >= 150 => 2,
-            >= 125 => 1,
-            _ => 0
-        };
 
         // Setting initial values for relaunch check
         _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, Language);
@@ -157,17 +152,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         {
             _dispatcherQueue.TryEnqueue(async () => await RefreshLibrariesAsync());
         }
-    }
-
-    partial void OnVolumeBoostChanged(int value)
-    {
-        PlaybackSettings.MaxVolume = value switch
-        {
-            3 => 200,
-            2 => 150,
-            1 => 125,
-            _ => 100
-        };
     }
 
     partial void OnAdvancedModeChanged(bool value)

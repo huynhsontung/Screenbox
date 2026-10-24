@@ -384,15 +384,16 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsVolumeBoostDescription}"
-                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
-                        SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
+                        ItemsSource="{x:Bind ViewModel.VolumeBoostOptions}"
+                        SelectedItem="{x:Bind ViewModel.PlaybackSettings.MaxVolume, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:Int32">
+                                <TextBlock Text="{x:Bind helpers:ItemLabelHelper.GetVolumeBoostLabel((x:Int32))}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
-                        <x:String>None</x:String>
-                        <x:String>#125%</x:String>
-                        <x:String>#150%</x:String>
-                        <x:String>#200%</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
 

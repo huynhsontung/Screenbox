@@ -1,7 +1,9 @@
 using System;
+using System.Globalization;
 using Screenbox.Core;
 using Screenbox.Core.Enums;
 using Windows.Globalization;
+using Windows.Globalization.NumberFormatting;
 
 namespace Screenbox.Helpers;
 
@@ -177,6 +179,21 @@ public static class ItemLabelHelper
     public static string GetStorageItemCaption(bool isFile, string fileInfo, uint itemCount)
     {
         return isFile ? fileInfo : Strings.Resources.ItemsCount(itemCount);
+    }
+
+    /// <summary>
+    /// Gets the label for a maximum volume option.
+    /// </summary>
+    /// <param name="maxVolume">The maximum volume percentage.</param>
+    /// <returns>
+    /// The localized "None" label if <paramref name="maxVolume"/> is 100 or less (no boost);
+    /// otherwise, the percentage followed by a percent sign.
+    /// </returns>
+    public static string GetVolumeBoostLabel(int maxVolume)
+    {
+        return maxVolume <= 100
+            ? Strings.Resources.None
+            : new PercentFormatter { FractionDigits = 0 }.Format(maxVolume / 100.0);
     }
 
     /// <summary>
