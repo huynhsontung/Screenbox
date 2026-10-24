@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -16,18 +17,23 @@ public sealed partial class PlayQueuePageViewModel : ObservableRecipient
 {
     private readonly IFilesService _filesService;
     private readonly IPlayQueueCoordinator _coordinator;
+    private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlayQueuePageViewModel(IFilesService filesService, IPlayQueueCoordinator coordinator)
+    public PlayQueuePageViewModel(
+        IFilesService filesService,
+        IPlayQueueCoordinator coordinator,
+        MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
         _coordinator = coordinator;
+        _mediaFactory = mediaFactory;
     }
 
     [RelayCommand]
     private void AddUrl(Uri? uri)
     {
-        if (uri == null) return;
-        Messenger.Send(new PlayMediaMessage(uri));
+        if (uri is null) return;
+        Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(uri)));
     }
 
     /// <summary>
