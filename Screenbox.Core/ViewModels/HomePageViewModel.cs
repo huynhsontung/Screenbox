@@ -96,7 +96,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private void OpenUrl(Uri? url)
     {
         if (url == null) return;
-        Messenger.Send(new PlayMediaMessage(url));
+        Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(url)));
     }
 
     private async Task UpdateContentAsync()
@@ -298,7 +298,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
         IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
         if (files.Length == 0) return;
-        Messenger.Send(new PlayMediaMessage(files));
+        Messenger.Send(new PlayFilesMessage(files));
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]

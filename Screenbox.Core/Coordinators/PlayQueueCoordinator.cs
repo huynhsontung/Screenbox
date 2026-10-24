@@ -72,7 +72,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     // Tracks shuffle backup, current index, and provides a snapshot for service calls.
     private Playlist _playlist;
 
-    private object? _delayPlay;
+    private Func<Task>? _delayPlay;
 
     // When true, collection-changed events are deferred to avoid excessive
     // updates during bulk operations (e.g. ApplyQueueSnapshot, ClearQueue).
@@ -150,7 +150,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     #region Message Handlers
 
     /// <summary>
-    /// Handles a request to play a single media item or URI.
+    /// Handles a request to play a single media item.
     /// Clears the queue first unless <see cref="PlayMediaMessage.Existing"/> is true,
     /// in which case the item is played from within the current queue.
     /// </summary>
@@ -158,13 +158,18 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (MediaPlayer is null)
         {
-            _delayPlay = message.Value;
+            _delayPlay = () => ProcessPlayMediaAsync(message);
             return;
         }
 
-        if (message is { Existing: true, Value: MediaViewModel next })
+        await ProcessPlayMediaAsync(message);
+    }
+
+    private async Task ProcessPlayMediaAsync(PlayMediaMessage message)
+    {
+        if (message.Existing)
         {
-            await PlayAsync(next);
+            await PlayAsync(message.Value);
         }
         else
         {
@@ -182,7 +187,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (MediaPlayer is null)
         {
-            _delayPlay = message;
+            _delayPlay = () => ProcessPlayFilesAsync(message);
             return;
         }
 
@@ -293,30 +298,18 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             if (_delayPlay is not null)
             {
-                var pending = _delayPlay;
+                Func<Task> pending = _delayPlay;
                 _delayPlay = null;
                 await ProcessDelayPlayAsync(pending);
             }
         }
     }
 
-    private async Task ProcessDelayPlayAsync(object pendingPlay)
+    private async Task ProcessDelayPlayAsync(Func<Task> pendingPlay)
     {
         try
         {
-            if (pendingPlay is PlayFilesMessage playFilesMessage)
-            {
-                await ProcessPlayFilesAsync(playFilesMessage);
-            }
-            else if (pendingPlay is MediaViewModel media && _context.Items.Contains(media))
-            {
-                await PlayAsync(media);
-            }
-            else
-            {
-                ClearQueue();
-                await ParseAndPlayAsync(pendingPlay);
-            }
+            await pendingPlay();
         }
         catch (Exception ex)
         {
@@ -539,7 +532,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (MediaPlayer is null)
         {
-            _delayPlay = vm;
+            _delayPlay = () => PlayAsync(vm, allowExpand);
             return;
         }
 
@@ -912,64 +905,41 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _bufferManager.UpdateBufferAsync(MediaPlayer, _playlist, _context.RepeatMode);
 
     /// <summary>
-    /// Parses the given value into a media list and starts playback.
-    /// Uses a two-phase approach: start playing the first item immediately,
+    /// Parses the given media item into a media list and starts playback.
+    /// Uses a two-phase approach: start playing the item immediately if not expandable,
     /// then resolve the full media list (e.g. from a playlist file) and update the queue.
     /// </summary>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task ParseAndPlayAsync(object value)
+    private async Task ParseAndPlayAsync(MediaViewModel media)
     {
-        NextMediaList? result = null;
-
-        switch (value)
+        if (media.Source is not IExpandableMediaSource)
         {
-            case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
-                var fileMedia = _mediaFactory.GetOrCreate(file);
-                if (fileMedia.Source is not IExpandableMediaSource)
-                {
-                    CreateQueueAndPlay(fileMedia);
-                }
-                // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
-                // same object reference. Calling ParseMediaListAsync(file) would create a second VM
-                // via GetOrCreate, making result.NextItem a different instance from fileMedia.
-                // That mismatch would cause LoadFromPlaylist to restart playback unnecessarily.
-                result = await _mediaListFactory.ParseMediaListAsync(fileMedia);
-                break;
-
-            case IReadOnlyList<IStorageItem> items:
-                result = await _mediaListFactory.TryParseMediaListAsync(items);
-                break;
-
-            case StorageFile file:
-                var fileMedia0 = _mediaFactory.GetOrCreate(file);
-                if (fileMedia0.Source is not IExpandableMediaSource)
-                {
-                    CreateQueueAndPlay(fileMedia0);
-                }
-                result = await _mediaListFactory.ParseMediaListAsync(fileMedia0);
-                break;
-
-            case Uri uri:
-                var uriMedia = _mediaFactory.Create(uri);
-                if (uriMedia.Source is not IExpandableMediaSource)
-                {
-                    CreateQueueAndPlay(uriMedia);
-                }
-                result = await _mediaListFactory.ParseMediaListAsync(uriMedia);
-                break;
-
-            case MediaViewModel media:
-                if (media.Source is not IExpandableMediaSource)
-                {
-                    CreateQueueAndPlay(media);
-                }
-                result = await _mediaListFactory.ParseMediaListAsync(media);
-                break;
-
-            default:
-                throw new NotSupportedException($"Cannot parse and play object with type {value.GetType().FullName}");
+            CreateQueueAndPlay(media);
         }
 
+        NextMediaList result = await _mediaListFactory.ParseMediaListAsync(media);
+        var playlist = new Playlist(result.NextItem, result.Items);
+        ApplyQueueSnapshot(playlist);
+        MediaPlayer?.Play();
+    }
+
+    /// <summary>
+    /// Parses the given storage items into a media list and starts playback.
+    /// </summary>
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    private async Task ParseAndPlayAsync(IReadOnlyList<IStorageItem> items)
+    {
+        if (items.Count == 1 && items[0] is StorageFile file)
+        {
+            // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
+            // same object reference. Calling ParseMediaListAsync(file) would create a second VM
+            // via GetOrCreate, making result.NextItem a different instance from fileMedia.
+            // That mismatch would cause LoadFromPlaylist to restart playback unnecessarily.
+            var fileMedia = _mediaFactory.GetOrCreate(file);
+            await ParseAndPlayAsync(fileMedia);
+            return;
+        }
+
+        NextMediaList? result = await _mediaListFactory.TryParseMediaListAsync(items);
         if (result is not null)
         {
             var playlist = new Playlist(result.NextItem, result.Items);

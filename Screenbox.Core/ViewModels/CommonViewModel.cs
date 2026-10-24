@@ -153,7 +153,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
             if (files == null || files.Count == 0) return;
-            Messenger.Send(new PlayMediaMessage(files));
+            Messenger.Send(new PlayFilesMessage(files));
         }
         catch (Exception e)
         {
