@@ -562,6 +562,10 @@
     <value>"{0}" සඳහා වීඩියෝ ප්‍රතිඵල</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Playlist results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>ඇල්බමය නැත</value>
     <comment>#Format[Plural Int]</comment>

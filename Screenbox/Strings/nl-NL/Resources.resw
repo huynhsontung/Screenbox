@@ -562,6 +562,10 @@
     <value>Video resultaten voor "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Playlist results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>Geen album</value>
     <comment>#Format[Plural Int]</comment>

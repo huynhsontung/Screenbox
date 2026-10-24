@@ -562,6 +562,10 @@
     <value>关于 "{0}" 的视频搜索结果</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Playlist results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>无专辑</value>
     <comment>#Format[Plural Int]</comment>

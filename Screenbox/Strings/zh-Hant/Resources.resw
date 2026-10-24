@@ -562,6 +562,10 @@
     <value>「{0}」的影片搜尋結果</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Playlist results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>無專輯</value>
     <comment>#Format[Plural Int]</comment>
