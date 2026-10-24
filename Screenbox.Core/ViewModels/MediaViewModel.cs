@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -122,7 +119,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
     public void SetOptions(string options)
     {
         string[] opts = options.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Where(o => o.StartsWith(":") && o.Length > 1).ToArray();
+            .Where(o => o.StartsWith(':') && o.Length > 1).ToArray();
 
         // Check if new options and existing options are the same
         if (opts.Length == _options.Count && opts.SequenceEqual(_options))
