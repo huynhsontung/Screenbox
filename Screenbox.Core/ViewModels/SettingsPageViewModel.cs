@@ -29,7 +29,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public GeneralSettingsContext GeneralSettings { get; }
 
     [ObservableProperty] public partial string Language { get; set; }
-    [ObservableProperty] public partial int PlayerAutoResize { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
@@ -43,6 +42,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public ObservableCollection<StorageFolder> VideoLocations { get; }
 
     public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
+
+    public IReadOnlyList<PlayerAutoResizeOption> PlayerAutoResizeOptions { get; } = Enum.GetValues<PlayerAutoResizeOption>();
 
     public IReadOnlyList<int> VolumeBoostOptions { get; } = _volumeOptions;
 
@@ -113,7 +114,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
         // Load values
         Language = GeneralSettings.Language;
-        PlayerAutoResize = (int)PlayerSettings.AutoResize;
         ShowRecent = GeneralSettings.ShowRecent;
         SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
         AdvancedMode = PlayerSettings.AdvancedMode;
@@ -129,11 +129,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         GeneralSettings.Language = value;
         CheckForRelaunch();
-    }
-
-    partial void OnPlayerAutoResizeChanged(int value)
-    {
-        PlayerSettings.AutoResize = (PlayerAutoResizeOption)value;
     }
 
     partial void OnShowRecentChanged(bool value)

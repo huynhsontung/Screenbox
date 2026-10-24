@@ -364,14 +364,16 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsAutoResizeDescription}"
-                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
-                        SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
+                        ItemsSource="{x:Bind ViewModel.PlayerAutoResizeOptions}"
+                        SelectedItem="{x:Bind ViewModel.PlayerSettings.AutoResize, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="enums:PlayerAutoResizeOption">
+                                <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((enums:PlayerAutoResizeOption))}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
-                        <x:String>Always</x:String>
-                        <x:String>OnLaunch</x:String>
-                        <x:String>Never</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
 
