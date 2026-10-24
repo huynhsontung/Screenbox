@@ -69,7 +69,7 @@ jobs:
       actions: write
       contents: read
     env:
-      PROJ_PATH: Screenbox
+      APP_PROJ_PATH: Screenbox
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -96,9 +96,9 @@ jobs:
           WINAPP_CLI_TELEMETRY_OPTOUT: '1'
         run: |
           winapp cert generate `
-            --manifest "$env:PROJ_PATH/Package.appxmanifest" `
+            --manifest "$env:APP_PROJ_PATH/Package.appxmanifest" `
             --password "$env:TEMP_CERT_PASSWORD" `
-            --output "$env:PROJ_PATH/Screenbox_TemporaryKey.pfx" `
+            --output "$env:APP_PROJ_PATH/Screenbox_TemporaryKey.pfx" `
             --install
 
       - name: Extract self-signed certificate thumbprint
@@ -107,7 +107,7 @@ jobs:
           TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
         run: |
           $cert = Get-PfxCertificate `
-            -FilePath "$env:PROJ_PATH/Screenbox_TemporaryKey.pfx" `
+            -FilePath "$env:APP_PROJ_PATH/Screenbox_TemporaryKey.pfx" `
             -Password (ConvertTo-SecureString $env:TEMP_CERT_PASSWORD -AsPlainText -Force)
           "thumbprint=$($cert.Thumbprint)" >> $env:GITHUB_OUTPUT
 
@@ -121,7 +121,7 @@ jobs:
 
       - name: Build app package
         run: |
-          msbuild $env:PROJ_PATH/Screenbox.csproj `
+          msbuild $env:APP_PROJ_PATH/Screenbox.csproj `
             -restore `
             -p:RestoreConfigFile=nuget.config `
             -p:ContinuousIntegrationBuild=true `
@@ -134,14 +134,14 @@ jobs:
       - name: Upload sideload app package artifact
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/*.msixbundle
+          path: ${{ env.APP_PROJ_PATH }}/AppPackages/*_Test/*.msixbundle
           archive: false
 
       - name: Create pre-install kit artifact
-        run: ./scripts/Export-InstallKit.ps1 -OutputPath "$env:PROJ_PATH/AppPackages/*_Test/Screenbox-PreInstallKit.zip" -IncludeCertificate
+        run: ./scripts/Export-InstallKit.ps1 -OutputPath "$env:APP_PROJ_PATH/AppPackages/*_Test/Screenbox-PreInstallKit.zip" -IncludeCertificate
 
       - name: Upload pre-install kit artifact
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ env.PROJ_PATH }}/AppPackages/*_Test/Screenbox-PreInstallKit.zip
+          path: ${{ env.APP_PROJ_PATH }}/AppPackages/*_Test/Screenbox-PreInstallKit.zip
           archive: false

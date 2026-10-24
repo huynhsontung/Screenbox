@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       architecture:
-        description: 'Choose the target processor architecture'
+        description: 'Choose the processor architecture'
         required: true
         type: choice
         default: x64
@@ -32,7 +32,12 @@ on:
           - detailed
           - diagnostic
       upload_dgml:
-        description: 'Upload the generated DGML file'
+        description: 'Upload the generated codegen and scan DGML files'
+        required: true
+        type: boolean
+        default: true
+      upload_map:
+        description: 'Upload the generated object-layout map file'
         required: true
         type: boolean
         default: false
@@ -40,7 +45,7 @@ on:
 jobs:
   publish:
     name: Publish ${{ matrix.checkout_path }}
-    runs-on: windows-latest
+    runs-on: ${{ inputs.architecture == 'arm64' && 'windows-11-vs2026-arm' || 'windows-latest' }}
     permissions:
       actions: write
       contents: read
@@ -54,7 +59,7 @@ jobs:
             checkout_path: compare
     env:
       ARCH: ${{ inputs.architecture }}
-      PROJ_PATH: Screenbox
+      APP_PROJ_PATH: Screenbox
     steps:
       - name: Checkout ${{ matrix.ref }}
         uses: actions/checkout@v7
@@ -70,28 +75,30 @@ jobs:
       - name: Extract target framework
         working-directory: ${{ matrix.checkout_path }}
         run: |
-          $tfm = msbuild "$env:PROJ_PATH/Screenbox.csproj" -nologo -getProperty:TargetFramework
+          $tfm = msbuild "$env:APP_PROJ_PATH/Screenbox.csproj" -nologo -getProperty:TargetFramework
           "PROJ_TFM=$tfm" >> $env:GITHUB_ENV
 
       - name: Publish ${{ matrix.ref }}
         working-directory: ${{ matrix.checkout_path }}
         run: |
-          msbuild "$env:PROJ_PATH/Screenbox.csproj" `
+          msbuild "$env:APP_PROJ_PATH/Screenbox.csproj" `
             -restore `
             -v:${{ inputs.detail_level }} `
             -t:Publish `
             -p:Configuration=Release `
             -p:Platform=$env:ARCH `
             -p:IlcGenerateMstatFile=true `
-            -p:IlcGenerateDgmlFile=true
+            -p:IlcGenerateDgmlFile=true `
+            -p:IlcGenerateMapFile=true
 
       - name: Upload ${{ matrix.checkout_path }} artifact
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.checkout_path }}
           path: |
-            ${{ matrix.checkout_path }}/${{ env.PROJ_PATH }}/obj/${{ env.ARCH }}/Release/${{ env.PROJ_TFM }}/win-${{ env.ARCH }}/native/*.mstat
-            ${{ inputs.upload_dgml && format('{0}/{1}/obj/{2}/Release/{3}/win-{2}/native/*.scan.dgml.xml', matrix.checkout_path, env.PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
+            ${{ matrix.checkout_path }}/${{ env.APP_PROJ_PATH }}/obj/${{ env.ARCH }}/Release/${{ env.PROJ_TFM }}/win-${{ env.ARCH }}/native/*.mstat
+            ${{ inputs.upload_dgml && format('{0}/{1}/obj/{2}/Release/{3}/win-{2}/native/*.dgml.xml', matrix.checkout_path, env.APP_PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
+            ${{ inputs.upload_map && format('{0}/{1}/obj/{2}/Release/{3}/win-{2}/native/*.map.xml', matrix.checkout_path, env.APP_PROJ_PATH, env.ARCH, env.PROJ_TFM) || '' }}
           if-no-files-found: error
           retention-days: 5
 
@@ -110,14 +117,14 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: baseline
-          path: Downloads
+          path: downloads
           skip-decompress: true
 
       - name: Download compare artifact
         uses: actions/download-artifact@v8
         with:
           name: compare
-          path: Downloads
+          path: downloads
           skip-decompress: true
 
       - name: Install Sizoscope CLI
@@ -126,8 +133,8 @@ jobs:
       - name: Compare .mstat files
         run: |
           & "Tools/sizoscope-cli.exe" `
-            Downloads/baseline.zip `
-            Downloads/compare.zip `
+            downloads/baseline.zip `
+            downloads/compare.zip `
             --output "sizoscope-diff.txt"
 
       - name: Publish report to summary
