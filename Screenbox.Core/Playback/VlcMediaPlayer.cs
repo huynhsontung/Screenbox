@@ -241,7 +241,6 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
                 if (_playbackItem != null) RemoveItemHandlers(_playbackItem);
                 _playbackItem = vlcItem;
-                vlcItem.SubtitleTracks.Player = this;
                 RegisterItemHandlers(_playbackItem);
                 _readyToPlay = true;
                 _updateMediaProperties = true;
@@ -441,6 +440,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void RemoveItemHandlers(VlcPlaybackItem item)
     {
+        item.SubtitleTracks.Player = null;
         item.SubtitleTracks.SelectedIndexChanged -= SubtitleTracksOnSelectedIndexChanged;
         item.AudioTracks.SelectedIndexChanged -= AudioTracksOnSelectedIndexChanged;
         item.VideoTracks.SelectedIndexChanged -= VideoTracksOnSelectedIndexChanged;
@@ -449,6 +449,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     private void RegisterItemHandlers(VlcPlaybackItem item)
     {
         RemoveItemHandlers(item);
+        item.SubtitleTracks.Player = this;
         item.SubtitleTracks.SelectedIndexChanged += SubtitleTracksOnSelectedIndexChanged;
         item.AudioTracks.SelectedIndexChanged += AudioTracksOnSelectedIndexChanged;
         item.VideoTracks.SelectedIndexChanged += VideoTracksOnSelectedIndexChanged;

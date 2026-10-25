@@ -4,14 +4,15 @@ namespace Screenbox.Core.Playback;
 
 public sealed partial class VlcAudioTrackList : SingleSelectTrackList<AudioTrack>
 {
-    private readonly Media? _media;
+    private readonly Media _media;
 
     public VlcAudioTrackList(Media media)
     {
         _media = media;
-        if (_media.Tracks.Length > 0)
+        var tracks = _media.Tracks;
+        if (tracks.Length > 0)
         {
-            AddVlcMediaTracks(_media.Tracks);
+            AddVlcMediaTracks(tracks);
         }
         else
         {
@@ -21,9 +22,14 @@ public sealed partial class VlcAudioTrackList : SingleSelectTrackList<AudioTrack
         SelectedIndex = 0;
     }
 
+    internal void Detach()
+    {
+        _media.ParsedChanged -= Media_ParsedChanged;
+    }
+
     private void Media_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
     {
-        if (_media == null || e.ParsedStatus != MediaParsedStatus.Done) return;
+        if (e.ParsedStatus != MediaParsedStatus.Done) return;
         _media.ParsedChanged -= Media_ParsedChanged;
         AddVlcMediaTracks(_media.Tracks);
     }

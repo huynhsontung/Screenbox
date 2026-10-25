@@ -834,7 +834,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 }
 
                 SetCurrentItem(playlist.CurrentItem);
-                RaiseCanNavigateChanged();
             }
             finally
             {
@@ -894,16 +893,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     /// <summary>
     /// Parses the given media item into a media list and starts playback.
-    /// Uses a two-phase approach: start playing the item immediately if not expandable,
-    /// then resolve the full media list (e.g. from a playlist file) and update the queue.
     /// </summary>
     private async Task ParseAndPlayAsync(MediaViewModel media)
     {
-        if (media.Source is not IExpandableMediaSource)
-        {
-            CreateQueueAndPlay(media);
-        }
-
         NextMediaList result = await _mediaListFactory.ParseMediaListAsync(media);
         var playlist = new Playlist(result.NextItem, result.Items);
         ApplyQueueSnapshot(playlist);
@@ -918,12 +910,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (items.Count == 1 && items[0] is StorageFile file)
         {
-            // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
-            // same object reference. Calling ParseMediaListAsync(file) would create a second VM
-            // via GetOrCreate, making result.NextItem a different instance from fileMedia.
-            // That mismatch would cause LoadFromPlaylist to restart playback unnecessarily.
-            var fileMedia = _mediaFactory.GetOrCreate(file);
-            await ParseAndPlayAsync(fileMedia);
+            await ParseAndPlayAsync(_mediaFactory.GetOrCreate(file));
             return;
         }
 
@@ -934,13 +921,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             ApplyQueueSnapshot(playlist);
             MediaPlayer?.Play();
         }
-    }
-
-    private void CreateQueueAndPlay(MediaViewModel nextItem)
-    {
-        var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
-        ApplyQueueSnapshot(playlist);
-        MediaPlayer?.Play();
     }
 
     #endregion

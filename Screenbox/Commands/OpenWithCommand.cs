@@ -31,7 +31,6 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
     }
 
     /// <inheritdoc/>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public bool CanExecute(MediaViewModel? parameter)
     {
         return parameter?.Source is IFileMediaSource
@@ -67,7 +66,6 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task OpenWithAsync(MediaViewModel? parameter)
     {
         if (parameter == null)

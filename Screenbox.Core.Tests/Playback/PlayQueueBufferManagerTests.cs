@@ -16,7 +16,7 @@ using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 
 namespace Screenbox.Core.Tests.Playback;
 
-public class PlayQueueBufferManagerTests
+public partial class PlayQueueBufferManagerTests
 {
     private sealed partial class DummyPlaybackItem : IPlaybackItem
     {

@@ -20,11 +20,8 @@ public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<Subtitl
 
         public StorageFile File { get; }
 
-        public VlcMediaPlayer? Player { get; }
-
-        public LazySubtitleTrack(VlcMediaPlayer? player, StorageFile file)
+        public LazySubtitleTrack(StorageFile file)
         {
-            Player = player;
             File = file;
             Track = new SubtitleTrack("-1", file.Name);
         }
@@ -36,9 +33,10 @@ public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<Subtitl
     {
         _pendingSubtitleTracks = new List<LazySubtitleTrack>();
         _media = media;
-        if (_media.Tracks.Length > 0)
+        var tracks = _media.Tracks;
+        if (tracks.Length > 0)
         {
-            AddVlcMediaTracks(_media.Tracks);
+            AddVlcMediaTracks(tracks);
         }
         else
         {
@@ -46,6 +44,12 @@ public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<Subtitl
         }
 
         SelectedIndexChanged += OnSelectedIndexChanged;
+    }
+
+    internal void Detach()
+    {
+        _media.ParsedChanged -= Media_ParsedChanged;
+        Player = null;
     }
 
     internal void SelectVlcSpu(int spu)
@@ -79,12 +83,11 @@ public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<Subtitl
         if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
             _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack)
         {
-            var player = lazyTrack.Player ?? Player;
             int trackSpu = int.TryParse(selectedTrack.Id, out int s) ? s : -1;
-            if (player != null && (trackSpu == -1 || player.VlcPlayer.SpuCount < trackSpu))
+            if (Player != null && (trackSpu == -1 || Player.VlcPlayer.SpuCount < trackSpu))
             {
                 selectedTrack.Id = "-1";
-                player.AddSubtitle(lazyTrack.File, true);
+                Player.AddSubtitle(lazyTrack.File, true);
             }
         }
     }
@@ -94,23 +97,11 @@ public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<Subtitl
     {
         if (file is StorageFile storageFile)
         {
-            if (Player != null)
-            {
-                AddExternalSubtitle(Player, storageFile, select);
-            }
-            else
-            {
-                AddExternalSubtitleInternal(null, storageFile, select);
-            }
+            AddExternalSubtitleInternal(storageFile, select);
         }
     }
 
-    public void AddExternalSubtitle(VlcMediaPlayer player, StorageFile file, bool select)
-    {
-        AddExternalSubtitleInternal(player, file, select);
-    }
-
-    private void AddExternalSubtitleInternal(VlcMediaPlayer? player, StorageFile file, bool select)
+    private void AddExternalSubtitleInternal(StorageFile file, bool select)
     {
         string filePath = file.Path;
 
@@ -133,7 +124,7 @@ public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<Subtitl
             return;
         }
 
-        var lazySub = new LazySubtitleTrack(player, file);
+        var lazySub = new LazySubtitleTrack(file);
         _pendingSubtitleTracks.Add(lazySub);
         TrackList.Add(lazySub.Track);
 

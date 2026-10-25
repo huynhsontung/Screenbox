@@ -102,6 +102,10 @@ public partial class VlcPlaybackItem : IPlaybackItem
         if (_isDisposed) return;
         _isDisposed = true;
 
+        AudioTracks.Detach();
+        VideoTracks.Detach();
+        SubtitleTracks.Detach();
+
         if (_disposeCallback != null)
         {
             _disposeCallback(Media);

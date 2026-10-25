@@ -30,7 +30,6 @@ public sealed class SystemMediaTransportControlsService : ISystemMediaTransportC
         _lastUpdated = DateTime.MinValue;
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async Task UpdateTransportControlsDisplayAsync(MediaViewModel? item)
     {
         SystemMediaTransportControlsDisplayUpdater displayUpdater = TransportControls.DisplayUpdater;

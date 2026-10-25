@@ -11,6 +11,7 @@ namespace Screenbox.Core.Tests.Helpers;
 
 public partial class TestMediaPlayer : IMediaPlayer
 {
+#pragma warning disable CS0067
     public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaEnded;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaFailed;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
@@ -29,6 +30,7 @@ public partial class TestMediaPlayer : IMediaPlayer
     public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
     public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? AudioDelayChanged;
     public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? SubtitleDelayChanged;
+#pragma warning restore CS0067
 
     public bool CanPause => true;
     public bool CanSeek => true;

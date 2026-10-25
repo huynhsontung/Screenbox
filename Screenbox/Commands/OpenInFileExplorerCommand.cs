@@ -27,7 +27,6 @@ internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaVie
     }
 
     /// <inheritdoc/>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public bool CanExecute(MediaViewModel? parameter)
     {
         return DeviceInfoHelper.IsDesktop
@@ -63,7 +62,6 @@ internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaVie
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     private async Task OpenInFileExplorerAsync(MediaViewModel? parameter)
     {
         if (parameter is null)

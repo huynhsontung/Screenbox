@@ -78,17 +78,8 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel GetOrCreate(StorageFile file)
     {
-        string location = file.Path;
-        var existing = FindByLocation(_libraryContext.Music.Songs, location)
-                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
-        if (existing != null)
-        {
-            if (existing.Source is IFileMediaSource fileSource && fileSource.StorageFile is null)
-                fileSource.UpdateStorageFile(file);
-            return existing;
-        }
-
-        return Create(file);
+        TryGetOrCreate(file, out MediaViewModel mediaViewModel);
+        return mediaViewModel;
     }
 
     /// <summary>
@@ -97,10 +88,8 @@ public sealed class MediaViewModelFactory
     /// </summary>
     public MediaViewModel GetOrCreate(Uri uri)
     {
-        string location = uri.IsFile ? uri.LocalPath : uri.OriginalString;
-        var existing = FindByLocation(_libraryContext.Music.Songs, location)
-                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
-        return existing ?? Create(uri);
+        TryGetOrCreate(uri, out MediaViewModel mediaViewModel);
+        return mediaViewModel;
     }
 
     /// <summary>
@@ -114,34 +103,36 @@ public sealed class MediaViewModelFactory
         return existing ?? Create(pathOrUri);
     }
 
-    public bool TryGetOrCreate(StorageFile file, out MediaViewModel? mediaViewModel)
+    public bool TryGetOrCreate(StorageFile file, out MediaViewModel mediaViewModel)
     {
         string location = file.Path;
-        mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
-                         ?? FindByLocation(_libraryContext.Videos.Videos, location);
-        if (mediaViewModel == null)
+        var existing = FindByLocation(_libraryContext.Music.Songs, location)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
+        if (existing is null)
         {
             mediaViewModel = Create(file);
             return false;
         }
 
-        if (mediaViewModel.Source is IFileMediaSource fileSource && fileSource.StorageFile is null)
+        if (existing.Source is IFileMediaSource fileSource && fileSource.StorageFile is null)
             fileSource.UpdateStorageFile(file);
 
+        mediaViewModel = existing;
         return true;
     }
 
-    public bool TryGetOrCreate(Uri uri, out MediaViewModel? mediaViewModel)
+    public bool TryGetOrCreate(Uri uri, out MediaViewModel mediaViewModel)
     {
         string location = uri.IsFile ? uri.LocalPath : uri.OriginalString;
-        mediaViewModel = FindByLocation(_libraryContext.Music.Songs, location)
-                         ?? FindByLocation(_libraryContext.Videos.Videos, location);
-        if (mediaViewModel == null)
+        var existing = FindByLocation(_libraryContext.Music.Songs, location)
+                       ?? FindByLocation(_libraryContext.Videos.Videos, location);
+        if (existing is null)
         {
             mediaViewModel = Create(uri);
             return false;
         }
 
+        mediaViewModel = existing;
         return true;
     }
 
