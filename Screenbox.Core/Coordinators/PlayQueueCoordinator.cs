@@ -374,9 +374,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     #region IPlayQueueCoordinator Implementation
 
     /// <inheritdoc/>
-    public event EventHandler? CanNavigateChanged;
-
-    /// <inheritdoc/>
     public bool CanNext()
     {
         return _playbackControlService.CanNext(_playlist, _context.RepeatMode, _neighboringFilesQuery is not null);
@@ -652,7 +649,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         _transportControlsService.TransportControls.IsNextEnabled = CanNext();
         _transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
-        CanNavigateChanged?.Invoke(this, EventArgs.Empty);
+        Messenger.Send(new QueueCanNavigateChangedMessage());
     }
 
     /// <summary>

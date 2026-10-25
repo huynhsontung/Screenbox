@@ -23,12 +23,6 @@ namespace Screenbox.Core.Coordinators;
 public interface IPlayQueueCoordinator
 {
     /// <summary>
-    /// Raised when the result of <see cref="CanNext"/> or <see cref="CanPrevious"/> changes.
-    /// ViewModels should subscribe to keep their own navigation command states in sync.
-    /// </summary>
-    event EventHandler? CanNavigateChanged;
-
-    /// <summary>
     /// Returns whether navigating to the next item is currently possible.
     /// </summary>
     bool CanNext();

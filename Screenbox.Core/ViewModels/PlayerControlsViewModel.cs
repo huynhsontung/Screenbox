@@ -26,7 +26,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<TogglePlayPauseMessage>,
     IRecipient<TrackNavigationMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
-    IRecipient<PropertyChangedMessage<WindowViewMode>>
+    IRecipient<PropertyChangedMessage<WindowViewMode>>,
+    IRecipient<QueueCanNavigateChangedMessage>
 {
     /// <summary>
     /// The observable play queue state. Bind to this for <c>Items</c>,
@@ -93,7 +94,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         PlayerShowChapters = playerSettings.ShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
-        _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
 
         if (MediaPlayer != null)
         {
@@ -107,6 +107,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
+        Messenger.Register<QueueCanNavigateChangedMessage>(this);
     }
 
     public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
@@ -314,7 +315,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
-    private void OnCoordinatorCanNavigateChanged(object? sender, EventArgs e)
+    public void Receive(QueueCanNavigateChangedMessage message)
     {
         NextCommand.NotifyCanExecuteChanged();
         PreviousCommand.NotifyCanExecuteChanged();
