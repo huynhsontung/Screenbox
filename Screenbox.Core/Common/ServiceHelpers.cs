@@ -73,6 +73,7 @@ public static class ServiceHelpers
         // Coordinators
         services.AddSingleton<ILibraryCoordinator, LibraryCoordinator>();
         services.AddSingleton<IPlayQueueCoordinator, PlayQueueCoordinator>();
+        services.AddSingleton<ITransportControlsCoordinator, TransportControlsCoordinator>();
         services.AddSingleton<IPlayQueueBufferManager, PlayQueueBufferManager>();
         services.AddSingleton<IPlaybackProgressTracker, PlaybackProgressTracker>();
 

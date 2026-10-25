@@ -9,6 +9,7 @@ using CommunityToolkit.WinUI;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -21,7 +22,6 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Input;
-
 
 namespace Screenbox.Core.ViewModels;
 
@@ -51,7 +51,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private readonly PlayerContext _playerContext;
     private readonly IPlayerService _playerService;
-    private readonly ISystemMediaTransportControlsService _transportControlsService;
+
     private readonly PlayerSettingsContext _playerSettings;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _clickTimer;
@@ -70,21 +70,18 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         PlayerContext playerContext,
         IPlayerService playerService,
         PlayerSettingsContext playerSettings,
-        ISystemMediaTransportControlsService transportControlsService,
+        ITransportControlsCoordinator transportControlsCoordinator,
         ILogger<PlayerElementViewModel> logger)
     {
         _playerContext = playerContext;
         _playerService = playerService;
         _playerSettings = playerSettings;
-        _transportControlsService = transportControlsService;
+
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _clickTimer = _dispatcherQueue.CreateTimer();
         _pointerWheelTimer = _dispatcherQueue.CreateTimer();
         _requestTracker = new DisplayRequestTracker();
-
-        transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
-        transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
 
         Messenger.Register<ChangeAspectRatioMessage>(this);
     }
@@ -104,8 +101,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         if (oldPlayer != null)
         {
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
-            oldPlayer.PositionChanged -= OnPositionChanged;
-            oldPlayer.MediaFailed -= OnMediaFailed;
+
             oldPlayer.PlaybackItemChanged -= OnPlaybackItemChanged;
             MediaPlayer = null;
         }
@@ -174,8 +170,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
                 MediaPlayer = vlcMediaPlayer;
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
-                player.PositionChanged += OnPositionChanged;
-                player.MediaFailed += OnMediaFailed;
+
                 player.PlaybackItemChanged += OnPlaybackItemChanged;
 
                 initException?.Throw();
@@ -443,48 +438,9 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         }
     }
 
-    private void OnMediaFailed(IMediaPlayer sender, object? args)
-    {
-        _transportControlsService.ClosePlayback();
-    }
-
-    private void OnPositionChanged(IMediaPlayer sender, object? args)
-    {
-        _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
-    }
-
     private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<IPlaybackItem?> args)
     {
         if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
-    {
-        if (MediaPlayer == null) return;
-        MediaPlayer.Position = args.RequestedPlaybackPosition;
-    }
-
-    private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-    {
-        if (MediaPlayer == null) return;
-        switch (args.Button)
-        {
-            case SystemMediaTransportControlsButton.Pause:
-                MediaPlayer.Pause();
-                break;
-            case SystemMediaTransportControlsButton.Play:
-                MediaPlayer.Play();
-                break;
-            case SystemMediaTransportControlsButton.Stop:
-                MediaPlayer.PlaybackItem = null;
-                break;
-            case SystemMediaTransportControlsButton.FastForward:
-                MediaPlayer.Position += TimeSpan.FromSeconds(10);
-                break;
-            case SystemMediaTransportControlsButton.Rewind:
-                MediaPlayer.Position -= TimeSpan.FromSeconds(10);
-                break;
-        }
     }
 
     private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
@@ -494,7 +450,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             UpdateDisplayRequest(sender.PlaybackState, _requestTracker);
         });
 
-        _transportControlsService.UpdatePlaybackStatus(sender.PlaybackState);
     }
 
     private void SetCropGeometry(Size size)
