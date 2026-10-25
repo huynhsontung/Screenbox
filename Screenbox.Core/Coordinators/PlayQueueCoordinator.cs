@@ -33,8 +33,9 @@ namespace Screenbox.Core.Coordinators;
 /// <remarks>
 /// <para>
 /// This coordinator handles all play queue mutations, playback navigation commands,
-/// media player event handling, neighboring-file auto-enqueue (when a single file is opened),
-/// and thumbnail pre-buffering for items adjacent to the current position.
+/// Windows System Media Transport Controls wiring, media player event handling,
+/// neighboring-file auto-enqueue (when a single file is opened), and thumbnail
+/// pre-buffering for items adjacent to the current position.
 /// </para>
 /// <para>
 /// All observable state is written to <see cref="PlayQueueContext"/>.
@@ -60,6 +61,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly PlaybackSettingsContext _playbackSettings;
+    private readonly ISystemMediaTransportControlsService _transportControlsService;
+    private readonly MediaViewModelFactory _mediaFactory;
     private readonly PlayerContext _playerContext;
     private readonly IPlayQueueBufferManager _bufferManager;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -91,6 +94,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
         PlaybackSettingsContext playbackSettings,
+        ISystemMediaTransportControlsService transportControlsService,
+        MediaViewModelFactory mediaFactory,
         PlayerContext playerContext,
         IPlayQueueBufferManager bufferManager,
         ILogger<PlayQueueCoordinator> logger)
@@ -102,6 +107,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _filesService = filesService;
         _generalSettings = generalSettings;
         _playbackSettings = playbackSettings;
+        _transportControlsService = transportControlsService;
+        _mediaFactory = mediaFactory;
         _playerContext = playerContext;
         _bufferManager = bufferManager;
         _logger = logger;
@@ -119,6 +126,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         // Keep internal Playlist model in sync with the observable Items collection.
         _context.Items.CollectionChanged += OnCollectionChanged;
+
+        // Wire transport controls buttons to commands.
+        _transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
+        _transportControlsService.TransportControls.AutoRepeatModeChangeRequested += TransportControlsOnAutoRepeatModeChangeRequested;
 
         if (MediaPlayer is not null)
         {
@@ -353,6 +364,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private void HandleRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
     {
         Messenger.Send(new RepeatModeChangedMessage(value));
+        _transportControlsService.TransportControls.AutoRepeatMode = value;
         _playbackSettings.RepeatMode = value;
         RaiseCanNavigateChanged();
     }
@@ -552,13 +564,15 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         try
         {
-            var newVms = await _mediaListFactory.ExpandMediaAsync(expandable);
-            if (newVms.Count == 0)
+            var expandedItems = await expandable.ExpandAsync();
+            if (expandedItems.Count == 0)
             {
                 _logger.LogInformation("Expandable media source yielded 0 items, playing directly: {Location}", placeholder.Location);
                 await PlayAsync(placeholder, allowExpand: false);
                 return;
             }
+
+            var newVms = expandedItems.Select(_mediaFactory.Create).ToList();
 
             // Track whether the placeholder was the currently playing or targeted item before replacing.
             bool shouldAutoPlay = _context.CurrentItem == placeholder || _context.CurrentItem is null;
@@ -588,13 +602,14 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         try
         {
-            var newVms = await _mediaListFactory.ExpandSubItemsAsync(playbackItem, TimeSpan.FromSeconds(5), cancellationToken);
-            if (newVms.Count > 0 && !cancellationToken.IsCancellationRequested && _context.CurrentItem == vm)
+            var subItems = await playbackItem.ExpandSubItemsAsync(TimeSpan.FromSeconds(5), cancellationToken);
+            if (subItems.Count > 0 && !cancellationToken.IsCancellationRequested && _context.CurrentItem == vm)
             {
                 void ReplaceAndPlay()
                 {
                     if (_context.CurrentItem != vm) return;
 
+                    var newVms = subItems.Select(_mediaFactory.Create).ToList();
                     if (ReplaceItemInQueue(vm, newVms))
                     {
                         SetCurrentItem(newVms[0]);
@@ -627,10 +642,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     }
 
     /// <summary>
-    /// Notifies subscribers that <see cref="CanNext"/> or <see cref="CanPrevious"/> may have changed.
+    /// Updates transport controls navigation state and notifies subscribers that
+    /// <see cref="CanNext"/> or <see cref="CanPrevious"/> may have changed.
     /// </summary>
     private void RaiseCanNavigateChanged()
     {
+        _transportControlsService.TransportControls.IsNextEnabled = CanNext();
+        _transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
         Messenger.Send(new QueueCanNavigateChangedMessage());
     }
 
@@ -691,8 +709,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     /// <summary>
     /// Performs asynchronous follow-up work after the current item changes:
-    /// breadcrumb logging, sub-item discovery, and concurrent updates to recent files
-    /// and the media thumbnail buffer.
+    /// breadcrumb logging, sub-item discovery, and concurrent updates to recent files,
+    /// transport controls display, and the media thumbnail buffer.
     /// </summary>
     private async Task ProcessCurrentItemChangedAsync(MediaViewModel? value)
     {
@@ -702,6 +720,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         if (value is null)
         {
+            _transportControlsService.ClosePlayback();
             return;
         }
 
@@ -724,6 +743,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             await Task.WhenAll(
                 _generalSettings.ShowRecent ? AddToRecent(value.Source, token) : Task.CompletedTask,
+                _transportControlsService.UpdateTransportControlsDisplayAsync(value),
                 UpdateMediaBufferAsync()
             );
         }
@@ -874,9 +894,16 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     /// <summary>
     /// Parses the given media item into a media list and starts playback.
+    /// Uses a two-phase approach: start playing the item immediately if not expandable,
+    /// then resolve the full media list (e.g. from a playlist file) and update the queue.
     /// </summary>
     private async Task ParseAndPlayAsync(MediaViewModel media)
     {
+        if (media.Source is not IExpandableMediaSource)
+        {
+            CreateQueueAndPlay(media);
+        }
+
         NextMediaList result = await _mediaListFactory.ParseMediaListAsync(media);
         var playlist = new Playlist(result.NextItem, result.Items);
         ApplyQueueSnapshot(playlist);
@@ -891,20 +918,29 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (items.Count == 1 && items[0] is StorageFile file)
         {
-            var result = await _mediaListFactory.ParseMediaListAsync(file);
-            var playlist = new Playlist(result.NextItem, result.Items);
-            ApplyQueueSnapshot(playlist);
-            MediaPlayer?.Play();
+            // Pass the existing VM instead of the raw file so ParseMediaListAsync reuses the
+            // same object reference. Calling ParseMediaListAsync(file) would create a second VM
+            // via GetOrCreate, making result.NextItem a different instance from fileMedia.
+            // That mismatch would cause LoadFromPlaylist to restart playback unnecessarily.
+            var fileMedia = _mediaFactory.GetOrCreate(file);
+            await ParseAndPlayAsync(fileMedia);
             return;
         }
 
-        NextMediaList? listResult = await _mediaListFactory.TryParseMediaListAsync(items);
-        if (listResult is not null)
+        NextMediaList? result = await _mediaListFactory.TryParseMediaListAsync(items);
+        if (result is not null)
         {
-            var playlist = new Playlist(listResult.NextItem, listResult.Items);
+            var playlist = new Playlist(result.NextItem, result.Items);
             ApplyQueueSnapshot(playlist);
             MediaPlayer?.Play();
         }
+    }
+
+    private void CreateQueueAndPlay(MediaViewModel nextItem)
+    {
+        var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
+        ApplyQueueSnapshot(playlist);
+        MediaPlayer?.Play();
     }
 
     #endregion
@@ -971,6 +1007,44 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
     }
 
+    private async void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+    {
+        try
+        {
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Next:
+                    await NextAsync();
+                    break;
+                case SystemMediaTransportControlsButton.Previous:
+                    await PreviousAsync();
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to handle transport controls button {Button}", args.Button);
+        }
+    }
+
+    private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
+    {
+        void Update()
+        {
+            // Update context directly (the coordinator will react via OnContextPropertyChanged).
+            _context.RepeatMode = args.RequestedAutoRepeatMode;
+        }
+
+        if (_dispatcherQueue.HasThreadAccess)
+        {
+            Update();
+        }
+        else
+        {
+            _dispatcherQueue.TryEnqueue(Update);
+        }
+    }
+
     /// <summary>
     /// Keeps the internal <see cref="_playlist"/> model in sync with the observable
     /// <see cref="PlayQueueContext.Items"/> collection and updates shuffle backup bookkeeping
@@ -993,3 +1067,4 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #endregion
 }
+

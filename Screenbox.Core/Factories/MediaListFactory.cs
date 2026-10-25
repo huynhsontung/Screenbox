@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
-using Screenbox.Core.Playback;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
@@ -84,35 +83,15 @@ public sealed class MediaListFactory : IMediaListFactory
         return queue.Count > 0 ? new NextMediaList(next ?? queue[0], queue) : null;
     }
 
-    public async Task<IReadOnlyList<MediaViewModel>> ExpandMediaAsync(
-        IExpandableMediaSource expandable,
-        CancellationToken cancellationToken = default)
-    {
-        var items = await expandable.ExpandAsync(cancellationToken);
-        return items.Count > 0
-            ? items.Select(_mediaFactory.Create).ToList()
-            : Array.Empty<MediaViewModel>();
-    }
-
-    public async Task<IReadOnlyList<MediaViewModel>> ExpandSubItemsAsync(
-        IPlaybackItem playbackItem,
-        TimeSpan timeout,
-        CancellationToken cancellationToken = default)
-    {
-        var subItems = await playbackItem.ExpandSubItemsAsync(timeout, cancellationToken);
-        return subItems.Count > 0
-            ? subItems.Select(_mediaFactory.Create).ToList()
-            : Array.Empty<MediaViewModel>();
-    }
-
     public async Task<NextMediaList> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default)
     {
         if (media.Source is IExpandableMediaSource expandable)
         {
-            var vms = await ExpandMediaAsync(expandable, cancellationToken);
-            if (vms.Count > 0)
+            var items = await expandable.ExpandAsync(cancellationToken);
+            if (items.Count > 0)
             {
-                return new NextMediaList(vms[0], vms as List<MediaViewModel> ?? vms.ToList());
+                var vms = items.Select(_mediaFactory.Create).ToList();
+                return new NextMediaList(vms[0], vms);
             }
         }
 

@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
-using Screenbox.Core.Playback;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
 
@@ -35,19 +33,4 @@ public interface IMediaListFactory
     /// Create a playlist from a URI
     /// </summary>
     Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Expands an expandable media source into child <see cref="MediaViewModel"/> items.
-    /// </summary>
-    Task<IReadOnlyList<MediaViewModel>> ExpandMediaAsync(
-        IExpandableMediaSource expandable,
-        CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Waits for sub-items on a playback item and converts them into <see cref="MediaViewModel"/> items.
-    /// </summary>
-    Task<IReadOnlyList<MediaViewModel>> ExpandSubItemsAsync(
-        IPlaybackItem playbackItem,
-        TimeSpan timeout,
-        CancellationToken cancellationToken = default);
 }
