@@ -263,7 +263,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         // evict it so it will be freshly created with new options when played.
         if (media != _context.CurrentItem)
         {
-            CleanPlaybackItem(media);
+            _bufferManager.CleanPlaybackItem(media);
         }
     }
 
@@ -300,20 +300,15 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 Func<Task> pending = _delayPlay;
                 _delayPlay = null;
-                await ProcessDelayPlayAsync(pending);
+                try
+                {
+                    await pending();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to process delayed playback request");
+                }
             }
-        }
-    }
-
-    private async Task ProcessDelayPlayAsync(Func<Task> pendingPlay)
-    {
-        try
-        {
-            await pendingPlay();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to process delayed playback request");
         }
     }
 
@@ -495,7 +490,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             SetCurrentItem(null);
         }
 
-        CleanPlaybackItem(item);
+        _bufferManager.CleanPlaybackItem(item);
         _context.Items.Remove(item);
     }
 
@@ -513,7 +508,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         SetCurrentItem(null);
         if (item is not null)
         {
-            CleanPlaybackItem(item);
+            _bufferManager.CleanPlaybackItem(item);
         }
         SetCurrentItem(item);
     }
@@ -521,12 +516,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     #endregion
 
     #region Private Methods
-
-    private IPlaybackItem? GetOrCreatePlaybackItem(MediaViewModel vm) =>
-        _bufferManager.GetOrCreatePlaybackItem(MediaPlayer, vm);
-
-    private void CleanPlaybackItem(MediaViewModel vm) =>
-        _bufferManager.CleanPlaybackItem(vm);
 
     private async Task PlayAsync(MediaViewModel vm, bool allowExpand = true)
     {
@@ -678,7 +667,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             if (MediaPlayer is not null)
             {
-                MediaPlayer.PlaybackItem = value is not null ? GetOrCreatePlaybackItem(value) : null;
+                MediaPlayer.PlaybackItem = value is not null
+                    ? _bufferManager.GetOrCreatePlaybackItem(MediaPlayer, value)
+                    : null;
             }
 
             if (_context.CurrentItem is not null)
