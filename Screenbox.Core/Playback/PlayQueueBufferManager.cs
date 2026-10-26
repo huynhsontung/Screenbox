@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -85,7 +84,7 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     }
 
     /// <inheritdoc/>
-    public async Task UpdateBufferAsync(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
+    public void UpdateBuffer(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
     {
         if (_isDisposed) return;
 
@@ -109,7 +108,6 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
         }
 
         _mediaBuffer = newBuffer;
-        await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
     }
 
     public void Dispose()

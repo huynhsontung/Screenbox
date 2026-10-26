@@ -679,10 +679,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             if (token.IsCancellationRequested) return;
 
+            _bufferManager.UpdateBuffer(MediaPlayer, _playlist, _context.RepeatMode);
             await Task.WhenAll(
                 _generalSettings.ShowRecent ? _filesService.AddToRecentAsync(value.Source, token) : Task.CompletedTask,
-                _transportControlsService.UpdateTransportControlsDisplayAsync(value),
-                UpdateMediaBufferAsync()
+                _transportControlsService.UpdateTransportControlsDisplayAsync(value)
             );
         }
         catch (OperationCanceledException)
@@ -774,13 +774,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _dispatcherQueue.TryEnqueue(Clear);
         }
     }
-
-    /// <summary>
-    /// Pre-loads thumbnails for items near the current position and releases
-    /// thumbnails for items that are no longer in the buffer window.
-    /// </summary>
-    private Task UpdateMediaBufferAsync() =>
-        _bufferManager.UpdateBufferAsync(MediaPlayer, _playlist, _context.RepeatMode);
 
     private async Task ApplyNavigationResultAsync(PlaybackNavigationResult result)
     {

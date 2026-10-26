@@ -137,7 +137,7 @@ public partial class PlayQueueBufferManagerTests
         var playlist = new Playlist(items[0], items);
 
         // At index 0, buffer window is [0, 1, 2]
-        await bufferManager.UpdateBufferAsync(player, playlist, MediaPlaybackAutoRepeatMode.None);
+        bufferManager.UpdateBuffer(player, playlist, MediaPlaybackAutoRepeatMode.None);
         var item0 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, items[0])!;
         var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, items[1])!;
         await Assert.That(item0.IsDisposed).IsFalse();
@@ -145,7 +145,7 @@ public partial class PlayQueueBufferManagerTests
 
         // Slide window to index 4: buffer window is [2, 3, 4]
         playlist.CurrentIndex = 4;
-        await bufferManager.UpdateBufferAsync(player, playlist, MediaPlaybackAutoRepeatMode.None);
+        bufferManager.UpdateBuffer(player, playlist, MediaPlaybackAutoRepeatMode.None);
 
         // Items 0 and 1 slid out of window -> must be disposed
         await Assert.That(item0.IsDisposed).IsTrue();

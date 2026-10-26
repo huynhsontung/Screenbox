@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
@@ -31,5 +30,5 @@ public interface IPlayQueueBufferManager : IDisposable
     /// Updates the sliding buffer window around the current index: pre-creates playback items,
     /// evicts items that slid out of the window, and triggers thumbnail loads.
     /// </summary>
-    Task UpdateBufferAsync(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
+    void UpdateBuffer(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
 }
