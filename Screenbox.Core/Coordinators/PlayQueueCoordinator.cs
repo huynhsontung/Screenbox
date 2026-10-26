@@ -21,8 +21,6 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.Search;
 using Windows.System;
 
 namespace Screenbox.Core.Coordinators;
@@ -34,8 +32,7 @@ namespace Screenbox.Core.Coordinators;
 /// <para>
 /// This coordinator handles all play queue mutations, playback navigation commands,
 /// Windows System Media Transport Controls wiring, media player event handling,
-/// neighboring-file auto-enqueue (when a single file is opened), and thumbnail
-/// pre-buffering for items adjacent to the current position.
+/// and thumbnail pre-buffering for items adjacent to the current position.
 /// </para>
 /// <para>
 /// All observable state is written to <see cref="PlayQueueContext"/>.
@@ -45,7 +42,6 @@ namespace Screenbox.Core.Coordinators;
 /// </remarks>
 public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQueueCoordinator,
     IRecipient<PlayMediaMessage>,
-    IRecipient<PlayFilesMessage>,
     IRecipient<SetQueueMessage>,
     IRecipient<ClearQueueMessage>,
     IRecipient<QueueRequestMessage>,
@@ -78,8 +74,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     // updates during bulk operations (e.g. ApplyQueueSnapshot, ClearQueue).
     private bool _deferCollectionChanged;
 
-    private StorageFileQueryResult? _neighboringFilesQuery;
-    private CancellationTokenSource? _playFilesCts;
     private CancellationTokenSource? _currentItemCts;
 
     // Guard flag to prevent re-entrant handling when the coordinator itself
@@ -139,7 +133,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         }
 
         Messenger.Register<PlayMediaMessage>(this);
-        Messenger.Register<PlayFilesMessage>(this);
         Messenger.Register<SetQueueMessage>(this);
         Messenger.Register<ClearQueueMessage>(this);
         Messenger.Register<QueueRequestMessage>(this);
@@ -174,47 +167,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         else
         {
             ClearQueue();
-            await ParseAndPlayAsync(message.Value);
-        }
-    }
-
-    /// <summary>
-    /// Handles a request to play one or more files from the file system.
-    /// Automatically enqueues neighboring files when a single file is opened
-    /// and the <c>EnqueueAllFilesInFolder</c> setting is enabled.
-    /// </summary>
-    public async void Receive(PlayFilesMessage message)
-    {
-        if (MediaPlayer is null)
-        {
-            _delayPlay = () => ProcessPlayFilesAsync(message);
-            return;
-        }
-
-        await ProcessPlayFilesAsync(message);
-    }
-
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task ProcessPlayFilesAsync(PlayFilesMessage message)
-    {
-        var files = message.Value;
-        _neighboringFilesQuery = message.NeighboringFilesQuery;
-        await ParseAndPlayAsync(files);
-
-        // Enqueue neighboring files in the same folder if the setting is enabled
-        // and only a single file was opened (avoids expanding explicit multi-selections).
-        if (_playlist.Items.Count == 1 && _generalSettings.EnqueueAllFilesInFolder)
-        {
-            if (_neighboringFilesQuery is null && files[0] is StorageFile file)
-            {
-                _neighboringFilesQuery = await _filesService.GetNeighboringFilesQueryAsync(file);
-            }
-
-            if (_neighboringFilesQuery is not null)
-            {
-                var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist, _neighboringFilesQuery);
-                ApplyQueueSnapshot(updatedPlaylist);
-            }
+            NextMediaList result = await _mediaListFactory.ParseMediaListAsync(message.Value);
+            ApplyQueueSnapshot(new Playlist(result.NextItem, result.Items));
+            MediaPlayer?.Play();
         }
     }
 
@@ -230,9 +185,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// </summary>
     public void Receive(SetQueueMessage message)
     {
-        // Reset transient state when a new playlist takes over.
-        _neighboringFilesQuery = null;
-
         // Disable shuffle without triggering the shuffle-rebuild side effect
         // (the new playlist has its own order).
         _settingContextFromCoordinator = true;
@@ -245,7 +197,18 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         var playNext = message.Value.CurrentItem;
         if (message.ShouldPlay && playNext is not null)
         {
-            MediaPlayer?.Play();
+            if (MediaPlayer is null)
+            {
+                _delayPlay = () =>
+                {
+                    MediaPlayer?.Play();
+                    return Task.CompletedTask;
+                };
+            }
+            else
+            {
+                MediaPlayer.Play();
+            }
         }
     }
 
@@ -295,6 +258,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             MediaPlayer.MediaFailed += OnMediaFailed;
             MediaPlayer.MediaEnded += OnEndReached;
             MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+
+            if (_context.CurrentItem is not null && MediaPlayer.PlaybackItem is null)
+            {
+                SetCurrentItem(_context.CurrentItem);
+            }
 
             if (_delayPlay is not null)
             {
@@ -376,35 +344,22 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public bool CanNext()
     {
-        return _playbackControlService.CanNext(_playlist, _context.RepeatMode, _neighboringFilesQuery is not null);
+        return _playbackControlService.CanNext(_playlist, _context.RepeatMode);
     }
 
     /// <inheritdoc/>
     public bool CanPrevious()
     {
-        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode, _neighboringFilesQuery is not null);
+        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode);
     }
 
     /// <inheritdoc/>
     public async Task NextAsync()
     {
-        var playlist = _playlist;
-        var result = playlist.Items.Count == 1 && _neighboringFilesQuery is not null
-            ? await _playbackControlService.GetNeighboringNextAsync(playlist, _neighboringFilesQuery)
-            : _playbackControlService.GetNext(playlist, _context.RepeatMode);
-
+        var result = await _playbackControlService.GetNextAsync(_playlist, _context.RepeatMode);
         if (result is not null)
         {
-            if (result.UpdatedPlaylist is not null)
-            {
-                // Playlist was replaced by neighboring-file navigation.
-                ApplyQueueSnapshot(result.UpdatedPlaylist);
-                MediaPlayer?.Play();
-            }
-            else
-            {
-                await PlayAsync(result.NextItem);
-            }
+            await ApplyNavigationResultAsync(result);
         }
     }
 
@@ -421,23 +376,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             return;
         }
 
-        var playlist = _playlist;
-        var result = playlist.Items.Count == 1 && _neighboringFilesQuery is not null
-            ? await _playbackControlService.GetNeighboringPreviousAsync(playlist, _neighboringFilesQuery)
-            : _playbackControlService.GetPrevious(playlist, _context.RepeatMode);
-
+        var result = await _playbackControlService.GetPreviousAsync(_playlist, _context.RepeatMode);
         if (result is not null)
         {
-            if (result.UpdatedPlaylist is not null)
-            {
-                // Playlist was replaced by neighboring-file navigation.
-                ApplyQueueSnapshot(result.UpdatedPlaylist);
-                MediaPlayer?.Play();
-            }
-            else
-            {
-                await PlayAsync(result.NextItem);
-            }
+            await ApplyNavigationResultAsync(result);
         }
         else
         {
@@ -458,22 +400,18 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     #region Public Methods
 
     /// <inheritdoc/>
-    public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files, int insertIndex = -1)
+    public void Enqueue(IReadOnlyList<MediaViewModel> items, int insertIndex = -1)
     {
-        var mediaList = await _mediaListFactory.TryParseMediaListAsync(files);
-        if (mediaList?.Items.Count > 0)
+        foreach (var item in items)
         {
-            foreach (var item in mediaList.Items)
+            if (insertIndex < 0 || insertIndex >= _context.Items.Count)
             {
-                if (insertIndex < 0 || insertIndex >= _context.Items.Count)
-                {
-                    _context.Items.Add(item);
-                }
-                else
-                {
-                    _context.Items.Insert(insertIndex, item);
-                    insertIndex++;
-                }
+                _context.Items.Add(item);
+            }
+            else
+            {
+                _context.Items.Insert(insertIndex, item);
+                insertIndex++;
             }
         }
     }
@@ -691,7 +629,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _playlist.CurrentIndex = -1;
             }
 
-            Messenger.Send(new QueueCurrentItemChangedMessage(value, _neighboringFilesQuery));
+            Messenger.Send(new QueueCurrentItemChangedMessage(value, _playlist.NeighboringFilesQuery));
             RaiseCanNavigateChanged();
         }
 
@@ -742,7 +680,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             if (token.IsCancellationRequested) return;
 
             await Task.WhenAll(
-                _generalSettings.ShowRecent ? AddToRecent(value.Source, token) : Task.CompletedTask,
+                _generalSettings.ShowRecent ? _filesService.AddToRecentAsync(value.Source, token) : Task.CompletedTask,
                 _transportControlsService.UpdateTransportControlsDisplayAsync(value),
                 UpdateMediaBufferAsync()
             );
@@ -755,52 +693,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             _logger.LogError(ex, "Failed to complete post-processing for current item: {Location}", value.Location);
         }
-    }
-
-    private async Task AddToRecent(IMediaSource? source, CancellationToken cancellationToken)
-    {
-        try
-        {
-            if (source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
-            {
-                if (cancellationToken.IsCancellationRequested) return;
-                _filesService.AddToRecent(file);
-            }
-        }
-        catch
-        {
-            // Silently ignore — recent-files tracking is best-effort.
-        }
-    }
-
-    /// <summary>
-    /// Fetches neighboring files asynchronously and adds them to <paramref name="playlist"/>.
-    /// Uses a cancellation-token pattern so that a new call cancels any in-flight fetch.
-    /// </summary>
-    private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
-    {
-        _playFilesCts?.Cancel();
-        using var cts = new CancellationTokenSource();
-        try
-        {
-            _playFilesCts = cts;
-            var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(playlist, neighboringFilesQuery, cts.Token);
-            return updatedPlaylist;
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected when superseded by a newer fetch.
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to enqueue neighboring files.");
-        }
-        finally
-        {
-            _playFilesCts = null;
-        }
-
-        return playlist;
     }
 
     /// <summary>
@@ -862,7 +754,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _deferCollectionChanged = true;
                 _context.Items.Clear();
                 _playlist = new Playlist();
-                _neighboringFilesQuery = null;
 
                 _settingContextFromCoordinator = true;
                 _context.ShuffleMode = false;
@@ -891,35 +782,17 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private Task UpdateMediaBufferAsync() =>
         _bufferManager.UpdateBufferAsync(MediaPlayer, _playlist, _context.RepeatMode);
 
-    /// <summary>
-    /// Parses the given media item into a media list and starts playback.
-    /// </summary>
-    private async Task ParseAndPlayAsync(MediaViewModel media)
+    private async Task ApplyNavigationResultAsync(PlaybackNavigationResult result)
     {
-        NextMediaList result = await _mediaListFactory.ParseMediaListAsync(media);
-        var playlist = new Playlist(result.NextItem, result.Items);
-        ApplyQueueSnapshot(playlist);
-        MediaPlayer?.Play();
-    }
-
-    /// <summary>
-    /// Parses the given storage items into a media list and starts playback.
-    /// </summary>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task ParseAndPlayAsync(IReadOnlyList<IStorageItem> items)
-    {
-        if (items.Count == 1 && items[0] is StorageFile file)
+        if (result.UpdatedPlaylist is not null)
         {
-            await ParseAndPlayAsync(_mediaFactory.GetOrCreate(file));
-            return;
-        }
-
-        NextMediaList? result = await _mediaListFactory.TryParseMediaListAsync(items);
-        if (result is not null)
-        {
-            var playlist = new Playlist(result.NextItem, result.Items);
-            ApplyQueueSnapshot(playlist);
+            // Playlist was replaced by neighboring-file navigation.
+            ApplyQueueSnapshot(result.UpdatedPlaylist);
             MediaPlayer?.Play();
+        }
+        else
+        {
+            await PlayAsync(result.NextItem);
         }
     }
 
@@ -960,20 +833,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         try
         {
-            var playlist = _playlist;
-            var result = _playbackControlService.HandleMediaEnded(playlist, _context.RepeatMode);
+            var result = _playbackControlService.HandleMediaEnded(_playlist, _context.RepeatMode);
             if (result is not null)
             {
-                if (result.UpdatedPlaylist is not null)
-                {
-                    // Playlist was replaced by neighboring-file navigation.
-                    ApplyQueueSnapshot(result.UpdatedPlaylist);
-                    MediaPlayer?.Play();
-                }
-                else
-                {
-                    await PlayAsync(result.NextItem);
-                }
+                await ApplyNavigationResultAsync(result);
             }
             else if (_context.RepeatMode == MediaPlaybackAutoRepeatMode.Track)
             {

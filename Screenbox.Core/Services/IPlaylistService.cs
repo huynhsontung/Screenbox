@@ -16,9 +16,14 @@ namespace Screenbox.Core.Services;
 public interface IPlaylistService
 {
     /// <summary>
-    /// Add neighboring files to an existing playlist
+    /// Creates a playlist from storage items, optionally associating a neighboring files query.
     /// </summary>
-    Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default);
+    Task<Playlist?> TryCreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFileQueryResult? neighboringFilesQuery = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds neighboring files to an existing playlist using the playlist's attached neighboring files query.
+    /// </summary>
+    Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Shuffle the items in a playlist

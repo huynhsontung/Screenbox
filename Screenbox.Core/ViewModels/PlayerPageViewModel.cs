@@ -110,6 +110,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly DispatcherQueueTimer _playPauseHoldTimer;
     private readonly IWindowService _windowService;
     private readonly PlayerSettingsContext _playerSettings;
+    private readonly GeneralSettingsContext _generalSettings;
+    private readonly IPlaylistService _playlistService;
     private readonly IFilesService _filesService;
     private readonly PlayerContext _playerContext;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -119,11 +121,14 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private double _playbackRateBeforeHold;
 
     public PlayerPageViewModel(IWindowService windowService,
-        PlayerSettingsContext playerSettings, IFilesService filesService, PlayerContext playerContext,
+        PlayerSettingsContext playerSettings, GeneralSettingsContext generalSettings,
+        IPlaylistService playlistService, IFilesService filesService, PlayerContext playerContext,
         INavigationService navigationService, MediaViewModelFactory mediaFactory)
     {
         _windowService = windowService;
         _playerSettings = playerSettings;
+        _generalSettings = generalSettings;
+        _playlistService = playlistService;
         _filesService = filesService;
         _playerContext = playerContext;
         _mediaFactory = mediaFactory;
@@ -305,7 +310,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                     }
                     else
                     {
-                        Messenger.Send(new PlayFilesMessage(items));
+                        await Messenger.PlayFilesAsync(items, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
                     }
 
                     return;

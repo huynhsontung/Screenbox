@@ -36,6 +36,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
+    private readonly IPlaylistService _playlistService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly ILogger<HomePageViewModel> _logger;
@@ -46,6 +47,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
+        IPlaylistService playlistService,
         ILogger<HomePageViewModel> logger)
     {
         Selection = selection;
@@ -53,6 +55,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _generalSettings = generalSettings;
+        _playlistService = playlistService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
@@ -298,7 +301,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
         IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
         if (files.Length == 0) return;
-        Messenger.Send(new PlayFilesMessage(files));
+        await Messenger.PlayFilesAsync(files, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]

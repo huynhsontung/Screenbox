@@ -12,7 +12,7 @@ namespace Screenbox.Core.Tests.Services;
 
 public class PlaylistServiceTests
 {
-    private readonly PlaylistService _service = new(null!, null!);
+    private readonly PlaylistService _service = new(null!, null!, null!);
 
     private static MediaViewModel CreateMedia(string name) =>
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };

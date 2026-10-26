@@ -21,15 +21,51 @@ public sealed class PlaylistService : IPlaylistService
 
     private readonly IMediaListFactory _mediaListFactory;
     private readonly IDatabaseService _databaseService;
+    private readonly IFilesService _filesService;
 
-    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService)
+    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService, IFilesService filesService)
     {
         _mediaListFactory = mediaListFactory;
         _databaseService = databaseService;
+        _filesService = filesService;
     }
 
-    public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default)
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<Playlist?> TryCreatePlaylistAsync(
+        IReadOnlyList<IStorageItem> storageItems,
+        StorageFileQueryResult? neighboringFilesQuery = null,
+        CancellationToken cancellationToken = default)
     {
+        if (storageItems.Count == 0) return null;
+
+        NextMediaList? result;
+        if (storageItems.Count == 1 && storageItems[0] is StorageFile file)
+        {
+            result = await _mediaListFactory.ParseMediaListAsync(file, cancellationToken);
+            if (result.Items.Count == 1)
+            {
+                neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+            }
+        }
+        else
+        {
+            result = await _mediaListFactory.TryParseMediaListAsync(storageItems, cancellationToken: cancellationToken);
+            if (result is null) return null;
+        }
+
+        return new Playlist(result.NextItem, result.Items)
+        {
+            NeighboringFilesQuery = neighboringFilesQuery
+        };
+    }
+
+    public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, CancellationToken cancellationToken = default)
+    {
+        if (playlist.NeighboringFilesQuery is not { } neighboringFilesQuery)
+        {
+            return playlist;
+        }
+
         var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
         var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();

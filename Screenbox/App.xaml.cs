@@ -214,7 +214,13 @@ sealed partial class App : Application
         }
 
         Window.Current.Activate();
-        WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
+        var playlistService = _services.GetRequiredService<IPlaylistService>();
+        var generalSettings = _services.GetRequiredService<GeneralSettingsContext>();
+        _ = WeakReferenceMessenger.Default.PlayFilesAsync(
+            args.Files,
+            playlistService,
+            generalSettings.EnqueueAllFilesInFolder,
+            args.NeighboringFilesQuery);
     }
 
     /// <summary>

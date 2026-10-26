@@ -35,6 +35,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
     private readonly INavigationService _navigationService;
     private readonly IFilesService _filesService;
     private readonly PlayerSettingsContext _playerSettings;
+    private readonly GeneralSettingsContext _generalSettings;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
     private readonly Dictionary<string, object> _pageStates;
@@ -42,12 +43,14 @@ public sealed partial class CommonViewModel : ObservableRecipient,
     public CommonViewModel(INavigationService navigationService,
         IFilesService filesService,
         PlayerSettingsContext playerSettings,
+        GeneralSettingsContext generalSettings,
         IPlaylistService playlistService,
         PlaylistsContext playlistsContext)
     {
         _navigationService = navigationService;
         _filesService = filesService;
         _playerSettings = playerSettings;
+        _generalSettings = generalSettings;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
         NavigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
@@ -153,7 +156,7 @@ public sealed partial class CommonViewModel : ObservableRecipient,
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
             if (files == null || files.Count == 0) return;
-            Messenger.Send(new PlayFilesMessage(files));
+            await Messenger.PlayFilesAsync(files, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
         }
         catch (Exception e)
         {

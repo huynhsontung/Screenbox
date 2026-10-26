@@ -65,7 +65,7 @@ public partial class PlayQueueBufferManagerTests
     public async Task GetOrCreatePlaybackItem_CachesAndReturnsSameItem()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!);
+        var playlistService = new PlaylistService(null!, null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
@@ -82,7 +82,7 @@ public partial class PlayQueueBufferManagerTests
     public async Task CleanPlaybackItem_DisposesAndRemovesItem()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!);
+        var playlistService = new PlaylistService(null!, null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
@@ -102,7 +102,7 @@ public partial class PlayQueueBufferManagerTests
     public async Task Clear_DisposesAllCachedItems()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!);
+        var playlistService = new PlaylistService(null!, null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
         var player = new TestMediaPlayer();
         var media1 = CreateMedia("test1");
@@ -121,7 +121,7 @@ public partial class PlayQueueBufferManagerTests
     public async Task UpdateBufferAsync_EvictsOutOfWindowItems()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!);
+        var playlistService = new PlaylistService(null!, null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
         var player = new TestMediaPlayer();
 
