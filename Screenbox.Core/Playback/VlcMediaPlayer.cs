@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
 using Windows.Devices.Enumeration;
@@ -412,7 +413,10 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         MediaEnded?.Invoke(this, EventArgs.Empty);
         PlaybackState = MediaPlaybackState.None;
         if (IsLoopingEnabled)
-            Replay();
+        {
+            // Escape LibVLC's EndReached native callback thread before calling Stop()/Play().
+            Task.Run(Replay);
+        }
     }
 
     private void VlcPlayer_Opening(object? sender, EventArgs e)

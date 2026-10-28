@@ -234,7 +234,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Re-subscribes to media events on the new player and replays any
     /// deferred play request that arrived before the player was ready.
     /// </summary>
-    public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
+    public async void Receive(PropertyChangedMessage<IMediaPlayer?> message)
     {
         if (message.Sender is not PlayerContext) return;
         if (message.OldValue is { } oldPlayer)
@@ -262,19 +262,17 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 Func<Task> pending = _delayPlay;
                 _delayPlay = null;
 
-                // Defer delayed playback to the next dispatcher tick so all subscribers to
-                // PropertyChangedMessage<IMediaPlayer?> finish wiring up the new player first.
-                _dispatcherQueue.TryEnqueue(async () =>
+                // Yield so all synchronous subscribers to PropertyChangedMessage<IMediaPlayer?>
+                // finish wiring up the new player before delayed playback starts.
+                await Task.Yield();
+                try
                 {
-                    try
-                    {
-                        await pending();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to process delayed playback request");
-                    }
-                });
+                    await pending();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to process delayed playback request");
+                }
             }
         }
     }
@@ -285,12 +283,19 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     /// <summary>
     /// Reacts to observable property changes on <see cref="PlayQueueContext"/>.
-    /// Only handles <see cref="PlayQueueContext.ShuffleMode"/> and
-    /// <see cref="PlayQueueContext.RepeatMode"/> changes initiated from the UI
-    /// (the coordinator suppresses its own updates via <see cref="_settingContextFromCoordinator"/>).
+    /// Triggers post-processing when <see cref="PlayQueueContext.CurrentItem"/> changes, and
+    /// handles <see cref="PlayQueueContext.ShuffleMode"/> and <see cref="PlayQueueContext.RepeatMode"/>
+    /// changes initiated from the UI (the coordinator suppresses its own updates via
+    /// <see cref="_settingContextFromCoordinator"/>).
     /// </summary>
     private void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(PlayQueueContext.CurrentItem))
+        {
+            _ = ProcessCurrentItemChangedAsync(_context.CurrentItem);
+            return;
+        }
+
         if (_settingContextFromCoordinator) return;
 
         switch (e.PropertyName)
@@ -367,28 +372,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (MediaPlayer is null) return;
 
-        void SetPositionToStart()
-        {
-            if (MediaPlayer is not null)
-            {
-                MediaPlayer.Position = TimeSpan.Zero;
-            }
-        }
-
         // If more than 5 seconds in, restart the current track instead of going back.
         if (MediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
             MediaPlayer.Position > TimeSpan.FromSeconds(5))
         {
-            // Ensure LibVLC position changes and PositionChanged events run on the dispatcher thread.
-            if (_dispatcherQueue.HasThreadAccess)
-            {
-                SetPositionToStart();
-            }
-            else
-            {
-                _dispatcherQueue.TryEnqueue(SetPositionToStart);
-            }
-
+            MediaPlayer.Position = TimeSpan.Zero;
             return;
         }
 
@@ -397,15 +385,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             await ApplyNavigationResultAsync(result);
         }
-        else if (_dispatcherQueue.HasThreadAccess)
-        {
-            // At the beginning of the queue with no repeat — restart the current track.
-            SetPositionToStart();
-        }
         else
         {
-            // Marshal to the dispatcher thread if GetPreviousAsync resumed on a background thread.
-            _dispatcherQueue.TryEnqueue(SetPositionToStart);
+            // At the beginning of the queue with no repeat — restart the current track.
+            MediaPlayer.Position = TimeSpan.Zero;
         }
     }
 
@@ -634,10 +617,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _context.CurrentItem.IsPlaying = false;
             }
 
-            _settingContextFromCoordinator = true;
-            _context.CurrentItem = value;
-            _settingContextFromCoordinator = false;
-
             if (value is not null)
             {
                 value.IsMediaActive = true;
@@ -650,6 +629,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _playlist.CurrentIndex = -1;
             }
 
+            // Assign CurrentItem after updating PlaybackItem and CurrentIndex so
+            // OnContextPropertyChanged -> ProcessCurrentItemChangedAsync sees the updated state.
+            _context.CurrentItem = value;
+
             Messenger.Send(new QueueCurrentItemChangedMessage(value, _playlist.NeighboringFilesQuery));
             RaiseCanNavigateChanged();
 
@@ -657,8 +640,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 MediaPlayer?.Play();
             }
-
-            _ = ProcessCurrentItemChangedAsync(value);
         }
 
         // Marshal observable context updates, PlaybackItem assignment, and Play() to the UI thread
@@ -856,9 +837,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private void OnEndReached(IMediaPlayer sender, object? args)
     {
         // MediaEnded is raised on LibVLC's EndReached native callback thread while LibVLC holds internal locks.
-        // Calling VlcPlayer.Play(), Stop(), or Position on the same thread causes a re-entrancy deadlock,
-        // so all playback transitions must be dispatched to the UI thread.
-        _dispatcherQueue.TryEnqueue(async () =>
+        // Escape the native event thread via Task.Run before calling Position or advancing playback
+        // to avoid a LibVLC re-entrancy deadlock.
+        _ = Task.Run(async () =>
         {
             try
             {
