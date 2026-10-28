@@ -168,8 +168,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             ClearQueue();
             NextMediaList result = await _mediaListFactory.ParseMediaListAsync(message.Value);
-            ApplyQueueSnapshot(new Playlist(result.NextItem, result.Items));
-            MediaPlayer?.Play();
+            ApplyQueueSnapshot(new Playlist(result.NextItem, result.Items), shouldPlay: true);
         }
     }
 
@@ -193,22 +192,16 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         // Note: we do not clone the playlist here so the sender retains control.
         // TODO: Consider cloning to prevent external modifications to the loaded playlist.
-        ApplyQueueSnapshot(message.Value);
         var playNext = message.Value.CurrentItem;
-        if (message.ShouldPlay && playNext is not null)
+        bool shouldPlay = message.ShouldPlay && playNext is not null;
+        ApplyQueueSnapshot(message.Value, shouldPlay: shouldPlay && MediaPlayer is not null);
+        if (shouldPlay && MediaPlayer is null)
         {
-            if (MediaPlayer is null)
+            _delayPlay = () =>
             {
-                _delayPlay = () =>
-                {
-                    MediaPlayer?.Play();
-                    return Task.CompletedTask;
-                };
-            }
-            else
-            {
-                MediaPlayer.Play();
-            }
+                MediaPlayer?.Play();
+                return Task.CompletedTask;
+            };
         }
     }
 
@@ -241,7 +234,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Re-subscribes to media events on the new player and replays any
     /// deferred play request that arrived before the player was ready.
     /// </summary>
-    public async void Receive(PropertyChangedMessage<IMediaPlayer?> message)
+    public void Receive(PropertyChangedMessage<IMediaPlayer?> message)
     {
         if (message.Sender is not PlayerContext) return;
         if (message.OldValue is { } oldPlayer)
@@ -268,14 +261,20 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 Func<Task> pending = _delayPlay;
                 _delayPlay = null;
-                try
+
+                // Defer delayed playback to the next dispatcher tick so all subscribers to
+                // PropertyChangedMessage<IMediaPlayer?> finish wiring up the new player first.
+                _dispatcherQueue.TryEnqueue(async () =>
                 {
-                    await pending();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to process delayed playback request");
-                }
+                    try
+                    {
+                        await pending();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to process delayed playback request");
+                    }
+                });
             }
         }
     }
@@ -368,11 +367,28 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     {
         if (MediaPlayer is null) return;
 
+        void SetPositionToStart()
+        {
+            if (MediaPlayer is not null)
+            {
+                MediaPlayer.Position = TimeSpan.Zero;
+            }
+        }
+
         // If more than 5 seconds in, restart the current track instead of going back.
         if (MediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
             MediaPlayer.Position > TimeSpan.FromSeconds(5))
         {
-            MediaPlayer.Position = TimeSpan.Zero;
+            // Ensure LibVLC position changes and PositionChanged events run on the dispatcher thread.
+            if (_dispatcherQueue.HasThreadAccess)
+            {
+                SetPositionToStart();
+            }
+            else
+            {
+                _dispatcherQueue.TryEnqueue(SetPositionToStart);
+            }
+
             return;
         }
 
@@ -381,10 +397,15 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             await ApplyNavigationResultAsync(result);
         }
-        else
+        else if (_dispatcherQueue.HasThreadAccess)
         {
             // At the beginning of the queue with no repeat — restart the current track.
-            MediaPlayer.Position = TimeSpan.Zero;
+            SetPositionToStart();
+        }
+        else
+        {
+            // Marshal to the dispatcher thread if GetPreviousAsync resumed on a background thread.
+            _dispatcherQueue.TryEnqueue(SetPositionToStart);
         }
     }
 
@@ -466,8 +487,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             return;
         }
 
-        SetCurrentItem(vm);
-        MediaPlayer.Play();
+        SetCurrentItem(vm, shouldPlay: true);
     }
 
     private bool ReplaceItemInQueue(MediaViewModel target, IReadOnlyList<MediaViewModel> replacements)
@@ -550,11 +570,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     var newVms = subItems.Select(_mediaFactory.Create).ToList();
                     if (ReplaceItemInQueue(vm, newVms))
                     {
-                        SetCurrentItem(newVms[0]);
-                        MediaPlayer?.Play();
+                        SetCurrentItem(newVms[0], shouldPlay: true);
                     }
                 }
 
+                // ExpandSubItemsAsync may complete on a LibVLC native event thread (MediaParsedChanged);
+                // marshal queue mutation and VlcPlayer.Play() back onto the UI dispatcher thread.
                 if (_dispatcherQueue.HasThreadAccess)
                 {
                     ReplaceAndPlay();
@@ -596,7 +617,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// updating <see cref="PlayQueueContext.CurrentIndex"/>, and broadcasting a
     /// <see cref="QueueCurrentItemChangedMessage"/> via the messenger.
     /// </summary>
-    private void SetCurrentItem(MediaViewModel? value)
+    private void SetCurrentItem(MediaViewModel? value, bool shouldPlay = false)
     {
         void UpdateState()
         {
@@ -631,8 +652,17 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             Messenger.Send(new QueueCurrentItemChangedMessage(value, _playlist.NeighboringFilesQuery));
             RaiseCanNavigateChanged();
+
+            if (shouldPlay && value is not null)
+            {
+                MediaPlayer?.Play();
+            }
+
+            _ = ProcessCurrentItemChangedAsync(value);
         }
 
+        // Marshal observable context updates, PlaybackItem assignment, and Play() to the UI thread
+        // so that PlaybackItem is always assigned before MediaPlayer.Play() and buffer updates run.
         if (_dispatcherQueue.HasThreadAccess)
         {
             UpdateState();
@@ -641,8 +671,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             _dispatcherQueue.TryEnqueue(UpdateState);
         }
-
-        _ = ProcessCurrentItemChangedAsync(value);
     }
 
     /// <summary>
@@ -701,7 +729,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Collection-changed events are deferred during this operation to avoid
     /// redundant intermediate updates.
     /// </summary>
-    private void ApplyQueueSnapshot(Playlist playlist)
+    private void ApplyQueueSnapshot(Playlist playlist, bool shouldPlay = false)
     {
         void UpdateQueue()
         {
@@ -725,7 +753,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     }
                 }
 
-                SetCurrentItem(playlist.CurrentItem);
+                SetCurrentItem(playlist.CurrentItem, shouldPlay);
             }
             finally
             {
@@ -733,6 +761,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             }
         }
 
+        // ObservableCollection mutations and subsequent SetCurrentItem/Play() must run on the UI thread.
         if (_dispatcherQueue.HasThreadAccess)
         {
             UpdateQueue();
@@ -745,10 +774,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void ClearQueue()
     {
-        _bufferManager.Clear();
-
         void Clear()
         {
+            _bufferManager.Clear();
+
             try
             {
                 _deferCollectionChanged = true;
@@ -765,6 +794,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             }
         }
 
+        // Ensure buffer disposal and ObservableCollection.Clear() run on the UI thread.
         if (_dispatcherQueue.HasThreadAccess)
         {
             Clear();
@@ -780,8 +810,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         if (result.UpdatedPlaylist is not null)
         {
             // Playlist was replaced by neighboring-file navigation.
-            ApplyQueueSnapshot(result.UpdatedPlaylist);
-            MediaPlayer?.Play();
+            ApplyQueueSnapshot(result.UpdatedPlaylist, shouldPlay: true);
         }
         else
         {
@@ -795,6 +824,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void OnMediaFailed(IMediaPlayer sender, EventArgs args)
     {
+        // MediaFailed is raised on a LibVLC native event thread; marshal observable property updates to the UI thread.
         _dispatcherQueue.TryEnqueue(() =>
         {
             if (_context.CurrentItem is not null)
@@ -807,6 +837,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void OnPlaybackStateChanged(IMediaPlayer sender, object args)
     {
+        // PlaybackStateChanged is raised on a LibVLC native event thread; marshal observable property updates to the UI thread.
         _dispatcherQueue.TryEnqueue(() =>
         {
             if (_context.CurrentItem is not null)
@@ -822,45 +853,56 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         });
     }
 
-    private async void OnEndReached(IMediaPlayer sender, object? args)
+    private void OnEndReached(IMediaPlayer sender, object? args)
     {
-        try
+        // MediaEnded is raised on LibVLC's EndReached native callback thread while LibVLC holds internal locks.
+        // Calling VlcPlayer.Play(), Stop(), or Position on the same thread causes a re-entrancy deadlock,
+        // so all playback transitions must be dispatched to the UI thread.
+        _dispatcherQueue.TryEnqueue(async () =>
         {
-            var result = _playbackControlService.HandleMediaEnded(_playlist, _context.RepeatMode);
-            if (result is not null)
+            try
             {
-                await ApplyNavigationResultAsync(result);
+                var result = _playbackControlService.HandleMediaEnded(_playlist, _context.RepeatMode);
+                if (result is not null)
+                {
+                    await ApplyNavigationResultAsync(result);
+                }
+                else if (_context.RepeatMode == MediaPlaybackAutoRepeatMode.Track)
+                {
+                    // Track repeat — restart from the beginning.
+                    sender.Position = TimeSpan.Zero;
+                }
             }
-            else if (_context.RepeatMode == MediaPlaybackAutoRepeatMode.Track)
+            catch (Exception ex)
             {
-                // Track repeat — restart from the beginning.
-                sender.Position = TimeSpan.Zero;
+                _logger.LogError(ex, "Failed to advance playlist on media ended");
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to advance playlist on media ended");
-        }
+        });
     }
 
-    private async void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+    private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
     {
-        try
+        // SystemMediaTransportControls events fire on a background MTA worker thread;
+        // marshal to the UI thread so playlist navigation and MediaPlayer calls stay thread-safe.
+        _dispatcherQueue.TryEnqueue(async () =>
         {
-            switch (args.Button)
+            try
             {
-                case SystemMediaTransportControlsButton.Next:
-                    await NextAsync();
-                    break;
-                case SystemMediaTransportControlsButton.Previous:
-                    await PreviousAsync();
-                    break;
+                switch (args.Button)
+                {
+                    case SystemMediaTransportControlsButton.Next:
+                        await NextAsync();
+                        break;
+                    case SystemMediaTransportControlsButton.Previous:
+                        await PreviousAsync();
+                        break;
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to handle transport controls button {Button}", args.Button);
-        }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to handle transport controls button {Button}", args.Button);
+            }
+        });
     }
 
     private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
@@ -871,6 +913,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _context.RepeatMode = args.RequestedAutoRepeatMode;
         }
 
+        // SystemMediaTransportControls events fire on a background MTA worker thread;
+        // marshal observable context updates to the UI thread.
         if (_dispatcherQueue.HasThreadAccess)
         {
             Update();
@@ -903,4 +947,3 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #endregion
 }
-
