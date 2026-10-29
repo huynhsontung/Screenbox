@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
+using Screenbox.Core.Models;
 using Windows.Media.Core;
 using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
 
@@ -57,6 +58,35 @@ public partial class VlcPlaybackItem : IPlaybackItem
     public async Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         await Media.WaitForParsed(timeout, cancellationToken);
+    }
+
+    public async Task<MediaInfo?> ProbeMediaInfoAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
+    {
+        if (_isDisposed)
+        {
+            return null;
+        }
+
+        if (!Media.IsParsed || Media.ParsedStatus != MediaParsedStatus.Done)
+        {
+            await Media.ParseAsync(timeout, cancellationToken);
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (_isDisposed)
+        {
+            return null;
+        }
+
+        if (Media.ParsedStatus != MediaParsedStatus.Done &&
+            Media.State != VLCState.Playing &&
+            Media.Tracks.Length == 0)
+        {
+            return null;
+        }
+
+        return Media.GetMediaInfo();
     }
 
     public async Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
