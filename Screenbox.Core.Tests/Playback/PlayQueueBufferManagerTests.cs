@@ -115,10 +115,11 @@ public partial class PlayQueueBufferManagerTests
 
         await Assert.That(item1.IsDisposed).IsTrue();
         await Assert.That(item2.IsDisposed).IsTrue();
+        await Assert.That(bufferManager.BufferedItems).IsEmpty();
     }
 
     [Test]
-    public async Task UpdateBufferAsync_EvictsOutOfWindowItems()
+    public async Task UpdateBuffer_EvictsOutOfWindowItemsAndExposesBufferedItems()
     {
         var playerService = new MockPlayerService();
         var playlistService = new PlaylistService(null!, null!, null!);
@@ -142,6 +143,10 @@ public partial class PlayQueueBufferManagerTests
         var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, items[1])!;
         await Assert.That(item0.IsDisposed).IsFalse();
         await Assert.That(item1.IsDisposed).IsFalse();
+        await Assert.That(bufferManager.BufferedItems).Count().IsEqualTo(3);
+        await Assert.That(bufferManager.BufferedItems[0]).IsSameReferenceAs(items[0]);
+        await Assert.That(bufferManager.BufferedItems[1]).IsSameReferenceAs(items[1]);
+        await Assert.That(bufferManager.BufferedItems[2]).IsSameReferenceAs(items[2]);
 
         // Slide window to index 4: buffer window is [2, 3, 4]
         playlist.CurrentIndex = 4;
@@ -150,5 +155,9 @@ public partial class PlayQueueBufferManagerTests
         // Items 0 and 1 slid out of window -> must be disposed
         await Assert.That(item0.IsDisposed).IsTrue();
         await Assert.That(item1.IsDisposed).IsTrue();
+        await Assert.That(bufferManager.BufferedItems).Count().IsEqualTo(3);
+        await Assert.That(bufferManager.BufferedItems[0]).IsSameReferenceAs(items[2]);
+        await Assert.That(bufferManager.BufferedItems[1]).IsSameReferenceAs(items[3]);
+        await Assert.That(bufferManager.BufferedItems[2]).IsSameReferenceAs(items[4]);
     }
 }

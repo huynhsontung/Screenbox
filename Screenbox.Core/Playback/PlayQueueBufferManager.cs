@@ -14,11 +14,14 @@ using Windows.Media;
 namespace Screenbox.Core.Playback;
 
 /// <summary>
-/// Manages the sliding-window buffer of media items around the current play position,
-/// pre-fetching thumbnails and managing the lifecycle of native <see cref="IPlaybackItem"/> instances.
+/// Manages the sliding-window buffer of media items around the current play position
+/// and the lifecycle of native <see cref="IPlaybackItem"/> instances.
 /// </summary>
 public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
 {
+    /// <inheritdoc/>
+    public IReadOnlyList<MediaViewModel> BufferedItems => _mediaBuffer;
+
     private readonly IPlayerService _playerService;
     private readonly IPlaylistService _playlistService;
     private readonly IMessenger _messenger;
@@ -91,7 +94,6 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
         var bufferIndices = _playlistService.GetMediaBufferIndices(playlist.CurrentIndex, playlist.Items.Count, repeatMode);
         var newBuffer = bufferIndices.Select(i => playlist.Items[i]).ToList();
 
-        var toLoad = newBuffer.Except(_mediaBuffer).ToList();
         var toClean = _mediaBuffer.Except(newBuffer).ToList();
 
         foreach (var media in toClean)
