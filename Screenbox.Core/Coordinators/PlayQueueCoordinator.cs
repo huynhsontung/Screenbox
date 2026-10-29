@@ -76,10 +76,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private CancellationTokenSource? _currentItemCts;
 
-    // Guard flag to prevent re-entrant handling when the coordinator itself
-    // writes ShuffleMode or RepeatMode back to the context.
-    private bool _settingContextFromCoordinator;
-
     public PlayQueueCoordinator(
         PlayQueueContext context,
         IPlaylistService playlistService,
@@ -111,11 +107,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _playlist = new Playlist();
 
         // Initialize context with persisted repeat mode.
-        _settingContextFromCoordinator = true;
         _context.RepeatMode = playbackSettings.RepeatMode;
-        _settingContextFromCoordinator = false;
 
-        // React to UI-initiated shuffle/repeat changes (TwoWay bindings write to context).
+        // React to context property changes.
         _context.PropertyChanged += OnContextPropertyChanged;
 
         // Keep internal Playlist model in sync with the observable Items collection.
@@ -180,16 +174,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     /// <summary>
     /// Handles a request to replace the play queue with a new playlist.
-    /// Resets shuffle state before loading the incoming playlist.
     /// </summary>
     public void Receive(SetQueueMessage message)
     {
-        // Disable shuffle without triggering the shuffle-rebuild side effect
-        // (the new playlist has its own order).
-        _settingContextFromCoordinator = true;
-        _context.ShuffleMode = false;
-        _settingContextFromCoordinator = false;
-
         // Note: we do not clone the playlist here so the sender retains control.
         // TODO: Consider cloning to prevent external modifications to the loaded playlist.
         var playNext = message.Value.CurrentItem;
@@ -285,21 +272,15 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Reacts to observable property changes on <see cref="PlayQueueContext"/>.
     /// Triggers post-processing when <see cref="PlayQueueContext.CurrentItem"/> changes, and
     /// handles <see cref="PlayQueueContext.ShuffleMode"/> and <see cref="PlayQueueContext.RepeatMode"/>
-    /// changes initiated from the UI (the coordinator suppresses its own updates via
-    /// <see cref="_settingContextFromCoordinator"/>).
+    /// changes.
     /// </summary>
     private async void OnContextPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(PlayQueueContext.CurrentItem))
-        {
-            await ProcessCurrentItemChangedAsync(_context.CurrentItem);
-            return;
-        }
-
-        if (_settingContextFromCoordinator) return;
-
         switch (e.PropertyName)
         {
+            case nameof(PlayQueueContext.CurrentItem):
+                await ProcessCurrentItemChangedAsync(_context.CurrentItem);
+                break;
             case nameof(PlayQueueContext.ShuffleMode):
                 HandleShuffleModeChanged(_context.ShuffleMode);
                 break;
@@ -311,6 +292,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void HandleShuffleModeChanged(bool value)
     {
+        if (_playlist.ShuffleMode == value) return;
+
         Playlist playlist;
         if (value)
         {
@@ -709,6 +692,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 _deferCollectionChanged = true;
                 _playlist = playlist;
+                _context.ShuffleMode = playlist.ShuffleMode;
 
                 // Use efficient synchronization for small lists; fall back to a full
                 // clear-and-refill for large lists to keep the UI thread responsive.
@@ -748,10 +732,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _deferCollectionChanged = true;
                 _context.Items.Clear();
                 _playlist = new Playlist();
-
-                _settingContextFromCoordinator = true;
                 _context.ShuffleMode = false;
-                _settingContextFromCoordinator = false;
             }
             finally
             {
