@@ -1,3 +1,4 @@
+using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Input;
@@ -113,7 +114,20 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
+        // Skip if no down event was processed, and recover gracefully if the
+        // recognizer cannot process the event (e.g. non-chronological timestamps).
+        if (IsEnabled && _gestureRecognizer.IsActive)
+        {
+            try
+            {
+                _gestureRecognizer.ProcessUpEvent(e.GetCurrentPoint(this));
+            }
+            catch (Exception ex) when (ex is ArgumentException or System.Runtime.InteropServices.COMException)
+            {
+                _gestureRecognizer.CompleteGesture();
+            }
+        }
+
         VideoViewButton.ReleasePointerCapture(e.Pointer);
         e.Handled = IsEnabled;
     }
