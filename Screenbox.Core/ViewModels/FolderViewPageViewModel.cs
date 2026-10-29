@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
@@ -143,7 +144,14 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
     private void Play(StorageItemViewModel? item)
     {
         if (item?.Media == null) return;
-        Messenger.SendQueueAndPlay(item.Media, _playableItems, true);
+        if (item.Media.Source is IExpandableMediaSource)
+        {
+            Messenger.Send(new PlayMediaMessage(item.Media, false));
+        }
+        else
+        {
+            Messenger.SendQueueAndPlay(item.Media, _playableItems, true);
+        }
     }
 
     [RelayCommand]
@@ -191,7 +199,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
             {
                 StorageItemViewModel item = _storageVmFactory.GetInstance(storageFile);
                 Items.Add(item);
-                if (item.Media != null) _playableItems.Add(item.Media);
+                if (item.Media != null && item.Media.Source is not IExpandableMediaSource) _playableItems.Add(item.Media);
             }
         }
 
@@ -217,7 +225,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
             {
                 StorageItemViewModel item = _storageVmFactory.GetInstance(storageItem);
                 Items.Add(item);
-                if (item.Media != null) _playableItems.Add(item.Media);
+                if (item.Media != null && item.Media.Source is not IExpandableMediaSource) _playableItems.Add(item.Media);
             }
         }
 

@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,6 +36,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
+    private readonly IPlaylistService _playlistService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly ILogger<HomePageViewModel> _logger;
@@ -45,6 +47,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
+        IPlaylistService playlistService,
         ILogger<HomePageViewModel> logger)
     {
         Selection = selection;
@@ -52,6 +55,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _mediaFactory = mediaFactory;
         _filesService = filesService;
         _generalSettings = generalSettings;
+        _playlistService = playlistService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
@@ -95,7 +99,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private void OpenUrl(Uri? url)
     {
         if (url == null) return;
-        Messenger.Send(new PlayMediaMessage(url));
+        Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(url)));
     }
 
     private async Task UpdateContentAsync()
@@ -143,7 +147,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var fetchTasks = tokens.Select(async token =>
         {
             if (_recentContext.TokenToMediaMappings.TryGetValue(token, out var cachedMedia) &&
-                cachedMedia.Source is StorageFile cachedFile)
+                cachedMedia.Source is IFileMediaSource { StorageFile: { } cachedFile })
             {
                 return (Token: token, File: (StorageFile?)cachedFile, Media: (MediaViewModel?)cachedMedia);
             }
@@ -297,7 +301,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
         IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
         if (files.Length == 0) return;
-        Messenger.Send(new PlayMediaMessage(files));
+        await Messenger.PlayFilesAsync(files, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -373,4 +377,5 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }
+
 

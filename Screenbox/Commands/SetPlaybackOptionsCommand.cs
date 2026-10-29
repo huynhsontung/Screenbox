@@ -1,6 +1,8 @@
 using System;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 using Screenbox.Core.ViewModels;
 using Screenbox.Dialogs;
 using Windows.UI.Xaml.Controls;
@@ -33,7 +35,7 @@ internal sealed partial class SetPlaybackOptionsCommand : IRelayCommand
             SetOptionsDialog dialog = new(string.Join(' ', media.Options));
             ContentDialogResult result = await dialog.ShowAsync();
             if (result == ContentDialogResult.None) return;
-            media.SetOptions(dialog.Options);
+            WeakReferenceMessenger.Default.Send(new UpdateMediaOptionsMessage(media, dialog.Options));
             if (result == ContentDialogResult.Secondary)
             {
                 PlayCommand?.Execute(parameter);

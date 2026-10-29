@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,17 +21,53 @@ public sealed class PlaylistService : IPlaylistService
 
     private readonly IMediaListFactory _mediaListFactory;
     private readonly IDatabaseService _databaseService;
+    private readonly IFilesService _filesService;
 
-    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService)
+    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService, IFilesService filesService)
     {
         _mediaListFactory = mediaListFactory;
         _databaseService = databaseService;
+        _filesService = filesService;
     }
 
-    public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default)
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<Playlist?> TryCreatePlaylistAsync(
+        IReadOnlyList<IStorageItem> storageItems,
+        StorageFileQueryResult? neighboringFilesQuery = null,
+        CancellationToken cancellationToken = default)
     {
+        if (storageItems.Count == 0) return null;
+
+        NextMediaList? result;
+        if (storageItems.Count == 1 && storageItems[0] is StorageFile file)
+        {
+            result = await _mediaListFactory.ParseMediaListAsync(file, cancellationToken);
+            if (result.Items.Count == 1)
+            {
+                neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+            }
+        }
+        else
+        {
+            result = await _mediaListFactory.TryParseMediaListAsync(storageItems, cancellationToken: cancellationToken);
+            if (result is null) return null;
+        }
+
+        return new Playlist(result.NextItem, result.Items)
+        {
+            NeighboringFilesQuery = neighboringFilesQuery
+        };
+    }
+
+    public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, CancellationToken cancellationToken = default)
+    {
+        if (playlist.NeighboringFilesQuery is not { } neighboringFilesQuery)
+        {
+            return playlist;
+        }
+
         var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-        var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, cancellationToken);
+        var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
         if (result?.Items.Count > 0)
         {
@@ -103,6 +140,65 @@ public sealed class PlaylistService : IPlaylistService
         return playlist.CurrentItem != null
             ? new Playlist(playlist.CurrentItem, backup)
             : new Playlist(backup);
+    }
+
+    public void UpdateShuffleBackup(Playlist playlist, NotifyCollectionChangedEventArgs e)
+    {
+        if (playlist.Items.Count <= 1)
+        {
+            playlist.ShuffleBackup = null;
+            return;
+        }
+
+        ShuffleBackup? backup = playlist.ShuffleBackup;
+        if (!playlist.ShuffleMode || backup is null)
+        {
+            return;
+        }
+
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Remove when e.OldItems?.Count > 0:
+                foreach (object item in e.OldItems)
+                {
+                    if (item is MediaViewModel vm)
+                    {
+                        backup.Removals.Add(vm);
+                    }
+                }
+                break;
+
+            case NotifyCollectionChangedAction.Replace when e is
+            {
+                OldItems: { Count: { } oldCount }, NewItems: { Count: { } newCount }
+            } && oldCount == newCount && newCount > 0:
+                for (int i = 0; i < oldCount; i++)
+                {
+                    if (e.OldItems[i] is not MediaViewModel oldItem) continue;
+                    if (e.NewItems[i] is not MediaViewModel newItem) continue;
+                    int backupIndex = backup.OriginalPlaylist.IndexOf(oldItem);
+                    if (backupIndex >= 0)
+                    {
+                        backup.OriginalPlaylist[backupIndex] = newItem;
+                    }
+                }
+                break;
+
+            case NotifyCollectionChangedAction.Add when e.NewItems is not null:
+                foreach (object item in e.NewItems)
+                {
+                    if (item is MediaViewModel vm && !backup.Removals.Remove(vm))
+                    {
+                        playlist.ShuffleBackup = null;
+                        break;
+                    }
+                }
+                break;
+
+            case NotifyCollectionChangedAction.Reset:
+                playlist.ShuffleBackup = null;
+                break;
+        }
     }
 
     public IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5)

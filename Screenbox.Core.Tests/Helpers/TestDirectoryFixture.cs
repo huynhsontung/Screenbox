@@ -4,7 +4,7 @@ namespace Screenbox.Core.Tests.Helpers;
 /// Provides isolated temporary directories for unit testing database and filesystem operations.
 /// Uses primary constructor and modern C# features.
 /// </summary>
-public sealed class TestDirectoryFixture : IDisposable
+public sealed partial class TestDirectoryFixture : IDisposable
 {
     static TestDirectoryFixture()
     {

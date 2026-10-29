@@ -203,7 +203,7 @@ sealed partial class App : Application
         //view.SetPreferredMinSize(new Size(480, 270));
     }
 
-    protected override void OnFileActivated(FileActivatedEventArgs args)
+    protected override async void OnFileActivated(FileActivatedEventArgs args)
     {
         _logger.LogInformation("File activation started. {PreviousExecutionState}", args.PreviousExecutionState);
 
@@ -214,7 +214,13 @@ sealed partial class App : Application
         }
 
         Window.Current.Activate();
-        WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
+        var playlistService = _services.GetRequiredService<IPlaylistService>();
+        var generalSettings = _services.GetRequiredService<GeneralSettingsContext>();
+        await WeakReferenceMessenger.Default.PlayFilesAsync(
+            args.Files,
+            playlistService,
+            generalSettings.EnqueueAllFilesInFolder,
+            args.NeighboringFilesQuery);
     }
 
     /// <summary>

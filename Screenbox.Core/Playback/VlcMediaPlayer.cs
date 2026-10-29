@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
 using Windows.Devices.Enumeration;
@@ -19,7 +20,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? IsMutedChanged;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? VolumeChanged;
-    public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<PlaybackItem?>>? PlaybackItemChanged;
+    public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<IPlaybackItem?>>? PlaybackItemChanged;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingProgressChanged;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingStarted;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
@@ -30,8 +31,8 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
     public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
     public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
-    public event TypedEventHandler<VlcMediaPlayer, ValueChangedEventArgs<double>>? SubtitleDelayChanged;
-    public event TypedEventHandler<VlcMediaPlayer, ValueChangedEventArgs<double>>? AudioDelayChanged;
+    public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? SubtitleDelayChanged;
+    public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? AudioDelayChanged;
 
     public ChapterCue? Chapter
     {
@@ -189,29 +190,6 @@ public sealed class VlcMediaPlayer : IMediaPlayer
             {
                 _normalizedSourceRect = value;
 
-                /*
-                This is how CropGeometry is parsed. Note that it only takes integer inputs.
-                https://code.videolan.org/videolan/vlc/-/blob/56222b9290dd9bf08e02b10b1e9ee13d68931fc2/src/video_output/vout_intf.c#L452-464
-
-                if (sscanf(newval.psz_string, "%u:%u", &num, &den) == 2) {
-                   vout_ControlChangeCropRatio(vout, num, den);
-                } else if (sscanf(newval.psz_string, "%ux%u+%u+%u", &width, &height, &x, &y) == 4) {
-                   vout_ControlChangeCropWindow(vout, x, y, width, height);
-                } else if (sscanf(newval.psz_string, "%u+%u+%u+%u", &left, &top, &right, &bottom) == 4) {
-                   vout_ControlChangeCropBorder(vout, left, top, right, bottom);
-                } else if (*newval.psz_string == '\0') {
-                   vout_ControlChangeCropRatio(vout, 0, 0);
-                } else {
-                   msg_Err(object, "Unknown crop format (%s)", newval.psz_string);
-                }
-                */
-
-                // double rightOffset = value.Right * NaturalVideoWidth;
-                // double bottomOffset = value.Bottom * NaturalVideoHeight;
-                // double leftOffset = value.Left * NaturalVideoWidth;
-                // double topOffset = value.Top * NaturalVideoHeight;
-                // VlcPlayer.CropGeometry = $"{rightOffset:F0}x{bottomOffset:F0}+{leftOffset:F0}+{topOffset:F0}";
-
                 // Use crop ratio to avoid conflict with subtitle rendering
                 double newWidth = value.Width * NaturalVideoWidth;
                 double newHeight = value.Height * NaturalVideoHeight;
@@ -244,13 +222,13 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         }
     }
 
-    public PlaybackItem? PlaybackItem
+    public IPlaybackItem? PlaybackItem
     {
         get => _playbackItem;
         set
         {
-            if (_playbackItem == value) return;
-            PlaybackItem? oldValue = _playbackItem;
+            if (ReferenceEquals(_playbackItem, value)) return;
+            IPlaybackItem? oldValue = _playbackItem;
             if (value == null)
             {
                 VlcPlayer.Stop();
@@ -259,13 +237,17 @@ public sealed class VlcMediaPlayer : IMediaPlayer
             }
             else
             {
-                _playbackItem = value;
+                if (value is not VlcPlaybackItem vlcItem)
+                    throw new NotSupportedException("Only VlcPlaybackItem is supported by VlcMediaPlayer.");
+
+                if (_playbackItem != null) RemoveItemHandlers(_playbackItem);
+                _playbackItem = vlcItem;
                 RegisterItemHandlers(_playbackItem);
                 _readyToPlay = true;
                 _updateMediaProperties = true;
             }
 
-            PlaybackItemChanged?.Invoke(this, new ValueChangedEventArgs<PlaybackItem?>(value, oldValue));
+            PlaybackItemChanged?.Invoke(this, new ValueChangedEventArgs<IPlaybackItem?>(value, oldValue));
         }
     }
 
@@ -294,7 +276,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     private TimeSpan _naturalDuration;
     private TimeSpan _position;
     private MediaPlaybackState _playbackState;
-    private PlaybackItem? _playbackItem;
+    private VlcPlaybackItem? _playbackItem;
 
     public VlcMediaPlayer(LibVLC libVlc)
     {
@@ -358,33 +340,33 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void VlcPlayer_ESSelected(object? sender, MediaPlayerESSelectedEventArgs e)
     {
-        if (PlaybackItem == null || e.Type != TrackType.Text) return;
+        if (_playbackItem == null || e.Type != TrackType.Text) return;
         // VLC sometimes auto selects a subtitle track.
         // Update subtitle track index accordingly.
         int spu = e.Id;
         if (spu < 0) return;
-        PlaybackItem.SubtitleTracks.SelectVlcSpu(spu);
+        _playbackItem.SubtitleTracks.SelectVlcSpu(spu);
     }
 
     private void VlcPlayer_ChapterChanged(object? sender, MediaPlayerChapterChangedEventArgs e)
     {
-        if (PlaybackItem == null || e.Chapter < 0 || e.Chapter >= PlaybackItem.Chapters.Count)
+        if (_playbackItem == null || e.Chapter < 0 || e.Chapter >= _playbackItem.Chapters.Count)
         {
             Chapter = null;
             return;
         }
 
-        Chapter = PlaybackItem.Chapters[e.Chapter];
+        Chapter = _playbackItem.Chapters[e.Chapter];
     }
 
     private void VlcPlayer_ESAdded(object? sender, MediaPlayerESAddedEventArgs e)
     {
         // Cannot use this event to check the track details during media Opening
         // This event fires before the track entry is added to Media.Tracks array
-        if (PlaybackItem == null || PlaybackState == MediaPlaybackState.Opening) return;
+        if (_playbackItem == null || PlaybackState == MediaPlaybackState.Opening) return;
         if (e.Type == TrackType.Text)
         {
-            PlaybackItem.SubtitleTracks.NotifyTrackAdded(e.Id);
+            _playbackItem.SubtitleTracks.NotifyTrackAdded(e.Id);
         }
     }
 
@@ -396,9 +378,12 @@ public sealed class VlcMediaPlayer : IMediaPlayer
             return;
         }
 
-        NaturalDuration = e.Length > MaxSupportedMilliseconds
+        var duration = e.Length > MaxSupportedMilliseconds
             ? TimeSpan.MaxValue
             : TimeSpan.FromMilliseconds(e.Length);
+
+        _playbackItem?.Chapters.Load(this);
+        NaturalDuration = duration;
     }
 
     private void VlcPlayer_Playing(object? sender, EventArgs e)
@@ -406,6 +391,11 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         PlaybackState = MediaPlaybackState.Playing;
         if (!_updateMediaProperties) return;
         _updateMediaProperties = false;
+
+        if (_playbackItem?.Chapters.Count == 0)
+        {
+            _playbackItem.Chapters.Load(this);
+        }
 
         // Update video dimension
         uint px = 0, py = 0;
@@ -423,7 +413,10 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         MediaEnded?.Invoke(this, EventArgs.Empty);
         PlaybackState = MediaPlaybackState.None;
         if (IsLoopingEnabled)
-            Replay();
+        {
+            // Escape LibVLC's EndReached native callback thread before calling Stop()/Play().
+            Task.Run(Replay);
+        }
     }
 
     private void VlcPlayer_Opening(object? sender, EventArgs e)
@@ -438,7 +431,6 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         if (BufferingProgress == 0)
         {
             BufferingStarted?.Invoke(this, EventArgs.Empty);
-            //PlaybackStateChanged?.Invoke(this, null);
         }
 
         BufferingProgress = e.Cache / 100d;
@@ -446,21 +438,22 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         if (BufferingProgress == 1.0)
         {
             BufferingEnded?.Invoke(this, EventArgs.Empty);
-            //PlaybackStateChanged?.Invoke(this, null);
             BufferingProgress = 0;
         }
     }
 
-    private void RemoveItemHandlers(PlaybackItem item)
+    private void RemoveItemHandlers(VlcPlaybackItem item)
     {
+        item.SubtitleTracks.Player = null;
         item.SubtitleTracks.SelectedIndexChanged -= SubtitleTracksOnSelectedIndexChanged;
         item.AudioTracks.SelectedIndexChanged -= AudioTracksOnSelectedIndexChanged;
         item.VideoTracks.SelectedIndexChanged -= VideoTracksOnSelectedIndexChanged;
     }
 
-    private void RegisterItemHandlers(PlaybackItem item)
+    private void RegisterItemHandlers(VlcPlaybackItem item)
     {
         RemoveItemHandlers(item);
+        item.SubtitleTracks.Player = this;
         item.SubtitleTracks.SelectedIndexChanged += SubtitleTracksOnSelectedIndexChanged;
         item.AudioTracks.SelectedIndexChanged += AudioTracksOnSelectedIndexChanged;
         item.VideoTracks.SelectedIndexChanged += VideoTracksOnSelectedIndexChanged;
@@ -468,27 +461,42 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     private void AudioTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
-        PlaybackAudioTrackList trackList = (PlaybackAudioTrackList)sender;
-        VlcPlayer.SetAudioTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
+        VlcAudioTrackList trackList = (VlcAudioTrackList)sender;
+        int trackId = -1;
+        if (sender.SelectedIndex >= 0 && int.TryParse(trackList[sender.SelectedIndex].Id, out int id))
+        {
+            trackId = id;
+        }
+        VlcPlayer.SetAudioTrack(trackId);
     }
 
     private void VideoTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
-        PlaybackVideoTrackList trackList = (PlaybackVideoTrackList)sender;
-        VlcPlayer.SetVideoTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
+        VlcVideoTrackList trackList = (VlcVideoTrackList)sender;
+        int trackId = -1;
+        if (sender.SelectedIndex >= 0 && int.TryParse(trackList[sender.SelectedIndex].Id, out int id))
+        {
+            trackId = id;
+        }
+        VlcPlayer.SetVideoTrack(trackId);
     }
 
     private void SubtitleTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
     {
-        PlaybackSubtitleTrackList trackList = (PlaybackSubtitleTrackList)sender;
-        if (sender.SelectedIndex < 0) VlcPlayer.SetSpu(-1);
-        else if (trackList[sender.SelectedIndex].VlcSpu >= 0)   // VlcSpu < 0 on lazy load
-            VlcPlayer.SetSpu(trackList[sender.SelectedIndex].VlcSpu);
+        VlcSubtitleTrackList trackList = (VlcSubtitleTrackList)sender;
+        if (sender.SelectedIndex < 0)
+        {
+            VlcPlayer.SetSpu(-1);
+        }
+        else if (int.TryParse(trackList[sender.SelectedIndex].Id, out int spu) && spu >= 0)
+        {
+            VlcPlayer.SetSpu(spu);
+        }
     }
 
     public void AddSubtitle(IStorageFile file, bool select = true)
     {
-        if (PlaybackItem == null) return;
+        if (_playbackItem == null) return;
         string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
         VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, select);
     }
@@ -506,11 +514,11 @@ public sealed class VlcMediaPlayer : IMediaPlayer
 
     public void Play()
     {
-        if (PlaybackItem?.Media == null) return;
+        if (_playbackItem?.Media == null) return;
         if (_readyToPlay)
         {
             _readyToPlay = false;
-            VlcPlayer.Play(PlaybackItem.Media);
+            VlcPlayer.Play(_playbackItem.Media);
         }
         else
         {
@@ -538,20 +546,27 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         }
     }
 
-    public void NextChapter()
+    public bool NextChapter()
     {
-        if (PlaybackItem?.Media is null || PlaybackItem.Chapters.Count == 0)
-            return;
+        if (_playbackItem?.Media is null || _playbackItem.Chapters.Count == 0)
+            return false;
 
         VlcPlayer.NextChapter();
+        return true;
     }
 
-    public void PreviousChapter()
+    public bool PreviousChapter()
     {
-        if (PlaybackItem?.Media is null || PlaybackItem.Chapters.Count == 0)
-            return;
+        if (_playbackItem?.Media is null || _playbackItem.Chapters.Count == 0)
+            return false;
 
         VlcPlayer.PreviousChapter();
+        return true;
+    }
+
+    public bool TryTakeSnapshot(string destinationFolderPath, uint width = 0, uint height = 0)
+    {
+        return VlcPlayer.TakeSnapshot(0, destinationFolderPath, width, height);
     }
 
     private void Replay()

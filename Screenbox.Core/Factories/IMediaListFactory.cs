@@ -13,7 +13,11 @@ public interface IMediaListFactory
     /// <summary>
     /// Create a playlist from storage items
     /// </summary>
-    Task<NextMediaList?> TryParseMediaListAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, CancellationToken cancellationToken = default);
+    Task<NextMediaList?> TryParseMediaListAsync(
+        IReadOnlyList<IStorageItem> storageItems,
+        StorageFile? playNext = null,
+        bool expandPlaylists = true,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a playlist from a single media item
@@ -29,9 +33,4 @@ public interface IMediaListFactory
     /// Create a playlist from a URI
     /// </summary>
     Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Parse sub-media items recursively (for playlist files)
-    /// </summary>
-    Task<List<MediaViewModel>> ParseSubMediaRecursiveAsync(MediaViewModel source, CancellationToken cancellationToken = default);
 }

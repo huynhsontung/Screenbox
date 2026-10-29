@@ -26,7 +26,8 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<TogglePlayPauseMessage>,
     IRecipient<TrackNavigationMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
-    IRecipient<PropertyChangedMessage<WindowViewMode>>
+    IRecipient<PropertyChangedMessage<WindowViewMode>>,
+    IRecipient<QueueCanNavigateChangedMessage>
 {
     /// <summary>
     /// The observable play queue state. Bind to this for <c>Items</c>,
@@ -93,7 +94,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         PlayerShowChapters = playerSettings.ShowChapters;
         PlayQueue = playQueue;
         PlayQueue.PropertyChanged += PlayQueueOnPropertyChanged;
-        _coordinator.CanNavigateChanged += OnCoordinatorCanNavigateChanged;
 
         if (MediaPlayer != null)
         {
@@ -107,6 +107,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
+        Messenger.Register<QueueCanNavigateChangedMessage>(this);
     }
 
     public void Receive(SettingChangedMessage<PlayerSettingsContext, bool> message)
@@ -234,7 +235,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         if (MediaPlayer?.PlaybackItem is null)
             return;
 
-        PlaybackSubtitleTrackList tracks = MediaPlayer.PlaybackItem.SubtitleTracks;
+        ISubtitleTrackList tracks = MediaPlayer.PlaybackItem.SubtitleTracks;
         int count = tracks.Count;
         if (count == 0 || (count > 1 && modifiers == VirtualKeyModifiers.None))
             return;
@@ -314,7 +315,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 
-    private void OnCoordinatorCanNavigateChanged(object? sender, EventArgs e)
+    public void Receive(QueueCanNavigateChangedMessage message)
     {
         NextCommand.NotifyCanExecuteChanged();
         PreviousCommand.NotifyCanExecuteChanged();
@@ -441,19 +442,14 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
 
     private async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
     {
-        if (mediaPlayer is not VlcMediaPlayer player)
-        {
-            throw new NotImplementedException("Not supported on non VLC players");
-        }
-
         StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
             $"snapshot_{DateTimeOffset.Now.Ticks}",
             CreationCollisionOption.FailIfExists);
 
         try
         {
-            if (!player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
-                throw new Exception("VLC failed to save snapshot");
+            if (!mediaPlayer.TryTakeSnapshot(tempFolder.Path))
+                throw new Exception("Media player failed to save snapshot");
 
             StorageFile file = (await tempFolder.GetFilesAsync())[0];
             StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_playerSettings.FrameCaptureFolderToken);
@@ -466,3 +462,4 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         }
     }
 }
+

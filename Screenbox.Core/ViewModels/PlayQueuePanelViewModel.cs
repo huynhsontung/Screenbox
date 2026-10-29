@@ -9,6 +9,7 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -42,17 +43,20 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private readonly IPlayQueueCoordinator _coordinator;
     private readonly IFilesService _filesService;
+    private readonly IMediaListFactory _mediaListFactory;
 
     public PlayQueuePanelViewModel(
         PlayQueueContext queue,
         IPlayQueueCoordinator coordinator,
         SelectionViewModel selection,
-        IFilesService filesService)
+        IFilesService filesService,
+        IMediaListFactory mediaListFactory)
     {
         Queue = queue;
         _coordinator = coordinator;
         Selection = selection;
         _filesService = filesService;
+        _mediaListFactory = mediaListFactory;
         _hasItems = queue.Items.Count > 0;
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
@@ -187,7 +191,11 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
             if (files is null || files.Count == 0) return;
-            await _coordinator.EnqueueAsync(files);
+            var mediaList = await _mediaListFactory.TryParseMediaListAsync(files);
+            if (mediaList?.Items.Count > 0)
+            {
+                _coordinator.Enqueue(mediaList.Items);
+            }
         }
         catch (Exception e)
         {
@@ -198,8 +206,14 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     /// <summary>
     /// Enqueues storage items dropped onto the queue at the specified position.
     /// </summary>
-    public Task EnqueueDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex) =>
-        _coordinator.EnqueueAsync(items, insertIndex);
+    public async Task EnqueueDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex)
+    {
+        var mediaList = await _mediaListFactory.TryParseMediaListAsync(items);
+        if (mediaList?.Items.Count > 0)
+        {
+            _coordinator.Enqueue(mediaList.Items, insertIndex);
+        }
+    }
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 

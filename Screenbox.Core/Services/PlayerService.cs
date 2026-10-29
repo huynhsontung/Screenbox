@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.Logging;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Playback;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -13,6 +14,7 @@ namespace Screenbox.Core.Services;
 public sealed partial class PlayerService : IPlayerService
 {
     private readonly IVlcDialogService _vlcDialogService;
+    private readonly IMediaSourceFactory _mediaSourceFactory;
     private readonly ILogger<PlayerService> _logger;
     private readonly ILogger _vlcLogger;
     private readonly bool _useFal;
@@ -20,10 +22,12 @@ public sealed partial class PlayerService : IPlayerService
 
     public PlayerService(
         IVlcDialogService vlcDialogService,
+        IMediaSourceFactory mediaSourceFactory,
         ILogger<PlayerService> logger,
         ILogger<LibVLC> vlcLogger)
     {
         _vlcDialogService = vlcDialogService;
+        _mediaSourceFactory = mediaSourceFactory;
         _logger = logger;
         _vlcLogger = vlcLogger;
 
@@ -58,17 +62,12 @@ public sealed partial class PlayerService : IPlayerService
         return mediaPlayer;
     }
 
-    public PlaybackItem CreatePlaybackItem(IMediaPlayer player, object source, params string[] options)
+    public IPlaybackItem CreatePlaybackItem(IMediaPlayer player, IMediaSource source, params string[] options)
     {
         if (player is not VlcMediaPlayer vlcMediaPlayer)
             throw new NotSupportedException("Only VlcMediaPlayer is supported");
         Media media = CreateMedia(vlcMediaPlayer, source, options);
-        return new PlaybackItem(source, media);
-    }
-
-    public void DisposePlaybackItem(PlaybackItem item)
-    {
-        DisposeMedia(item.Media);
+        return new VlcPlaybackItem(source, media, DisposeMedia, _mediaSourceFactory);
     }
 
     public void DisposePlayer(IMediaPlayer player)
@@ -80,14 +79,17 @@ public sealed partial class PlayerService : IPlayerService
         }
     }
 
-    private Media CreateMedia(VlcMediaPlayer player, object source, params string[] options)
+    private Media CreateMedia(VlcMediaPlayer player, IMediaSource source, params string[] options)
     {
         return source switch
         {
-            IStorageFile file => CreateMedia(player, file, options),
-            string str => CreateMedia(player, str, options),
-            Uri uri => CreateMedia(player, uri, options),
-            _ => throw new ArgumentOutOfRangeException(nameof(source))
+            IFileMediaSource fileSource when fileSource.StorageFile is not null =>
+                CreateMedia(player, fileSource.StorageFile, options),
+            IFileMediaSource fileSource =>
+                CreateMedia(player, fileSource.Path, options),
+            IUriMediaSource uriSource =>
+                CreateMedia(player, uriSource.Uri, options),
+            _ => throw new ArgumentOutOfRangeException(nameof(source), $"Unsupported media source type: {source.GetType().Name}")
         };
     }
 

@@ -286,7 +286,7 @@ Architectural rules for coordinators:
 Available coordinators:
 
 - **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
-- **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `PlayFilesMessage`, `SetQueueMessage`, `ClearQueueMessage`, and `QueueRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Manages neighboring-file auto-enqueue when a single file is opened. Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations.
+- **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `SetQueueMessage`, `ClearQueueMessage`, and `QueueRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations.
 
 #### Helper Classes
 
@@ -302,15 +302,16 @@ The media playback system is built on [LibVLCSharp](https://code.videolan.org/vi
 #### Core Playback Components
 
 - **`IMediaPlayer`**: Media player abstraction interface
+- **`IPlaybackItem`**: Playback item interface with track, chapter, and timing abstractions
 - **`VlcMediaPlayer.cs`**: VLC-based implementation of media player
-- **`PlaybackItem.cs`**: Media item wrapper with metadata and state
+- **`VlcPlaybackItem.cs`**: VLC-backed implementation of playback item
 
 #### Track Management System
 
-- **`PlaybackAudioTrackList.cs`**: Audio track selection and switching
-- **`PlaybackVideoTrackList.cs`**: Video track and subtitle management
-- **`PlaybackSubtitleTrackList.cs`**: Subtitle track handling
-- **`PlaybackChapterList.cs`**: Chapter navigation support
+- **VlcAudioTrackList.cs**: Audio track selection and switching
+- **VlcVideoTrackList.cs**: Video track and subtitle management
+- **VlcSubtitleTrackList.cs**: Subtitle track handling
+- **VlcChapterList.cs**: Chapter navigation support
 
 The playback engine provides a clean interface for the ViewModel layer while abstracting the complexities of the underlying VLC media framework.
 

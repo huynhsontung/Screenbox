@@ -6,12 +6,18 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
+using System.Threading;
+using System.Threading.Tasks;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Windows.Storage;
+using Windows.Storage.Search;
 
 namespace Screenbox.Core.Helpers;
 
-internal static class MessengerExtensions
+public static class MessengerExtensions
 {
+    private static CancellationTokenSource? s_playFilesCts;
     public static void SendQueueAndPlay(this IMessenger messenger, MediaViewModel media,
         IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
     {
@@ -147,5 +153,62 @@ internal static class MessengerExtensions
             result.NaturalDuration,
             extra: sb.ToString(),
             showBadge: true);
+    }
+
+    /// <summary>
+    /// Parses storage items into a playlist and sends a message to load and play them.
+    /// If a single file was selected and folder auto-enqueue is enabled, automatically
+    /// fetches and enqueues neighboring files in the folder.
+    /// </summary>
+    public static async Task PlayFilesAsync(
+        this IMessenger messenger,
+        IReadOnlyList<IStorageItem> files,
+        IPlaylistService playlistService,
+        bool enqueueAllFilesInFolder,
+        StorageFileQueryResult? neighboringFilesQuery = null,
+        CancellationToken cancellationToken = default)
+    {
+        s_playFilesCts?.Cancel();
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        s_playFilesCts = cts;
+
+        try
+        {
+            var playlist = await playlistService.TryCreatePlaylistAsync(files, neighboringFilesQuery, cts.Token);
+            if (playlist is null || playlist.Items.Count == 0 || cts.Token.IsCancellationRequested) return;
+
+            messenger.Send(new SetQueueMessage(playlist, shouldPlay: true));
+
+            if (playlist.Items.Count == 1 && enqueueAllFilesInFolder && playlist.NeighboringFilesQuery is not null)
+            {
+                try
+                {
+                    var updatedPlaylist = await playlistService.AddNeighboringFilesAsync(playlist, cts.Token);
+                    if (updatedPlaylist.Items.Count > 1 && !cts.Token.IsCancellationRequested)
+                    {
+                        Playlist currentQueue = messenger.Send(new QueueRequestMessage());
+                        if (currentQueue.Items.Count == 1 && currentQueue.CurrentItem == playlist.CurrentItem)
+                        {
+                            messenger.Send(new SetQueueMessage(updatedPlaylist, shouldPlay: false));
+                        }
+                    }
+                }
+                catch (Exception) when (!cts.Token.IsCancellationRequested)
+                {
+                    // Best-effort background folder expansion; single-file playback is already active.
+                }
+            }
+        }
+        catch (OperationCanceledException) when (cts.Token.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        {
+            // Superseded by a newer PlayFilesAsync call.
+        }
+        finally
+        {
+            if (s_playFilesCts == cts)
+            {
+                s_playFilesCts = null;
+            }
+        }
     }
 }

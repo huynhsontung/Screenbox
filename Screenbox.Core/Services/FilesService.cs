@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Windows.Foundation;
 using Windows.Storage;
@@ -158,6 +160,22 @@ public sealed class FilesService : IFilesService
         {
             // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
             // Ownership issue?
+        }
+    }
+
+    public async Task AddToRecentAsync(IMediaSource? source, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+            {
+                if (cancellationToken.IsCancellationRequested) return;
+                AddToRecent(file);
+            }
+        }
+        catch
+        {
+            // Silently ignore — recent-files tracking is best-effort.
         }
     }
 

@@ -21,7 +21,7 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Input;
-using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
+
 
 namespace Screenbox.Core.ViewModels;
 
@@ -41,11 +41,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public event EventHandler<EventArgs>? ClearViewRequested;
 
-    public MediaPlayer? VlcPlayer => VlcMediaPlayer?.VlcPlayer;
+    public LibVLCSharp.Shared.MediaPlayer? VlcPlayer => (_playerContext.MediaPlayer as VlcMediaPlayer)?.VlcPlayer;
 
-    private VlcMediaPlayer? VlcMediaPlayer
+    private IMediaPlayer? MediaPlayer
     {
-        get => _playerContext.MediaPlayer as VlcMediaPlayer;
+        get => _playerContext.MediaPlayer;
         set => _playerContext.MediaPlayer = value;
     }
 
@@ -97,17 +97,17 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void Initialize(string[] swapChainOptions)
     {
-        // Unsubscribe events and set VlcMediaPlayer to null immediately so that
+        // Unsubscribe events and set MediaPlayer to null immediately so that
         // downstream consumers (e.g. MediaListViewModel._delayPlay) know the player
-        // is unavailable and queue any incoming PlayFilesMessage for later processing.
-        VlcMediaPlayer? oldPlayer = VlcMediaPlayer;
+        // is unavailable and queue any incoming playback requests for later processing.
+        IMediaPlayer? oldPlayer = MediaPlayer;
         if (oldPlayer != null)
         {
             oldPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
             oldPlayer.PositionChanged -= OnPositionChanged;
             oldPlayer.MediaFailed -= OnMediaFailed;
             oldPlayer.PlaybackItemChanged -= OnPlaybackItemChanged;
-            VlcMediaPlayer = null;
+            MediaPlayer = null;
         }
 
         // Cancel any in-progress initialization so that a stale Task cannot
@@ -172,7 +172,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                     return;
                 }
 
-                VlcMediaPlayer = vlcMediaPlayer;
+                MediaPlayer = vlcMediaPlayer;
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
                 player.PositionChanged += OnPositionChanged;
                 player.MediaFailed += OnMediaFailed;
@@ -209,7 +209,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     public void OnClick()
     {
-        if (_playerSettings.GestureTap is PlaybackActionKind.None || VlcMediaPlayer?.PlaybackItem == null)
+        if (_playerSettings.GestureTap is PlaybackActionKind.None || MediaPlayer?.PlaybackItem == null)
         {
             return;
         }
@@ -251,11 +251,11 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeStep, true));
             Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volume).ShowMessage());
         }
-        else if (VlcMediaPlayer?.CanSeek ?? false)
+        else if (MediaPlayer?.CanSeek ?? false)
         {
             // Pointer wheel events can be fired in quick succession and still count as a single seek action from the user's perspective.
             // Debounce setting the time before manipulation to calculate the culmulative change correctly.
-            _pointerWheelTimer.Debounce(() => _timeBeforeManipulation = VlcMediaPlayer.Position, TimeSpan.FromSeconds(1), true);
+            _pointerWheelTimer.Debounce(() => _timeBeforeManipulation = MediaPlayer.Position, TimeSpan.FromSeconds(1), true);
             Messenger.Send(new TimeChangeOverrideMessage(true));
             // For mouse wheel, each detent is 120. For touchpad, it can be a smaller value.
             var seekAmount = -(delta / 12.0);   // Each mouse wheel detent corresponds to a 10 second seek. Touchpad has more precision.
@@ -321,8 +321,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             else if (absCumulativeX > absCumulativeY && absCumulativeX >= 50 && _playerSettings.GestureSlideHorizontal)
             {
                 _slideOrientation = SlideOrientation.Horizontal;
-                if (VlcMediaPlayer != null)
-                    _timeBeforeManipulation = VlcMediaPlayer.Position;
+                if (MediaPlayer != null)
+                    _timeBeforeManipulation = MediaPlayer.Position;
             }
         }
 
@@ -331,7 +331,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-(VerticalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.Y), true));
             Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volume).ShowMessage());
         }
-        else if (_slideOrientation is SlideOrientation.Horizontal && (VlcMediaPlayer?.CanSeek ?? false))
+        else if (_slideOrientation is SlideOrientation.Horizontal && (MediaPlayer?.CanSeek ?? false))
         {
             Messenger.Send(new TimeChangeOverrideMessage(true));
             TimeSpan timeChange = TimeSpan.FromMilliseconds(HorizontalStepAmountPerPixel / _rawPixelsPerViewPixel * delta.X);
@@ -350,16 +350,16 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     {
         const double HoldingSpeed = 2.0;
 
-        if (!_playerSettings.GesturePressAndHold || VlcMediaPlayer is null) return;
-        if (!IsHolding && VlcMediaPlayer.PlaybackState is MediaPlaybackState.Paused) return;
+        if (!_playerSettings.GesturePressAndHold || MediaPlayer is null) return;
+        if (!IsHolding && MediaPlayer.PlaybackState is MediaPlaybackState.Paused) return;
 
         switch (holdingState)
         {
             case HoldingState.Started when !IsHolding:
-                _playbackRateBeforeHold = VlcMediaPlayer.PlaybackRate;
+                _playbackRateBeforeHold = MediaPlayer.PlaybackRate;
                 // If the rate is already faster than the holding speed, set it to twice the holding speed.
-                double effectiveHoldingSpeed = VlcMediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
-                if (VlcMediaPlayer.PlaybackRate != effectiveHoldingSpeed)
+                double effectiveHoldingSpeed = MediaPlayer.PlaybackRate >= HoldingSpeed ? HoldingSpeed * 2.0 : HoldingSpeed;
+                if (MediaPlayer.PlaybackRate != effectiveHoldingSpeed)
                 {
                     Messenger.Send(new ChangePlaybackRateRequestMessage(effectiveHoldingSpeed));
                     Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateUp, value: effectiveHoldingSpeed).SetDuration(Timeout.InfiniteTimeSpan).ShowMessage());
@@ -369,7 +369,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 break;
             case HoldingState.Completed when IsHolding:
             case HoldingState.Canceled when IsHolding:
-                if (VlcMediaPlayer.PlaybackRate != _playbackRateBeforeHold)
+                if (MediaPlayer.PlaybackRate != _playbackRateBeforeHold)
                 {
                     Messenger.Send(new ChangePlaybackRateRequestMessage(_playbackRateBeforeHold));
                     Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.RateDown, value: _playbackRateBeforeHold).ShowMessage());
@@ -382,9 +382,9 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private void ProcessPlayerGesture(PlaybackActionKind gestureOption, double change)
     {
-        if (VlcMediaPlayer is null) return;
+        if (MediaPlayer is null) return;
 
-        double playbackRate = VlcMediaPlayer.PlaybackRate;
+        double playbackRate = MediaPlayer.PlaybackRate;
         double rateDelta = change / 20.0;
 
         switch (gestureOption)
@@ -395,18 +395,18 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 Messenger.Send(new TogglePlayPauseMessage(true));
                 break;
             case PlaybackActionKind.Rewind:
-                if (VlcMediaPlayer?.CanSeek ?? false)
+                if (MediaPlayer?.CanSeek ?? false)
                 {
-                    _timeBeforeManipulation = VlcMediaPlayer.Position;
+                    _timeBeforeManipulation = MediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
                     var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(-_playerSettings.RewindStep), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
                 }
                 break;
             case PlaybackActionKind.FastForward:
-                if (VlcMediaPlayer?.CanSeek ?? false)
+                if (MediaPlayer?.CanSeek ?? false)
                 {
-                    _timeBeforeManipulation = VlcMediaPlayer.Position;
+                    _timeBeforeManipulation = MediaPlayer.Position;
                     Messenger.Send(new TimeChangeOverrideMessage(true));
                     var newTime = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromSeconds(_playerSettings.FastForwardStep), true)).Response.NewPosition;
                     UpdateTimeStatusMessage(newTime);
@@ -435,10 +435,10 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 Messenger.Send(new TrackNavigationMessage(TrackNavigationDirection.Next));
                 break;
             case PlaybackActionKind.PreviousChapter:
-                VlcMediaPlayer.PreviousChapter();
+                MediaPlayer.PreviousChapter();
                 break;
             case PlaybackActionKind.NextChapter:
-                VlcMediaPlayer.NextChapter();
+                MediaPlayer.NextChapter();
                 break;
         }
     }
@@ -453,36 +453,36 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
     }
 
-    private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
+    private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<IPlaybackItem?> args)
     {
         if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
     {
-        if (VlcMediaPlayer == null) return;
-        VlcMediaPlayer.Position = args.RequestedPlaybackPosition;
+        if (MediaPlayer == null) return;
+        MediaPlayer.Position = args.RequestedPlaybackPosition;
     }
 
     private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
     {
-        if (VlcMediaPlayer == null) return;
+        if (MediaPlayer == null) return;
         switch (args.Button)
         {
             case SystemMediaTransportControlsButton.Pause:
-                VlcMediaPlayer.Pause();
+                MediaPlayer.Pause();
                 break;
             case SystemMediaTransportControlsButton.Play:
-                VlcMediaPlayer.Play();
+                MediaPlayer.Play();
                 break;
             case SystemMediaTransportControlsButton.Stop:
-                VlcMediaPlayer.PlaybackItem = null;
+                MediaPlayer.PlaybackItem = null;
                 break;
             case SystemMediaTransportControlsButton.FastForward:
-                VlcMediaPlayer.Position += TimeSpan.FromSeconds(10);
+                MediaPlayer.Position += TimeSpan.FromSeconds(10);
                 break;
             case SystemMediaTransportControlsButton.Rewind:
-                VlcMediaPlayer.Position -= TimeSpan.FromSeconds(10);
+                MediaPlayer.Position -= TimeSpan.FromSeconds(10);
                 break;
         }
     }
@@ -499,12 +499,12 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
 
     private void SetCropGeometry(Size size)
     {
-        if (VlcMediaPlayer == null || size.Width < 0 || size.Height < 0) return;
+        if (MediaPlayer == null || size.Width < 0 || size.Height < 0) return;
         Rect defaultSize = new(0, 0, 1, 1);
         if (size is { Width: 0, Height: 0 })
         {
-            if (VlcMediaPlayer.NormalizedSourceRect == defaultSize) return;
-            VlcMediaPlayer.NormalizedSourceRect = defaultSize;
+            if (MediaPlayer.NormalizedSourceRect == defaultSize) return;
+            MediaPlayer.NormalizedSourceRect = defaultSize;
         }
         else
         {
@@ -514,15 +514,15 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             }
 
             double leftOffset = 0.5, topOffset = 0.5;
-            double widthRatio = size.Width / VlcMediaPlayer.NaturalVideoWidth;
-            double heightRatio = size.Height / VlcMediaPlayer.NaturalVideoHeight;
+            double widthRatio = size.Width / MediaPlayer.NaturalVideoWidth;
+            double heightRatio = size.Height / MediaPlayer.NaturalVideoHeight;
             double ratio = Math.Max(widthRatio, heightRatio);
-            double width = size.Width / ratio / VlcMediaPlayer.NaturalVideoWidth;
-            double height = size.Height / ratio / VlcMediaPlayer.NaturalVideoHeight;
+            double width = size.Width / ratio / MediaPlayer.NaturalVideoWidth;
+            double height = size.Height / ratio / MediaPlayer.NaturalVideoHeight;
             leftOffset -= width / 2;
             topOffset -= height / 2;
 
-            VlcMediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
+            MediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
         }
     }
 
@@ -564,3 +564,4 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
             .ShowMessage());
     }
 }
+

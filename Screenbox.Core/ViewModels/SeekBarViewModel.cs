@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -453,20 +454,15 @@ public sealed partial class SeekBarViewModel :
         }
     }
 
-    private void UpdateChapters(PlaybackChapterList? chapterList)
+    private void UpdateChapters(IReadOnlyList<ChapterCue>? chapterList)
     {
         Chapters.Clear();
         if (chapterList == null) return;
-        if (MediaPlayer != null)
-        {
-            chapterList.Load(MediaPlayer);
-        }
 
         foreach (ChapterCue chapterCue in chapterList)
         {
             Chapters.Add(chapterCue);
         }
-        // Chapters.SyncItems(chapterList);
     }
 
     private void UpdateProgress(TimeSpan position)

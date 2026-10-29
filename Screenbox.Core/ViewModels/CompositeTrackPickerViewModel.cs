@@ -17,6 +17,7 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
+using Screenbox.Core.MediaSources;
 using Windows.Storage.Search;
 
 namespace Screenbox.Core.ViewModels;
@@ -30,11 +31,11 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
     public ObservableCollection<string> VideoTracks { get; }
 
-    private PlaybackSubtitleTrackList? ItemSubtitleTrackList => MediaPlayer?.PlaybackItem?.SubtitleTracks;
+    private ISubtitleTrackList? ItemSubtitleTrackList => MediaPlayer?.PlaybackItem?.SubtitleTracks;
 
-    private PlaybackAudioTrackList? ItemAudioTrackList => MediaPlayer?.PlaybackItem?.AudioTracks;
+    private ISingleSelectMediaTrackList<AudioTrack>? ItemAudioTrackList => MediaPlayer?.PlaybackItem?.AudioTracks;
 
-    private PlaybackVideoTrackList? ItemVideoTrackList => MediaPlayer?.PlaybackItem?.VideoTracks;
+    private ISingleSelectMediaTrackList<VideoTrack>? ItemVideoTrackList => MediaPlayer?.PlaybackItem?.VideoTracks;
 
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
@@ -95,16 +96,17 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     /// <summary>
     /// Try load a subtitle in the same directory with the same name
     /// </summary>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public async void Receive(QueueCurrentItemChangedMessage message)
     {
         _cts?.Cancel();
-        if (MediaPlayer is not VlcMediaPlayer player) return;
-        if (message.Value is not { Source: StorageFile file, MediaType: MediaPlaybackType.Video } media)
+        if (MediaPlayer is null) return;
+        if (message.Value is not { MediaType: MediaPlaybackType.Video } media ||
+            media.Source is not IFileMediaSource fileSource ||
+            await fileSource.GetStorageFileAsync() is not { } file)
             return;
 
         bool subtitleInitialized = false;
-        var playbackSubtitleTrackList = media.Item.Value?.SubtitleTracks;
+        var playbackSubtitleTrackList = MediaPlayer.PlaybackItem?.SubtitleTracks;
         if (playbackSubtitleTrackList == null) return;
         if (playbackSubtitleTrackList.Count > 0) subtitleInitialized = true;
 
@@ -114,17 +116,17 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             foreach (StorageFile subtitleFile in subtitles)
             {
                 // Preload subtitle but don't select it
-                playbackSubtitleTrackList.AddExternalSubtitle(player, subtitleFile, false);
+                playbackSubtitleTrackList.AddExternalSubtitle(subtitleFile, false);
             }
         }
 
-        if (!subtitleInitialized && media.Item.Value is { } playbackItem)
+        if (!subtitleInitialized && MediaPlayer.PlaybackItem is { } playbackItem)
         {
             try
             {
                 using var cts = new CancellationTokenSource();
                 _cts = cts;
-                await playbackItem.Media.WaitForParsed(TimeSpan.FromSeconds(5), cts.Token);
+                await playbackItem.WaitForParsedAsync(TimeSpan.FromSeconds(5), cts.Token);
             }
             catch (OperationCanceledException)
             {
@@ -139,7 +141,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _playbackSettings.SubtitleLanguage);
     }
 
-    private static void TrySetSubtitleFromLanguage(PlaybackSubtitleTrackList subtitleTrackList, string persistentLanguage)
+    private static void TrySetSubtitleFromLanguage(ISubtitleTrackList subtitleTrackList, string persistentLanguage)
     {
         // Check persistent subtitle value to try and select a subtitle
         if (!string.IsNullOrEmpty(persistentLanguage))
@@ -286,11 +288,11 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     {
         try
         {
-            if (ItemSubtitleTrackList == null || MediaPlayer is not VlcMediaPlayer player) return;
+            if (ItemSubtitleTrackList == null) return;
             StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
             if (file == null) return;
 
-            ItemSubtitleTrackList.AddExternalSubtitle(player, file, true);
+            ItemSubtitleTrackList.AddExternalSubtitle(file, true);
             Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.SubtitleAdded, message: file.Name));
         }
         catch (Exception e)

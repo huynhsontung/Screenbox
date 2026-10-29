@@ -1,3 +1,4 @@
+using Screenbox.Core.MediaSources;
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,6 +27,7 @@ public sealed partial class PropertyViewModel : ObservableObject
     private readonly IFilesService _filesService;
     private StorageFile? _mediaFile;
     private Uri? _mediaUri;
+    private string? _mediaFilePath;
 
     public PropertyViewModel(IFilesService filesService)
     {
@@ -47,7 +49,6 @@ public sealed partial class PropertyViewModel : ObservableObject
     /// <summary>
     /// Populates the property collections with metadata keys and values from the given <paramref name="media"/> item.
     /// </summary>
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     public void UpdateProperties(MediaViewModel media)
     {
         switch (media.MediaType)
@@ -89,17 +90,21 @@ public sealed partial class PropertyViewModel : ObservableObject
 
         switch (media.Source)
         {
-            case StorageFile file:
-                _mediaFile = file;
+            case IFileMediaSource fileSource:
+                _mediaFile = fileSource.StorageFile;
+                _mediaFilePath = fileSource.Path;
                 CanNavigateToFile = true;
-                FileProperties.Add(new MediaMetadata(MediaProperty.FileType, _mediaFile.FileType));
-                FileProperties.Add(new MediaMetadata(MediaProperty.ContentType, _mediaFile.ContentType));
+                FileProperties.Add(new MediaMetadata(MediaProperty.FileType, fileSource.FileType));
+                if (_mediaFile != null)
+                {
+                    FileProperties.Add(new MediaMetadata(MediaProperty.ContentType, _mediaFile.ContentType));
+                }
                 FileProperties.Add(new MediaMetadata(MediaProperty.Size, BytesToHumanReadable((long)media.MediaInfo.Size)));
                 FileProperties.Add(new MediaMetadata(MediaProperty.LastModified, media.MediaInfo.DateModified.ToString()));
                 break;
-            case Uri uri:
-                _mediaUri = uri;
-                CanNavigateToFile = uri.IsFile;
+            case IUriMediaSource uriSource:
+                _mediaUri = uriSource.Uri;
+                CanNavigateToFile = uriSource.Uri.IsFile;
                 break;
         }
     }
@@ -109,6 +114,8 @@ public sealed partial class PropertyViewModel : ObservableObject
     {
         if (_mediaFile != null)
             _filesService.OpenFileLocationAsync(_mediaFile);
+        else if (!string.IsNullOrEmpty(_mediaFilePath))
+            _filesService.OpenFileLocationAsync(_mediaFilePath);
         else if (_mediaUri != null)
             _filesService.OpenFileLocationAsync(_mediaUri.OriginalString);
     }
@@ -161,3 +168,5 @@ public sealed partial class PropertyViewModel : ObservableObject
         return readable.ToString("0.## ") + suffix;
     }
 }
+
+

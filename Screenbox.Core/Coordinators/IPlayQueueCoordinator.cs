@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Screenbox.Core.ViewModels;
-using Windows.Storage;
 
 namespace Screenbox.Core.Coordinators;
 
@@ -13,7 +12,7 @@ namespace Screenbox.Core.Coordinators;
 /// <para>
 /// <see cref="PlayQueueCoordinator"/> handles all queue mutations, playback navigation,
 /// message routing, Windows System Media Transport Controls wiring, media event handling,
-/// neighboring-file auto-enqueue, and thumbnail pre-buffering.
+/// and thumbnail pre-buffering.
 /// </para>
 /// <para>
 /// All observable state is written to <see cref="Contexts.PlayQueueContext"/>,
@@ -22,12 +21,6 @@ namespace Screenbox.Core.Coordinators;
 /// </remarks>
 public interface IPlayQueueCoordinator
 {
-    /// <summary>
-    /// Raised when the result of <see cref="CanNext"/> or <see cref="CanPrevious"/> changes.
-    /// ViewModels should subscribe to keep their own navigation command states in sync.
-    /// </summary>
-    event EventHandler? CanNavigateChanged;
-
     /// <summary>
     /// Returns whether navigating to the next item is currently possible.
     /// </summary>
@@ -54,14 +47,13 @@ public interface IPlayQueueCoordinator
     void Clear();
 
     /// <summary>
-    /// Appends or inserts the given storage items into the play queue.
-    /// Playlist files (e.g. .m3u) are parsed and their contents added.
+    /// Appends or inserts the given media items into the play queue.
     /// </summary>
-    /// <param name="files">The files or folders to enqueue.</param>
+    /// <param name="items">The items to enqueue.</param>
     /// <param name="insertIndex">
     /// The zero-based index at which to insert. Pass -1 (default) to append at the end.
     /// </param>
-    Task EnqueueAsync(IReadOnlyList<IStorageItem> files, int insertIndex = -1);
+    void Enqueue(IReadOnlyList<MediaViewModel> items, int insertIndex = -1);
 
     /// <summary>
     /// Removes an item from the play queue.

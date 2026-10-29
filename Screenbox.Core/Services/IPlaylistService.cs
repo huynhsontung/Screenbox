@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
@@ -15,9 +16,14 @@ namespace Screenbox.Core.Services;
 public interface IPlaylistService
 {
     /// <summary>
-    /// Add neighboring files to an existing playlist
+    /// Creates a playlist from storage items, optionally associating a neighboring files query.
     /// </summary>
-    Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default);
+    Task<Playlist?> TryCreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFileQueryResult? neighboringFilesQuery = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds neighboring files to an existing playlist using the playlist's attached neighboring files query.
+    /// </summary>
+    Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Shuffle the items in a playlist
@@ -28,6 +34,11 @@ public interface IPlaylistService
     /// Restore playlist from shuffle backup
     /// </summary>
     Playlist RestoreFromShuffle(Playlist playlist);
+
+    /// <summary>
+    /// Synchronizes shuffle backup state when items are added, removed, or replaced in the playlist.
+    /// </summary>
+    void UpdateShuffleBackup(Playlist playlist, NotifyCollectionChangedEventArgs e);
 
     /// <summary>
     /// Get media buffer indices around current position

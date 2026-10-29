@@ -358,7 +358,7 @@ public sealed class LibraryService : ILibraryService
         {
             try
             {
-                MediaViewModel media = _mediaFactory.GetOrCreate(new Uri(record.Path));
+                MediaViewModel media = _mediaFactory.GetOrCreate(record.Path);
                 media.IsFromLibrary = true;
                 if (!media.DetailsLoaded)
                 {
@@ -407,7 +407,7 @@ public sealed class LibraryService : ILibraryService
         {
             try
             {
-                MediaViewModel media = _mediaFactory.GetOrCreate(new Uri(record.Path));
+                MediaViewModel media = _mediaFactory.GetOrCreate(record.Path);
                 media.IsFromLibrary = true;
                 if (!media.DetailsLoaded)
                 {
@@ -740,3 +740,4 @@ public sealed class LibraryService : ILibraryService
         return KnownFolders.RemovableDevices.CreateFileQueryWithOptions(queryOptions);
     }
 }
+

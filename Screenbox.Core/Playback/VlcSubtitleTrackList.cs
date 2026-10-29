@@ -1,16 +1,18 @@
+using Screenbox.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibVLCSharp.Shared;
-using Windows.Media.Core;
 using Windows.Storage;
 
 namespace Screenbox.Core.Playback;
 
-public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
+public sealed partial class VlcSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>, ISubtitleTrackList
 {
     private readonly Media _media;
     private readonly List<LazySubtitleTrack> _pendingSubtitleTracks;
+
+    internal VlcMediaPlayer? Player { get; set; }
 
     private class LazySubtitleTrack
     {
@@ -18,30 +20,23 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
 
         public StorageFile File { get; }
 
-        public VlcMediaPlayer Player { get; }
-
-        public LazySubtitleTrack(VlcMediaPlayer player, StorageFile file)
+        public LazySubtitleTrack(StorageFile file)
         {
-            Player = player;
             File = file;
-            Track = new SubtitleTrack
-            {
-                Id = "-1",
-                VlcSpu = -1,
-                Label = file.Name,
-            };
+            Track = new SubtitleTrack("-1", file.Name);
         }
     }
 
     private int _delaySpu = -1;
 
-    public PlaybackSubtitleTrackList(Media media)
+    public VlcSubtitleTrackList(Media media)
     {
         _pendingSubtitleTracks = new List<LazySubtitleTrack>();
         _media = media;
-        if (_media.Tracks.Length > 0)
+        var tracks = _media.Tracks;
+        if (tracks.Length > 0)
         {
-            AddVlcMediaTracks(_media.Tracks);
+            AddVlcMediaTracks(tracks);
         }
         else
         {
@@ -49,6 +44,12 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
         }
 
         SelectedIndexChanged += OnSelectedIndexChanged;
+    }
+
+    internal void Detach()
+    {
+        _media.ParsedChanged -= Media_ParsedChanged;
+        Player = null;
     }
 
     internal void SelectVlcSpu(int spu)
@@ -66,9 +67,10 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
             return;
         }
 
+        string spuStr = spu.ToString();
         for (int i = 0; i < Count; i++)
         {
-            if (this[i].VlcSpu == spu)
+            if (this[i].Id == spuStr)
             {
                 SelectedIndex = i;
                 break;
@@ -76,18 +78,30 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
         }
     }
 
-    private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+    private void OnSelectedIndexChanged(Windows.Media.Core.ISingleSelectMediaTrackList sender, object? args)
     {
         if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
-            _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack &&
-            (selectedTrack.VlcSpu == -1 || lazyTrack.Player.VlcPlayer.SpuCount < selectedTrack.VlcSpu))
+            _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack)
         {
-            selectedTrack.VlcSpu = -1;
-            lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
+            int trackSpu = int.TryParse(selectedTrack.Id, out int s) ? s : -1;
+            if (Player != null && (trackSpu == -1 || Player.VlcPlayer.SpuCount < trackSpu))
+            {
+                selectedTrack.Id = "-1";
+                Player.AddSubtitle(lazyTrack.File, true);
+            }
         }
     }
 
-    public void AddExternalSubtitle(VlcMediaPlayer player, StorageFile file, bool select)
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public void AddExternalSubtitle(IStorageFile file, bool select = true)
+    {
+        if (file is StorageFile storageFile)
+        {
+            AddExternalSubtitleInternal(storageFile, select);
+        }
+    }
+
+    private void AddExternalSubtitleInternal(StorageFile file, bool select)
     {
         string filePath = file.Path;
 
@@ -110,7 +124,7 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
             return;
         }
 
-        var lazySub = new LazySubtitleTrack(player, file);
+        var lazySub = new LazySubtitleTrack(file);
         _pendingSubtitleTracks.Add(lazySub);
         TrackList.Add(lazySub.Track);
 
@@ -122,9 +136,8 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
 
     internal void NotifyTrackAdded(int trackId)
     {
-        if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { VlcSpu: -1 } selectedTrack)
+        if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack && selectedTrack.Id == "-1")
         {
-            selectedTrack.VlcSpu = trackId;
             selectedTrack.Id = trackId.ToString();
         }
     }
@@ -144,7 +157,10 @@ public sealed partial class PlaybackSubtitleTrackList : SingleSelectTrackList<Su
         {
             if (track.TrackType == TrackType.Text)
             {
-                TrackList.Add(new SubtitleTrack(track));
+                TrackList.Add(new SubtitleTrack(
+                    track.Id.ToString(),
+                    track.Description,
+                    track.Language ?? string.Empty));
             }
         }
     }
