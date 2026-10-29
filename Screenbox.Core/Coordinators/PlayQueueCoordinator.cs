@@ -665,8 +665,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _bufferManager.UpdateBuffer(MediaPlayer, _playlist, _context.RepeatMode);
             await Task.WhenAll(
                 _generalSettings.ShowRecent ? _filesService.AddToRecentAsync(value.Source, token) : Task.CompletedTask,
-                _transportControlsService.UpdateTransportControlsDisplayAsync(value),
-                Task.WhenAll(_bufferManager.BufferedItems.Select(x => x.LoadThumbnailAsync()))
+                _transportControlsService.UpdateTransportControlsDisplayAsync(value)
             );
         }
         catch (OperationCanceledException)
