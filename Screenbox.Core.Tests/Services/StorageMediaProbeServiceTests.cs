@@ -28,7 +28,6 @@ public partial class StorageMediaProbeServiceTests
         public ISubtitleTrackList SubtitleTracks => throw new NotImplementedException();
         public IReadOnlyList<ChapterCue> Chapters => Array.Empty<ChapterCue>();
         public Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public Task<MediaInfo?> ProbeMediaInfoAsync(TimeSpan timeout, CancellationToken cancellationToken = default) => Task.FromResult<MediaInfo?>(null);
         public Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<ExpandedMediaItem>>(Array.Empty<ExpandedMediaItem>());
         public void Dispose() { }

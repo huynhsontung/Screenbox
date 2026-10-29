@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.MediaSources;
-using Screenbox.Core.Models;
 using Windows.Media.Core;
 using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
 
@@ -24,8 +23,6 @@ public interface IPlaybackItem : IDisposable
     IReadOnlyList<ChapterCue> Chapters { get; }
 
     Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
-
-    Task<MediaInfo?> ProbeMediaInfoAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
 }
