@@ -89,8 +89,11 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (nextFile is not null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(nextFile);
-                var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
-                return new PlaybackNavigationResult(newPlaylist, result.NextItem);
+                var newPlaylist = new Playlist(result.CurrentIndex, result.Items, playlist);
+                if (newPlaylist.CurrentItem is { } nextItem)
+                {
+                    return new PlaybackNavigationResult(newPlaylist, nextItem);
+                }
             }
         }
 
@@ -128,8 +131,11 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (previousFile is not null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(previousFile);
-                var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
-                return new PlaybackNavigationResult(newPlaylist, result.NextItem);
+                var newPlaylist = new Playlist(result.CurrentIndex, result.Items, playlist);
+                if (newPlaylist.CurrentItem is { } nextItem)
+                {
+                    return new PlaybackNavigationResult(newPlaylist, nextItem);
+                }
             }
         }
 

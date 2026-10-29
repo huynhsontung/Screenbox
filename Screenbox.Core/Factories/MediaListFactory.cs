@@ -22,7 +22,7 @@ public sealed class MediaListFactory : IMediaListFactory
 
     [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public async Task<NextMediaList?> TryParseMediaListAsync(
+    public async Task<Playlist?> TryParseMediaListAsync(
         IReadOnlyList<IStorageItem> storageItems,
         StorageFile? playNext = null,
         bool expandPlaylists = true,
@@ -80,10 +80,10 @@ public sealed class MediaListFactory : IMediaListFactory
             }
         }
 
-        return queue.Count > 0 ? new NextMediaList(next ?? queue[0], queue) : null;
+        return queue.Count > 0 ? new Playlist(next ?? queue[0], queue) : null;
     }
 
-    public async Task<NextMediaList> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default)
+    public async Task<Playlist> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default)
     {
         if (media.Source is IExpandableMediaSource expandable)
         {
@@ -91,20 +91,20 @@ public sealed class MediaListFactory : IMediaListFactory
             if (items.Count > 0)
             {
                 var vms = items.Select(_mediaFactory.Create).ToList();
-                return new NextMediaList(vms[0], vms);
+                return new Playlist(0, vms);
             }
         }
 
-        return new NextMediaList(media);
+        return new Playlist(media);
     }
 
-    public async Task<NextMediaList> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default)
+    public async Task<Playlist> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default)
     {
         var media = _mediaFactory.GetOrCreate(file);
         return await ParseMediaListAsync(media, cancellationToken);
     }
 
-    public async Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default)
+    public async Task<Playlist> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default)
     {
         var media = _mediaFactory.GetOrCreate(uri);
         return await ParseMediaListAsync(media, cancellationToken);
