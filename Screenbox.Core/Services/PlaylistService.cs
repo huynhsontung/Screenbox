@@ -38,25 +38,23 @@ public sealed class PlaylistService : IPlaylistService
     {
         if (storageItems.Count == 0) return null;
 
-        NextMediaList? result;
+        Playlist? playlist;
         if (storageItems.Count == 1 && storageItems[0] is StorageFile file)
         {
-            result = await _mediaListFactory.ParseMediaListAsync(file, cancellationToken);
-            if (result.Items.Count == 1)
+            playlist = await _mediaListFactory.ParseMediaListAsync(file, cancellationToken);
+            if (playlist.Items.Count == 1)
             {
                 neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
             }
         }
         else
         {
-            result = await _mediaListFactory.TryParseMediaListAsync(storageItems, cancellationToken: cancellationToken);
-            if (result is null) return null;
+            playlist = await _mediaListFactory.TryParseMediaListAsync(storageItems, cancellationToken: cancellationToken);
+            if (playlist is null) return null;
         }
 
-        return new Playlist(result.NextItem, result.Items)
-        {
-            NeighboringFilesQuery = neighboringFilesQuery
-        };
+        playlist.NeighboringFilesQuery = neighboringFilesQuery;
+        return playlist;
     }
 
     public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, CancellationToken cancellationToken = default)

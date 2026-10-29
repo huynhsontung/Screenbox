@@ -13,7 +13,7 @@ public interface IMediaListFactory
     /// <summary>
     /// Create a playlist from storage items
     /// </summary>
-    Task<NextMediaList?> TryParseMediaListAsync(
+    Task<Playlist?> TryParseMediaListAsync(
         IReadOnlyList<IStorageItem> storageItems,
         StorageFile? playNext = null,
         bool expandPlaylists = true,
@@ -22,15 +22,15 @@ public interface IMediaListFactory
     /// <summary>
     /// Create a playlist from a single media item
     /// </summary>
-    Task<NextMediaList> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default);
+    Task<Playlist> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a playlist from a storage file
     /// </summary>
-    Task<NextMediaList> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default);
+    Task<Playlist> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a playlist from a URI
     /// </summary>
-    Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default);
+    Task<Playlist> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default);
 }

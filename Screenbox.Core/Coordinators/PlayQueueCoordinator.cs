@@ -161,8 +161,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         else
         {
             ClearQueue();
-            NextMediaList result = await _mediaListFactory.ParseMediaListAsync(message.Value);
-            ApplyQueueSnapshot(new Playlist(result.NextItem, result.Items), shouldPlay: true);
+            Playlist playlist = await _mediaListFactory.ParseMediaListAsync(message.Value);
+            ApplyQueueSnapshot(playlist, shouldPlay: true);
         }
     }
 

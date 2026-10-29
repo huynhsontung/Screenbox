@@ -7,7 +7,7 @@ namespace Screenbox.Core.Models;
 /// <summary>
 /// Pure data model representing a playlist
 /// </summary>
-public class Playlist
+public sealed class Playlist
 {
     public List<MediaViewModel> Items { get; }
     public int CurrentIndex { get; set; }
@@ -24,6 +24,11 @@ public class Playlist
     public StorageFileQueryResult? NeighboringFilesQuery { get; set; }
 
     public Playlist() : this(new List<MediaViewModel>()) { }
+
+    public Playlist(MediaViewModel currentItem, Playlist? reference = null)
+        : this(0, (MediaViewModel[])[currentItem], reference)
+    {
+    }
 
     public Playlist(IReadOnlyList<MediaViewModel> items, Playlist? reference = null)
     {
