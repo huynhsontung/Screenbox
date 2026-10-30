@@ -99,8 +99,6 @@
     <Grid
         x:Name="LayoutRoot"
         KeyboardAcceleratorPlacementMode="Hidden"
-        PointerEntered="LayoutRoot_OnPointerEntered"
-        PointerExited="LayoutRoot_OnPointerExited"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         PreviewKeyDown="LayoutRoot_OnPreviewKeyDown"
         PreviewKeyUp="LayoutRoot_OnPreviewKeyUp"
@@ -892,6 +890,7 @@
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource MiniPlayerRevealBorderBrush}" />
+                        <Setter Target="LayoutRoot.(RevealBrush.State)" Value="Normal" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
                         <Setter Target="LayoutRoot.CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
                         <Setter Target="LayoutRoot.Height" Value="128" />
