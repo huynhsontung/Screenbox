@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,13 +12,12 @@ using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
-using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -30,16 +28,13 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     public PlaybackSettingsContext PlaybackSettings { get; }
     public GeneralSettingsContext GeneralSettings { get; }
 
-    [ObservableProperty] public partial int PlayerAutoResize { get; set; }
-    [ObservableProperty] public partial int VolumeBoost { get; set; }
+    [ObservableProperty] public partial string Language { get; set; }
     [ObservableProperty] public partial bool ShowRecent { get; set; }
-    [ObservableProperty] public partial int Theme { get; set; }
     [ObservableProperty] public partial bool SearchRemovableStorage { get; set; }
     [ObservableProperty] public partial bool AdvancedMode { get; set; }
     [ObservableProperty] public partial int VideoUpscaling { get; set; }
     [ObservableProperty] public partial string GlobalArguments { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsRelaunchRequired { get; set; }
-    [ObservableProperty] public partial int SelectedLanguage { get; set; }
     [ObservableProperty] public partial StorageFolder? FrameCaptureFolder { get; set; }
 
     public ObservableCollection<StorageFolder> MusicLocations { get; }
@@ -48,13 +43,17 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
-    public List<LanguageInfo> AvailableLanguages { get; }
+    public IReadOnlyList<PlayerAutoResizeOption> PlayerAutoResizeOptions { get; } = Enum.GetValues<PlayerAutoResizeOption>();
+
+    public IReadOnlyList<int> VolumeBoostOptions { get; } = _volumeOptions;
 
     public IReadOnlyList<int> PlayerSeekStepOptions { get; } = new[] { 5, 10, 15, 20, 30 };
 
     public IReadOnlyList<int> PlayerControlsHideDelayOptions { get; } = new[] { 1, 2, 3, 4, 5 };
 
     public IReadOnlyList<PlaybackActionKind> GestureOptions { get; } = Enum.GetValues<PlaybackActionKind>();
+
+    private static readonly int[] _volumeOptions = [100, 125, 150, 200];
 
     private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
@@ -69,12 +68,12 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     private StorageLibrary? _videosLibrary;
     private StorageLibrary? _musicLibrary;
 
-    private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, int Language)
+    private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, string Language)
     {
         public string GlobalArguments { get; } = GlobalArguments;
         public bool AdvancedMode { get; } = AdvancedMode;
         public int VideoUpscaling { get; } = VideoUpscaling;
-        public int Language { get; } = Language;
+        public string Language { get; } = Language;
     }
 
     public SettingsPageViewModel(
@@ -105,12 +104,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         VideoLocations = new ObservableCollection<StorageFolder>();
         RemovableStorageFolders = new ObservableCollection<StorageFolder>();
 
-        IEnumerable<Language> manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l));
-        AvailableLanguages = manifestLanguages.Select(l => new LanguageInfo(l.NativeName, l.LanguageTag))
-            .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
-            .Prepend(new LanguageInfo(string.Empty, string.Empty))
-            .ToList();
-
         if (SystemInformation.IsXbox)
         {
             _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
@@ -120,55 +113,22 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         }
 
         // Load values
-        PlayerAutoResize = (int)PlayerSettings.AutoResize;
+        Language = GeneralSettings.Language;
         ShowRecent = GeneralSettings.ShowRecent;
-        Theme = ((int)GeneralSettings.Theme + 2) % 3;
         SearchRemovableStorage = LibrarySettings.SearchRemovableStorage;
         AdvancedMode = PlayerSettings.AdvancedMode;
         VideoUpscaling = (int)PlayerSettings.VideoUpscale;
         GlobalArguments = PlayerSettings.GlobalArguments;
-        int maxVolume = PlaybackSettings.MaxVolume;
-        VolumeBoost = maxVolume switch
-        {
-            >= 200 => 3,
-            >= 150 => 2,
-            >= 125 => 1,
-            _ => 0
-        };
-
-        string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
-        SelectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
 
         // Setting initial values for relaunch check
-        _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, SelectedLanguage);
+        _initialValues ??= new InitialValues(GlobalArguments, AdvancedMode, VideoUpscaling, Language);
         CheckForRelaunch();
     }
 
-    partial void OnThemeChanged(int value)
+    partial void OnLanguageChanged(string value)
     {
-        // The recommended theme option order is Light, Dark, System
-        // So we need to map the value to the correct ThemeOption
-        GeneralSettings.Theme = (ThemeOption)((value + 1) % 3);
-    }
-
-    partial void OnSelectedLanguageChanged(int value)
-    {
-        if (value <= 0)
-        {
-            ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
-            CheckForRelaunch();
-            return;
-        }
-
-        // If the value is out of bounds, do nothing
-        if (value >= AvailableLanguages.Count) return;
-        ApplicationLanguages.PrimaryLanguageOverride = AvailableLanguages[value].LanguageTag;
+        GeneralSettings.Language = value;
         CheckForRelaunch();
-    }
-
-    partial void OnPlayerAutoResizeChanged(int value)
-    {
-        PlayerSettings.AutoResize = (PlayerAutoResizeOption)value;
     }
 
     partial void OnShowRecentChanged(bool value)
@@ -187,17 +147,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         {
             _dispatcherQueue.TryEnqueue(async () => await RefreshLibrariesAsync());
         }
-    }
-
-    partial void OnVolumeBoostChanged(int value)
-    {
-        PlaybackSettings.MaxVolume = value switch
-        {
-            3 => 200,
-            2 => 150,
-            1 => 125,
-            _ => 100
-        };
     }
 
     partial void OnAdvancedModeChanged(bool value)
@@ -472,7 +421,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
 
         // Check if app language has been changed
-        bool languageChanged = _initialValues.Language != SelectedLanguage;
+        bool languageChanged = _initialValues.Language != Language;
 
         // Check if global arguments have been changed
         bool argsChanged = _initialValues.GlobalArguments != GlobalArguments;

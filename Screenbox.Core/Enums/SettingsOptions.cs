@@ -1,4 +1,4 @@
-﻿namespace Screenbox.Core.Enums;
+namespace Screenbox.Core.Enums;
 
 public enum PlayerAutoResizeOption
 {
@@ -12,11 +12,4 @@ public enum VideoUpscaleOption
     Linear,
     Point,
     Super
-}
-
-public enum ThemeOption
-{
-    Auto,
-    Light,
-    Dark
 }
