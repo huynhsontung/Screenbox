@@ -14,6 +14,7 @@ public enum NotificationKind
     MediaLoadFailed,
     SubtitleLoadFailed,
     FrameSaveFailed,
+    ItemDeleteFailed,
 
     FrameSaved,
     SubtitleAdded,
@@ -21,6 +22,7 @@ public enum NotificationKind
     PlaylistDeleted,
     PlaylistRenamed,
     PlaylistItemsAdded,
+    ItemDeleted,
 
     ResumePosition,
 }
