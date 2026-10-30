@@ -1,10 +1,10 @@
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.Tests.Contexts;
 
@@ -34,15 +34,15 @@ public partial class SettingsContextTests
     }
 
     [Test]
-    public async Task GeneralSettingsContext_WhenAdvancedModeChanged_UpdatesStorageAndBroadcastsMessage()
+    public async Task GeneralSettingsContext_WhenThemeChanged_UpdatesStorageAndBroadcastsMessage()
     {
         var storage = new MemorySettingsStorage();
-        var context = new PlayerSettingsContext(storage);
+        var context = new GeneralSettingsContext(storage);
 
-        PropertyChangedMessage<bool>? receivedMessage = null;
-        SettingChangedMessage<PlayerSettingsContext, bool>? receivedDomainMessage = null;
+        PropertyChangedMessage<ElementTheme>? receivedMessage = null;
+        SettingChangedMessage<GeneralSettingsContext, ElementTheme>? receivedDomainMessage = null;
         object recipient = new();
-        WeakReferenceMessenger.Default.Register<PropertyChangedMessage<bool>>(
+        WeakReferenceMessenger.Default.Register<PropertyChangedMessage<ElementTheme>>(
             recipient,
             (r, m) =>
             {
@@ -51,7 +51,7 @@ public partial class SettingsContextTests
                     receivedMessage = m;
                 }
             });
-        WeakReferenceMessenger.Default.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(
+        WeakReferenceMessenger.Default.Register<SettingChangedMessage<GeneralSettingsContext, ElementTheme>>(
             recipient,
             (r, m) =>
             {
@@ -63,15 +63,15 @@ public partial class SettingsContextTests
 
         try
         {
-            context.AdvancedMode = true;
+            context.Theme = ElementTheme.Dark;
 
-            await Assert.That(context.AdvancedMode).IsTrue()    ;
-            await Assert.That(storage.GetValue("Advanced/IsEnabled", false)).IsTrue();
+            await Assert.That(context.Theme).IsEqualTo(ElementTheme.Dark);
+            await Assert.That(storage.GetValue("General/Theme", (int)ElementTheme.Default)).IsEqualTo((int)ElementTheme.Dark);
             await Assert.That(receivedMessage).IsNotNull();
-            await Assert.That(receivedMessage!.NewValue).IsTrue();
+            await Assert.That(receivedMessage!.NewValue).IsEqualTo(ElementTheme.Dark);
             await Assert.That(receivedDomainMessage).IsNotNull();
-            await Assert.That(receivedDomainMessage!.NewValue).IsTrue();
-            await Assert.That(receivedDomainMessage!.PropertyName).IsEqualTo(nameof(PlayerSettingsContext.AdvancedMode));
+            await Assert.That(receivedDomainMessage!.NewValue).IsEqualTo(ElementTheme.Dark);
+            await Assert.That(receivedDomainMessage!.PropertyName).IsEqualTo(nameof(GeneralSettingsContext.Theme));
         }
         finally
         {
