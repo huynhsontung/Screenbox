@@ -115,10 +115,9 @@ public sealed class VlcMediaProbeService : IMediaProbeService
             return null;
         }
 
-        IPlaybackItem? tempItem = null;
         try
         {
-            tempItem = _playerService.CreatePlaybackItem(
+            using var tempItem = _playerService.CreatePlaybackItem(
                 mediaPlayer,
                 source,
                 options ?? Array.Empty<string>());
@@ -132,10 +131,6 @@ public sealed class VlcMediaProbeService : IMediaProbeService
         {
             _logger.LogError(ex, "Failed to probe media properties.");
             return null;
-        }
-        finally
-        {
-            tempItem?.Dispose();
         }
     }
 
