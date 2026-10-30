@@ -115,7 +115,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
         bool isPlaying = ContextItem switch
         {
-            IPlaybackItem playable => playable.IsPlaying,
+            IPlaybable playable => playable.IsPlaying,
             StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
             _ => false,
         };

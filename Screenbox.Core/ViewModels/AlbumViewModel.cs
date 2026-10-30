@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class AlbumViewModel : ObservableRecipient, IPlaybackItem
+public sealed partial class AlbumViewModel : ObservableRecipient, IPlaybable
 {
     public string Name { get; }
 

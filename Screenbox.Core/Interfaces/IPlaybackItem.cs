@@ -3,7 +3,7 @@ namespace Screenbox.Core;
 /// <summary>
 /// Defines members that identify a playback item and indicate whether it is playing.
 /// </summary>
-public interface IPlaybackItem
+public interface IPlaybable
 {
     /// <summary>
     /// Gets the name of the playback item.

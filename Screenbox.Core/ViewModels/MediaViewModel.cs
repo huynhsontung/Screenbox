@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class MediaViewModel : ObservableRecipient, IPlaybackItem, ISelectable
+public sealed partial class MediaViewModel : ObservableRecipient, IPlaybable, ISelectable
 {
     public string Location => Source.Location;
 
