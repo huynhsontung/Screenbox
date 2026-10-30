@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
@@ -112,7 +113,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly PlayerSettingsContext _playerSettings;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IPlaylistService _playlistService;
-    private readonly StorageMediaProbeService _storageMediaProbeService;
+    private readonly IMediaProbeService _storageMediaProbeService;
     private readonly IMediaProbeService _mediaProbeService;
     private readonly PlayerContext _playerContext;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -123,8 +124,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public PlayerPageViewModel(IWindowService windowService,
         PlayerSettingsContext playerSettings, GeneralSettingsContext generalSettings,
-        IPlaylistService playlistService, StorageMediaProbeService storageMediaProbeService,
-        IMediaProbeService mediaProbeService, PlayerContext playerContext,
+        IPlaylistService playlistService,
+        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
+        [FromKeyedServices(typeof(VlcMediaProbeService))] IMediaProbeService mediaProbeService,
+        PlayerContext playerContext,
         INavigationService navigationService, MediaViewModelFactory mediaFactory)
     {
         _windowService = windowService;

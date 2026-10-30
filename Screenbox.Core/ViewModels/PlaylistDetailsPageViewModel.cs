@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
@@ -30,7 +31,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     public partial MediaViewModel? FirstItem { get; set; }
 
     private readonly IFilesService _filesService;
-    private readonly StorageMediaProbeService _storageMediaProbeService;
+    private readonly IMediaProbeService _storageMediaProbeService;
     private readonly IPlaylistService _playlistService;
     private readonly IMediaListFactory _mediaListFactory;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -38,7 +39,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     public PlaylistDetailsPageViewModel(
         IFilesService filesService,
-        StorageMediaProbeService storageMediaProbeService,
+        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
         IPlaylistService playlistService,
         IMediaListFactory mediaListFactory,
         MediaViewModelFactory mediaFactory)

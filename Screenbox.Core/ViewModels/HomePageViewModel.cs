@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
@@ -35,7 +36,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly RecentContext _recentContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
-    private readonly StorageMediaProbeService _storageMediaProbeService;
+    private readonly IMediaProbeService _storageMediaProbeService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IPlaylistService _playlistService;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -47,7 +48,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
-        StorageMediaProbeService storageMediaProbeService,
+        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
         GeneralSettingsContext generalSettings,
         IPlaylistService playlistService,
         ILogger<HomePageViewModel> logger)

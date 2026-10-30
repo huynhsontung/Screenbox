@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -27,13 +28,17 @@ public sealed class LibraryService : ILibraryService
 
     private static readonly string[] CustomPropertyKeys = { SystemProperties.Title };
     private readonly LibrarySettingsContext _librarySettings;
-    private readonly StorageMediaProbeService _storageMediaProbeService;
+    private readonly IMediaProbeService _storageMediaProbeService;
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ILogger<LibraryService> _logger;
 
-    public LibraryService(LibrarySettingsContext librarySettings, StorageMediaProbeService storageMediaProbeService,
-        IDatabaseService databaseService, MediaViewModelFactory mediaFactory, ILogger<LibraryService> logger)
+    public LibraryService(
+        LibrarySettingsContext librarySettings,
+        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
+        IDatabaseService databaseService,
+        MediaViewModelFactory mediaFactory,
+        ILogger<LibraryService> logger)
     {
         _librarySettings = librarySettings;
         _storageMediaProbeService = storageMediaProbeService;

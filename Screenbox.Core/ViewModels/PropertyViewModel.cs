@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
@@ -26,7 +27,7 @@ public sealed partial class PropertyViewModel : ObservableObject
     public partial bool CanNavigateToFile { get; set; }
 
     private readonly IFilesService _filesService;
-    private readonly StorageMediaProbeService _storageMediaProbeService;
+    private readonly IMediaProbeService _storageMediaProbeService;
     private readonly IMediaProbeService _mediaProbeService;
     private StorageFile? _mediaFile;
     private Uri? _mediaUri;
@@ -34,8 +35,8 @@ public sealed partial class PropertyViewModel : ObservableObject
 
     public PropertyViewModel(
         IFilesService filesService,
-        StorageMediaProbeService storageMediaProbeService,
-        IMediaProbeService mediaProbeService)
+        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
+        [FromKeyedServices(typeof(VlcMediaProbeService))] IMediaProbeService mediaProbeService)
     {
         _filesService = filesService;
         _storageMediaProbeService = storageMediaProbeService;
