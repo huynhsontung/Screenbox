@@ -12,7 +12,7 @@ using Screenbox.Core.Messages;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class ArtistViewModel : ObservableRecipient
+public sealed partial class ArtistViewModel : ObservableRecipient, IPlaybable
 {
     public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
