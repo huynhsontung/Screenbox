@@ -319,7 +319,7 @@
     <value>Невідомий жанр</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>Усі жанри</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Додати теку</value>
@@ -560,6 +560,10 @@
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
     <value>Результати пошуку відео «{0}»</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Результати списку відтворення для «{0}»</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -876,7 +880,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>Застосовано фільтр за жанром: {0}</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -1063,16 +1067,16 @@
     <value>Збільшити швидкість</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Наступний трек</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Попередній трек</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Наступний розділ</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Попередній розділ</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Додати до списку відтворення</value>
@@ -1183,17 +1187,17 @@
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>Параметри звуку</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>Параметри субтитрів</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>Зменшити {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>Збільшити {0}</value>
     <comment>#Format[String value]</comment>
   </data>
 </root>
