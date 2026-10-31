@@ -37,6 +37,12 @@
          https://github.com/microsoft/CsWinRT/pull/2358
     -->
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+
+    <!-- Disable generation of resource interfaces and providers for ReswPlus to reduce binary size.
+         References:
+         https://github.com/DotNetPlus/ReswPlus/blob/main/docs/Injectable-resource-providers.md
+    -->
+    <ReswPlusGenerateResourceInterfaces>false</ReswPlusGenerateResourceInterfaces>
   </PropertyGroup>
 
   <ItemGroup>
