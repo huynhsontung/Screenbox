@@ -21,7 +21,7 @@ public partial class PlayQueueBufferManagerTests
     private sealed partial class DummyPlaybackItem : IPlaybackItem
     {
         public bool IsDisposed { get; private set; }
-        public IMediaSource Source { get; } = null!;
+        public IMediaSource Source { get; init; } = null!;
         public TimeSpan? Duration => TimeSpan.Zero;
         public ISingleSelectMediaTrackList<AudioTrack> AudioTracks => throw new NotImplementedException();
         public ISingleSelectMediaTrackList<VideoTrack> VideoTracks => throw new NotImplementedException();
@@ -50,7 +50,7 @@ public partial class PlayQueueBufferManagerTests
         public IPlaybackItem CreatePlaybackItem(IMediaPlayer player, IMediaSource source, params string[] options)
         {
             CreateCount++;
-            var item = new DummyPlaybackItem();
+            var item = new DummyPlaybackItem { Source = source };
             CreatedItems.Add(item);
             return item;
         }
@@ -159,5 +159,24 @@ public partial class PlayQueueBufferManagerTests
         await Assert.That(bufferManager.BufferedItems[0]).IsSameReferenceAs(items[2]);
         await Assert.That(bufferManager.BufferedItems[1]).IsSameReferenceAs(items[3]);
         await Assert.That(bufferManager.BufferedItems[2]).IsSameReferenceAs(items[4]);
+    }
+
+    [Test]
+    public async Task TryGetPlaybackItem_WhenBuffered_ReturnsTrueAndItemWithoutCreatingNew()
+    {
+        var playerService = new MockPlayerService();
+        var playlistService = new PlaylistService(null!, null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
+        var player = new TestMediaPlayer();
+        var media = CreateMedia("test1");
+
+        await Assert.That(bufferManager.TryGetPlaybackItem(media.Source, out var unbuffered)).IsFalse();
+        await Assert.That(unbuffered).IsNull();
+        await Assert.That(playerService.CreateCount).IsEqualTo(0);
+
+        var created = bufferManager.GetOrCreatePlaybackItem(player, media);
+        await Assert.That(bufferManager.TryGetPlaybackItem(media.Source, out var buffered)).IsTrue();
+        await Assert.That(buffered).IsSameReferenceAs(created);
+        await Assert.That(playerService.CreateCount).IsEqualTo(1);
     }
 }

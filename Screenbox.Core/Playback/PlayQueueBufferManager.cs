@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -41,6 +43,25 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
         _playlistService = playlistService;
         _logger = logger ?? NullLogger<PlayQueueBufferManager>.Instance;
         _messenger = messenger ?? WeakReferenceMessenger.Default;
+    }
+
+    /// <inheritdoc/>
+    public bool TryGetPlaybackItem(IMediaSource source, [NotNullWhen(true)] out IPlaybackItem? item)
+    {
+        if (!_isDisposed)
+        {
+            foreach (var (vm, bufferedItem) in _bufferedPlaybackItems)
+            {
+                if (ReferenceEquals(vm.Source, source))
+                {
+                    item = bufferedItem;
+                    return true;
+                }
+            }
+        }
+
+        item = null;
+        return false;
     }
 
     /// <inheritdoc/>

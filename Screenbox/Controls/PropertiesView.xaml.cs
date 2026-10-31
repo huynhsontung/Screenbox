@@ -30,10 +30,11 @@ public sealed partial class PropertiesView : UserControl
         Loaded += OnLoaded;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         if (Media == null) return;
-        ViewModel.OnLoaded(Media);
+        await ViewModel.LoadPropertiesAsync(Media);
+        Bindings.Update();
     }
 
     private static void OnMediaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

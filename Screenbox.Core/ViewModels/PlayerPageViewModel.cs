@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
@@ -112,7 +113,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly PlayerSettingsContext _playerSettings;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IPlaylistService _playlistService;
-    private readonly IFilesService _filesService;
+    private readonly IMediaProbeService _storageMediaProbeService;
+    private readonly IMediaProbeService _mediaProbeService;
     private readonly PlayerContext _playerContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private bool _visibilityOverride;
@@ -122,14 +124,18 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public PlayerPageViewModel(IWindowService windowService,
         PlayerSettingsContext playerSettings, GeneralSettingsContext generalSettings,
-        IPlaylistService playlistService, IFilesService filesService, PlayerContext playerContext,
+        IPlaylistService playlistService,
+        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
+        [FromKeyedServices(typeof(VlcMediaProbeService))] IMediaProbeService mediaProbeService,
+        PlayerContext playerContext,
         INavigationService navigationService, MediaViewModelFactory mediaFactory)
     {
         _windowService = windowService;
         _playerSettings = playerSettings;
         _generalSettings = generalSettings;
         _playlistService = playlistService;
-        _filesService = filesService;
+        _storageMediaProbeService = storageMediaProbeService;
+        _mediaProbeService = mediaProbeService;
         _playerContext = playerContext;
         _mediaFactory = mediaFactory;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -279,7 +285,13 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
         if (current != null)
         {
-            await current.LoadDetailsAsync(_filesService);
+            if (!current.DetailsLoaded)
+            {
+                await current.LoadDetailsAsync(_storageMediaProbeService);
+                _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
+            }
+
+            await current.LoadDetailsAsync(_mediaProbeService);
             await current.LoadThumbnailAsync();
 
             // Process again in case media type changed after loading details
