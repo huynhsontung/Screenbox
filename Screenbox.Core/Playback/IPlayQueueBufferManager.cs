@@ -5,7 +5,6 @@ using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
-using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
 
 namespace Screenbox.Core.Playback;
 
