@@ -1200,5 +1200,14 @@
     <value>Erhöhe {0}</value>
     <comment>#Format[String value]</comment>
   </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>Use system setting</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
 </root>
 
