@@ -37,8 +37,6 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         Vertical
     }
 
-    [ObservableProperty] public partial bool IsHolding { get; set; }
-
     public event EventHandler<EventArgs>? ClearViewRequested;
 
     public LibVLCSharp.Shared.MediaPlayer? VlcPlayer => (_playerContext.MediaPlayer as VlcMediaPlayer)?.VlcPlayer;
@@ -48,6 +46,8 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         get => _playerContext.MediaPlayer;
         set => _playerContext.MediaPlayer = value;
     }
+
+    public bool IsHolding { get; private set; }
 
     private readonly PlayerContext _playerContext;
     private readonly IPlayerService _playerService;
