@@ -279,34 +279,42 @@
                     Header="{x:Bind strings:Resources.SettingsThemeSelectionHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FiltersGlyph}}">
+                    <!--  App Theme  -->
                     <ComboBox
                         MinWidth="150"
-                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
-                        SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
+                        AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsThemeSelectionDescription}"
+                        SelectedItem="{x:Bind ViewModel.GeneralSettings.Theme, Mode=TwoWay}"
+                        SelectionChanged="ThemeComboBox_OnSelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="ElementTheme">
+                                <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((ElementTheme))}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <!--  The app settings guidelines recommend theme options to follow this order.  -->
+                        <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
+                        <ElementTheme>Light</ElementTheme>
+                        <ElementTheme>Dark</ElementTheme>
+                        <ElementTheme>Default</ElementTheme>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
-                        <!--  The app settings guidelines recommend theme options to follow this order.  -->
-                        <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
-                        <x:String>ThemeLight</x:String>
-                        <x:String>ThemeDark</x:String>
-                        <x:String>ThemeAuto</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
+                <!--  App Language  -->
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
                     Header="{x:Bind strings:Resources.SettingsLanguageSelectionHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
                     <ComboBox
-                        x:Name="LanguageComboBox"
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsLanguageSelectionDescription}"
-                        ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
-                        SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
+                        ItemsSource="{x:Bind LanguageOptions}"
+                        SelectedItem="{x:Bind SelectedLanguage, Mode=TwoWay}"
+                        SelectionChanged="LanguageComboBox_OnSelectionChanged">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:LanguageInfo">
-                                <TextBlock Text="{x:Bind NativeName}" TextAlignment="DetectFromContent" />
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind helpers:ItemLabelHelper.GetLanguageLabel((x:String))}" TextAlignment="DetectFromContent" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
@@ -356,14 +364,16 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsAutoResizeDescription}"
-                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
-                        SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
+                        ItemsSource="{x:Bind ViewModel.PlayerAutoResizeOptions}"
+                        SelectedItem="{x:Bind ViewModel.PlayerSettings.AutoResize, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="enums:PlayerAutoResizeOption">
+                                <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((enums:PlayerAutoResizeOption))}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
-                        <x:String>Always</x:String>
-                        <x:String>OnLaunch</x:String>
-                        <x:String>Never</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
 
@@ -376,15 +386,16 @@
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsVolumeBoostDescription}"
-                        ItemTemplate="{StaticResource ResourceNameToResourceStringTemplate}"
-                        SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
+                        ItemsSource="{x:Bind ViewModel.VolumeBoostOptions}"
+                        SelectedItem="{x:Bind ViewModel.PlaybackSettings.MaxVolume, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:Int32">
+                                <TextBlock Text="{x:Bind helpers:ItemLabelHelper.GetVolumeBoostLabel((x:Int32))}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ComboBoxWidthFromPopupBehavior />
                         </interactivity:Interaction.Behaviors>
-                        <x:String>None</x:String>
-                        <x:String>#125%</x:String>
-                        <x:String>#150%</x:String>
-                        <x:String>#200%</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
 
