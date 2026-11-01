@@ -26,6 +26,7 @@ public sealed partial class PlayerElement : UserControl
 
     private readonly GestureRecognizer _gestureRecognizer;
     private bool _shouldSuppressNextClick;
+    private uint? _trackedPointerId;
 
     public event RoutedEventHandler? Click;
 
@@ -86,28 +87,44 @@ public sealed partial class PlayerElement : UserControl
 
     private void VideoViewButton_OnPointerCanceled(object sender, PointerRoutedEventArgs e)
     {
-        _gestureRecognizer.CompleteGesture();
+        CompleteGestureRecognizerGesture();
         VideoViewButton.ReleasePointerCapture(e.Pointer);
         e.Handled = IsEnabled;
     }
 
     private void VideoViewButton_OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        if (!IsEnabled || ViewModel.IsHolding) return;
+        if (!IsEnabled || ViewModel.IsHolding || _trackedPointerId != e.Pointer.PointerId || !_gestureRecognizer.IsActive)
+            return;
 
-        _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(this));
+        try
+        {
+            _gestureRecognizer.ProcessMoveEvents(e.GetIntermediatePoints(this));
+        }
+        catch (Exception ex) when (ex is ArgumentException or System.Runtime.InteropServices.COMException)
+        {
+            CompleteGestureRecognizerGesture();
+        }
     }
 
     private void VideoViewButton_OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         if (!IsEnabled) return;
 
-        // If the gesture recognizer is already active, complete the current gesture before processing the new down event.
-        // If we don't do this, the gesture recognizer will throw an exception.
         if (_gestureRecognizer.IsActive)
-            _gestureRecognizer.CompleteGesture();
+            CompleteGestureRecognizerGesture();
 
-        _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
+        try
+        {
+            _gestureRecognizer.ProcessDownEvent(e.GetCurrentPoint(this));
+        }
+        catch (Exception ex) when (ex is ArgumentException or System.Runtime.InteropServices.COMException)
+        {
+            CompleteGestureRecognizerGesture();
+            return;
+        }
+
+        _trackedPointerId = e.Pointer.PointerId;
         VideoViewButton.CapturePointer(e.Pointer);
         e.Handled = true;
     }
@@ -116,7 +133,7 @@ public sealed partial class PlayerElement : UserControl
     {
         // Skip if no down event was processed, and recover gracefully if the
         // recognizer cannot process the event (e.g. non-chronological timestamps).
-        if (IsEnabled && _gestureRecognizer.IsActive)
+        if (IsEnabled && _trackedPointerId == e.Pointer.PointerId && _gestureRecognizer.IsActive)
         {
             try
             {
@@ -124,8 +141,13 @@ public sealed partial class PlayerElement : UserControl
             }
             catch (Exception ex) when (ex is ArgumentException or System.Runtime.InteropServices.COMException)
             {
-                _gestureRecognizer.CompleteGesture();
+                CompleteGestureRecognizerGesture();
             }
+        }
+
+        if (_trackedPointerId == e.Pointer.PointerId)
+        {
+            _trackedPointerId = null;
         }
 
         VideoViewButton.ReleasePointerCapture(e.Pointer);
@@ -164,5 +186,11 @@ public sealed partial class PlayerElement : UserControl
             && args.HoldingState is HoldingState.Completed or HoldingState.Canceled)
             _shouldSuppressNextClick = true;
         ViewModel.ProcessHoldingGesture(args.HoldingState);
+    }
+
+    private void CompleteGestureRecognizerGesture()
+    {
+        _trackedPointerId = null;
+        _gestureRecognizer.CompleteGesture();
     }
 }
