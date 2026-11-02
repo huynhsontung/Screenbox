@@ -23,6 +23,7 @@ using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Storage.Search;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -216,11 +217,22 @@ sealed partial class App : Application
         Window.Current.Activate();
         var playlistService = _services.GetRequiredService<IPlaylistService>();
         var generalSettings = _services.GetRequiredService<GeneralSettingsContext>();
+
+        StorageFileQueryResult? neighboringFilesQuery = null;
+        try
+        {
+            neighboringFilesQuery = args.NeighboringFilesQuery;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to retrieve NeighboringFilesQuery during file activation.");
+        }
+
         await WeakReferenceMessenger.Default.PlayFilesAsync(
             args.Files,
             playlistService,
             generalSettings.EnqueueAllFilesInFolder,
-            args.NeighboringFilesQuery);
+            neighboringFilesQuery);
     }
 
     /// <summary>
