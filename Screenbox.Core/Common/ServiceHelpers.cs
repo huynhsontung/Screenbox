@@ -88,7 +88,13 @@ public static class ServiceHelpers
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
         services.AddSingleton<IPlaylistService, PlaylistService>();
-        services.AddKeyedSingleton<IMediaProbeService, StorageMediaProbeService>(typeof(StorageMediaProbeService));
-        services.AddKeyedSingleton<IMediaProbeService, VlcMediaProbeService>(typeof(VlcMediaProbeService));
+        services.AddSingleton<StorageMediaProbeService>();
+        services.AddSingleton<VlcMediaProbeService>();
+        services.AddKeyedSingleton<IMediaProbeService>(
+            typeof(StorageMediaProbeService),
+            (sp, _) => sp.GetRequiredService<StorageMediaProbeService>());
+        services.AddKeyedSingleton<IMediaProbeService>(
+            typeof(VlcMediaProbeService),
+            (sp, _) => sp.GetRequiredService<VlcMediaProbeService>());
     }
 }

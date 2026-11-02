@@ -26,14 +26,19 @@ public class ServiceHelpersTests
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        IMediaProbeService? storageProbe = provider.GetKeyedService<IMediaProbeService>(typeof(StorageMediaProbeService));
-        IMediaProbeService? vlcProbe = provider.GetKeyedService<IMediaProbeService>(typeof(VlcMediaProbeService));
+        StorageMediaProbeService storageConcrete = provider.GetRequiredService<StorageMediaProbeService>();
+        IMediaProbeService storageKeyed = provider.GetRequiredKeyedService<IMediaProbeService>(typeof(StorageMediaProbeService));
 
-        await Assert.That(storageProbe).IsNotNull();
-        await Assert.That(storageProbe).IsTypeOf<StorageMediaProbeService>();
+        VlcMediaProbeService vlcConcrete = provider.GetRequiredService<VlcMediaProbeService>();
+        IMediaProbeService vlcKeyed = provider.GetRequiredKeyedService<IMediaProbeService>(typeof(VlcMediaProbeService));
 
-        await Assert.That(vlcProbe).IsNotNull();
-        await Assert.That(vlcProbe).IsTypeOf<VlcMediaProbeService>();
+        await Assert.That(storageKeyed).IsNotNull();
+        await Assert.That(storageKeyed).IsTypeOf<StorageMediaProbeService>();
+        await Assert.That(storageKeyed).IsSameReferenceAs(storageConcrete);
+
+        await Assert.That(vlcKeyed).IsNotNull();
+        await Assert.That(vlcKeyed).IsTypeOf<VlcMediaProbeService>();
+        await Assert.That(vlcKeyed).IsSameReferenceAs(vlcConcrete);
     }
 
     [Test]
