@@ -84,6 +84,7 @@ public static class ServiceHelpers
         services.AddSingleton<ILibraryService, LibraryService>();
         services.AddSingleton<ISearchService, SearchService>();
         services.AddSingleton<IWindowService, WindowService>();
+        services.AddSingleton<IGamepadActionService, GamepadActionService>();
         services.AddSingleton<ICastService, CastService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();

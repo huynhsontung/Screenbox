@@ -24,6 +24,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
     IRecipient<SettingChangedMessage<PlayerSettingsContext, bool>>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<TogglePlayPauseMessage>,
+    IRecipient<ToggleFullscreenMessage>,
     IRecipient<TrackNavigationMessage>,
     IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
     IRecipient<PropertyChangedMessage<WindowViewMode>>,
@@ -104,6 +105,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         Messenger.Register<SettingChangedMessage<PlayerSettingsContext, bool>>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
         Messenger.Register<TogglePlayPauseMessage>(this);
+        Messenger.Register<ToggleFullscreenMessage>(this);
         Messenger.Register<TrackNavigationMessage>(this);
         Messenger.Register<PropertyChangedMessage<PlayerVisibilityState>>(this);
         Messenger.Register<PropertyChangedMessage<WindowViewMode>>(this);
@@ -152,6 +154,11 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
                     IsPlaying ? PlaybackCommandKind.Pause : PlaybackCommandKind.Play)
                 .ShowBadge());
         }
+    }
+
+    public void Receive(ToggleFullscreenMessage message)
+    {
+        ToggleFullscreenCommand.Execute(null);
     }
 
     public async void Receive(TrackNavigationMessage message)

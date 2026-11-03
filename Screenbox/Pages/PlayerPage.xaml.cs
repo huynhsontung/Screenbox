@@ -8,6 +8,8 @@ using CommunityToolkit.WinUI;
 using Screenbox.Controls;
 using Screenbox.Converters;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.ApplicationModel.DataTransfer;
@@ -36,6 +38,7 @@ public sealed partial class PlayerPage : Page
     private static readonly bool _isArabicLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "ar";
 
     private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
+    private readonly IGamepadActionService _gamepadActionService;
     private CancellationTokenSource? _animationCancellationTokenSource;
     private bool _startup;
 
@@ -43,6 +46,7 @@ public sealed partial class PlayerPage : Page
     {
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
+        _gamepadActionService = Ioc.Default.GetRequiredService<IGamepadActionService>();
         _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         RegisterSeekBarPointerHandlers();
@@ -78,26 +82,73 @@ public sealed partial class PlayerPage : Page
             return;
         }
 
-        bool shouldHideControls = ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default };
-
-        switch (e.Key)
+        // B is reserved for closing the controls, it is not remappable.
+        if (e.Key == VirtualKey.GamepadB && ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default })
         {
-            case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
-                ViewModel.ControlsHidden = false;
-                PlayQueueFlyout.ShowAt(PlayQueueButton,
-                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.BottomEdgeAlignedLeft) });
-                break;
-            case VirtualKey.GamepadMenu:
-                VideoView.ContextFlyout.ShowAt(PlayerControls,
-                    new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
-                break;
-            case VirtualKey.GamepadB when shouldHideControls:
-                ViewModel.TryHideControls(true);
-                break;
-            default:
-                base.OnKeyDown(e);
-                return;
+            ViewModel.TryHideControls(true);
+            return;
         }
+
+        if (TryExecuteGamepadAction(e.Key))
+        {
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Executes the action mapped to the specified gamepad key.
+    /// </summary>
+    /// <param name="key">The key that was pressed.</param>
+    /// <returns><see langword="true"/> if an action was executed.</returns>
+    private bool TryExecuteGamepadAction(VirtualKey key)
+    {
+        GamepadButtonAction action = ViewModel.PlayerSettings.GetMappedAction(key);
+        if (action == GamepadButtonAction.None) return false;
+
+        // Play/pause is handled by the preview key handlers to support press-and-hold.
+        if (action == GamepadButtonAction.PlayPause) return false;
+
+        if (_gamepadActionService.TryExecute(action)) return true;
+
+        switch (action)
+        {
+            case GamepadButtonAction.OpenPlayQueue:
+                return TryOpenPlayQueue();
+            case GamepadButtonAction.OpenSubtitleMenu:
+                if (ViewModel.ControlsHidden)
+                {
+                    ViewModel.ControlsHidden = false;
+                }
+
+                PlayerControls?.ShowAudioSubtitleFlyout();
+                return true;
+            case GamepadButtonAction.OpenPlaybackOptions:
+                return TryOpenPlaybackOptions();
+            default:
+                return false;
+        }
+    }
+
+    private bool TryOpenPlayQueue()
+    {
+        if (ViewModel.ViewMode == WindowViewMode.Compact) return false;
+
+        ViewModel.ControlsHidden = false;
+        PlayQueueFlyout.ShowAt(PlayQueueButton,
+            new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.BottomEdgeAlignedLeft) });
+        return true;
+    }
+
+    private bool TryOpenPlaybackOptions()
+    {
+        if (VideoView.ContextFlyout is null) return false;
+
+        VideoView.ContextFlyout.ShowAt(PlayerControls,
+            new FlyoutShowOptions { Placement = GlobalizationHelper.MirrorWhenRightToLeft(FlyoutPlacementMode.TopEdgeAlignedRight) });
+        return true;
     }
 
     private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -465,7 +516,7 @@ public sealed partial class PlayerPage : Page
 
     private void LayoutRoot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.OriginalKey is VirtualKey.Space or VirtualKey.GamepadX &&
+        if (IsPlayPauseKey(e.OriginalKey) &&
             !KeyboardAcceleratorHelper.IsControlKeyDown &&
             !KeyboardAcceleratorHelper.IsShiftKeyDown &&
             !e.KeyStatus.IsMenuKeyDown)
@@ -477,7 +528,7 @@ public sealed partial class PlayerPage : Page
 
     private void LayoutRoot_OnPreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
-        if (e.OriginalKey is VirtualKey.Space or VirtualKey.GamepadX &&
+        if (IsPlayPauseKey(e.OriginalKey) &&
             !KeyboardAcceleratorHelper.IsControlKeyDown &&
             !KeyboardAcceleratorHelper.IsShiftKeyDown &&
             !e.KeyStatus.IsMenuKeyDown)
@@ -485,6 +536,20 @@ public sealed partial class PlayerPage : Page
             e.Handled = true;
             ViewModel.HandlePlayPauseKeyUp();
         }
+    }
+
+    /// <summary>
+    /// Determines whether the specified key toggles playback.
+    /// </summary>
+    /// <remarks>
+    /// Play/pause is handled while the key is held down and released to support the
+    /// press-and-hold speed up gesture, so it is resolved here instead of on key down.
+    /// </remarks>
+    private bool IsPlayPauseKey(VirtualKey key)
+    {
+        if (key == VirtualKey.Space) return true;
+        if (!key.IsGamepadKey()) return false;
+        return ViewModel.PlayerSettings.GetMappedAction(key) == GamepadButtonAction.PlayPause;
     }
 
     private void ChangeVolumeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

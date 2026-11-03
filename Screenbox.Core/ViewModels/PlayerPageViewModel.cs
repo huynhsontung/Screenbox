@@ -120,6 +120,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private bool _isPlayPauseHoldActive;
     private double _playbackRateBeforeHold;
 
+    public PlayerSettingsContext PlayerSettings => _playerSettings;
+
     public PlayerPageViewModel(IWindowService windowService,
         PlayerSettingsContext playerSettings, GeneralSettingsContext generalSettings,
         IPlaylistService playlistService, IFilesService filesService, PlayerContext playerContext,

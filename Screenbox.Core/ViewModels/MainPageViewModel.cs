@@ -25,9 +25,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     IRecipient<NavigationViewDisplayModeRequestMessage>,
     IRecipient<CriticalErrorMessage>
 {
-    private const int TriggerSeekMultiplier = 4;
-    private const int VolumeAdjustmentStep = 2;
-
     [ObservableProperty] public partial bool PlayerVisible { get; set; }
     [ObservableProperty] public partial bool ShouldUseMargin { get; set; }
     [ObservableProperty] public partial bool IsPaneOpen { get; set; }
@@ -46,6 +43,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
     private readonly IPlaylistViewModelFactory _playlistFactory;
+    private readonly IGamepadActionService _gamepadActionService;
     private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
@@ -59,7 +57,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     public MainPageViewModel(PlayerSettingsContext playerSettings, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
         PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory,
-        ILogger<MainPageViewModel> logger)
+        IGamepadActionService gamepadActionService, ILogger<MainPageViewModel> logger)
     {
         _playerSettings = playerSettings;
         _searchService = searchService;
@@ -68,6 +66,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
         _playlistFactory = playlistFactory;
+        _gamepadActionService = gamepadActionService;
         _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;
@@ -104,48 +103,13 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     public void ProcessGamepadKeyDown(VirtualKey key)
     {
-        // All Gamepad keys are in the range of [195, 218]
-        if ((int)key < 195 || (int)key > 218) return;
+        if (!key.IsGamepadKey()) return;
 
         Playlist playlist = Messenger.Send(new QueueRequestMessage());
         if (playlist.IsEmpty) return;
 
-        int rewindStep = _playerSettings.RewindStep;
-        int fastForwardStep = _playerSettings.FastForwardStep;
-
-        switch (key)
-        {
-            case VirtualKey.GamepadRightThumbstickLeft:
-            case VirtualKey.GamepadLeftShoulder:
-                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(-rewindStep));
-                break;
-            case VirtualKey.GamepadRightThumbstickRight:
-            case VirtualKey.GamepadRightShoulder:
-                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(fastForwardStep));
-                break;
-            case VirtualKey.GamepadLeftTrigger when PlayerVisible:
-                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(-rewindStep * TriggerSeekMultiplier));
-                break;
-            case VirtualKey.GamepadRightTrigger when PlayerVisible:
-                Messenger.SendSeekWithStatus(TimeSpan.FromSeconds(fastForwardStep * TriggerSeekMultiplier));
-                break;
-            case VirtualKey.GamepadRightThumbstickUp:
-                int volumeUp = Messenger.Send(new ChangeVolumeRequestMessage(VolumeAdjustmentStep, true));
-                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volumeUp).ShowBadge().ShowMessage());
-                break;
-            case VirtualKey.GamepadRightThumbstickDown:
-                int volumeDown = Messenger.Send(new ChangeVolumeRequestMessage(-VolumeAdjustmentStep, true));
-                Messenger.Send(new PlayerOsdUpdateMessage(PlaybackCommandKind.Volume, value: volumeDown).ShowBadge().ShowMessage());
-                break;
-            case VirtualKey.GamepadX:
-                Messenger.Send(new TogglePlayPauseMessage(true));
-                break;
-            case VirtualKey.GamepadView when PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded:
-                Messenger.Send(new TogglePlayerVisibilityMessage());
-                break;
-            default:
-                return;
-        }
+        GamepadButtonAction action = _playerSettings.GetMappedAction(key);
+        _gamepadActionService.TryExecute(action);
     }
 
     public void OnDrop(DataPackageView data)
