@@ -1,3 +1,5 @@
+using System.IO;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -158,7 +160,8 @@ public static class MessengerExtensions
     /// <summary>
     /// Parses storage items into a playlist and sends a message to load and play them.
     /// If a single file was selected and folder auto-enqueue is enabled, automatically
-    /// fetches and enqueues neighboring files in the folder.
+    /// fetches and enqueues neighboring files in the folder. If folder enqueue prompt is enabled,
+    /// prompts the user via a notification instead of immediately enqueuing neighboring files.
     /// </summary>
     public static async Task PlayFilesAsync(
         this IMessenger messenger,
@@ -166,6 +169,7 @@ public static class MessengerExtensions
         IPlaylistService playlistService,
         bool enqueueAllFilesInFolder,
         StorageFileQueryResult? neighboringFilesQuery = null,
+        bool promptFolderEnqueue = false,
         CancellationToken cancellationToken = default)
     {
         s_playFilesCts?.Cancel();
@@ -179,23 +183,57 @@ public static class MessengerExtensions
 
             messenger.Send(new SetQueueMessage(playlist, shouldPlay: true));
 
-            if (playlist.Items.Count == 1 && enqueueAllFilesInFolder && playlist.NeighboringFilesQuery is not null)
+            if (playlist.Items.Count == 1 && playlist.NeighboringFilesQuery is not null)
             {
-                try
+                if (promptFolderEnqueue)
                 {
-                    var updatedPlaylist = await playlistService.AddNeighboringFilesAsync(playlist, cts.Token);
-                    if (updatedPlaylist.Items.Count > 1 && !cts.Token.IsCancellationRequested)
+                    try
                     {
-                        Playlist currentQueue = messenger.Send(new QueueRequestMessage());
-                        if (currentQueue.Items.Count == 1 && currentQueue.CurrentItem == playlist.CurrentItem)
+                        var updatedPlaylist = await playlistService.AddNeighboringFilesAsync(playlist, cts.Token);
+                        if (updatedPlaylist.Items.Count > 1 && !cts.Token.IsCancellationRequested)
                         {
-                            messenger.Send(new SetQueueMessage(updatedPlaylist, shouldPlay: false));
+                            string folderName = playlist.NeighboringFilesQuery.Folder?.DisplayName
+                                ?? Path.GetFileName(Path.GetDirectoryName(playlist.CurrentItem?.Location))
+                                ?? string.Empty;
+
+                            messenger.Send(new NotificationMessage(
+                                NotificationLevel.Info,
+                                NotificationKind.EnqueueFolderItems,
+                                title: folderName,
+                                actionCommand: new RelayCommand(() =>
+                                {
+                                    messenger.Send(new CloseNotificationMessage());
+                                    Playlist currentQueue = messenger.Send(new QueueRequestMessage());
+                                    if (currentQueue.Items.Count == 1 && currentQueue.CurrentItem == playlist.CurrentItem)
+                                    {
+                                        messenger.Send(new SetQueueMessage(updatedPlaylist, shouldPlay: false));
+                                    }
+                                })));
                         }
                     }
+                    catch (Exception) when (!cts.Token.IsCancellationRequested)
+                    {
+                        // Best-effort background folder query; single-file playback is already active.
+                    }
                 }
-                catch (Exception) when (!cts.Token.IsCancellationRequested)
+                else if (enqueueAllFilesInFolder)
                 {
-                    // Best-effort background folder expansion; single-file playback is already active.
+                    try
+                    {
+                        var updatedPlaylist = await playlistService.AddNeighboringFilesAsync(playlist, cts.Token);
+                        if (updatedPlaylist.Items.Count > 1 && !cts.Token.IsCancellationRequested)
+                        {
+                            Playlist currentQueue = messenger.Send(new QueueRequestMessage());
+                            if (currentQueue.Items.Count == 1 && currentQueue.CurrentItem == playlist.CurrentItem)
+                            {
+                                messenger.Send(new SetQueueMessage(updatedPlaylist, shouldPlay: false));
+                            }
+                        }
+                    }
+                    catch (Exception) when (!cts.Token.IsCancellationRequested)
+                    {
+                        // Best-effort background folder expansion; single-file playback is already active.
+                    }
                 }
             }
         }
