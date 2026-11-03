@@ -103,6 +103,10 @@
         <DataTemplate x:Key="PlaybackActionKindToResourceStringTemplate" x:DataType="enums:PlaybackActionKind">
             <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((enums:PlaybackActionKind))}" />
         </DataTemplate>
+
+        <DataTemplate x:Key="GamepadButtonActionTemplate" x:DataType="enums:GamepadButtonAction">
+            <TextBlock Text="{x:Bind converters:ResourceNameToResourceStringConverter.FromEnum((enums:GamepadButtonAction))}" />
+        </DataTemplate>
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
@@ -533,6 +537,125 @@
                         </ctc:SettingsCard>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGesturePressAndHoldHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSettings.GesturePressAndHold, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsGamepadDescription}"
+                    Header="{x:Bind strings:Resources.SettingsGamepadHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE7FC;}">
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadXButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadXAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadYButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadYAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadViewButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadViewAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadMenuButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadMenuAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadLeftShoulderButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadLeftShoulderAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadRightShoulderButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadRightShoulderAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadLeftTriggerButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadLeftTriggerAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadRightTriggerButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadRightTriggerAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadLeftThumbstickButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadLeftThumbstickButtonAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsGamepadRightThumbstickButton}">
+                            <ComboBox
+                                MinWidth="150"
+                                ItemTemplate="{StaticResource GamepadButtonActionTemplate}"
+                                ItemsSource="{x:Bind ViewModel.GamepadButtonActionOptions}"
+                                SelectedItem="{x:Bind ViewModel.PlayerSettings.GamepadRightThumbstickButtonAction, Mode=TwoWay}">
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:ComboBoxWidthFromPopupBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </ComboBox>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>

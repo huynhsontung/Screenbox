@@ -63,6 +63,14 @@ public sealed partial class PlayerControls : UserControl
         PlayPauseButton.Focus(value);
     }
 
+    public void ShowAudioSubtitleFlyout()
+    {
+        if (AudioSubtitlePickerFlyout is not null && AudioAndCaptionButton is not null)
+        {
+            AudioSubtitlePickerFlyout.ShowAt(AudioAndCaptionButton);
+        }
+    }
+
     private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
     {
         _castFlyout ??= CastControl.GetFlyout();

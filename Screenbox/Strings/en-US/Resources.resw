@@ -1042,6 +1042,66 @@
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
     <value>Enable press and hold to increase playback speed</value>
   </data>
+  <data name="SettingsGamepadHeader" xml:space="preserve">
+    <value>Gamepad mappings</value>
+  </data>
+  <data name="SettingsGamepadDescription" xml:space="preserve">
+    <value>Choose what each controller button does while the player is open. A, B, the D-pad, and the thumbsticks are always used for navigation.</value>
+  </data>
+  <data name="SettingsGamepadXButton" xml:space="preserve">
+    <value>X button</value>
+  </data>
+  <data name="SettingsGamepadYButton" xml:space="preserve">
+    <value>Y button</value>
+  </data>
+  <data name="SettingsGamepadViewButton" xml:space="preserve">
+    <value>View button</value>
+  </data>
+  <data name="SettingsGamepadMenuButton" xml:space="preserve">
+    <value>Menu button</value>
+  </data>
+  <data name="SettingsGamepadLeftShoulderButton" xml:space="preserve">
+    <value>Left bumper (LB)</value>
+  </data>
+  <data name="SettingsGamepadRightShoulderButton" xml:space="preserve">
+    <value>Right bumper (RB)</value>
+  </data>
+  <data name="SettingsGamepadLeftTriggerButton" xml:space="preserve">
+    <value>Left trigger (LT)</value>
+  </data>
+  <data name="SettingsGamepadRightTriggerButton" xml:space="preserve">
+    <value>Right trigger (RT)</value>
+  </data>
+  <data name="SettingsGamepadLeftThumbstickButton" xml:space="preserve">
+    <value>Left stick click (LS)</value>
+  </data>
+  <data name="SettingsGamepadRightThumbstickButton" xml:space="preserve">
+    <value>Right stick click (RS)</value>
+  </data>
+  <data name="GamepadButtonActionNone" xml:space="preserve">
+    <value>Nothing</value>
+  </data>
+  <data name="GamepadButtonActionToggleFullscreen" xml:space="preserve">
+    <value>Toggle fullscreen</value>
+  </data>
+  <data name="GamepadButtonActionTogglePlayerVisibility" xml:space="preserve">
+    <value>Show or hide the player</value>
+  </data>
+  <data name="GamepadButtonActionOpenPlaybackOptions" xml:space="preserve">
+    <value>Playback options</value>
+  </data>
+  <data name="GamepadButtonActionOpenPlayQueue" xml:space="preserve">
+    <value>Play queue</value>
+  </data>
+  <data name="GamepadButtonActionOpenSubtitleMenu" xml:space="preserve">
+    <value>Audio and subtitles</value>
+  </data>
+  <data name="GamepadButtonActionRewindLong" xml:space="preserve">
+    <value>Rewind further</value>
+  </data>
+  <data name="GamepadButtonActionFastForwardLong" xml:space="preserve">
+    <value>Fast forward further</value>
+  </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
     <value>Nothing</value>
   </data>
