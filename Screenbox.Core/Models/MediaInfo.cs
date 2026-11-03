@@ -12,9 +12,11 @@ public sealed class MediaInfo
 
     public MusicInfo MusicProperties { get; }
 
-    public ulong Size { get; }
+    public ulong Size { get; set; }
 
-    public DateTimeOffset DateModified { get; }
+    public DateTimeOffset DateModified { get; set; }
+
+    public Uri? ArtworkUri { get; set; }
 
     public MediaInfo(MediaPlaybackType mediaType, string title = "", uint year = default, TimeSpan duration = default)
     {
@@ -67,5 +69,12 @@ public sealed class MediaInfo
         MediaType = MediaPlaybackType.Video;
         MusicProperties = new MusicInfo();
         VideoProperties = new VideoInfo(videoProperties);
+    }
+
+    public MediaInfo(MediaPlaybackType mediaType, MusicInfo musicProperties, VideoInfo videoProperties)
+    {
+        MediaType = mediaType;
+        MusicProperties = musicProperties;
+        VideoProperties = videoProperties;
     }
 }

@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -66,6 +69,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TrackNumberText))]
+    [NotifyPropertyChangedFor(nameof(Duration))]
+    [NotifyPropertyChangedFor(nameof(MediaType))]
     public partial MediaInfo MediaInfo { get; set; }
 
     [ObservableProperty]
@@ -140,55 +145,66 @@ public sealed partial class MediaViewModel : ObservableRecipient
         AltCaption = file.Name;
     }
 
-    public async Task LoadDetailsAsync(IFilesService filesService)
+    /// <summary>
+    /// Loads media metadata from <see cref="Source"/> using <paramref name="metadataService"/> and updates <see cref="MediaInfo"/>.
+    /// </summary>
+    /// <param name="metadataService">The source metadata service used to extract media metadata.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    public async Task LoadDetailsAsync(ISourceMetadataService metadataService, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(metadataService);
         DetailsLoaded = true;
-        if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+
+        if (await metadataService.GetMediaInfoAsync(Source, cancellationToken) is { } parsedInfo)
         {
-            MediaInfo = await filesService.GetMediaInfoAsync(file);
+            ApplyMediaInfo(parsedInfo);
+        }
+    }
+
+    /// <summary>
+    /// Loads media metadata from <paramref name="item"/> using <paramref name="metadataService"/> and updates <see cref="MediaInfo"/>.
+    /// </summary>
+    /// <param name="metadataService">The playback metadata service used to extract media metadata.</param>
+    /// <param name="item">The playback item to inspect.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    public async Task LoadDetailsAsync(IPlaybackMetadataService metadataService, IPlaybackItem item, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(metadataService);
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (await metadataService.GetMediaInfoAsync(item, cancellationToken) is { } parsedInfo)
+        {
+            if (Source is not IFileMediaSource)
+            {
+                DetailsLoaded = true;
+            }
+
+            ApplyMediaInfo(parsedInfo);
+        }
+    }
+
+    private void ApplyMediaInfo(MediaInfo parsedInfo)
+    {
+        if (MediaType != MediaPlaybackType.Unknown)
+        {
+            parsedInfo.MediaType = MediaType;
+        }
+        else if (Source.MediaType != MediaPlaybackType.Unknown)
+        {
+            parsedInfo.MediaType = Source.MediaType;
         }
 
-        switch (MediaType)
-        {
-            // TODO: Rework engine-discovered metadata fetching
-            // case MediaPlaybackType.Unknown ...
-            case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
-                Name = MediaInfo.MusicProperties.Title;
-                break;
-            case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title):
-                Name = MediaInfo.VideoProperties.Title;
-                break;
-        }
-
-        // TODO: Rework engine-discovered metadata fetching
-        // if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
-        // {
-        //     if (Source is not IStorageItem &&
-        //         media.Meta(MetadataType.Title) is { } title &&
-        //         !string.IsNullOrEmpty(title) &&
-        //         !Guid.TryParse(title, out Guid _))
-        //     {
-        //         Name = title;
-        //     }
-        //
-        //     VideoInfo videoProperties = MediaInfo.VideoProperties;
-        //     videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
-        //     videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
-        //     videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
-        // }
-
-        if (Name == AltCaption)
-            AltCaption = string.Empty;
+        MediaInfo = MediaInfo.MergeSelective(parsedInfo);
     }
 
     public async Task LoadThumbnailAsync()
     {
-        if (Thumbnail != null) return;
+        if (Thumbnail is not null) return;
 
         if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
         {
             using var source = await GetThumbnailSourceAsync(file);
-            if (source == null) return;
+            if (source is null) return;
             BitmapImage image = new()
             {
                 DecodePixelType = DecodePixelType.Logical,
@@ -207,17 +223,14 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
             Thumbnail = image;
         }
-        // TODO: Rework engine-discovered metadata fetching
-        // else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
-        //          media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-        //          Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri? artworkUri))
-        // {
-        //     Thumbnail = new BitmapImage(artworkUri)
-        //     {
-        //         DecodePixelType = DecodePixelType.Logical,
-        //         DecodePixelHeight = 300
-        //     };
-        // }
+        else if (MediaInfo.ArtworkUri is { } artworkUri)
+        {
+            Thumbnail = new BitmapImage(artworkUri)
+            {
+                DecodePixelType = DecodePixelType.Logical,
+                DecodePixelHeight = 300
+            };
+        }
     }
 
     public Task<IRandomAccessStream?> GetThumbnailSourceAsync()
@@ -267,6 +280,19 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private void UpdateCaptions()
     {
+        string title = MediaType switch
+        {
+            MediaPlaybackType.Video => MediaInfo.VideoProperties.Title,
+            _ => !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title)
+                ? MediaInfo.MusicProperties.Title
+                : MediaInfo.VideoProperties.Title
+        };
+
+        if (!string.IsNullOrEmpty(title))
+        {
+            Name = title;
+        }
+
         if (Duration > TimeSpan.Zero)
         {
             Caption = Humanizer.ToDuration(Duration);
@@ -285,19 +311,9 @@ public sealed partial class MediaViewModel : ObservableRecipient
             AltCaption = musicProperties.Album;
         }
 
-        // TODO: Rework engine-discovered metadata fetching
-        // if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
-        // {
-        //     string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
-        //     if (!string.IsNullOrEmpty(artist))
-        //     {
-        //         Caption = artist;
-        //     }
-        //
-        //     if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
-        //     {
-        //         AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
-        //     }
-        // }
+        if (Name == AltCaption)
+        {
+            AltCaption = string.Empty;
+        }
     }
 }

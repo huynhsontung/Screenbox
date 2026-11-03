@@ -5,14 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
-using Screenbox.Core.Models;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.System;
@@ -179,42 +176,6 @@ public sealed class FilesService : IFilesService
         }
     }
 
-    public async Task<MediaInfo> GetMediaInfoAsync(StorageFile file)
-    {
-        MediaPlaybackType mediaType = FilesHelpers.GetMediaTypeForFile(file);
-        if (!file.IsAvailable) return new MediaInfo(mediaType);
-
-        try
-        {
-            BasicProperties basicProperties = await file.GetBasicPropertiesAsync();
-            switch (mediaType)
-            {
-                case MediaPlaybackType.Video:
-                    VideoProperties videoProperties = await file.Properties.GetVideoPropertiesAsync();
-                    return new MediaInfo(basicProperties, videoProperties);
-                case MediaPlaybackType.Music:
-                    MusicProperties musicProperties = await file.Properties.GetMusicPropertiesAsync();
-                    return new MediaInfo(basicProperties, musicProperties);
-            }
-        }
-        catch (Exception e) when (IsExpectedStoragePropertiesHResult(e.HResult))
-        {
-            // Expected transient WinRT failures while querying StorageFile properties:
-            //   0x800706BA RPC_S_SERVER_UNAVAILABLE - the RPC server is unavailable.
-            //   0x8000000E E_ILLEGAL_METHOD_CALL    - file's property provider isn't ready
-            //                                         (file became unavailable after IsAvailable,
-            //                                          app suspended, or item disposed).
-            //   0x80070490 ERROR_NOT_FOUND          - element not found.
-            // These are already handled by returning a default MediaInfo; don't report to Sentry.
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to load media metadata for file type '{FileType}'.", file.FileType);
-        }
-
-        return new MediaInfo(mediaType);
-    }
-
     public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token)
     {
         return GetFrameCaptureFolderFromTokenAsync(token).AsAsyncOperation();
@@ -249,16 +210,6 @@ public sealed class FilesService : IFilesService
 
         // Fall back to captures folder.
         return KnownFolders.AppCaptures;
-    }
-
-    private static bool IsExpectedStoragePropertiesHResult(int hresult)
-    {
-        const int RPC_S_SERVER_UNAVAILABLE = unchecked((int)0x800706BA);
-        const int E_ILLEGAL_METHOD_CALL = unchecked((int)0x8000000E);
-        const int ERROR_NOT_FOUND = unchecked((int)0x80070490);
-        return hresult == RPC_S_SERVER_UNAVAILABLE
-               || hresult == E_ILLEGAL_METHOD_CALL
-               || hresult == ERROR_NOT_FOUND;
     }
 
     private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)

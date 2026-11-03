@@ -88,5 +88,7 @@ public static class ServiceHelpers
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
         services.AddSingleton<IPlaylistService, PlaylistService>();
+        services.AddSingleton<ISourceMetadataService, StorageMetadataService>();
+        services.AddSingleton<IPlaybackMetadataService, VlcMetadataService>();
     }
 }

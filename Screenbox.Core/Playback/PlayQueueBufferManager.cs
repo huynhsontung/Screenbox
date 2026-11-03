@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,18 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
         _playlistService = playlistService;
         _logger = logger ?? NullLogger<PlayQueueBufferManager>.Instance;
         _messenger = messenger ?? WeakReferenceMessenger.Default;
+    }
+
+    /// <inheritdoc/>
+    public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item)
+    {
+        if (!_isDisposed && _bufferedPlaybackItems.TryGetValue(vm, out item))
+        {
+            return true;
+        }
+
+        item = null;
+        return false;
     }
 
     /// <inheritdoc/>
