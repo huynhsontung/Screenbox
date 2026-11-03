@@ -6,7 +6,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
-using Screenbox.Core.Playback;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
@@ -14,24 +13,24 @@ using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
 namespace Screenbox.Core.Services;
 
 /// <summary>
-/// Fast media probe service backed by Windows Storage file properties (WinRT).
+/// Fast source metadata service backed by Windows Storage file properties (WinRT).
 /// </summary>
-public sealed class StorageMediaProbeService : IMediaProbeService
+public sealed class StorageMetadataService : ISourceMetadataService
 {
-    private readonly ILogger<StorageMediaProbeService> _logger;
+    private readonly ILogger<StorageMetadataService> _logger;
 
-    public StorageMediaProbeService(ILogger<StorageMediaProbeService> logger)
+    public StorageMetadataService(ILogger<StorageMetadataService> logger)
     {
         _logger = logger;
     }
 
     /// <summary>
-    /// Probes Windows Storage properties from the specified <paramref name="file"/>.
+    /// Retrieves Windows Storage properties from the specified <paramref name="file"/>.
     /// </summary>
-    /// <param name="file">The storage file to probe.</param>
+    /// <param name="file">The storage file to inspect.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if probing was canceled.</returns>
-    public async Task<MediaInfo?> ProbeMediaAsync(
+    /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if the operation was canceled.</returns>
+    public async Task<MediaInfo?> GetMediaInfoAsync(
         StorageFile file,
         CancellationToken cancellationToken = default)
     {
@@ -82,12 +81,12 @@ public sealed class StorageMediaProbeService : IMediaProbeService
     }
 
     /// <summary>
-    /// Probes Windows Storage properties from the specified <paramref name="fileSource"/>.
+    /// Retrieves Windows Storage properties from the specified <paramref name="fileSource"/>.
     /// </summary>
-    /// <param name="fileSource">The file media source to probe.</param>
+    /// <param name="fileSource">The file media source to inspect.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if the file could not be resolved or probing was canceled.</returns>
-    public async Task<MediaInfo?> ProbeMediaAsync(
+    /// <returns>A populated <see cref="MediaInfo"/>, or <see langword="null"/> if the file could not be resolved or the operation was canceled.</returns>
+    public async Task<MediaInfo?> GetMediaInfoAsync(
         IFileMediaSource fileSource,
         CancellationToken cancellationToken = default)
     {
@@ -98,32 +97,22 @@ public sealed class StorageMediaProbeService : IMediaProbeService
             return null;
         }
 
-        return await ProbeMediaAsync(file, cancellationToken);
+        return await GetMediaInfoAsync(file, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<MediaInfo?> ProbeMediaAsync(
+    public async Task<MediaInfo?> GetMediaInfoAsync(
         IMediaSource source,
-        string[]? options = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(source);
 
         if (source is IFileMediaSource fileSource)
         {
-            return await ProbeMediaAsync(fileSource, cancellationToken);
+            return await GetMediaInfoAsync(fileSource, cancellationToken);
         }
 
         return null;
-    }
-
-    /// <inheritdoc/>
-    public Task<MediaInfo?> ProbeMediaAsync(
-        IPlaybackItem item,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-        return ProbeMediaAsync(item.Source, null, cancellationToken);
     }
 
     private static bool IsExpectedStoragePropertiesHResult(int hresult)

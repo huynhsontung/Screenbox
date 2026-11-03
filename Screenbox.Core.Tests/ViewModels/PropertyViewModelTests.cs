@@ -1,29 +1,93 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.Foundation;
+using Windows.Media;
+using Windows.Media.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
+using AudioTrack = Screenbox.Core.Playback.AudioTrack;
+using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
+using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
+using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 
 namespace Screenbox.Core.Tests.ViewModels;
 
-public class PropertyViewModelTests
+public partial class PropertyViewModelTests
 {
-    private static StorageMediaProbeService CreateStorageProbeService() =>
-        new(NullLogger<StorageMediaProbeService>.Instance);
+    private static StorageMetadataService CreateStorageMetadataService() =>
+        new(NullLogger<StorageMetadataService>.Instance);
+
+    private static PlayerContext CreatePlayerContextWithPlayer() =>
+        new() { MediaPlayer = new TestMediaPlayer() };
+
+    private sealed partial class DummyPlaybackItem : IPlaybackItem
+    {
+        public bool IsDisposed { get; private set; }
+        public IMediaSource Source { get; init; } = null!;
+        public TimeSpan? Duration => null;
+        public ISingleSelectMediaTrackList<AudioTrack> AudioTracks => throw new NotImplementedException();
+        public ISingleSelectMediaTrackList<VideoTrack> VideoTracks => throw new NotImplementedException();
+        public ISubtitleTrackList SubtitleTracks => throw new NotImplementedException();
+        public IReadOnlyList<ChapterCue> Chapters => Array.Empty<ChapterCue>();
+        public Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ExpandedMediaItem>>(Array.Empty<ExpandedMediaItem>());
+        public void Dispose() => IsDisposed = true;
+    }
+
+    private sealed class FakePlayerService : IPlayerService
+    {
+        public int CreateCount { get; private set; }
+        public string[]? LastOptions { get; private set; }
+        public DummyPlaybackItem? LastCreatedItem { get; private set; }
+
+        public IMediaPlayer Initialize(string[] swapChainOptions) => throw new NotImplementedException();
+
+        public IPlaybackItem CreatePlaybackItem(IMediaPlayer player, IMediaSource source, params string[] options)
+        {
+            CreateCount++;
+            LastOptions = options;
+            LastCreatedItem = new DummyPlaybackItem { Source = source };
+            return LastCreatedItem;
+        }
+
+        public void DisposePlayer(IMediaPlayer player) { }
+    }
+
+    private sealed partial class FakeBufferManager : IPlayQueueBufferManager
+    {
+        private readonly Dictionary<MediaViewModel, IPlaybackItem> _items = new();
+
+        public IReadOnlyList<MediaViewModel> BufferedItems => Array.Empty<MediaViewModel>();
+
+        public void AddBufferedItem(MediaViewModel vm, IPlaybackItem item) => _items[vm] = item;
+
+        public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item) =>
+            _items.TryGetValue(vm, out item);
+
+        public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, MediaViewModel vm) => null;
+        public void CleanPlaybackItem(MediaViewModel vm) { }
+        public void Clear() { }
+        public void UpdateBuffer(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode) { }
+        public void Dispose() { }
+    }
 
     [Test]
-    public async Task LoadPropertiesAsync_ShouldProbeMediaAndPopulateUpdatedProperties()
+    public async Task LoadPropertiesAsync_ShouldExtractMetadataAndPopulateUpdatedProperties()
     {
         var source = new FileMediaSource(@"C:\music\song.ogg");
         var probedMusic = new MusicInfo
@@ -38,12 +102,21 @@ public class PropertyViewModelTests
             Duration = TimeSpan.FromSeconds(195),
             Bitrate = 256000
         };
-        var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
+        var playbackMetadataService = new TestMetadataService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
+        var playerService = new FakePlayerService();
         var media = new MediaViewModel(source)
         {
             MediaInfo = new MediaInfo(MediaPlaybackType.Music)
         };
-        var vm = new PropertyViewModel(new DummyFilesService(), CreateStorageProbeService(), probeService);
+        media.SetOptions(":network-caching=1000");
+
+        var vm = new PropertyViewModel(
+            new DummyFilesService(),
+            CreateStorageMetadataService(),
+            playbackMetadataService,
+            CreatePlayerContextWithPlayer(),
+            playerService,
+            new FakeBufferManager());
 
         vm.UpdateProperties(media);
         await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Title).Value).IsEqualTo(string.Empty);
@@ -51,7 +124,11 @@ public class PropertyViewModelTests
         await vm.LoadPropertiesAsync(media);
 
         await Assert.That(media.DetailsLoaded).IsTrue();
-        await Assert.That(probeService.CallCount).IsEqualTo(1);
+        await Assert.That(playbackMetadataService.CallCount).IsEqualTo(1);
+        await Assert.That(playerService.CreateCount).IsEqualTo(1);
+        await Assert.That(playerService.LastOptions).IsNotNull();
+        await Assert.That(playerService.LastOptions!).Contains(":network-caching=1000");
+        await Assert.That(playerService.LastCreatedItem!.IsDisposed).IsTrue();
         await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Title).Value).IsEqualTo("Probed Ogg Title");
         await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.ContributingArtists).Value).IsEqualTo("Probed Artist");
         await Assert.That(vm.MediaProperties.First(p => p.Key == MediaProperty.Album).Value).IsEqualTo("Probed Album");
@@ -63,6 +140,40 @@ public class PropertyViewModelTests
     }
 
     [Test]
+    public async Task LoadPropertiesAsync_WhenItemIsBuffered_UsesBufferedItemWithoutCreatingTempItem()
+    {
+        var source = new FileMediaSource(@"C:\videos\movie.mp4");
+        var media = new MediaViewModel(source)
+        {
+            MediaInfo = new MediaInfo(MediaPlaybackType.Video)
+        };
+        var bufferedItem = new DummyPlaybackItem { Source = source };
+        var bufferManager = new FakeBufferManager();
+        bufferManager.AddBufferedItem(media, bufferedItem);
+
+        var playerService = new FakePlayerService();
+        var playbackMetadataService = new TestMetadataService(new MediaInfo(
+            MediaPlaybackType.Video,
+            new MusicInfo(),
+            new VideoInfo { Width = 1920, Height = 1080 }));
+
+        var vm = new PropertyViewModel(
+            new DummyFilesService(),
+            CreateStorageMetadataService(),
+            playbackMetadataService,
+            CreatePlayerContextWithPlayer(),
+            playerService,
+            bufferManager);
+
+        await vm.LoadPropertiesAsync(media);
+
+        await Assert.That(playerService.CreateCount).IsEqualTo(0);
+        await Assert.That(playbackMetadataService.LastItem).IsSameReferenceAs(bufferedItem);
+        await Assert.That(bufferedItem.IsDisposed).IsFalse();
+        await Assert.That(vm.VideoProperties.First(p => p.Key == MediaProperty.Resolution).Value).IsEqualTo("1920×1080");
+    }
+
+    [Test]
     public async Task UpdateProperties_WhenCalledMultipleTimes_ShouldUpdatePropertiesWithoutDuplicates()
     {
         var source = new FileMediaSource(@"C:\videos\clip.mp4");
@@ -71,7 +182,13 @@ public class PropertyViewModelTests
             MediaInfo = new MediaInfo(MediaPlaybackType.Video)
         };
 
-        var vm = new PropertyViewModel(new DummyFilesService(), CreateStorageProbeService(), new TestMediaProbeService());
+        var vm = new PropertyViewModel(
+            new DummyFilesService(),
+            CreateStorageMetadataService(),
+            new TestMetadataService(),
+            CreatePlayerContextWithPlayer(),
+            new FakePlayerService(),
+            new FakeBufferManager());
 
         vm.UpdateProperties(media);
         int initialMediaCount = vm.MediaProperties.Count;
@@ -85,7 +202,7 @@ public class PropertyViewModelTests
             Height = 1080,
             Bitrate = 8000000
         };
-        await media.LoadDetailsAsync(new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo { Bitrate = 192000 }, updatedVideo)));
+        await media.LoadDetailsAsync((ISourceMetadataService)new TestMetadataService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo { Bitrate = 192000 }, updatedVideo)));
         vm.UpdateProperties(media);
 
         await Assert.That(vm.MediaProperties.Count).IsEqualTo(initialMediaCount);
@@ -120,8 +237,11 @@ public class PropertyViewModelTests
         };
         var vm = new PropertyViewModel(
             new DummyFilesService(),
-            CreateStorageProbeService(),
-            new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), vlcVideo)));
+            CreateStorageMetadataService(),
+            new TestMetadataService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), vlcVideo)),
+            CreatePlayerContextWithPlayer(),
+            new FakePlayerService(),
+            new FakeBufferManager());
 
         await vm.LoadPropertiesAsync(media);
 

@@ -170,12 +170,12 @@ public partial class PlayQueueBufferManagerTests
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
 
-        await Assert.That(bufferManager.TryGetPlaybackItem(media.Source, out var unbuffered)).IsFalse();
+        await Assert.That(bufferManager.TryGetPlaybackItem(media, out var unbuffered)).IsFalse();
         await Assert.That(unbuffered).IsNull();
         await Assert.That(playerService.CreateCount).IsEqualTo(0);
 
         var created = bufferManager.GetOrCreatePlaybackItem(player, media);
-        await Assert.That(bufferManager.TryGetPlaybackItem(media.Source, out var buffered)).IsTrue();
+        await Assert.That(bufferManager.TryGetPlaybackItem(media, out var buffered)).IsTrue();
         await Assert.That(buffered).IsSameReferenceAs(created);
         await Assert.That(playerService.CreateCount).IsEqualTo(1);
     }

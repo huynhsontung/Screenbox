@@ -1,22 +1,44 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
+using Windows.Media.Core;
+using AudioTrack = Screenbox.Core.Playback.AudioTrack;
+using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
+using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 
 namespace Screenbox.Core.Tests.ViewModels;
 
-public class MediaViewModelTests
+public partial class MediaViewModelTests
 {
+    private sealed partial class DummyPlaybackItem : IPlaybackItem
+    {
+        public IMediaSource Source { get; init; } = null!;
+        public TimeSpan? Duration => null;
+        public ISingleSelectMediaTrackList<AudioTrack> AudioTracks => throw new NotImplementedException();
+        public ISingleSelectMediaTrackList<VideoTrack> VideoTracks => throw new NotImplementedException();
+        public ISubtitleTrackList SubtitleTracks => throw new NotImplementedException();
+        public IReadOnlyList<ChapterCue> Chapters => Array.Empty<ChapterCue>();
+        public Task WaitForParsedAsync(TimeSpan timeout, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<IReadOnlyList<ExpandedMediaItem>> ExpandSubItemsAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ExpandedMediaItem>>(Array.Empty<ExpandedMediaItem>());
+        public void Dispose() { }
+    }
+
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_ShouldUpdateMediaInfoAndCaptions()
+    public async Task LoadDetailsAsync_WithPlaybackMetadataService_ShouldUpdateMediaInfoAndCaptions()
     {
         var source = new UriMediaSource(new Uri("https://example.com/stream.ogg"));
         var vm = new MediaViewModel(source);
+        var item = new DummyPlaybackItem { Source = source };
 
         var probedMusic = new MusicInfo
         {
@@ -30,9 +52,9 @@ public class MediaViewModelTests
             Duration = TimeSpan.FromMinutes(4),
             Bitrate = 192000
         };
-        var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
+        var metadataService = new TestMetadataService(new MediaInfo(MediaPlaybackType.Music, probedMusic, new VideoInfo()));
 
-        await vm.LoadDetailsAsync(probeService);
+        await vm.LoadDetailsAsync(metadataService, item);
 
         await Assert.That(vm.DetailsLoaded).IsTrue();
         await Assert.That(vm.MediaType).IsEqualTo(MediaPlaybackType.Music);
@@ -48,69 +70,54 @@ public class MediaViewModelTests
     }
 
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_OnFileSource_ShouldNotMarkDetailsLoadedUntilStorageProbed()
+    public async Task LoadDetailsAsync_WithPlaybackMetadataService_OnFileSource_ShouldNotMarkDetailsLoadedUntilSourceProbed()
     {
         var source = new FileMediaSource(@"C:\videos\movie.mkv");
         var vm = new MediaViewModel(source);
+        var item = new DummyPlaybackItem { Source = source };
 
         var vlcVideo = new VideoInfo
         {
             Width = 1920,
             Height = 1080
         };
-        var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), vlcVideo));
+        var playbackMetadataService = new TestMetadataService(new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), vlcVideo));
 
-        await vm.LoadDetailsAsync(probeService);
+        await vm.LoadDetailsAsync(playbackMetadataService, item);
 
         await Assert.That(vm.DetailsLoaded).IsFalse();
         await Assert.That(vm.MediaInfo.VideoProperties.Width).IsEqualTo(1920u);
 
-        var storageProbeService = new StorageMediaProbeService(NullLogger<StorageMediaProbeService>.Instance);
-        await vm.LoadDetailsAsync(storageProbeService);
+        var storageMetadataService = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+        await vm.LoadDetailsAsync(storageMetadataService);
 
         await Assert.That(vm.DetailsLoaded).IsTrue();
     }
 
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_ShouldPassMediaOptions()
-    {
-        var source = new UriMediaSource(new Uri("https://example.com/live.m3u8"));
-        var vm = new MediaViewModel(source);
-        vm.SetOptions(":network-caching=1000 :http-user-agent=Screenbox");
-
-        var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video));
-
-        await vm.LoadDetailsAsync(probeService);
-
-        await Assert.That(probeService.CallCount).IsEqualTo(1);
-        await Assert.That(probeService.LastOptions).IsNotNull();
-        await Assert.That(probeService.LastOptions!.Length).IsEqualTo(2);
-        await Assert.That(probeService.LastOptions[0]).IsEqualTo(":network-caching=1000");
-        await Assert.That(probeService.LastOptions[1]).IsEqualTo(":http-user-agent=Screenbox");
-    }
-
-    [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_ShouldPreserveKnownMediaType()
+    public async Task LoadDetailsAsync_ShouldPreserveKnownMediaType()
     {
         var source = new FileMediaSource(@"C:\music\song.mp3");
         var vm = new MediaViewModel(source)
         {
             MediaInfo = new MediaInfo(MediaPlaybackType.Music)
         };
+        var item = new DummyPlaybackItem { Source = source };
 
-        var probeService = new TestMediaProbeService(new MediaInfo(MediaPlaybackType.Video, title: "Embedded Cover Track"));
+        var playbackMetadataService = new TestMetadataService(new MediaInfo(MediaPlaybackType.Video, title: "Embedded Cover Track"));
 
-        await vm.LoadDetailsAsync(probeService);
+        await vm.LoadDetailsAsync(playbackMetadataService, item);
 
         await Assert.That(vm.MediaType).IsEqualTo(MediaPlaybackType.Music);
         await Assert.That(vm.Name).IsEqualTo("Embedded Cover Track");
     }
 
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_ShouldNotResetExistingStorageProperties()
+    public async Task LoadDetailsAsync_ShouldNotResetExistingStorageProperties()
     {
         var source = new FileMediaSource(@"C:\videos\movie.mp4");
         var vm = new MediaViewModel(source);
+        var item = new DummyPlaybackItem { Source = source };
 
         var storageVideo = new VideoInfo
         {
@@ -133,7 +140,7 @@ public class MediaViewModelTests
             Size = 1_500_000_000,
             DateModified = new DateTimeOffset(2024, 6, 15, 0, 0, 0, TimeSpan.Zero)
         };
-        await vm.LoadDetailsAsync(new TestMediaProbeService(storageInfo));
+        await vm.LoadDetailsAsync((ISourceMetadataService)new TestMetadataService(storageInfo));
 
         var vlcVideo = new VideoInfo
         {
@@ -151,7 +158,7 @@ public class MediaViewModelTests
             Episode = "Episode 4"
         };
         var vlcInfo = new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), vlcVideo);
-        await vm.LoadDetailsAsync(new TestMediaProbeService(vlcInfo));
+        await vm.LoadDetailsAsync(new TestMetadataService(vlcInfo), item);
 
         await Assert.That(vm.Name).IsEqualTo("Storage Movie Title");
         await Assert.That(vm.MediaInfo.VideoProperties.Title).IsEqualTo("Storage Movie Title");
@@ -170,10 +177,11 @@ public class MediaViewModelTests
     }
 
     [Test]
-    public async Task LoadDetailsAsync_WithMediaProbeService_WhenStorageFieldIsZeroOrEmpty_ShouldUpdateFromVlcProbe()
+    public async Task LoadDetailsAsync_WhenStorageFieldIsZeroOrEmpty_ShouldUpdateFromPlaybackMetadata()
     {
         var source = new FileMediaSource(@"C:\videos\clip.mkv");
         var vm = new MediaViewModel(source);
+        var item = new DummyPlaybackItem { Source = source };
 
         var storageVideo = new VideoInfo
         {
@@ -183,7 +191,7 @@ public class MediaViewModelTests
             Height = 0
         };
         var storageInfo = new MediaInfo(MediaPlaybackType.Video, new MusicInfo(), storageVideo);
-        await vm.LoadDetailsAsync(new TestMediaProbeService(storageInfo));
+        await vm.LoadDetailsAsync((ISourceMetadataService)new TestMetadataService(storageInfo));
 
         var vlcVideo = new VideoInfo
         {
@@ -197,7 +205,7 @@ public class MediaViewModelTests
             Bitrate = 192_000
         };
         var vlcInfo = new MediaInfo(MediaPlaybackType.Video, vlcMusic, vlcVideo);
-        await vm.LoadDetailsAsync(new TestMediaProbeService(vlcInfo));
+        await vm.LoadDetailsAsync(new TestMetadataService(vlcInfo), item);
 
         await Assert.That(vm.MediaInfo.VideoProperties.Title).IsEqualTo("Storage MKV");
         await Assert.That(vm.MediaInfo.VideoProperties.Bitrate).IsEqualTo(4_500_000U);

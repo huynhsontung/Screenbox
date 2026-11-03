@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Contexts;
@@ -36,7 +36,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly RecentContext _recentContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
-    private readonly IMediaProbeService _storageMediaProbeService;
+    private readonly ISourceMetadataService _sourceMetadataService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IPlaylistService _playlistService;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -48,7 +48,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
-        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
+        ISourceMetadataService sourceMetadataService,
         GeneralSettingsContext generalSettings,
         IPlaylistService playlistService,
         ILogger<HomePageViewModel> logger)
@@ -57,7 +57,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _recentContext = recentContext;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
-        _storageMediaProbeService = storageMediaProbeService;
+        _sourceMetadataService = sourceMetadataService;
         _generalSettings = generalSettings;
         _playlistService = playlistService;
         _logger = logger;
@@ -240,7 +240,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         try
         {
-            await media.LoadDetailsAsync(_storageMediaProbeService);
+            await media.LoadDetailsAsync(_sourceMetadataService);
         }
         catch (ArgumentException)
         {

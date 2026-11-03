@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
-using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -46,18 +45,11 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     }
 
     /// <inheritdoc/>
-    public bool TryGetPlaybackItem(IMediaSource source, [NotNullWhen(true)] out IPlaybackItem? item)
+    public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item)
     {
-        if (!_isDisposed)
+        if (!_isDisposed && _bufferedPlaybackItems.TryGetValue(vm, out item))
         {
-            foreach (var (vm, bufferedItem) in _bufferedPlaybackItems)
-            {
-                if (ReferenceEquals(vm.Source, source))
-                {
-                    item = bufferedItem;
-                    return true;
-                }
-            }
+            return true;
         }
 
         item = null;

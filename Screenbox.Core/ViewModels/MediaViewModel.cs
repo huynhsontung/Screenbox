@@ -9,6 +9,7 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -145,40 +146,55 @@ public sealed partial class MediaViewModel : ObservableRecipient
     }
 
     /// <summary>
-    /// Probes the media source using <paramref name="mediaProbeService"/> and updates <see cref="MediaInfo"/>.
+    /// Loads media metadata from <see cref="Source"/> using <paramref name="metadataService"/> and updates <see cref="MediaInfo"/>.
     /// </summary>
-    /// <param name="mediaProbeService">The media probe service used to parse the media.</param>
-    /// <param name="cancellationToken">A token to cancel the probe operation.</param>
-    public async Task LoadDetailsAsync(IMediaProbeService mediaProbeService, CancellationToken cancellationToken = default)
+    /// <param name="metadataService">The source metadata service used to extract media metadata.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    public async Task LoadDetailsAsync(ISourceMetadataService metadataService, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(mediaProbeService);
+        ArgumentNullException.ThrowIfNull(metadataService);
+        DetailsLoaded = true;
 
-        if (mediaProbeService is StorageMediaProbeService)
+        if (await metadataService.GetMediaInfoAsync(Source, cancellationToken) is { } parsedInfo)
         {
-            DetailsLoaded = true;
+            ApplyMediaInfo(parsedInfo);
         }
+    }
 
-        if (await mediaProbeService.ProbeMediaAsync(
-                Source,
-                _options.Count > 0 ? _options.ToArray() : null,
-                cancellationToken) is { } parsedInfo)
+    /// <summary>
+    /// Loads media metadata from <paramref name="item"/> using <paramref name="metadataService"/> and updates <see cref="MediaInfo"/>.
+    /// </summary>
+    /// <param name="metadataService">The playback metadata service used to extract media metadata.</param>
+    /// <param name="item">The playback item to inspect.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    public async Task LoadDetailsAsync(IPlaybackMetadataService metadataService, IPlaybackItem item, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(metadataService);
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (await metadataService.GetMediaInfoAsync(item, cancellationToken) is { } parsedInfo)
         {
             if (Source is not IFileMediaSource)
             {
                 DetailsLoaded = true;
             }
 
-            if (MediaType != MediaPlaybackType.Unknown)
-            {
-                parsedInfo.MediaType = MediaType;
-            }
-            else if (Source.MediaType != MediaPlaybackType.Unknown)
-            {
-                parsedInfo.MediaType = Source.MediaType;
-            }
-
-            MediaInfo = MediaInfo.MergeSelective(parsedInfo);
+            ApplyMediaInfo(parsedInfo);
         }
+    }
+
+    private void ApplyMediaInfo(MediaInfo parsedInfo)
+    {
+        if (MediaType != MediaPlaybackType.Unknown)
+        {
+            parsedInfo.MediaType = MediaType;
+        }
+        else if (Source.MediaType != MediaPlaybackType.Unknown)
+        {
+            parsedInfo.MediaType = Source.MediaType;
+        }
+
+        MediaInfo = MediaInfo.MergeSelective(parsedInfo);
     }
 
     public async Task LoadThumbnailAsync()

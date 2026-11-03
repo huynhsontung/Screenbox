@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Screenbox.Core;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -17,32 +15,26 @@ public class ServiceHelpersTests
     }
 
     [Test]
-    public async Task PopulateCoreServices_RegistersKeyedMediaProbeServices()
+    public async Task PopulateCoreServices_RegistersSourceAndPlaybackMetadataServices()
     {
         ServiceCollection services = new();
         ServiceHelpers.PopulateCoreServices(services);
         services.AddLogging();
-        services.AddSingleton<IVlcDialogService, DummyVlcDialogService>();
 
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        StorageMediaProbeService storageConcrete = provider.GetRequiredService<StorageMediaProbeService>();
-        IMediaProbeService storageKeyed = provider.GetRequiredKeyedService<IMediaProbeService>(typeof(StorageMediaProbeService));
+        ISourceMetadataService sourceService = provider.GetRequiredService<ISourceMetadataService>();
+        IPlaybackMetadataService playbackService = provider.GetRequiredService<IPlaybackMetadataService>();
 
-        VlcMediaProbeService vlcConcrete = provider.GetRequiredService<VlcMediaProbeService>();
-        IMediaProbeService vlcKeyed = provider.GetRequiredKeyedService<IMediaProbeService>(typeof(VlcMediaProbeService));
+        await Assert.That(sourceService).IsNotNull();
+        await Assert.That(sourceService).IsTypeOf<StorageMetadataService>();
 
-        await Assert.That(storageKeyed).IsNotNull();
-        await Assert.That(storageKeyed).IsTypeOf<StorageMediaProbeService>();
-        await Assert.That(storageKeyed).IsSameReferenceAs(storageConcrete);
-
-        await Assert.That(vlcKeyed).IsNotNull();
-        await Assert.That(vlcKeyed).IsTypeOf<VlcMediaProbeService>();
-        await Assert.That(vlcKeyed).IsSameReferenceAs(vlcConcrete);
+        await Assert.That(playbackService).IsNotNull();
+        await Assert.That(playbackService).IsTypeOf<VlcMetadataService>();
     }
 
     [Test]
-    public async Task PopulateCoreServices_ResolvesPropertyViewModelWithKeyedServices()
+    public async Task PopulateCoreServices_ResolvesPropertyViewModel()
     {
         ServiceCollection services = new();
         ServiceHelpers.PopulateCoreServices(services);

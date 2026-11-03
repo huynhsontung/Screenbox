@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
@@ -20,9 +19,9 @@ public interface IPlayQueueBufferManager : IDisposable
     IReadOnlyList<MediaViewModel> BufferedItems { get; }
 
     /// <summary>
-    /// Attempts to retrieve an already buffered playback item matching the specified media source without creating a new one.
+    /// Attempts to retrieve an already buffered playback item for the specified media without creating a new one.
     /// </summary>
-    bool TryGetPlaybackItem(IMediaSource source, [NotNullWhen(true)] out IPlaybackItem? item);
+    bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item);
 
     /// <summary>
     /// Gets an existing playback item or creates a new one for the specified media.

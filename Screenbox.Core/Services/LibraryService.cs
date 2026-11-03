@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -28,20 +28,20 @@ public sealed class LibraryService : ILibraryService
 
     private static readonly string[] CustomPropertyKeys = { SystemProperties.Title };
     private readonly LibrarySettingsContext _librarySettings;
-    private readonly IMediaProbeService _storageMediaProbeService;
+    private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ILogger<LibraryService> _logger;
 
     public LibraryService(
         LibrarySettingsContext librarySettings,
-        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
+        ISourceMetadataService sourceMetadataService,
         IDatabaseService databaseService,
         MediaViewModelFactory mediaFactory,
         ILogger<LibraryService> logger)
     {
         _librarySettings = librarySettings;
-        _storageMediaProbeService = storageMediaProbeService;
+        _sourceMetadataService = sourceMetadataService;
         _databaseService = databaseService;
         _mediaFactory = mediaFactory;
         _logger = logger;
@@ -528,7 +528,7 @@ public sealed class LibraryService : ILibraryService
                 cancellationToken.ThrowIfCancellationRequested();
                 MediaViewModel song = _mediaFactory.Create(file);
                 song.IsFromLibrary = true;
-                await song.LoadDetailsAsync(_storageMediaProbeService, cancellationToken);
+                await song.LoadDetailsAsync(_sourceMetadataService, cancellationToken);
                 albumFactory.AddSong(song);
                 artistFactory.AddSong(song);
                 song.Album = albumFactory.SongsToAlbums[song];
@@ -564,7 +564,7 @@ public sealed class LibraryService : ILibraryService
                 cancellationToken.ThrowIfCancellationRequested();
                 MediaViewModel video = _mediaFactory.Create(file);
                 video.IsFromLibrary = true;
-                await video.LoadDetailsAsync(_storageMediaProbeService, cancellationToken);
+                await video.LoadDetailsAsync(_sourceMetadataService, cancellationToken);
                 target.Add(video);
             }
 

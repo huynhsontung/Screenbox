@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -27,24 +29,33 @@ public sealed partial class PropertyViewModel : ObservableObject
     public partial bool CanNavigateToFile { get; set; }
 
     private readonly IFilesService _filesService;
-    private readonly IMediaProbeService _storageMediaProbeService;
-    private readonly IMediaProbeService _mediaProbeService;
+    private readonly ISourceMetadataService _sourceMetadataService;
+    private readonly IPlaybackMetadataService _playbackMetadataService;
+    private readonly PlayerContext _playerContext;
+    private readonly IPlayerService _playerService;
+    private readonly IPlayQueueBufferManager _bufferManager;
     private StorageFile? _mediaFile;
     private Uri? _mediaUri;
     private string? _mediaFilePath;
 
     public PropertyViewModel(
         IFilesService filesService,
-        [FromKeyedServices(typeof(StorageMediaProbeService))] IMediaProbeService storageMediaProbeService,
-        [FromKeyedServices(typeof(VlcMediaProbeService))] IMediaProbeService mediaProbeService)
+        ISourceMetadataService sourceMetadataService,
+        IPlaybackMetadataService playbackMetadataService,
+        PlayerContext playerContext,
+        IPlayerService playerService,
+        IPlayQueueBufferManager bufferManager)
     {
         _filesService = filesService;
-        _storageMediaProbeService = storageMediaProbeService;
-        _mediaProbeService = mediaProbeService;
+        _sourceMetadataService = sourceMetadataService;
+        _playbackMetadataService = playbackMetadataService;
+        _playerContext = playerContext;
+        _playerService = playerService;
+        _bufferManager = bufferManager;
     }
 
     /// <summary>
-    /// Probes media properties on demand for the specified <paramref name="media"/> item
+    /// Loads media metadata on demand for the specified <paramref name="media"/> item
     /// and refreshes the property collections.
     /// </summary>
     /// <param name="media">The media view model whose properties are being inspected.</param>
@@ -52,10 +63,36 @@ public sealed partial class PropertyViewModel : ObservableObject
     {
         if (!media.DetailsLoaded)
         {
-            await media.LoadDetailsAsync(_storageMediaProbeService);
+            await media.LoadDetailsAsync(_sourceMetadataService);
         }
 
-        await media.LoadDetailsAsync(_mediaProbeService);
+        if (_bufferManager.TryGetPlaybackItem(media, out IPlaybackItem? bufferedItem))
+        {
+            await media.LoadDetailsAsync(_playbackMetadataService, bufferedItem);
+        }
+        else if (_playerContext.MediaPlayer is { } mediaPlayer)
+        {
+            if (mediaPlayer.PlaybackItem is { } activeItem && ReferenceEquals(activeItem.Source, media.Source))
+            {
+                await media.LoadDetailsAsync(_playbackMetadataService, activeItem);
+            }
+            else
+            {
+                try
+                {
+                    using IPlaybackItem tempItem = _playerService.CreatePlaybackItem(
+                        mediaPlayer,
+                        media.Source,
+                        media.Options.Count > 0 ? media.Options.ToArray() : Array.Empty<string>());
+                    await media.LoadDetailsAsync(_playbackMetadataService, tempItem);
+                }
+                catch (Exception)
+                {
+                    // Ignore playback item creation failures during property inspection
+                }
+            }
+        }
+
         UpdateProperties(media);
     }
 
@@ -194,5 +231,3 @@ public sealed partial class PropertyViewModel : ObservableObject
         return readable.ToString("0.## ") + suffix;
     }
 }
-
-

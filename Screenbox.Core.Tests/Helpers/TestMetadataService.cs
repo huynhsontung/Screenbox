@@ -7,7 +7,7 @@ using Screenbox.Core.Services;
 
 namespace Screenbox.Core.Tests.Helpers;
 
-public sealed class TestMediaProbeService : IMediaProbeService
+public sealed class TestMetadataService : ISourceMetadataService, IPlaybackMetadataService
 {
     private readonly MediaInfo? _result;
 
@@ -17,22 +17,19 @@ public sealed class TestMediaProbeService : IMediaProbeService
 
     public IPlaybackItem? LastItem { get; private set; }
 
-    public string[]? LastOptions { get; private set; }
-
-    public TestMediaProbeService(MediaInfo? result = null)
+    public TestMetadataService(MediaInfo? result = null)
     {
         _result = result;
     }
 
-    public Task<MediaInfo?> ProbeMediaAsync(IMediaSource source, string[]? options = null, CancellationToken cancellationToken = default)
+    public Task<MediaInfo?> GetMediaInfoAsync(IMediaSource source, CancellationToken cancellationToken = default)
     {
         CallCount++;
         LastSource = source;
-        LastOptions = options;
         return Task.FromResult(_result);
     }
 
-    public Task<MediaInfo?> ProbeMediaAsync(IPlaybackItem item, CancellationToken cancellationToken = default)
+    public Task<MediaInfo?> GetMediaInfoAsync(IPlaybackItem item, CancellationToken cancellationToken = default)
     {
         CallCount++;
         LastItem = item;
