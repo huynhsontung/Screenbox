@@ -23,4 +23,5 @@ public enum NotificationKind
     PlaylistItemsAdded,
 
     ResumePosition,
+    EnqueueFolderItems,
 }
