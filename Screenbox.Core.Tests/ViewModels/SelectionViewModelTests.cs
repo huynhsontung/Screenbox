@@ -1,3 +1,4 @@
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Data;
 
@@ -50,30 +51,28 @@ public class SelectionViewModelTests
         await Assert.That(vm.SelectedCount).IsEqualTo(6);
     }
 
-
-
     [Test]
     public async Task GetSelectedItems_ShouldReturnCorrectItemsFromSource()
     {
-        var source = new List<string> { "Item0", "Item1", "Item2", "Item3", "Item4", "Item5" };
+        var source = CreateItems(6);
         var vm = new SelectionViewModel();
         vm.SetItemsSource(source);
 
         vm.SelectRange(new ItemIndexRange(1, 2)); // Item1, Item2
         vm.SelectRange(new ItemIndexRange(4, 1)); // Item4
 
-        var selected = vm.GetSelectedItems<string>();
+        var selected = vm.GetSelectedItems<DummyItem>();
 
         await Assert.That(selected.Count).IsEqualTo(3);
-        await Assert.That(selected[0]).IsEqualTo("Item1");
-        await Assert.That(selected[1]).IsEqualTo("Item2");
-        await Assert.That(selected[2]).IsEqualTo("Item4");
+        await Assert.That(selected[0].Name).IsEqualTo("Item1");
+        await Assert.That(selected[1].Name).IsEqualTo("Item2");
+        await Assert.That(selected[2].Name).IsEqualTo("Item4");
     }
 
     [Test]
     public async Task SetItemsSource_ShouldTrimRangesWhenSourceChanges()
     {
-        var source1 = new List<string> { "Item0", "Item1", "Item2", "Item3", "Item4", "Item5" };
+        var source1 = CreateItems(6);
         var vm = new SelectionViewModel();
         vm.SetItemsSource(source1);
         vm.SelectRange(new ItemIndexRange(2, 4)); // 2..5 (count 4)
@@ -81,7 +80,7 @@ public class SelectionViewModelTests
         await Assert.That(vm.SelectedCount).IsEqualTo(4);
 
         // Change source to smaller collection (size 3)
-        var source2 = new List<string> { "Item0", "Item1", "Item2" };
+        var source2 = CreateItems(3);
         vm.SetItemsSource(source2);
 
         // Range [2..5] should be trimmed to [2..2] (length 1)
@@ -105,4 +104,9 @@ public class SelectionViewModelTests
         await Assert.That(vm.SelectedRanges).IsEmpty();
         await Assert.That(vm.SelectedCount).IsEqualTo(0);
     }
+
+    private sealed record DummyItem(string Name) : ISelectable;
+
+    private static List<ISelectable> CreateItems(int count) =>
+        Enumerable.Range(0, count).Select(i => (ISelectable)new DummyItem($"Item{i}")).ToList();
 }

@@ -52,7 +52,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsSelectionModeActive { get; set; }
 
-    private IReadOnlyList<object>? _sourceCollection;
+    private IReadOnlyList<ISelectable>? _sourceCollection;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SelectionViewModel"/> class.
@@ -66,7 +66,7 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// <summary>
     /// Sets the source collection for selection and updates the selection state.
     /// </summary>
-    public void SetItemsSource(IReadOnlyList<object>? source)
+    public void SetItemsSource(IReadOnlyList<ISelectable>? source)
     {
         if (_sourceCollection is INotifyCollectionChanged oldCollection)
         {
@@ -125,12 +125,12 @@ public sealed partial class SelectionViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Retrieves a list of selected objects from the configured source collection based on current selected ranges.
+    /// Retrieves a list of selected items from the configured source collection based on current selected ranges.
     /// </summary>
-    public List<object> GetSelectedItems()
+    public List<ISelectable> GetSelectedItems()
     {
-        if (_sourceCollection is null || _sourceCollection.Count == 0) return new List<object>();
-        return GetSelectedItems<object>();
+        if (_sourceCollection is null || _sourceCollection.Count == 0) return new List<ISelectable>();
+        return GetSelectedItems<ISelectable>();
     }
 
     /// <summary>
@@ -190,9 +190,9 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// <summary>
     /// Selects the specified item and activates selection mode.
     /// </summary>
-    /// <param name="item">An object representing the item to select.</param>
+    /// <param name="item">An item representing the item to select.</param>
     [RelayCommand]
-    public void SelectItem(object? item)
+    public void SelectItem(ISelectable? item)
     {
         int index = GetItemIndex(item);
         if (index >= 0)
@@ -204,9 +204,9 @@ public sealed partial class SelectionViewModel : ObservableObject
     /// <summary>
     /// Deselects the specified item.
     /// </summary>
-    /// <param name="item">An object representing the item to deselect.</param>
+    /// <param name="item">An item representing the item to deselect.</param>
     [RelayCommand]
-    public void DeselectItem(object? item)
+    public void DeselectItem(ISelectable? item)
     {
         int index = GetItemIndex(item);
         if (index >= 0)
@@ -215,7 +215,7 @@ public sealed partial class SelectionViewModel : ObservableObject
         }
     }
 
-    public int GetItemIndex(object? item)
+    public int GetItemIndex(ISelectable? item)
     {
         if (item is null || _sourceCollection is null) return -1;
 
