@@ -46,6 +46,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
     private readonly IPlaylistViewModelFactory _playlistFactory;
+    private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
@@ -59,6 +60,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     public MainPageViewModel(PlayerSettingsContext playerSettings, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
         PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory,
+        IRecentMediaCoordinator recentMediaCoordinator,
         ILogger<MainPageViewModel> logger)
     {
         _playerSettings = playerSettings;
@@ -68,6 +70,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
         _playlistFactory = playlistFactory;
+        _recentMediaCoordinator = recentMediaCoordinator;
         _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;
@@ -241,7 +244,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             await Task.WhenAll(
                 FetchMusicLibraryAsync(),
                 FetchVideosLibraryAsync(),
-                FetchPlaylistsAsync());
+                FetchPlaylistsAsync(),
+                _recentMediaCoordinator.LoadAsync());
 
             // Fetch playlists again to ensure items are updated after libraries are fetched
             // This is necessary because playlist items may reference media that is not yet loaded in the library context

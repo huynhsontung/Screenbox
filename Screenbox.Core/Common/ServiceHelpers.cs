@@ -75,6 +75,7 @@ public static class ServiceHelpers
         services.AddSingleton<IPlayQueueCoordinator, PlayQueueCoordinator>();
         services.AddSingleton<IPlayQueueBufferManager, PlayQueueBufferManager>();
         services.AddSingleton<IPlaybackProgressTracker, PlaybackProgressTracker>();
+        services.AddSingleton<IRecentMediaCoordinator, RecentMediaCoordinator>();
 
         // Services
         services.AddSingleton<ISettingsStorage, SettingsStorage>();

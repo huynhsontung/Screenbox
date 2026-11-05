@@ -52,6 +52,7 @@ internal sealed partial class SetPlaybackOptionsCommand : IRelayCommand
     {
         MediaViewModel media => media,
         StorageItemViewModel storageItemViewModel => storageItemViewModel.Media,
+        RecentItemViewModel recentItemViewModel => recentItemViewModel.Media,
         _ => null
     };
 }
