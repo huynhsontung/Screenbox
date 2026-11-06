@@ -1201,13 +1201,13 @@
     <comment>#Format[String value]</comment>
   </data>
   <data name="ElementThemeDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>使用系統設定</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>淺色</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>暗色</value>
   </data>
 </root>
 

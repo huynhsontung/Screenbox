@@ -1025,7 +1025,7 @@
     <value>Mapp</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Tryck</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
     <value>Swipe up</value>
@@ -1201,13 +1201,13 @@
     <comment>#Format[String value]</comment>
   </data>
   <data name="ElementThemeDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Använd systeminställning</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Ljust</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Mörkt</value>
   </data>
 </root>
 

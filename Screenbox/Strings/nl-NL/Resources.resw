@@ -149,11 +149,11 @@
     <value>Total duration</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Hoofdstuk</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Hoofdstukken</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -1201,13 +1201,13 @@
     <comment>#Format[String value]</comment>
   </data>
   <data name="ElementThemeDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Systeeminstelling gebruiken</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Licht</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Donker</value>
   </data>
 </root>
 

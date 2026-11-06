@@ -1204,10 +1204,10 @@
     <value>Use system setting</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Lig</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Donker</value>
   </data>
 </root>
 

@@ -992,7 +992,7 @@
     <value>نقطة</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value/>
+    <value>الدقة الفائقة</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>عرض اسم الفصل عندما يكون متاحًا</value>
@@ -1201,13 +1201,13 @@
     <comment>#Format[String value]</comment>
   </data>
   <data name="ElementThemeDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>استخدام إعدادات النظام</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>فاتح</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>داكن</value>
   </data>
 </root>
 

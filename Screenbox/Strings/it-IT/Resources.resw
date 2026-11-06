@@ -1025,7 +1025,7 @@
     <value>Cartella</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Tocca</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
     <value>Scorri verso l'alto</value>

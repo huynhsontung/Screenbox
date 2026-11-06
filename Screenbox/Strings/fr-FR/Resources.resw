@@ -149,11 +149,11 @@
     <value>Durée totale</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Chapitre</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Chapitres</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -1025,7 +1025,7 @@
     <value>Dossier</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Appuyez sur</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
     <value>Swipe up</value>
@@ -1201,13 +1201,13 @@
     <comment>#Format[String value]</comment>
   </data>
   <data name="ElementThemeDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Utiliser le paramètre système</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Clair</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Sombre</value>
   </data>
 </root>
 

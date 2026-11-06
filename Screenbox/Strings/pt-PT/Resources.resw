@@ -786,7 +786,7 @@
     <value>Modo avançado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>O modo avançado permite personalizar o comportamento do LibVLC utilizando argumentos da linha de comandos.</value>
+    <value>O modo avançado permite personalizar o comportamento do LibVLC utilizando argumentos da linha de comandos</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Argumentos universais</value>
@@ -1201,13 +1201,13 @@
     <comment>#Format[String value]</comment>
   </data>
   <data name="ElementThemeDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Utilizar definição do sistema</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Claro</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Escuro</value>
   </data>
 </root>
 
