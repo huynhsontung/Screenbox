@@ -1,3 +1,4 @@
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -83,7 +84,10 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     private void Play(MediaViewModel? media)
     {
         _itemList ??= GroupedAlbums.SelectMany<IGrouping<AlbumViewModel, MediaViewModel>, MediaViewModel>(static g => g).ToList();
-        Messenger.SendQueueAndPlay(media ?? _itemList[0], _itemList);
+        Messenger.SendQueueAndPlay(
+            media ?? _itemList[0],
+            _itemList,
+            origin: Source is not null ? PlaylistOrigin.ForArtist(Source) : null);
     }
 
     [RelayCommand]
@@ -92,7 +96,12 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
         if (Source == null || Source.RelatedSongs.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Models.Playlist(0, shuffledList);
+        var playlist = new Playlist(0, shuffledList)
+        {
+            ShuffleMode = true,
+            ShuffleBackup = new ShuffleBackup(Source.OrderedSongs.ToList()),
+            Origin = PlaylistOrigin.ForArtist(Source)
+        };
         Messenger.Send(new SetQueueMessage(playlist, true));
     }
 

@@ -1,3 +1,4 @@
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,12 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
         if (Songs.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = Songs.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Models.Playlist(0, shuffledList);
+        var playlist = new Playlist(0, shuffledList)
+        {
+            ShuffleMode = true,
+            ShuffleBackup = new ShuffleBackup(Songs.ToList()),
+            Origin = PlaylistOrigin.ForLibraryQueue(shuffledList[0])
+        };
         Messenger.Send(new SetQueueMessage(playlist, true));
     }
 }

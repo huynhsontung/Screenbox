@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -45,6 +45,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     IRecipient<SetQueueMessage>,
     IRecipient<ClearQueueMessage>,
     IRecipient<QueueRequestMessage>,
+    IRecipient<QueuePlaybackStateRequestMessage>,
     IRecipient<PropertyChangedMessage<IMediaPlayer?>>,
     IRecipient<UpdateMediaOptionsMessage>
 {
@@ -75,6 +76,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private bool _deferCollectionChanged;
 
     private CancellationTokenSource? _currentItemCts;
+    private Guid _recordedSessionId;
+    private RecentItemKind? _recordedOriginKind;
+    private QueuePlaybackState? _lastBroadcastState;
 
     public PlayQueueCoordinator(
         PlayQueueContext context,
@@ -131,6 +135,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         Messenger.Register<SetQueueMessage>(this);
         Messenger.Register<ClearQueueMessage>(this);
         Messenger.Register<QueueRequestMessage>(this);
+        Messenger.Register<QueuePlaybackStateRequestMessage>(this);
         Messenger.Register<PropertyChangedMessage<IMediaPlayer?>>(this);
         Messenger.Register<UpdateMediaOptionsMessage>(this);
     }
@@ -215,6 +220,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     public void Receive(QueueRequestMessage message)
     {
         message.Reply(new Playlist(_playlist));
+    }
+
+    /// <summary>Returns the current queue playback state snapshot to the requester.</summary>
+    public void Receive(QueuePlaybackStateRequestMessage message)
+    {
+        message.Reply(GetCurrentPlaybackState());
     }
 
     /// <summary>
@@ -537,6 +548,14 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     var newVms = subItems.Select(_mediaFactory.Create).ToList();
                     if (ReplaceItemInQueue(vm, newVms))
                     {
+                        if (newVms.Count > 1)
+                        {
+                            _playlist.Origin = PlaylistOrigin.ForAdHocPlaylist(vm.Name, vm.Location);
+                            _context.ActiveOrigin = _playlist.Origin;
+                            _recordedOriginKind = RecentItemKind.AdHocPlaylist;
+                            Messenger.Send(new QueueSessionStartedMessage(new Playlist(_playlist), IsUpgrade: true));
+                        }
+
                         SetCurrentItem(newVms[0], shouldPlay: true);
                     }
                 }
@@ -599,16 +618,34 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 value.IsMediaActive = true;
                 _context.CurrentIndex = _context.Items.IndexOf(value);
                 _playlist.CurrentIndex = _context.CurrentIndex;
+
+                if (_playlist.Origin is null)
+                {
+                    _playlist.Origin = PlaylistOrigin.ForSingleMedia(value);
+                    _context.ActiveOrigin = _playlist.Origin;
+                }
             }
             else
             {
                 _context.CurrentIndex = -1;
                 _playlist.CurrentIndex = -1;
+                if (_context.Items.Count == 0)
+                {
+                    _context.ActiveSessionId = Guid.Empty;
+                    _context.ActiveOrigin = null;
+                }
             }
 
             // Assign CurrentItem after updating PlaybackItem and CurrentIndex so
             // OnContextPropertyChanged -> ProcessCurrentItemChangedAsync sees the updated state.
             _context.CurrentItem = value;
+            _context.IsPlaying = MediaPlayer?.PlaybackState == MediaPlaybackState.Playing && value is not null;
+            if (value is not null)
+            {
+                value.IsPlaying = _context.IsPlaying;
+            }
+
+            BroadcastPlaybackState();
 
             if (shouldPlay && value is not null)
             {
@@ -663,6 +700,22 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             if (token.IsCancellationRequested) return;
 
+            if (_playlist.Origin is null || _playlist.Origin.TrackItemsIndividually)
+            {
+                _dispatcherQueue.TryExecuteOrEnqueue(() =>
+                {
+                    if (_context.CurrentItem != value) return;
+                    _recordedSessionId = _playlist.SessionId;
+                    _recordedOriginKind = RecentItemKind.SingleMedia;
+                    var singlePlaylist = new Playlist(value)
+                    {
+                        SessionId = _playlist.SessionId,
+                        Origin = PlaylistOrigin.ForSingleMedia(value)
+                    };
+                    Messenger.Send(new QueueSessionStartedMessage(singlePlaylist, IsUpgrade: false));
+                });
+            }
+
             _bufferManager.UpdateBuffer(MediaPlayer, _playlist, _context.RepeatMode);
             await Task.WhenAll(
                 _generalSettings.ShowRecent ? _filesService.AddToRecentAsync(value.Source, token) : Task.CompletedTask,
@@ -692,7 +745,26 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             try
             {
                 _deferCollectionChanged = true;
+                if (!playlist.IsEmpty)
+                {
+                    playlist.Origin ??= playlist.Items.Count > 1
+                        ? PlaylistOrigin.ForAdHocPlaylist(playlist.Items[0].Name)
+                        : PlaylistOrigin.ForSingleMedia(playlist.Items[0]);
+                }
+
                 _playlist = playlist;
+                _context.ActiveSessionId = playlist.IsEmpty ? Guid.Empty : playlist.SessionId;
+                _context.ActiveOrigin = playlist.Origin;
+
+                if (!playlist.IsEmpty && playlist.Origin is { TrackItemsIndividually: false } &&
+                    (playlist.SessionId != _recordedSessionId || _recordedOriginKind != playlist.Origin.Kind))
+                {
+                    bool isUpgrade = playlist.SessionId == _recordedSessionId &&
+                                     _recordedOriginKind == RecentItemKind.SingleMedia;
+                    _recordedSessionId = playlist.SessionId;
+                    _recordedOriginKind = playlist.Origin.Kind;
+                    Messenger.Send(new QueueSessionStartedMessage(new Playlist(playlist), isUpgrade));
+                }
                 _context.ShuffleMode = playlist.ShuffleMode;
 
                 // Use efficient synchronization for small lists; fall back to a full
@@ -732,8 +804,14 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 _deferCollectionChanged = true;
                 _context.Items.Clear();
-                _playlist = new Playlist();
+                _playlist = new Playlist { SessionId = Guid.Empty };
+                _context.ActiveSessionId = Guid.Empty;
+                _context.ActiveOrigin = null;
+                _context.IsPlaying = false;
+                _recordedSessionId = Guid.Empty;
+                _recordedOriginKind = null;
                 _context.ShuffleMode = false;
+                BroadcastPlaybackState();
             }
             finally
             {
@@ -760,6 +838,32 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     #endregion
 
+    #region Playback State
+
+    /// <summary>
+    /// Gets the current immutable snapshot of queue session and playback state.
+    /// </summary>
+    public QueuePlaybackState GetCurrentPlaybackState()
+    {
+        return new QueuePlaybackState(
+            _context.ActiveSessionId,
+            _context.ActiveOrigin,
+            _context.CurrentItem,
+            _context.IsPlaying);
+    }
+
+    private void BroadcastPlaybackState()
+    {
+        var state = GetCurrentPlaybackState();
+        if (state != _lastBroadcastState)
+        {
+            _lastBroadcastState = state;
+            Messenger.Send(new QueuePlaybackStateChangedMessage(state));
+        }
+    }
+
+    #endregion
+
     #region Event Handlers
 
     private void OnMediaFailed(IMediaPlayer sender, EventArgs args)
@@ -767,11 +871,14 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         // MediaFailed is raised on a LibVLC native event thread; marshal observable property updates to the UI thread.
         _dispatcherQueue.TryEnqueue(() =>
         {
+            _context.IsPlaying = false;
             if (_context.CurrentItem is not null)
             {
                 _context.CurrentItem.IsPlaying = false;
                 _context.CurrentItem.IsAvailable = false;
             }
+
+            BroadcastPlaybackState();
         });
     }
 
@@ -780,9 +887,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         // PlaybackStateChanged is raised on a LibVLC native event thread; marshal observable property updates to the UI thread.
         _dispatcherQueue.TryEnqueue(() =>
         {
+            bool isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+            _context.IsPlaying = isPlaying;
+
             if (_context.CurrentItem is not null)
             {
-                bool isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
                 if (isPlaying)
                 {
                     _context.CurrentItem.IsAvailable = true;
@@ -790,6 +899,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
                 _context.CurrentItem.IsPlaying = isPlaying;
             }
+
+            BroadcastPlaybackState();
         });
     }
 
