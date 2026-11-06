@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
-using CommunityToolkit.WinUI;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
@@ -41,7 +40,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ISourceMetadataService _sourceMetadataService;
-    private readonly DispatcherQueue? _dispatcherQueue;
+    private readonly DispatcherQueue _dispatcherQueue;
     private readonly ILogger<RecentMediaCoordinator> _logger;
     private readonly SemaphoreSlim _loadLock = new(1, 1);
 
@@ -92,7 +91,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        RunOnUiThread(RelinkAllItems);
+        _dispatcherQueue.TryExecuteOrEnqueue(RelinkAllItems);
     }
 
     /// <inheritdoc/>
@@ -100,7 +99,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         if (!_generalSettings.ShowRecent)
         {
-            RunOnUiThread(() =>
+            _dispatcherQueue.TryExecuteOrEnqueue(() =>
             {
                 ClearRecentCollection();
                 _recentContext.IsLoaded = true;
@@ -117,7 +116,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 entries = await MigrateLegacyMruAsync();
             }
 
-            RunOnUiThread(() =>
+            _dispatcherQueue.TryExecuteOrEnqueue(() =>
             {
                 var viewModels = new List<RecentItemViewModel>(entries.Count);
                 foreach (var entry in entries)
@@ -190,7 +189,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async Task RemoveAsync(RecentItemViewModel item)
     {
-        RunOnUiThread(() =>
+        _dispatcherQueue.TryExecuteOrEnqueue(() =>
         {
             item.Detach();
             _recentContext.Recent.Remove(item);
@@ -209,7 +208,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async Task ClearAsync()
     {
-        RunOnUiThread(() =>
+        _dispatcherQueue.TryExecuteOrEnqueue(() =>
         {
             ClearRecentCollection();
             _recentContext.IsLoaded = true;
@@ -260,7 +259,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         RecentItemViewModel? targetVm = null;
         string entryId = Guid.NewGuid().ToString();
 
-        RunOnUiThread(() =>
+        _dispatcherQueue.TryExecuteOrEnqueue(() =>
         {
             if (replaceEntryId is not null)
             {
@@ -377,12 +376,12 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         {
             case nameof(PlayQueueContext.CurrentItem):
                 AttachCurrentItemListener(_playQueueContext.CurrentItem);
-                RunOnUiThread(UpdateActiveStates);
+                _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
                 break;
 
             case nameof(PlayQueueContext.ActiveSessionId):
             case nameof(PlayQueueContext.ActiveOrigin):
-                RunOnUiThread(UpdateActiveStates);
+                _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
                 break;
         }
     }
@@ -408,7 +407,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         if (e.PropertyName is nameof(MediaViewModel.IsPlaying) or nameof(MediaViewModel.IsMediaActive))
         {
-            RunOnUiThread(UpdateActiveStates);
+            _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
         }
     }
 
@@ -449,7 +448,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private void Playlists_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        RunOnUiThread(RelinkAllItems);
+        _dispatcherQueue.TryExecuteOrEnqueue(RelinkAllItems);
     }
 
     private async void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -463,7 +462,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
             else
             {
-                RunOnUiThread(() =>
+                _dispatcherQueue.TryExecuteOrEnqueue(() =>
                 {
                     ClearRecentCollection();
                     _recentContext.IsLoaded = true;
@@ -485,35 +484,35 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         switch (item.Kind)
         {
             case RecentItemKind.UserPlaylist:
-                {
-                    var playlist = _playlistsContext.Playlists.FirstOrDefault(p => p.Id == item.SourceId);
-                    item.LinkPlaylist(playlist);
-                }
-                break;
+            {
+                var playlist = _playlistsContext.Playlists.FirstOrDefault(p => p.Id == item.SourceId);
+                item.LinkPlaylist(playlist);
+            }
+            break;
 
             case RecentItemKind.Album:
+            {
+                AlbumViewModel? album = null;
+                if (item.SourceId is not null)
                 {
-                    AlbumViewModel? album = null;
-                    if (item.SourceId is not null)
-                    {
-                        _libraryContext.Music.Albums.TryGetValue(item.SourceId, out album);
-                    }
-
-                    item.LinkAlbum(album);
+                    _libraryContext.Music.Albums.TryGetValue(item.SourceId, out album);
                 }
-                break;
+
+                item.LinkAlbum(album);
+            }
+            break;
 
             case RecentItemKind.Artist:
+            {
+                ArtistViewModel? artist = null;
+                if (item.SourceId is not null)
                 {
-                    ArtistViewModel? artist = null;
-                    if (item.SourceId is not null)
-                    {
-                        _libraryContext.Music.Artists.TryGetValue(item.SourceId, out artist);
-                    }
-
-                    item.LinkArtist(artist);
+                    _libraryContext.Music.Artists.TryGetValue(item.SourceId, out artist);
                 }
-                break;
+
+                item.LinkArtist(artist);
+            }
+            break;
         }
     }
 
@@ -723,18 +722,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
 
         _recentContext.Recent.Clear();
-    }
-
-    private void RunOnUiThread(Action action)
-    {
-        if (_dispatcherQueue is null || _dispatcherQueue.HasThreadAccess)
-        {
-            action();
-        }
-        else
-        {
-            _dispatcherQueue.TryEnqueue(() => action());
-        }
     }
 
     private async Task SafeLoadDetailsAsync(MediaViewModel media)
