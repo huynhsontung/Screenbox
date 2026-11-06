@@ -562,6 +562,10 @@
     <value>نتائج الفيديو لـ "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Playlist results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>لا يوجد ألبوم</value>
     <comment>#Format[Plural Int]</comment>
@@ -988,7 +992,7 @@
     <value>نقطة</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value/>
+    <value>الدقة الفائقة</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>عرض اسم الفصل عندما يكون متاحًا</value>
@@ -1195,6 +1199,15 @@
   <data name="IncreaseValue" xml:space="preserve">
     <value>Increase {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>استخدام إعدادات النظام</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>داكن</value>
   </data>
 </root>
 

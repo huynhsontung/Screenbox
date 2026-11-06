@@ -149,11 +149,11 @@
     <value>Total duration</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Hoofdstuk</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Hoofdstukken</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -560,6 +560,10 @@
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
     <value>Video resultaten voor "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Playlist results for "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -1195,6 +1199,15 @@
   <data name="IncreaseValue" xml:space="preserve">
     <value>Increase {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>Systeeminstelling gebruiken</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Licht</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Donker</value>
   </data>
 </root>
 
