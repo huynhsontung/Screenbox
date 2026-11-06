@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Screenbox.Core.ViewModels;
 using Windows.Storage.Search;
@@ -12,6 +13,17 @@ public sealed class Playlist
     public List<MediaViewModel> Items { get; }
     public int CurrentIndex { get; set; }
     public bool ShuffleMode { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier for the queue session this playlist belongs to.
+    /// </summary>
+    public Guid SessionId { get; set; } = Guid.NewGuid();
+
+    /// <summary>
+    /// Gets or sets the origin metadata describing how this playlist was created.
+    /// </summary>
+    public PlaylistOrigin? Origin { get; set; }
+
     /// <summary>
     /// Gets a value indicating whether this playlist has a shuffle backup that can be restored.
     /// </summary>
@@ -37,6 +49,8 @@ public sealed class Playlist
         ShuffleMode = reference?.ShuffleMode ?? false;
         ShuffleBackup = reference?.ShuffleBackup;
         NeighboringFilesQuery = reference?.NeighboringFilesQuery;
+        SessionId = reference?.SessionId ?? Guid.NewGuid();
+        Origin = reference?.Origin;
     }
 
     public Playlist(int currentIndex, IReadOnlyList<MediaViewModel> items, Playlist? reference = null)
@@ -60,4 +74,24 @@ public sealed class Playlist
 
     public MediaViewModel? CurrentItem =>
         CurrentIndex >= 0 && CurrentIndex < Items.Count ? Items[CurrentIndex] : null;
+
+    /// <summary>
+    /// Returns the canonical (unshuffled) list of items in this playlist.
+    /// When a shuffle backup is present, returns the original playlist order with any removed items excluded.
+    /// </summary>
+    public IReadOnlyList<MediaViewModel> GetCanonicalItems()
+    {
+        if (ShuffleBackup is null)
+        {
+            return Items;
+        }
+
+        var canonical = new List<MediaViewModel>(ShuffleBackup.OriginalPlaylist);
+        foreach (MediaViewModel removal in ShuffleBackup.Removals)
+        {
+            canonical.Remove(removal);
+        }
+
+        return canonical;
+    }
 }

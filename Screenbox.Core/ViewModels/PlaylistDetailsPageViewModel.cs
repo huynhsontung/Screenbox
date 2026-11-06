@@ -91,7 +91,10 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private void Play(MediaViewModel? item)
     {
         if (Source == null || item == null) return;
-        var playlist = new Playlist(item, Source.Items);
+        var playlist = new Playlist(item, Source.Items)
+        {
+            Origin = PlaylistOrigin.ForUserPlaylist(Source)
+        };
         Messenger.Send(new SetQueueMessage(playlist, true));
     }
 
@@ -101,7 +104,12 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         if (playlist == null || playlist.Items.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = playlist.Items.OrderBy(_ => rnd.Next()).ToList();
-        var shuffledPlaylist = new Playlist(0, shuffledList);
+        var shuffledPlaylist = new Playlist(0, shuffledList)
+        {
+            ShuffleMode = true,
+            ShuffleBackup = new ShuffleBackup(playlist.Items.ToList()),
+            Origin = PlaylistOrigin.ForUserPlaylist(playlist)
+        };
         Messenger.Send(new SetQueueMessage(shuffledPlaylist, true));
     }
 

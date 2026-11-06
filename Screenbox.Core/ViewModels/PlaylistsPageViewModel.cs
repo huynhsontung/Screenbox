@@ -1,3 +1,4 @@
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -114,7 +115,10 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
             .GetSelectedItems<PlaylistViewModel>()
             .SelectMany(p => p.Items)
             .ToArray();
-        Messenger.SendQueueAndPlay(items[0], items);
+        if (items.Length > 0)
+        {
+            Messenger.SendQueueAndPlay(items[0], items, origin: PlaylistOrigin.ForAdHocPlaylist(items[0].Name));
+        }
         Selection.DisableSelectionMode();
     }
 
