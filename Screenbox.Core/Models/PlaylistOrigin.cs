@@ -12,47 +12,21 @@ namespace Screenbox.Core.Models;
 /// <summary>
 /// Metadata describing the source container or mode that created a <see cref="Playlist"/>.
 /// </summary>
-public sealed class PlaylistOrigin : IEquatable<PlaylistOrigin>
+/// <param name="Kind">The recent item kind associated with this playlist origin.</param>
+/// <param name="SourceId">The stable identifier for the origin source (e.g. playlist ID, album key, artist key, or path).</param>
+/// <param name="Title">The display title for the recent entry or session.</param>
+/// <param name="Subtitle">The optional subtitle or caption for the recent entry or session.</param>
+public sealed record PlaylistOrigin(
+    RecentItemKind Kind,
+    string SourceId,
+    string Title,
+    string? Subtitle = null)
 {
-    /// <summary>Gets the recent item kind associated with this playlist origin.</summary>
-    public RecentItemKind Kind { get; }
-
-    /// <summary>Gets the stable identifier for the origin source (e.g. playlist ID, album key, artist key, or path).</summary>
-    public string SourceId { get; }
-
-    /// <summary>Gets the display title for the recent entry or session.</summary>
-    public string Title { get; }
-
-    /// <summary>Gets the optional subtitle or caption for the recent entry or session.</summary>
-    public string? Subtitle { get; }
-
     /// <summary>
     /// Gets a value indicating whether each track change in this queue should be recorded
     /// individually as a <see cref="RecentItemKind.SingleMedia"/> entry.
     /// </summary>
     public bool TrackItemsIndividually => Kind == RecentItemKind.SingleMedia;
-
-    private PlaylistOrigin(RecentItemKind kind, string sourceId, string title, string? subtitle = null)
-    {
-        Kind = kind;
-        SourceId = sourceId;
-        Title = title;
-        Subtitle = subtitle;
-    }
-
-    public bool Equals(PlaylistOrigin? other)
-    {
-        if (other is null) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Kind == other.Kind &&
-               string.Equals(SourceId, other.SourceId, StringComparison.Ordinal) &&
-               string.Equals(Title, other.Title, StringComparison.Ordinal) &&
-               string.Equals(Subtitle, other.Subtitle, StringComparison.Ordinal);
-    }
-
-    public override bool Equals(object? obj) => Equals(obj as PlaylistOrigin);
-
-    public override int GetHashCode() => HashCode.Combine(Kind, SourceId, Title, Subtitle);
 
     /// <summary>Creates a <see cref="PlaylistOrigin"/> for a single media item.</summary>
     public static PlaylistOrigin ForSingleMedia(MediaViewModel media)
