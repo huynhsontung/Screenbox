@@ -170,7 +170,7 @@ Instead, `RecentMediaCoordinator.UpdateActiveStates()` drives `IsQueueActive` an
 - For `AdHocPlaylist`, `UserPlaylist`, `Album`, `Artist`:
   - `IsQueueActive` is `true` iff `ActiveSessionId == PlayQueueContext.ActiveSessionId` and `ContentHash == PlayQueueContext.ActiveOrigin.ContentHash`.
 - For all kinds:
-  - `IsPlaying = IsQueueActive && (PlayQueueContext.CurrentItem?.IsPlaying ?? false)`.
+  - `IsPlaying = IsQueueActive && PlayQueueContext.IsPlaying`.
 
 Clicking anywhere on a card body or its hover Play/Pause button on `HomePage` invokes `RecentItemViewModel.Play()`:
 - If `IsQueueActive == true`: sends `TogglePlayPauseMessage(false)` to toggle playback of the current active item in the queue.

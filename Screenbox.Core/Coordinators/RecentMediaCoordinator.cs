@@ -44,7 +44,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly ILogger<RecentMediaCoordinator> _logger;
     private readonly SemaphoreSlim _loadLock = new(1, 1);
 
-    private MediaViewModel? _monitoredCurrentItem;
     private string? _lastRecordedEntryId;
 
     public RecentMediaCoordinator(
@@ -72,11 +71,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         _playQueueContext.PropertyChanged += PlayQueueContext_PropertyChanged;
         _playlistsContext.Playlists.CollectionChanged += Playlists_CollectionChanged;
         _generalSettings.PropertyChanged += GeneralSettings_PropertyChanged;
-
-        if (_playQueueContext.CurrentItem is not null)
-        {
-            AttachCurrentItemListener(_playQueueContext.CurrentItem);
-        }
 
         Messenger.Register<QueueSessionStartedMessage>(this);
         Messenger.Register<PropertyChangedMessage<MusicLibrary>>(this);
@@ -375,39 +369,11 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         switch (e.PropertyName)
         {
             case nameof(PlayQueueContext.CurrentItem):
-                AttachCurrentItemListener(_playQueueContext.CurrentItem);
-                _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
-                break;
-
             case nameof(PlayQueueContext.ActiveSessionId):
             case nameof(PlayQueueContext.ActiveOrigin):
+            case nameof(PlayQueueContext.IsPlaying):
                 _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
                 break;
-        }
-    }
-
-    private void AttachCurrentItemListener(MediaViewModel? newItem)
-    {
-        if (ReferenceEquals(_monitoredCurrentItem, newItem)) return;
-
-        if (_monitoredCurrentItem is not null)
-        {
-            _monitoredCurrentItem.PropertyChanged -= MonitoredCurrentItem_PropertyChanged;
-        }
-
-        _monitoredCurrentItem = newItem;
-
-        if (_monitoredCurrentItem is not null)
-        {
-            _monitoredCurrentItem.PropertyChanged += MonitoredCurrentItem_PropertyChanged;
-        }
-    }
-
-    private void MonitoredCurrentItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is nameof(MediaViewModel.IsPlaying) or nameof(MediaViewModel.IsMediaActive))
-        {
-            _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
         }
     }
 
@@ -416,7 +382,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         Guid activeSessionId = _playQueueContext.ActiveSessionId;
         PlaylistOrigin? activeOrigin = _playQueueContext.ActiveOrigin;
         MediaViewModel? currentItem = _playQueueContext.CurrentItem;
-        bool isPlaying = currentItem?.IsPlaying ?? false;
+        bool isPlaying = _playQueueContext.IsPlaying;
 
         foreach (var item in _recentContext.Recent)
         {

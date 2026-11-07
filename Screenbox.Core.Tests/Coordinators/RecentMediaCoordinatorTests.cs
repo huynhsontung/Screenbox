@@ -182,19 +182,21 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentFolder.IsQueueActive).IsTrue();
         await Assert.That(recentFolder.IsPlaying).IsFalse();
 
-        // Start playing track1
-        track1.IsPlaying = true;
+        // Start playing
+        playQueueContext.IsPlaying = true;
         await Assert.That(recentFolder.IsPlaying).IsTrue();
 
         // Advance to track2 within the same session -> folder stays active & playing
-        track1.IsPlaying = false;
-        track2.IsPlaying = true;
         playQueueContext.CurrentItem = track2;
         await Assert.That(recentFolder.IsQueueActive).IsTrue();
         await Assert.That(recentFolder.IsPlaying).IsTrue();
 
+        // Pause playback -> folder stays active, but IsPlaying is false
+        playQueueContext.IsPlaying = false;
+        await Assert.That(recentFolder.IsQueueActive).IsTrue();
+        await Assert.That(recentFolder.IsPlaying).IsFalse();
+
         // Clear queue -> folder becomes inactive and not playing
-        track2.IsPlaying = false;
         playQueueContext.ActiveSessionId = Guid.Empty;
         playQueueContext.ActiveOrigin = null;
         playQueueContext.CurrentItem = null;
