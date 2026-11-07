@@ -10,8 +10,6 @@ public class RecentContextTests
         var context = new RecentContext();
 
         await Assert.That(context.Recent).IsEmpty();
-        await Assert.That(context.PathToMruMappings).IsEmpty();
-        await Assert.That(context.TokenToMediaMappings).IsEmpty();
         await Assert.That(context.IsLoaded).IsFalse();
     }
 

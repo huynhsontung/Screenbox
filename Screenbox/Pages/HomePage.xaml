@@ -32,28 +32,112 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <DataTemplate x:Key="RecentMediaGridViewItemTemplate" x:DataType="viewModels:RecentItemViewModel">
+                <controls:CommonGridViewItem
+                    Title="{x:Bind Name, Mode=OneWay}"
+                    Width="{StaticResource CommonGridViewItemWidth}"
+                    AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, Caption), Mode=OneWay}"
+                    Caption="{x:Bind Caption, Mode=OneWay}"
+                    IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+                    PlayCommand="{x:Bind PlayCommand}"
+                    PlayCommandParameter="{x:Bind}"
+                    ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+                    ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
+                    <controls:CommonGridViewItem.PlaceholderIconSource>
+                        <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="{x:Bind converters:GlyphConverter.ToMediaTypeGlyph(MediaType), Mode=OneWay}" />
+                    </controls:CommonGridViewItem.PlaceholderIconSource>
+                </controls:CommonGridViewItem>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RecentPlaylistGridViewItemTemplate" x:DataType="viewModels:RecentItemViewModel">
+                <controls:CommonGridViewItem
+                    Title="{x:Bind Name, Mode=OneWay}"
+                    Width="{StaticResource CommonGridViewItemWidth}"
+                    AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, ItemsCount), Mode=OneWay}"
+                    Caption="{x:Bind strings:Resources.ItemsCount(ItemsCount), Mode=OneWay}"
+                    IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+                    PlayCommand="{x:Bind PlayCommand}"
+                    PlayCommandParameter="{x:Bind}"
+                    ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+                    <controls:CommonGridViewItem.PlaceholderIconSource>
+                        <FontIconSource
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
+                            Glyph="{StaticResource PlaylistGlyph}" />
+                    </controls:CommonGridViewItem.PlaceholderIconSource>
+                </controls:CommonGridViewItem>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RecentAlbumGridViewItemTemplate" x:DataType="viewModels:RecentItemViewModel">
+                <controls:CommonGridViewItem
+                    Title="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Name, strings:Resources.UnknownAlbum), Mode=OneWay}"
+                    Width="{StaticResource CommonGridViewItemWidth}"
+                    AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleName(Name, ArtistName), Mode=OneWay}"
+                    Caption="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ArtistName, strings:Resources.UnknownArtist), Mode=OneWay}"
+                    IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+                    PlayCommand="{x:Bind PlayCommand}"
+                    PlayCommandParameter="{x:Bind}"
+                    ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+                    ThumbnailSource="{x:Bind AlbumArt, Mode=OneWay}">
+                    <controls:CommonGridViewItem.PlaceholderIconSource>
+                        <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="&#xE93C;" />
+                    </controls:CommonGridViewItem.PlaceholderIconSource>
+                </controls:CommonGridViewItem>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RecentArtistGridViewItemTemplate" x:DataType="viewModels:RecentItemViewModel">
+                <controls:CommonGridViewItem
+                    Title="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(Name, strings:Resources.UnknownArtist), Mode=OneWay}"
+                    Width="{StaticResource CommonGridViewItemWidth}"
+                    AutomationProperties.Name="{x:Bind Name, Mode=OneWay}"
+                    CornerRadius="{StaticResource CircularCornerRadius}"
+                    HorizontalTextAlignment="Center"
+                    IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+                    PlayCommand="{x:Bind PlayCommand}"
+                    PlayCommandParameter="{x:Bind}"
+                    ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+                    <controls:CommonGridViewItem.PlaceholderIconSource>
+                        <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="&#xE77B;" />
+                    </controls:CommonGridViewItem.PlaceholderIconSource>
+                </controls:CommonGridViewItem>
+            </DataTemplate>
+
+            <templates:RecentItemTemplateSelector
+                x:Key="RecentItemTemplateSelector"
+                AlbumTemplate="{StaticResource RecentAlbumGridViewItemTemplate}"
+                ArtistTemplate="{StaticResource RecentArtistGridViewItemTemplate}"
+                MediaTemplate="{StaticResource RecentMediaGridViewItemTemplate}"
+                PlaylistTemplate="{StaticResource RecentPlaylistGridViewItemTemplate}" />
+
             <flyouts:MediaMenuFlyout
                 x:Key="ItemFlyout"
-                AddToQueueCommand="{x:Bind Common.AddToQueueCommand}"
+                AddToQueueCommand="{x:Bind ViewModel.AddToQueueCommand}"
                 ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                 IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
-                PlayNextCommand="{x:Bind Common.PlayNextCommand}"
+                PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
                 RemoveCommand="{x:Bind ViewModel.RemoveCommand}"
                 SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}">
                 <flyouts:MediaMenuFlyout.AdditionalItems>
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenAlbumCommand}"
-                        CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.TargetAlbum, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE93C;}"
                         Text="{x:Bind strings:Resources.ShowAlbum}"
-                        Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.ContextMedia.TargetAlbum, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenArtistCommand}"
-                        CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.TargetArtist, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE77B;}"
                         Text="{x:Bind strings:Resources.ShowArtist}"
-                        Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.ContextMedia.TargetArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenPlaylistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextMedia.LinkedPlaylist, Mode=OneWay}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlaylistGlyph}}"
+                        Text="{x:Bind strings:Resources.Open}"
+                        Visibility="{x:Bind ViewModel.ContextMedia.LinkedPlaylist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 </flyouts:MediaMenuFlyout.AdditionalItems>
             </flyouts:MediaMenuFlyout>
 
@@ -171,7 +255,7 @@
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
-            ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
+            ItemTemplateSelector="{StaticResource RecentItemTemplateSelector}"
             ItemsSource="{x:Bind ViewModel.Recent}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionMode="None">

@@ -109,6 +109,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         {
             MediaViewModel media => media,
             StorageItemViewModel storageItem => storageItem.Media,
+            RecentItemViewModel recentItem => recentItem.Media,
             _ => null,
         };
 
@@ -119,6 +120,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             MediaViewModel media => media.IsPlaying,
             PlaylistViewModel playlist => playlist.IsPlaying,
             StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
+            RecentItemViewModel recentItem => recentItem.IsPlaying,
             _ => false,
         };
 
@@ -187,6 +189,13 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             PropertiesItem.CommandParameter = mediaVm;
             PropertiesItem.Visibility = Visibility.Visible;
         }
+        else
+        {
+            OpenWithItem.Visibility = Visibility.Collapsed;
+            OpenInFileExplorerItem.Visibility = Visibility.Collapsed;
+            OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = false;
+            PropertiesItem.Visibility = Visibility.Collapsed;
+        }
 
         // Select MenuFlyoutItem
         if (SelectCommand is not null)
@@ -201,7 +210,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
 
         // Advanced PlaybackOptions MenuFlyoutItem
-        if (IsAdvancedModeEnabled)
+        if (IsAdvancedModeEnabled && mediaVm is not null)
         {
             AdvancedModeSeparator.Visibility = Visibility.Visible;
 
@@ -210,6 +219,11 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             SetPlaybackOptionsItem.Command = _setPlaybackOptionsCommand;
             SetPlaybackOptionsItem.CommandParameter = ContextItem;
             SetPlaybackOptionsItem.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            AdvancedModeSeparator.Visibility = Visibility.Collapsed;
+            SetPlaybackOptionsItem.Visibility = Visibility.Collapsed;
         }
     }
 
