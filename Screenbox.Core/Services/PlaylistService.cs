@@ -52,6 +52,8 @@ public sealed class PlaylistService : IPlaylistService
             }
             else if (playlist.Origin?.Kind == RecentItemKind.AdHocPlaylist)
             {
+                // Register the playlist file (e.g. .m3u/.m3u8) with the Windows Most Recently Used (MRU) list
+                // so the app retains persistent file-access permission to reload it across future sessions.
                 _filesService.AddToRecent(file);
             }
         }
@@ -59,6 +61,8 @@ public sealed class PlaylistService : IPlaylistService
         {
             if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder)
             {
+                // Register the opened folder with the Windows Most Recently Used (MRU) list so the app
+                // retains persistent access permission to re-read the folder and its contents in future sessions.
                 _filesService.AddToRecent(folder);
             }
 
@@ -218,6 +222,8 @@ public sealed class PlaylistService : IPlaylistService
                         ? parentFolder.DisplayName
                         : parentFolder.Name;
                     folderPath = parentFolder.Path;
+                    // When expanding single-file playback into a full folder playlist, register the parent folder
+                    // with the Windows MRU list so persistent read permission is granted across future sessions.
                     _filesService.AddToRecent(parentFolder);
                 }
             }
