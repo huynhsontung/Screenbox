@@ -1,3 +1,4 @@
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,7 +81,34 @@ public sealed class MediaListFactory : IMediaListFactory
             }
         }
 
-        return queue.Count > 0 ? new Playlist(next ?? queue[0], queue) : null;
+        if (queue.Count == 0)
+        {
+            return null;
+        }
+
+        var playlist = new Playlist(next ?? queue[0], queue);
+        if (storageItems.Count == 1 && storageItems[0] is StorageFolder rootFolder)
+        {
+            string folderTitle = !string.IsNullOrWhiteSpace(rootFolder.DisplayName)
+                ? rootFolder.DisplayName
+                : rootFolder.Name;
+            playlist.Origin = PlaylistOrigin.ForAdHocPlaylist(folderTitle, rootFolder.Path);
+        }
+        else if (storageItems.Count == 1 && storageItems[0] is StorageFile singleFile && singleFile.IsSupportedPlaylist())
+        {
+            string title = Path.GetFileNameWithoutExtension(singleFile.Name);
+            playlist.Origin = PlaylistOrigin.ForAdHocPlaylist(string.IsNullOrWhiteSpace(title) ? singleFile.Name : title, singleFile.Path);
+        }
+        else if (queue.Count > 1)
+        {
+            playlist.Origin = PlaylistOrigin.ForAdHocPlaylist(queue[0].Name);
+        }
+        else
+        {
+            playlist.Origin = PlaylistOrigin.ForSingleMedia(queue[0]);
+        }
+
+        return playlist;
     }
 
     public async Task<Playlist> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default)
@@ -91,11 +119,20 @@ public sealed class MediaListFactory : IMediaListFactory
             if (items.Count > 0)
             {
                 var vms = items.Select(_mediaFactory.Create).ToList();
-                return new Playlist(0, vms);
+                string title = Path.GetFileNameWithoutExtension(media.Name);
+                return new Playlist(0, vms)
+                {
+                    Origin = PlaylistOrigin.ForAdHocPlaylist(
+                        string.IsNullOrWhiteSpace(title) ? media.Name : title,
+                        media.Location)
+                };
             }
         }
 
-        return new Playlist(media);
+        return new Playlist(media)
+        {
+            Origin = PlaylistOrigin.ForSingleMedia(media)
+        };
     }
 
     public async Task<Playlist> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default)

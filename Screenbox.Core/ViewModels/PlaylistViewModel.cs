@@ -20,7 +20,8 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class PlaylistViewModel : ObservableRecipient
+public sealed partial class PlaylistViewModel : ObservableRecipient,
+    IRecipient<QueuePlaybackStateChangedMessage>
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 
@@ -28,6 +29,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
 
     [ObservableProperty] public partial string Name { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsPlaying { get; set; }
+    [ObservableProperty] public partial bool IsQueueActive { get; set; }
     [ObservableProperty] public partial object? Thumbnail { get; set; }
     [ObservableProperty] public partial DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
 
@@ -47,6 +49,16 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         IPlaylistService playlistService,
         MediaViewModelFactory mediaFactory,
         ILogger<PlaylistViewModel> logger)
+        : this(playlistService, mediaFactory, logger, WeakReferenceMessenger.Default)
+    {
+    }
+
+    public PlaylistViewModel(
+        IPlaylistService playlistService,
+        MediaViewModelFactory mediaFactory,
+        ILogger<PlaylistViewModel> logger,
+        IMessenger messenger)
+        : base(messenger)
     {
         _playlistService = playlistService;
         _mediaFactory = mediaFactory;
@@ -55,27 +67,20 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         _playlistSaveTimer = _dispatcherQueue.CreateTimer();
 
         Items.CollectionChanged += Items_CollectionChanged;
+
+        Messenger.Register<QueuePlaybackStateChangedMessage>(this);
+
+        var request = new QueuePlaybackStateRequestMessage();
+        Messenger.Send(request);
+        if (request.HasReceivedResponse)
+        {
+            UpdatePlaybackState(request.Response);
+        }
     }
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
-
-        if (e.OldItems is not null)
-        {
-            foreach (MediaViewModel media in e.OldItems.OfType<MediaViewModel>())
-            {
-                media.PropertyChanged -= Media_OnPropertyChanged;
-            }
-        }
-
-        if (e.NewItems is not null)
-        {
-            foreach (MediaViewModel media in e.NewItems.OfType<MediaViewModel>())
-            {
-                media.PropertyChanged += Media_OnPropertyChanged;
-            }
-        }
 
         _playlistSaveTimer.Debounce(async () =>
         {
@@ -97,7 +102,10 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
 
     public Playlist ToPlaylist()
     {
-        return new Playlist(0, Items);
+        return new Playlist(0, Items)
+        {
+            Origin = PlaylistOrigin.ForUserPlaylist(this)
+        };
     }
 
     public void Load(PlaylistRecordDto persistentPlaylist)
@@ -106,6 +114,13 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         Name = persistentPlaylist.DisplayName;
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
+
+        var request = new QueuePlaybackStateRequestMessage();
+        Messenger.Send(request);
+        if (request.HasReceivedResponse)
+        {
+            UpdatePlaybackState(request.Response);
+        }
         var itemSet = new HashSet<MediaViewModel>(persistentPlaylist.Items.Count);
 
         var albumFactory = new AlbumViewModelFactory();
@@ -135,10 +150,24 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
         await SaveAsync();
     }
 
+    public void Receive(QueuePlaybackStateChangedMessage message)
+    {
+        UpdatePlaybackState(message.State);
+    }
+
+    private void UpdatePlaybackState(QueuePlaybackState state)
+    {
+        bool isActive = state.SessionId != Guid.Empty &&
+                        state.CurrentItem is not null &&
+                        (state.Origin?.Matches(RecentItemKind.UserPlaylist, Id) ?? false);
+        IsQueueActive = isActive;
+        IsPlaying = isActive && state.IsPlaying;
+    }
+
     [RelayCommand(CanExecute = nameof(HasItems))]
     private void Play()
     {
-        if (Items.Any(media => media.IsMediaActive))
+        if (IsQueueActive)
         {
             Messenger.Send(new TogglePlayPauseMessage(showBadge: false));
             return;
@@ -191,14 +220,6 @@ public sealed partial class PlaylistViewModel : ObservableRecipient
 
         //await SaveAsync();
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
-    }
-
-    private void Media_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
-        {
-            IsPlaying = media.IsPlaying;
-        }
     }
 
     private PlaylistRecordDto ToPersistentPlaylist()

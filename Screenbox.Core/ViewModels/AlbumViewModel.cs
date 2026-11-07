@@ -2,25 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class AlbumViewModel : ObservableRecipient
+public sealed partial class AlbumViewModel : ObservableRecipient,
+    IRecipient<QueuePlaybackStateChangedMessage>
 {
     public string Name { get; }
 
     public string ArtistName => string.IsNullOrEmpty(_albumArtist)
         ? _songArtist
         : _albumArtist;
+
+    public string AlbumKey => AlbumViewModelFactory.GetAlbumKey(Name, ArtistName);
 
     public uint? Year
     {
@@ -43,25 +48,47 @@ public sealed partial class AlbumViewModel : ObservableRecipient
     public IReadOnlyList<MediaViewModel> OrderedSongs => GetSortedSongs(RelatedSongs);
 
     [ObservableProperty] public partial bool IsPlaying { get; set; }
+    [ObservableProperty] public partial bool IsQueueActive { get; set; }
 
     private readonly string _albumArtist;
     private string _songArtist;
     private BitmapImage? _albumArt;
     private uint? _year;
 
-    public AlbumViewModel()
-    {
-        Name = string.Empty;
-        _albumArtist = string.Empty;
-        _songArtist = string.Empty;
-        RelatedSongs = new ObservableCollection<MediaViewModel>();
-        RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
-    }
+    public AlbumViewModel() : this(string.Empty, string.Empty, WeakReferenceMessenger.Default) { }
 
-    public AlbumViewModel(string album, string albumArtist) : this()
+    public AlbumViewModel(string album, string albumArtist) : this(album, albumArtist, WeakReferenceMessenger.Default) { }
+
+    public AlbumViewModel(string album, string albumArtist, IMessenger messenger) : base(messenger)
     {
         Name = album;
         _albumArtist = albumArtist;
+        _songArtist = string.Empty;
+        RelatedSongs = new ObservableCollection<MediaViewModel>();
+        RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
+
+        Messenger.Register<QueuePlaybackStateChangedMessage>(this);
+
+        var request = new QueuePlaybackStateRequestMessage();
+        Messenger.Send(request);
+        if (request.HasReceivedResponse)
+        {
+            UpdatePlaybackState(request.Response);
+        }
+    }
+
+    public void Receive(QueuePlaybackStateChangedMessage message)
+    {
+        UpdatePlaybackState(message.State);
+    }
+
+    private void UpdatePlaybackState(QueuePlaybackState state)
+    {
+        bool isActive = state.SessionId != Guid.Empty &&
+                        state.CurrentItem is not null &&
+                        (state.Origin?.Matches(RecentItemKind.Album, AlbumKey) ?? false);
+        IsQueueActive = isActive;
+        IsPlaying = isActive && state.IsPlaying;
     }
 
     public async Task LoadAlbumArtAsync()
@@ -75,36 +102,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient
 
     private void RelatedSongsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.OldItems != null)
-        {
-            foreach (MediaViewModel media in e.OldItems.OfType<MediaViewModel>())
-            {
-                media.PropertyChanged -= MediaOnPropertyChanged;
-            }
-        }
-
-        if (e.NewItems != null)
-        {
-            foreach (MediaViewModel media in e.NewItems.OfType<MediaViewModel>())
-            {
-                media.PropertyChanged += MediaOnPropertyChanged;
-            }
-        }
-
         UpdateProperties();
-    }
-
-    private void MediaOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
-        {
-            IsPlaying = media.IsPlaying;
-        }
-
-        if (RelatedSongs.Count > 0 && ReferenceEquals(RelatedSongs[0], sender))
-        {
-            UpdateProperties();
-        }
     }
 
     private void UpdateProperties()
@@ -121,15 +119,14 @@ public sealed partial class AlbumViewModel : ObservableRecipient
         if (RelatedSongs.Count == 0)
             return;
 
-        MediaViewModel? inQueue = RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
-        if (inQueue != null)
+        if (IsQueueActive)
         {
             Messenger.Send(new TogglePlayPauseMessage(false));
         }
         else
         {
             IReadOnlyList<MediaViewModel> songs = OrderedSongs;
-            Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
+            Messenger.SendQueueAndPlay(songs[0], songs, pauseIfExists: false, origin: PlaylistOrigin.ForAlbum(this));
         }
     }
 

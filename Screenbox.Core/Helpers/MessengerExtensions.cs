@@ -18,8 +18,12 @@ namespace Screenbox.Core.Helpers;
 public static class MessengerExtensions
 {
     private static CancellationTokenSource? s_playFilesCts;
-    public static void SendQueueAndPlay(this IMessenger messenger, MediaViewModel media,
-        IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
+    public static void SendQueueAndPlay(
+        this IMessenger messenger,
+        MediaViewModel media,
+        IReadOnlyList<MediaViewModel> queue,
+        bool pauseIfExists = true,
+        PlaylistOrigin? origin = null)
     {
         if (media.IsMediaActive && pauseIfExists)
         {
@@ -27,7 +31,10 @@ public static class MessengerExtensions
             return;
         }
 
-        var playlist = new Playlist(media, queue);
+        var playlist = new Playlist(media, queue)
+        {
+            Origin = origin
+        };
         messenger.Send(new SetQueueMessage(playlist, true));
     }
 
@@ -56,7 +63,12 @@ public static class MessengerExtensions
         if (playlist.IsEmpty)
         {
             // Queue all items and play the first one
-            var updatedPlaylist = new Playlist(0, items);
+            var updatedPlaylist = new Playlist(0, items)
+            {
+                Origin = items.Count > 1
+                    ? PlaylistOrigin.ForAdHocPlaylist(items[0].Name)
+                    : PlaylistOrigin.ForSingleMedia(items[0])
+            };
             messenger.Send(new SetQueueMessage(updatedPlaylist, true));
         }
         else
@@ -101,7 +113,12 @@ public static class MessengerExtensions
         if (playlist.IsEmpty)
         {
             // Queue all items and play the first one
-            var updatedPlaylist = new Playlist(0, items);
+            var updatedPlaylist = new Playlist(0, items)
+            {
+                Origin = items.Count > 1
+                    ? PlaylistOrigin.ForAdHocPlaylist(items[0].Name)
+                    : PlaylistOrigin.ForSingleMedia(items[0])
+            };
             messenger.Send(new SetQueueMessage(updatedPlaylist, true));
         }
         else

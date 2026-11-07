@@ -11,6 +11,8 @@ using Screenbox.Core.ViewModels;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
+using System.IO;
+using Screenbox.Core.Enums;
 using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
 namespace Screenbox.Core.Services;
@@ -31,6 +33,7 @@ public sealed class PlaylistService : IPlaylistService
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
     public async Task<Playlist?> TryCreatePlaylistAsync(
         IReadOnlyList<IStorageItem> storageItems,
         StorageFileQueryResult? neighboringFilesQuery = null,
@@ -42,13 +45,26 @@ public sealed class PlaylistService : IPlaylistService
         if (storageItems.Count == 1 && storageItems[0] is StorageFile file)
         {
             playlist = await _mediaListFactory.ParseMediaListAsync(file, cancellationToken);
-            if (playlist.Items.Count == 1)
+            if (playlist.Items.Count == 1 && playlist.Origin?.Kind == RecentItemKind.SingleMedia)
             {
                 neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+            }
+            else if (playlist.Origin?.Kind == RecentItemKind.AdHocPlaylist)
+            {
+                // Register the playlist file (e.g. .m3u/.m3u8) with the Windows Most Recently Used (MRU) list
+                // so the app retains persistent file-access permission to reload it across future sessions.
+                _filesService.AddToRecent(file);
             }
         }
         else
         {
+            if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder)
+            {
+                // Register the opened folder with the Windows Most Recently Used (MRU) list so the app
+                // retains persistent access permission to re-read the folder and its contents in future sessions.
+                _filesService.AddToRecent(folder);
+            }
+
             playlist = await _mediaListFactory.TryParseMediaListAsync(storageItems, cancellationToken: cancellationToken);
             if (playlist is null) return null;
         }
@@ -67,9 +83,44 @@ public sealed class PlaylistService : IPlaylistService
         var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
         var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
-        if (result?.Items.Count > 0)
+        if (result?.Items.Count > 1)
         {
+            string folderName = string.Empty;
+            string? folderPath = null;
+            try
+            {
+                if (neighboringFilesQuery.Folder is { } parentFolder)
+                {
+                    folderName = !string.IsNullOrWhiteSpace(parentFolder.DisplayName)
+                        ? parentFolder.DisplayName
+                        : parentFolder.Name;
+                    folderPath = parentFolder.Path;
+                    // When expanding single-file playback into a full folder playlist, register the parent folder
+                    // with the Windows MRU list so persistent read permission is granted across future sessions.
+                    _filesService.AddToRecent(parentFolder);
+                }
+            }
+            catch
+            {
+                // Best-effort folder inspection
+            }
+
             var currentItem = playlist.CurrentItem;
+            if (string.IsNullOrWhiteSpace(folderName) && currentItem is not null)
+            {
+                folderPath ??= Path.GetDirectoryName(currentItem.Location);
+                folderName = !string.IsNullOrWhiteSpace(folderPath)
+                    ? Path.GetFileName(folderPath)
+                    : currentItem.Name;
+            }
+
+            if (string.IsNullOrWhiteSpace(folderName))
+            {
+                folderName = result.Items[0].Name;
+            }
+
+            var folderOrigin = PlaylistOrigin.ForAdHocPlaylist(folderName, folderPath);
+
             if (currentItem != null)
             {
                 // Replace the matching item (by location) with the existing CurrentItem to preserve
@@ -83,7 +134,10 @@ public sealed class PlaylistService : IPlaylistService
                 if (matchIndex >= 0)
                 {
                     result.Items[matchIndex] = currentItem;
-                    return new Playlist(currentItem, result.Items, playlist);
+                    return new Playlist(currentItem, result.Items, playlist)
+                    {
+                        Origin = folderOrigin
+                    };
                 }
 
                 // Current item not found in neighboring files (edge case).
@@ -91,7 +145,10 @@ public sealed class PlaylistService : IPlaylistService
                 return playlist;
             }
 
-            return new Playlist(result.Items, playlist);
+            return new Playlist(result.Items, playlist)
+            {
+                Origin = folderOrigin
+            };
         }
 
         return playlist;
@@ -135,9 +192,12 @@ public sealed class PlaylistService : IPlaylistService
             backup.Remove(removal);
         }
 
-        return playlist.CurrentItem != null
-            ? new Playlist(playlist.CurrentItem, backup)
-            : new Playlist(backup);
+        var restored = playlist.CurrentItem != null
+            ? new Playlist(playlist.CurrentItem, backup, playlist)
+            : new Playlist(backup, playlist);
+        restored.ShuffleMode = false;
+        restored.ShuffleBackup = null;
+        return restored;
     }
 
     public void UpdateShuffleBackup(Playlist playlist, NotifyCollectionChangedEventArgs e)
