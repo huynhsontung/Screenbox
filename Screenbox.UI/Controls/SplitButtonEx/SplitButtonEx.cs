@@ -1,3 +1,4 @@
+using Screenbox.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
@@ -14,8 +15,7 @@ namespace Screenbox.UI.Controls;
 /// to set independent access keys and tooltips for the primary and secondary button parts.
 /// </summary>
 /// <remarks>
-/// You can modify the default XY focus navigation behavior using the <see cref="IsSecondaryButtonTabStop"/>
-/// property to enable keyboard and game controller navigation to the secondary button part.
+/// Set <see cref="IsSecondaryButtonTabStop"/> to enable navigation to the secondary button part.
 /// </remarks>
 /// <example>
 /// The following example shows how to create a <see cref="SplitButtonEx"/> with separate tool tips
@@ -76,6 +76,27 @@ public sealed partial class SplitButtonEx : SplitButton
             UpdateSecondaryButtonToolTip();
             UpdateToolTipPlacement(secondaryButton);
             UpdateIsSecondaryButtonTabStop();
+        }
+    }
+
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        base.OnKeyDown(e);
+
+        if (e.Handled || !IsSecondaryButtonTabStop || _secondaryButton is null)
+            return;
+
+        if (ReferenceEquals(e.OriginalSource, this) && XboxHelper.IsGamepadNavigationRight(e.OriginalKey))
+        {
+            _secondaryButton.Focus(FocusState.Keyboard);
+            e.Handled = true;
+            return;
+        }
+        else if (ReferenceEquals(e.OriginalSource, _secondaryButton) && XboxHelper.IsGamepadNavigationLeft(e.OriginalKey))
+        {
+            Focus(FocusState.Keyboard);
+            e.Handled = true;
+            return;
         }
     }
 
@@ -185,7 +206,6 @@ public sealed partial class SplitButtonEx : SplitButton
             return;
 
         _secondaryButton.IsTabStop = true;
-        _secondaryButton.XYFocusLeftNavigationStrategy = XYFocusNavigationStrategy.NavigationDirectionDistance;
 
         // Update the appearance of the secondary button part to match the focus visual of the control.
         var radius = CornerRadius;
