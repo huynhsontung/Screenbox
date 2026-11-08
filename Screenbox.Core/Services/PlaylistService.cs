@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
@@ -19,13 +22,13 @@ public sealed class PlaylistService : IPlaylistService
 {
     private const string ThumbnailsFolderName = "Thumbnails";
 
-    private readonly IMediaListFactory _mediaListFactory;
+    private readonly MediaViewModelFactory _mediaFactory;
     private readonly IDatabaseService _databaseService;
     private readonly IFilesService _filesService;
 
-    public PlaylistService(IMediaListFactory mediaListFactory, IDatabaseService databaseService, IFilesService filesService)
+    public PlaylistService(MediaViewModelFactory mediaFactory, IDatabaseService databaseService, IFilesService filesService)
     {
-        _mediaListFactory = mediaListFactory;
+        _mediaFactory = mediaFactory;
         _databaseService = databaseService;
         _filesService = filesService;
     }
@@ -41,7 +44,7 @@ public sealed class PlaylistService : IPlaylistService
         Playlist? playlist;
         if (storageItems.Count == 1 && storageItems[0] is StorageFile file)
         {
-            playlist = await _mediaListFactory.ParseMediaListAsync(file, cancellationToken);
+            playlist = await ParsePlaylistAsync(file, cancellationToken);
             if (playlist.Items.Count == 1)
             {
                 neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
@@ -49,12 +52,102 @@ public sealed class PlaylistService : IPlaylistService
         }
         else
         {
-            playlist = await _mediaListFactory.TryParseMediaListAsync(storageItems, cancellationToken: cancellationToken);
+            playlist = await TryParsePlaylistAsync(storageItems, cancellationToken: cancellationToken);
             if (playlist is null) return null;
         }
 
         playlist.NeighboringFilesQuery = neighboringFilesQuery;
         return playlist;
+    }
+
+    [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    public async Task<Playlist?> TryParsePlaylistAsync(
+        IReadOnlyList<IStorageItem> storageItems,
+        StorageFile? playNext = null,
+        bool expandPlaylists = true,
+        CancellationToken cancellationToken = default)
+    {
+        var queue = new List<MediaViewModel>();
+        var storageItemQueue = storageItems.ToList();
+        MediaViewModel? next = null;
+
+        // Max number of items in queue is 10k. Reevaluate if needed.
+        for (int i = 0; i < storageItemQueue.Count && queue.Count < 10000; i++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var item = storageItemQueue[i];
+            switch (item)
+            {
+                case StorageFile storageFile when storageFile.IsSupported():
+                    var vm = _mediaFactory.GetOrCreate(storageFile);
+                    bool isPlayNext = playNext is not null && storageFile.IsEqual(playNext);
+
+                    if (vm.Source is IExpandableMediaSource expandable)
+                    {
+                        if (expandPlaylists || isPlayNext)
+                        {
+                            var expandedItems = await expandable.ExpandAsync(cancellationToken);
+                            if (expandedItems.Count > 0)
+                            {
+                                var childVms = expandedItems.Select(_mediaFactory.Create).ToList();
+
+                                if (isPlayNext)
+                                    next = childVms[0];
+                                queue.AddRange(childVms);
+                            }
+                            else
+                            {
+                                if (isPlayNext) next = vm;
+                                queue.Add(vm);
+                            }
+                        }
+                        // If expandPlaylists is false and not playNext, skip expandable items (e.g. .m3u in folder)
+                    }
+                    else
+                    {
+                        if (isPlayNext)
+                            next = vm;
+                        queue.Add(vm);
+                    }
+                    break;
+
+                case StorageFolder storageFolder:
+                    var subItems = await storageFolder.GetItemsAsync(0, 10000);
+                    storageItemQueue.AddRange(subItems);
+                    break;
+            }
+        }
+
+        return queue.Count > 0 ? new Playlist(next ?? queue[0], queue) : null;
+    }
+
+    public async Task<Playlist> ParsePlaylistAsync(MediaViewModel media, CancellationToken cancellationToken = default)
+    {
+        if (media.Source is IExpandableMediaSource expandable)
+        {
+            var items = await expandable.ExpandAsync(cancellationToken);
+            if (items.Count > 0)
+            {
+                var vms = items.Select(_mediaFactory.Create).ToList();
+                return new Playlist(0, vms);
+            }
+        }
+
+        return new Playlist(media);
+    }
+
+    public async Task<Playlist> ParsePlaylistAsync(StorageFile file, CancellationToken cancellationToken = default)
+    {
+        var media = _mediaFactory.GetOrCreate(file);
+        return await ParsePlaylistAsync(media, cancellationToken);
+    }
+
+    public async Task<Playlist> ParsePlaylistAsync(Uri uri, CancellationToken cancellationToken = default)
+    {
+        var media = _mediaFactory.GetOrCreate(uri);
+        return await ParsePlaylistAsync(media, cancellationToken);
     }
 
     public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, CancellationToken cancellationToken = default)
@@ -65,12 +158,12 @@ public sealed class PlaylistService : IPlaylistService
         }
 
         var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-        var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
+        var result = await TryParsePlaylistAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
         if (result?.Items.Count > 0)
         {
             var currentItem = playlist.CurrentItem;
-            if (currentItem != null)
+            if (currentItem is not null)
             {
                 // Replace the matching item (by location) with the existing CurrentItem to preserve
                 // VM identity. Without this, GetOrCreate creates a new VM for the same file that is a
@@ -330,8 +423,8 @@ public sealed class PlaylistService : IPlaylistService
     public async Task<IReadOnlyList<MediaViewModel>> ImportPlaylistItemsAsync(StorageFile file)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
-        var mediaList = await _mediaListFactory.ParseMediaListAsync(file);
-        return mediaList.Items;
+        var playlist = await ParsePlaylistAsync(file);
+        return playlist.Items;
     }
 
     public async Task ExportPlaylistItemsAsync(IReadOnlyList<MediaViewModel> items, StorageFile file)

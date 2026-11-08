@@ -78,7 +78,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
             async void DebouncedAction()
             {
-                await UpdateRecentMediaListAsync(false).ConfigureAwait(false);
+                await UpdateRecentMediaAsync(false).ConfigureAwait(false);
             }
         }
     }
@@ -111,7 +111,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         // Update recent media
         if (_generalSettings.ShowRecent)
         {
-            await UpdateRecentMediaListAsync(true);
+            await UpdateRecentMediaAsync(true);
         }
         else
         {
@@ -126,7 +126,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task UpdateRecentMediaListAsync(bool loadMediaDetails)
+    private async Task UpdateRecentMediaAsync(bool loadMediaDetails)
     {
         // Assume UI Thread
         string[] tokens = StorageApplicationPermissions.MostRecentlyUsedList.Entries

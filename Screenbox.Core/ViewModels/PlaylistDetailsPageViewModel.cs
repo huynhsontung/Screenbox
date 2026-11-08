@@ -32,7 +32,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IPlaylistService _playlistService;
-    private readonly IMediaListFactory _mediaListFactory;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueueTimer _commandRefreshTimer;
 
@@ -40,13 +39,11 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IFilesService filesService,
         ISourceMetadataService sourceMetadataService,
         IPlaylistService playlistService,
-        IMediaListFactory mediaListFactory,
         MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
         _sourceMetadataService = sourceMetadataService;
         _playlistService = playlistService;
-        _mediaListFactory = mediaListFactory;
         _mediaFactory = mediaFactory;
         _commandRefreshTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
     }
@@ -121,21 +118,21 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
         if (files == null || files.Count == 0) return;
 
-        var mediaList = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetOrCreate).ToList();
-        if (mediaList.Count == 0) return;
+        var items = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetOrCreate).ToList();
+        if (items.Count == 0) return;
 
-        await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_sourceMetadataService)));
-        await Source.AddItemsAsync(mediaList);
+        await Task.WhenAll(items.Select(m => m.LoadDetailsAsync(_sourceMetadataService)));
+        await Source.AddItemsAsync(items);
     }
 
     public async Task AddDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex)
     {
         if (Source is null) return;
 
-        var mediaList = await _mediaListFactory.TryParseMediaListAsync(items);
-        if (mediaList?.Items.Count > 0)
+        var playlist = await _playlistService.TryParsePlaylistAsync(items);
+        if (playlist?.Items.Count > 0)
         {
-            await Source.AddItemsAtIndexAsync(mediaList.Items, insertIndex);
+            await Source.AddItemsAtIndexAsync(playlist.Items, insertIndex);
         }
     }
 

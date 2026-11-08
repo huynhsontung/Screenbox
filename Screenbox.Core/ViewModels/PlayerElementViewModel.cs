@@ -98,7 +98,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     public void Initialize(string[] swapChainOptions)
     {
         // Unsubscribe events and set MediaPlayer to null immediately so that
-        // downstream consumers (e.g. MediaListViewModel._delayPlay) know the player
+        // downstream consumers (e.g. PlayQueueCoordinator._delayPlay) know the player
         // is unavailable and queue any incoming playback requests for later processing.
         IMediaPlayer? oldPlayer = MediaPlayer;
         if (oldPlayer != null)

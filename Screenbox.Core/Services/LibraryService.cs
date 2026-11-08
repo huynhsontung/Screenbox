@@ -621,7 +621,7 @@ public sealed class LibraryService : ILibraryService
         }
     }
 
-    private Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+    private Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> items, StorageLibraryChangeReader changeReader)
     {
         if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibraryChangeReader",
                 "GetLastChangeId"))
@@ -634,19 +634,19 @@ public sealed class LibraryService : ILibraryService
 
             if (changeId > 0)
             {
-                return TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+                return TryResolveLibraryBatchChangeAsync(items, changeReader);
             }
         }
         else
         {
-            return TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+            return TryResolveLibraryBatchChangeAsync(items, changeReader);
         }
 
         return Task.FromResult(true);
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+    private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> items, StorageLibraryChangeReader changeReader)
     {
         var changeBatch = await changeReader.ReadBatchAsync();
         foreach (StorageLibraryChange change in changeBatch)
@@ -663,24 +663,24 @@ public sealed class LibraryService : ILibraryService
                 case StorageLibraryChangeType.Created:
                 case StorageLibraryChangeType.MovedIntoLibrary:
                     file = (StorageFile)await change.GetStorageItemAsync();
-                    mediaList.Add(_mediaFactory.GetOrCreate(file));
+                    items.Add(_mediaFactory.GetOrCreate(file));
                     break;
 
                 case StorageLibraryChangeType.Deleted:
                 case StorageLibraryChangeType.MovedOutOfLibrary:
-                    existing = mediaList.Find(s =>
+                    existing = items.Find(s =>
                         s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
                     if (existing != null)
                     {
                         DetachMediaRelationships(existing);
-                        mediaList.Remove(existing);
+                        items.Remove(existing);
                     }
 
                     break;
 
                 case StorageLibraryChangeType.MovedOrRenamed:
                     file = (StorageFile)await change.GetStorageItemAsync();
-                    existing = mediaList.Find(s =>
+                    existing = items.Find(s =>
                         s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
 
                     var newMedia = _mediaFactory.GetOrCreate(file);
@@ -688,17 +688,17 @@ public sealed class LibraryService : ILibraryService
                     {
                         var existingInfo = existing.MediaInfo;
                         DetachMediaRelationships(existing);
-                        mediaList.Remove(existing);
+                        items.Remove(existing);
                         newMedia.MediaInfo = existingInfo;
                     }
 
-                    mediaList.Add(newMedia);
+                    items.Add(newMedia);
                     break;
 
                 case StorageLibraryChangeType.ContentsChanged:
                 case StorageLibraryChangeType.ContentsReplaced:
                     file = (StorageFile)await change.GetStorageItemAsync();
-                    existing = mediaList.Find(s =>
+                    existing = items.Find(s =>
                         s.Location.Equals(file.Path, StringComparison.OrdinalIgnoreCase));
                     existing?.UpdateSource(file);
                     break;
