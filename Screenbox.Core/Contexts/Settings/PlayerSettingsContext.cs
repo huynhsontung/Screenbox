@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
@@ -32,6 +32,16 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase<PlayerSe
     private const string AdvancedModeKey = "Advanced/IsEnabled";
     private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
     private const string GlobalArgumentsKey = "Values/GlobalArguments";
+    private const string GamepadXActionKey = "Player/Gamepad/XAction";
+    private const string GamepadYActionKey = "Player/Gamepad/YAction";
+    private const string GamepadViewActionKey = "Player/Gamepad/ViewAction";
+    private const string GamepadMenuActionKey = "Player/Gamepad/MenuAction";
+    private const string GamepadLeftShoulderActionKey = "Player/Gamepad/LeftShoulderAction";
+    private const string GamepadRightShoulderActionKey = "Player/Gamepad/RightShoulderAction";
+    private const string GamepadLeftTriggerActionKey = "Player/Gamepad/LeftTriggerAction";
+    private const string GamepadRightTriggerActionKey = "Player/Gamepad/RightTriggerAction";
+    private const string GamepadLeftThumbstickButtonActionKey = "Player/Gamepad/LeftThumbstickButtonAction";
+    private const string GamepadRightThumbstickButtonActionKey = "Player/Gamepad/RightThumbstickButtonAction";
 
     private static bool IsXbox => SystemInformation.IsXbox;
 
@@ -153,6 +163,66 @@ public sealed partial class PlayerSettingsContext : SettingsContextBase<PlayerSe
     {
         get => Get(GlobalArgumentsKey, string.Empty);
         set => Set(GlobalArgumentsKey, value);
+    }
+
+    public GamepadButtonAction GamepadXAction
+    {
+        get => Get(GamepadXActionKey, GamepadButtonAction.PlayPause);
+        set => Set(GamepadXActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadYAction
+    {
+        get => Get(GamepadYActionKey, GamepadButtonAction.ToggleFullscreen);
+        set => Set(GamepadYActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadViewAction
+    {
+        get => Get(GamepadViewActionKey, GamepadButtonAction.TogglePlayerVisibility);
+        set => Set(GamepadViewActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadMenuAction
+    {
+        get => Get(GamepadMenuActionKey, GamepadButtonAction.OpenPlaybackOptions);
+        set => Set(GamepadMenuActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadLeftShoulderAction
+    {
+        get => Get(GamepadLeftShoulderActionKey, GamepadButtonAction.Rewind);
+        set => Set(GamepadLeftShoulderActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadRightShoulderAction
+    {
+        get => Get(GamepadRightShoulderActionKey, GamepadButtonAction.FastForward);
+        set => Set(GamepadRightShoulderActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadLeftTriggerAction
+    {
+        get => Get(GamepadLeftTriggerActionKey, GamepadButtonAction.RewindLong);
+        set => Set(GamepadLeftTriggerActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadRightTriggerAction
+    {
+        get => Get(GamepadRightTriggerActionKey, GamepadButtonAction.FastForwardLong);
+        set => Set(GamepadRightTriggerActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadLeftThumbstickButtonAction
+    {
+        get => Get(GamepadLeftThumbstickButtonActionKey, GamepadButtonAction.OpenSubtitleMenu);
+        set => Set(GamepadLeftThumbstickButtonActionKey, value);
+    }
+
+    public GamepadButtonAction GamepadRightThumbstickButtonAction
+    {
+        get => Get(GamepadRightThumbstickButtonActionKey, GamepadButtonAction.None);
+        set => Set(GamepadRightThumbstickButtonActionKey, value);
     }
 
     public PlayerSettingsContext(ISettingsStorage storage) : base(storage)
