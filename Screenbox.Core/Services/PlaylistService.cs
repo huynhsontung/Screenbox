@@ -20,8 +20,6 @@ namespace Screenbox.Core.Services;
 
 public sealed class PlaylistService : IPlaylistService
 {
-    private const string ThumbnailsFolderName = "Thumbnails";
-
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IDatabaseService _databaseService;
     private readonly IFilesService _filesService;
@@ -363,36 +361,6 @@ public sealed class PlaylistService : IPlaylistService
     public async Task DeletePlaylistAsync(string id)
     {
         await _databaseService.DeletePlaylistAsync(id);
-    }
-
-    public async Task SaveThumbnailAsync(string mediaLocation, byte[] imageBytes)
-    {
-        StorageFolder thumbnailsFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(ThumbnailsFolderName, CreationCollisionOption.OpenIfExists);
-        string hash = GetHash(mediaLocation);
-        StorageFile file = await thumbnailsFolder.CreateFileAsync(hash + ".png", CreationCollisionOption.ReplaceExisting);
-        await FileIO.WriteBytesAsync(file, imageBytes);
-    }
-
-    public async Task<StorageFile?> GetThumbnailFileAsync(string mediaLocation)
-    {
-        StorageFolder thumbnailsFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(ThumbnailsFolderName, CreationCollisionOption.OpenIfExists);
-        string hash = GetHash(mediaLocation);
-        try
-        {
-            return await thumbnailsFolder.GetFileAsync(hash + ".png");
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static string GetHash(string input)
-    {
-        using var sha256 = System.Security.Cryptography.SHA256.Create();
-        byte[] bytes = Encoding.UTF8.GetBytes(input.ToLowerInvariant());
-        byte[] hashBytes = sha256.ComputeHash(bytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
     }
 
     /// <summary>

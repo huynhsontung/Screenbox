@@ -91,16 +91,6 @@ public interface IPlaylistService
     Task DeletePlaylistAsync(string id);
 
     /// <summary>
-    /// Save a thumbnail for a media item
-    /// </summary>
-    Task SaveThumbnailAsync(string mediaLocation, byte[] imageBytes);
-
-    /// <summary>
-    /// Get a thumbnail file for a media item
-    /// </summary>
-    Task<StorageFile?> GetThumbnailFileAsync(string mediaLocation);
-
-    /// <summary>
     /// Appends media items to an existing persistent playlist and persists the updated playlist.
     /// </summary>
     Task AddToPlaylistAsync(string playlistId, IReadOnlyList<MediaViewModel> items);
