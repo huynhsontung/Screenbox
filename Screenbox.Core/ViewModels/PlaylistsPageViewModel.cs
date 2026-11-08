@@ -5,11 +5,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -27,21 +27,18 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly IPlaylistService _playlistService;
     private readonly PlaylistsContext _playlistsContext;
-    private readonly IPlaylistViewModelFactory _playlistFactory;
 
     public ObservableCollection<PlaylistViewModel> Playlists => _playlistsContext.Playlists;
 
     [ObservableProperty] public partial PlaylistViewModel? SelectedPlaylist { get; set; }
 
     public PlaylistsPageViewModel(IFilesService filesService, IPlaylistService playlistService,
-        PlaylistsContext playlistsContext, IPlaylistViewModelFactory playlistFactory,
-        SelectionViewModel selection)
+        PlaylistsContext playlistsContext, SelectionViewModel selection)
     {
         Selection = selection;
         _filesService = filesService;
         _playlistService = playlistService;
         _playlistsContext = playlistsContext;
-        _playlistFactory = playlistFactory;
 
         Selection.SetItemsSource(Playlists);
         ((INotifyCollectionChanged)Selection.SelectedRanges).CollectionChanged += Selection_SelectedRangesChanged;
@@ -58,7 +55,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     public async Task CreatePlaylistAsync(string displayName)
     {
         // Create view model and add to collection
-        var playlist = _playlistFactory.Create();
+        var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
         playlist.Name = displayName;
         await playlist.SaveAsync();
 
@@ -90,7 +87,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         IReadOnlyList<MediaViewModel> items = await _playlistService.ImportPlaylistItemsAsync(file);
         if (items.Count == 0) return;
 
-        var playlist = _playlistFactory.Create();
+        var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
         playlist.Name = file.DisplayName;
         await playlist.AddItemsAsync(items);
         Playlists.Insert(0, playlist);

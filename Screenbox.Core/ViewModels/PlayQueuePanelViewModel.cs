@@ -9,7 +9,6 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -43,20 +42,20 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private readonly IPlayQueueCoordinator _coordinator;
     private readonly IFilesService _filesService;
-    private readonly IMediaListFactory _mediaListFactory;
+    private readonly IPlaylistService _playlistService;
 
     public PlayQueuePanelViewModel(
         PlayQueueContext queue,
         IPlayQueueCoordinator coordinator,
         SelectionViewModel selection,
         IFilesService filesService,
-        IMediaListFactory mediaListFactory)
+        IPlaylistService playlistService)
     {
         Queue = queue;
         _coordinator = coordinator;
         Selection = selection;
         _filesService = filesService;
-        _mediaListFactory = mediaListFactory;
+        _playlistService = playlistService;
         _hasItems = queue.Items.Count > 0;
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
@@ -191,10 +190,10 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
             if (files is null || files.Count == 0) return;
-            var mediaList = await _mediaListFactory.TryParseMediaListAsync(files);
-            if (mediaList?.Items.Count > 0)
+            var playlist = await _playlistService.TryParsePlaylistAsync(files);
+            if (playlist?.Items.Count > 0)
             {
-                _coordinator.Enqueue(mediaList.Items);
+                _coordinator.Enqueue(playlist.Items);
             }
         }
         catch (Exception e)
@@ -208,10 +207,10 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     /// </summary>
     public async Task EnqueueDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex)
     {
-        var mediaList = await _mediaListFactory.TryParseMediaListAsync(items);
-        if (mediaList?.Items.Count > 0)
+        var playlist = await _playlistService.TryParsePlaylistAsync(items);
+        if (playlist?.Items.Count > 0)
         {
-            _coordinator.Enqueue(mediaList.Items, insertIndex);
+            _coordinator.Enqueue(playlist.Items, insertIndex);
         }
     }
 

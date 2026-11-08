@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
@@ -19,6 +20,30 @@ public interface IPlaylistService
     /// Creates a playlist from storage items, optionally associating a neighboring files query.
     /// </summary>
     Task<Playlist?> TryCreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFileQueryResult? neighboringFilesQuery = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Parses storage items into a playlist, optionally designating a target file to play first and expanding playlist files.
+    /// </summary>
+    Task<Playlist?> TryParsePlaylistAsync(
+        IReadOnlyList<IStorageItem> storageItems,
+        StorageFile? playNext = null,
+        bool expandPlaylists = true,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a playlist from a single media item, expanding it if it is a playlist source.
+    /// </summary>
+    Task<Playlist> ParsePlaylistAsync(MediaViewModel media, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a playlist from a storage file, expanding it if it is a playlist file.
+    /// </summary>
+    Task<Playlist> ParsePlaylistAsync(StorageFile file, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates a playlist from a URI, expanding it if it is a playlist source.
+    /// </summary>
+    Task<Playlist> ParsePlaylistAsync(Uri uri, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds neighboring files to an existing playlist using the playlist's attached neighboring files query.
@@ -64,16 +89,6 @@ public interface IPlaylistService
     /// Delete a persistent playlist from storage
     /// </summary>
     Task DeletePlaylistAsync(string id);
-
-    /// <summary>
-    /// Save a thumbnail for a media item
-    /// </summary>
-    Task SaveThumbnailAsync(string mediaLocation, byte[] imageBytes);
-
-    /// <summary>
-    /// Get a thumbnail file for a media item
-    /// </summary>
-    Task<StorageFile?> GetThumbnailFileAsync(string mediaLocation);
 
     /// <summary>
     /// Appends media items to an existing persistent playlist and persists the updated playlist.

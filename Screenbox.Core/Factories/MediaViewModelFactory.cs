@@ -136,9 +136,9 @@ public sealed class MediaViewModelFactory
         return true;
     }
 
-    private static MediaViewModel? FindByLocation(IReadOnlyList<MediaViewModel> mediaList, string location)
+    private static MediaViewModel? FindByLocation(IReadOnlyList<MediaViewModel> items, string location)
     {
-        return mediaList.FirstOrDefault(vm =>
+        return items.FirstOrDefault(vm =>
             vm.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
     }
 }

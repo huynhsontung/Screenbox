@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -45,7 +45,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
-    private readonly IPlaylistViewModelFactory _playlistFactory;
     private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
@@ -58,7 +57,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
     public MainPageViewModel(PlayerSettingsContext playerSettings, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
-        PlaylistsContext playlistsContext, IPlaylistService playlistService, IPlaylistViewModelFactory playlistFactory,
+        PlaylistsContext playlistsContext, IPlaylistService playlistService,
         ILogger<MainPageViewModel> logger)
     {
         _playerSettings = playerSettings;
@@ -67,7 +66,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _libraryCoordinator = libraryCoordinator;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
-        _playlistFactory = playlistFactory;
         _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;
@@ -299,7 +297,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             _playlistsContext.Playlists.Clear();
             foreach (var p in loaded)
             {
-                var playlist = _playlistFactory.Create();
+                var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
                 try
                 {
                     playlist.Load(p);

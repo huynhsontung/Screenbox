@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Windows.Media;
@@ -10,14 +9,14 @@ namespace Screenbox.Core.Services;
 public sealed class PlaybackControlService : IPlaybackControlService
 {
     private readonly IFilesService _filesService;
-    private readonly IMediaListFactory _mediaListFactory;
+    private readonly IPlaylistService _playlistService;
 
     public PlaybackControlService(
         IFilesService filesService,
-        IMediaListFactory mediaListFactory)
+        IPlaylistService playlistService)
     {
         _filesService = filesService;
-        _mediaListFactory = mediaListFactory;
+        _playlistService = playlistService;
     }
 
     public bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
@@ -88,7 +87,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
             var nextFile = await _filesService.GetNextFileAsync(file, neighboringFilesQuery);
             if (nextFile is not null)
             {
-                var result = await _mediaListFactory.ParseMediaListAsync(nextFile);
+                var result = await _playlistService.ParsePlaylistAsync(nextFile);
                 var newPlaylist = new Playlist(result.CurrentIndex, result.Items, playlist);
                 if (newPlaylist.CurrentItem is { } nextItem)
                 {
@@ -130,7 +129,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
             var previousFile = await _filesService.GetPreviousFileAsync(file, neighboringFilesQuery);
             if (previousFile is not null)
             {
-                var result = await _mediaListFactory.ParseMediaListAsync(previousFile);
+                var result = await _playlistService.ParsePlaylistAsync(previousFile);
                 var newPlaylist = new Playlist(result.CurrentIndex, result.Items, playlist);
                 if (newPlaylist.CurrentItem is { } nextItem)
                 {

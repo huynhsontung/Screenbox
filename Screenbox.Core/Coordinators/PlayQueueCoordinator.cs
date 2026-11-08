@@ -53,7 +53,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly PlayQueueContext _context;
     private readonly IPlaylistService _playlistService;
     private readonly IPlaybackControlService _playbackControlService;
-    private readonly IMediaListFactory _mediaListFactory;
+
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly PlaybackSettingsContext _playbackSettings;
@@ -80,7 +80,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         PlayQueueContext context,
         IPlaylistService playlistService,
         IPlaybackControlService playbackControlService,
-        IMediaListFactory mediaListFactory,
+
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
         PlaybackSettingsContext playbackSettings,
@@ -93,7 +93,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _context = context;
         _playlistService = playlistService;
         _playbackControlService = playbackControlService;
-        _mediaListFactory = mediaListFactory;
+
+
         _filesService = filesService;
         _generalSettings = generalSettings;
         _playbackSettings = playbackSettings;
@@ -161,7 +162,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         else
         {
             ClearQueue();
-            Playlist playlist = await _mediaListFactory.ParseMediaListAsync(message.Value);
+            Playlist playlist = await _playlistService.ParsePlaylistAsync(message.Value);
             ApplyQueueSnapshot(playlist, shouldPlay: true);
         }
     }

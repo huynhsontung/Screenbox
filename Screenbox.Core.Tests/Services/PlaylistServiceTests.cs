@@ -1,21 +1,95 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading;
 using System.Threading.Tasks;
+using Screenbox.Core.Contexts;
+using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
+using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
 namespace Screenbox.Core.Tests.Services;
 
 public class PlaylistServiceTests
 {
-    private readonly PlaylistService _service = new(null!, null!, null!);
+    private sealed class DummyExpandableMediaSource : IExpandableMediaSource
+    {
+        private readonly IReadOnlyList<ExpandedMediaItem> _items;
+
+        public DummyExpandableMediaSource(IReadOnlyList<ExpandedMediaItem> items)
+        {
+            _items = items;
+        }
+
+        public string Location => "C:\\Playlists\\test.m3u";
+        public string Name => "test.m3u";
+        public MediaPlaybackType MediaType => MediaPlaybackType.Playlist;
+        public DateTimeOffset DateAdded => DateTimeOffset.Now;
+
+        public Task<IReadOnlyList<ExpandedMediaItem>> ExpandAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(_items);
+    }
+
+    private readonly PlaylistService _service = new(new MediaViewModelFactory(new MediaSourceFactory(), new LibraryContext()), null!, null!);
 
     private static MediaViewModel CreateMedia(string name) =>
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };
+
+    [Test]
+    public async Task ParsePlaylistAsync_NonExpandableMedia_ReturnsSingleItemPlaylist()
+    {
+        var item = CreateMedia("song1");
+        var playlist = await _service.ParsePlaylistAsync(item);
+
+        await Assert.That(playlist.Items.Count).IsEqualTo(1);
+        await Assert.That(playlist.CurrentIndex).IsEqualTo(0);
+        await Assert.That(playlist.CurrentItem).IsSameReferenceAs(item);
+    }
+
+    [Test]
+    public async Task ParsePlaylistAsync_ExpandableMediaWithItems_ReturnsExpandedPlaylist()
+    {
+        var expandedItems = new List<ExpandedMediaItem>
+        {
+            new(new UriMediaSource(new Uri("https://example.com/1.mp3")), "Track 1", TimeSpan.FromMinutes(3)),
+            new(new UriMediaSource(new Uri("https://example.com/2.mp3")), "Track 2", TimeSpan.FromMinutes(4))
+        };
+        var expandableVm = new MediaViewModel(new DummyExpandableMediaSource(expandedItems));
+
+        var playlist = await _service.ParsePlaylistAsync(expandableVm);
+
+        await Assert.That(playlist.Items.Count).IsEqualTo(2);
+        await Assert.That(playlist.CurrentIndex).IsEqualTo(0);
+        await Assert.That(playlist.Items[0].Name).IsEqualTo("Track 1");
+        await Assert.That(playlist.Items[1].Name).IsEqualTo("Track 2");
+    }
+
+    [Test]
+    public async Task ParsePlaylistAsync_ExpandableMediaEmpty_FallsBackToSingleItemPlaylist()
+    {
+        var expandableVm = new MediaViewModel(new DummyExpandableMediaSource(Array.Empty<ExpandedMediaItem>()));
+
+        var playlist = await _service.ParsePlaylistAsync(expandableVm);
+
+        await Assert.That(playlist.Items.Count).IsEqualTo(1);
+        await Assert.That(playlist.CurrentIndex).IsEqualTo(0);
+        await Assert.That(playlist.CurrentItem).IsSameReferenceAs(expandableVm);
+    }
+
+    [Test]
+    public async Task ParsePlaylistAsync_Uri_CreatesPlaylistWithUriItem()
+    {
+        var uri = new Uri("https://example.com/stream.mp3");
+        var playlist = await _service.ParsePlaylistAsync(uri);
+
+        await Assert.That(playlist.Items.Count).IsEqualTo(1);
+        await Assert.That(playlist.CurrentIndex).IsEqualTo(0);
+        await Assert.That(playlist.CurrentItem!.Location).IsEqualTo("https://example.com/stream.mp3");
+    }
 
     [Test]
     public async Task ShufflePlaylist_SetsShuffleModeAndPopulatesBackup()
