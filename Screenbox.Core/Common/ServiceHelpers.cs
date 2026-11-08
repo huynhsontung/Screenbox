@@ -54,7 +54,6 @@ public static class ServiceHelpers
         services.AddSingleton<StorageItemViewModelFactory>();
         services.AddTransient<ArtistViewModelFactory>();
         services.AddTransient<AlbumViewModelFactory>();
-        services.AddSingleton<IPlaylistViewModelFactory, PlaylistViewModelFactory>();
 
         // Contexts
         services.AddSingleton<PlayerContext>();
