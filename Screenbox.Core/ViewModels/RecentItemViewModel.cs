@@ -119,7 +119,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     /// </summary>
     public double ItemsCount => Kind switch
     {
-        RecentItemKind.UserPlaylist when LinkedPlaylist is not null => LinkedPlaylist.ItemsCount,
+        RecentItemKind.Playlist when LinkedPlaylist is not null => LinkedPlaylist.ItemsCount,
         _ => _snapshotItems.Count
     };
 
@@ -129,7 +129,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     public int InitialIndex { get; private set; }
 
     /// <summary>
-    /// Gets the linked <see cref="PlaylistViewModel"/> when <see cref="Kind"/> is <see cref="RecentItemKind.UserPlaylist"/>.
+    /// Gets the linked <see cref="PlaylistViewModel"/> when <see cref="Kind"/> is <see cref="RecentItemKind.Playlist"/>.
     /// </summary>
     public PlaylistViewModel? LinkedPlaylist { get; private set; }
 
@@ -211,7 +211,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     /// <summary>
     /// Updates the snapshot items and metadata for an ad-hoc playlist.
     /// </summary>
-    public void UpdateAdHocSnapshot(string name, string? sourceId, IReadOnlyList<MediaViewModel> items, int initialIndex)
+    public void UpdateMediaCollectionSnapshot(string name, string? sourceId, IReadOnlyList<MediaViewModel> items, int initialIndex)
     {
         Name = name;
         SourceId = sourceId;
@@ -320,8 +320,8 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         return Kind switch
         {
             RecentItemKind.SingleMedia => Media is not null ? (MediaViewModel[])[Media] : Array.Empty<MediaViewModel>(),
-            RecentItemKind.AdHocPlaylist => _snapshotItems,
-            RecentItemKind.UserPlaylist => LinkedPlaylist?.Items ?? (IReadOnlyList<MediaViewModel>)_snapshotItems,
+            RecentItemKind.MediaCollection => _snapshotItems,
+            RecentItemKind.Playlist => LinkedPlaylist?.Items ?? (IReadOnlyList<MediaViewModel>)_snapshotItems,
             RecentItemKind.Album => LinkedAlbum?.OrderedSongs ?? _snapshotItems,
             RecentItemKind.Artist => LinkedArtist?.OrderedSongs ?? _snapshotItems,
             _ => Array.Empty<MediaViewModel>()
@@ -348,28 +348,28 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
                 Messenger.Send(new PlayMediaMessage(Media, false));
                 break;
 
-            case RecentItemKind.AdHocPlaylist:
+            case RecentItemKind.MediaCollection:
                 if (_snapshotItems.Count > 0)
                 {
                     int index = Math.Clamp(InitialIndex, 0, _snapshotItems.Count - 1);
-                    var origin = PlaylistOrigin.ForAdHocPlaylist(Name, SourceId);
-                    var playlist = new Playlist(index, _snapshotItems) { Origin = origin };
-                    ActiveSessionId = playlist.SessionId;
-                    Messenger.Send(new SetQueueMessage(playlist, true));
+                    var origin = QueueOrigin.ForMediaCollection(Name, SourceId);
+                    var queue = new QueueSession(index, _snapshotItems) { Origin = origin };
+                    ActiveSessionId = queue.SessionId;
+                    Messenger.Send(new SetQueueMessage(queue, true));
                 }
                 break;
 
-            case RecentItemKind.UserPlaylist:
+            case RecentItemKind.Playlist:
                 {
                     var items = GetPlayableItems();
                     if (items.Count > 0)
                     {
                         var origin = LinkedPlaylist is not null
-                            ? PlaylistOrigin.ForUserPlaylist(LinkedPlaylist)
-                            : PlaylistOrigin.ForAdHocPlaylist(Name, SourceId);
-                        var playlist = new Playlist(0, items) { Origin = origin };
-                        ActiveSessionId = playlist.SessionId;
-                        Messenger.Send(new SetQueueMessage(playlist, true));
+                            ? QueueOrigin.ForPlaylist(LinkedPlaylist)
+                            : QueueOrigin.ForMediaCollection(Name, SourceId);
+                        var queue = new QueueSession(0, items) { Origin = origin };
+                        ActiveSessionId = queue.SessionId;
+                        Messenger.Send(new SetQueueMessage(queue, true));
                     }
                 }
                 break;
@@ -380,11 +380,11 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
                     if (items.Count > 0)
                     {
                         var origin = LinkedAlbum is not null
-                            ? PlaylistOrigin.ForAlbum(LinkedAlbum)
-                            : PlaylistOrigin.ForAdHocPlaylist(Name, SourceId);
-                        var playlist = new Playlist(0, items) { Origin = origin };
-                        ActiveSessionId = playlist.SessionId;
-                        Messenger.Send(new SetQueueMessage(playlist, true));
+                            ? QueueOrigin.ForAlbum(LinkedAlbum)
+                            : QueueOrigin.ForMediaCollection(Name, SourceId);
+                        var queue = new QueueSession(0, items) { Origin = origin };
+                        ActiveSessionId = queue.SessionId;
+                        Messenger.Send(new SetQueueMessage(queue, true));
                     }
                 }
                 break;
@@ -395,11 +395,11 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
                     if (items.Count > 0)
                     {
                         var origin = LinkedArtist is not null
-                            ? PlaylistOrigin.ForArtist(LinkedArtist)
-                            : PlaylistOrigin.ForAdHocPlaylist(Name, SourceId);
-                        var playlist = new Playlist(0, items) { Origin = origin };
-                        ActiveSessionId = playlist.SessionId;
-                        Messenger.Send(new SetQueueMessage(playlist, true));
+                            ? QueueOrigin.ForArtist(LinkedArtist)
+                            : QueueOrigin.ForMediaCollection(Name, SourceId);
+                        var queue = new QueueSession(0, items) { Origin = origin };
+                        ActiveSessionId = queue.SessionId;
+                        Messenger.Send(new SetQueueMessage(queue, true));
                     }
                 }
                 break;

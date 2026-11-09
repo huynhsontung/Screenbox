@@ -79,7 +79,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async void Receive(QueueSessionStartedMessage message)
     {
-        await HandleQueueSessionStartedAsync(message.Playlist, message.IsUpgrade);
+        await HandleQueueSessionStartedAsync(message.Queue, message.IsUpgrade);
     }
 
     /// <inheritdoc/>
@@ -219,9 +219,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
     }
 
-    public async Task HandleQueueSessionStartedAsync(Playlist playlist, bool isUpgrade)
+    public async Task HandleQueueSessionStartedAsync(QueueSession queue, bool isUpgrade)
     {
-        if (!_generalSettings.ShowRecent || playlist.IsEmpty)
+        if (!_generalSettings.ShowRecent || queue.IsEmpty)
             return;
 
         if (!_recentContext.IsLoaded)
@@ -229,23 +229,23 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             await LoadAsync();
         }
 
-        IReadOnlyList<MediaViewModel> canonicalItems = playlist.GetCanonicalItems();
+        IReadOnlyList<MediaViewModel> canonicalItems = queue.GetCanonicalItems();
         if (canonicalItems.Count == 0)
             return;
 
-        var origin = playlist.Origin ?? (canonicalItems.Count > 1
-            ? PlaylistOrigin.ForAdHocPlaylist(canonicalItems[0].Name)
-            : PlaylistOrigin.ForSingleMedia(canonicalItems[0]));
+        var origin = queue.Origin ?? (canonicalItems.Count > 1
+            ? QueueOrigin.ForMediaCollection(canonicalItems[0].Name)
+            : QueueOrigin.ForSingleMedia(canonicalItems[0]));
 
-        List<string>? canonicalLocations = origin.Kind == RecentItemKind.AdHocPlaylist
+        List<string>? canonicalLocations = origin.Kind == RecentItemKind.MediaCollection
             ? canonicalItems.Select(m => m.Location).ToList()
             : null;
         string sourceOrTitleKey = !string.IsNullOrEmpty(origin.SourceId) ? origin.SourceId : origin.Title;
-        string contentHash = PlaylistOrigin.ComputeContentHash(origin.Kind, sourceOrTitleKey, canonicalLocations);
+        string contentHash = QueueOrigin.ComputeContentHash(origin.Kind, sourceOrTitleKey, canonicalLocations);
 
-        int initialIndex = playlist.CurrentItem is not null
-            ? Math.Max(0, IndexOfItem(canonicalItems, playlist.CurrentItem))
-            : Math.Max(0, playlist.CurrentIndex);
+        int initialIndex = queue.CurrentItem is not null
+            ? Math.Max(0, IndexOfItem(canonicalItems, queue.CurrentItem))
+            : Math.Max(0, queue.CurrentIndex);
 
         var now = DateTimeOffset.UtcNow;
         string? replaceEntryId = isUpgrade ? _lastRecordedEntryId : null;
@@ -269,10 +269,10 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             if (existing is not null)
             {
                 entryId = existing.EntryId;
-                existing.ActiveSessionId = playlist.SessionId;
-                if (origin.Kind == RecentItemKind.AdHocPlaylist)
+                existing.ActiveSessionId = queue.SessionId;
+                if (origin.Kind == RecentItemKind.MediaCollection)
                 {
-                    existing.UpdateAdHocSnapshot(origin.Title, origin.SourceId, canonicalItems, initialIndex);
+                    existing.UpdateMediaCollectionSnapshot(origin.Title, origin.SourceId, canonicalItems, initialIndex);
                 }
 
                 int existingIndex = _recentContext.Recent.IndexOf(existing);
@@ -287,12 +287,12 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             {
                 if (origin.Kind == RecentItemKind.SingleMedia)
                 {
-                    var media = playlist.CurrentItem ?? canonicalItems[0];
-                    targetVm = new RecentItemViewModel(entryId, contentHash, media, playlist.SessionId);
+                    var media = queue.CurrentItem ?? canonicalItems[0];
+                    targetVm = new RecentItemViewModel(entryId, contentHash, media, queue.SessionId);
                 }
                 else
                 {
-                    IReadOnlyList<MediaViewModel> snapshot = origin.Kind == RecentItemKind.AdHocPlaylist
+                    IReadOnlyList<MediaViewModel> snapshot = origin.Kind == RecentItemKind.MediaCollection
                         ? canonicalItems
                         : [];
                     targetVm = new RecentItemViewModel(
@@ -304,7 +304,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                         origin.SourceId,
                         snapshot,
                         initialIndex,
-                        playlist.SessionId);
+                        queue.SessionId);
                 }
 
                 LinkItem(targetVm);
@@ -326,8 +326,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         {
             List<RawMediaRecordDto> dtoItems = origin.Kind switch
             {
-                RecentItemKind.SingleMedia => [ToRawMediaRecord(playlist.CurrentItem ?? canonicalItems[0])],
-                RecentItemKind.AdHocPlaylist => canonicalItems.Select(ToRawMediaRecord).ToList(),
+                RecentItemKind.SingleMedia => [ToRawMediaRecord(queue.CurrentItem ?? canonicalItems[0])],
+                RecentItemKind.MediaCollection => canonicalItems.Select(ToRawMediaRecord).ToList(),
                 _ => []
             };
 
@@ -380,7 +380,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private void UpdateActiveStates()
     {
         Guid activeSessionId = _playQueueContext.ActiveSessionId;
-        PlaylistOrigin? activeOrigin = _playQueueContext.ActiveOrigin;
+        QueueOrigin? activeOrigin = _playQueueContext.ActiveOrigin;
         MediaViewModel? currentItem = _playQueueContext.CurrentItem;
         bool isPlaying = _playQueueContext.IsPlaying;
 
@@ -397,8 +397,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 isItemActive = isIndividualMode &&
                                item.Media is not null &&
                                string.Equals(
-                                   PlaylistOrigin.NormalizeLocation(item.Media.Location),
-                                   PlaylistOrigin.NormalizeLocation(currentItem.Location),
+                                   QueueOrigin.NormalizeLocation(item.Media.Location),
+                                   QueueOrigin.NormalizeLocation(currentItem.Location),
                                    StringComparison.Ordinal);
             }
             else
@@ -449,7 +449,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         switch (item.Kind)
         {
-            case RecentItemKind.UserPlaylist:
+            case RecentItemKind.Playlist:
             {
                 var playlist = _playlistsContext.Playlists.FirstOrDefault(p => p.Id == item.SourceId);
                 item.LinkPlaylist(playlist);
@@ -496,7 +496,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             return new RecentItemViewModel(entry.Id, entry.ContentHash, media);
         }
 
-        if (entry.Kind == RecentItemKind.AdHocPlaylist)
+        if (entry.Kind == RecentItemKind.MediaCollection)
         {
             var snapshot = new List<MediaViewModel>(entry.Items.Count);
             foreach (var itemDto in entry.Items)
@@ -646,7 +646,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                     if (file.IsSupportedPlaylist()) continue;
 
                     MediaViewModel media = _mediaFactory.GetOrCreate(file);
-                    string contentHash = PlaylistOrigin.ComputeContentHash(RecentItemKind.SingleMedia, media.Location);
+                    string contentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, media.Location);
                     DateTimeOffset lastPlayed = long.TryParse(entry.Metadata, out long ticks)
                         ? new DateTimeOffset(ticks, TimeSpan.Zero)
                         : DateTimeOffset.UtcNow;

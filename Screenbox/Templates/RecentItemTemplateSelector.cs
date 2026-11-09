@@ -16,7 +16,7 @@ public sealed class RecentItemTemplateSelector : DataTemplateSelector
     public DataTemplate? MediaTemplate { get; set; }
 
     /// <summary>
-    /// Gets or sets the template for ad-hoc and user playlists.
+    /// Gets or sets the template for media collections and playlists.
     /// </summary>
     public DataTemplate? PlaylistTemplate { get; set; }
 
@@ -49,7 +49,7 @@ public sealed class RecentItemTemplateSelector : DataTemplateSelector
             return vm.Kind switch
             {
                 RecentItemKind.SingleMedia => MediaTemplate,
-                RecentItemKind.AdHocPlaylist or RecentItemKind.UserPlaylist => PlaylistTemplate,
+                RecentItemKind.MediaCollection or RecentItemKind.Playlist => PlaylistTemplate,
                 RecentItemKind.Album => AlbumTemplate,
                 RecentItemKind.Artist => ArtistTemplate,
                 _ => MediaTemplate

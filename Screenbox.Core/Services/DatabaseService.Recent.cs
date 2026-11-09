@@ -45,7 +45,7 @@ public sealed partial class DatabaseService
 
         foreach (RecentEntryDto entry in entries)
         {
-            if (entry.Kind is RecentItemKind.SingleMedia or RecentItemKind.AdHocPlaylist)
+            if (entry.Kind is RecentItemKind.SingleMedia or RecentItemKind.MediaCollection)
             {
                 entry.Items = ReadRecentEntryItems(connection, entry.Id);
             }
@@ -103,7 +103,7 @@ public sealed partial class DatabaseService
             clearItemsCmd.ExecuteNonQuery();
         }
 
-        if (entry.Kind is RecentItemKind.SingleMedia or RecentItemKind.AdHocPlaylist && entry.Items.Count > 0)
+        if (entry.Kind is RecentItemKind.SingleMedia or RecentItemKind.MediaCollection && entry.Items.Count > 0)
         {
             using var insertItemCmd = connection.CreateCommand();
             insertItemCmd.CommandText = """

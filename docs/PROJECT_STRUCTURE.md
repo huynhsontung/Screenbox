@@ -341,7 +341,7 @@ The library tables in `screenbox.db` (SQLite, `LocalFolder`) are rebuildable cac
 | `media_records` | Caches media-file metadata indexed by path; queried instead of crawling disk on subsequent launches |
 | `playback_progress` | Stores the last playback position per media location for resume-from-position |
 | `recent_entries` | Stores up to 100 recent media and playlist/container entries ordered by `last_played` |
-| `recent_entry_items` | Stores the canonical ordered media items for `SingleMedia` and `AdHocPlaylist` recent entries; cascade-deleted with `recent_entries` |
+| `recent_entry_items` | Stores the canonical ordered media items for `SingleMedia` and `MediaCollection` recent entries; cascade-deleted with `recent_entries` |
 | `playlists` | One row per saved playlist (id, display name, last-updated timestamp) |
 | `playlist_items` | Ordered list of media snapshots for each playlist; cascade-deleted with the parent playlist |
 

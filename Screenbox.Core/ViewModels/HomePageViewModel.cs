@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
+using Windows.System;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
@@ -142,7 +144,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient
                     items[0],
                     items,
                     pauseIfExists: false,
-                    origin: PlaylistOrigin.ForAdHocPlaylist(items[0].Name));
+                    origin: QueueOrigin.ForMediaCollection(items[0].Name));
             }
         }
 

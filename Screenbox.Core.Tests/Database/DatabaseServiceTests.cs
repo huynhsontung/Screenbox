@@ -294,7 +294,7 @@ public sealed class DatabaseServiceTests
             Kind = RecentItemKind.SingleMedia,
             SourceId = @"C:\Music\track1.mp3",
             Title = "Track 1",
-            ContentHash = PlaylistOrigin.ComputeContentHash(RecentItemKind.SingleMedia, @"C:\Music\track1.mp3"),
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, @"C:\Music\track1.mp3"),
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-10),
             Items = [new RawMediaRecordDto { Path = @"C:\Music\track1.mp3", Title = "Track 1", MediaType = MediaPlaybackType.Music }]
         };
@@ -311,10 +311,10 @@ public sealed class DatabaseServiceTests
         var upgradedFolderEntry = new RecentEntryDto
         {
             Id = "entry_2",
-            Kind = RecentItemKind.AdHocPlaylist,
+            Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\Music",
             Title = "Music",
-            ContentHash = PlaylistOrigin.ComputeContentHash(RecentItemKind.AdHocPlaylist, @"C:\Music", folderPaths),
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music", folderPaths),
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-5),
             Items =
             [
@@ -328,13 +328,13 @@ public sealed class DatabaseServiceTests
         loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded).HasSingleItem();
         await Assert.That(loaded[0].Id).IsEqualTo("entry_2");
-        await Assert.That(loaded[0].Kind).IsEqualTo(RecentItemKind.AdHocPlaylist);
+        await Assert.That(loaded[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
         await Assert.That(loaded[0].Items.Count).IsEqualTo(2);
 
         var duplicateFolderEntry = new RecentEntryDto
         {
             Id = "entry_3",
-            Kind = RecentItemKind.AdHocPlaylist,
+            Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\Music",
             Title = "Music",
             ContentHash = upgradedFolderEntry.ContentHash,
@@ -357,7 +357,7 @@ public sealed class DatabaseServiceTests
                     Kind = RecentItemKind.SingleMedia,
                     SourceId = path,
                     Title = $"Video {i}",
-                    ContentHash = PlaylistOrigin.ComputeContentHash(RecentItemKind.SingleMedia, path),
+                    ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, path),
                     LastPlayed = DateTimeOffset.UtcNow.AddSeconds(i + 1),
                     Items = [new RawMediaRecordDto { Path = path, Title = $"Video {i}", MediaType = MediaPlaybackType.Video }]
                 },

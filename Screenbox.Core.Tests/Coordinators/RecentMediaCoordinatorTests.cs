@@ -55,7 +55,7 @@ public sealed class RecentMediaCoordinatorTests
     }
 
     [Test]
-    public async Task HandleQueueSessionStartedAsync_PromotesIdenticalAdHocPlaylist_AndCreatesNewWhenItemsChange()
+    public async Task HandleQueueSessionStartedAsync_PromotesIdenticalMediaCollection_AndCreatesNewWhenItemsChange()
     {
         using var fixture = new TestDirectoryFixture();
         var (coordinator, recentContext, playQueueContext, _, _, dbService) = CreateCoordinator(fixture.DirectoryPath);
@@ -65,9 +65,9 @@ public sealed class RecentMediaCoordinatorTests
         var track2 = CreateDummyMedia("track2");
         var single = CreateDummyMedia("single");
 
-        var folderSession1 = new Playlist(0, new[] { track1, track2 })
+        var folderSession1 = new QueueSession(0, new[] { track1, track2 })
         {
-            Origin = PlaylistOrigin.ForAdHocPlaylist("FolderA", @"C:\FolderA")
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
         };
 
         playQueueContext.ActiveSessionId = folderSession1.SessionId;
@@ -76,13 +76,13 @@ public sealed class RecentMediaCoordinatorTests
         await coordinator.HandleQueueSessionStartedAsync(folderSession1, isUpgrade: false);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.AdHocPlaylist);
+        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
         await Assert.That(recentContext.Recent[0].IsQueueActive).IsTrue();
 
         // Play a single media item
-        var singleSession = new Playlist(single)
+        var singleSession = new QueueSession(single)
         {
-            Origin = PlaylistOrigin.ForSingleMedia(single)
+            Origin = QueueOrigin.ForSingleMedia(single)
         };
         playQueueContext.ActiveSessionId = singleSession.SessionId;
         playQueueContext.ActiveOrigin = singleSession.Origin;
@@ -95,9 +95,9 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent[1].IsQueueActive).IsFalse();
 
         // Replay the exact same folder playlist -> promotes existing entry to index 0
-        var folderSession2 = new Playlist(0, new[] { track1, track2 })
+        var folderSession2 = new QueueSession(0, new[] { track1, track2 })
         {
-            Origin = PlaylistOrigin.ForAdHocPlaylist("FolderA", @"C:\FolderA")
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
         };
         playQueueContext.ActiveSessionId = folderSession2.SessionId;
         playQueueContext.ActiveOrigin = folderSession2.Origin;
@@ -105,14 +105,14 @@ public sealed class RecentMediaCoordinatorTests
         await coordinator.HandleQueueSessionStartedAsync(folderSession2, isUpgrade: false);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.AdHocPlaylist);
+        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
         await Assert.That(recentContext.Recent[0].IsQueueActive).IsTrue();
 
         // Play the folder with an added track -> creates a new entry
         var track3 = CreateDummyMedia("track3");
-        var modifiedFolderSession = new Playlist(0, new[] { track1, track2, track3 })
+        var modifiedFolderSession = new QueueSession(0, new[] { track1, track2, track3 })
         {
-            Origin = PlaylistOrigin.ForAdHocPlaylist("FolderA", @"C:\FolderA")
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
         };
         playQueueContext.ActiveSessionId = modifiedFolderSession.SessionId;
         playQueueContext.ActiveOrigin = modifiedFolderSession.Origin;
@@ -134,9 +134,9 @@ public sealed class RecentMediaCoordinatorTests
         var track1 = CreateDummyMedia("track1");
         var track2 = CreateDummyMedia("track2");
 
-        var initialSingle = new Playlist(track1)
+        var initialSingle = new QueueSession(track1)
         {
-            Origin = PlaylistOrigin.ForSingleMedia(track1)
+            Origin = QueueOrigin.ForSingleMedia(track1)
         };
         playQueueContext.ActiveSessionId = initialSingle.SessionId;
         playQueueContext.ActiveOrigin = initialSingle.Origin;
@@ -146,15 +146,15 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.SingleMedia);
 
-        var upgradedPlaylist = new Playlist(0, new[] { track1, track2 }, initialSingle)
+        var upgradedPlaylist = new QueueSession(0, new[] { track1, track2 }, initialSingle)
         {
-            Origin = PlaylistOrigin.ForAdHocPlaylist("MyFolder", @"C:\MyFolder")
+            Origin = QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder")
         };
         playQueueContext.ActiveOrigin = upgradedPlaylist.Origin;
         await coordinator.HandleQueueSessionStartedAsync(upgradedPlaylist, isUpgrade: true);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.AdHocPlaylist);
+        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("MyFolder");
         await Assert.That(recentContext.Recent[0].ItemsCount).IsEqualTo(2d);
     }
@@ -169,9 +169,9 @@ public sealed class RecentMediaCoordinatorTests
         var track1 = CreateDummyMedia("track1");
         var track2 = CreateDummyMedia("track2");
 
-        var folderSession = new Playlist(0, new[] { track1, track2 })
+        var folderSession = new QueueSession(0, new[] { track1, track2 })
         {
-            Origin = PlaylistOrigin.ForAdHocPlaylist("FolderA", @"C:\FolderA")
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
         };
         playQueueContext.ActiveSessionId = folderSession.SessionId;
         playQueueContext.ActiveOrigin = folderSession.Origin;
