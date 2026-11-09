@@ -112,7 +112,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly IWindowService _windowService;
     private readonly PlayerSettingsContext _playerSettings;
     private readonly GeneralSettingsContext _generalSettings;
-    private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IPlaybackMetadataService _playbackMetadataService;
     private readonly PlayerContext _playerContext;
@@ -124,7 +124,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     public PlayerPageViewModel(IWindowService windowService,
         PlayerSettingsContext playerSettings, GeneralSettingsContext generalSettings,
-        IPlaylistService playlistService,
+        IQueueService queueService,
         ISourceMetadataService sourceMetadataService,
         IPlaybackMetadataService playbackMetadataService,
         PlayerContext playerContext,
@@ -133,7 +133,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _windowService = windowService;
         _playerSettings = playerSettings;
         _generalSettings = generalSettings;
-        _playlistService = playlistService;
+        _queueService = queueService;
         _sourceMetadataService = sourceMetadataService;
         _playbackMetadataService = playbackMetadataService;
         _playerContext = playerContext;
@@ -326,7 +326,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                     }
                     else
                     {
-                        await Messenger.PlayFilesAsync(items, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
+                        await Messenger.PlayFilesAsync(items, _queueService, _generalSettings.EnqueueAllFilesInFolder);
                     }
 
                     return;
@@ -737,7 +737,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
                 _windowService.TryExitCompactLayoutAsync();
                 break;
             case WindowViewMode.Default:
-                Playlist playlist = Messenger.Send(new QueueRequestMessage());
+                QueueSession playlist = Messenger.Send(new QueueRequestMessage());
                 bool hasItemsInQueue = playlist.Items.Count > 0;
                 PlayerVisibility = hasItemsInQueue ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Hidden;
                 break;

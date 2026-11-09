@@ -82,7 +82,7 @@ public partial class PropertyViewModelTests
         public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, MediaViewModel vm) => null;
         public void CleanPlaybackItem(MediaViewModel vm) { }
         public void Clear() { }
-        public void UpdateBuffer(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode) { }
+        public void UpdateBuffer(IMediaPlayer? player, QueueSession queue, MediaPlaybackAutoRepeatMode repeatMode) { }
         public void Dispose() { }
     }
 

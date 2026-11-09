@@ -14,7 +14,7 @@ namespace Screenbox.Core.Messages;
 /// <param name="IsPlaying">Whether the current media item in the play queue is currently playing.</param>
 public sealed record QueuePlaybackState(
     Guid SessionId,
-    PlaylistOrigin? Origin,
+    QueueOrigin? Origin,
     MediaViewModel? CurrentItem,
     bool IsPlaying);
 

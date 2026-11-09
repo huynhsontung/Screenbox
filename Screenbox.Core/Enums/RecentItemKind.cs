@@ -6,8 +6,8 @@ namespace Screenbox.Core.Enums;
 public enum RecentItemKind
 {
     SingleMedia = 0,
-    AdHocPlaylist = 1,
-    UserPlaylist = 2,
+    MediaCollection = 1,
+    Playlist = 2,
     Album = 3,
     Artist = 4,
 }

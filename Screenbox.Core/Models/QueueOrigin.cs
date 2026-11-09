@@ -10,13 +10,13 @@ using Screenbox.Core.ViewModels;
 namespace Screenbox.Core.Models;
 
 /// <summary>
-/// Metadata describing the source container or mode that created a <see cref="Playlist"/>.
+/// Metadata describing the source container or mode that created a <see cref="QueueSession"/>.
 /// </summary>
-/// <param name="Kind">The recent item kind associated with this playlist origin.</param>
+/// <param name="Kind">The recent item kind associated with this queue origin.</param>
 /// <param name="SourceId">The stable identifier for the origin source (e.g. playlist ID, album key, artist key, or path).</param>
 /// <param name="Title">The display title for the recent entry or session.</param>
 /// <param name="Subtitle">The optional subtitle or caption for the recent entry or session.</param>
-public sealed record PlaylistOrigin(
+public sealed record QueueOrigin(
     RecentItemKind Kind,
     string SourceId,
     string Title,
@@ -28,42 +28,42 @@ public sealed record PlaylistOrigin(
     /// </summary>
     public bool TrackItemsIndividually => Kind == RecentItemKind.SingleMedia;
 
-    /// <summary>Creates a <see cref="PlaylistOrigin"/> for a single media item.</summary>
-    public static PlaylistOrigin ForSingleMedia(MediaViewModel media)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for a single media item.</summary>
+    public static QueueOrigin ForSingleMedia(MediaViewModel media)
     {
-        return new PlaylistOrigin(RecentItemKind.SingleMedia, media.Location, media.Name, media.Caption);
+        return new QueueOrigin(RecentItemKind.SingleMedia, media.Location, media.Name, media.Caption);
     }
 
-    /// <summary>Creates a <see cref="PlaylistOrigin"/> for a library-wide queue where each played track is recorded individually.</summary>
-    public static PlaylistOrigin ForLibraryQueue(MediaViewModel initialMedia)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for a library-wide queue where each played track is recorded individually.</summary>
+    public static QueueOrigin ForLibraryQueue(MediaViewModel initialMedia)
     {
-        return new PlaylistOrigin(RecentItemKind.SingleMedia, initialMedia.Location, initialMedia.Name, initialMedia.Caption);
+        return new QueueOrigin(RecentItemKind.SingleMedia, initialMedia.Location, initialMedia.Name, initialMedia.Caption);
     }
 
-    /// <summary>Creates a <see cref="PlaylistOrigin"/> for an ad-hoc playlist (such as a folder, M3U file, or multi-file selection).</summary>
-    public static PlaylistOrigin ForAdHocPlaylist(string title, string? sourcePath = null)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for an ad-hoc media collection (such as a folder, M3U file, or multi-file selection).</summary>
+    public static QueueOrigin ForMediaCollection(string title, string? sourcePath = null)
     {
-        return new PlaylistOrigin(RecentItemKind.AdHocPlaylist, sourcePath ?? string.Empty, title);
+        return new QueueOrigin(RecentItemKind.MediaCollection, sourcePath ?? string.Empty, title);
     }
 
-    /// <summary>Creates a <see cref="PlaylistOrigin"/> for a durable user playlist.</summary>
-    public static PlaylistOrigin ForUserPlaylist(PlaylistViewModel playlist)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for a durable user playlist.</summary>
+    public static QueueOrigin ForPlaylist(PlaylistViewModel playlist)
     {
-        return new PlaylistOrigin(RecentItemKind.UserPlaylist, playlist.Id, playlist.Name);
+        return new QueueOrigin(RecentItemKind.Playlist, playlist.Id, playlist.Name);
     }
 
-    /// <summary>Creates a <see cref="PlaylistOrigin"/> for an album.</summary>
-    public static PlaylistOrigin ForAlbum(AlbumViewModel album)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for an album.</summary>
+    public static QueueOrigin ForAlbum(AlbumViewModel album)
     {
         string key = AlbumViewModelFactory.GetAlbumKey(album.Name, album.ArtistName);
-        return new PlaylistOrigin(RecentItemKind.Album, key, album.Name, album.ArtistName);
+        return new QueueOrigin(RecentItemKind.Album, key, album.Name, album.ArtistName);
     }
 
-    /// <summary>Creates a <see cref="PlaylistOrigin"/> for an artist.</summary>
-    public static PlaylistOrigin ForArtist(ArtistViewModel artist)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for an artist.</summary>
+    public static QueueOrigin ForArtist(ArtistViewModel artist)
     {
         string key = artist.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
-        return new PlaylistOrigin(RecentItemKind.Artist, key, artist.Name);
+        return new QueueOrigin(RecentItemKind.Artist, key, artist.Name);
     }
 
     /// <summary>
@@ -78,10 +78,10 @@ public sealed record PlaylistOrigin(
 
     /// <summary>
     /// Computes a deterministic SHA-256 content hash for comparing recent entries.
-    /// For live containers (<see cref="RecentItemKind.UserPlaylist"/>, <see cref="RecentItemKind.Album"/>,
+    /// For live containers (<see cref="RecentItemKind.Playlist"/>, <see cref="RecentItemKind.Album"/>,
     /// <see cref="RecentItemKind.Artist"/>) and <see cref="RecentItemKind.SingleMedia"/>, the hash is derived
-    /// from the kind and stable source identifier. For <see cref="RecentItemKind.AdHocPlaylist"/>, the hash
-    /// includes the playlist title/source and the exact canonical sequence of item locations.
+    /// from the kind and stable source identifier. For <see cref="RecentItemKind.MediaCollection"/>, the hash
+    /// includes the collection title/source and the exact canonical sequence of item locations.
     /// </summary>
     public static string ComputeContentHash(RecentItemKind kind, string sourceOrTitleKey, IReadOnlyList<string>? canonicalLocations = null)
     {
@@ -89,7 +89,7 @@ public sealed record PlaylistOrigin(
         var sb = new StringBuilder();
         sb.Append((int)kind).Append('|').Append(NormalizeLocation(sourceOrTitleKey));
 
-        if (kind == RecentItemKind.AdHocPlaylist && canonicalLocations is not null)
+        if (kind == RecentItemKind.MediaCollection && canonicalLocations is not null)
         {
             foreach (string loc in canonicalLocations)
             {

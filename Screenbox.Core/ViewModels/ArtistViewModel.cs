@@ -73,7 +73,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
         else
         {
             IReadOnlyList<MediaViewModel> songs = OrderedSongs;
-            Messenger.SendQueueAndPlay(songs[0], songs, pauseIfExists: false, origin: PlaylistOrigin.ForArtist(this));
+            Messenger.SendQueueAndPlay(songs[0], songs, pauseIfExists: false, origin: QueueOrigin.ForArtist(this));
         }
     }
 

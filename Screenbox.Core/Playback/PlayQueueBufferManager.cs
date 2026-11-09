@@ -24,7 +24,7 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     public IReadOnlyList<MediaViewModel> BufferedItems => _mediaBuffer;
 
     private readonly IPlayerService _playerService;
-    private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
     private readonly IMessenger _messenger;
     private readonly ILogger<PlayQueueBufferManager> _logger;
 
@@ -34,12 +34,12 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
 
     public PlayQueueBufferManager(
         IPlayerService playerService,
-        IPlaylistService playlistService,
+        IQueueService queueService,
         ILogger<PlayQueueBufferManager>? logger = null,
         IMessenger? messenger = null)
     {
         _playerService = playerService;
-        _playlistService = playlistService;
+        _queueService = queueService;
         _logger = logger ?? NullLogger<PlayQueueBufferManager>.Instance;
         _messenger = messenger ?? WeakReferenceMessenger.Default;
     }
@@ -100,12 +100,12 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     }
 
     /// <inheritdoc/>
-    public void UpdateBuffer(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
+    public void UpdateBuffer(IMediaPlayer? player, QueueSession session, MediaPlaybackAutoRepeatMode repeatMode)
     {
         if (_isDisposed) return;
 
-        var bufferIndices = _playlistService.GetMediaBufferIndices(playlist.CurrentIndex, playlist.Items.Count, repeatMode);
-        var newBuffer = bufferIndices.Select(i => playlist.Items[i]).ToList();
+        var bufferIndices = _queueService.GetMediaBufferIndices(session.CurrentIndex, session.Items.Count, repeatMode);
+        var newBuffer = bufferIndices.Select(i => session.Items[i]).ToList();
 
         var toClean = _mediaBuffer.Except(newBuffer).ToList();
 

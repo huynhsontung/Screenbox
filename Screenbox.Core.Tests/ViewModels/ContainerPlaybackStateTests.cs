@@ -23,13 +23,13 @@ public class ContainerPlaybackStateTests
         var sessionId = Guid.NewGuid();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForAlbum(album), song, IsPlaying: true)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForAlbum(album), song, IsPlaying: true)));
 
         await Assert.That(album.IsQueueActive).IsTrue();
         await Assert.That(album.IsPlaying).IsTrue();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForAlbum(album), song, IsPlaying: false)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForAlbum(album), song, IsPlaying: false)));
 
         await Assert.That(album.IsQueueActive).IsTrue();
         await Assert.That(album.IsPlaying).IsFalse();
@@ -44,7 +44,7 @@ public class ContainerPlaybackStateTests
         var sessionId = Guid.NewGuid();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForSingleMedia(song), song, IsPlaying: true)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForSingleMedia(song), song, IsPlaying: true)));
 
         await Assert.That(album.IsQueueActive).IsFalse();
         await Assert.That(album.IsPlaying).IsFalse();
@@ -59,13 +59,13 @@ public class ContainerPlaybackStateTests
         var sessionId = Guid.NewGuid();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForArtist(artist), song, IsPlaying: true)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForArtist(artist), song, IsPlaying: true)));
 
         await Assert.That(artist.IsQueueActive).IsTrue();
         await Assert.That(artist.IsPlaying).IsTrue();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForArtist(artist), song, IsPlaying: false)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForArtist(artist), song, IsPlaying: false)));
 
         await Assert.That(artist.IsQueueActive).IsTrue();
         await Assert.That(artist.IsPlaying).IsFalse();
@@ -81,7 +81,7 @@ public class ContainerPlaybackStateTests
         var sessionId = Guid.NewGuid();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForArtist(otherArtist), song, IsPlaying: true)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForArtist(otherArtist), song, IsPlaying: true)));
 
         await Assert.That(artist.IsQueueActive).IsFalse();
         await Assert.That(artist.IsPlaying).IsFalse();
@@ -96,13 +96,13 @@ public class ContainerPlaybackStateTests
         var sessionId = Guid.NewGuid();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForUserPlaylist(playlist), song, IsPlaying: true)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForPlaylist(playlist), song, IsPlaying: true)));
 
         await Assert.That(playlist.IsQueueActive).IsTrue();
         await Assert.That(playlist.IsPlaying).IsTrue();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForUserPlaylist(playlist), song, IsPlaying: false)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForPlaylist(playlist), song, IsPlaying: false)));
 
         await Assert.That(playlist.IsQueueActive).IsTrue();
         await Assert.That(playlist.IsPlaying).IsFalse();
@@ -117,7 +117,7 @@ public class ContainerPlaybackStateTests
         var sessionId = Guid.NewGuid();
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(sessionId, PlaylistOrigin.ForSingleMedia(song), song, IsPlaying: true)));
+            new QueuePlaybackState(sessionId, QueueOrigin.ForSingleMedia(song), song, IsPlaying: true)));
 
         await Assert.That(playlist.IsQueueActive).IsFalse();
         await Assert.That(playlist.IsPlaying).IsFalse();
@@ -132,7 +132,7 @@ public class ContainerPlaybackStateTests
         album.RelatedSongs.Add(song);
 
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(Guid.NewGuid(), PlaylistOrigin.ForAlbum(album), song, IsPlaying: true)));
+            new QueuePlaybackState(Guid.NewGuid(), QueueOrigin.ForAlbum(album), song, IsPlaying: true)));
 
         bool toggleSent = false;
         messenger.Register<ContainerPlaybackStateTests, TogglePlayPauseMessage>(

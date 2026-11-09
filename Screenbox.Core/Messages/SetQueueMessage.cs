@@ -4,13 +4,13 @@ using Screenbox.Core.Models;
 namespace Screenbox.Core.Messages;
 
 /// <summary>
-/// Sent to replace the contents of the global play queue with the provided <see cref="Playlist"/> snapshot.
+/// Sent to replace the contents of the global play queue with the provided <see cref="QueueSession"/> snapshot.
 /// </summary>
-public sealed class SetQueueMessage : ValueChangedMessage<Playlist>
+public sealed class SetQueueMessage : ValueChangedMessage<QueueSession>
 {
     public bool ShouldPlay { get; }
 
-    public SetQueueMessage(Playlist playlist, bool shouldPlay = false) : base(playlist)
+    public SetQueueMessage(QueueSession queue, bool shouldPlay = false) : base(queue)
     {
         ShouldPlay = shouldPlay;
     }

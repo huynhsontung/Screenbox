@@ -25,12 +25,12 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
         if (Songs.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = Songs.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Playlist(0, shuffledList)
+        var queue = new QueueSession(0, shuffledList)
         {
             ShuffleMode = true,
             ShuffleBackup = new ShuffleBackup(Songs.ToList()),
-            Origin = PlaylistOrigin.ForLibraryQueue(shuffledList[0])
+            Origin = QueueOrigin.ForLibraryQueue(shuffledList[0])
         };
-        Messenger.Send(new SetQueueMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(queue, true));
     }
 }

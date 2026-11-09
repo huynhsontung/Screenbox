@@ -236,6 +236,6 @@ public sealed partial class SongsPageViewModel : BaseMusicContentViewModel,
     private void Play(MediaViewModel media)
     {
         if (Songs.Count == 0) return;
-        Messenger.SendQueueAndPlay(media, Songs, origin: PlaylistOrigin.ForLibraryQueue(media));
+        Messenger.SendQueueAndPlay(media, Songs, origin: QueueOrigin.ForLibraryQueue(media));
     }
 }

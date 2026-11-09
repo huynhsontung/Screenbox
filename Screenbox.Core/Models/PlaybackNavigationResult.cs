@@ -8,15 +8,15 @@ namespace Screenbox.Core.Models;
 public sealed class PlaybackNavigationResult
 {
     public MediaViewModel NextItem { get; }
-    public Playlist? UpdatedPlaylist { get; }
+    public QueueSession? UpdatedQueue { get; }
 
     public PlaybackNavigationResult(MediaViewModel nextItem)
     {
         NextItem = nextItem;
     }
 
-    public PlaybackNavigationResult(Playlist updatedPlaylist, MediaViewModel nextItem) : this(nextItem)
+    public PlaybackNavigationResult(QueueSession updatedQueue, MediaViewModel nextItem) : this(nextItem)
     {
-        UpdatedPlaylist = updatedPlaylist;
+        UpdatedQueue = updatedQueue;
     }
 }

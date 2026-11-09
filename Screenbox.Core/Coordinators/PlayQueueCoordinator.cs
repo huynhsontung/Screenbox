@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -52,7 +52,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private IMediaPlayer? MediaPlayer => _playerContext.MediaPlayer;
 
     private readonly PlayQueueContext _context;
-    private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
     private readonly IPlaybackControlService _playbackControlService;
 
     private readonly IFilesService _filesService;
@@ -67,7 +67,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     // Internal playlist model — separate from the observable context.Items collection.
     // Tracks shuffle backup, current index, and provides a snapshot for service calls.
-    private Playlist _playlist;
+    private QueueSession _queueSession;
 
     private Func<Task>? _delayPlay;
 
@@ -82,7 +82,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     public PlayQueueCoordinator(
         PlayQueueContext context,
-        IPlaylistService playlistService,
+        IQueueService queueService,
         IPlaybackControlService playbackControlService,
 
         IFilesService filesService,
@@ -95,7 +95,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         ILogger<PlayQueueCoordinator> logger)
     {
         _context = context;
-        _playlistService = playlistService;
+        _queueService = queueService;
         _playbackControlService = playbackControlService;
 
 
@@ -109,7 +109,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        _playlist = new Playlist();
+        _queueSession = new QueueSession();
 
         // Initialize context with persisted repeat mode.
         _context.RepeatMode = playbackSettings.RepeatMode;
@@ -117,7 +117,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         // React to context property changes.
         _context.PropertyChanged += OnContextPropertyChanged;
 
-        // Keep internal Playlist model in sync with the observable Items collection.
+        // Keep internal QueueSession model in sync with the observable Items collection.
         _context.Items.CollectionChanged += OnCollectionChanged;
 
         // Wire transport controls buttons to commands.
@@ -167,7 +167,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         else
         {
             ClearQueue();
-            Playlist playlist = await _playlistService.ParsePlaylistAsync(message.Value);
+            QueueSession playlist = await _queueService.ParseQueueAsync(message.Value);
             ApplyQueueSnapshot(playlist, shouldPlay: true);
         }
     }
@@ -219,7 +219,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <summary>Returns a snapshot copy of the current queue to the requester.</summary>
     public void Receive(QueueRequestMessage message)
     {
-        message.Reply(new Playlist(_playlist));
+        message.Reply(new QueueSession(_queueSession));
     }
 
     /// <summary>Returns the current queue playback state snapshot to the requester.</summary>
@@ -304,22 +304,22 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void HandleShuffleModeChanged(bool value)
     {
-        if (_playlist.ShuffleMode == value) return;
+        if (_queueSession.ShuffleMode == value) return;
 
-        Playlist playlist;
+        QueueSession playlist;
         if (value)
         {
-            playlist = _playlistService.ShufflePlaylist(_playlist, _context.CurrentIndex);
+            playlist = _queueService.Shuffle(_queueSession, _context.CurrentIndex);
         }
         else
         {
-            if (_playlist.CanRestoreFromShuffle)
+            if (_queueSession.CanRestoreFromShuffle)
             {
-                playlist = _playlistService.RestoreFromShuffle(_playlist);
+                playlist = _queueService.RestoreFromShuffle(_queueSession);
             }
             else
             {
-                playlist = _playlistService.ShufflePlaylist(_playlist, _context.CurrentIndex);
+                playlist = _queueService.Shuffle(_queueSession, _context.CurrentIndex);
                 playlist.ShuffleMode = false;
                 playlist.ShuffleBackup = null;
             }
@@ -343,19 +343,19 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public bool CanNext()
     {
-        return _playbackControlService.CanNext(_playlist, _context.RepeatMode);
+        return _playbackControlService.CanNext(_queueSession, _context.RepeatMode);
     }
 
     /// <inheritdoc/>
     public bool CanPrevious()
     {
-        return _playbackControlService.CanPrevious(_playlist, _context.RepeatMode);
+        return _playbackControlService.CanPrevious(_queueSession, _context.RepeatMode);
     }
 
     /// <inheritdoc/>
     public async Task NextAsync()
     {
-        var result = await _playbackControlService.GetNextAsync(_playlist, _context.RepeatMode);
+        var result = await _playbackControlService.GetNextAsync(_queueSession, _context.RepeatMode);
         if (result is not null)
         {
             await ApplyNavigationResultAsync(result);
@@ -375,7 +375,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             return;
         }
 
-        var result = await _playbackControlService.GetPreviousAsync(_playlist, _context.RepeatMode);
+        var result = await _playbackControlService.GetPreviousAsync(_queueSession, _context.RepeatMode);
         if (result is not null)
         {
             await ApplyNavigationResultAsync(result);
@@ -485,7 +485,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _context.CurrentIndex = _context.CurrentItem is not null
                 ? _context.Items.IndexOf(_context.CurrentItem)
                 : -1;
-            _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+            _queueSession = new QueueSession(_context.CurrentIndex, _context.Items, _queueSession);
         }
         finally
         {
@@ -550,10 +550,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     {
                         if (newVms.Count > 1)
                         {
-                            _playlist.Origin = PlaylistOrigin.ForAdHocPlaylist(vm.Name, vm.Location);
-                            _context.ActiveOrigin = _playlist.Origin;
-                            _recordedOriginKind = RecentItemKind.AdHocPlaylist;
-                            Messenger.Send(new QueueSessionStartedMessage(new Playlist(_playlist), IsUpgrade: true));
+                            _queueSession.Origin = QueueOrigin.ForMediaCollection(vm.Name, vm.Location);
+                            _context.ActiveOrigin = _queueSession.Origin;
+                            _recordedOriginKind = RecentItemKind.MediaCollection;
+                            Messenger.Send(new QueueSessionStartedMessage(new QueueSession(_queueSession), IsUpgrade: true));
                         }
 
                         SetCurrentItem(newVms[0], shouldPlay: true);
@@ -617,18 +617,18 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 value.IsMediaActive = true;
                 _context.CurrentIndex = _context.Items.IndexOf(value);
-                _playlist.CurrentIndex = _context.CurrentIndex;
+                _queueSession.CurrentIndex = _context.CurrentIndex;
 
-                if (_playlist.Origin is null)
+                if (_queueSession.Origin is null)
                 {
-                    _playlist.Origin = PlaylistOrigin.ForSingleMedia(value);
-                    _context.ActiveOrigin = _playlist.Origin;
+                    _queueSession.Origin = QueueOrigin.ForSingleMedia(value);
+                    _context.ActiveOrigin = _queueSession.Origin;
                 }
             }
             else
             {
                 _context.CurrentIndex = -1;
-                _playlist.CurrentIndex = -1;
+                _queueSession.CurrentIndex = -1;
                 if (_context.Items.Count == 0)
                 {
                     _context.ActiveSessionId = Guid.Empty;
@@ -671,7 +671,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
         void PropagateCurrentItemChanged()
         {
-            Messenger.Send(new QueueCurrentItemChangedMessage(value, _playlist.NeighboringFilesQuery));
+            Messenger.Send(new QueueCurrentItemChangedMessage(value, _queueSession.NeighboringFilesQuery));
             RaiseCanNavigateChanged();
         }
 
@@ -700,23 +700,23 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             if (token.IsCancellationRequested) return;
 
-            if (_playlist.Origin is null || _playlist.Origin.TrackItemsIndividually)
+            if (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually)
             {
                 _dispatcherQueue.TryExecuteOrEnqueue(() =>
                 {
                     if (_context.CurrentItem != value) return;
-                    _recordedSessionId = _playlist.SessionId;
+                    _recordedSessionId = _queueSession.SessionId;
                     _recordedOriginKind = RecentItemKind.SingleMedia;
-                    var singlePlaylist = new Playlist(value)
+                    var singleQueue = new QueueSession(value)
                     {
-                        SessionId = _playlist.SessionId,
-                        Origin = PlaylistOrigin.ForSingleMedia(value)
+                        SessionId = _queueSession.SessionId,
+                        Origin = QueueOrigin.ForSingleMedia(value)
                     };
-                    Messenger.Send(new QueueSessionStartedMessage(singlePlaylist, IsUpgrade: false));
+                    Messenger.Send(new QueueSessionStartedMessage(singleQueue, IsUpgrade: false));
                 });
             }
 
-            _bufferManager.UpdateBuffer(MediaPlayer, _playlist, _context.RepeatMode);
+            _bufferManager.UpdateBuffer(MediaPlayer, _queueSession, _context.RepeatMode);
             await Task.WhenAll(
                 _generalSettings.ShowRecent ? _filesService.AddToRecentAsync(value.Source, token) : Task.CompletedTask,
                 _transportControlsService.UpdateTransportControlsDisplayAsync(value)
@@ -738,7 +738,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// Collection-changed events are deferred during this operation to avoid
     /// redundant intermediate updates.
     /// </summary>
-    private void ApplyQueueSnapshot(Playlist playlist, bool shouldPlay = false)
+    private void ApplyQueueSnapshot(QueueSession playlist, bool shouldPlay = false)
     {
         void UpdateQueue()
         {
@@ -748,11 +748,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 if (!playlist.IsEmpty)
                 {
                     playlist.Origin ??= playlist.Items.Count > 1
-                        ? PlaylistOrigin.ForAdHocPlaylist(playlist.Items[0].Name)
-                        : PlaylistOrigin.ForSingleMedia(playlist.Items[0]);
+                        ? QueueOrigin.ForMediaCollection(playlist.Items[0].Name)
+                        : QueueOrigin.ForSingleMedia(playlist.Items[0]);
                 }
 
-                _playlist = playlist;
+                _queueSession = playlist;
                 _context.ActiveSessionId = playlist.IsEmpty ? Guid.Empty : playlist.SessionId;
                 _context.ActiveOrigin = playlist.Origin;
 
@@ -763,7 +763,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                                      _recordedOriginKind == RecentItemKind.SingleMedia;
                     _recordedSessionId = playlist.SessionId;
                     _recordedOriginKind = playlist.Origin.Kind;
-                    Messenger.Send(new QueueSessionStartedMessage(new Playlist(playlist), isUpgrade));
+                    Messenger.Send(new QueueSessionStartedMessage(new QueueSession(playlist), isUpgrade));
                 }
                 _context.ShuffleMode = playlist.ShuffleMode;
 
@@ -804,7 +804,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 _deferCollectionChanged = true;
                 _context.Items.Clear();
-                _playlist = new Playlist { SessionId = Guid.Empty };
+                _queueSession = new QueueSession { SessionId = Guid.Empty };
                 _context.ActiveSessionId = Guid.Empty;
                 _context.ActiveOrigin = null;
                 _context.IsPlaying = false;
@@ -825,10 +825,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private async Task ApplyNavigationResultAsync(PlaybackNavigationResult result)
     {
-        if (result.UpdatedPlaylist is not null)
+        if (result.UpdatedQueue is not null)
         {
-            // Playlist was replaced by neighboring-file navigation.
-            ApplyQueueSnapshot(result.UpdatedPlaylist, shouldPlay: true);
+            // Queue was replaced by neighboring-file navigation.
+            ApplyQueueSnapshot(result.UpdatedQueue, shouldPlay: true);
         }
         else
         {
@@ -913,7 +913,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         {
             try
             {
-                var result = _playbackControlService.HandleMediaEnded(_playlist, _context.RepeatMode);
+                var result = _playbackControlService.HandleMediaEnded(_queueSession, _context.RepeatMode);
                 if (result is not null)
                 {
                     await ApplyNavigationResultAsync(result);
@@ -970,7 +970,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     }
 
     /// <summary>
-    /// Keeps the internal <see cref="_playlist"/> model in sync with the observable
+    /// Keeps the internal <see cref="_queueSession"/> model in sync with the observable
     /// <see cref="PlayQueueContext.Items"/> collection and updates shuffle backup bookkeeping
     /// when shuffle mode is active.
     /// </summary>
@@ -983,10 +983,10 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _context.CurrentIndex = _context.CurrentItem is not null
             ? _context.Items.IndexOf(_context.CurrentItem)
             : -1;
-        _playlist = new Playlist(_context.CurrentIndex, _context.Items, _playlist);
+        _queueSession = new QueueSession(_context.CurrentIndex, _context.Items, _queueSession);
         RaiseCanNavigateChanged();
 
-        _playlistService.UpdateShuffleBackup(_playlist, e);
+        _queueService.UpdateShuffleBackup(_queueSession, e);
     }
 
     #endregion

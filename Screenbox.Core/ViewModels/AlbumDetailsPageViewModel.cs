@@ -81,7 +81,7 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
         Messenger.SendQueueAndPlay(
             item,
             _itemList,
-            origin: Source is not null ? PlaylistOrigin.ForAlbum(Source) : null);
+            origin: Source is not null ? QueueOrigin.ForAlbum(Source) : null);
     }
 
     [RelayCommand]
@@ -90,13 +90,13 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
         if (Source == null || Source.RelatedSongs.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Playlist(0, shuffledList)
+        var queue = new QueueSession(0, shuffledList)
         {
             ShuffleMode = true,
             ShuffleBackup = new ShuffleBackup(SortedItems.ToList()),
-            Origin = PlaylistOrigin.ForAlbum(Source)
+            Origin = QueueOrigin.ForAlbum(Source)
         };
-        Messenger.Send(new SetQueueMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(queue, true));
     }
 
     private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)

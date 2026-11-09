@@ -152,10 +152,10 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         else
         {
             var origin = _playableItems.Count > 1
-                ? PlaylistOrigin.ForAdHocPlaylist(
+                ? QueueOrigin.ForMediaCollection(
                     !string.IsNullOrEmpty(TitleText) ? TitleText : item.Media.Name,
                     BreadcrumbLocations.LastOrDefault()?.Path)
-                : PlaylistOrigin.ForSingleMedia(item.Media);
+                : QueueOrigin.ForSingleMedia(item.Media);
             Messenger.SendQueueAndPlay(item.Media, _playableItems, true, origin);
         }
     }

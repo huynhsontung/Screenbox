@@ -32,6 +32,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueueTimer _commandRefreshTimer;
 
@@ -39,11 +40,13 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IFilesService filesService,
         ISourceMetadataService sourceMetadataService,
         IPlaylistService playlistService,
+        IQueueService queueService,
         MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
         _sourceMetadataService = sourceMetadataService;
         _playlistService = playlistService;
+        _queueService = queueService;
         _mediaFactory = mediaFactory;
         _commandRefreshTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
     }
@@ -88,11 +91,11 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private void Play(MediaViewModel? item)
     {
         if (Source == null || item == null) return;
-        var playlist = new Playlist(item, Source.Items)
+        var queue = new QueueSession(item, Source.Items)
         {
-            Origin = PlaylistOrigin.ForUserPlaylist(Source)
+            Origin = QueueOrigin.ForPlaylist(Source)
         };
-        Messenger.Send(new SetQueueMessage(playlist, true));
+        Messenger.Send(new SetQueueMessage(queue, true));
     }
 
     [RelayCommand(CanExecute = nameof(NotEmpty))]
@@ -101,13 +104,13 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         if (playlist == null || playlist.Items.Count == 0) return;
         Random rnd = new();
         List<MediaViewModel> shuffledList = playlist.Items.OrderBy(_ => rnd.Next()).ToList();
-        var shuffledPlaylist = new Playlist(0, shuffledList)
+        var queue = new QueueSession(0, shuffledList)
         {
             ShuffleMode = true,
             ShuffleBackup = new ShuffleBackup(playlist.Items.ToList()),
-            Origin = PlaylistOrigin.ForUserPlaylist(playlist)
+            Origin = QueueOrigin.ForPlaylist(playlist)
         };
-        Messenger.Send(new SetQueueMessage(shuffledPlaylist, true));
+        Messenger.Send(new SetQueueMessage(queue, true));
     }
 
     [RelayCommand(CanExecute = nameof(NotNull))]
@@ -137,10 +140,10 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     {
         if (Source is null) return;
 
-        var playlist = await _playlistService.TryParsePlaylistAsync(items);
-        if (playlist?.Items.Count > 0)
+        var queue = await _queueService.TryParseQueueAsync(items);
+        if (queue?.Items.Count > 0)
         {
-            await Source.AddItemsAtIndexAsync(playlist.Items, insertIndex);
+            await Source.AddItemsAtIndexAsync(queue.Items, insertIndex);
         }
     }
 

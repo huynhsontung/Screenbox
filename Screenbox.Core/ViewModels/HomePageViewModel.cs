@@ -38,7 +38,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private readonly IFilesService _filesService;
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly GeneralSettingsContext _generalSettings;
-    private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _changeDebounceTimer;
     private readonly ILogger<HomePageViewModel> _logger;
@@ -50,7 +50,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IFilesService filesService,
         ISourceMetadataService sourceMetadataService,
         GeneralSettingsContext generalSettings,
-        IPlaylistService playlistService,
+        IQueueService queueService,
         ILogger<HomePageViewModel> logger)
     {
         Selection = selection;
@@ -59,7 +59,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         _filesService = filesService;
         _sourceMetadataService = sourceMetadataService;
         _generalSettings = generalSettings;
-        _playlistService = playlistService;
+        _queueService = queueService;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _changeDebounceTimer = _dispatcherQueue.CreateTimer();
@@ -305,7 +305,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
         IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
         if (files.Length == 0) return;
-        await Messenger.PlayFilesAsync(files, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
+        await Messenger.PlayFilesAsync(files, _queueService, _generalSettings.EnqueueAllFilesInFolder);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]

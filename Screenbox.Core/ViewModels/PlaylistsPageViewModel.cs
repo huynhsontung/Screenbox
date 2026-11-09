@@ -114,7 +114,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
             .ToArray();
         if (items.Length > 0)
         {
-            Messenger.SendQueueAndPlay(items[0], items, origin: PlaylistOrigin.ForAdHocPlaylist(items[0].Name));
+            Messenger.SendQueueAndPlay(items[0], items, origin: QueueOrigin.ForMediaCollection(items[0].Name));
         }
         Selection.DisableSelectionMode();
     }

@@ -34,7 +34,7 @@ public sealed partial class PlayQueueContext : ObservableObject
     [ObservableProperty] public partial Guid ActiveSessionId { get; set; }
 
     /// <summary>The origin metadata of the currently active play queue session.</summary>
-    [ObservableProperty] public partial PlaylistOrigin? ActiveOrigin { get; set; }
+    [ObservableProperty] public partial QueueOrigin? ActiveOrigin { get; set; }
 
     /// <summary>Whether the active item in the play queue is currently playing.</summary>
     [ObservableProperty] public partial bool IsPlaying { get; set; }

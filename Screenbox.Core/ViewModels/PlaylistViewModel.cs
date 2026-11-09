@@ -100,11 +100,11 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }, TimeSpan.FromMilliseconds(50));
     }
 
-    public Playlist ToPlaylist()
+    public QueueSession ToQueueSession()
     {
-        return new Playlist(0, Items)
+        return new QueueSession(0, Items)
         {
-            Origin = PlaylistOrigin.ForUserPlaylist(this)
+            Origin = QueueOrigin.ForPlaylist(this)
         };
     }
 
@@ -159,7 +159,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     {
         bool isActive = state.SessionId != Guid.Empty &&
                         state.CurrentItem is not null &&
-                        (state.Origin?.Matches(RecentItemKind.UserPlaylist, Id) ?? false);
+                        (state.Origin?.Matches(RecentItemKind.Playlist, Id) ?? false);
         IsQueueActive = isActive;
         IsPlaying = isActive && state.IsPlaying;
     }
@@ -173,7 +173,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             return;
         }
 
-        Messenger.Send(new SetQueueMessage(ToPlaylist(), true));
+        Messenger.Send(new SetQueueMessage(ToQueueSession(), true));
     }
 
     [RelayCommand(CanExecute = nameof(HasItems))]
