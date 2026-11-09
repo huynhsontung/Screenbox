@@ -1209,5 +1209,14 @@
   <data name="Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <data name="EnqueueFolderNotificationTitle" xml:space="preserve">
+    <value>Enqueue all files from "{0}"?</value>
+    <comment>#Format[String folderName]</comment>
+  </data>
+  <data name="EnqueueFolderNotificationTitleNoFolder" xml:space="preserve">
+    <value>Enqueue all files from this folder?</value>
+  </data>
+  <data name="EnqueueAll" xml:space="preserve">
+    <value>Enqueue all</value>
+  </data>
 </root>
-

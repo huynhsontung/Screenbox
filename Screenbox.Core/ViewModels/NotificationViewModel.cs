@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Windows.System;
 
@@ -12,7 +15,8 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class NotificationViewModel : ObservableRecipient,
     IRecipient<NotificationMessage>,
-    IRecipient<CloseNotificationMessage>
+    IRecipient<CloseNotificationMessage>,
+    IRecipient<QueueCurrentItemChangedMessage>
 {
     [ObservableProperty]
     public partial NotificationKind Kind { get; set; }
@@ -40,6 +44,7 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
 
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _timer;
+    private readonly Queue<NotificationMessage> _pendingNotifications = new();
 
     public NotificationViewModel()
     {
@@ -48,44 +53,94 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
 
         Messenger.Register<NotificationMessage>(this);
         Messenger.Register<CloseNotificationMessage>(this);
+        Messenger.Register<QueueCurrentItemChangedMessage>(this);
     }
 
+    /// <summary>
+    /// Handles an incoming application notification message.
+    /// </summary>
+    /// <param name="message">The notification message to display or queue.</param>
     public void Receive(NotificationMessage message)
     {
-        if (message.Kind == NotificationKind.ResumePosition && Severity is NotificationLevel.Error && IsOpen)
-            return;
-
-        TimeSpan duration = message.DurationOverride ?? GetNotificationDuration(message.Level);
-
-        _dispatcherQueue.TryEnqueue(() =>
+        if (message.Kind is NotificationKind.ResumePosition or NotificationKind.EnqueueFolderItems &&
+            Severity is NotificationLevel.Error &&
+            IsOpen)
         {
-            Reset();
-            Severity = message.Level;
-            Kind = message.Kind;
+            return;
+        }
 
-            if (message.Title is not null)
-                Title = message.Title;
+        _dispatcherQueue.TryExecuteOrEnqueue(() =>
+        {
+            if (IsOpen)
+            {
+                if (message.Level is NotificationLevel.Error)
+                {
+                    _pendingNotifications.Clear();
+                    DisplayNotification(message);
+                    return;
+                }
 
-            if (message.Message is not null)
-                Message = message.Message;
+                if (Severity is NotificationLevel.Error)
+                {
+                    return;
+                }
 
-            if (message.NumericValue.HasValue)
-                NumericValue = message.NumericValue;
+                // Avoid queuing duplicate interactive prompts of the same kind
+                if (message.Kind is NotificationKind.ResumePosition or NotificationKind.EnqueueFolderItems)
+                {
+                    var filtered = _pendingNotifications
+                        .Where(n => n.Kind != message.Kind)
+                        .ToList();
+                    _pendingNotifications.Clear();
+                    foreach (var item in filtered)
+                    {
+                        _pendingNotifications.Enqueue(item);
+                    }
+                }
 
-            if (message.ActionContent is not null)
-                ActionContent = message.ActionContent;
-
-            if (message.ActionCommand is not null)
-                ActionCommand = message.ActionCommand;
-           
-            IsOpen = true;
-            _timer.Debounce(() => IsOpen = false, duration);
+                _pendingNotifications.Enqueue(message);
+            }
+            else
+            {
+                DisplayNotification(message);
+            }
         });
     }
 
+    /// <summary>
+    /// Handles a request to close the current notification and show the next queued notification if present.
+    /// </summary>
+    /// <param name="message">The close notification message.</param>
     public void Receive(CloseNotificationMessage message)
     {
-        IsOpen = false;
+        _dispatcherQueue.TryExecuteOrEnqueue(DismissCurrentAndShowNext);
+    }
+
+    /// <summary>
+    /// Handles a change in the active play queue item by clearing stale media-specific notifications.
+    /// </summary>
+    /// <param name="message">The message containing the new current queue item.</param>
+    public void Receive(QueueCurrentItemChangedMessage message)
+    {
+        _dispatcherQueue.TryExecuteOrEnqueue(() =>
+        {
+            if (_pendingNotifications.Count > 0)
+            {
+                var remaining = _pendingNotifications
+                    .Where(n => n.Kind is not NotificationKind.ResumePosition and not NotificationKind.EnqueueFolderItems)
+                    .ToList();
+                _pendingNotifications.Clear();
+                foreach (var item in remaining)
+                {
+                    _pendingNotifications.Enqueue(item);
+                }
+            }
+
+            if (Kind is NotificationKind.ResumePosition or NotificationKind.EnqueueFolderItems)
+            {
+                DismissCurrentAndShowNext();
+            }
+        });
     }
 
     [RelayCommand]
@@ -94,8 +149,48 @@ public sealed partial class NotificationViewModel : ObservableRecipient,
         Messenger.Send<CloseNotificationMessage>();
     }
 
+    private void DisplayNotification(NotificationMessage message)
+    {
+        Reset();
+        Severity = message.Level;
+        Kind = message.Kind;
+
+        if (message.Title is not null)
+            Title = message.Title;
+
+        if (message.Message is not null)
+            Message = message.Message;
+
+        if (message.NumericValue.HasValue)
+            NumericValue = message.NumericValue;
+
+        if (message.ActionContent is not null)
+            ActionContent = message.ActionContent;
+
+        if (message.ActionCommand is not null)
+            ActionCommand = message.ActionCommand;
+
+        IsOpen = true;
+        TimeSpan duration = message.DurationOverride ?? GetNotificationDuration(message.Level);
+        _timer.Debounce(DismissCurrentAndShowNext, duration);
+    }
+
+    private void DismissCurrentAndShowNext()
+    {
+        _timer.Stop();
+        if (_pendingNotifications.TryDequeue(out var nextMessage))
+        {
+            DisplayNotification(nextMessage);
+        }
+        else
+        {
+            Reset();
+        }
+    }
+
     private void Reset()
     {
+        _timer.Stop();
         Kind = NotificationKind.None;
         Severity = default;
         Title = default;

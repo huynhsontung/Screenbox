@@ -281,7 +281,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         if (media.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
         {
-            await Messenger.PlayFilesAsync(new[] { file }, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
+            await Messenger.PlayFilesAsync(
+                new[] { file },
+                _playlistService,
+                enqueueAllFilesInFolder: false,
+                promptFolderEnqueue: _generalSettings.EnqueueAllFilesInFolder);
         }
         else
         {

@@ -51,6 +51,11 @@ public sealed partial class NotificationView : UserControl
                 Content = Strings.Resources.GoToPosition(actionContent),
                 Command = actionCommand,
             },
+            NotificationKind.EnqueueFolderItems => new Button
+            {
+                Content = Strings.Resources.EnqueueAll,
+                Command = actionCommand,
+            },
             _ => null
         };
     }
@@ -76,6 +81,9 @@ public sealed partial class NotificationView : UserControl
             NotificationKind.PlaylistRenamed => Strings.Resources.PlaylistRenamedNotificationTitle(title ?? string.Empty),
             NotificationKind.PlaylistItemsAdded when numericValue is double count => Strings.Resources.PlaylistItemsAddedNotificationTitle(count, title ?? string.Empty),
             NotificationKind.ResumePosition => Strings.Resources.ResumePositionNotificationTitle,
+            NotificationKind.EnqueueFolderItems => !string.IsNullOrEmpty(title)
+                ? Strings.Resources.EnqueueFolderNotificationTitle(title)
+                : Strings.Resources.EnqueueFolderNotificationTitleNoFolder,
             _ => null,
         };
     }
