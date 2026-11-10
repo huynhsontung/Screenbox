@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Screenbox.Behaviors;
 using Screenbox.Commands;
 using Screenbox.Converters;
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
@@ -114,10 +115,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
         bool isPlaying = ContextItem switch
         {
-            AlbumViewModel album => album.IsPlaying,
-            ArtistViewModel artist => artist.IsPlaying,
-            MediaViewModel media => media.IsPlaying,
-            PlaylistViewModel playlist => playlist.IsPlaying,
+            IPlaybable playable => playable.IsPlaying,
             StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
             _ => false,
         };
