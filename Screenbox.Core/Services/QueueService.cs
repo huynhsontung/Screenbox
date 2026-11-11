@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -21,6 +22,8 @@ namespace Screenbox.Core.Services;
 
 public sealed class QueueService : IQueueService
 {
+    private const int MaxQueueSize = 10000;
+
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext? _generalSettings;
@@ -32,6 +35,8 @@ public sealed class QueueService : IQueueService
         _generalSettings = generalSettings;
     }
 
+    #region Queue Creation & Parsing
+
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
     [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
     public async Task<QueueSession?> TryCreateQueueAsync(
@@ -41,33 +46,18 @@ public sealed class QueueService : IQueueService
     {
         if (storageItems.Count == 0) return null;
 
-        QueueSession? session;
         if (storageItems.Count == 1 && storageItems[0] is StorageFile file)
         {
-            session = await ParseQueueAsync(file, cancellationToken);
-            if (session.Items.Count == 1 && session.Origin?.Kind == RecentItemKind.SingleMedia)
-            {
-                neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
-            }
-            else if (session.Origin?.Kind == RecentItemKind.MediaCollection && _generalSettings?.ShowRecent != false)
-            {
-                // Register the playlist file (e.g. .m3u/.m3u8) with the Windows Most Recently Used (MRU) list
-                // so the app retains persistent file-access permission to reload it across future sessions.
-                _filesService.AddToRecent(file);
-            }
+            return await CreateSingleFileQueueAsync(file, neighboringFilesQuery, cancellationToken);
         }
-        else
-        {
-            if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder && _generalSettings?.ShowRecent != false)
-            {
-                // Register the opened folder with the Windows Most Recently Used (MRU) list so the app
-                // retains persistent access permission to re-read the folder and its contents in future sessions.
-                _filesService.AddToRecent(folder);
-            }
 
-            session = await TryParseQueueAsync(storageItems, cancellationToken: cancellationToken);
-            if (session is null) return null;
+        if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder)
+        {
+            TrackInRecentIfEnabled(folder);
         }
+
+        var session = await TryParseQueueAsync(storageItems, cancellationToken: cancellationToken);
+        if (session is null) return null;
 
         session.NeighboringFilesQuery = neighboringFilesQuery;
         return session;
@@ -85,49 +75,20 @@ public sealed class QueueService : IQueueService
         var storageItemQueue = storageItems.ToList();
         MediaViewModel? next = null;
 
-        // Max number of items in queue is 10k. Reevaluate if needed.
-        for (int i = 0; i < storageItemQueue.Count && queue.Count < 10000; i++)
+        for (int i = 0; i < storageItemQueue.Count && queue.Count < MaxQueueSize; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var item = storageItemQueue[i];
-            switch (item)
+            switch (storageItemQueue[i])
             {
                 case StorageFile storageFile when storageFile.IsSupported():
-                    var vm = _mediaFactory.GetOrCreate(storageFile);
                     bool isPlayNext = playNext is not null && storageFile.IsEqual(playNext);
-
-                    if (vm.Source is IExpandableMediaSource expandable)
-                    {
-                        if (expandPlaylists || isPlayNext)
-                        {
-                            var expandedItems = await expandable.ExpandAsync(cancellationToken);
-                            if (expandedItems.Count > 0)
-                            {
-                                var childVms = expandedItems.Select(_mediaFactory.Create).ToList();
-
-                                if (isPlayNext)
-                                    next = childVms[0];
-                                queue.AddRange(childVms);
-                            }
-                            else
-                            {
-                                if (isPlayNext) next = vm;
-                                queue.Add(vm);
-                            }
-                        }
-                        // If expandPlaylists is false and not playNext, skip expandable items (e.g. .m3u in folder)
-                    }
-                    else
-                    {
-                        if (isPlayNext)
-                            next = vm;
-                        queue.Add(vm);
-                    }
+                    var targetVm = await AppendStorageFileAsync(storageFile, queue, isPlayNext, expandPlaylists, cancellationToken);
+                    next ??= targetVm;
                     break;
 
                 case StorageFolder storageFolder:
-                    var subItems = await storageFolder.GetItemsAsync(0, 10000);
+                    var subItems = await storageFolder.GetItemsAsync(0, MaxQueueSize);
                     storageItemQueue.AddRange(subItems);
                     break;
             }
@@ -138,29 +99,10 @@ public sealed class QueueService : IQueueService
             return null;
         }
 
-        var session = new QueueSession(next ?? queue[0], queue);
-        if (storageItems.Count == 1 && storageItems[0] is StorageFolder rootFolder)
+        return new QueueSession(next ?? queue[0], queue)
         {
-            string folderTitle = !string.IsNullOrWhiteSpace(rootFolder.DisplayName)
-                ? rootFolder.DisplayName
-                : rootFolder.Name;
-            session.Origin = QueueOrigin.ForMediaCollection(folderTitle, rootFolder.Path);
-        }
-        else if (storageItems.Count == 1 && storageItems[0] is StorageFile singleFile && singleFile.IsSupportedPlaylist())
-        {
-            string title = Path.GetFileNameWithoutExtension(singleFile.Name);
-            session.Origin = QueueOrigin.ForMediaCollection(string.IsNullOrWhiteSpace(title) ? singleFile.Name : title, singleFile.Path);
-        }
-        else if (queue.Count > 1)
-        {
-            session.Origin = QueueOrigin.ForMediaCollection(queue[0].Name);
-        }
-        else
-        {
-            session.Origin = QueueOrigin.ForSingleMedia(queue[0]);
-        }
-
-        return session;
+            Origin = ResolveStorageItemsOrigin(storageItems, queue)
+        };
     }
 
     public async Task<QueueSession> ParseQueueAsync(MediaViewModel media, CancellationToken cancellationToken = default)
@@ -199,6 +141,88 @@ public sealed class QueueService : IQueueService
         return await ParseQueueAsync(media, cancellationToken);
     }
 
+    private async Task<QueueSession> CreateSingleFileQueueAsync(
+        StorageFile file,
+        StorageFileQueryResult? neighboringFilesQuery,
+        CancellationToken cancellationToken)
+    {
+        var session = await ParseQueueAsync(file, cancellationToken);
+        if (session.Items.Count == 1 && session.Origin?.Kind == RecentItemKind.SingleMedia)
+        {
+            neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+        }
+        else if (session.Origin?.Kind == RecentItemKind.MediaCollection)
+        {
+            TrackInRecentIfEnabled(file);
+        }
+
+        session.NeighboringFilesQuery = neighboringFilesQuery;
+        return session;
+    }
+
+    private async Task<MediaViewModel?> AppendStorageFileAsync(
+        StorageFile storageFile,
+        List<MediaViewModel> queue,
+        bool isPlayNext,
+        bool expandPlaylists,
+        CancellationToken cancellationToken)
+    {
+        var vm = _mediaFactory.GetOrCreate(storageFile);
+        if (vm.Source is not IExpandableMediaSource expandable)
+        {
+            queue.Add(vm);
+            return isPlayNext ? vm : null;
+        }
+
+        // Skip expandable items (e.g. .m3u in folder) when expandPlaylists is false and not explicitly selected.
+        if (!expandPlaylists && !isPlayNext)
+        {
+            return null;
+        }
+
+        var expandedItems = await expandable.ExpandAsync(cancellationToken);
+        if (expandedItems.Count == 0)
+        {
+            queue.Add(vm);
+            return isPlayNext ? vm : null;
+        }
+
+        var childVms = expandedItems.Select(_mediaFactory.Create).ToList();
+        queue.AddRange(childVms);
+        return isPlayNext ? childVms[0] : null;
+    }
+
+    [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
+    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
+    private static QueueOrigin ResolveStorageItemsOrigin(
+        IReadOnlyList<IStorageItem> storageItems,
+        IReadOnlyList<MediaViewModel> queue)
+    {
+        if (storageItems.Count == 1 && storageItems[0] is StorageFolder rootFolder)
+        {
+            string folderTitle = !string.IsNullOrWhiteSpace(rootFolder.DisplayName)
+                ? rootFolder.DisplayName
+                : rootFolder.Name;
+            return QueueOrigin.ForMediaCollection(folderTitle, rootFolder.Path);
+        }
+
+        if (storageItems.Count == 1 && storageItems[0] is StorageFile singleFile && singleFile.IsSupportedPlaylist())
+        {
+            string title = Path.GetFileNameWithoutExtension(singleFile.Name);
+            return QueueOrigin.ForMediaCollection(
+                string.IsNullOrWhiteSpace(title) ? singleFile.Name : title,
+                singleFile.Path);
+        }
+
+        return queue.Count > 1
+            ? QueueOrigin.ForMediaCollection(queue[0].Name)
+            : QueueOrigin.ForSingleMedia(queue[0]);
+    }
+
+    #endregion
+
+    #region Neighboring Files Expansion
+
     public async Task<QueueSession> AddNeighboringFilesAsync(QueueSession session, CancellationToken cancellationToken = default)
     {
         if (session.NeighboringFilesQuery is not { } neighboringFilesQuery)
@@ -209,79 +233,93 @@ public sealed class QueueService : IQueueService
         var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
         var result = await TryParseQueueAsync(neighboringFiles, null, expandPlaylists: false, cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
-        if (result?.Items.Count > 1)
+
+        if (result is null || result.Items.Count <= 1)
         {
-            string folderName = string.Empty;
-            string? folderPath = null;
-            try
+            return session;
+        }
+
+        var folderOrigin = ResolveNeighboringFolderOrigin(neighboringFilesQuery, session.CurrentItem, result.Items[0]);
+        return MergeCurrentItemIntoNeighboringQueue(session, result.Items, folderOrigin);
+    }
+
+    private QueueOrigin ResolveNeighboringFolderOrigin(
+        StorageFileQueryResult neighboringFilesQuery,
+        MediaViewModel? currentItem,
+        MediaViewModel fallbackItem)
+    {
+        string folderName = string.Empty;
+        string? folderPath = null;
+        try
+        {
+            if (neighboringFilesQuery.Folder is { } parentFolder)
             {
-                if (neighboringFilesQuery.Folder is { } parentFolder)
-                {
-                    folderName = !string.IsNullOrWhiteSpace(parentFolder.DisplayName)
-                        ? parentFolder.DisplayName
-                        : parentFolder.Name;
-                    folderPath = parentFolder.Path;
-                    // When expanding single-file playback into a full folder queue, register the parent folder
-                    // with the Windows MRU list so persistent read permission is granted across future sessions.
-                    if (_generalSettings?.ShowRecent != false)
-                    {
-                        _filesService.AddToRecent(parentFolder);
-                    }
-                }
+                folderName = !string.IsNullOrWhiteSpace(parentFolder.DisplayName)
+                    ? parentFolder.DisplayName
+                    : parentFolder.Name;
+                folderPath = parentFolder.Path;
+                TrackInRecentIfEnabled(parentFolder);
             }
-            catch
-            {
-                // Best-effort folder inspection
-            }
+        }
+        catch
+        {
+            // Best-effort folder inspection
+        }
 
-            var currentItem = session.CurrentItem;
-            if (string.IsNullOrWhiteSpace(folderName) && currentItem is not null)
-            {
-                folderPath ??= Path.GetDirectoryName(currentItem.Location);
-                folderName = !string.IsNullOrWhiteSpace(folderPath)
-                    ? Path.GetFileName(folderPath)
-                    : currentItem.Name;
-            }
+        if (string.IsNullOrWhiteSpace(folderName) && currentItem is not null)
+        {
+            folderPath ??= Path.GetDirectoryName(currentItem.Location);
+            folderName = !string.IsNullOrWhiteSpace(folderPath)
+                ? Path.GetFileName(folderPath)
+                : currentItem.Name;
+        }
 
-            if (string.IsNullOrWhiteSpace(folderName))
-            {
-                folderName = result.Items[0].Name;
-            }
+        if (string.IsNullOrWhiteSpace(folderName))
+        {
+            folderName = fallbackItem.Name;
+        }
 
-            var folderOrigin = QueueOrigin.ForMediaCollection(folderName, folderPath);
+        return QueueOrigin.ForMediaCollection(folderName, folderPath);
+    }
 
-            if (currentItem is not null)
-            {
-                // Replace the matching item (by location) with the existing CurrentItem to preserve
-                // VM identity. Without this, GetOrCreate creates a new VM for the same file that is a
-                // different object reference. QueueSession uses IndexOf (reference equality) to find
-                // CurrentItem in the new list; if it fails, CurrentIndex becomes -1, which causes
-                // LoadFromPlaylist to set PlaybackItem to null and call VlcPlayer.Stop() on the UI
-                // thread, freezing the app.
-                int matchIndex = result.Items.FindIndex(vm =>
-                    vm.Location.Equals(currentItem.Location, StringComparison.OrdinalIgnoreCase));
-                if (matchIndex >= 0)
-                {
-                    result.Items[matchIndex] = currentItem;
-                    return new QueueSession(currentItem, result.Items, session)
-                    {
-                        Origin = folderOrigin
-                    };
-                }
-
-                // Current item not found in neighboring files (edge case).
-                // Return the queue session unchanged to avoid losing the current position.
-                return session;
-            }
-
-            return new QueueSession(result.Items, session)
+    private static QueueSession MergeCurrentItemIntoNeighboringQueue(
+        QueueSession session,
+        List<MediaViewModel> neighboringItems,
+        QueueOrigin folderOrigin)
+    {
+        if (session.CurrentItem is not { } currentItem)
+        {
+            return new QueueSession(neighboringItems, session)
             {
                 Origin = folderOrigin
             };
         }
 
+        // Replace the matching item (by location) with the existing CurrentItem to preserve
+        // VM identity. Without this, GetOrCreate creates a new VM for the same file that is a
+        // different object reference. QueueSession uses IndexOf (reference equality) to find
+        // CurrentItem in the new list; if it fails, CurrentIndex becomes -1, which causes
+        // LoadFromPlaylist to set PlaybackItem to null and call VlcPlayer.Stop() on the UI
+        // thread, freezing the app.
+        int matchIndex = neighboringItems.FindIndex(vm =>
+            vm.Location.Equals(currentItem.Location, StringComparison.OrdinalIgnoreCase));
+        if (matchIndex >= 0)
+        {
+            neighboringItems[matchIndex] = currentItem;
+            return new QueueSession(currentItem, neighboringItems, session)
+            {
+                Origin = folderOrigin
+            };
+        }
+
+        // Current item not found in neighboring files (edge case).
+        // Return the queue session unchanged to avoid losing the current position.
         return session;
     }
+
+    #endregion
+
+    #region Shuffle & Buffer Management
 
     public QueueSession Shuffle(QueueSession session, int? preserveIndex = null)
     {
@@ -346,40 +384,22 @@ public sealed class QueueService : IQueueService
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Remove when e.OldItems?.Count > 0:
-                foreach (object item in e.OldItems)
+                foreach (MediaViewModel vm in e.OldItems.OfType<MediaViewModel>())
                 {
-                    if (item is MediaViewModel vm)
-                    {
-                        backup.Removals.Add(vm);
-                    }
+                    backup.Removals.Add(vm);
                 }
                 break;
 
             case NotifyCollectionChangedAction.Replace when e is
             {
-                OldItems: { Count: { } oldCount }, NewItems: { Count: { } newCount }
+                OldItems: { Count: { } oldCount } oldItems,
+                NewItems: { Count: { } newCount } newItems
             } && oldCount == newCount && newCount > 0:
-                for (int i = 0; i < oldCount; i++)
-                {
-                    if (e.OldItems[i] is not MediaViewModel oldItem) continue;
-                    if (e.NewItems[i] is not MediaViewModel newItem) continue;
-                    int backupIndex = backup.OriginalItems.IndexOf(oldItem);
-                    if (backupIndex >= 0)
-                    {
-                        backup.OriginalItems[backupIndex] = newItem;
-                    }
-                }
+                ApplyShuffleReplace(backup, oldItems, newItems);
                 break;
 
-            case NotifyCollectionChangedAction.Add when e.NewItems is not null:
-                foreach (object item in e.NewItems)
-                {
-                    if (item is MediaViewModel vm && !backup.Removals.Remove(vm))
-                    {
-                        session.ShuffleBackup = null;
-                        break;
-                    }
-                }
+            case NotifyCollectionChangedAction.Add when e.NewItems is { } newItems:
+                ApplyShuffleAdd(session, backup, newItems);
                 break;
 
             case NotifyCollectionChangedAction.Reset:
@@ -418,6 +438,35 @@ public sealed class QueueService : IQueueService
         return indices.AsReadOnly();
     }
 
+    private static void ApplyShuffleReplace(ShuffleBackup backup, IList oldItems, IList newItems)
+    {
+        for (int i = 0; i < oldItems.Count; i++)
+        {
+            if (oldItems[i] is not MediaViewModel oldItem || newItems[i] is not MediaViewModel newItem)
+            {
+                continue;
+            }
+
+            int backupIndex = backup.OriginalItems.IndexOf(oldItem);
+            if (backupIndex >= 0)
+            {
+                backup.OriginalItems[backupIndex] = newItem;
+            }
+        }
+    }
+
+    private static void ApplyShuffleAdd(QueueSession session, ShuffleBackup backup, IList newItems)
+    {
+        foreach (MediaViewModel vm in newItems.OfType<MediaViewModel>())
+        {
+            if (!backup.Removals.Remove(vm))
+            {
+                session.ShuffleBackup = null;
+                break;
+            }
+        }
+    }
+
     private static void ShuffleList<T>(IList<T> list, Random rng)
     {
         int n = list.Count;
@@ -426,6 +475,18 @@ public sealed class QueueService : IQueueService
             n--;
             int k = rng.Next(n + 1);
             (list[k], list[n]) = (list[n], list[k]);
+        }
+    }
+
+    #endregion
+
+    private void TrackInRecentIfEnabled(IStorageItem item)
+    {
+        // Register the storage item (e.g. playlist file or folder) with the Windows Most Recently Used (MRU)
+        // list so the app retains persistent file-access permission to reload it across future sessions.
+        if (_generalSettings?.ShowRecent != false)
+        {
+            _filesService.AddToRecent(item);
         }
     }
 }
