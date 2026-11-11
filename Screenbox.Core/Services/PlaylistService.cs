@@ -72,7 +72,7 @@ public sealed class PlaylistService : IPlaylistService
         foreach (MediaViewModel m in items)
         {
             if (m is null) continue;
-            playlist.Items.Add(ToRawMediaRecord(m));
+            playlist.Items.Add(RawMediaRecordDto.FromMediaViewModel(m));
         }
 
         playlist.LastUpdated = DateTimeOffset.Now;
@@ -111,33 +111,5 @@ public sealed class PlaylistService : IPlaylistService
 
         byte[] bytes = Encoding.UTF8.GetBytes(sb.ToString());
         await FileIO.WriteBytesAsync(file, bytes);
-    }
-
-    private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
-    {
-        return new RawMediaRecordDto
-        {
-            Path = media.Location,
-            Title = media.Name,
-            MediaType = media.MediaType,
-            DateAdded = media.DateAdded,
-            Duration = media.Duration,
-            Year = media.MediaType == MediaPlaybackType.Music
-                ? media.MediaInfo.MusicProperties.Year
-                : media.MediaInfo.VideoProperties.Year,
-            Artist = media.MediaInfo.MusicProperties.Artist,
-            Album = media.MediaInfo.MusicProperties.Album,
-            AlbumArtist = media.MediaInfo.MusicProperties.AlbumArtist,
-            Composers = media.MediaInfo.MusicProperties.Composers,
-            Genre = media.MediaInfo.MusicProperties.Genre,
-            TrackNumber = media.MediaInfo.MusicProperties.TrackNumber,
-            Bitrate = media.MediaInfo.MusicProperties.Bitrate,
-            Subtitle = media.MediaInfo.VideoProperties.Subtitle,
-            Producers = media.MediaInfo.VideoProperties.Producers,
-            Writers = media.MediaInfo.VideoProperties.Writers,
-            Width = media.MediaInfo.VideoProperties.Width,
-            Height = media.MediaInfo.VideoProperties.Height,
-            VideoBitrate = media.MediaInfo.VideoProperties.Bitrate,
-        };
     }
 }

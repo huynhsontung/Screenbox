@@ -38,6 +38,31 @@ public static class MessengerExtensions
         messenger.Send(new SetQueueMessage(session, true));
     }
 
+    public static void SendShuffleAndPlay(
+        this IMessenger messenger,
+        IReadOnlyList<MediaViewModel> items,
+        QueueOrigin? origin = null)
+    {
+        if (items.Count == 0) return;
+
+        var originalItems = items.ToList();
+        var shuffledItems = new List<MediaViewModel>(originalItems);
+        var random = new Random();
+        for (int n = shuffledItems.Count - 1; n > 0; n--)
+        {
+            int k = random.Next(n + 1);
+            (shuffledItems[k], shuffledItems[n]) = (shuffledItems[n], shuffledItems[k]);
+        }
+
+        var session = new QueueSession(0, shuffledItems)
+        {
+            ShuffleMode = true,
+            ShuffleBackup = new ShuffleBackup(originalItems),
+            Origin = origin ?? QueueOrigin.ForLibraryQueue(shuffledItems[0])
+        };
+        messenger.Send(new SetQueueMessage(session, true));
+    }
+
     public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
     {
         QueueSession queue = messenger.Send(new QueueRequestMessage());

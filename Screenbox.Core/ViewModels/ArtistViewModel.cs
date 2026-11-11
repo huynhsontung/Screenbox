@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -20,7 +21,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
 
     public string Name { get; }
 
-    public string ArtistKey => Name.Trim().ToLower(CultureInfo.CurrentUICulture);
+    public string ArtistKey => ArtistViewModelFactory.GetArtistKey(Name);
 
     public IReadOnlyList<MediaViewModel> OrderedSongs => GetAlbumSortedSongs(RelatedSongs);
 

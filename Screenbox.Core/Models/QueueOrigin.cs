@@ -35,10 +35,7 @@ public sealed record QueueOrigin(
     }
 
     /// <summary>Creates a <see cref="QueueOrigin"/> for a library-wide queue where each played track is recorded individually.</summary>
-    public static QueueOrigin ForLibraryQueue(MediaViewModel initialMedia)
-    {
-        return new QueueOrigin(RecentItemKind.SingleMedia, initialMedia.Location, initialMedia.Name, initialMedia.Caption);
-    }
+    public static QueueOrigin ForLibraryQueue(MediaViewModel initialMedia) => ForSingleMedia(initialMedia);
 
     /// <summary>Creates a <see cref="QueueOrigin"/> for an ad-hoc media collection (such as a folder, M3U file, or multi-file selection).</summary>
     public static QueueOrigin ForMediaCollection(string title, string? sourcePath = null)
@@ -55,15 +52,13 @@ public sealed record QueueOrigin(
     /// <summary>Creates a <see cref="QueueOrigin"/> for an album.</summary>
     public static QueueOrigin ForAlbum(AlbumViewModel album)
     {
-        string key = AlbumViewModelFactory.GetAlbumKey(album.Name, album.ArtistName);
-        return new QueueOrigin(RecentItemKind.Album, key, album.Name, album.ArtistName);
+        return new QueueOrigin(RecentItemKind.Album, album.AlbumKey, album.Name, album.ArtistName);
     }
 
     /// <summary>Creates a <see cref="QueueOrigin"/> for an artist.</summary>
     public static QueueOrigin ForArtist(ArtistViewModel artist)
     {
-        string key = artist.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
-        return new QueueOrigin(RecentItemKind.Artist, key, artist.Name);
+        return new QueueOrigin(RecentItemKind.Artist, artist.ArtistKey, artist.Name);
     }
 
     /// <summary>

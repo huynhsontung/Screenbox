@@ -319,9 +319,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             }
             else
             {
-                playlist = _queueService.Shuffle(_queueSession, _context.CurrentIndex);
-                playlist.ShuffleMode = false;
-                playlist.ShuffleBackup = null;
+                playlist = new QueueSession(_queueSession)
+                {
+                    ShuffleMode = false,
+                    ShuffleBackup = null
+                };
             }
         }
 
@@ -515,6 +517,17 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             if (ReplaceItemInQueue(placeholder, newVms))
             {
+                if (newVms.Count > 1 && (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually))
+                {
+                    _queueSession.Origin = QueueOrigin.ForMediaCollection(placeholder.Name, placeholder.Location);
+                    _context.ActiveOrigin = _queueSession.Origin;
+                    bool isUpgrade = _queueSession.SessionId == _recordedSessionId &&
+                                     _recordedOriginKind == RecentItemKind.SingleMedia;
+                    _recordedSessionId = _queueSession.SessionId;
+                    _recordedOriginKind = RecentItemKind.MediaCollection;
+                    Messenger.Send(new QueueSessionStartedMessage(new QueueSession(_queueSession), isUpgrade));
+                }
+
                 // Only start playback of the first child if the placeholder was the active/target item.
                 // If the user already switched to another track while expanding, preserve their current playback.
                 if (shouldAutoPlay)
@@ -698,7 +711,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 await CheckSubItemsAsync(value, currentPlaybackItem, token);
             }
 
-            if (token.IsCancellationRequested) return;
+            if (token.IsCancellationRequested || _context.CurrentItem != value) return;
 
             if (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually)
             {

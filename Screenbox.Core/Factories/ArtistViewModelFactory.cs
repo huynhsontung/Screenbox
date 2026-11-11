@@ -115,7 +115,7 @@ public sealed class ArtistViewModelFactory
         }
     }
 
-    public string GetArtistKey(string artistName)
+    public static string GetArtistKey(string artistName)
     {
         return artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
     }

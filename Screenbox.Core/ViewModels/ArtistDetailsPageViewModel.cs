@@ -94,15 +94,8 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     private void ShuffleAndPlay()
     {
         if (Source == null || Source.RelatedSongs.Count == 0) return;
-        Random rnd = new();
-        List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
-        var queue = new QueueSession(0, shuffledList)
-        {
-            ShuffleMode = true,
-            ShuffleBackup = new ShuffleBackup(Source.OrderedSongs.ToList()),
-            Origin = QueueOrigin.ForArtist(Source)
-        };
-        Messenger.Send(new SetQueueMessage(queue, true));
+        _itemList ??= GroupedAlbums.SelectMany<IGrouping<AlbumViewModel, MediaViewModel>, MediaViewModel>(static g => g).ToList();
+        Messenger.SendShuffleAndPlay(_itemList, QueueOrigin.ForArtist(Source));
     }
 
     private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)

@@ -229,7 +229,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             Id = _id.ToString(),
             DisplayName = Name,
             LastUpdated = LastUpdated,
-            Items = Items.Select(ToRawMediaRecord).ToList()
+            Items = Items.Select(RawMediaRecordDto.FromMediaViewModel).ToList()
         };
     }
 
@@ -260,7 +260,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             if (!string.IsNullOrEmpty(record.Title))
                 media.Name = record.Title;
 
-            media.MediaInfo = CreateMediaInfo(record);
+            media.MediaInfo = record.ToMediaInfo();
 
             if (media.MediaType == MediaPlaybackType.Music)
             {
@@ -279,71 +279,5 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
 
         return media;
-    }
-
-    private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
-    {
-        return new RawMediaRecordDto
-        {
-            Path = media.Location,
-            Title = media.Name,
-            MediaType = media.MediaType,
-            DateAdded = media.DateAdded,
-            Duration = media.Duration,
-            Year = media.MediaType == MediaPlaybackType.Music
-                ? media.MediaInfo.MusicProperties.Year
-                : media.MediaInfo.VideoProperties.Year,
-            Artist = media.MediaInfo.MusicProperties.Artist,
-            Album = media.MediaInfo.MusicProperties.Album,
-            AlbumArtist = media.MediaInfo.MusicProperties.AlbumArtist,
-            Composers = media.MediaInfo.MusicProperties.Composers,
-            Genre = media.MediaInfo.MusicProperties.Genre,
-            TrackNumber = media.MediaInfo.MusicProperties.TrackNumber,
-            Bitrate = media.MediaInfo.MusicProperties.Bitrate,
-            Subtitle = media.MediaInfo.VideoProperties.Subtitle,
-            Producers = media.MediaInfo.VideoProperties.Producers,
-            Writers = media.MediaInfo.VideoProperties.Writers,
-            Width = media.MediaInfo.VideoProperties.Width,
-            Height = media.MediaInfo.VideoProperties.Height,
-            VideoBitrate = media.MediaInfo.VideoProperties.Bitrate,
-        };
-    }
-
-    private static MediaInfo CreateMediaInfo(RawMediaRecordDto record)
-    {
-        if (record.MediaType == MediaPlaybackType.Music)
-        {
-            return new MediaInfo(new MusicInfo
-            {
-                Title = record.Title,
-                Artist = record.Artist,
-                Album = record.Album,
-                AlbumArtist = record.AlbumArtist,
-                Composers = record.Composers,
-                Genre = record.Genre,
-                TrackNumber = record.TrackNumber,
-                Year = record.Year,
-                Duration = record.Duration,
-                Bitrate = record.Bitrate,
-            });
-        }
-
-        if (record.MediaType == MediaPlaybackType.Video)
-        {
-            return new MediaInfo(new VideoInfo
-            {
-                Title = record.Title,
-                Subtitle = record.Subtitle,
-                Producers = record.Producers,
-                Writers = record.Writers,
-                Year = record.Year,
-                Duration = record.Duration,
-                Width = record.Width,
-                Height = record.Height,
-                Bitrate = record.VideoBitrate,
-            });
-        }
-
-        return new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
     }
 }

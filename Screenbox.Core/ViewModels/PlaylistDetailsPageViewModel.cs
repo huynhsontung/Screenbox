@@ -102,15 +102,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     private void ShuffleAndPlay(PlaylistViewModel? playlist)
     {
         if (playlist == null || playlist.Items.Count == 0) return;
-        Random rnd = new();
-        List<MediaViewModel> shuffledList = playlist.Items.OrderBy(_ => rnd.Next()).ToList();
-        var queue = new QueueSession(0, shuffledList)
-        {
-            ShuffleMode = true,
-            ShuffleBackup = new ShuffleBackup(playlist.Items.ToList()),
-            Origin = QueueOrigin.ForPlaylist(playlist)
-        };
-        Messenger.Send(new SetQueueMessage(queue, true));
+        Messenger.SendShuffleAndPlay(playlist.Items, QueueOrigin.ForPlaylist(playlist));
     }
 
     [RelayCommand(CanExecute = nameof(NotNull))]
