@@ -11,6 +11,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Windows.Storage.FileProperties;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
@@ -61,13 +62,8 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     /// Gets or sets the secondary subtitle (e.g., album artist).
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ArtistName))]
+    [NotifyPropertyChangedFor(nameof(Caption))]
     public partial string? Subtitle { get; set; }
-
-    /// <summary>
-    /// Gets the artist name for album cards.
-    /// </summary>
-    public string ArtistName => LinkedAlbum?.ArtistName ?? Subtitle ?? string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether this recent item's queue session or media is currently active in the play queue.
@@ -100,19 +96,20 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     };
 
     /// <summary>
-    /// Gets the album art for album cards.
-    /// </summary>
-    public BitmapImage? AlbumArt => LinkedAlbum?.AlbumArt;
-
-    /// <summary>
     /// Gets the media type for single media items.
     /// </summary>
     public MediaPlaybackType MediaType => Media?.MediaType ?? MediaPlaybackType.Unknown;
 
     /// <summary>
-    /// Gets the caption for single media items.
+    /// Gets the caption for this recent item.
+    /// Returns media caption for single media, artist name for albums, or subtitle.
     /// </summary>
-    public string Caption => Media?.Caption ?? string.Empty;
+    public string Caption => Kind switch
+    {
+        RecentItemKind.SingleMedia => Media?.Caption ?? string.Empty,
+        RecentItemKind.Album => LinkedAlbum?.ArtistName ?? Subtitle ?? string.Empty,
+        _ => Subtitle ?? string.Empty
+    };
 
     /// <summary>
     /// Gets the item count for playlists (bound as <see cref="double"/> for localization pluralization).
@@ -122,6 +119,22 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         RecentItemKind.Playlist when LinkedPlaylist is not null => LinkedPlaylist.ItemsCount,
         _ => _snapshotItems.Count
     };
+
+    /// <summary>
+    /// Gets the corner radius for the thumbnail presentation.
+    /// Uses circular radius for artists and standard rounded rectangle for other media.
+    /// </summary>
+    public CornerRadius CornerRadius => Kind == RecentItemKind.Artist
+        ? new CornerRadius(99)
+        : new CornerRadius(4);
+
+    /// <summary>
+    /// Gets the horizontal text alignment for the title and caption.
+    /// Centered for artists and left-aligned for other media.
+    /// </summary>
+    public TextAlignment HorizontalTextAlignment => Kind == RecentItemKind.Artist
+        ? TextAlignment.Center
+        : TextAlignment.Left;
 
     /// <summary>
     /// Gets the initial index for re-playing an ad-hoc playlist.
@@ -276,8 +289,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         OnPropertyChanged(nameof(LinkedAlbum));
         OnPropertyChanged(nameof(TargetAlbum));
         OnPropertyChanged(nameof(TargetArtist));
-        OnPropertyChanged(nameof(ArtistName));
-        OnPropertyChanged(nameof(AlbumArt));
+        OnPropertyChanged(nameof(Caption));
         OnPropertyChanged(nameof(Thumbnail));
         PlayCommand.NotifyCanExecuteChanged();
         PlayNextCommand.NotifyCanExecuteChanged();
@@ -499,13 +511,12 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         if (LinkedAlbum is null) return;
         if (e.PropertyName == nameof(AlbumViewModel.AlbumArt))
         {
-            OnPropertyChanged(nameof(AlbumArt));
             OnPropertyChanged(nameof(Thumbnail));
         }
         else if (e.PropertyName == nameof(AlbumViewModel.ArtistName))
         {
             Subtitle = LinkedAlbum.ArtistName;
-            OnPropertyChanged(nameof(ArtistName));
+            OnPropertyChanged(nameof(Caption));
         }
     }
 

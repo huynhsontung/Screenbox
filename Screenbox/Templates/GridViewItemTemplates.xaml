@@ -94,4 +94,26 @@
             </controls:CommonGridViewItem.PlaceholderIconSource>
         </controls:CommonGridViewItem>
     </DataTemplate>
+
+    <DataTemplate x:Key="RecentGridViewItemTemplate" x:DataType="viewModels:RecentItemViewModel">
+        <controls:CommonGridViewItem
+            Title="{x:Bind helpers:ItemLabelHelper.GetRecentItemTitle(Kind, Name), Mode=OneWay}"
+            Width="{StaticResource CommonGridViewItemWidth}"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatAccessibleRecentItemName(Kind, Name, Caption, ItemsCount), Mode=OneWay}"
+            Caption="{x:Bind helpers:ItemLabelHelper.GetRecentItemCaption(Kind, Caption, ItemsCount), Mode=OneWay}"
+            CornerRadius="{x:Bind CornerRadius}"
+            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+            IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
+            PlayCommand="{x:Bind PlayCommand}"
+            PlayCommandParameter="{x:Bind}"
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+            ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
+            <controls:CommonGridViewItem.PlaceholderIconSource>
+                <FontIconSource
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
+                    Glyph="{x:Bind converters:GlyphConverter.ToRecentItemGlyph(Kind, MediaType), Mode=OneWay}" />
+            </controls:CommonGridViewItem.PlaceholderIconSource>
+        </controls:CommonGridViewItem>
+    </DataTemplate>
 </ResourceDictionary>

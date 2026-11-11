@@ -220,4 +220,54 @@ public static class ItemLabelHelper
     {
         return string.IsNullOrEmpty(value) ? fallback : value;
     }
+
+    /// <summary>
+    /// Gets the display title for a recent item, applying localized fallback values for albums and artists.
+    /// </summary>
+    /// <param name="kind">The kind of recent item.</param>
+    /// <param name="name">The raw name of the item.</param>
+    /// <returns>The resolved title.</returns>
+    public static string GetRecentItemTitle(RecentItemKind kind, string name)
+    {
+        return kind switch
+        {
+            RecentItemKind.Album => GetValueOrFallback(name, Strings.Resources.UnknownAlbum),
+            RecentItemKind.Artist => GetValueOrFallback(name, Strings.Resources.UnknownArtist),
+            _ => name,
+        };
+    }
+
+    /// <summary>
+    /// Gets the display caption for a recent item based on its kind, applying localized formatting.
+    /// </summary>
+    /// <param name="kind">The kind of recent item.</param>
+    /// <param name="caption">The underlying caption or artist name.</param>
+    /// <param name="itemsCount">The numeric item count for playlist entries.</param>
+    /// <returns>The localized caption string.</returns>
+    public static string GetRecentItemCaption(RecentItemKind kind, string caption, double itemsCount)
+    {
+        return kind switch
+        {
+            RecentItemKind.SingleMedia => caption,
+            RecentItemKind.MediaCollection or RecentItemKind.Playlist => Strings.Resources.ItemsCount(itemsCount),
+            RecentItemKind.Album => GetValueOrFallback(caption, Strings.Resources.UnknownArtist),
+            RecentItemKind.Artist => string.Empty,
+            _ => caption,
+        };
+    }
+
+    /// <summary>
+    /// Formats an accessible name for a recent item based on its resolved title and caption.
+    /// </summary>
+    /// <param name="kind">The kind of recent item.</param>
+    /// <param name="name">The raw name of the item.</param>
+    /// <param name="caption">The underlying caption or artist name.</param>
+    /// <param name="itemsCount">The numeric item count for playlist entries.</param>
+    /// <returns>A formatted accessible name.</returns>
+    public static string FormatAccessibleRecentItemName(RecentItemKind kind, string name, string caption, double itemsCount)
+    {
+        string title = GetRecentItemTitle(kind, name);
+        string sub = GetRecentItemCaption(kind, caption, itemsCount);
+        return string.IsNullOrEmpty(sub) ? title : FormatAccessibleName(title, sub);
+    }
 }
