@@ -45,12 +45,12 @@
     <PackageReference Include="CommunityToolkit.Uwp.Converters" Version="8.2.251219" />
     <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
     <PackageReference Include="LibVLC.UWP" Version="3.0.23-2608082208" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0" />
     <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
     <PackageReference Include="Sentry.Extensions.Logging" Version="6.12.1" />
-    <PackageReference Include="ReswPlus" Version="0.5.0" />
+    <PackageReference Include="ReswPlus" Version="0.6.1" />
   </ItemGroup>
 
   <ItemGroup Label="Localization">
