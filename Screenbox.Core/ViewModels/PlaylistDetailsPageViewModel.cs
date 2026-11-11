@@ -68,6 +68,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         if (Source is not null)
         {
             Source.Items.CollectionChanged += SourceItems_CollectionChanged;
+            _ = Source.LoadThumbnailAsync();
         }
 
         FirstItem = Source?.Items.FirstOrDefault();

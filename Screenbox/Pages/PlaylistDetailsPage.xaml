@@ -94,8 +94,10 @@
                     Shadow="{StaticResource ElevationThemeShadow}"
                     SizeChanged="CoverArt_OnSizeChanged"
                     Translation="0,0,16">
-                    <Border CornerRadius="{x:Bind CoverArt.CornerRadius}">
-                        <Image Source="{x:Bind ViewModel.Source.Thumbnail, Mode=OneWay}" Stretch="UniformToFill" />
+                    <Border CornerRadius="{x:Bind CoverArt.CornerRadius}" FlowDirection="LeftToRight">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{x:Bind ViewModel.Source.Thumbnail, FallbackValue={x:Null}, Mode=OneWay}" Stretch="UniformToFill" />
+                        </Border.Background>
                     </Border>
                     <FontIcon
                         x:Name="CoverArtIcon"
