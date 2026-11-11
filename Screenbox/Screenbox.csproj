@@ -29,7 +29,7 @@
     <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     
-    <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.7.260930100</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
+    <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.7.261102100</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
