@@ -20,7 +20,7 @@ public sealed partial class DatabaseService
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = """
-                SELECT id, kind, source_id, title, subtitle, content_hash, last_played
+                SELECT id, kind, source_id, title, subtitle, content_hash, initial_index, last_played
                 FROM recent_entries
                 ORDER BY last_played DESC
                 LIMIT @max;
@@ -38,7 +38,8 @@ public sealed partial class DatabaseService
                     Title = reader.GetString(3),
                     Subtitle = reader.IsDBNull(4) ? null : reader.GetString(4),
                     ContentHash = reader.GetString(5),
-                    LastPlayed = new DateTimeOffset(reader.GetInt64(6), TimeSpan.Zero),
+                    InitialIndex = reader.GetInt32(6),
+                    LastPlayed = new DateTimeOffset(reader.GetInt64(7), TimeSpan.Zero),
                 });
             }
         }
@@ -82,9 +83,9 @@ public sealed partial class DatabaseService
         {
             upsertCmd.CommandText = """
                 INSERT OR REPLACE INTO recent_entries
-                    (id, kind, source_id, title, subtitle, content_hash, last_played)
+                    (id, kind, source_id, title, subtitle, content_hash, initial_index, last_played)
                 VALUES
-                    (@id, @kind, @sourceId, @title, @subtitle, @hash, @lastPlayed);
+                    (@id, @kind, @sourceId, @title, @subtitle, @hash, @initialIndex, @lastPlayed);
                 """;
             upsertCmd.Parameters.AddWithValue("@id", entry.Id);
             upsertCmd.Parameters.AddWithValue("@kind", (int)entry.Kind);
@@ -92,6 +93,7 @@ public sealed partial class DatabaseService
             upsertCmd.Parameters.AddWithValue("@title", entry.Title);
             upsertCmd.Parameters.AddWithValue("@subtitle", (object?)entry.Subtitle ?? DBNull.Value);
             upsertCmd.Parameters.AddWithValue("@hash", entry.ContentHash);
+            upsertCmd.Parameters.AddWithValue("@initialIndex", entry.InitialIndex);
             upsertCmd.Parameters.AddWithValue("@lastPlayed", entry.LastPlayed.UtcTicks);
             upsertCmd.ExecuteNonQuery();
         }

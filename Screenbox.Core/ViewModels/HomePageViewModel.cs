@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.Logging;
-using Windows.System;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
@@ -34,9 +32,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IQueueService _queueService;
-    private readonly DispatcherQueue _dispatcherQueue;
-    private readonly DispatcherQueueTimer _changeDebounceTimer;
-    private readonly ILogger<HomePageViewModel> _logger;
 
     public HomePageViewModel(
         RecentContext recentContext,
@@ -45,8 +40,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
-        IQueueService queueService,
-        ILogger<HomePageViewModel> logger)
+        IQueueService queueService)
     {
         Selection = selection;
         _recentContext = recentContext;
@@ -55,9 +49,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient
         _filesService = filesService;
         _generalSettings = generalSettings;
         _queueService = queueService;
-        _logger = logger;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _changeDebounceTimer = _dispatcherQueue.CreateTimer();
 
         Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;

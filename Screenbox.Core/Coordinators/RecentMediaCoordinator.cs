@@ -85,7 +85,11 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        _dispatcherQueue.TryExecuteOrEnqueue(RelinkAllItems);
+        _dispatcherQueue.TryExecuteOrEnqueue(async () =>
+        {
+            RelinkAllItems();
+            await LoadAlbumArtForLinkedAlbumsAsync();
+        });
     }
 
     /// <inheritdoc/>
@@ -339,6 +343,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 Title = origin.Title,
                 Subtitle = origin.Subtitle,
                 SourceId = origin.SourceId,
+                InitialIndex = initialIndex,
                 LastPlayed = now,
                 Items = dtoItems
             };
@@ -401,6 +406,12 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                                    QueueOrigin.NormalizeLocation(currentItem.Location),
                                    StringComparison.Ordinal);
             }
+            else if (item.Kind is RecentItemKind.Playlist or RecentItemKind.Album or RecentItemKind.Artist)
+            {
+                isItemActive = item.ActiveSessionId == activeSessionId ||
+                               (activeOrigin is { TrackItemsIndividually: false } &&
+                                activeOrigin.Matches(item.Kind, item.SourceId ?? string.Empty));
+            }
             else
             {
                 isItemActive = item.ActiveSessionId == activeSessionId &&
@@ -414,7 +425,24 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private void Playlists_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _dispatcherQueue.TryExecuteOrEnqueue(RelinkAllItems);
+        _dispatcherQueue.TryExecuteOrEnqueue(async () =>
+        {
+            if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems is not null)
+            {
+                foreach (PlaylistViewModel removedPlaylist in e.OldItems.OfType<PlaylistViewModel>())
+                {
+                    var removedItems = _recentContext.Recent
+                        .Where(r => r.Kind == RecentItemKind.Playlist && r.SourceId == removedPlaylist.Id)
+                        .ToList();
+                    foreach (var item in removedItems)
+                    {
+                        await RemoveAsync(item);
+                    }
+                }
+            }
+
+            RelinkAllItems();
+        });
     }
 
     private async void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -515,7 +543,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 entry.Title,
                 entry.Subtitle,
                 entry.SourceId,
-                snapshot);
+                snapshot,
+                entry.InitialIndex);
         }
 
         return new RecentItemViewModel(
@@ -525,7 +554,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             entry.Title,
             entry.Subtitle,
             entry.SourceId,
-            []);
+            [],
+            entry.InitialIndex);
     }
 
     private MediaViewModel? HydrateMediaViewModel(RawMediaRecordDto record)
@@ -552,7 +582,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 media.Name = record.Title;
             }
 
-            media.MediaInfo = CreateMediaInfo(record);
+            media.MediaInfo = record.ToMediaInfo();
             if (record.DateAdded != default)
             {
                 media.DateAdded = record.DateAdded.ToLocalTime();
@@ -562,42 +592,17 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         return media;
     }
 
-    private static MediaInfo CreateMediaInfo(RawMediaRecordDto record)
+    private async Task LoadAlbumArtForLinkedAlbumsAsync()
     {
-        if (record.MediaType == MediaPlaybackType.Music)
-        {
-            return new MediaInfo(new MusicInfo
-            {
-                Title = record.Title,
-                Artist = record.Artist,
-                Album = record.Album,
-                AlbumArtist = record.AlbumArtist,
-                Composers = record.Composers,
-                Genre = record.Genre,
-                TrackNumber = record.TrackNumber,
-                Year = record.Year,
-                Duration = record.Duration,
-                Bitrate = record.Bitrate,
-            });
-        }
+        var tasks = _recentContext.Recent
+            .Where(item => item.Kind == RecentItemKind.Album && item.LinkedAlbum is { AlbumArt: null })
+            .Select(item => item.LinkedAlbum!.LoadAlbumArtAsync())
+            .ToList();
 
-        if (record.MediaType == MediaPlaybackType.Video)
+        if (tasks.Count > 0)
         {
-            return new MediaInfo(new VideoInfo
-            {
-                Title = record.Title,
-                Subtitle = record.Subtitle,
-                Producers = record.Producers,
-                Writers = record.Writers,
-                Year = record.Year,
-                Duration = record.Duration,
-                Width = record.Width,
-                Height = record.Height,
-                Bitrate = record.VideoBitrate,
-            });
+            await Task.WhenAll(tasks);
         }
-
-        return new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
     }
 
     private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)

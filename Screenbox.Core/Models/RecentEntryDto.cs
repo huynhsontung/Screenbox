@@ -21,6 +21,8 @@ public sealed class RecentEntryDto
 
     public string ContentHash { get; set; } = string.Empty;
 
+    public int InitialIndex { get; set; }
+
     public DateTimeOffset LastPlayed { get; set; }
 
     public List<RawMediaRecordDto> Items { get; set; } = [];

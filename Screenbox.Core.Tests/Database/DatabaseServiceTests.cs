@@ -315,6 +315,7 @@ public sealed class DatabaseServiceTests
             SourceId = @"C:\Music",
             Title = "Music",
             ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music", folderPaths),
+            InitialIndex = 1,
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-5),
             Items =
             [
@@ -329,6 +330,7 @@ public sealed class DatabaseServiceTests
         await Assert.That(loaded).HasSingleItem();
         await Assert.That(loaded[0].Id).IsEqualTo("entry_2");
         await Assert.That(loaded[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
+        await Assert.That(loaded[0].InitialIndex).IsEqualTo(1);
         await Assert.That(loaded[0].Items.Count).IsEqualTo(2);
 
         var duplicateFolderEntry = new RecentEntryDto

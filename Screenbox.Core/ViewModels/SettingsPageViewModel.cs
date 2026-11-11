@@ -57,7 +57,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
-    private readonly RecentContext _recentContext;
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly DispatcherQueue _dispatcherQueue;
@@ -84,7 +83,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         GeneralSettingsContext generalSettings,
         IFilesService filesService,
         LibraryContext libraryContext,
-        RecentContext recentContext,
         ILibraryCoordinator libraryCoordinator,
         IRecentMediaCoordinator recentMediaCoordinator,
         IPlaybackProgressTracker playbackProgressTracker,
@@ -96,7 +94,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         GeneralSettings = generalSettings;
         _filesService = filesService;
         _libraryContext = libraryContext;
-        _recentContext = recentContext;
         _libraryCoordinator = libraryCoordinator;
         _recentMediaCoordinator = recentMediaCoordinator;
         _playbackProgressTracker = playbackProgressTracker;
@@ -137,10 +134,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     partial void OnShowRecentChanged(bool value)
     {
         GeneralSettings.ShowRecent = value;
-        if (!value)
-        {
-            ClearRecentContext();
-        }
     }
 
     partial void OnSearchRemovableStorageChanged(bool value)
@@ -262,21 +255,7 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     [RelayCommand]
     private async Task ClearRecentHistory()
     {
-        ClearRecentContext();
         await _recentMediaCoordinator.ClearAsync();
-    }
-
-    private void ClearRecentContext()
-    {
-        foreach (var item in _recentContext.Recent)
-        {
-            item.Detach();
-        }
-
-        _recentContext.Recent.Clear();
-
-
-        _recentContext.IsLoaded = true;
     }
 
     [RelayCommand]

@@ -64,7 +64,7 @@ public sealed partial class DatabaseService
             "subtitle", "producers", "writers", "width", "height", "video_bitrate");
         EnsureReplaceableTable(connection, "playback_progress", CreatePlaybackProgressSql, "location", "position_ticks");
         EnsureReplaceableTable(connection, "recent_entries", CreateRecentEntriesSql,
-            "id", "kind", "source_id", "title", "subtitle", "content_hash", "last_played");
+            "id", "kind", "source_id", "title", "subtitle", "content_hash", "initial_index", "last_played");
         EnsureReplaceableTable(connection, "recent_entry_items", CreateRecentEntryItemsSql,
             "id", "entry_id", "sort_order", "path", "title", "media_type", "duration_ticks");
         EnsurePlaylistsTable(connection);
@@ -375,13 +375,14 @@ public sealed partial class DatabaseService
 
     private const string CreateRecentEntriesSql = """
         CREATE TABLE IF NOT EXISTS recent_entries (
-            id           TEXT    PRIMARY KEY,
-            kind         INTEGER NOT NULL,
-            source_id    TEXT    NOT NULL,
-            title        TEXT    NOT NULL,
-            subtitle     TEXT,
-            content_hash TEXT    NOT NULL,
-            last_played  INTEGER NOT NULL
+            id            TEXT    PRIMARY KEY,
+            kind          INTEGER NOT NULL,
+            source_id     TEXT    NOT NULL,
+            title         TEXT    NOT NULL,
+            subtitle      TEXT,
+            content_hash  TEXT    NOT NULL,
+            initial_index INTEGER NOT NULL DEFAULT 0,
+            last_played   INTEGER NOT NULL
         );
         """;
 
