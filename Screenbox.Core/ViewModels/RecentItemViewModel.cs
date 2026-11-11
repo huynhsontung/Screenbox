@@ -266,6 +266,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
 
         if (album is not null)
         {
+            album.UpdateProperties();
             Name = album.Name;
             Subtitle = album.ArtistName;
             album.PropertyChanged += LinkedAlbum_PropertyChanged;
@@ -519,6 +520,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
 
     private void LinkedEntitySongs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        LinkedAlbum?.UpdateProperties();
         OnPropertyChanged(nameof(TargetArtist));
         PlayCommand.NotifyCanExecuteChanged();
         PlayNextCommand.NotifyCanExecuteChanged();
