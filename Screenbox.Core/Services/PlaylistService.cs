@@ -7,6 +7,7 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using MediaPlaybackType = Screenbox.Core.Enums.MediaPlaybackType;
 
 namespace Screenbox.Core.Services;
@@ -52,6 +53,7 @@ public sealed class PlaylistService : IPlaylistService
     public async Task DeletePlaylistAsync(string id)
     {
         await _databaseService.DeletePlaylistAsync(id);
+        await DeleteThumbnailAsync(id);
     }
 
     /// <summary>
@@ -111,5 +113,47 @@ public sealed class PlaylistService : IPlaylistService
 
         byte[] bytes = Encoding.UTF8.GetBytes(sb.ToString());
         await FileIO.WriteBytesAsync(file, bytes);
+    }
+
+    /// <inheritdoc/>
+    public async Task SaveThumbnailAsync(string playlistId, IRandomAccessStream inputStream)
+    {
+        StorageFolder folder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Image", CreationCollisionOption.OpenIfExists);
+        StorageFile file = await folder.CreateFileAsync(playlistId + ".png", CreationCollisionOption.ReplaceExisting);
+
+        using IRandomAccessStream outputStream = await file.OpenAsync(FileAccessMode.ReadWrite);
+        inputStream.Seek(0);
+        await RandomAccessStream.CopyAsync(inputStream, outputStream);
+        await outputStream.FlushAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task DeleteThumbnailAsync(string playlistId)
+    {
+        try
+        {
+            StorageFile? thumbnail = await GetThumbnailFileAsync(playlistId);
+            if (thumbnail is not null)
+            {
+                await thumbnail.DeleteAsync();
+            }
+        }
+        catch (System.IO.FileNotFoundException)
+        {
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<StorageFile?> GetThumbnailFileAsync(string playlistId)
+    {
+        StorageFolder folder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Image", CreationCollisionOption.OpenIfExists);
+        try
+        {
+            return await folder.GetFileAsync(playlistId + ".png");
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
