@@ -109,7 +109,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        _queueSession = new QueueSession();
+        _queueSession = new QueueSession { SessionId = Guid.Empty };
 
         // Initialize context with persisted repeat mode.
         _context.RepeatMode = playbackSettings.RepeatMode;
@@ -484,6 +484,23 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _context.Items.Insert(index + i, replacements[i]);
             }
 
+            if (_queueSession.ShuffleBackup is { } backup)
+            {
+                int backupIndex = backup.OriginalItems.IndexOf(target);
+                if (backupIndex >= 0)
+                {
+                    backup.OriginalItems.RemoveAt(backupIndex);
+                    for (int i = 0; i < replacements.Count; i++)
+                    {
+                        backup.OriginalItems.Insert(backupIndex + i, replacements[i]);
+                    }
+                }
+                else
+                {
+                    _queueSession.ShuffleBackup = null;
+                }
+            }
+
             _context.CurrentIndex = _context.CurrentItem is not null
                 ? _context.Items.IndexOf(_context.CurrentItem)
                 : -1;
@@ -519,13 +536,24 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 if (newVms.Count > 1 && (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually))
                 {
+                    // Upgrade the session origin before starting playback so ProcessCurrentItemChangedAsync
+                    // sees a collection origin and does not emit a separate SingleMedia session for newVms[0].
                     _queueSession.Origin = QueueOrigin.ForMediaCollection(placeholder.Name, placeholder.Location);
                     _context.ActiveOrigin = _queueSession.Origin;
                     bool isUpgrade = _queueSession.SessionId == _recordedSessionId &&
                                      _recordedOriginKind == RecentItemKind.SingleMedia;
                     _recordedSessionId = _queueSession.SessionId;
                     _recordedOriginKind = RecentItemKind.MediaCollection;
-                    Messenger.Send(new QueueSessionStartedMessage(new QueueSession(_queueSession), isUpgrade));
+
+                    // ReplaceItemInQueue temporarily left _queueSession.CurrentIndex at -1 when removing the active
+                    // placeholder; construct the snapshot with newVms[0] as the active item so recent-media
+                    // tracking records the expanded item's actual queue position as InitialIndex.
+                    MediaViewModel targetItem = shouldAutoPlay && _context.CurrentItem is null
+                        ? newVms[0]
+                        : (_context.CurrentItem ?? newVms[0]);
+                    Messenger.Send(new QueueSessionStartedMessage(
+                        new QueueSession(targetItem, _queueSession.Items, _queueSession),
+                        isUpgrade));
                 }
 
                 // Only start playback of the first child if the placeholder was the active/target item.
@@ -561,18 +589,29 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     var newVms = subItems.Select(_mediaFactory.Create).ToList();
                     if (ReplaceItemInQueue(vm, newVms))
                     {
-                        if (newVms.Count > 1 && (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually))
+                        bool shouldUpgradeOrigin = newVms.Count > 1 &&
+                                                   (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually);
+                        bool isUpgrade = false;
+                        if (shouldUpgradeOrigin)
                         {
+                            // Upgrade the session origin before calling SetCurrentItem so ProcessCurrentItemChangedAsync
+                            // sees TrackItemsIndividually == false and does not emit a duplicate SingleMedia session.
                             _queueSession.Origin = QueueOrigin.ForMediaCollection(vm.Name, vm.Location);
                             _context.ActiveOrigin = _queueSession.Origin;
-                            bool isUpgrade = _queueSession.SessionId == _recordedSessionId &&
-                                             _recordedOriginKind == RecentItemKind.SingleMedia;
+                            isUpgrade = _queueSession.SessionId == _recordedSessionId &&
+                                        _recordedOriginKind == RecentItemKind.SingleMedia;
                             _recordedSessionId = _queueSession.SessionId;
                             _recordedOriginKind = RecentItemKind.MediaCollection;
-                            Messenger.Send(new QueueSessionStartedMessage(new QueueSession(_queueSession), isUpgrade));
                         }
 
+                        // Select newVms[0] before broadcasting QueueSessionStartedMessage so _queueSession.CurrentIndex
+                        // and CurrentItem reflect the first expanded sub-item rather than -1 after removing vm.
                         SetCurrentItem(newVms[0], shouldPlay: true);
+
+                        if (shouldUpgradeOrigin)
+                        {
+                            Messenger.Send(new QueueSessionStartedMessage(new QueueSession(_queueSession), isUpgrade));
+                        }
                     }
                 }
 
@@ -1028,9 +1067,13 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             ? _context.Items.IndexOf(_context.CurrentItem)
             : -1;
         _queueSession = new QueueSession(_context.CurrentIndex, _context.Items, _queueSession);
-        if (_queueSession.SessionId == Guid.Empty)
+        if (_queueSession.SessionId == Guid.Empty || _context.ActiveSessionId == Guid.Empty)
         {
-            _queueSession.SessionId = Guid.NewGuid();
+            if (_queueSession.SessionId == Guid.Empty)
+            {
+                _queueSession.SessionId = Guid.NewGuid();
+            }
+
             _queueSession.Origin ??= _context.Items.Count > 1
                 ? QueueOrigin.ForMediaCollection(_context.Items[0].Name)
                 : QueueOrigin.ForSingleMedia(_context.Items[0]);

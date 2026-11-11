@@ -88,7 +88,11 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (nextFile is not null)
             {
                 var result = await _queueService.ParseQueueAsync(nextFile);
-                var newQueue = new QueueSession(result.CurrentIndex, result.Items, session);
+                var newQueue = new QueueSession(result.CurrentIndex, result.Items, session)
+                {
+                    SessionId = result.SessionId,
+                    Origin = result.Origin
+                };
                 if (newQueue.CurrentItem is { } nextItem)
                 {
                     return new PlaybackNavigationResult(newQueue, nextItem);
@@ -130,7 +134,11 @@ public sealed class PlaybackControlService : IPlaybackControlService
             if (previousFile is not null)
             {
                 var result = await _queueService.ParseQueueAsync(previousFile);
-                var newQueue = new QueueSession(result.CurrentIndex, result.Items, session);
+                var newQueue = new QueueSession(result.CurrentIndex, result.Items, session)
+                {
+                    SessionId = result.SessionId,
+                    Origin = result.Origin
+                };
                 if (newQueue.CurrentItem is { } nextItem)
                 {
                     return new PlaybackNavigationResult(newQueue, nextItem);
