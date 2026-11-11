@@ -123,7 +123,7 @@ public sealed partial class SearchResultPageViewModel : ObservableRecipient
     private void PlaySong(MediaViewModel media)
     {
         if (SearchResult == null) return;
-        Messenger.SendQueueAndPlay(media, SearchResult.Songs);
+        Messenger.SendQueueAndPlay(media, SearchResult.Songs, origin: QueueOrigin.ForLibraryQueue(media));
     }
 
     [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreArtists))]

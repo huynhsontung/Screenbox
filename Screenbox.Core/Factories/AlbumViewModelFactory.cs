@@ -55,8 +55,7 @@ public sealed class AlbumViewModelFactory
         album.RelatedSongs.Remove(song);
         if (album.RelatedSongs.Count == 0)
         {
-            var key = GetAlbumKey(album.Name, album.ArtistName);
-            Albums.Remove(key);
+            Albums.Remove(album.AlbumKey);
         }
 
         SongsToAlbums.Remove(song);

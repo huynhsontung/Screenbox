@@ -4,8 +4,8 @@ using Screenbox.Core.Models;
 namespace Screenbox.Core.Messages;
 
 /// <summary>
-/// Requests a snapshot of the current play queue as a <see cref="Playlist"/> model.
+/// Requests a snapshot of the current play queue as a <see cref="QueueSession"/> model.
 /// </summary>
-public sealed class QueueRequestMessage : RequestMessage<Playlist>
+public sealed class QueueRequestMessage : RequestMessage<QueueSession>
 {
 }

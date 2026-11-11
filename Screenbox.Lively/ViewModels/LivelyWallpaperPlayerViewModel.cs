@@ -245,7 +245,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     private void LoadMedia()
     {
-        Playlist reply = Messenger.Send(new QueueRequestMessage());
+        QueueSession reply = Messenger.Send(new QueueRequestMessage());
         Media = reply.CurrentItem;
     }
 

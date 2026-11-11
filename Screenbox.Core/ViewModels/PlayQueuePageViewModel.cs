@@ -18,18 +18,18 @@ public sealed partial class PlayQueuePageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly IPlayQueueCoordinator _coordinator;
     private readonly MediaViewModelFactory _mediaFactory;
-    private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
 
     public PlayQueuePageViewModel(
         IFilesService filesService,
         IPlayQueueCoordinator coordinator,
         MediaViewModelFactory mediaFactory,
-        IPlaylistService playlistService)
+        IQueueService queueService)
     {
         _filesService = filesService;
         _coordinator = coordinator;
         _mediaFactory = mediaFactory;
-        _playlistService = playlistService;
+        _queueService = queueService;
     }
 
     [RelayCommand]
@@ -50,7 +50,7 @@ public sealed partial class PlayQueuePageViewModel : ObservableRecipient
             StorageFolder? folder = await _filesService.PickFolderAsync();
             if (folder == null) return;
             IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
-            var playlist = await _playlistService.TryParsePlaylistAsync(items);
+            var playlist = await _queueService.TryParseQueueAsync(items);
             if (playlist?.Items.Count > 0)
             {
                 _coordinator.Enqueue(playlist.Items);

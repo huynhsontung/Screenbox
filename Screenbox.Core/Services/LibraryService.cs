@@ -185,6 +185,7 @@ public sealed class LibraryService : ILibraryService
                 artistFactory.AddSong(song);
                 song.Album = albumFactory.SongsToAlbums[song];
                 song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                song.Album.UpdateProperties();
             }
         }
 
@@ -533,6 +534,7 @@ public sealed class LibraryService : ILibraryService
                 artistFactory.AddSong(song);
                 song.Album = albumFactory.SongsToAlbums[song];
                 song.Artists = artistFactory.SongsToArtists[song].ToArray();
+                song.Album.UpdateProperties();
                 target.Add(song);
             }
 

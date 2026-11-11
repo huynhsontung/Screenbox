@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
+using Screenbox.Core.Helpers;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -22,9 +21,6 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
     private void ShuffleAndPlay()
     {
         if (Songs.Count == 0) return;
-        Random rnd = new();
-        List<MediaViewModel> shuffledList = Songs.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Models.Playlist(0, shuffledList);
-        Messenger.Send(new SetQueueMessage(playlist, true));
+        Messenger.SendShuffleAndPlay(Songs);
     }
 }

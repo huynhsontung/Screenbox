@@ -117,6 +117,11 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
     private IEnumerable<AlbumViewModel> GetFilteredAlbums(LibraryContext context)
     {
         IEnumerable<AlbumViewModel> allAlbums = context.Music.Albums.Values;
+        foreach (AlbumViewModel album in allAlbums)
+        {
+            album.UpdateProperties();
+        }
+
         return SelectedGenre switch
         {
             null => allAlbums,

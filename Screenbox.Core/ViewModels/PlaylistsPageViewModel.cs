@@ -1,3 +1,4 @@
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -107,11 +108,17 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelected()
     {
-        var items = Selection
-            .GetSelectedItems<PlaylistViewModel>()
+        var selectedPlaylists = Selection.GetSelectedItems<PlaylistViewModel>();
+        var items = selectedPlaylists
             .SelectMany(p => p.Items)
             .ToArray();
-        Messenger.SendQueueAndPlay(items[0], items);
+        if (items.Length > 0)
+        {
+            var origin = selectedPlaylists.Count == 1
+                ? QueueOrigin.ForPlaylist(selectedPlaylists[0])
+                : QueueOrigin.ForMediaCollection(items[0].Name);
+            Messenger.SendQueueAndPlay(items[0], items, origin: origin);
+        }
         Selection.DisableSelectionMode();
     }
 

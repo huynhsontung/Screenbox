@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
-using System.Threading;
-using System.Threading.Tasks;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
@@ -18,23 +18,68 @@ namespace Screenbox.Core.Helpers;
 public static class MessengerExtensions
 {
     private static CancellationTokenSource? s_playFilesCts;
-    public static void SendQueueAndPlay(this IMessenger messenger, MediaViewModel media,
-        IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
+    public static void SendQueueAndPlay(
+        this IMessenger messenger,
+        MediaViewModel media,
+        IReadOnlyList<MediaViewModel> queue,
+        bool pauseIfExists = true,
+        QueueOrigin? origin = null)
     {
         if (media.IsMediaActive && pauseIfExists)
         {
-            messenger.Send(new TogglePlayPauseMessage(false));
-            return;
+            var request = messenger.Send(new QueuePlaybackStateRequestMessage());
+            bool sameOrigin = true;
+            if (request.HasReceivedResponse)
+            {
+                var activeOrigin = request.Response.Origin;
+                sameOrigin = origin is { TrackItemsIndividually: false }
+                    ? (activeOrigin?.Matches(origin.Kind, origin.SourceId) ?? false)
+                    : (activeOrigin is null || activeOrigin.TrackItemsIndividually);
+            }
+
+            if (sameOrigin)
+            {
+                messenger.Send(new TogglePlayPauseMessage(false));
+                return;
+            }
         }
 
-        var playlist = new Playlist(media, queue);
-        messenger.Send(new SetQueueMessage(playlist, true));
+        var session = new QueueSession(media, queue)
+        {
+            Origin = origin
+        };
+        messenger.Send(new SetQueueMessage(session, true));
+    }
+
+    public static void SendShuffleAndPlay(
+        this IMessenger messenger,
+        IReadOnlyList<MediaViewModel> items,
+        QueueOrigin? origin = null)
+    {
+        if (items.Count == 0) return;
+
+        var originalItems = items.ToList();
+        var shuffledItems = new List<MediaViewModel>(originalItems);
+        var random = new Random();
+        for (int n = shuffledItems.Count - 1; n > 0; n--)
+        {
+            int k = random.Next(n + 1);
+            (shuffledItems[k], shuffledItems[n]) = (shuffledItems[n], shuffledItems[k]);
+        }
+
+        var session = new QueueSession(0, shuffledItems)
+        {
+            ShuffleMode = true,
+            ShuffleBackup = new ShuffleBackup(originalItems),
+            Origin = origin ?? QueueOrigin.ForLibraryQueue(shuffledItems[0])
+        };
+        messenger.Send(new SetQueueMessage(session, true));
     }
 
     public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
     {
-        Playlist playlist = messenger.Send(new QueueRequestMessage());
-        if (playlist.IsEmpty)
+        QueueSession queue = messenger.Send(new QueueRequestMessage());
+        if (queue.IsEmpty)
         {
             // Play the item on its own
             messenger.Send(new PlayMediaMessage(media));
@@ -43,8 +88,9 @@ public static class MessengerExtensions
         {
             // Clone to prevent queuing duplications
             MediaViewModel clone = new(media);
-            playlist.Items.Insert(Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count), clone);
-            messenger.Send(new SetQueueMessage(playlist, false));
+            queue.Items.Insert(Math.Min(queue.CurrentIndex + 1, queue.Items.Count), clone);
+            queue.ShuffleBackup = null;
+            messenger.Send(new SetQueueMessage(queue, false));
         }
     }
 
@@ -52,34 +98,40 @@ public static class MessengerExtensions
     {
         if (items.Count == 0) return;
 
-        Playlist playlist = messenger.Send(new QueueRequestMessage());
-        if (playlist.IsEmpty)
+        QueueSession queue = messenger.Send(new QueueRequestMessage());
+        if (queue.IsEmpty)
         {
             // Queue all items and play the first one
-            var updatedPlaylist = new Playlist(0, items);
-            messenger.Send(new SetQueueMessage(updatedPlaylist, true));
+            var updatedQueue = new QueueSession(0, items)
+            {
+                Origin = items.Count > 1
+                    ? QueueOrigin.ForMediaCollection(items[0].Name)
+                    : QueueOrigin.ForSingleMedia(items[0])
+            };
+            messenger.Send(new SetQueueMessage(updatedQueue, true));
         }
         else
         {
             // Clone all items to prevent queuing duplications
             List<MediaViewModel> clones = items.Select(item => new MediaViewModel(item)).ToList();
 
-            int insertIndex = Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count);
+            int insertIndex = Math.Min(queue.CurrentIndex + 1, queue.Items.Count);
 
             // Insert items in order at the insertion point
             for (int i = 0; i < clones.Count; i++)
             {
-                playlist.Items.Insert(insertIndex + i, clones[i]);
+                queue.Items.Insert(insertIndex + i, clones[i]);
             }
 
-            messenger.Send(new SetQueueMessage(playlist, false));
+            queue.ShuffleBackup = null;
+            messenger.Send(new SetQueueMessage(queue, false));
         }
     }
 
     public static void SendAddToQueue(this IMessenger messenger, MediaViewModel media)
     {
-        Playlist playlist = messenger.Send(new QueueRequestMessage());
-        if (playlist.IsEmpty)
+        QueueSession queue = messenger.Send(new QueueRequestMessage());
+        if (queue.IsEmpty)
         {
             // Play the item on its own
             messenger.Send(new PlayMediaMessage(media));
@@ -88,8 +140,9 @@ public static class MessengerExtensions
         {
             // Clone to prevent queuing duplications
             MediaViewModel clone = new(media);
-            playlist.Items.Add(clone);
-            messenger.Send(new SetQueueMessage(playlist, false));
+            queue.Items.Add(clone);
+            queue.ShuffleBackup = null;
+            messenger.Send(new SetQueueMessage(queue, false));
         }
     }
 
@@ -97,12 +150,17 @@ public static class MessengerExtensions
     {
         if (items.Count == 0) return;
 
-        Playlist playlist = messenger.Send(new QueueRequestMessage());
-        if (playlist.IsEmpty)
+        QueueSession queue = messenger.Send(new QueueRequestMessage());
+        if (queue.IsEmpty)
         {
             // Queue all items and play the first one
-            var updatedPlaylist = new Playlist(0, items);
-            messenger.Send(new SetQueueMessage(updatedPlaylist, true));
+            var updatedQueue = new QueueSession(0, items)
+            {
+                Origin = items.Count > 1
+                    ? QueueOrigin.ForMediaCollection(items[0].Name)
+                    : QueueOrigin.ForSingleMedia(items[0])
+            };
+            messenger.Send(new SetQueueMessage(updatedQueue, true));
         }
         else
         {
@@ -112,10 +170,11 @@ public static class MessengerExtensions
             // Add all items to the end of the queue
             foreach (MediaViewModel clone in clones)
             {
-                playlist.Items.Add(clone);
+                queue.Items.Add(clone);
             }
 
-            messenger.Send(new SetQueueMessage(playlist, false));
+            queue.ShuffleBackup = null;
+            messenger.Send(new SetQueueMessage(queue, false));
         }
     }
 
@@ -156,14 +215,14 @@ public static class MessengerExtensions
     }
 
     /// <summary>
-    /// Parses storage items into a playlist and sends a message to load and play them.
+    /// Parses storage items into a queue session and sends a message to load and play them.
     /// If a single file was selected and folder auto-enqueue is enabled, automatically
     /// fetches and enqueues neighboring files in the folder.
     /// </summary>
     public static async Task PlayFilesAsync(
         this IMessenger messenger,
         IReadOnlyList<IStorageItem> files,
-        IPlaylistService playlistService,
+        IQueueService queueService,
         bool enqueueAllFilesInFolder,
         StorageFileQueryResult? neighboringFilesQuery = null,
         CancellationToken cancellationToken = default)
@@ -174,22 +233,22 @@ public static class MessengerExtensions
 
         try
         {
-            var playlist = await playlistService.TryCreatePlaylistAsync(files, neighboringFilesQuery, cts.Token);
-            if (playlist is null || playlist.Items.Count == 0 || cts.Token.IsCancellationRequested) return;
+            var queue = await queueService.TryCreateQueueAsync(files, neighboringFilesQuery, cts.Token);
+            if (queue is null || queue.Items.Count == 0 || cts.Token.IsCancellationRequested) return;
 
-            messenger.Send(new SetQueueMessage(playlist, shouldPlay: true));
+            messenger.Send(new SetQueueMessage(queue, shouldPlay: true));
 
-            if (playlist.Items.Count == 1 && enqueueAllFilesInFolder && playlist.NeighboringFilesQuery is not null)
+            if (queue.Items.Count == 1 && enqueueAllFilesInFolder && queue.NeighboringFilesQuery is not null)
             {
                 try
                 {
-                    var updatedPlaylist = await playlistService.AddNeighboringFilesAsync(playlist, cts.Token);
-                    if (updatedPlaylist.Items.Count > 1 && !cts.Token.IsCancellationRequested)
+                    var updatedQueue = await queueService.AddNeighboringFilesAsync(queue, cts.Token);
+                    if (updatedQueue.Items.Count > 1 && !cts.Token.IsCancellationRequested)
                     {
-                        Playlist currentQueue = messenger.Send(new QueueRequestMessage());
-                        if (currentQueue.Items.Count == 1 && currentQueue.CurrentItem == playlist.CurrentItem)
+                        QueueSession currentQueue = messenger.Send(new QueueRequestMessage());
+                        if (currentQueue.Items.Count == 1 && currentQueue.CurrentItem == queue.CurrentItem)
                         {
-                            messenger.Send(new SetQueueMessage(updatedPlaylist, shouldPlay: false));
+                            messenger.Send(new SetQueueMessage(updatedQueue, shouldPlay: false));
                         }
                     }
                 }

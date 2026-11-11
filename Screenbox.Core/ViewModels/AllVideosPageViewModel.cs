@@ -76,6 +76,6 @@ public sealed partial class AllVideosPageViewModel : ObservableRecipient,
     private void Play(MediaViewModel media)
     {
         if (Videos.Count == 0) return;
-        Messenger.SendQueueAndPlay(media, Videos, true);
+        Messenger.SendQueueAndPlay(media, Videos, true, QueueOrigin.ForLibraryQueue(media));
     }
 }

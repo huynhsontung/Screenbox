@@ -1,3 +1,4 @@
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,12 +49,14 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
 
     async partial void OnSourceChanged(AlbumViewModel? value)
     {
+        _itemList = null;
         if (value == null)
         {
             SortedItems.Clear();
-            _itemList = null;
             return;
         }
+
+        value.UpdateProperties();
 
         var sorted = value.RelatedSongs.OrderBy(m =>
                 m.MediaInfo.MusicProperties.TrackNumber != 0    // Track number should start with 1
@@ -77,17 +80,18 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
     private void Play(MediaViewModel item)
     {
         _itemList ??= SortedItems.ToList();
-        Messenger.SendQueueAndPlay(item, _itemList);
+        Messenger.SendQueueAndPlay(
+            item,
+            _itemList,
+            origin: Source is not null ? QueueOrigin.ForAlbum(Source) : null);
     }
 
     [RelayCommand]
     private void ShuffleAndPlay()
     {
         if (Source == null || Source.RelatedSongs.Count == 0) return;
-        Random rnd = new();
-        List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
-        var playlist = new Models.Playlist(0, shuffledList);
-        Messenger.Send(new SetQueueMessage(playlist, true));
+        _itemList ??= SortedItems.ToList();
+        Messenger.SendShuffleAndPlay(_itemList, QueueOrigin.ForAlbum(Source));
     }
 
     private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)

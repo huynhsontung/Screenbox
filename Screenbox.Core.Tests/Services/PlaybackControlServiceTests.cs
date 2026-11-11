@@ -22,31 +22,31 @@ public class PlaybackControlServiceTests
         Unsafe.As<StorageFileQueryResult>(RuntimeHelpers.GetUninitializedObject(typeof(StorageFileQueryResult)));
 
     [Test]
-    public async Task CanNext_EmptyPlaylist_ReturnsFalse()
+    public async Task CanNext_EmptyQueueSession_ReturnsFalse()
     {
-        var playlist = new Playlist();
-        await Assert.That(_service.CanNext(playlist)).IsFalse();
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.List)).IsFalse();
+        var queue = new QueueSession();
+        await Assert.That(_service.CanNext(queue)).IsFalse();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.List)).IsFalse();
 
-        playlist.NeighboringFilesQuery = CreateDummyQuery();
-        await Assert.That(_service.CanNext(playlist)).IsFalse();
+        queue.NeighboringFilesQuery = CreateDummyQuery();
+        await Assert.That(_service.CanNext(queue)).IsFalse();
     }
 
     [Test]
     public async Task CanNext_SingleItem_RequiresNeighborOrListRepeat()
     {
         var item = CreateDummyMedia("song1");
-        var playlist = new Playlist(item, new List<MediaViewModel> { item });
+        var queue = new QueueSession(item, new List<MediaViewModel> { item });
 
         // Single item without neighbor or list repeat -> cannot go next
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.None)).IsFalse();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.None)).IsFalse();
 
         // Single item with list repeat -> can go next
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.List)).IsTrue();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.List)).IsTrue();
 
         // Single item with neighbor in folder -> can go next
-        playlist.NeighboringFilesQuery = CreateDummyQuery();
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.None)).IsTrue();
+        queue.NeighboringFilesQuery = CreateDummyQuery();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.None)).IsTrue();
     }
 
     [Test]
@@ -54,54 +54,54 @@ public class PlaybackControlServiceTests
     {
         var item1 = CreateDummyMedia("song1");
         var item2 = CreateDummyMedia("song2");
-        var playlist = new Playlist(item1, new List<MediaViewModel> { item1, item2 });
+        var queue = new QueueSession(item1, new List<MediaViewModel> { item1, item2 });
 
         // At index 0 of 2 -> can go next
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.None)).IsTrue();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.None)).IsTrue();
 
         // Advance to index 1 of 2 (last item)
-        playlist.CurrentIndex = 1;
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.None)).IsFalse();
+        queue.CurrentIndex = 1;
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.None)).IsFalse();
 
-        // At last item, NeighboringFilesQuery should NOT allow going next (multi-item playlist ignores neighboring folder query)
-        playlist.NeighboringFilesQuery = CreateDummyQuery();
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.None)).IsFalse();
+        // At last item, NeighboringFilesQuery should NOT allow going next (multi-item queue ignores neighboring folder query)
+        queue.NeighboringFilesQuery = CreateDummyQuery();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.None)).IsFalse();
 
         // With list repeat, can always cycle next
-        await Assert.That(_service.CanNext(playlist, MediaPlaybackAutoRepeatMode.List)).IsTrue();
+        await Assert.That(_service.CanNext(queue, MediaPlaybackAutoRepeatMode.List)).IsTrue();
     }
 
     [Test]
-    public async Task CanPrevious_ChecksPlaylistNonEmpty()
+    public async Task CanPrevious_ChecksQueueSessionNonEmpty()
     {
-        var emptyPlaylist = new Playlist();
-        await Assert.That(_service.CanPrevious(emptyPlaylist)).IsFalse();
+        var emptyQueueSession = new QueueSession();
+        await Assert.That(_service.CanPrevious(emptyQueueSession)).IsFalse();
 
         var item = CreateDummyMedia("song1");
-        var playlist = new Playlist(item, new List<MediaViewModel> { item });
-        await Assert.That(_service.CanPrevious(playlist)).IsTrue();
+        var queue = new QueueSession(item, new List<MediaViewModel> { item });
+        await Assert.That(_service.CanPrevious(queue)).IsTrue();
     }
 
     [Test]
-    public async Task GetNextAsync_MultiItemPlaylist_NavigatesToNextItem()
+    public async Task GetNextAsync_MultiItemQueueSession_NavigatesToNextItem()
     {
         var item1 = CreateDummyMedia("song1");
         var item2 = CreateDummyMedia("song2");
-        var playlist = new Playlist(item1, new List<MediaViewModel> { item1, item2 });
+        var queue = new QueueSession(item1, new List<MediaViewModel> { item1, item2 });
 
-        var result = await _service.GetNextAsync(playlist);
+        var result = await _service.GetNextAsync(queue);
         await Assert.That(result).IsNotNull();
         await Assert.That(result!.NextItem).IsEqualTo(item2);
     }
 
     [Test]
-    public async Task GetPreviousAsync_MultiItemPlaylist_NavigatesToPreviousItem()
+    public async Task GetPreviousAsync_MultiItemQueueSession_NavigatesToPreviousItem()
     {
         var item1 = CreateDummyMedia("song1");
         var item2 = CreateDummyMedia("song2");
-        var playlist = new Playlist(item2, new List<MediaViewModel> { item1, item2 });
+        var queue = new QueueSession(item2, new List<MediaViewModel> { item1, item2 });
 
-        var result = await _service.GetPreviousAsync(playlist);
+        var result = await _service.GetPreviousAsync(queue);
         await Assert.That(result).IsNotNull();
         await Assert.That(result!.NextItem).IsEqualTo(item1);
     }

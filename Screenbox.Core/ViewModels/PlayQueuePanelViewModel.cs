@@ -42,20 +42,20 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 
     private readonly IPlayQueueCoordinator _coordinator;
     private readonly IFilesService _filesService;
-    private readonly IPlaylistService _playlistService;
+    private readonly IQueueService _queueService;
 
     public PlayQueuePanelViewModel(
         PlayQueueContext queue,
         IPlayQueueCoordinator coordinator,
         SelectionViewModel selection,
         IFilesService filesService,
-        IPlaylistService playlistService)
+        IQueueService queueService)
     {
         Queue = queue;
         _coordinator = coordinator;
         Selection = selection;
         _filesService = filesService;
-        _playlistService = playlistService;
+        _queueService = queueService;
         _hasItems = queue.Items.Count > 0;
         Queue.Items.CollectionChanged += ItemsOnCollectionChanged;
 
@@ -190,7 +190,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
             if (files is null || files.Count == 0) return;
-            var playlist = await _playlistService.TryParsePlaylistAsync(files);
+            var playlist = await _queueService.TryParseQueueAsync(files);
             if (playlist?.Items.Count > 0)
             {
                 _coordinator.Enqueue(playlist.Items);
@@ -207,7 +207,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     /// </summary>
     public async Task EnqueueDroppedItemsAsync(IReadOnlyList<IStorageItem> items, int insertIndex)
     {
-        var playlist = await _playlistService.TryParsePlaylistAsync(items);
+        var playlist = await _queueService.TryParseQueueAsync(items);
         if (playlist?.Items.Count > 0)
         {
             _coordinator.Enqueue(playlist.Items, insertIndex);

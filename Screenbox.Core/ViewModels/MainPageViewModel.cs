@@ -105,8 +105,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         // All Gamepad keys are in the range of [195, 218]
         if ((int)key < 195 || (int)key > 218) return;
 
-        Playlist playlist = Messenger.Send(new QueueRequestMessage());
-        if (playlist.IsEmpty) return;
+        QueueSession queue = Messenger.Send(new QueueRequestMessage());
+        if (queue.IsEmpty) return;
 
         int rewindStep = _playerSettings.RewindStep;
         int fastForwardStep = _playerSettings.FastForwardStep;

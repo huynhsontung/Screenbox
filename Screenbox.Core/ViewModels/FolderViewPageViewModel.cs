@@ -1,3 +1,4 @@
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -150,7 +151,12 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         }
         else
         {
-            Messenger.SendQueueAndPlay(item.Media, _playableItems, true);
+            var origin = _playableItems.Count > 1
+                ? QueueOrigin.ForMediaCollection(
+                    !string.IsNullOrEmpty(TitleText) ? TitleText : item.Media.Name,
+                    BreadcrumbLocations.LastOrDefault()?.Path)
+                : QueueOrigin.ForSingleMedia(item.Media);
+            Messenger.SendQueueAndPlay(item.Media, _playableItems, true, origin);
         }
     }
 

@@ -42,5 +42,5 @@ public interface IPlayQueueBufferManager : IDisposable
     /// Updates the sliding buffer window around the current index: pre-creates playback items
     /// and evicts items that slid out of the window.
     /// </summary>
-    void UpdateBuffer(IMediaPlayer? player, Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
+    void UpdateBuffer(IMediaPlayer? player, QueueSession session, MediaPlaybackAutoRepeatMode repeatMode);
 }

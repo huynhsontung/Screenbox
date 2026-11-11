@@ -215,7 +215,7 @@ sealed partial class App : Application
         }
 
         Window.Current.Activate();
-        var playlistService = _services.GetRequiredService<IPlaylistService>();
+        var queueService = _services.GetRequiredService<IQueueService>();
         var generalSettings = _services.GetRequiredService<GeneralSettingsContext>();
 
         StorageFileQueryResult? neighboringFilesQuery = null;
@@ -230,7 +230,7 @@ sealed partial class App : Application
 
         await WeakReferenceMessenger.Default.PlayFilesAsync(
             args.Files,
-            playlistService,
+            queueService,
             generalSettings.EnqueueAllFilesInFolder,
             neighboringFilesQuery);
     }

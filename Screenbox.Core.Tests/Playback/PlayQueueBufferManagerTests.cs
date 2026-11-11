@@ -65,8 +65,8 @@ public partial class PlayQueueBufferManagerTests
     public async Task GetOrCreatePlaybackItem_CachesAndReturnsSameItem()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!, null!);
-        using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
 
@@ -82,8 +82,8 @@ public partial class PlayQueueBufferManagerTests
     public async Task CleanPlaybackItem_DisposesAndRemovesItem()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!, null!);
-        using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
 
@@ -102,8 +102,8 @@ public partial class PlayQueueBufferManagerTests
     public async Task Clear_DisposesAllCachedItems()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!, null!);
-        using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
         var media1 = CreateMedia("test1");
         var media2 = CreateMedia("test2");
@@ -122,8 +122,8 @@ public partial class PlayQueueBufferManagerTests
     public async Task UpdateBuffer_EvictsOutOfWindowItemsAndExposesBufferedItems()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!, null!);
-        using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
 
         var items = new List<MediaViewModel>
@@ -135,10 +135,10 @@ public partial class PlayQueueBufferManagerTests
             CreateMedia("song4")
         };
 
-        var playlist = new Playlist(items[0], items);
+        var queue = new QueueSession(items[0], items);
 
         // At index 0, buffer window is [0, 1, 2]
-        bufferManager.UpdateBuffer(player, playlist, MediaPlaybackAutoRepeatMode.None);
+        bufferManager.UpdateBuffer(player, queue, MediaPlaybackAutoRepeatMode.None);
         var item0 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, items[0])!;
         var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, items[1])!;
         await Assert.That(item0.IsDisposed).IsFalse();
@@ -149,8 +149,8 @@ public partial class PlayQueueBufferManagerTests
         await Assert.That(bufferManager.BufferedItems[2]).IsSameReferenceAs(items[2]);
 
         // Slide window to index 4: buffer window is [2, 3, 4]
-        playlist.CurrentIndex = 4;
-        bufferManager.UpdateBuffer(player, playlist, MediaPlaybackAutoRepeatMode.None);
+        queue.CurrentIndex = 4;
+        bufferManager.UpdateBuffer(player, queue, MediaPlaybackAutoRepeatMode.None);
 
         // Items 0 and 1 slid out of window -> must be disposed
         await Assert.That(item0.IsDisposed).IsTrue();
@@ -165,8 +165,8 @@ public partial class PlayQueueBufferManagerTests
     public async Task TryGetPlaybackItem_WhenBuffered_ReturnsTrueAndItemWithoutCreatingNew()
     {
         var playerService = new MockPlayerService();
-        var playlistService = new PlaylistService(null!, null!, null!);
-        using var bufferManager = new PlayQueueBufferManager(playerService, playlistService);
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
 
