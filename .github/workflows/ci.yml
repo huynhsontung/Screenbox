@@ -28,7 +28,7 @@ jobs:
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.x'
 
       - name: Restore .NET tools
         run: dotnet tool restore
