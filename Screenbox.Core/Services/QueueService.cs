@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
@@ -22,11 +23,13 @@ public sealed class QueueService : IQueueService
 {
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
+    private readonly GeneralSettingsContext? _generalSettings;
 
-    public QueueService(MediaViewModelFactory mediaFactory, IFilesService filesService)
+    public QueueService(MediaViewModelFactory mediaFactory, IFilesService filesService, GeneralSettingsContext? generalSettings = null)
     {
         _mediaFactory = mediaFactory;
         _filesService = filesService;
+        _generalSettings = generalSettings;
     }
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
@@ -46,7 +49,7 @@ public sealed class QueueService : IQueueService
             {
                 neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
             }
-            else if (session.Origin?.Kind == RecentItemKind.MediaCollection)
+            else if (session.Origin?.Kind == RecentItemKind.MediaCollection && _generalSettings?.ShowRecent != false)
             {
                 // Register the playlist file (e.g. .m3u/.m3u8) with the Windows Most Recently Used (MRU) list
                 // so the app retains persistent file-access permission to reload it across future sessions.
@@ -55,7 +58,7 @@ public sealed class QueueService : IQueueService
         }
         else
         {
-            if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder)
+            if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder && _generalSettings?.ShowRecent != false)
             {
                 // Register the opened folder with the Windows Most Recently Used (MRU) list so the app
                 // retains persistent access permission to re-read the folder and its contents in future sessions.
@@ -220,7 +223,10 @@ public sealed class QueueService : IQueueService
                     folderPath = parentFolder.Path;
                     // When expanding single-file playback into a full folder queue, register the parent folder
                     // with the Windows MRU list so persistent read permission is granted across future sessions.
-                    _filesService.AddToRecent(parentFolder);
+                    if (_generalSettings?.ShowRecent != false)
+                    {
+                        _filesService.AddToRecent(parentFolder);
+                    }
                 }
             }
             catch

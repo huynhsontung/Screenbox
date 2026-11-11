@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -147,6 +149,66 @@ public class ContainerPlaybackStateTests
         finally
         {
             messenger.Unregister<TogglePlayPauseMessage>(this);
+        }
+    }
+
+    [Test]
+    public async Task AlbumViewModel_EmptyAlbumArtist_AlbumKeyRemainsStableAfterUpdateProperties()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var album = new AlbumViewModel("Abbey Road", string.Empty, messenger);
+        string initialKey = album.AlbumKey;
+
+        var artist = new ArtistViewModel("The Beatles", messenger);
+        var song = CreateDummyMedia("Come Together");
+        song.Artists = new[] { artist };
+        album.RelatedSongs.Add(song);
+
+        album.UpdateProperties();
+
+        await Assert.That(album.ArtistName).IsEqualTo("The Beatles");
+        await Assert.That(album.AlbumKey).IsEqualTo(initialKey);
+    }
+
+    [Test]
+    public async Task SendQueueAndPlay_ActiveMediaWithDifferentOrigin_QueuesNewSessionInsteadOfTogglingPause()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var album = new AlbumViewModel("Abbey Road", "The Beatles", messenger);
+        var song1 = CreateDummyMedia("Come Together");
+        var song2 = CreateDummyMedia("Something");
+        song1.IsMediaActive = true;
+
+        var activeState = new QueuePlaybackState(
+            Guid.NewGuid(),
+            QueueOrigin.ForSingleMedia(song1),
+            song1,
+            IsPlaying: true);
+
+        messenger.Register<ContainerPlaybackStateTests, QueuePlaybackStateRequestMessage>(
+            this,
+            (_, m) => m.Reply(activeState));
+
+        bool toggleSent = false;
+        SetQueueMessage? queuedMessage = null;
+        messenger.Register<ContainerPlaybackStateTests, TogglePlayPauseMessage>(
+            this,
+            (_, _) => toggleSent = true);
+        messenger.Register<ContainerPlaybackStateTests, SetQueueMessage>(
+            this,
+            (_, m) => queuedMessage = m);
+
+        try
+        {
+            messenger.SendQueueAndPlay(song1, new[] { song1, song2 }, origin: QueueOrigin.ForAlbum(album));
+
+            await Assert.That(toggleSent).IsFalse();
+            await Assert.That(queuedMessage).IsNotNull();
+            await Assert.That(queuedMessage!.Value.Origin?.Matches(RecentItemKind.Album, album.AlbumKey) ?? false).IsTrue();
+        }
+        finally
+        {
+            messenger.UnregisterAll(this);
         }
     }
 }

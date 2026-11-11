@@ -153,11 +153,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
             if (_recentContext.TokenToMediaMappings.TryGetValue(token, out var cachedMedia) &&
                 cachedMedia.Source is IFileMediaSource { StorageFile: { } cachedFile })
             {
-                return (Token: token, File: (StorageFile?)cachedFile, Media: (MediaViewModel?)cachedMedia);
+                return (Token: token, File: (StorageFile?)cachedFile, ShouldRemove: false, Media: (MediaViewModel?)cachedMedia);
             }
 
-            StorageFile? file = await ConvertMruTokenToStorageFileAsync(token).ConfigureAwait(false);
-            return (Token: token, File: file, Media: (MediaViewModel?)null);
+            var (file, shouldRemove) = await ConvertMruTokenToStorageFileAsync(token).ConfigureAwait(false);
+            return (Token: token, File: file, ShouldRemove: shouldRemove, Media: (MediaViewModel?)null);
         });
 
         var results = await Task.WhenAll(fetchTasks).ConfigureAwait(true);
@@ -165,11 +165,14 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var validPairs = new List<(string Token, StorageFile File, MediaViewModel Media)>();
         var tokensToRemove = new List<string>();
 
-        foreach (var (token, file, cachedMedia) in results)
+        foreach (var (token, file, shouldRemove, cachedMedia) in results)
         {
             if (file == null)
             {
-                tokensToRemove.Add(token);
+                if (shouldRemove)
+                {
+                    tokensToRemove.Add(token);
+                }
                 continue;
             }
 
@@ -349,37 +352,37 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Selection.DisableSelectionMode();
     }
 
-    private async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
+    private async Task<(StorageFile? File, bool ShouldRemove)> ConvertMruTokenToStorageFileAsync(string token)
     {
         try
         {
-            return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
+            var file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
                 AccessCacheOptions.SuppressAccessTimeUpdate);
+            return (file, false);
         }
         catch (UnauthorizedAccessException)
         {
-            return null;
+            return (null, true);
         }
         catch (System.IO.FileNotFoundException)
         {
-            return null;
+            return (null, true);
         }
         catch (ArgumentException)
         {
-            return null;
+            // Token may refer to a StorageFolder rather than a StorageFile; preserve it in MRU.
+            return (null, false);
         }
         catch (InvalidOperationException)
         {
-            return null;
+            return (null, false);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to resolve MRU token '{Token}' to a file.", token);
-            return null;
+            return (null, false);
         }
     }
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }
-
-

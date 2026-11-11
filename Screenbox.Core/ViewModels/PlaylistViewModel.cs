@@ -270,6 +270,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
                 artistFactory.AddSong(media);
                 media.Album = albumFactory.SongsToAlbums[media];
                 media.Artists = artistFactory.SongsToArtists[media].ToArray();
+                media.Album.UpdateProperties();
             }
 
             if (record.DateAdded != default)

@@ -49,12 +49,14 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
 
     async partial void OnSourceChanged(AlbumViewModel? value)
     {
+        _itemList = null;
         if (value == null)
         {
             SortedItems.Clear();
-            _itemList = null;
             return;
         }
+
+        value.UpdateProperties();
 
         var sorted = value.RelatedSongs.OrderBy(m =>
                 m.MediaInfo.MusicProperties.TrackNumber != 0    // Track number should start with 1

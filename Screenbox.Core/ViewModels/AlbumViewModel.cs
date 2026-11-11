@@ -21,11 +21,10 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
 {
     public string Name { get; }
 
-    public string ArtistName => string.IsNullOrEmpty(_albumArtist)
-        ? _songArtist
-        : _albumArtist;
+    public string AlbumKey => AlbumViewModelFactory.GetAlbumKey(Name, _albumArtist);
 
-    public string AlbumKey => AlbumViewModelFactory.GetAlbumKey(Name, ArtistName);
+    [ObservableProperty] public partial string ArtistName { get; private set; }
+    [ObservableProperty] public partial BitmapImage? AlbumArt { get; private set; }
 
     public uint? Year
     {
@@ -39,8 +38,6 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         }
     }
 
-    public BitmapImage? AlbumArt => _albumArt;
-
     public DateTimeOffset DateAdded { get; set; }
 
     public ObservableCollection<MediaViewModel> RelatedSongs { get; }
@@ -51,8 +48,6 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
     [ObservableProperty] public partial bool IsQueueActive { get; set; }
 
     private readonly string _albumArtist;
-    private string _songArtist;
-    private BitmapImage? _albumArt;
     private uint? _year;
 
     public AlbumViewModel() : this(string.Empty, string.Empty, WeakReferenceMessenger.Default) { }
@@ -63,7 +58,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
     {
         Name = album;
         _albumArtist = albumArtist;
-        _songArtist = string.Empty;
+        ArtistName = albumArtist;
         RelatedSongs = new ObservableCollection<MediaViewModel>();
         RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
 
@@ -105,12 +100,20 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         UpdateProperties();
     }
 
-    private void UpdateProperties()
+    public void UpdateProperties()
     {
-        if (RelatedSongs.Count == 0) return;
+        if (RelatedSongs.Count == 0)
+        {
+            AlbumArt = null;
+            ArtistName = _albumArtist;
+            return;
+        }
+
         MediaViewModel first = RelatedSongs[0];
-        SetProperty(ref _albumArt, first.Thumbnail, nameof(AlbumArt));
-        SetProperty(ref _songArtist, first.MainArtist?.Name ?? string.Empty, nameof(ArtistName));
+        AlbumArt = first.Thumbnail;
+        ArtistName = !string.IsNullOrEmpty(_albumArtist)
+            ? _albumArtist
+            : first.MainArtist?.Name ?? first.MediaInfo.MusicProperties.Artist ?? string.Empty;
     }
 
     [RelayCommand]

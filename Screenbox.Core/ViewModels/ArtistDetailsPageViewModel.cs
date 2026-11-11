@@ -57,6 +57,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 
     async partial void OnSourceChanged(ArtistViewModel? value)
     {
+        _itemList = null;
         if (value is null)
         {
             GroupedAlbums.Clear();

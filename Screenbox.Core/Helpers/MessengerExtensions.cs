@@ -27,8 +27,21 @@ public static class MessengerExtensions
     {
         if (media.IsMediaActive && pauseIfExists)
         {
-            messenger.Send(new TogglePlayPauseMessage(false));
-            return;
+            var request = messenger.Send(new QueuePlaybackStateRequestMessage());
+            bool sameOrigin = true;
+            if (request.HasReceivedResponse)
+            {
+                var activeOrigin = request.Response.Origin;
+                sameOrigin = origin is { TrackItemsIndividually: false }
+                    ? (activeOrigin?.Matches(origin.Kind, origin.SourceId) ?? false)
+                    : (activeOrigin is null || activeOrigin.TrackItemsIndividually);
+            }
+
+            if (sameOrigin)
+            {
+                messenger.Send(new TogglePlayPauseMessage(false));
+                return;
+            }
         }
 
         var session = new QueueSession(media, queue)
@@ -76,6 +89,7 @@ public static class MessengerExtensions
             // Clone to prevent queuing duplications
             MediaViewModel clone = new(media);
             queue.Items.Insert(Math.Min(queue.CurrentIndex + 1, queue.Items.Count), clone);
+            queue.ShuffleBackup = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }
@@ -109,6 +123,7 @@ public static class MessengerExtensions
                 queue.Items.Insert(insertIndex + i, clones[i]);
             }
 
+            queue.ShuffleBackup = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }
@@ -126,6 +141,7 @@ public static class MessengerExtensions
             // Clone to prevent queuing duplications
             MediaViewModel clone = new(media);
             queue.Items.Add(clone);
+            queue.ShuffleBackup = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }
@@ -157,6 +173,7 @@ public static class MessengerExtensions
                 queue.Items.Add(clone);
             }
 
+            queue.ShuffleBackup = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }

@@ -108,13 +108,16 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelected()
     {
-        var items = Selection
-            .GetSelectedItems<PlaylistViewModel>()
+        var selectedPlaylists = Selection.GetSelectedItems<PlaylistViewModel>();
+        var items = selectedPlaylists
             .SelectMany(p => p.Items)
             .ToArray();
         if (items.Length > 0)
         {
-            Messenger.SendQueueAndPlay(items[0], items, origin: QueueOrigin.ForMediaCollection(items[0].Name));
+            var origin = selectedPlaylists.Count == 1
+                ? QueueOrigin.ForPlaylist(selectedPlaylists[0])
+                : QueueOrigin.ForMediaCollection(items[0].Name);
+            Messenger.SendQueueAndPlay(items[0], items, origin: origin);
         }
         Selection.DisableSelectionMode();
     }

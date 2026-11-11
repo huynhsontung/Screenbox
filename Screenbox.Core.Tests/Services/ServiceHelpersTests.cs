@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Windows.Foundation.Collections;
 
 namespace Screenbox.Core.Tests.Services;
 
@@ -40,6 +41,7 @@ public class ServiceHelpersTests
         ServiceHelpers.PopulateCoreServices(services);
         services.AddLogging();
         services.AddSingleton<IVlcDialogService, DummyVlcDialogService>();
+        services.AddSingleton<ISettingsStorage>(new SettingsStorage(new PropertySet()));
 
         using ServiceProvider provider = services.BuildServiceProvider();
 

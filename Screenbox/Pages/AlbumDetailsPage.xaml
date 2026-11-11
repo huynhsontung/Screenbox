@@ -129,7 +129,7 @@
                         Margin="0,8,0,0"
                         FontWeight="Normal"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.Source.ArtistName, strings:Resources.UnknownArtist)}"
+                        Text="{x:Bind helpers:ItemLabelHelper.GetValueOrFallback(ViewModel.Source.ArtistName, strings:Resources.UnknownArtist), Mode=OneWay}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
