@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -21,7 +19,6 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.System;
 
 namespace Screenbox.Core.Coordinators;
 
@@ -41,10 +38,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly IDatabaseService _databaseService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ISourceMetadataService _sourceMetadataService;
-    private readonly DispatcherQueue _dispatcherQueue;
     private readonly ILogger<RecentMediaCoordinator> _logger;
-    private readonly SemaphoreSlim _loadLock = new(1, 1);
 
+    private Task? _loadTask;
     private string? _lastRecordedEntryId;
 
     public RecentMediaCoordinator(
@@ -67,7 +63,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         _mediaFactory = mediaFactory;
         _sourceMetadataService = sourceMetadataService;
         _logger = logger;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         _playQueueContext.PropertyChanged += PlayQueueContext_PropertyChanged;
         _playlistsContext.Playlists.CollectionChanged += Playlists_CollectionChanged;
@@ -80,34 +75,50 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async void Receive(QueueSessionStartedMessage message)
     {
-        await HandleQueueSessionStartedAsync(message.Queue, message.IsUpgrade);
+        try
+        {
+            await HandleQueueSessionStartedAsync(message.Queue, message.IsUpgrade);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to handle queue session started in recent coordinator.");
+        }
     }
 
     /// <inheritdoc/>
-    public void Receive(PropertyChangedMessage<MusicLibrary> message)
+    public async void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        _dispatcherQueue.TryExecuteOrEnqueue(async () =>
+        try
         {
             RelinkAllItems();
             await LoadAlbumArtForLinkedAlbumsAsync();
-        });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update recent items after music library changed.");
+        }
     }
 
     /// <inheritdoc/>
-    public async Task LoadAsync()
+    public Task LoadAsync()
     {
         if (!_generalSettings.ShowRecent)
         {
-            _dispatcherQueue.TryExecuteOrEnqueue(() =>
-            {
-                ClearRecentCollection();
-                _recentContext.IsLoaded = true;
-            });
-            return;
+            ClearRecentCollection();
+            _recentContext.IsLoaded = false;
+            return Task.CompletedTask;
         }
 
-        if (_recentContext.Recent.Count > 0) return;
-        await _loadLock.WaitAsync();
+        if (_recentContext.IsLoaded)
+        {
+            return Task.CompletedTask;
+        }
+
+        return _loadTask ??= LoadInternalAsync();
+    }
+
+    private async Task LoadInternalAsync()
+    {
         try
         {
             var entries = await _databaseService.LoadRecentEntriesAsync(RecentContext.MaxRecentItems);
@@ -135,10 +146,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to load recent media entries from SQLite.");
-        }
-        finally
-        {
-            _loadLock.Release();
+            _loadTask = null;
         }
     }
 
@@ -182,11 +190,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async Task RemoveAsync(RecentItemViewModel item)
     {
-        _dispatcherQueue.TryExecuteOrEnqueue(() =>
-        {
-            item.Detach();
-            _recentContext.Recent.Remove(item);
-        });
+        item.Detach();
+        _recentContext.Recent.Remove(item);
 
         try
         {
@@ -201,11 +206,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async Task ClearAsync()
     {
-        _dispatcherQueue.TryExecuteOrEnqueue(() =>
-        {
-            ClearRecentCollection();
-            _recentContext.IsLoaded = true;
-        });
+        ClearRecentCollection();
+        _recentContext.IsLoaded = true;
+        _loadTask = null;
 
         try
         {
@@ -259,72 +262,69 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         RecentItemViewModel? targetVm = null;
         string entryId = Guid.NewGuid().ToString();
 
-        _dispatcherQueue.TryExecuteOrEnqueue(() =>
+        if (replaceEntryId is not null)
         {
-            if (replaceEntryId is not null)
+            var upgradedTarget = _recentContext.Recent.FirstOrDefault(r => r.EntryId == replaceEntryId);
+            if (upgradedTarget is not null && upgradedTarget.ContentHash != contentHash)
             {
-                var upgradedTarget = _recentContext.Recent.FirstOrDefault(r => r.EntryId == replaceEntryId);
-                if (upgradedTarget is not null && upgradedTarget.ContentHash != contentHash)
-                {
-                    upgradedTarget.Detach();
-                    _recentContext.Recent.Remove(upgradedTarget);
-                }
+                upgradedTarget.Detach();
+                _recentContext.Recent.Remove(upgradedTarget);
+            }
+        }
+
+        var existing = _recentContext.Recent.FirstOrDefault(r => r.ContentHash == contentHash);
+        if (existing is not null)
+        {
+            entryId = existing.EntryId;
+            existing.ActiveSessionId = queue.SessionId;
+            if (origin.Kind == RecentItemKind.MediaCollection)
+            {
+                existing.UpdateMediaCollectionSnapshot(origin, canonicalItems, initialIndex);
             }
 
-            var existing = _recentContext.Recent.FirstOrDefault(r => r.ContentHash == contentHash);
-            if (existing is not null)
+            int existingIndex = _recentContext.Recent.IndexOf(existing);
+            if (existingIndex > 0)
             {
-                entryId = existing.EntryId;
-                existing.ActiveSessionId = queue.SessionId;
-                if (origin.Kind == RecentItemKind.MediaCollection)
-                {
-                    existing.UpdateMediaCollectionSnapshot(origin, canonicalItems, initialIndex);
-                }
+                _recentContext.Recent.RemoveAt(existingIndex);
+                _recentContext.Recent.Insert(0, existing);
+            }
 
-                int existingIndex = _recentContext.Recent.IndexOf(existing);
-                if (existingIndex > 0)
-                {
-                    _recentContext.Recent.RemoveAt(existingIndex);
-                    _recentContext.Recent.Insert(0, existing);
-                }
-
-                targetVm = existing;
+            targetVm = existing;
+        }
+        else
+        {
+            if (origin.Kind == RecentItemKind.SingleMedia)
+            {
+                var media = queue.CurrentItem ?? canonicalItems[0];
+                targetVm = new RecentItemViewModel(entryId, contentHash, media, queue.SessionId);
             }
             else
             {
-                if (origin.Kind == RecentItemKind.SingleMedia)
-                {
-                    var media = queue.CurrentItem ?? canonicalItems[0];
-                    targetVm = new RecentItemViewModel(entryId, contentHash, media, queue.SessionId);
-                }
-                else
-                {
-                    IReadOnlyList<MediaViewModel> snapshot = origin.Kind == RecentItemKind.MediaCollection
-                        ? canonicalItems
-                        : [];
-                    targetVm = new RecentItemViewModel(
-                        entryId,
-                        contentHash,
-                        origin,
-                        snapshot,
-                        initialIndex,
-                        queue.SessionId);
-                }
-
-                LinkItem(targetVm);
-                _recentContext.Recent.Insert(0, targetVm);
-
-                while (_recentContext.Recent.Count > RecentContext.MaxRecentItems)
-                {
-                    var tail = _recentContext.Recent[^1];
-                    tail.Detach();
-                    _recentContext.Recent.RemoveAt(_recentContext.Recent.Count - 1);
-                }
+                IReadOnlyList<MediaViewModel> snapshot = origin.Kind == RecentItemKind.MediaCollection
+                    ? canonicalItems
+                    : [];
+                targetVm = new RecentItemViewModel(
+                    entryId,
+                    contentHash,
+                    origin,
+                    snapshot,
+                    initialIndex,
+                    queue.SessionId);
             }
 
-            _lastRecordedEntryId = entryId;
-            UpdateActiveStates();
-        });
+            LinkItem(targetVm);
+            _recentContext.Recent.Insert(0, targetVm);
+
+            while (_recentContext.Recent.Count > RecentContext.MaxRecentItems)
+            {
+                var tail = _recentContext.Recent[^1];
+                tail.Detach();
+                _recentContext.Recent.RemoveAt(_recentContext.Recent.Count - 1);
+            }
+        }
+
+        _lastRecordedEntryId = entryId;
+        UpdateActiveStates();
 
         try
         {
@@ -377,7 +377,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             case nameof(PlayQueueContext.ActiveSessionId):
             case nameof(PlayQueueContext.ActiveOrigin):
             case nameof(PlayQueueContext.IsPlaying):
-                _dispatcherQueue.TryExecuteOrEnqueue(UpdateActiveStates);
+                UpdateActiveStates();
                 break;
         }
     }
@@ -423,9 +423,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
     }
 
-    private void Playlists_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private async void Playlists_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _dispatcherQueue.TryExecuteOrEnqueue(async () =>
+        try
         {
             if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems is not null)
             {
@@ -442,7 +442,11 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
 
             RelinkAllItems();
-        });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update recent items after playlists changed.");
+        }
     }
 
     private async void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -456,11 +460,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
             else
             {
-                _dispatcherQueue.TryExecuteOrEnqueue(() =>
-                {
-                    ClearRecentCollection();
-                    _recentContext.IsLoaded = true;
-                });
+                _loadTask = null;
+                ClearRecentCollection();
+                _recentContext.IsLoaded = false;
             }
         }
     }

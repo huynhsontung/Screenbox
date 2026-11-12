@@ -27,7 +27,20 @@ public sealed class RecentMediaCoordinatorTests
         PlaylistsContext PlaylistsContext,
         DatabaseService DatabaseService) CreateCoordinator(string dbFolderPath)
     {
-        var recentContext = new RecentContext { IsLoaded = true };
+        var (c, r, pq, l, pl, db, _) = CreateCoordinator(dbFolderPath, isLoaded: true);
+        return (c, r, pq, l, pl, db);
+    }
+
+    private static (
+        RecentMediaCoordinator Coordinator,
+        RecentContext RecentContext,
+        PlayQueueContext PlayQueueContext,
+        LibraryContext LibraryContext,
+        PlaylistsContext PlaylistsContext,
+        DatabaseService DatabaseService,
+        GeneralSettingsContext GeneralSettings) CreateCoordinator(string dbFolderPath, bool isLoaded)
+    {
+        var recentContext = new RecentContext { IsLoaded = isLoaded };
         var playQueueContext = new PlayQueueContext();
         var libraryContext = new LibraryContext();
         var playlistsContext = new PlaylistsContext();
@@ -51,7 +64,7 @@ public sealed class RecentMediaCoordinatorTests
             metadataService,
             NullLogger<RecentMediaCoordinator>.Instance);
 
-        return (coordinator, recentContext, playQueueContext, libraryContext, playlistsContext, dbService);
+        return (coordinator, recentContext, playQueueContext, libraryContext, playlistsContext, dbService, generalSettings);
     }
 
     [Test]
@@ -202,5 +215,70 @@ public sealed class RecentMediaCoordinatorTests
         playQueueContext.CurrentItem = null;
         await Assert.That(recentFolder.IsQueueActive).IsFalse();
         await Assert.That(recentFolder.IsPlaying).IsFalse();
+    }
+
+    [Test]
+    public async Task ShowRecent_Toggle_ClearsAndReloadsFromDatabase()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, playQueueContext, _, _, dbService, generalSettings) =
+            CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
+        await dbService.InitializeAsync();
+
+        // 1. Initial queue session recorded
+        var track = CreateDummyMedia("song1");
+        var session = new QueueSession(track) { Origin = QueueOrigin.ForSingleMedia(track) };
+        playQueueContext.ActiveSessionId = session.SessionId;
+        playQueueContext.ActiveOrigin = session.Origin;
+        playQueueContext.CurrentItem = track;
+        await coordinator.HandleQueueSessionStartedAsync(session, isUpgrade: false);
+
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        await Assert.That(recentContext.IsLoaded).IsTrue();
+
+        // 2. Toggle ShowRecent to false -> clears in-memory collection and marks IsLoaded false
+        generalSettings.ShowRecent = false;
+        await Assert.That(recentContext.Recent).IsEmpty();
+        await Assert.That(recentContext.IsLoaded).IsFalse();
+
+        // 3. Toggle ShowRecent back to true -> reloads the entry from SQLite
+        generalSettings.ShowRecent = true;
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        await Assert.That(recentContext.IsLoaded).IsTrue();
+        await Assert.That(recentContext.Recent[0].Name).IsEqualTo("song1");
+    }
+
+    [Test]
+    public async Task LoadAsync_WhenInvokedConcurrently_CoalescesIntoSingleLoad()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, _, _, _, dbService, _) =
+            CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
+        await dbService.InitializeAsync();
+
+        // Seed a recent entry in SQLite
+        var dto = new RecentEntryDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            Kind = RecentItemKind.SingleMedia,
+            ContentHash = "hash1",
+            Title = "SavedTrack",
+            SourceId = "https://example.com/SavedTrack.mp3",
+            LastPlayed = DateTimeOffset.UtcNow,
+            Items = [new RawMediaRecordDto { Path = "https://example.com/SavedTrack.mp3", Title = "SavedTrack" }]
+        };
+        await dbService.UpsertRecentEntryAsync(dto);
+
+        // Run 5 concurrent loads
+        await Task.WhenAll(
+            coordinator.LoadAsync(),
+            coordinator.LoadAsync(),
+            coordinator.LoadAsync(),
+            coordinator.LoadAsync(),
+            coordinator.LoadAsync());
+
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        await Assert.That(recentContext.IsLoaded).IsTrue();
+        await Assert.That(recentContext.Recent[0].Name).IsEqualTo("SavedTrack");
     }
 }
