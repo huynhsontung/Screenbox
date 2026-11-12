@@ -39,12 +39,6 @@
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- Use C#/WinRT 2.3.1 directly to enable improved AOT analysis.
-         The Windows 26100 SDK uses an older version lacking these enhancements. -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
-  </ItemGroup>
-
   <!-- Global usings -->
   <ItemGroup>
     <Using Include="WinRT" />

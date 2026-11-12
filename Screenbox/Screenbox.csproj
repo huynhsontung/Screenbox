@@ -38,19 +38,19 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Uwp.Animations" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.Uwp.Behaviors" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.Uwp.Converters" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
-    <PackageReference Include="LibVLC.UWP" Version="3.0.23-2608082208" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0" />
-    <PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
-    <PackageReference Include="Sentry.Extensions.Logging" Version="6.12.1" />
-    <PackageReference Include="ReswPlus" Version="0.6.1" />
+    <PackageReference Include="CommunityToolkit.Uwp.Animations" />
+    <PackageReference Include="CommunityToolkit.Uwp.Behaviors" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" />
+    <PackageReference Include="CommunityToolkit.Uwp.Converters" />
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions" />
+    <PackageReference Include="LibVLC.UWP" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="Microsoft.UI.Xaml" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" />
+    <PackageReference Include="Sentry.Extensions.Logging" />
+    <PackageReference Include="ReswPlus" />
   </ItemGroup>
 
   <ItemGroup Label="Localization">

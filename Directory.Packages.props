@@ -1,0 +1,57 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Windows UI Library -->
+    <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
+
+    <!-- XAML Behaviors -->
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
+
+    <!-- Windows Community Toolkit -->
+    <PackageVersion Include="CommunityToolkit.Uwp.Animations" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Behaviors" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Converters" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
+
+    <!-- ReswPlus -->
+    <PackageVersion Include="ReswPlus" Version="0.6.1" />
+
+    <!-- Media playback (LibVLC, LibVLCSharp) -->
+    <PackageVersion Include="LibVLC.UWP" Version="3.0.23-2608082208" />
+    <PackageVersion Include="LibVLCSharp.UWP" Version="3.10.2" />
+
+    <!-- Direct3D 11 interop -->
+    <PackageVersion Include="Vortice.Direct3D11" Version="3.8.3" />
+
+    <!-- MVVM Toolkit -->
+    <PackageVersion Include="CommunityToolkit.Diagnostics" Version="8.4.2" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+
+    <!-- .NET runtime extensions (Dependency Injection, Logging) -->
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0" />
+
+    <!-- .NET data access (SQLite) -->
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="11.0.0" />
+
+    <!-- Error tracking (Sentry) -->
+    <PackageVersion Include="Sentry.Extensions.Logging" Version="6.12.1" />
+
+    <!-- Testing framework (TUnit) -->
+    <PackageVersion Include="TUnit" Version="1.75.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Use C#/WinRT 2.3.1 directly to enable improved AOT analysis.
+         The Windows 26100 SDK uses an older version lacking these enhancements. -->
+    <GlobalPackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
+  </ItemGroup>
+</Project>
