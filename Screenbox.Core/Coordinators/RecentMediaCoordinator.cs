@@ -143,8 +143,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         {
             _loadLock.Release();
         }
-
-        await LoadDetailsAndThumbnailsAsync();
     }
 
     /// <inheritdoc/>
