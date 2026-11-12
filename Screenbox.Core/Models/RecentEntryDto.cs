@@ -26,4 +26,9 @@ public sealed class RecentEntryDto
     public DateTimeOffset LastPlayed { get; set; }
 
     public List<RawMediaRecordDto> Items { get; set; } = [];
+
+    /// <summary>
+    /// Creates a <see cref="QueueOrigin"/> representing this recent entry.
+    /// </summary>
+    public QueueOrigin ToOrigin() => new(Kind, SourceId, Title, Subtitle);
 }

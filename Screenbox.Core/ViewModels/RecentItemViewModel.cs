@@ -53,9 +53,22 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     public string? SourceId { get; private set; }
 
     /// <summary>
+    /// Gets the queue origin for this recent item, reflecting any live-linked playlist, album, or artist.
+    /// </summary>
+    public QueueOrigin Origin => Kind switch
+    {
+        RecentItemKind.SingleMedia when Media is not null => QueueOrigin.ForSingleMedia(Media),
+        RecentItemKind.Playlist when LinkedPlaylist is not null => QueueOrigin.ForPlaylist(LinkedPlaylist),
+        RecentItemKind.Album when LinkedAlbum is not null => QueueOrigin.ForAlbum(LinkedAlbum),
+        RecentItemKind.Artist when LinkedArtist is not null => QueueOrigin.ForArtist(LinkedArtist),
+        _ => new QueueOrigin(Kind, SourceId ?? string.Empty, Name, Subtitle)
+    };
+
+    /// <summary>
     /// Gets or sets the display name of the recent item.
     /// </summary>
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Origin))]
     public partial string Name { get; set; }
 
     /// <summary>
@@ -63,6 +76,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Caption))]
+    [NotifyPropertyChangedFor(nameof(Origin))]
     public partial string? Subtitle { get; set; }
 
     /// <summary>
@@ -180,57 +194,50 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     private List<MediaViewModel> _snapshotItems;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RecentItemViewModel"/> class for a single media item.
-    /// </summary>
-    public RecentItemViewModel(string entryId, string contentHash, MediaViewModel media, Guid? activeSessionId = null)
-    {
-        EntryId = entryId;
-        ContentHash = contentHash;
-        Kind = RecentItemKind.SingleMedia;
-        Media = media;
-        SourceId = media.Location;
-        Name = media.Name;
-        ActiveSessionId = activeSessionId;
-        _snapshotItems = [media];
-
-        media.PropertyChanged += Media_PropertyChanged;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RecentItemViewModel"/> class for a container or playlist entry.
+    /// Initializes a new instance of the <see cref="RecentItemViewModel"/> class from a <see cref="QueueOrigin"/>.
     /// </summary>
     public RecentItemViewModel(
         string entryId,
         string contentHash,
-        RecentItemKind kind,
-        string name,
-        string? subtitle,
-        string? sourceId,
-        IReadOnlyList<MediaViewModel> snapshotItems,
+        QueueOrigin origin,
+        IReadOnlyList<MediaViewModel>? snapshotItems = null,
         int initialIndex = 0,
         Guid? activeSessionId = null)
     {
+        ArgumentNullException.ThrowIfNull(origin);
         EntryId = entryId;
         ContentHash = contentHash;
-        Kind = kind;
-        Name = name;
-        Subtitle = subtitle;
-        SourceId = sourceId;
+        Kind = origin.Kind;
+        Name = origin.Title;
+        Subtitle = origin.Subtitle;
+        SourceId = origin.SourceId;
         InitialIndex = initialIndex;
         ActiveSessionId = activeSessionId;
-        _snapshotItems = snapshotItems.ToList();
+        _snapshotItems = snapshotItems is not null ? [..snapshotItems] : [];
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RecentItemViewModel"/> class for a single media item.
+    /// </summary>
+    public RecentItemViewModel(string entryId, string contentHash, MediaViewModel media, Guid? activeSessionId = null)
+        : this(entryId, contentHash, QueueOrigin.ForSingleMedia(media), (MediaViewModel[])[media], 0, activeSessionId)
+    {
+        Media = media;
+        media.PropertyChanged += Media_PropertyChanged;
     }
 
     /// <summary>
     /// Updates the snapshot items and metadata for an ad-hoc playlist.
     /// </summary>
-    public void UpdateMediaCollectionSnapshot(string name, string? sourceId, IReadOnlyList<MediaViewModel> items, int initialIndex)
+    public void UpdateMediaCollectionSnapshot(QueueOrigin origin, IReadOnlyList<MediaViewModel> items, int initialIndex)
     {
-        Name = name;
-        SourceId = sourceId;
+        ArgumentNullException.ThrowIfNull(origin);
+        Name = origin.Title;
+        SourceId = origin.SourceId;
         InitialIndex = initialIndex;
-        _snapshotItems = items.ToList();
+        _snapshotItems = [..items];
         OnPropertyChanged(nameof(ItemsCount));
+        OnPropertyChanged(nameof(Origin));
     }
 
     /// <summary>
@@ -257,9 +264,8 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
 
         OnPropertyChanged(nameof(LinkedPlaylist));
         OnPropertyChanged(nameof(ItemsCount));
-        PlayCommand.NotifyCanExecuteChanged();
-        PlayNextCommand.NotifyCanExecuteChanged();
-        AddToQueueCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(Origin));
+        NotifyPlaybackCommandsCanExecuteChanged();
     }
 
     /// <summary>
@@ -291,9 +297,8 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         OnPropertyChanged(nameof(TargetArtist));
         OnPropertyChanged(nameof(Caption));
         OnPropertyChanged(nameof(Thumbnail));
-        PlayCommand.NotifyCanExecuteChanged();
-        PlayNextCommand.NotifyCanExecuteChanged();
-        AddToQueueCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(Origin));
+        NotifyPlaybackCommandsCanExecuteChanged();
     }
 
     /// <summary>
@@ -320,9 +325,8 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
 
         OnPropertyChanged(nameof(LinkedArtist));
         OnPropertyChanged(nameof(TargetArtist));
-        PlayCommand.NotifyCanExecuteChanged();
-        PlayNextCommand.NotifyCanExecuteChanged();
-        AddToQueueCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(Origin));
+        NotifyPlaybackCommandsCanExecuteChanged();
     }
 
     /// <summary>
@@ -355,67 +359,22 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
             return;
         }
 
-        switch (Kind)
+        if (Kind == RecentItemKind.SingleMedia && Media is not null)
         {
-            case RecentItemKind.SingleMedia when Media is not null:
-                Messenger.Send(new PlayMediaMessage(Media, false));
-                break;
+            Messenger.Send(new PlayMediaMessage(Media, false));
+            return;
+        }
 
-            case RecentItemKind.MediaCollection:
-                if (_snapshotItems.Count > 0)
-                {
-                    int index = Math.Clamp(InitialIndex, 0, _snapshotItems.Count - 1);
-                    var origin = QueueOrigin.ForMediaCollection(Name, SourceId);
-                    var queue = new QueueSession(index, _snapshotItems) { Origin = origin };
-                    ActiveSessionId = queue.SessionId;
-                    Messenger.Send(new SetQueueMessage(queue, true));
-                }
-                break;
+        var items = GetPlayableItems();
+        if (items.Count > 0)
+        {
+            int index = Kind == RecentItemKind.MediaCollection
+                ? Math.Clamp(InitialIndex, 0, items.Count - 1)
+                : 0;
 
-            case RecentItemKind.Playlist:
-                {
-                    var items = GetPlayableItems();
-                    if (items.Count > 0)
-                    {
-                        var origin = LinkedPlaylist is not null
-                            ? QueueOrigin.ForPlaylist(LinkedPlaylist)
-                            : QueueOrigin.ForMediaCollection(Name, SourceId);
-                        var queue = new QueueSession(0, items) { Origin = origin };
-                        ActiveSessionId = queue.SessionId;
-                        Messenger.Send(new SetQueueMessage(queue, true));
-                    }
-                }
-                break;
-
-            case RecentItemKind.Album:
-                {
-                    var items = GetPlayableItems();
-                    if (items.Count > 0)
-                    {
-                        var origin = LinkedAlbum is not null
-                            ? QueueOrigin.ForAlbum(LinkedAlbum)
-                            : QueueOrigin.ForMediaCollection(Name, SourceId);
-                        var queue = new QueueSession(0, items) { Origin = origin };
-                        ActiveSessionId = queue.SessionId;
-                        Messenger.Send(new SetQueueMessage(queue, true));
-                    }
-                }
-                break;
-
-            case RecentItemKind.Artist:
-                {
-                    var items = GetPlayableItems();
-                    if (items.Count > 0)
-                    {
-                        var origin = LinkedArtist is not null
-                            ? QueueOrigin.ForArtist(LinkedArtist)
-                            : QueueOrigin.ForMediaCollection(Name, SourceId);
-                        var queue = new QueueSession(0, items) { Origin = origin };
-                        ActiveSessionId = queue.SessionId;
-                        Messenger.Send(new SetQueueMessage(queue, true));
-                    }
-                }
-                break;
+            var queue = new QueueSession(index, items) { Origin = Origin };
+            ActiveSessionId = queue.SessionId;
+            Messenger.Send(new SetQueueMessage(queue, true));
         }
     }
 
@@ -460,12 +419,23 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         LinkArtist(null);
     }
 
+    private void NotifyPlaybackCommandsCanExecuteChanged()
+    {
+        PlayCommand.NotifyCanExecuteChanged();
+        PlayNextCommand.NotifyCanExecuteChanged();
+        AddToQueueCommand.NotifyCanExecuteChanged();
+    }
+
     private void Media_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
             case nameof(MediaViewModel.Name):
-                if (Media is not null) Name = Media.Name;
+                if (Media is not null)
+                {
+                    Name = Media.Name;
+                    OnPropertyChanged(nameof(Origin));
+                }
                 break;
             case nameof(MediaViewModel.Thumbnail):
                 OnPropertyChanged(nameof(Thumbnail));
@@ -475,6 +445,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
                 break;
             case nameof(MediaViewModel.Caption):
                 OnPropertyChanged(nameof(Caption));
+                OnPropertyChanged(nameof(Origin));
                 break;
             case nameof(MediaViewModel.Album):
                 OnPropertyChanged(nameof(TargetAlbum));
@@ -491,6 +462,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         if (e.PropertyName == nameof(PlaylistViewModel.Name))
         {
             Name = LinkedPlaylist.Name;
+            OnPropertyChanged(nameof(Origin));
         }
         else if (e.PropertyName == nameof(PlaylistViewModel.ItemsCount))
         {
@@ -501,9 +473,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     private void LinkedPlaylistItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
-        PlayCommand.NotifyCanExecuteChanged();
-        PlayNextCommand.NotifyCanExecuteChanged();
-        AddToQueueCommand.NotifyCanExecuteChanged();
+        NotifyPlaybackCommandsCanExecuteChanged();
     }
 
     private void LinkedAlbum_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -517,6 +487,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         {
             Subtitle = LinkedAlbum.ArtistName;
             OnPropertyChanged(nameof(Caption));
+            OnPropertyChanged(nameof(Origin));
         }
     }
 
@@ -526,6 +497,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         if (e.PropertyName == nameof(ArtistViewModel.Name))
         {
             Name = LinkedArtist.Name;
+            OnPropertyChanged(nameof(Origin));
         }
     }
 
@@ -533,8 +505,6 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     {
         LinkedAlbum?.UpdateProperties();
         OnPropertyChanged(nameof(TargetArtist));
-        PlayCommand.NotifyCanExecuteChanged();
-        PlayNextCommand.NotifyCanExecuteChanged();
-        AddToQueueCommand.NotifyCanExecuteChanged();
+        NotifyPlaybackCommandsCanExecuteChanged();
     }
 }

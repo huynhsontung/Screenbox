@@ -276,7 +276,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 existing.ActiveSessionId = queue.SessionId;
                 if (origin.Kind == RecentItemKind.MediaCollection)
                 {
-                    existing.UpdateMediaCollectionSnapshot(origin.Title, origin.SourceId, canonicalItems, initialIndex);
+                    existing.UpdateMediaCollectionSnapshot(origin, canonicalItems, initialIndex);
                 }
 
                 int existingIndex = _recentContext.Recent.IndexOf(existing);
@@ -302,10 +302,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                     targetVm = new RecentItemViewModel(
                         entryId,
                         contentHash,
-                        origin.Kind,
-                        origin.Title,
-                        origin.Subtitle,
-                        origin.SourceId,
+                        origin,
                         snapshot,
                         initialIndex,
                         queue.SessionId);
@@ -539,10 +536,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             return new RecentItemViewModel(
                 entry.Id,
                 entry.ContentHash,
-                entry.Kind,
-                entry.Title,
-                entry.Subtitle,
-                entry.SourceId,
+                entry.ToOrigin(),
                 snapshot,
                 entry.InitialIndex);
         }
@@ -550,11 +544,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         return new RecentItemViewModel(
             entry.Id,
             entry.ContentHash,
-            entry.Kind,
-            entry.Title,
-            entry.Subtitle,
-            entry.SourceId,
-            [],
+            entry.ToOrigin(),
+            snapshotItems: null,
             entry.InitialIndex);
     }
 
