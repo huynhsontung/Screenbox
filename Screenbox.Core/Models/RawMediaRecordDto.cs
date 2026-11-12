@@ -44,6 +44,8 @@ public sealed record class RawMediaRecordDto
 
     public uint VideoBitrate { get; set; }
 
+    public string? Token { get; set; }
+
     /// <summary>
     /// Creates a <see cref="RawMediaRecordDto"/> from a <see cref="MediaViewModel"/>.
     /// </summary>

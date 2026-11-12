@@ -110,9 +110,9 @@ public sealed partial class DatabaseService
             using var insertItemCmd = connection.CreateCommand();
             insertItemCmd.CommandText = """
                 INSERT INTO recent_entry_items
-                    (entry_id, sort_order, path, title, media_type, duration_ticks)
+                    (entry_id, sort_order, path, title, media_type, duration_ticks, token)
                 VALUES
-                    (@eid, @order, @path, @title, @mediaType, @duration);
+                    (@eid, @order, @path, @title, @mediaType, @duration, @token);
                 """;
 
             var p = insertItemCmd.Parameters;
@@ -122,6 +122,7 @@ public sealed partial class DatabaseService
             var pTitle = p.Add("@title", SqliteType.Text);
             var pMediaType = p.Add("@mediaType", SqliteType.Integer);
             var pDuration = p.Add("@duration", SqliteType.Integer);
+            var pToken = p.Add("@token", SqliteType.Text);
 
             for (int i = 0; i < entry.Items.Count; i++)
             {
@@ -131,6 +132,7 @@ public sealed partial class DatabaseService
                 pTitle.Value = string.IsNullOrEmpty(item.Title) ? DBNull.Value : item.Title;
                 pMediaType.Value = (int)item.MediaType;
                 pDuration.Value = item.Duration.Ticks;
+                pToken.Value = string.IsNullOrEmpty(item.Token) ? DBNull.Value : item.Token;
                 insertItemCmd.ExecuteNonQuery();
             }
         }
@@ -189,6 +191,7 @@ public sealed partial class DatabaseService
             string? savedTitle = reader.IsDBNull(1) ? null : reader.GetString(1);
             int savedMediaType = reader.IsDBNull(2) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(2);
             long savedDurationTicks = reader.IsDBNull(3) ? 0L : reader.GetInt64(3);
+            string? token = reader.IsDBNull(4) ? null : reader.GetString(4);
 
             string fallbackTitle = !string.IsNullOrWhiteSpace(savedTitle)
                 ? savedTitle!
@@ -201,24 +204,25 @@ public sealed partial class DatabaseService
             items.Add(new RawMediaRecordDto
             {
                 Path = path,
-                Title = reader.IsDBNull(4) ? fallbackTitle : reader.GetString(4),
-                MediaType = (MediaPlaybackType)(reader.IsDBNull(5) ? savedMediaType : reader.GetInt32(5)),
-                DateAdded = reader.IsDBNull(6) ? default : new DateTimeOffset(reader.GetInt64(6), TimeSpan.Zero),
-                Duration = reader.IsDBNull(7) ? TimeSpan.FromTicks(savedDurationTicks) : TimeSpan.FromTicks(reader.GetInt64(7)),
-                Year = reader.IsDBNull(8) ? 0u : (uint)reader.GetInt64(8),
-                Artist = reader.IsDBNull(9) ? string.Empty : reader.GetString(9),
-                Album = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
-                AlbumArtist = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
-                Composers = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
-                Genre = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
-                TrackNumber = reader.IsDBNull(14) ? 0u : (uint)reader.GetInt64(14),
-                Subtitle = reader.IsDBNull(15) ? string.Empty : reader.GetString(15),
-                Producers = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
-                Writers = reader.IsDBNull(17) ? string.Empty : reader.GetString(17),
-                Bitrate = reader.IsDBNull(18) ? 0u : (uint)reader.GetInt64(18),
-                Width = reader.IsDBNull(19) ? 0u : (uint)reader.GetInt64(19),
-                Height = reader.IsDBNull(20) ? 0u : (uint)reader.GetInt64(20),
-                VideoBitrate = reader.IsDBNull(21) ? 0u : (uint)reader.GetInt64(21),
+                Title = reader.IsDBNull(5) ? fallbackTitle : reader.GetString(5),
+                MediaType = (MediaPlaybackType)(reader.IsDBNull(6) ? savedMediaType : reader.GetInt32(6)),
+                DateAdded = reader.IsDBNull(7) ? default : new DateTimeOffset(reader.GetInt64(7), TimeSpan.Zero),
+                Duration = reader.IsDBNull(8) ? TimeSpan.FromTicks(savedDurationTicks) : TimeSpan.FromTicks(reader.GetInt64(8)),
+                Year = reader.IsDBNull(9) ? 0u : (uint)reader.GetInt64(9),
+                Artist = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
+                Album = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
+                AlbumArtist = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
+                Composers = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+                Genre = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+                TrackNumber = reader.IsDBNull(15) ? 0u : (uint)reader.GetInt64(15),
+                Subtitle = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
+                Producers = reader.IsDBNull(17) ? string.Empty : reader.GetString(17),
+                Writers = reader.IsDBNull(18) ? string.Empty : reader.GetString(18),
+                Bitrate = reader.IsDBNull(19) ? 0u : (uint)reader.GetInt64(19),
+                Width = reader.IsDBNull(20) ? 0u : (uint)reader.GetInt64(20),
+                Height = reader.IsDBNull(21) ? 0u : (uint)reader.GetInt64(21),
+                VideoBitrate = reader.IsDBNull(22) ? 0u : (uint)reader.GetInt64(22),
+                Token = token,
             });
         }
 
@@ -226,7 +230,7 @@ public sealed partial class DatabaseService
     }
 
     private const string SelectRecentEntryItemsWithMetadataSql = """
-        SELECT rei.path, rei.title, rei.media_type, rei.duration_ticks,
+        SELECT rei.path, rei.title, rei.media_type, rei.duration_ticks, rei.token,
                mr.title, mr.media_type, mr.date_added, mr.duration_ticks, mr.year,
                mr.artist, mr.album, mr.album_artist, mr.composers, mr.genre, mr.track_number,
                mr.subtitle, mr.producers, mr.writers, mr.bitrate, mr.width, mr.height, mr.video_bitrate

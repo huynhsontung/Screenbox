@@ -66,7 +66,7 @@ public sealed partial class DatabaseService
         EnsureReplaceableTable(connection, "recent_entries", CreateRecentEntriesSql,
             "id", "kind", "source_id", "title", "subtitle", "content_hash", "initial_index", "last_played");
         EnsureReplaceableTable(connection, "recent_entry_items", CreateRecentEntryItemsSql,
-            "id", "entry_id", "sort_order", "path", "title", "media_type", "duration_ticks");
+            "id", "entry_id", "sort_order", "path", "title", "media_type", "duration_ticks", "token");
         EnsurePlaylistsTable(connection);
         EnsurePlaylistItemsTable(connection);
         migrationComplete = await TryImportLegacyPlaylistsAsync(connection);
@@ -394,7 +394,8 @@ public sealed partial class DatabaseService
             path           TEXT    NOT NULL,
             title          TEXT,
             media_type     INTEGER NOT NULL,
-            duration_ticks INTEGER NOT NULL
+            duration_ticks INTEGER NOT NULL,
+            token          TEXT
         );
         """;
 

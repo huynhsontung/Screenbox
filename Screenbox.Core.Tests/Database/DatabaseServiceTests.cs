@@ -296,7 +296,7 @@ public sealed class DatabaseServiceTests
             Title = "Track 1",
             ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, @"C:\Music\track1.mp3"),
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-10),
-            Items = [new RawMediaRecordDto { Path = @"C:\Music\track1.mp3", Title = "Track 1", MediaType = MediaPlaybackType.Music }]
+            Items = [new RawMediaRecordDto { Path = @"C:\Music\track1.mp3", Title = "Track 1", MediaType = MediaPlaybackType.Music, Token = "token_abc" }]
         };
 
         await dbService.UpsertRecentEntryAsync(singleEntry);
@@ -306,6 +306,7 @@ public sealed class DatabaseServiceTests
         await Assert.That(loaded[0].Id).IsEqualTo("entry_1");
         await Assert.That(loaded[0].Items).HasSingleItem();
         await Assert.That(loaded[0].Items[0].Path).IsEqualTo(@"C:\Music\track1.mp3");
+        await Assert.That(loaded[0].Items[0].Token).IsEqualTo("token_abc");
 
         string[] folderPaths = [@"C:\Music\track1.mp3", @"C:\Music\track2.mp3"];
         var upgradedFolderEntry = new RecentEntryDto

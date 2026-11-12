@@ -40,7 +40,9 @@ public sealed partial class HomePageViewModel : ObservableRecipient
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
         GeneralSettingsContext generalSettings,
-        IQueueService queueService)
+        IQueueService queueService,
+        IMessenger? messenger = null)
+        : base(messenger ?? WeakReferenceMessenger.Default)
     {
         Selection = selection;
         _recentContext = recentContext;
@@ -148,7 +150,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient
         var items = Selection
             .GetSelectedItems<RecentItemViewModel>()
             .SelectMany(r => r.GetPlayableItems())
-            .Reverse()
             .ToArray();
         if (items.Length > 0)
         {

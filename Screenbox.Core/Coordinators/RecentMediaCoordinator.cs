@@ -14,6 +14,7 @@ using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -118,7 +119,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             var viewModels = new List<RecentItemViewModel>(entries.Count);
             foreach (var entry in entries)
             {
-                var vm = HydrateRecentItem(entry);
+                var vm = await HydrateRecentItemAsync(entry);
                 if (vm is not null)
                 {
                     viewModels.Add(vm);
@@ -506,7 +507,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
     }
 
-    private RecentItemViewModel? HydrateRecentItem(RecentEntryDto entry)
+    private async Task<RecentItemViewModel?> HydrateRecentItemAsync(RecentEntryDto entry)
     {
         if (entry.Kind == RecentItemKind.SingleMedia)
         {
@@ -514,7 +515,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             string? path = first?.Path ?? entry.SourceId;
             if (string.IsNullOrEmpty(path)) return null;
 
-            var media = HydrateMediaViewModel(first ?? new RawMediaRecordDto { Path = path, Title = entry.Title });
+            var media = await HydrateMediaViewModelAsync(first ?? new RawMediaRecordDto { Path = path, Title = entry.Title });
             if (media is null) return null;
 
             return new RecentItemViewModel(entry.Id, entry.ContentHash, media);
@@ -525,7 +526,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             var snapshot = new List<MediaViewModel>(entry.Items.Count);
             foreach (var itemDto in entry.Items)
             {
-                var media = HydrateMediaViewModel(itemDto);
+                var media = await HydrateMediaViewModelAsync(itemDto);
                 if (media is not null)
                 {
                     snapshot.Add(media);
@@ -548,21 +549,54 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             entry.InitialIndex);
     }
 
-    private MediaViewModel? HydrateMediaViewModel(RawMediaRecordDto record)
+    private async Task<MediaViewModel?> HydrateMediaViewModelAsync(RawMediaRecordDto record)
     {
         if (string.IsNullOrEmpty(record.Path))
             return null;
 
+        StorageFile? file = null;
+        if (!string.IsNullOrEmpty(record.Token))
+        {
+            try
+            {
+                if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(record.Token))
+                {
+                    file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(
+                        record.Token,
+                        AccessCacheOptions.SuppressAccessTimeUpdate);
+                }
+                else if (StorageApplicationPermissions.FutureAccessList.ContainsItem(record.Token))
+                {
+                    file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(
+                        record.Token,
+                        AccessCacheOptions.SuppressAccessTimeUpdate);
+                }
+            }
+            catch
+            {
+                // Access cache lookup failed; fall back to path
+            }
+        }
+
         MediaViewModel media;
         bool existing = false;
 
-        if (Uri.TryCreate(record.Path, UriKind.Absolute, out Uri? uri))
+        if (file is not null)
+        {
+            existing = _mediaFactory.TryGetOrCreate(file, out media);
+        }
+        else if (Uri.TryCreate(record.Path, UriKind.Absolute, out Uri? uri))
         {
             existing = _mediaFactory.TryGetOrCreate(uri, out media);
         }
         else
         {
             media = _mediaFactory.GetOrCreate(record.Path);
+        }
+
+        if (media.Source is IFileMediaSource fileSource && !string.IsNullOrEmpty(record.Token))
+        {
+            fileSource.Token = record.Token;
         }
 
         if (!existing)
@@ -597,12 +631,33 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
     {
+        string? token = null;
+        if (media.Source is IFileMediaSource fileSource)
+        {
+            token = fileSource.Token;
+            if (string.IsNullOrEmpty(token) && fileSource.StorageFile is { } file)
+            {
+                try
+                {
+                    token = StorageApplicationPermissions.MostRecentlyUsedList.Add(
+                        file,
+                        DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+                    fileSource.Token = token;
+                }
+                catch
+                {
+                    // Access cache may be unavailable in headless unit tests.
+                }
+            }
+        }
+
         return new RawMediaRecordDto
         {
             Path = media.Location,
             Title = media.Name,
             MediaType = media.MediaType,
-            Duration = media.Duration
+            Duration = media.Duration,
+            Token = token
         };
     }
 
@@ -642,9 +697,12 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
                     MediaViewModel media = _mediaFactory.GetOrCreate(file);
                     string contentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, media.Location);
-                    DateTimeOffset lastPlayed = long.TryParse(entry.Metadata, out long ticks)
-                        ? new DateTimeOffset(ticks, TimeSpan.Zero)
+                    DateTimeOffset lastPlayed = long.TryParse(entry.Metadata, out long seconds)
+                        ? DateTimeOffset.FromUnixTimeSeconds(seconds)
                         : DateTimeOffset.UtcNow;
+
+                    var rawRecord = ToRawMediaRecord(media);
+                    rawRecord.Token = entry.Token;
 
                     var dto = new RecentEntryDto
                     {
@@ -654,7 +712,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                         Title = media.Name,
                         SourceId = media.Location,
                         LastPlayed = lastPlayed,
-                        Items = [ToRawMediaRecord(media)]
+                        Items = [rawRecord]
                     };
 
                     await _databaseService.UpsertRecentEntryAsync(dto, maxEntries: RecentContext.MaxRecentItems);

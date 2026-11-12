@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.MediaSources;
 
@@ -21,6 +22,8 @@ public class FileMediaSource : IFileMediaSource
 
     public StorageFile? StorageFile { get; private set; }
 
+    public string? Token { get; set; }
+
     public FileMediaSource(StorageFile file)
     {
         StorageFile = file;
@@ -30,12 +33,13 @@ public class FileMediaSource : IFileMediaSource
         MediaType = FilesHelpers.GetMediaTypeForFile(file);
     }
 
-    public FileMediaSource(string path)
+    public FileMediaSource(string path, string? token = null)
     {
         Path = path;
         FileType = System.IO.Path.GetExtension(path);
         Name = System.IO.Path.GetFileName(path);
         MediaType = FilesHelpers.GetMediaTypeForExtension(FileType);
+        Token = token;
     }
 
     public async Task<StorageFile?> GetStorageFileAsync()
@@ -45,7 +49,30 @@ public class FileMediaSource : IFileMediaSource
             return StorageFile;
         }
 
-        if (!string.IsNullOrEmpty(Path))
+        if (!string.IsNullOrEmpty(Token))
+        {
+            try
+            {
+                if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(Token))
+                {
+                    StorageFile = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(
+                        Token,
+                        AccessCacheOptions.SuppressAccessTimeUpdate);
+                }
+                else if (StorageApplicationPermissions.FutureAccessList.ContainsItem(Token))
+                {
+                    StorageFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(
+                        Token,
+                        AccessCacheOptions.SuppressAccessTimeUpdate);
+                }
+            }
+            catch
+            {
+                // Access cache lookup failed; fall back to path
+            }
+        }
+
+        if (StorageFile == null && !string.IsNullOrEmpty(Path))
         {
             StorageFile = await FilesHelpers.TryGetFileFromPathAsync(Path);
         }
