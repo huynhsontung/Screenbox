@@ -25,8 +25,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install XAML Styler Console
-        run: dotnet tool install --global XamlStyler.Console
+      - name: Install .NET tools
+        run: dotnet tool restore
 
       - name: Run XAML style check
         run: ./scripts/lint-xaml.ps1
