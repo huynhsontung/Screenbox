@@ -242,8 +242,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             await Task.WhenAll(
                 FetchMusicLibraryAsync(),
                 FetchVideosLibraryAsync(),
-                FetchPlaylistsAsync(),
-                _recentMediaCoordinator.LoadAsync());
+                FetchPlaylistsAsync());
 
             // Fetch playlists again to ensure items are updated after libraries are fetched
             // This is necessary because playlist items may reference media that is not yet loaded in the library context

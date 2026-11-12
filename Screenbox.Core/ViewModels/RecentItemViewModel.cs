@@ -10,7 +10,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
-using Windows.Storage.FileProperties;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -213,7 +212,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         SourceId = origin.SourceId;
         InitialIndex = initialIndex;
         ActiveSessionId = activeSessionId;
-        _snapshotItems = snapshotItems is not null ? [..snapshotItems] : [];
+        _snapshotItems = snapshotItems is not null ? [.. snapshotItems] : [];
     }
 
     /// <summary>
@@ -235,7 +234,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
         Name = origin.Title;
         SourceId = origin.SourceId;
         InitialIndex = initialIndex;
-        _snapshotItems = [..items];
+        _snapshotItems = [.. items];
         OnPropertyChanged(nameof(ItemsCount));
         OnPropertyChanged(nameof(Origin));
     }
@@ -336,7 +335,7 @@ public sealed partial class RecentItemViewModel : ObservableRecipient
     {
         return Kind switch
         {
-            RecentItemKind.SingleMedia => Media is not null ? (MediaViewModel[])[Media] : Array.Empty<MediaViewModel>(),
+            RecentItemKind.SingleMedia => Media is not null ? [Media] : Array.Empty<MediaViewModel>(),
             RecentItemKind.MediaCollection => _snapshotItems,
             RecentItemKind.Playlist => LinkedPlaylist?.Items ?? (IReadOnlyList<MediaViewModel>)_snapshotItems,
             RecentItemKind.Album => LinkedAlbum?.OrderedSongs ?? _snapshotItems,

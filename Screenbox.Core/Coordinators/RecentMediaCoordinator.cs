@@ -105,6 +105,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             return;
         }
 
+        if (_recentContext.Recent.Count > 0) return;
         await _loadLock.WaitAsync();
         try
         {
@@ -114,28 +115,25 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 entries = await MigrateLegacyMruAsync();
             }
 
-            _dispatcherQueue.TryExecuteOrEnqueue(() =>
+            var viewModels = new List<RecentItemViewModel>(entries.Count);
+            foreach (var entry in entries)
             {
-                var viewModels = new List<RecentItemViewModel>(entries.Count);
-                foreach (var entry in entries)
+                var vm = HydrateRecentItem(entry);
+                if (vm is not null)
                 {
-                    var vm = HydrateRecentItem(entry);
-                    if (vm is not null)
-                    {
-                        viewModels.Add(vm);
-                    }
+                    viewModels.Add(vm);
                 }
+            }
 
-                ClearRecentCollection();
-                foreach (var vm in viewModels)
-                {
-                    _recentContext.Recent.Add(vm);
-                }
+            ClearRecentCollection();
+            foreach (var vm in viewModels)
+            {
+                _recentContext.Recent.Add(vm);
+            }
 
-                RelinkAllItems();
-                UpdateActiveStates();
-                _recentContext.IsLoaded = true;
-            });
+            RelinkAllItems();
+            UpdateActiveStates();
+            _recentContext.IsLoaded = true;
         }
         catch (Exception ex)
         {
@@ -145,6 +143,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         {
             _loadLock.Release();
         }
+
+        await LoadDetailsAndThumbnailsAsync();
     }
 
     /// <inheritdoc/>
