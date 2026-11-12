@@ -2,7 +2,7 @@
 
   <!-- Platform configuration -->
   <PropertyGroup>
-    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
