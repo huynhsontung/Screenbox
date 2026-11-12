@@ -282,7 +282,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 int existingIndex = _recentContext.Recent.IndexOf(existing);
                 if (existingIndex > 0)
                 {
-                    _recentContext.Recent.Move(existingIndex, 0);
+                    _recentContext.Recent.RemoveAt(existingIndex);
+                    _recentContext.Recent.Insert(0, existing);
                 }
 
                 targetVm = existing;
