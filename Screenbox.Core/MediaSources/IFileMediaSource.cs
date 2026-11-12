@@ -20,6 +20,11 @@ public interface IFileMediaSource : IMediaSource
     string FileType { get; }
 
     /// <summary>
+    /// Gets or sets the access token (e.g. from MRU or FutureAccessList) used to restore access to this file across app sessions.
+    /// </summary>
+    string? Token { get; set; }
+
+    /// <summary>
     /// Gets the cached <see cref="Windows.Storage.StorageFile"/> if already resolved or provided upfront; otherwise <see langword="null"/>.
     /// </summary>
     StorageFile? StorageFile { get; }

@@ -45,6 +45,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
+    private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
@@ -58,6 +59,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     public MainPageViewModel(PlayerSettingsContext playerSettings, ISearchService searchService, INavigationService navigationService,
         LibraryContext libraryContext, ILibraryCoordinator libraryCoordinator,
         PlaylistsContext playlistsContext, IPlaylistService playlistService,
+        IRecentMediaCoordinator recentMediaCoordinator,
         ILogger<MainPageViewModel> logger)
     {
         _playerSettings = playerSettings;
@@ -66,6 +68,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _libraryCoordinator = libraryCoordinator;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
+        _recentMediaCoordinator = recentMediaCoordinator;
         _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;

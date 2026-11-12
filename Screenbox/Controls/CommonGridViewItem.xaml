@@ -22,7 +22,7 @@
             Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
             BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
             BorderThickness="1"
-            CornerRadius="{x:Bind CornerRadius}"
+            CornerRadius="{x:Bind CornerRadius, Mode=OneWay}"
             FlowDirection="LeftToRight">
             <Grid.Background>
                 <ImageBrush
@@ -32,7 +32,7 @@
             </Grid.Background>
             <Border
                 Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
-                CornerRadius="{x:Bind CornerRadius}"
+                CornerRadius="{x:Bind CornerRadius, Mode=OneWay}"
                 Visibility="{x:Bind ThumbnailSource, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}">
                 <IconSourceElement
                     x:Name="PlaceholderIcon"
@@ -95,7 +95,7 @@
         <StackPanel Grid.Row="1" Padding="4,0">
             <TextBlock
                 x:Name="TitleText"
-                HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+                HorizontalTextAlignment="{x:Bind HorizontalTextAlignment, Mode=OneWay}"
                 LineHeight="20"
                 MaxLines="2"
                 Style="{StaticResource BodyStrongTextBlockStyle}"
@@ -107,7 +107,7 @@
             <TextBlock
                 x:Name="CaptionText"
                 Grid.Row="1"
-                HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+                HorizontalTextAlignment="{x:Bind HorizontalTextAlignment, Mode=OneWay}"
                 Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
                 Style="{StaticResource CaptionTextBlockStyle}"
                 Text="{x:Bind Caption, Mode=OneWay}"

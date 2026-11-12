@@ -299,5 +299,27 @@ public static partial class GlyphConverter
             _ => GlobeGlyph,
         };
     }
+
+    /// <summary>
+    /// Gets the placeholder glyph code for a recent item based on its kind and media type.
+    /// </summary>
+    /// <param name="kind">The kind of recent item.</param>
+    /// <param name="mediaType">The media type for single media items.</param>
+    /// <returns>A glyph code representing the placeholder icon.</returns>
+    public static string ToRecentItemGlyph(RecentItemKind kind, MediaPlaybackType mediaType)
+    {
+        const string ContactGlyph = "\uE77B";
+        const string MusicAlbumGlyph = "\uE93C";
+        const string PlaylistGlyph = "\U000F00A8";
+
+        return kind switch
+        {
+            RecentItemKind.SingleMedia => ToMediaTypeGlyph(mediaType),
+            RecentItemKind.MediaCollection or RecentItemKind.Playlist => PlaylistGlyph,
+            RecentItemKind.Album => MusicAlbumGlyph,
+            RecentItemKind.Artist => ContactGlyph,
+            _ => PlaylistGlyph,
+        };
+    }
 }
 

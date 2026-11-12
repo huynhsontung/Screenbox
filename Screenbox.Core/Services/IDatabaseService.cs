@@ -45,4 +45,19 @@ public interface IDatabaseService
 
     /// <summary>Deletes a playlist and cascades to its items.</summary>
     Task DeletePlaylistAsync(string id);
+
+    /// <summary>Loads recent entries ordered by <c>last_played</c> descending, up to <paramref name="maxEntries"/>.</summary>
+    Task<List<RecentEntryDto>> LoadRecentEntriesAsync(int maxEntries = 100);
+
+    /// <summary>
+    /// Upserts a recent entry and its items, optionally removing <paramref name="replaceEntryId"/>,
+    /// deduplicating by <see cref="RecentEntryDto.ContentHash"/>, and pruning entries beyond <paramref name="maxEntries"/>.
+    /// </summary>
+    Task UpsertRecentEntryAsync(RecentEntryDto entry, string? replaceEntryId = null, int maxEntries = 100);
+
+    /// <summary>Deletes a single recent entry and cascades to its items.</summary>
+    Task DeleteRecentEntryAsync(string id);
+
+    /// <summary>Clears all recent entries and their items.</summary>
+    Task ClearRecentEntriesAsync();
 }

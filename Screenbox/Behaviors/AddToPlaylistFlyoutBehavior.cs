@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,10 +101,18 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         MediaViewModel[] contextItems = dataContext switch
         {
             StorageItemViewModel { Media: { } media } => [media],
+            RecentItemViewModel recent => recent.GetPlayableItems().ToArray(),
             MediaViewModel vm => [vm],
             AlbumViewModel album => album.OrderedSongs.ToArray(),
             ArtistViewModel artist => artist.OrderedSongs.ToArray(),
-            SelectionViewModel selection => selection.GetSelectedItems<MediaViewModel>().ToArray(),
+            SelectionViewModel selection => selection.GetSelectedItems<object>()
+                .SelectMany(o => o switch
+                {
+                    MediaViewModel m => (MediaViewModel[])[m],
+                    RecentItemViewModel r => r.GetPlayableItems(),
+                    _ => Array.Empty<MediaViewModel>()
+                })
+                .ToArray(),
             IReadOnlyList<MediaViewModel> list => list.ToArray(),
             IEnumerable<MediaViewModel> collection => collection.ToArray(),
             IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToArray(),

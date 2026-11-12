@@ -63,6 +63,10 @@ public sealed partial class DatabaseService
             "artist", "album", "album_artist", "composers", "genre", "track_number", "bitrate",
             "subtitle", "producers", "writers", "width", "height", "video_bitrate");
         EnsureReplaceableTable(connection, "playback_progress", CreatePlaybackProgressSql, "location", "position_ticks");
+        EnsureReplaceableTable(connection, "recent_entries", CreateRecentEntriesSql,
+            "id", "kind", "source_id", "title", "subtitle", "content_hash", "initial_index", "last_played");
+        EnsureReplaceableTable(connection, "recent_entry_items", CreateRecentEntryItemsSql,
+            "id", "entry_id", "sort_order", "path", "title", "media_type", "duration_ticks", "token");
         EnsurePlaylistsTable(connection);
         EnsurePlaylistItemsTable(connection);
         migrationComplete = await TryImportLegacyPlaylistsAsync(connection);
@@ -90,6 +94,8 @@ public sealed partial class DatabaseService
         ExecuteNonQuery(connection, CreateLibraryFoldersSql);
         ExecuteNonQuery(connection, CreateMediaRecordsSql);
         ExecuteNonQuery(connection, CreatePlaybackProgressSql);
+        ExecuteNonQuery(connection, CreateRecentEntriesSql);
+        ExecuteNonQuery(connection, CreateRecentEntryItemsSql);
         ExecuteNonQuery(connection, CreatePlaylistsSql);
         ExecuteNonQuery(connection, CreatePlaylistItemsSql);
         transaction.Commit();
@@ -364,6 +370,32 @@ public sealed partial class DatabaseService
         CREATE TABLE IF NOT EXISTS playback_progress (
             location      TEXT    PRIMARY KEY,
             position_ticks INTEGER NOT NULL
+        );
+        """;
+
+    private const string CreateRecentEntriesSql = """
+        CREATE TABLE IF NOT EXISTS recent_entries (
+            id            TEXT    PRIMARY KEY,
+            kind          INTEGER NOT NULL,
+            source_id     TEXT    NOT NULL,
+            title         TEXT    NOT NULL,
+            subtitle      TEXT,
+            content_hash  TEXT    NOT NULL,
+            initial_index INTEGER NOT NULL DEFAULT 0,
+            last_played   INTEGER NOT NULL
+        );
+        """;
+
+    private const string CreateRecentEntryItemsSql = """
+        CREATE TABLE IF NOT EXISTS recent_entry_items (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            entry_id       TEXT    NOT NULL REFERENCES recent_entries(id) ON DELETE CASCADE,
+            sort_order     INTEGER NOT NULL,
+            path           TEXT    NOT NULL,
+            title          TEXT,
+            media_type     INTEGER NOT NULL,
+            duration_ticks INTEGER NOT NULL,
+            token          TEXT
         );
         """;
 
