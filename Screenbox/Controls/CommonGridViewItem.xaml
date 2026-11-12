@@ -17,29 +17,29 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid
+        <!--  Thumbnail backplate  -->
+        <Border
+            Grid.Row="0"
+            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+            BorderThickness="1"
+            CornerRadius="{x:Bind CornerRadius}" />
+
+        <Border
             Grid.Row="0"
             Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
             BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
             BorderThickness="1"
             CornerRadius="{x:Bind CornerRadius}"
-            FlowDirection="LeftToRight">
-            <Grid.Background>
-                <ImageBrush
-                    x:Name="ThumbnailImage"
-                    ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}"
-                    Stretch="UniformToFill" />
-            </Grid.Background>
-            <Border
-                Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
-                CornerRadius="{x:Bind CornerRadius}"
-                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}">
-                <IconSourceElement
-                    x:Name="PlaceholderIcon"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}" />
-            </Border>
-        </Grid>
+            FlowDirection="LeftToRight"
+            IsHitTestVisible="False">
+            <Border.Background>
+                <ImageBrush ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}" Stretch="UniformToFill" />
+            </Border.Background>
+            <IconSourceElement
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                IconSource="{x:Bind PlaceholderIconSource}"
+                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}" />
+        </Border>
 
         <Border
             x:Name="IsPlayingIcon"
