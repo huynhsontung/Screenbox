@@ -111,10 +111,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         try
         {
             var entries = await _databaseService.LoadRecentEntriesAsync(RecentContext.MaxRecentItems);
-            if (entries.Count == 0 && StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0)
-            {
-                entries = await MigrateLegacyMruAsync();
-            }
 
             var viewModels = new List<RecentItemViewModel>(entries.Count);
             foreach (var entry in entries)
@@ -214,7 +210,14 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         try
         {
             await _databaseService.ClearRecentEntriesAsync();
-            StorageApplicationPermissions.MostRecentlyUsedList.Clear();
+            try
+            {
+                StorageApplicationPermissions.MostRecentlyUsedList.Clear();
+            }
+            catch
+            {
+                // Access cache may be unavailable in headless unit tests.
+            }
         }
         catch (Exception ex)
         {
@@ -673,64 +676,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
 
         return 0;
-    }
-
-    private async Task<List<RecentEntryDto>> MigrateLegacyMruAsync()
-    {
-        var migrated = new List<RecentEntryDto>();
-        try
-        {
-            var mruEntries = StorageApplicationPermissions.MostRecentlyUsedList.Entries
-                .OrderBy(x => x.Metadata)
-                .ToArray();
-
-            foreach (var entry in mruEntries)
-            {
-                if (string.IsNullOrEmpty(entry.Token)) continue;
-                try
-                {
-                    StorageFile file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(
-                        entry.Token,
-                        AccessCacheOptions.SuppressAccessTimeUpdate);
-
-                    if (file.IsSupportedPlaylist()) continue;
-
-                    MediaViewModel media = _mediaFactory.GetOrCreate(file);
-                    string contentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, media.Location);
-                    DateTimeOffset lastPlayed = long.TryParse(entry.Metadata, out long seconds)
-                        ? DateTimeOffset.FromUnixTimeSeconds(seconds)
-                        : DateTimeOffset.UtcNow;
-
-                    var rawRecord = ToRawMediaRecord(media);
-                    rawRecord.Token = entry.Token;
-
-                    var dto = new RecentEntryDto
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Kind = RecentItemKind.SingleMedia,
-                        ContentHash = contentHash,
-                        Title = media.Name,
-                        SourceId = media.Location,
-                        LastPlayed = lastPlayed,
-                        Items = [rawRecord]
-                    };
-
-                    await _databaseService.UpsertRecentEntryAsync(dto, maxEntries: RecentContext.MaxRecentItems);
-                }
-                catch
-                {
-                    // Skip inaccessible legacy MRU token
-                }
-            }
-
-            migrated = await _databaseService.LoadRecentEntriesAsync(RecentContext.MaxRecentItems);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to migrate legacy MRU entries.");
-        }
-
-        return migrated;
     }
 
     private void ClearRecentCollection()
