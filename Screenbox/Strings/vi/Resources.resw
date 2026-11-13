@@ -319,7 +319,7 @@
     <value>Không rõ thể loại</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>Tất cả thể loại</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Thêm thư mục</value>
@@ -560,6 +560,10 @@
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
     <value>Kết quả video cho "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Kết quả danh sách phát cho "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -876,7 +880,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>Lọc theo thể loại {0} đã chọn</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -1195,6 +1199,15 @@
   <data name="IncreaseValue" xml:space="preserve">
     <value>Tăng {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>Dùng cài đặt hệ thống</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Sáng</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Tối</value>
   </data>
 </root>
 

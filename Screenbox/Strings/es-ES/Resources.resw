@@ -149,11 +149,11 @@
     <value>Duración total</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Capítulo</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Capítulos</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -319,7 +319,7 @@
     <value>Género desconocido</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>Todos los géneros</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Añadir carpeta</value>
@@ -367,7 +367,7 @@
     <value>Abrir ubicación del archivo</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Abrir en el explorador de archivos</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>Abrir con</value>
@@ -562,6 +562,10 @@
     <value>Resultados de video para "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Resultados de listas de reproducción para "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>Ningún álbum</value>
     <comment>#Format[Plural Int]</comment>
@@ -672,10 +676,10 @@
     <value>Permitir que el volumen máximo supere el 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Tiempo que se retrocede al rebobinar</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Tiempo que se avanza al adelantar</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Controles en pantalla</value>
@@ -876,7 +880,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>Filtrar por género {0} seleccionado</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -1021,58 +1025,58 @@
     <value>Carpeta</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Pulse</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>Deslizar hacia arriba</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>Deslizar hacia abajo</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>Deslizar a la izquierda</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>Deslizar a la derecha</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Activar la opción de mantener pulsado para aumentar la velocidad de reproducción.</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>Nada</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>Reproducir/Pausa</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>Retroceder</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>Avance rápido</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>Reducir volumen</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>Aumentar volumen</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>Disminuir velocidad</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>Aumentar velocidad</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Siguiente pista</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Pista anterior</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Siguiente capítulo</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Capítulo anterior</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>Añadir a la lista de reproducción</value>
@@ -1084,10 +1088,10 @@
     <value>Nueva lista de reproducción</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Importar lista</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportar</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
     <value>Ítem seleccionado</value>
@@ -1133,11 +1137,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>Lista de reproducción {0} seleccionada</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>Listas seleccionadas {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1164,37 +1168,46 @@
     <value>Crea tu primera lista de reproducción para organizar tus vídeos y música favoritos.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>No hay elementos en esta lista.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Capturas de fotogramas se guardarán en</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Ubicación de capturas de fotogramas</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Cambiar carpeta</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Cambiar</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Relación de aspecto</value>
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>Opciones de audio</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>Opciones de subtítulos</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>Reducir {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>Aumentar {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>Usar la configuración del sistema</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Oscuro</value>
   </data>
 </root>
 
