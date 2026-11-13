@@ -319,7 +319,7 @@
     <value>Không rõ thể loại</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>Tất cả thể loại</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Thêm thư mục</value>
@@ -563,7 +563,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultPlaylistHeader" xml:space="preserve">
-    <value>Playlist results for "{0}"</value>
+    <value>Kết quả danh sách phát cho "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -880,7 +880,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>Lọc theo thể loại {0} đã chọn</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
