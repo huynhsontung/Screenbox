@@ -1,5 +1,6 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Screenbox.Core.Helpers;
 
@@ -18,10 +19,57 @@ public static class VlcArgumentHelper
     {
         if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
 
-        string[] args = raw.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        string[] args = Tokenize(raw, keepQuotes: true)
             .Where(s => s.StartsWith('-') && s != "--")
             .ToArray();
 
         return string.Join(' ', args);
+    }
+
+    /// <summary>
+    /// Splits a raw argument string into individual arguments, treating double-quoted
+    /// sections as a single group. The grouping quotes are removed from the result.
+    /// </summary>
+    /// <param name="raw">The raw input string of arguments.</param>
+    /// <returns>The list of parsed arguments.</returns>
+    public static IReadOnlyList<string> ParseArguments(string raw)
+    {
+        return Tokenize(raw, keepQuotes: false);
+    }
+
+    private static List<string> Tokenize(string raw, bool keepQuotes)
+    {
+        List<string> tokens = new();
+        if (string.IsNullOrWhiteSpace(raw)) return tokens;
+
+        StringBuilder current = new();
+        bool inQuotes = false;
+        bool hasToken = false;
+        foreach (char c in raw)
+        {
+            if (c == '"')
+            {
+                inQuotes = !inQuotes;
+                hasToken = true;
+                if (keepQuotes) current.Append(c);
+            }
+            else if (char.IsWhiteSpace(c) && !inQuotes)
+            {
+                if (hasToken)
+                {
+                    tokens.Add(current.ToString());
+                    current.Clear();
+                    hasToken = false;
+                }
+            }
+            else
+            {
+                current.Append(c);
+                hasToken = true;
+            }
+        }
+
+        if (hasToken) tokens.Add(current.ToString());
+        return tokens;
     }
 }
