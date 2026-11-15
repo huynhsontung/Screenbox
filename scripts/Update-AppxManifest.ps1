@@ -45,7 +45,7 @@ param (
 
 New-Variable -Name StoreIdentityName -Value "18496Starpine.Screenbox" -Option Constant
 New-Variable -Name StoreIdentityPublisher -Value "CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C" -Option Constant
-New-Variable -Name StoreDisplayName -Value "Screenbox" -Option Constant
+New-Variable -Name StoreDisplayName -Value "Screenbox media player" -Option Constant
 
 New-Variable -Name UnsignedOid -Value "2.25.311729368913984317654407730594956997722=1" -Option Constant
 
