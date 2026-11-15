@@ -696,9 +696,6 @@
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Slide vertically to adjust volume</value>
   </data>
-  <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
-  </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
     <value>Source code</value>
   </data>
