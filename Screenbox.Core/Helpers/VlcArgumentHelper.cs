@@ -37,6 +37,17 @@ public static class VlcArgumentHelper
         return Tokenize(raw, keepQuotes: false);
     }
 
+    /// <summary>
+    /// Joins parsed arguments into a single string that <see cref="ParseArguments"/> can parse back,
+    /// double-quoting any argument that contains whitespace.
+    /// </summary>
+    /// <param name="args">The parsed arguments.</param>
+    /// <returns>A space-delimited string of arguments.</returns>
+    public static string FormatArguments(IEnumerable<string> args)
+    {
+        return string.Join(' ', args.Select(a => a.Any(char.IsWhiteSpace) ? $"\"{a}\"" : a));
+    }
+
     private static List<string> Tokenize(string raw, bool keepQuotes)
     {
         List<string> tokens = new();
