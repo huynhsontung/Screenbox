@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install .NET tools
+      - name: Restore .NET tools
         run: dotnet tool restore
 
       - name: Run XAML style check
@@ -38,6 +38,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+          skip-lts-prepass: true
 
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
@@ -68,6 +74,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+          skip-lts-prepass: true
 
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3

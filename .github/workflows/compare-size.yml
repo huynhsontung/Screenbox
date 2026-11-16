@@ -67,6 +67,12 @@ jobs:
           ref: ${{ matrix.ref }}
           path: ${{ matrix.checkout_path }}
 
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+          skip-lts-prepass: true
+
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
         with:

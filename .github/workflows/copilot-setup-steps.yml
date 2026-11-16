@@ -21,8 +21,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v7
 
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '11.0.x'
+        skip-lts-prepass: true
+
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
+      with:
+          msbuild-architecture: x64
 
     - name: Cache NuGet packages
       uses: actions/cache@v6
