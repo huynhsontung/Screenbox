@@ -17,7 +17,7 @@ on:
       - '*.md'
 
 jobs:
-  xaml-lint:
+  xaml-format-check:
     runs-on: windows-latest
     permissions:
       contents: read
@@ -25,11 +25,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Restore .NET tools
-        run: dotnet tool restore
+      - name: Install XAML Styler Console
+        run: dotnet tool install --global XamlStyler.Console
 
-      - name: Run XAML style check
-        run: ./scripts/lint-xaml.ps1
+      - name: Check XAML format
+        run: xstyler.exe --passive --directory ${{ github.workspace }} --recursive
 
   test:
     runs-on: windows-latest
