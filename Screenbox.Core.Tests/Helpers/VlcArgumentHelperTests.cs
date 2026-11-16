@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Screenbox.Core.Helpers;
 
@@ -29,5 +31,31 @@ public class VlcArgumentHelperTests
         string sanitized = VlcArgumentHelper.SanitizeArguments(raw);
 
         await Assert.That(sanitized).IsEqualTo("--avcodec-hw=any --fullscreen");
+    }
+
+    [Test]
+    public async Task SanitizeArguments_PreservesQuotesAndParseArgumentsRemovesThem()
+    {
+        string raw = "--freetype-font=\"Arial Rounded MT Bold\" --freetype-color=16753920";
+        string sanitized = VlcArgumentHelper.SanitizeArguments(raw);
+
+        await Assert.That(sanitized).IsEqualTo(raw);
+
+        IReadOnlyList<string> parsed = VlcArgumentHelper.ParseArguments(sanitized);
+
+        await Assert.That(parsed.Count).IsEqualTo(2);
+        await Assert.That(parsed[0]).IsEqualTo("--freetype-font=Arial Rounded MT Bold");
+        await Assert.That(parsed[1]).IsEqualTo("--freetype-color=16753920");
+    }
+
+    [Test]
+    public async Task FormatArguments_ThenParseArguments_PreservesSpaceContainingOption()
+    {
+        string[] args = { "--freetype-font=Arial Rounded MT Bold", "--freetype-color=16753920" };
+
+        string formatted = VlcArgumentHelper.FormatArguments(args);
+        IReadOnlyList<string> parsed = VlcArgumentHelper.ParseArguments(formatted);
+
+        await Assert.That(parsed.SequenceEqual(args)).IsTrue();
     }
 }
