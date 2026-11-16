@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Lisää kaikki kansion tiedostot toistojonoon</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Käytä järjestelmän asetuksia</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Tumma</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Valoisa</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Muuta sovelluksen yleistä väriteemaa</value>
   </data>

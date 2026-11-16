@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>フォルダ内のすべてのファイルをキューに追加する</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>システム設定を使用する</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>ダーク</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>ライト</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>アプリ全体のテーマカラーを変更する</value>
   </data>

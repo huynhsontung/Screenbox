@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Tambahkan semua file dalam folder ke antrean</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Gunakan pengaturan sistem</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Gelap</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Terang</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Ubah skema warna keseluruhan aplikasi</value>
   </data>

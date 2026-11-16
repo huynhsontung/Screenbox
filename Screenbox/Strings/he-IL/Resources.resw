@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>הוסף את כל הקבצים בתיקייה לתור</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>השתמש בהגדרות המערכת</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>כהה</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>בהיר</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>שנה את ערכת הצבעים הכוללת של האפליקציה</value>
   </data>

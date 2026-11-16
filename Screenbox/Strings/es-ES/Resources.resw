@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Añadir todos los archivos a la cola</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Usar la configuración del sistema</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Oscuro</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Claro</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Cambiar el esquema de colores general de la aplicación</value>
   </data>

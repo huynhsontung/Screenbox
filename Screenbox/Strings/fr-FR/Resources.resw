@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Ajouter tous les fichiers du dossier à la file d'attente</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Utiliser le paramètre système</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Sombre</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Clair</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Modifier les couleurs de l'application</value>
   </data>

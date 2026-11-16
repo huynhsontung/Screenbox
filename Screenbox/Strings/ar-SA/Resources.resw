@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>إضافة جميع الملفات في المجلد إلى قائمة الانتظار</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>استخدام إعدادات النظام</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>داكن</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>فاتح</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>تغيير نظام الألوان العام للتطبيق</value>
   </data>

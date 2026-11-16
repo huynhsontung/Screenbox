@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Προσθήκη όλων των αρχείων στο φάκελο στην ουρά</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Χρήση ρύθμισης συστήματος</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Σκοτεινό</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Φωτεινό</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Αλλαγή του συνολικού συνδυασμού χρωμάτων της εφαρμογής</value>
   </data>

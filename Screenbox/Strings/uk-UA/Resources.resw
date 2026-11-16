@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Додати усі файли в теці до черги</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Використовувати системні налаштування</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Темна</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Світла</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Змінити загальну колірну схему програми</value>
   </data>

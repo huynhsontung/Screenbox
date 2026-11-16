@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Afegeix tots els fitxers de la carpeta a la cua</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Utilitza la configuració del sistema</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Fosc</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Clar</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Canvia l'esquema de colors general de l'aplicació</value>
   </data>

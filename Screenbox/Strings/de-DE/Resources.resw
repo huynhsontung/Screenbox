@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Alle Dateien im Ordner zur Warteschlange hinzufügen</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Systemeinstellung verwenden</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Dunkel</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Hell</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Ändert das allgemeine Farbschema der App</value>
   </data>

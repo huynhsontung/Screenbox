@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>கோப்புறையிலுள்ள அனைத்துக் கோப்புகளையும் வரிசையில் சேர்க்கவும்</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>கணினி அமைப்பைப் பயன்படுத்து</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>இருண்ட</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>ஒளிரும்</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>பயன்பாட்டின் ஒட்டுமொத்த வண்ணத் திட்டத்தை மாற்றவும்</value>
   </data>

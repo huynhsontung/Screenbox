@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Thêm tất cả các tập tin trong thư mục vào hàng đợi</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Dùng cài đặt hệ thống</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Tối</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Sáng</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Thay đổi bảng màu tổng thể của ứng dụng</value>
   </data>

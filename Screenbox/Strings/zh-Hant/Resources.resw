@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>新增所有檔案至佇列</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>使用系統設定</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>深色</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>淺色</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>更改介面色系</value>
   </data>

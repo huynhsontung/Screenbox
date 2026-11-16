@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>폴더에 있는 모든 파일 대기열에 추가</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>시스템 설정 사용</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>다크</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>라이트</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>앱 전체 색상 구성표를 변경합니다</value>
   </data>

@@ -955,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Klasördeki tüm dosyaları sıraya ekle</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Sistem ayarını kullan</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Koyu</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Açık</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Windows ayarlarınızla eşleşecek bir tema seçin veya özel bir tema seçin</value>
   </data>
