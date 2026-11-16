@@ -19,11 +19,13 @@
 #>
 
 $repositoryPath = Split-Path -Parent $PSScriptRoot
-$files = Get-ChildItem -Path $repositoryPath -Filter *.xaml -Recurse | Select-Object -ExpandProperty FullName | Where-Object { $_ -notmatch "(\\obj\\)|(\\bin\\)" }
+$xamlFiles = Get-ChildItem -Path $repositoryPath -Filter *.xaml -Recurse -File |
+    Where-Object { $_.DirectoryName -notmatch '([\\/](obj|bin)[\\/])' } |
+    Select-Object -ExpandProperty FullName
 
-if ($files.count -eq 0) {
+if ($xamlFiles.count -eq 0) {
     exit 0
 }
 
-dotnet tool run xstyler --passive --file ($files -join ',')
+dotnet tool run xstyler --passive --file ($xamlFiles -join ',')
 exit $LASTEXITCODE
