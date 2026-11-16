@@ -15,7 +15,7 @@
 
 $repositoryPath = Split-Path -Parent $PSScriptRoot
 $xamlFiles = Get-ChildItem -Path $repositoryPath -Filter *.xaml -Recurse -File |
-    Where-Object { $_.DirectoryName -notmatch '([\\/](obj|bin)[\\/])' } |
+    Where-Object { $_.DirectoryName -notmatch '([\\/](obj|bin)([\\/]|$))' }
     Select-Object -ExpandProperty FullName
 
 if ($xamlFiles.count -eq 0) {
