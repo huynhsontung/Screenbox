@@ -7,7 +7,7 @@
     <!-- Windows UI Library -->
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
 
-    <!-- XAML Behaviors -->
+    <!-- XAML Interactivity -->
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
 
     <!-- Windows Community Toolkit -->
@@ -18,7 +18,7 @@
     <PackageVersion Include="CommunityToolkit.Uwp.Converters" Version="8.2.251219" />
     <PackageVersion Include="CommunityToolkit.Uwp.Extensions" Version="8.2.251219" />
 
-    <!-- ReswPlus -->
+    <!-- Globalization (ReswPlus) -->
     <PackageVersion Include="ReswPlus" Version="0.6.1" />
 
     <!-- Media playback (LibVLC, LibVLCSharp) -->
