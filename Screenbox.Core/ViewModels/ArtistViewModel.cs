@@ -15,6 +15,7 @@ using Screenbox.Core.Models;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class ArtistViewModel : ObservableRecipient,
+    IRecentItem,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
     public ObservableCollection<MediaViewModel> RelatedSongs { get; }

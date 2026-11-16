@@ -118,30 +118,28 @@ public class QueueSessionTests
     }
 
     [Test]
-    public async Task QueueOrigin_ComputeContentHash_MatchesIdenticalMediaCollectionAndDiffersWhenOrderOrItemsChange()
+    public async Task QueueOrigin_ComputeContentHash_MatchesCaseInsensitivelyByKindAndSource()
     {
-        string hash1 = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"C:\Folder",
-            new[] { @"C:\Folder\a.mp3", @"C:\Folder\b.mp3" });
-
-        string hashSameCaseInsensitive = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"c:\folder",
-            new[] { @"c:\folder\A.MP3", @"c:\folder\B.MP3" });
-
-        string hashDifferentOrder = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"C:\Folder",
-            new[] { @"C:\Folder\b.mp3", @"C:\Folder\a.mp3" });
-
-        string hashExtraFile = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"C:\Folder",
-            new[] { @"C:\Folder\a.mp3", @"C:\Folder\b.mp3", @"C:\Folder\c.mp3" });
+        string hash1 = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Folder");
+        string hashSameCaseInsensitive = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"c:\folder");
+        string hashDifferentFolder = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\OtherFolder");
+        string hashDifferentKind = QueueOrigin.ComputeContentHash(RecentItemKind.Playlist, @"C:\Folder");
 
         await Assert.That(hash1).IsEqualTo(hashSameCaseInsensitive);
-        await Assert.That(hash1).IsNotEqualTo(hashDifferentOrder);
-        await Assert.That(hash1).IsNotEqualTo(hashExtraFile);
+        await Assert.That(hash1).IsNotEqualTo(hashDifferentFolder);
+        await Assert.That(hash1).IsNotEqualTo(hashDifferentKind);
+    }
+
+    [Test]
+    public async Task QueueOrigin_TrackItemsIndividually_IsTrueForEmptyMediaCollectionAndSingleMedia()
+    {
+        var item = CreateDummyMedia("song1");
+        var looseCollection = QueueOrigin.ForMediaCollection("Loose", null);
+        var folderCollection = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA");
+        var single = QueueOrigin.ForSingleMedia(item);
+
+        await Assert.That(looseCollection.TrackItemsIndividually).IsTrue();
+        await Assert.That(folderCollection.TrackItemsIndividually).IsFalse();
+        await Assert.That(single.TrackItemsIndividually).IsTrue();
     }
 }

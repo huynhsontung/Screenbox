@@ -45,7 +45,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
-    private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
@@ -68,7 +67,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _libraryCoordinator = libraryCoordinator;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
-        _recentMediaCoordinator = recentMediaCoordinator;
+        _ = recentMediaCoordinator; // Ensure singleton coordinator is instantiated at startup
         _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;

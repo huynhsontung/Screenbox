@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Contexts;
 
@@ -17,7 +16,7 @@ public sealed partial class RecentContext : ObservableObject
     /// <summary>
     /// Gets the collection of recent media items.
     /// </summary>
-    public ObservableCollection<RecentItemViewModel> Recent { get; } = new();
+    public ObservableCollection<IRecentItem> Recent { get; } = new();
 
     /// <summary>
     /// Gets or sets a value indicating whether the recent media list has been loaded from storage.

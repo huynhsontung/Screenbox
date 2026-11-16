@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
-using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Coordinators;
 
 /// <summary>
-/// Coordinates the lifecycle, active playback synchronization, library linking, and persistence of Recent Media entries.
+/// Coordinates the lifecycle, library linking, and persistence of Recent Media entries.
 /// </summary>
 public interface IRecentMediaCoordinator
 {
@@ -21,7 +20,7 @@ public interface IRecentMediaCoordinator
     /// <summary>
     /// Removes a single recent entry from the list and persistent storage.
     /// </summary>
-    Task RemoveAsync(RecentItemViewModel item);
+    Task RemoveAsync(IRecentItem item);
 
     /// <summary>
     /// Clears all recent entries from the list and persistent storage.

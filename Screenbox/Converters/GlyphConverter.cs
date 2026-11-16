@@ -301,25 +301,16 @@ public static partial class GlyphConverter
     }
 
     /// <summary>
-    /// Gets the placeholder glyph code for a recent item based on its kind and media type.
+    /// Gets the placeholder glyph code for a live media collection (folder or playlist file).
     /// </summary>
-    /// <param name="kind">The kind of recent item.</param>
-    /// <param name="mediaType">The media type for single media items.</param>
-    /// <returns>A glyph code representing the placeholder icon.</returns>
-    public static string ToRecentItemGlyph(RecentItemKind kind, MediaPlaybackType mediaType)
+    /// <param name="isPlaylistFile"><see langword="true"/> if the collection originates from a playlist file; otherwise <see langword="false"/>.</param>
+    /// <returns>A glyph code representing either a playlist or folder icon.</returns>
+    public static string ToMediaCollectionGlyph(bool isPlaylistFile)
     {
-        const string ContactGlyph = "\uE77B";
-        const string MusicAlbumGlyph = "\uE93C";
+        const string FolderGlyph = "\uE8B7";
         const string PlaylistGlyph = "\U000F00A8";
 
-        return kind switch
-        {
-            RecentItemKind.SingleMedia => ToMediaTypeGlyph(mediaType),
-            RecentItemKind.MediaCollection or RecentItemKind.Playlist => PlaylistGlyph,
-            RecentItemKind.Album => MusicAlbumGlyph,
-            RecentItemKind.Artist => ContactGlyph,
-            _ => PlaylistGlyph,
-        };
+        return isPlaylistFile ? PlaylistGlyph : FolderGlyph;
     }
 }
 

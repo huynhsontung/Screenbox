@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Screenbox.Core.Enums;
-using Screenbox.Core.Factories;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Models;
@@ -16,17 +13,21 @@ namespace Screenbox.Core.Models;
 /// <param name="SourceId">The stable identifier for the origin source (e.g. playlist ID, album key, artist key, or path).</param>
 /// <param name="Title">The display title for the recent entry or session.</param>
 /// <param name="Subtitle">The optional subtitle or caption for the recent entry or session.</param>
+/// <param name="Token">The optional WinRT access cache token for restoring file or folder access across sessions.</param>
 public sealed record QueueOrigin(
     RecentItemKind Kind,
     string SourceId,
     string Title,
-    string? Subtitle = null)
+    string? Subtitle = null,
+    string? Token = null)
 {
     /// <summary>
     /// Gets a value indicating whether each track change in this queue should be recorded
     /// individually as a <see cref="RecentItemKind.SingleMedia"/> entry.
     /// </summary>
-    public bool TrackItemsIndividually => Kind == RecentItemKind.SingleMedia;
+    public bool TrackItemsIndividually =>
+        Kind == RecentItemKind.SingleMedia ||
+        (Kind == RecentItemKind.MediaCollection && string.IsNullOrEmpty(SourceId));
 
     /// <summary>Creates a <see cref="QueueOrigin"/> for a single media item.</summary>
     public static QueueOrigin ForSingleMedia(MediaViewModel media)
@@ -37,10 +38,10 @@ public sealed record QueueOrigin(
     /// <summary>Creates a <see cref="QueueOrigin"/> for a library-wide queue where each played track is recorded individually.</summary>
     public static QueueOrigin ForLibraryQueue(MediaViewModel initialMedia) => ForSingleMedia(initialMedia);
 
-    /// <summary>Creates a <see cref="QueueOrigin"/> for an ad-hoc media collection (such as a folder, M3U file, or multi-file selection).</summary>
-    public static QueueOrigin ForMediaCollection(string title, string? sourcePath = null)
+    /// <summary>Creates a <see cref="QueueOrigin"/> for a folder or playlist file origin.</summary>
+    public static QueueOrigin ForMediaCollection(string title, string? sourcePath, string? token = null)
     {
-        return new QueueOrigin(RecentItemKind.MediaCollection, sourcePath ?? string.Empty, title);
+        return new QueueOrigin(RecentItemKind.MediaCollection, sourcePath ?? string.Empty, title, Token: token);
     }
 
     /// <summary>Creates a <see cref="QueueOrigin"/> for a durable user playlist.</summary>
@@ -73,26 +74,12 @@ public sealed record QueueOrigin(
 
     /// <summary>
     /// Computes a deterministic SHA-256 content hash for comparing recent entries.
-    /// For live containers (<see cref="RecentItemKind.Playlist"/>, <see cref="RecentItemKind.Album"/>,
-    /// <see cref="RecentItemKind.Artist"/>) and <see cref="RecentItemKind.SingleMedia"/>, the hash is derived
-    /// from the kind and stable source identifier. For <see cref="RecentItemKind.MediaCollection"/>, the hash
-    /// includes the collection title/source and the exact canonical sequence of item locations.
     /// </summary>
-    public static string ComputeContentHash(RecentItemKind kind, string sourceOrTitleKey, IReadOnlyList<string>? canonicalLocations = null)
+    public static string ComputeContentHash(RecentItemKind kind, string sourceOrTitleKey)
     {
         using var sha256 = SHA256.Create();
-        var sb = new StringBuilder();
-        sb.Append((int)kind).Append('|').Append(NormalizeLocation(sourceOrTitleKey));
-
-        if (kind == RecentItemKind.MediaCollection && canonicalLocations is not null)
-        {
-            foreach (string loc in canonicalLocations)
-            {
-                sb.Append('\n').Append(NormalizeLocation(loc));
-            }
-        }
-
-        byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString()));
+        string payload = $"{(int)kind}|{NormalizeLocation(sourceOrTitleKey)}";
+        byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(payload));
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
 

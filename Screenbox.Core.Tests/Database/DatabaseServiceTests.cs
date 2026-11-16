@@ -308,21 +308,15 @@ public sealed class DatabaseServiceTests
         await Assert.That(loaded[0].Items[0].Path).IsEqualTo(@"C:\Music\track1.mp3");
         await Assert.That(loaded[0].Items[0].Token).IsEqualTo("token_abc");
 
-        string[] folderPaths = [@"C:\Music\track1.mp3", @"C:\Music\track2.mp3"];
         var upgradedFolderEntry = new RecentEntryDto
         {
             Id = "entry_2",
             Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\Music",
             Title = "Music",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music", folderPaths),
-            InitialIndex = 1,
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music"),
+            Token = "folder_token_123",
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-5),
-            Items =
-            [
-                new RawMediaRecordDto { Path = @"C:\Music\track1.mp3", Title = "Track 1", MediaType = MediaPlaybackType.Music },
-                new RawMediaRecordDto { Path = @"C:\Music\track2.mp3", Title = "Track 2", MediaType = MediaPlaybackType.Music }
-            ]
         };
 
         await dbService.UpsertRecentEntryAsync(upgradedFolderEntry, replaceEntryId: "entry_1");
@@ -331,8 +325,8 @@ public sealed class DatabaseServiceTests
         await Assert.That(loaded).HasSingleItem();
         await Assert.That(loaded[0].Id).IsEqualTo("entry_2");
         await Assert.That(loaded[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
-        await Assert.That(loaded[0].InitialIndex).IsEqualTo(1);
-        await Assert.That(loaded[0].Items.Count).IsEqualTo(2);
+        await Assert.That(loaded[0].Token).IsEqualTo("folder_token_123");
+        await Assert.That(loaded[0].Items).IsEmpty();
 
         var duplicateFolderEntry = new RecentEntryDto
         {
@@ -341,14 +335,15 @@ public sealed class DatabaseServiceTests
             SourceId = @"C:\Music",
             Title = "Music",
             ContentHash = upgradedFolderEntry.ContentHash,
+            Token = "folder_token_456",
             LastPlayed = DateTimeOffset.UtcNow,
-            Items = upgradedFolderEntry.Items
         };
 
         await dbService.UpsertRecentEntryAsync(duplicateFolderEntry);
         loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded).HasSingleItem();
         await Assert.That(loaded[0].Id).IsEqualTo("entry_3");
+        await Assert.That(loaded[0].Token).IsEqualTo("folder_token_456");
 
         for (int i = 0; i < 4; i++)
         {

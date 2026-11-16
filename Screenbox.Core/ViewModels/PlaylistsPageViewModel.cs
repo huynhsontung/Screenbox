@@ -116,7 +116,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         {
             var origin = selectedPlaylists.Count == 1
                 ? QueueOrigin.ForPlaylist(selectedPlaylists[0])
-                : QueueOrigin.ForMediaCollection(items[0].Name);
+                : null;
             Messenger.SendQueueAndPlay(items[0], items, origin: origin);
         }
         Selection.DisableSelectionMode();

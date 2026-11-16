@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
@@ -16,32 +18,68 @@ namespace Screenbox.Core.Tests.Coordinators;
 
 public sealed class RecentMediaCoordinatorTests
 {
+    private sealed class FlakyDatabaseService : IDatabaseService
+    {
+        private readonly TaskCompletionSource<List<RecentEntryDto>>? _blockedLoadTcs;
+        private int _loadCalls;
+        private readonly bool _failFirstLoad;
+
+        public List<RecentEntryDto> Entries { get; } = [];
+
+        public FlakyDatabaseService(bool failFirstLoad = false, TaskCompletionSource<List<RecentEntryDto>>? blockedLoadTcs = null)
+        {
+            _failFirstLoad = failFirstLoad;
+            _blockedLoadTcs = blockedLoadTcs;
+        }
+
+        public Task InitializeAsync() => Task.CompletedTask;
+        public Task<RawCacheLoadResultDto> LoadLibraryCacheAsync(MediaPlaybackType mediaType) => Task.FromResult(new RawCacheLoadResultDto());
+        public Task SaveMusicCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<MusicCacheRecordDto> records) => Task.CompletedTask;
+        public Task SaveVideoCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<VideoCacheRecordDto> records) => Task.CompletedTask;
+        public Task ReplacePlaybackProgressAsync(IReadOnlyList<MediaPlaybackProgress> snapshot) => Task.CompletedTask;
+        public Task<List<MediaPlaybackProgress>> LoadPlaybackProgressAsync() => Task.FromResult(new List<MediaPlaybackProgress>());
+        public Task SavePlaylistAsync(PlaylistRecordDto playlist) => Task.CompletedTask;
+        public Task<PlaylistRecordDto?> LoadPlaylistAsync(string id) => Task.FromResult<PlaylistRecordDto?>(null);
+        public Task<List<PlaylistRecordDto>> ListPlaylistsAsync() => Task.FromResult(new List<PlaylistRecordDto>());
+        public Task DeletePlaylistAsync(string id) => Task.CompletedTask;
+
+        public Task<List<RecentEntryDto>> LoadRecentEntriesAsync(int maxEntries = 100)
+        {
+            _loadCalls++;
+            if (_failFirstLoad && _loadCalls == 1)
+            {
+                throw new InvalidOperationException("Simulated DB failure");
+            }
+
+            if (_blockedLoadTcs is not null)
+            {
+                return _blockedLoadTcs.Task;
+            }
+
+            return Task.FromResult(new List<RecentEntryDto>(Entries));
+        }
+
+        public Task UpsertRecentEntryAsync(RecentEntryDto entry, string? replaceEntryId = null, int maxEntries = 100) => Task.CompletedTask;
+        public Task DeleteRecentEntryAsync(string id) => Task.CompletedTask;
+        public Task ClearRecentEntriesAsync()
+        {
+            Entries.Clear();
+            return Task.CompletedTask;
+        }
+    }
+
     private static MediaViewModel CreateDummyMedia(string name) =>
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };
 
     private static (
         RecentMediaCoordinator Coordinator,
         RecentContext RecentContext,
-        PlayQueueContext PlayQueueContext,
-        LibraryContext LibraryContext,
-        PlaylistsContext PlaylistsContext,
-        DatabaseService DatabaseService) CreateCoordinator(string dbFolderPath)
-    {
-        var (c, r, pq, l, pl, db, _) = CreateCoordinator(dbFolderPath, isLoaded: true);
-        return (c, r, pq, l, pl, db);
-    }
-
-    private static (
-        RecentMediaCoordinator Coordinator,
-        RecentContext RecentContext,
-        PlayQueueContext PlayQueueContext,
         LibraryContext LibraryContext,
         PlaylistsContext PlaylistsContext,
         DatabaseService DatabaseService,
-        GeneralSettingsContext GeneralSettings) CreateCoordinator(string dbFolderPath, bool isLoaded)
+        GeneralSettingsContext GeneralSettings) CreateCoordinator(string dbFolderPath, bool isLoaded = true)
     {
         var recentContext = new RecentContext { IsLoaded = isLoaded };
-        var playQueueContext = new PlayQueueContext();
         var libraryContext = new LibraryContext();
         var playlistsContext = new PlaylistsContext();
         var settingsStorage = new MemorySettingsStorage();
@@ -55,23 +93,24 @@ public sealed class RecentMediaCoordinatorTests
 
         var coordinator = new RecentMediaCoordinator(
             recentContext,
-            playQueueContext,
             libraryContext,
             playlistsContext,
             generalSettings,
             dbService,
             mediaFactory,
             metadataService,
-            NullLogger<RecentMediaCoordinator>.Instance);
+            null!,
+            NullLogger<RecentMediaCoordinator>.Instance,
+            new StrongReferenceMessenger());
 
-        return (coordinator, recentContext, playQueueContext, libraryContext, playlistsContext, dbService, generalSettings);
+        return (coordinator, recentContext, libraryContext, playlistsContext, dbService, generalSettings);
     }
 
     [Test]
-    public async Task HandleQueueSessionStartedAsync_PromotesIdenticalMediaCollection_AndCreatesNewWhenItemsChange()
+    public async Task HandleQueueSessionStartedAsync_PromotesFolderShortcut_AndTracksLooseFilesIndividually()
     {
         using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, playQueueContext, _, _, dbService) = CreateCoordinator(fixture.DirectoryPath);
+        var (coordinator, recentContext, _, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
         await dbService.InitializeAsync();
 
         var track1 = CreateDummyMedia("track1");
@@ -80,68 +119,50 @@ public sealed class RecentMediaCoordinatorTests
 
         var folderSession1 = new QueueSession(0, new[] { track1, track2 })
         {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA", token: "tok_a")
         };
 
-        playQueueContext.ActiveSessionId = folderSession1.SessionId;
-        playQueueContext.ActiveOrigin = folderSession1.Origin;
-        playQueueContext.CurrentItem = track1;
         await coordinator.HandleQueueSessionStartedAsync(folderSession1, isUpgrade: false);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
-        await Assert.That(recentContext.Recent[0].IsQueueActive).IsTrue();
+        await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
+        await Assert.That(((MediaCollectionViewModel)recentContext.Recent[0]).Token).IsEqualTo("tok_a");
 
-        // Play a single media item
+        // Play a single media item -> moves to top
         var singleSession = new QueueSession(single)
         {
             Origin = QueueOrigin.ForSingleMedia(single)
         };
-        playQueueContext.ActiveSessionId = singleSession.SessionId;
-        playQueueContext.ActiveOrigin = singleSession.Origin;
-        playQueueContext.CurrentItem = single;
         await coordinator.HandleQueueSessionStartedAsync(singleSession, isUpgrade: false);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.SingleMedia);
-        await Assert.That(recentContext.Recent[0].IsQueueActive).IsTrue();
-        await Assert.That(recentContext.Recent[1].IsQueueActive).IsFalse();
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(single);
 
-        // Replay the exact same folder playlist -> promotes existing entry to index 0
-        var folderSession2 = new QueueSession(0, new[] { track1, track2 })
+        // Replay the same folder (even with extra tracks on disk) -> promotes the existing single shortcut
+        var track3 = CreateDummyMedia("track3");
+        var folderSession2 = new QueueSession(0, new[] { track1, track2, track3 })
         {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA", token: "tok_b")
         };
-        playQueueContext.ActiveSessionId = folderSession2.SessionId;
-        playQueueContext.ActiveOrigin = folderSession2.Origin;
-        playQueueContext.CurrentItem = track1;
         await coordinator.HandleQueueSessionStartedAsync(folderSession2, isUpgrade: false);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
-        await Assert.That(recentContext.Recent[0].IsQueueActive).IsTrue();
+        await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
+        await Assert.That(((MediaCollectionViewModel)recentContext.Recent[0]).Token).IsEqualTo("tok_b");
 
-        // Play the folder with an added track -> creates a new entry
-        var track3 = CreateDummyMedia("track3");
-        var modifiedFolderSession = new QueueSession(0, new[] { track1, track2, track3 })
-        {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
-        };
-        playQueueContext.ActiveSessionId = modifiedFolderSession.SessionId;
-        playQueueContext.ActiveOrigin = modifiedFolderSession.Origin;
-        playQueueContext.CurrentItem = track1;
-        await coordinator.HandleQueueSessionStartedAsync(modifiedFolderSession, isUpgrade: false);
+        // Loose multi-file queue (Origin == null) tracks the active item individually
+        var looseSession = new QueueSession(1, new[] { track1, track3 });
+        await coordinator.HandleQueueSessionStartedAsync(looseSession, isUpgrade: false);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(3);
-        await Assert.That(recentContext.Recent[0].ItemsCount).IsEqualTo(3d);
-        await Assert.That(recentContext.Recent[1].ItemsCount).IsEqualTo(2d);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(track3);
     }
 
     [Test]
     public async Task HandleQueueSessionStartedAsync_WithUpgrade_ReplacesInitialSingleMediaInPlace()
     {
         using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, playQueueContext, _, _, dbService) = CreateCoordinator(fixture.DirectoryPath);
+        var (coordinator, recentContext, _, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
         await dbService.InitializeAsync();
 
         var track1 = CreateDummyMedia("track1");
@@ -151,86 +172,78 @@ public sealed class RecentMediaCoordinatorTests
         {
             Origin = QueueOrigin.ForSingleMedia(track1)
         };
-        playQueueContext.ActiveSessionId = initialSingle.SessionId;
-        playQueueContext.ActiveOrigin = initialSingle.Origin;
-        playQueueContext.CurrentItem = track1;
         await coordinator.HandleQueueSessionStartedAsync(initialSingle, isUpgrade: false);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.SingleMedia);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(track1);
 
         var upgradedPlaylist = new QueueSession(0, new[] { track1, track2 }, initialSingle)
         {
             Origin = QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder")
         };
-        playQueueContext.ActiveOrigin = upgradedPlaylist.Origin;
         await coordinator.HandleQueueSessionStartedAsync(upgradedPlaylist, isUpgrade: true);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
+        await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("MyFolder");
-        await Assert.That(recentContext.Recent[0].ItemsCount).IsEqualTo(2d);
     }
 
     [Test]
-    public async Task ActiveAndPlayingState_SyncsAcrossSessionAdvancesAndClears()
+    public async Task RelinkLibraryItems_SwapsPlaceholderAlbumAndArtistWhenMusicLibraryLoads()
     {
         using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, playQueueContext, _, _, dbService) = CreateCoordinator(fixture.DirectoryPath);
+        var (coordinator, recentContext, libraryContext, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
         await dbService.InitializeAsync();
 
-        var track1 = CreateDummyMedia("track1");
-        var track2 = CreateDummyMedia("track2");
-
-        var folderSession = new QueueSession(0, new[] { track1, track2 })
+        var albumKey = AlbumViewModelFactory.GetAlbumKey("Abbey Road", "The Beatles");
+        await dbService.UpsertRecentEntryAsync(new RecentEntryDto
         {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
-        };
-        playQueueContext.ActiveSessionId = folderSession.SessionId;
-        playQueueContext.ActiveOrigin = folderSession.Origin;
-        playQueueContext.CurrentItem = track1;
-        await coordinator.HandleQueueSessionStartedAsync(folderSession, isUpgrade: false);
+            Id = "entry_album",
+            Kind = RecentItemKind.Album,
+            SourceId = albumKey,
+            Title = "Abbey Road",
+            Subtitle = "The Beatles",
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.Album, albumKey),
+            LastPlayed = DateTimeOffset.UtcNow
+        });
 
-        var recentFolder = recentContext.Recent[0];
-        await Assert.That(recentFolder.IsQueueActive).IsTrue();
-        await Assert.That(recentFolder.IsPlaying).IsFalse();
+        await coordinator.LoadAsync();
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        var placeholder = (AlbumViewModel)recentContext.Recent[0];
+        await Assert.That(placeholder.RelatedSongs).IsEmpty();
 
-        // Start playing
-        playQueueContext.IsPlaying = true;
-        await Assert.That(recentFolder.IsPlaying).IsTrue();
+        // Populate live library and broadcast MusicLibrary update
+        var liveAlbum = new AlbumViewModel("Abbey Road", "The Beatles");
+        var song = CreateDummyMedia("Come Together");
+        liveAlbum.RelatedSongs.Add(song);
+        var albums = new Dictionary<string, AlbumViewModel> { [albumKey] = liveAlbum };
+        var musicLibrary = new MusicLibrary(
+            new[] { song },
+            albums,
+            new Dictionary<string, ArtistViewModel>(),
+            Array.Empty<string>(),
+            new AlbumViewModel(),
+            new ArtistViewModel());
+        libraryContext.Music = musicLibrary;
 
-        // Advance to track2 within the same session -> folder stays active & playing
-        playQueueContext.CurrentItem = track2;
-        await Assert.That(recentFolder.IsQueueActive).IsTrue();
-        await Assert.That(recentFolder.IsPlaying).IsTrue();
+        coordinator.Receive(new PropertyChangedMessage<MusicLibrary>(libraryContext, nameof(LibraryContext.Music), MusicLibrary.Empty, musicLibrary));
 
-        // Pause playback -> folder stays active, but IsPlaying is false
-        playQueueContext.IsPlaying = false;
-        await Assert.That(recentFolder.IsQueueActive).IsTrue();
-        await Assert.That(recentFolder.IsPlaying).IsFalse();
-
-        // Clear queue -> folder becomes inactive and not playing
-        playQueueContext.ActiveSessionId = Guid.Empty;
-        playQueueContext.ActiveOrigin = null;
-        playQueueContext.CurrentItem = null;
-        await Assert.That(recentFolder.IsQueueActive).IsFalse();
-        await Assert.That(recentFolder.IsPlaying).IsFalse();
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(liveAlbum);
+        await Assert.That(((AlbumViewModel)recentContext.Recent[0]).RelatedSongs).HasSingleItem();
     }
 
     [Test]
     public async Task ShowRecent_Toggle_ClearsAndReloadsFromDatabase()
     {
         using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, playQueueContext, _, _, dbService, generalSettings) =
+        var (coordinator, recentContext, _, _, dbService, generalSettings) =
             CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
         await dbService.InitializeAsync();
 
         // 1. Initial queue session recorded
         var track = CreateDummyMedia("song1");
         var session = new QueueSession(track) { Origin = QueueOrigin.ForSingleMedia(track) };
-        playQueueContext.ActiveSessionId = session.SessionId;
-        playQueueContext.ActiveOrigin = session.Origin;
-        playQueueContext.CurrentItem = track;
         await coordinator.HandleQueueSessionStartedAsync(session, isUpgrade: false);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
@@ -252,16 +265,15 @@ public sealed class RecentMediaCoordinatorTests
     public async Task LoadAsync_WhenInvokedConcurrently_CoalescesIntoSingleLoad()
     {
         using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, _, _, _, dbService, _) =
+        var (coordinator, recentContext, _, _, dbService, _) =
             CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
         await dbService.InitializeAsync();
 
-        // Seed a recent entry in SQLite
         var dto = new RecentEntryDto
         {
             Id = Guid.NewGuid().ToString(),
             Kind = RecentItemKind.SingleMedia,
-            ContentHash = "hash1",
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, "https://example.com/SavedTrack.mp3"),
             Title = "SavedTrack",
             SourceId = "https://example.com/SavedTrack.mp3",
             LastPlayed = DateTimeOffset.UtcNow,
@@ -269,7 +281,6 @@ public sealed class RecentMediaCoordinatorTests
         };
         await dbService.UpsertRecentEntryAsync(dto);
 
-        // Run 5 concurrent loads
         await Task.WhenAll(
             coordinator.LoadAsync(),
             coordinator.LoadAsync(),
@@ -280,5 +291,84 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.IsLoaded).IsTrue();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("SavedTrack");
+    }
+
+    [Test]
+    public async Task LoadAsync_WhenFirstLoadFailsSynchronously_RetriesOnSubsequentCall()
+    {
+        var flakyDb = new FlakyDatabaseService(failFirstLoad: true);
+        flakyDb.Entries.Add(new RecentEntryDto
+        {
+            Id = "e1",
+            Kind = RecentItemKind.MediaCollection,
+            SourceId = @"C:\Music",
+            Title = "Music",
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music"),
+            LastPlayed = DateTimeOffset.UtcNow
+        });
+
+        var recentContext = new RecentContext();
+        var libraryContext = new LibraryContext();
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
+        var coordinator = new RecentMediaCoordinator(
+            recentContext,
+            libraryContext,
+            new PlaylistsContext(),
+            generalSettings,
+            flakyDb,
+            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
+            new TestMetadataService(),
+            null!,
+            NullLogger<RecentMediaCoordinator>.Instance,
+            new StrongReferenceMessenger());
+
+        await coordinator.LoadAsync();
+        await Assert.That(recentContext.IsLoaded).IsFalse();
+        await Assert.That(recentContext.Recent).IsEmpty();
+
+        // Retry succeeds
+        await coordinator.LoadAsync();
+        await Assert.That(recentContext.IsLoaded).IsTrue();
+        await Assert.That(recentContext.Recent).HasSingleItem();
+    }
+
+    [Test]
+    public async Task LoadAsync_WhenClearedWhileInFlight_DoesNotRestoreStaleCards()
+    {
+        var tcs = new TaskCompletionSource<List<RecentEntryDto>>();
+        var blockedDb = new FlakyDatabaseService(blockedLoadTcs: tcs);
+
+        var recentContext = new RecentContext();
+        var libraryContext = new LibraryContext();
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
+        var coordinator = new RecentMediaCoordinator(
+            recentContext,
+            libraryContext,
+            new PlaylistsContext(),
+            generalSettings,
+            blockedDb,
+            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
+            new TestMetadataService(),
+            null!,
+            NullLogger<RecentMediaCoordinator>.Instance,
+            new StrongReferenceMessenger());
+
+        Task pendingLoad = coordinator.LoadAsync();
+        await coordinator.ClearAsync();
+
+        tcs.SetResult([
+            new RecentEntryDto
+            {
+                Id = "stale",
+                Kind = RecentItemKind.MediaCollection,
+                SourceId = @"C:\Stale",
+                Title = "Stale",
+                ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Stale"),
+                LastPlayed = DateTimeOffset.UtcNow
+            }
+        ]);
+
+        await pendingLoad;
+        await Assert.That(recentContext.Recent).IsEmpty();
     }
 }

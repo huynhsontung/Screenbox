@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class AlbumViewModel : ObservableRecipient,
+    IRecentItem,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
     public string Name { get; }

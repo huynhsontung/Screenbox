@@ -101,15 +101,17 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         MediaViewModel[] contextItems = dataContext switch
         {
             StorageItemViewModel { Media: { } media } => [media],
-            RecentItemViewModel recent => recent.GetPlayableItems().ToArray(),
             MediaViewModel vm => [vm],
             AlbumViewModel album => album.OrderedSongs.ToArray(),
             ArtistViewModel artist => artist.OrderedSongs.ToArray(),
+            PlaylistViewModel playlist => playlist.Items.ToArray(),
             SelectionViewModel selection => selection.GetSelectedItems<object>()
                 .SelectMany(o => o switch
                 {
                     MediaViewModel m => (MediaViewModel[])[m],
-                    RecentItemViewModel r => r.GetPlayableItems(),
+                    AlbumViewModel album => album.OrderedSongs,
+                    ArtistViewModel artist => artist.OrderedSongs,
+                    PlaylistViewModel playlist => playlist.Items,
                     _ => Array.Empty<MediaViewModel>()
                 })
                 .ToArray(),

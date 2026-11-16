@@ -222,52 +222,24 @@ public static class ItemLabelHelper
     }
 
     /// <summary>
-    /// Gets the display title for a recent item, applying localized fallback values for albums and artists.
+    /// Gets a localized caption for a live media collection shortcut (folder or playlist file).
     /// </summary>
-    /// <param name="kind">The kind of recent item.</param>
-    /// <param name="name">The raw name of the item.</param>
-    /// <returns>The resolved title.</returns>
-    public static string GetRecentItemTitle(RecentItemKind kind, string name)
+    /// <param name="isPlaylistFile"><see langword="true"/> if the collection originates from a playlist file; otherwise <see langword="false"/>.</param>
+    /// <returns>A localized caption string.</returns>
+    public static string GetMediaCollectionCaption(bool isPlaylistFile)
     {
-        return kind switch
-        {
-            RecentItemKind.Album => GetValueOrFallback(name, Strings.Resources.UnknownAlbum),
-            RecentItemKind.Artist => GetValueOrFallback(name, Strings.Resources.UnknownArtist),
-            _ => name,
-        };
+        return isPlaylistFile ? string.Empty : Strings.Resources.Folder;
     }
 
     /// <summary>
-    /// Gets the display caption for a recent item based on its kind, applying localized formatting.
+    /// Formats an accessible name for a live media collection shortcut.
     /// </summary>
-    /// <param name="kind">The kind of recent item.</param>
-    /// <param name="caption">The underlying caption or artist name.</param>
-    /// <param name="itemsCount">The numeric item count for playlist entries.</param>
-    /// <returns>The localized caption string.</returns>
-    public static string GetRecentItemCaption(RecentItemKind kind, string caption, double itemsCount)
-    {
-        return kind switch
-        {
-            RecentItemKind.SingleMedia => caption,
-            RecentItemKind.MediaCollection or RecentItemKind.Playlist => Strings.Resources.ItemsCount(itemsCount),
-            RecentItemKind.Album => GetValueOrFallback(caption, Strings.Resources.UnknownArtist),
-            RecentItemKind.Artist => string.Empty,
-            _ => caption,
-        };
-    }
-
-    /// <summary>
-    /// Formats an accessible name for a recent item based on its resolved title and caption.
-    /// </summary>
-    /// <param name="kind">The kind of recent item.</param>
-    /// <param name="name">The raw name of the item.</param>
-    /// <param name="caption">The underlying caption or artist name.</param>
-    /// <param name="itemsCount">The numeric item count for playlist entries.</param>
+    /// <param name="name">The display name of the folder or playlist.</param>
+    /// <param name="isPlaylistFile"><see langword="true"/> if the collection originates from a playlist file; otherwise <see langword="false"/>.</param>
     /// <returns>A formatted accessible name.</returns>
-    public static string FormatAccessibleRecentItemName(RecentItemKind kind, string name, string caption, double itemsCount)
+    public static string FormatAccessibleMediaCollectionName(string name, bool isPlaylistFile)
     {
-        string title = GetRecentItemTitle(kind, name);
-        string sub = GetRecentItemCaption(kind, caption, itemsCount);
-        return string.IsNullOrEmpty(sub) ? title : FormatAccessibleName(title, sub);
+        string caption = GetMediaCollectionCaption(isPlaylistFile);
+        return string.IsNullOrEmpty(caption) ? name : FormatAccessibleName(name, caption);
     }
 }

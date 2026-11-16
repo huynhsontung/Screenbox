@@ -146,17 +146,18 @@ public sealed class FilesService : IFilesService
         }
     }
 
-    public void AddToRecent(IStorageItem item)
+    public string? AddToRecent(IStorageItem item)
     {
         string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         try
         {
-            StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
+            return StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
         }
         catch (Exception)
         {
             // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
             // Ownership issue?
+            return null;
         }
     }
 

@@ -24,7 +24,7 @@ public interface IFilesService
     public IAsyncOperation<StorageFolder> PickFolderAsync();
     public Task OpenFileLocationAsync(string path);
     public Task OpenFileLocationAsync(StorageFile file);
-    public void AddToRecent(IStorageItem item);
+    public string? AddToRecent(IStorageItem item);
     public Task AddToRecentAsync(IMediaSource? source, CancellationToken cancellationToken = default);
 
     /// <summary>

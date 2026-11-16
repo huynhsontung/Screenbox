@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +12,6 @@ using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -19,12 +19,32 @@ namespace Screenbox.Core.ViewModels;
 
 public sealed partial class HomePageViewModel : ObservableRecipient
 {
-    public ObservableCollection<RecentItemViewModel> Recent => _recentContext.Recent;
+    public ObservableCollection<IRecentItem> Recent => _recentContext.Recent;
 
     public SelectionViewModel Selection { get; }
 
     [ObservableProperty]
-    public partial RecentItemViewModel? ContextMedia { get; set; }
+    [NotifyPropertyChangedFor(nameof(ContextAlbum))]
+    [NotifyPropertyChangedFor(nameof(ContextArtist))]
+    [NotifyPropertyChangedFor(nameof(ContextPlaylist))]
+    public partial IRecentItem? ContextMedia { get; set; }
+
+    public AlbumViewModel? ContextAlbum => ContextMedia switch
+    {
+        AlbumViewModel album => album,
+        MediaViewModel media => media.Album,
+        _ => null
+    };
+
+    public ArtistViewModel? ContextArtist => ContextMedia switch
+    {
+        ArtistViewModel artist => artist,
+        AlbumViewModel album => album.RelatedSongs.FirstOrDefault()?.MainArtist,
+        MediaViewModel media => media.MainArtist,
+        _ => null
+    };
+
+    public PlaylistViewModel? ContextPlaylist => ContextMedia as PlaylistViewModel;
 
     private readonly RecentContext _recentContext;
     private readonly IRecentMediaCoordinator _recentMediaCoordinator;
@@ -88,25 +108,63 @@ public sealed partial class HomePageViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void Play(RecentItemViewModel? item)
+    private async Task PlayAsync(IRecentItem? item)
     {
-        item?.Play();
+        switch (item)
+        {
+            case MediaViewModel media:
+                if (media.IsPlayingIndividually)
+                {
+                    Messenger.Send(new TogglePlayPauseMessage(false));
+                }
+                else
+                {
+                    Messenger.Send(new PlayMediaMessage(media, false));
+                }
+                break;
+
+            case AlbumViewModel album:
+                album.PlayAlbumCommand.Execute(null);
+                break;
+
+            case ArtistViewModel artist:
+                artist.PlayArtistCommand.Execute(null);
+                break;
+
+            case PlaylistViewModel playlist:
+                playlist.PlayCommand.Execute(null);
+                break;
+
+            case MediaCollectionViewModel collection:
+                await collection.PlayAsync();
+                break;
+        }
     }
 
     [RelayCommand]
-    private void PlayNext(RecentItemViewModel? item)
+    private async Task PlayNextAsync(IRecentItem? item)
     {
-        item?.PlayNext();
+        if (item is null) return;
+        var items = await ResolvePlayableItemsAsync(item);
+        if (items.Count > 0)
+        {
+            Messenger.SendPlayNext(items);
+        }
     }
 
     [RelayCommand]
-    private void AddToQueue(RecentItemViewModel? item)
+    private async Task AddToQueueAsync(IRecentItem? item)
     {
-        item?.AddToQueue();
+        if (item is null) return;
+        var items = await ResolvePlayableItemsAsync(item);
+        if (items.Count > 0)
+        {
+            Messenger.SendAddToQueue(items);
+        }
     }
 
     [RelayCommand]
-    private async Task Remove(RecentItemViewModel? item)
+    private async Task RemoveAsync(IRecentItem? item)
     {
         if (item is null) return;
         await _recentMediaCoordinator.RemoveAsync(item);
@@ -121,63 +179,55 @@ public sealed partial class HomePageViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelected()
+    private async Task PlaySelectedAsync()
     {
-        var selected = Selection.GetSelectedItems<RecentItemViewModel>();
+        var selected = Selection.GetSelectedItems<IRecentItem>();
+        Selection.DisableSelectionMode();
+
         if (selected.Count == 1)
         {
-            selected[0].Play();
+            await PlayAsync(selected[0]);
         }
         else if (selected.Count > 1)
         {
-            var items = selected.SelectMany(r => r.GetPlayableItems()).ToArray();
+            var items = await ResolveSelectedPlayableItemsAsync(selected);
             if (items.Length > 0)
             {
-                Messenger.SendQueueAndPlay(
-                    items[0],
-                    items,
-                    pauseIfExists: false,
-                    origin: QueueOrigin.ForMediaCollection(items[0].Name));
+                Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false, origin: null);
             }
         }
-
-        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelectedNext()
+    private async Task PlaySelectedNextAsync()
     {
-        var items = Selection
-            .GetSelectedItems<RecentItemViewModel>()
-            .SelectMany(r => r.GetPlayableItems())
-            .ToArray();
+        var selected = Selection.GetSelectedItems<IRecentItem>();
+        Selection.DisableSelectionMode();
+
+        var items = await ResolveSelectedPlayableItemsAsync(selected);
         if (items.Length > 0)
         {
             Messenger.SendPlayNext(items);
         }
-
-        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void AddSelectedToQueue()
+    private async Task AddSelectedToQueueAsync()
     {
-        var items = Selection
-            .GetSelectedItems<RecentItemViewModel>()
-            .SelectMany(r => r.GetPlayableItems())
-            .ToArray();
+        var selected = Selection.GetSelectedItems<IRecentItem>();
+        Selection.DisableSelectionMode();
+
+        var items = await ResolveSelectedPlayableItemsAsync(selected);
         if (items.Length > 0)
         {
             Messenger.SendAddToQueue(items);
         }
-
-        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private async Task RemoveSelected()
+    private async Task RemoveSelectedAsync()
     {
-        var copy = Selection.GetSelectedItems<RecentItemViewModel>().ToArray();
+        var copy = Selection.GetSelectedItems<IRecentItem>().ToArray();
         foreach (var item in copy)
         {
             await _recentMediaCoordinator.RemoveAsync(item);
@@ -185,6 +235,22 @@ public sealed partial class HomePageViewModel : ObservableRecipient
 
         Selection.DisableSelectionMode();
     }
+
+    private static async Task<MediaViewModel[]> ResolveSelectedPlayableItemsAsync(IReadOnlyList<IRecentItem> selected)
+    {
+        var resolvedLists = await Task.WhenAll(selected.Select(ResolvePlayableItemsAsync));
+        return resolvedLists.SelectMany(list => list).ToArray();
+    }
+
+    private static Task<IReadOnlyList<MediaViewModel>> ResolvePlayableItemsAsync(IRecentItem item) => item switch
+    {
+        MediaViewModel media => Task.FromResult<IReadOnlyList<MediaViewModel>>(new[] { media }),
+        AlbumViewModel album => Task.FromResult(album.OrderedSongs),
+        ArtistViewModel artist => Task.FromResult(artist.OrderedSongs),
+        PlaylistViewModel playlist => Task.FromResult<IReadOnlyList<MediaViewModel>>(playlist.Items),
+        MediaCollectionViewModel collection => collection.GetPlayableItemsAsync(),
+        _ => Task.FromResult<IReadOnlyList<MediaViewModel>>(Array.Empty<MediaViewModel>())
+    };
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }

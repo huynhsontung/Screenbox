@@ -21,6 +21,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlaylistViewModel : ObservableRecipient,
+    IRecentItem,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();

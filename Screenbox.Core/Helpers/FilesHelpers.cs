@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Helpers;
 
@@ -71,5 +72,87 @@ public static class FilesHelpers
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFolder"/> from a file-system path.
+    /// Returns <see langword="null"/> when the folder is inaccessible or does not exist.
+    /// </summary>
+    public static async Task<StorageFolder?> TryGetFolderFromPathAsync(string path)
+    {
+        try
+        {
+            return await StorageFolder.GetFolderFromPathAsync(path);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFile"/> from the application's access cache
+    /// (<see cref="StorageApplicationPermissions.MostRecentlyUsedList"/> or
+    /// <see cref="StorageApplicationPermissions.FutureAccessList"/>) using the specified token.
+    /// </summary>
+    public static async Task<StorageFile?> TryGetFileFromTokenAsync(string? token)
+    {
+        if (string.IsNullOrEmpty(token)) return null;
+
+        try
+        {
+            if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+
+            if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.FutureAccessList.GetFileAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+        }
+        catch (Exception)
+        {
+            // Access cache lookup failed or unavailable.
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFolder"/> from the application's access cache
+    /// (<see cref="StorageApplicationPermissions.MostRecentlyUsedList"/> or
+    /// <see cref="StorageApplicationPermissions.FutureAccessList"/>) using the specified token.
+    /// </summary>
+    public static async Task<StorageFolder?> TryGetFolderFromTokenAsync(string? token)
+    {
+        if (string.IsNullOrEmpty(token)) return null;
+
+        try
+        {
+            if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.MostRecentlyUsedList.GetFolderAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+
+            if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+        }
+        catch (Exception)
+        {
+            // Access cache lookup failed or unavailable.
+        }
+
+        return null;
     }
 }

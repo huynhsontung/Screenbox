@@ -20,7 +20,7 @@ public sealed partial class DatabaseService
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = """
-                SELECT id, kind, source_id, title, subtitle, content_hash, initial_index, last_played
+                SELECT id, kind, source_id, title, subtitle, content_hash, token, last_played
                 FROM recent_entries
                 ORDER BY last_played DESC
                 LIMIT @max;
@@ -38,7 +38,7 @@ public sealed partial class DatabaseService
                     Title = reader.GetString(3),
                     Subtitle = reader.IsDBNull(4) ? null : reader.GetString(4),
                     ContentHash = reader.GetString(5),
-                    InitialIndex = reader.GetInt32(6),
+                    Token = reader.IsDBNull(6) ? null : reader.GetString(6),
                     LastPlayed = new DateTimeOffset(reader.GetInt64(7), TimeSpan.Zero),
                 });
             }
@@ -46,7 +46,7 @@ public sealed partial class DatabaseService
 
         foreach (RecentEntryDto entry in entries)
         {
-            if (entry.Kind is RecentItemKind.SingleMedia or RecentItemKind.MediaCollection)
+            if (entry.Kind is RecentItemKind.SingleMedia)
             {
                 entry.Items = ReadRecentEntryItems(connection, entry.Id);
             }
@@ -83,9 +83,9 @@ public sealed partial class DatabaseService
         {
             upsertCmd.CommandText = """
                 INSERT OR REPLACE INTO recent_entries
-                    (id, kind, source_id, title, subtitle, content_hash, initial_index, last_played)
+                    (id, kind, source_id, title, subtitle, content_hash, token, last_played)
                 VALUES
-                    (@id, @kind, @sourceId, @title, @subtitle, @hash, @initialIndex, @lastPlayed);
+                    (@id, @kind, @sourceId, @title, @subtitle, @hash, @token, @lastPlayed);
                 """;
             upsertCmd.Parameters.AddWithValue("@id", entry.Id);
             upsertCmd.Parameters.AddWithValue("@kind", (int)entry.Kind);
@@ -93,7 +93,7 @@ public sealed partial class DatabaseService
             upsertCmd.Parameters.AddWithValue("@title", entry.Title);
             upsertCmd.Parameters.AddWithValue("@subtitle", (object?)entry.Subtitle ?? DBNull.Value);
             upsertCmd.Parameters.AddWithValue("@hash", entry.ContentHash);
-            upsertCmd.Parameters.AddWithValue("@initialIndex", entry.InitialIndex);
+            upsertCmd.Parameters.AddWithValue("@token", (object?)entry.Token ?? DBNull.Value);
             upsertCmd.Parameters.AddWithValue("@lastPlayed", entry.LastPlayed.UtcTicks);
             upsertCmd.ExecuteNonQuery();
         }
@@ -105,7 +105,7 @@ public sealed partial class DatabaseService
             clearItemsCmd.ExecuteNonQuery();
         }
 
-        if (entry.Kind is RecentItemKind.SingleMedia or RecentItemKind.MediaCollection && entry.Items.Count > 0)
+        if (entry.Kind is RecentItemKind.SingleMedia && entry.Items.Count > 0)
         {
             using var insertItemCmd = connection.CreateCommand();
             insertItemCmd.CommandText = """

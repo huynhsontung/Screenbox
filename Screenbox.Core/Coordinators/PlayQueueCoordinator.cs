@@ -92,7 +92,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         MediaViewModelFactory mediaFactory,
         PlayerContext playerContext,
         IPlayQueueBufferManager bufferManager,
-        ILogger<PlayQueueCoordinator> logger)
+        ILogger<PlayQueueCoordinator> logger,
+        IMessenger? messenger = null)
+        : base(messenger ?? WeakReferenceMessenger.Default)
     {
         _context = context;
         _queueService = queueService;
@@ -403,6 +405,11 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public void Enqueue(IReadOnlyList<MediaViewModel> items, int insertIndex = -1)
     {
+        if (items.Count > 0)
+        {
+            UnlinkOrigin();
+        }
+
         foreach (var item in items)
         {
             if (insertIndex < 0 || insertIndex >= _context.Items.Count)
@@ -420,6 +427,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public void Remove(MediaViewModel item)
     {
+        UnlinkOrigin();
+
         // Stop playback before removing the active item.
         if (_context.CurrentItem == item)
         {
@@ -433,6 +442,8 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     /// <inheritdoc/>
     public void InsertNext(MediaViewModel item)
     {
+        UnlinkOrigin();
+
         // Insert a copy so that the same MediaViewModel isn't in the queue twice.
         _context.Items.Insert(_context.CurrentIndex + 1, new MediaViewModel(item));
     }
@@ -666,6 +677,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 _context.CurrentItem.IsMediaActive = false;
                 _context.CurrentItem.IsPlaying = false;
+                _context.CurrentItem.IsPlayingIndividually = false;
             }
 
             if (value is not null)
@@ -674,7 +686,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _context.CurrentIndex = _context.Items.IndexOf(value);
                 _queueSession.CurrentIndex = _context.CurrentIndex;
 
-                if (_queueSession.Origin is null)
+                if (_queueSession.Origin is null && _context.Items.Count == 1)
                 {
                     _queueSession.Origin = QueueOrigin.ForSingleMedia(value);
                     _context.ActiveOrigin = _queueSession.Origin;
@@ -698,6 +710,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             if (value is not null)
             {
                 value.IsPlaying = _context.IsPlaying;
+                UpdateCurrentItemIndividualPlayingState();
             }
 
             BroadcastPlaybackState();
@@ -800,16 +813,18 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             try
             {
                 _deferCollectionChanged = true;
-                if (!playlist.IsEmpty)
+                if (!playlist.IsEmpty && playlist.Origin is null && playlist.Items.Count == 1)
                 {
-                    playlist.Origin ??= playlist.Items.Count > 1
-                        ? QueueOrigin.ForMediaCollection(playlist.Items[0].Name)
-                        : QueueOrigin.ForSingleMedia(playlist.Items[0]);
+                    playlist.Origin = QueueOrigin.ForSingleMedia(playlist.Items[0]);
                 }
 
                 _queueSession = playlist;
                 _context.ActiveSessionId = playlist.IsEmpty ? Guid.Empty : playlist.SessionId;
                 _context.ActiveOrigin = playlist.Origin;
+                if (playlist.Origin is null)
+                {
+                    _recordedOriginKind = null;
+                }
 
                 if (!playlist.IsEmpty && playlist.Origin is { TrackItemsIndividually: false } &&
                     (playlist.SessionId != _recordedSessionId || _recordedOriginKind != playlist.Origin.Kind))
@@ -945,6 +960,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             if (_context.CurrentItem is not null)
             {
                 _context.CurrentItem.IsPlaying = false;
+                _context.CurrentItem.IsPlayingIndividually = false;
                 _context.CurrentItem.IsAvailable = false;
             }
 
@@ -968,6 +984,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 }
 
                 _context.CurrentItem.IsPlaying = isPlaying;
+                UpdateCurrentItemIndividualPlayingState();
             }
 
             BroadcastPlaybackState();
@@ -1074,17 +1091,41 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _queueSession.SessionId = Guid.NewGuid();
             }
 
-            _queueSession.Origin ??= _context.Items.Count > 1
-                ? QueueOrigin.ForMediaCollection(_context.Items[0].Name)
-                : QueueOrigin.ForSingleMedia(_context.Items[0]);
+            if (_queueSession.Origin is null && _context.Items.Count == 1)
+            {
+                _queueSession.Origin = QueueOrigin.ForSingleMedia(_context.Items[0]);
+            }
+
             _context.ActiveSessionId = _queueSession.SessionId;
             _context.ActiveOrigin = _queueSession.Origin;
+            UpdateCurrentItemIndividualPlayingState();
             BroadcastPlaybackState();
         }
 
         RaiseCanNavigateChanged();
 
         _queueService.UpdateShuffleBackup(_queueSession, e);
+    }
+
+    private void UnlinkOrigin()
+    {
+        if (_queueSession.Origin is { TrackItemsIndividually: false })
+        {
+            _queueSession.Origin = null;
+            _context.ActiveOrigin = null;
+            _recordedOriginKind = null;
+            UpdateCurrentItemIndividualPlayingState();
+            BroadcastPlaybackState();
+        }
+    }
+
+    private void UpdateCurrentItemIndividualPlayingState()
+    {
+        if (_context.CurrentItem is not null)
+        {
+            bool isIndividualMode = _queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually;
+            _context.CurrentItem.IsPlayingIndividually = _context.IsPlaying && isIndividualMode;
+        }
     }
 
     #endregion

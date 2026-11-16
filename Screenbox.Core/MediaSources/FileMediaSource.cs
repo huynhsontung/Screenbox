@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.MediaSources;
 
@@ -49,29 +48,7 @@ public class FileMediaSource : IFileMediaSource
             return StorageFile;
         }
 
-        if (!string.IsNullOrEmpty(Token))
-        {
-            try
-            {
-                if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(Token))
-                {
-                    StorageFile = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(
-                        Token,
-                        AccessCacheOptions.SuppressAccessTimeUpdate);
-                }
-                else if (StorageApplicationPermissions.FutureAccessList.ContainsItem(Token))
-                {
-                    StorageFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(
-                        Token,
-                        AccessCacheOptions.SuppressAccessTimeUpdate);
-                }
-            }
-            catch
-            {
-                // Access cache lookup failed; fall back to path
-            }
-        }
-
+        StorageFile = await FilesHelpers.TryGetFileFromTokenAsync(Token);
         if (StorageFile == null && !string.IsNullOrEmpty(Path))
         {
             StorageFile = await FilesHelpers.TryGetFileFromPathAsync(Path);

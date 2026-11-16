@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Screenbox.Behaviors;
 using Screenbox.Commands;
 using Screenbox.Converters;
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
@@ -72,7 +73,17 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     /// Gets or sets a value that indicates whether advanced playback options are enabled.
     /// </summary>
     /// <value><see langword="true"/> if advanced playback options should be displayed; otherwise, <see langword="false"/>.</value>
+    /// <summary>
+    /// Gets or sets a value that indicates whether advanced playback options are enabled.
+    /// </summary>
+    /// <value><see langword="true"/> if advanced playback options should be displayed; otherwise, <see langword="false"/>.</value>
     public bool IsAdvancedModeEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether <see cref="MediaViewModel"/> items should use
+    /// <see cref="MediaViewModel.IsPlayingIndividually"/> rather than <see cref="MediaViewModel.IsPlaying"/>.
+    /// </summary>
+    public bool UseIndividualPlaybackState { get; set; }
 
     /// <summary>
     /// Gets the collection used to generate the additional content of the menu.
@@ -109,18 +120,14 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         {
             MediaViewModel media => media,
             StorageItemViewModel storageItem => storageItem.Media,
-            RecentItemViewModel recentItem => recentItem.Media,
             _ => null,
         };
 
         bool isPlaying = ContextItem switch
         {
-            AlbumViewModel album => album.IsPlaying,
-            ArtistViewModel artist => artist.IsPlaying,
-            MediaViewModel media => media.IsPlaying,
-            PlaylistViewModel playlist => playlist.IsPlaying,
+            MediaViewModel media => UseIndividualPlaybackState ? media.IsPlayingIndividually : media.IsPlaying,
+            IRecentItem recentItem => recentItem.IsPlaying,
             StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
-            RecentItemViewModel recentItem => recentItem.IsPlaying,
             _ => false,
         };
 
@@ -149,13 +156,17 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
 
         // AddToPlaylist MenuFlyoutSubItem
-        if (IsAddToPlaylistButtonVisible)
+        if (IsAddToPlaylistButtonVisible && ContextItem is not MediaCollectionViewModel)
         {
             AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
             AddToPlaylistSubItem.Visibility = Visibility.Visible;
             AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
                 ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
                 : "\U000F00AA";
+        }
+        else
+        {
+            AddToPlaylistSubItem.Visibility = Visibility.Collapsed;
         }
 
         // Remove MenuFlyoutItem
