@@ -42,9 +42,7 @@ jobs:
           msbuild-architecture: x64
 
       - name: Setup Windows App Developer CLI
-        uses: microsoft/setup-WinAppCli@v0.2
-        with:
-          version: latest
+        uses: microsoft/setup-WinAppCli@v0.3
 
       - name: Determine version
         id: app_version
