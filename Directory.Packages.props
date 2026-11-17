@@ -43,7 +43,7 @@
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="11.0.0" />
 
     <!-- Error tracking (Sentry) -->
-    <PackageVersion Include="Sentry.Extensions.Logging" Version="6.12.1" />
+    <PackageVersion Include="Sentry.Extensions.Logging" Version="7.0.0" />
 
     <!-- Testing framework (TUnit) -->
     <PackageVersion Include="TUnit" Version="1.75.0" />
