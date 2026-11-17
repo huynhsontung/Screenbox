@@ -44,6 +44,12 @@ public interface IMediaPlayer
     double PlaybackRate { get; set; }
     double AudioDelay { get; set; }
     double SubtitleDelay { get; set; }
+    int SubtitleTextScale { get; set; }
+    int SubtitleMargin { get; set; }
+    int SubtitleColor { get; set; }
+    int SubtitleOutlineThickness { get; set; }
+    int SubtitleBackgroundOpacity { get; set; }
+    int SubtitleBackgroundColor { get; set; }
     Rect NormalizedSourceRect { get; set; }
     double Volume { get; set; }
     IPlaybackItem? PlaybackItem { get; set; }
