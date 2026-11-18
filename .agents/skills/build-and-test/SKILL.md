@@ -100,5 +100,5 @@ dotnet tool run xstyler -f Screenbox/Pages/PlayerPage.xaml
 To format all XAML files in place:
 
 ```pwsh
-pwsh ./scripts/Format-Xaml.ps1
+pwsh ./scripts/Test-XamlFormat.ps1 -Format
 ```
