@@ -138,7 +138,7 @@ public sealed class PlaylistService : IPlaylistService
                 await thumbnail.DeleteAsync();
             }
         }
-        catch (System.IO.FileNotFoundException)
+        catch (Exception)
         {
         }
     }
@@ -146,9 +146,10 @@ public sealed class PlaylistService : IPlaylistService
     /// <inheritdoc/>
     public async Task<StorageFile?> GetThumbnailFileAsync(string playlistId)
     {
-        StorageFolder folder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Image", CreationCollisionOption.OpenIfExists);
         try
         {
+            StorageFolder folder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Image", CreationCollisionOption.OpenIfExists);
+
             return await folder.GetFileAsync(playlistId + ".png");
         }
         catch
