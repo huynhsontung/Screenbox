@@ -218,12 +218,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     }
 
     /// <inheritdoc/>
-    public async Task LoadDetailsAndThumbnailsAsync()
+    public Task LoadDetailsAndThumbnailsAsync()
     {
-        if (!_generalSettings.ShowRecent) return;
-        await LoadAsync();
-        if (!_generalSettings.ShowRecent) return;
-
         var tasks = new List<Task>();
         foreach (IRecentItem item in _recentContext.Recent)
         {
@@ -245,10 +241,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
         }
 
-        if (tasks.Count > 0)
-        {
-            await Task.WhenAll(tasks);
-        }
+        return tasks.Count > 0 ? Task.WhenAll(tasks) : Task.CompletedTask;
     }
 
     /// <inheritdoc/>
