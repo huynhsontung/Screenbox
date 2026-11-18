@@ -362,19 +362,27 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         CancellationToken cancellationToken)
     {
         InMemoryRandomAccessStream stream = new();
-        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-        encoder.SetPixelData(
-            BitmapPixelFormat.Bgra8,
-            BitmapAlphaMode.Straight,
-            width: ThumbnailCollageSize,
-            height: ThumbnailCollageSize,
-            dpiX: 96.0,
-            dpiY: 96.0,
-            pixels);
-        await encoder.FlushAsync();
-        cancellationToken.ThrowIfCancellationRequested();
+        try
+        {
+            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+            encoder.SetPixelData(
+                BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Straight,
+                width: ThumbnailCollageSize,
+                height: ThumbnailCollageSize,
+                dpiX: 96.0,
+                dpiY: 96.0,
+                pixels);
+            await encoder.FlushAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
-        return stream;
+            return stream;
+        }
+        catch
+        {
+            stream.Dispose();
+            throw;
+        }
     }
 
     private async Task SetThumbnailSourceAsync(IRandomAccessStream stream)
