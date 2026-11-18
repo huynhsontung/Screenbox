@@ -270,7 +270,7 @@ Available contexts:
 - **`CastContext`**: Holds casting state including the active renderer watcher and selected renderer
 - **`LibraryContext`**: Holds library state including the `StorageLibrary` handles (`MusicStorageLibrary`, `VideosStorageLibrary`), loading flags, and the current `MusicLibrary` and `VideosLibrary` container objects. Written atomically by `LibraryCoordinator` after each fetch batch or on completion.
 - **`PlaylistsContext`**: Holds the application-wide collection of user playlists
-- **`RecentContext`**: Holds the application-wide collection of recent media items (`ObservableCollection<IRecentItem>`, capped at `MaxRecentItems = 100`). Written by `RecentMediaCoordinator`; observed by `HomePageViewModel`.
+- **`RecentContext`**: Holds the application-wide snapshot of recent media items (`IReadOnlyList<IRecentItem>`, capped at `MaxRecentItems = 100`, with `[NotifyPropertyChangedRecipients]`). Written atomically by `RecentMediaCoordinator`; observed and synced via `SyncItems()` in `HomePageViewModel`.
 - **`PlayQueueContext`**: Holds the global play queue state — `Items` (the ordered `ObservableCollection<MediaViewModel>`), `CurrentItem`, `CurrentIndex`, `ActiveSessionId`, `ActiveOrigin`, `ShuffleMode`, and `RepeatMode`. Written exclusively by `PlayQueueCoordinator`; observed by any ViewModel or Coordinator that needs play queue state.
 
 #### Stateful Coordinators

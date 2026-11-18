@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -48,11 +49,13 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly IQueueService _queueService;
     private readonly ILogger<RecentMediaCoordinator> _logger;
 
+    private readonly List<IRecentItem> _items = new();
     private readonly Dictionary<IRecentItem, RecentEntryMetadata> _metadata = new();
     private readonly Dictionary<string, RecentEntryDto> _pendingPlaylists = new(StringComparer.Ordinal);
 
     private Task? _loadTask;
-    private int _loadGeneration;
+    private CancellationTokenSource? _loadCts;
+    private bool _isLoaded;
     private string? _lastRecordedEntryId;
 
     public RecentMediaCoordinator(
@@ -119,11 +122,12 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         {
             InvalidatePendingLoads();
             ClearRecentCollection();
-            _recentContext.IsLoaded = false;
+            _isLoaded = false;
+            PublishRecentItems();
             return Task.CompletedTask;
         }
 
-        if (_recentContext.IsLoaded)
+        if (_isLoaded)
         {
             return Task.CompletedTask;
         }
@@ -133,17 +137,18 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             return _loadTask;
         }
 
-        int generation = ++_loadGeneration;
-        _loadTask = LoadInternalAsync(generation);
-        return _loadTask;
+        return _loadTask = LoadInternalAsync();
     }
 
-    private async Task LoadInternalAsync(int generation)
+    private async Task LoadInternalAsync()
     {
+        using CancellationTokenSource cts = new();
+        _loadCts = cts;
+        CancellationToken ct = cts.Token;
         try
         {
             var entries = await _databaseService.LoadRecentEntriesAsync(RecentContext.MaxRecentItems);
-            if (generation != _loadGeneration || !_generalSettings.ShowRecent)
+            if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
             {
                 return;
             }
@@ -153,6 +158,11 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
             foreach (RecentEntryDto entry in entries)
             {
+                if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
+                {
+                    return;
+                }
+
                 if (entry.Kind == RecentItemKind.Playlist)
                 {
                     var playlist = _playlistsContext.Playlists.FirstOrDefault(p => p.Id == entry.SourceId);
@@ -169,15 +179,15 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 }
 
                 IRecentItem? vm = await HydrateRecentItemAsync(entry);
+                if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
+                {
+                    return;
+                }
+
                 if (vm is not null)
                 {
                     hydrated.Add((vm, ToMetadata(entry)));
                 }
-            }
-
-            if (generation != _loadGeneration || !_generalSettings.ShowRecent)
-            {
-                return;
             }
 
             ClearRecentCollection();
@@ -189,7 +199,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 }
 
                 _metadata[item] = meta;
-                _recentContext.Recent.Add(item);
+                _items.Add(item);
             }
 
             foreach (RecentEntryDto pending in pendingPlaylists)
@@ -197,7 +207,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 _pendingPlaylists[pending.SourceId] = pending;
             }
 
-            _recentContext.IsLoaded = true;
+            _isLoaded = true;
+            PublishRecentItems();
         }
         catch (Exception ex)
         {
@@ -205,8 +216,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
         finally
         {
-            if (generation == _loadGeneration && !_recentContext.IsLoaded)
+            if (ReferenceEquals(_loadCts, cts))
             {
+                _loadCts = null;
                 _loadTask = null;
             }
         }
@@ -216,12 +228,10 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     public async Task LoadDetailsAndThumbnailsAsync()
     {
         if (!_generalSettings.ShowRecent) return;
-        if (!_recentContext.IsLoaded)
-        {
-            await LoadAsync();
-        }
+        await LoadAsync();
+        if (!_generalSettings.ShowRecent) return;
 
-        List<IRecentItem> snapshot = _recentContext.Recent.ToList();
+        List<IRecentItem> snapshot = _items.ToList();
         var tasks = new List<Task>();
         foreach (IRecentItem item in snapshot)
         {
@@ -254,7 +264,10 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         string? entryId = _metadata.TryGetValue(item, out var meta) ? meta.EntryId : null;
         _metadata.Remove(item);
-        _recentContext.Recent.Remove(item);
+        if (_items.Remove(item))
+        {
+            PublishRecentItems();
+        }
 
         if (string.IsNullOrEmpty(entryId))
         {
@@ -276,7 +289,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         InvalidatePendingLoads();
         ClearRecentCollection();
-        _recentContext.IsLoaded = true;
+        _isLoaded = true;
+        PublishRecentItems();
 
         try
         {
@@ -301,12 +315,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         if (!_generalSettings.ShowRecent || queue.IsEmpty)
             return;
 
-        if (!_recentContext.IsLoaded)
-        {
-            await LoadAsync();
-            if (!_generalSettings.ShowRecent)
-                return;
-        }
+        await LoadAsync();
+        if (!_generalSettings.ShowRecent)
+            return;
 
         MediaViewModel? fallbackItem = queue.CurrentItem ?? queue.Items.FirstOrDefault();
         if (fallbackItem is null)
@@ -327,7 +338,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             if (upgradedPair.Key is { } upgradedTarget && upgradedPair.Value.ContentHash != contentHash)
             {
                 _metadata.Remove(upgradedTarget);
-                _recentContext.Recent.Remove(upgradedTarget);
+                _items.Remove(upgradedTarget);
             }
         }
 
@@ -345,11 +356,11 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
             _metadata[existing] = existingPair.Value with { LastPlayed = now };
 
-            int existingIndex = _recentContext.Recent.IndexOf(existing);
+            int existingIndex = _items.IndexOf(existing);
             if (existingIndex > 0)
             {
-                _recentContext.Recent.RemoveAt(existingIndex);
-                _recentContext.Recent.Insert(0, existing);
+                _items.RemoveAt(existingIndex);
+                _items.Insert(0, existing);
             }
 
             targetVm = existing;
@@ -364,22 +375,23 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
             var meta = new RecentEntryMetadata(entryId, contentHash, origin.Kind, origin.SourceId, now);
             _metadata[targetVm] = meta;
-            _recentContext.Recent.Insert(0, targetVm);
+            _items.Insert(0, targetVm);
 
             if (origin.Kind == RecentItemKind.Playlist)
             {
                 _pendingPlaylists.Remove(origin.SourceId);
             }
 
-            while (_recentContext.Recent.Count > RecentContext.MaxRecentItems)
+            while (_items.Count > RecentContext.MaxRecentItems)
             {
-                IRecentItem tail = _recentContext.Recent[^1];
+                IRecentItem tail = _items[^1];
                 _metadata.Remove(tail);
-                _recentContext.Recent.RemoveAt(_recentContext.Recent.Count - 1);
+                _items.RemoveAt(_items.Count - 1);
             }
         }
 
         _lastRecordedEntryId = entryId;
+        PublishRecentItems();
 
         try
         {
@@ -477,9 +489,10 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private void RelinkLibraryItems()
     {
-        for (int i = 0; i < _recentContext.Recent.Count; i++)
+        bool changed = false;
+        for (int i = 0; i < _items.Count; i++)
         {
-            IRecentItem current = _recentContext.Recent[i];
+            IRecentItem current = _items[i];
             if (!_metadata.TryGetValue(current, out RecentEntryMetadata? meta))
             {
                 continue;
@@ -503,15 +516,22 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 _metadata.Remove(current);
                 if (_metadata.ContainsKey(liveItem))
                 {
-                    _recentContext.Recent.RemoveAt(i);
+                    _items.RemoveAt(i);
                     i--;
                 }
                 else
                 {
                     _metadata[liveItem] = meta;
-                    _recentContext.Recent[i] = liveItem;
+                    _items[i] = liveItem;
                 }
+
+                changed = true;
             }
+        }
+
+        if (changed)
+        {
+            PublishRecentItems();
         }
     }
 
@@ -524,7 +544,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 foreach (PlaylistViewModel removedPlaylist in e.OldItems.OfType<PlaylistViewModel>())
                 {
                     _pendingPlaylists.Remove(removedPlaylist.Id);
-                    if (_recentContext.Recent.Contains(removedPlaylist))
+                    if (_metadata.ContainsKey(removedPlaylist))
                     {
                         await RemoveAsync(removedPlaylist);
                     }
@@ -544,6 +564,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private void ResolvePendingPlaylists()
     {
+        bool changed = false;
         foreach (PlaylistViewModel playlist in _playlistsContext.Playlists)
         {
             if (!_pendingPlaylists.TryGetValue(playlist.Id, out RecentEntryDto? entry))
@@ -562,30 +583,36 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             if (insertIndex < RecentContext.MaxRecentItems)
             {
                 _metadata[playlist] = meta;
-                _recentContext.Recent.Insert(insertIndex, playlist);
+                _items.Insert(insertIndex, playlist);
+                changed = true;
 
-                while (_recentContext.Recent.Count > RecentContext.MaxRecentItems)
+                while (_items.Count > RecentContext.MaxRecentItems)
                 {
-                    IRecentItem tail = _recentContext.Recent[^1];
+                    IRecentItem tail = _items[^1];
                     _metadata.Remove(tail);
-                    _recentContext.Recent.RemoveAt(_recentContext.Recent.Count - 1);
+                    _items.RemoveAt(_items.Count - 1);
                 }
             }
+        }
+
+        if (changed)
+        {
+            PublishRecentItems();
         }
     }
 
     private int FindSortedInsertIndex(DateTimeOffset lastPlayed)
     {
-        for (int i = 0; i < _recentContext.Recent.Count; i++)
+        for (int i = 0; i < _items.Count; i++)
         {
-            if (_metadata.TryGetValue(_recentContext.Recent[i], out RecentEntryMetadata? existingMeta) &&
+            if (_metadata.TryGetValue(_items[i], out RecentEntryMetadata? existingMeta) &&
                 existingMeta.LastPlayed < lastPlayed)
             {
                 return i;
             }
         }
 
-        return _recentContext.Recent.Count;
+        return _items.Count;
     }
 
     private async void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -601,14 +628,16 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             {
                 InvalidatePendingLoads();
                 ClearRecentCollection();
-                _recentContext.IsLoaded = false;
+                _isLoaded = false;
+                PublishRecentItems();
             }
         }
     }
 
     private void InvalidatePendingLoads()
     {
-        _loadGeneration++;
+        _loadCts?.Cancel();
+        _loadCts = null;
         _loadTask = null;
     }
 
@@ -616,9 +645,14 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         _metadata.Clear();
         _pendingPlaylists.Clear();
-        _recentContext.Recent.Clear();
+        _items.Clear();
         _lastRecordedEntryId = null;
     }
+
+    private void PublishRecentItems() =>
+        _recentContext.Recent = _items.Count == 0
+            ? Array.Empty<IRecentItem>()
+            : _items.ToArray();
 
     private async Task<MediaViewModel?> HydrateMediaViewModelAsync(RawMediaRecordDto record)
     {
@@ -668,7 +702,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private async Task LoadAlbumArtForLinkedAlbumsAsync()
     {
-        var tasks = _recentContext.Recent
+        var tasks = _items
             .OfType<AlbumViewModel>()
             .Where(album => album.AlbumArt is null)
             .Select(album => album.LoadAlbumArtAsync())

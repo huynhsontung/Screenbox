@@ -1,26 +1,29 @@
-using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Screenbox.Core.Contexts;
 
 /// <summary>
 /// Context for holding the application-wide recent media items.
 /// </summary>
-public sealed partial class RecentContext : ObservableObject
+public sealed partial class RecentContext : ObservableRecipient
 {
     /// <summary>
     /// The maximum number of items retained in the recent list.
     /// </summary>
     public const int MaxRecentItems = 100;
 
-    /// <summary>
-    /// Gets the collection of recent media items.
-    /// </summary>
-    public ObservableCollection<IRecentItem> Recent { get; } = new();
+    public RecentContext(IMessenger? messenger = null)
+        : base(messenger ?? WeakReferenceMessenger.Default)
+    {
+    }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the recent media list has been loaded from storage.
+    /// Gets or sets the snapshot of recent media items.
     /// </summary>
     [ObservableProperty]
-    public partial bool IsLoaded { get; set; }
+    [NotifyPropertyChangedRecipients]
+    public partial IReadOnlyList<IRecentItem> Recent { get; set; } = Array.Empty<IRecentItem>();
 }

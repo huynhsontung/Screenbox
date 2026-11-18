@@ -53,12 +53,12 @@ flowchart TD
 
     subgraph RecentManagement["Recent Media Management (Singleton)"]
         RMC["RecentMediaCoordinator\n(IRecentMediaCoordinator)"]
-        RContext["RecentContext\n(ObservableCollection<IRecentItem>, Max=100)"]
+        RContext["RecentContext\n(IReadOnlyList<IRecentItem>, Max=100)"]
         DB["DatabaseService (SQLite)\nrecent_entries + recent_entry_items"]
     end
 
     subgraph UI["Presentation Layer (Transient)"]
-        HPVM["HomePageViewModel"]
+        HPVM["HomePageViewModel\n(ObservableCollection<IRecentItem> via SyncItems)"]
         HP["HomePage.xaml\n(RecentItemTemplateSelector + GridViewItemTemplates)"]
     end
 
@@ -67,8 +67,8 @@ flowchart TD
     PQC -->|"QueuePlaybackStateChangedMessage"| RContext
     PQC -->|"QueueSessionStartedMessage(Queue, IsUpgrade)"| RMC
     RMC <-->|"Load / Upsert / Delete / Prune 100"| DB
-    RMC -->|"Mutates Recent & swaps deferred Library/Playlist entities"| RContext
-    RContext -->|"Data Binding"| HPVM
+    RMC -->|"Publishes atomic IReadOnlyList<IRecentItem> snapshots"| RContext
+    RContext -->|"PropertyChangedMessage<IReadOnlyList<IRecentItem>>"| HPVM
     HPVM --> HP
 ```
 
@@ -78,10 +78,10 @@ flowchart TD
 | `QueueSession` | Per queue snapshot | Carries `SessionId` (`Guid`), `Origin` (`QueueOrigin?`), and `GetCanonicalItems()`. |
 | `QueueOrigin` | Immutable record | Describes the source container (`Kind`, `SourceId`, `Title`, `Subtitle`, `Token`, `TrackItemsIndividually`). |
 | `PlayQueueCoordinator` | Singleton | Owns the active `QueueSession`, updates `PlayQueueContext`, maintains `MediaViewModel.IsPlayingIndividually`, unlinks `Origin` on add/remove mutations, and broadcasts `QueueSessionStartedMessage` / `QueuePlaybackStateChangedMessage`. |
-| `RecentMediaCoordinator` | Singleton | Listens to `QueueSessionStartedMessage`, `PropertyChangedMessage<MusicLibrary>`, `Playlists.CollectionChanged`, and `GeneralSettings.ShowRecent`; updates `RecentContext.Recent`, tracks DB entry IDs internally, and persists to SQLite. |
-| `RecentContext` | Singleton | Holds `ObservableCollection<IRecentItem> Recent` and `MaxRecentItems = 100`. |
+| `RecentMediaCoordinator` | Singleton | Listens to `QueueSessionStartedMessage`, `PropertyChangedMessage<MusicLibrary>`, `Playlists.CollectionChanged`, and `GeneralSettings.ShowRecent`; owns internal `_items` / `_metadata` / `CancellationTokenSource` load state, publishes snapshots to `RecentContext.Recent`, and persists entries to SQLite. |
+| `RecentContext` | Singleton | Observable recipient holding the snapshot `IReadOnlyList<IRecentItem> Recent` (`[NotifyPropertyChangedRecipients]`) and `MaxRecentItems = 100`. |
 | `MediaCollectionViewModel` | Per folder / `.m3u` card | Lightweight ViewModel representing a live Folder or playlist-file (`.m3u`/`.m3u8`/URI) shortcut; resolves live items on demand via MRU token and `IQueueService`. |
-| `HomePageViewModel` | Transient | Binds `RecentContext.Recent` to `HomePage.xaml` and handles `Play`, `PlayNext`, `AddToQueue`, `Remove`, context flyout resolution, and multi-select actions via pattern matching on `IRecentItem`. |
+| `HomePageViewModel` | Transient | Maintains a local `ObservableCollection<IRecentItem> Recent` synced from `RecentContext.Recent` via `SyncItems()` + `TryExecuteOrEnqueue()`, and handles `Play`, `PlayNext`, `AddToQueue`, `Remove`, context flyout resolution, and multi-select actions via pattern matching on `IRecentItem`. |
 | `RecentItemTemplateSelector` | UI Selector | Maps each `IRecentItem` concrete type to its strongly-typed template in `GridViewItemTemplates.xaml`. |
 
 ---

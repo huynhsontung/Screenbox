@@ -21,15 +21,22 @@ public sealed class RecentMediaCoordinatorTests
     private sealed class FlakyDatabaseService : IDatabaseService
     {
         private readonly TaskCompletionSource<List<RecentEntryDto>>? _blockedLoadTcs;
+        private readonly Func<int, Task<List<RecentEntryDto>>>? _loadHandler;
         private int _loadCalls;
         private readonly bool _failFirstLoad;
 
+        public int LoadCallCount => _loadCalls;
+
         public List<RecentEntryDto> Entries { get; } = [];
 
-        public FlakyDatabaseService(bool failFirstLoad = false, TaskCompletionSource<List<RecentEntryDto>>? blockedLoadTcs = null)
+        public FlakyDatabaseService(
+            bool failFirstLoad = false,
+            TaskCompletionSource<List<RecentEntryDto>>? blockedLoadTcs = null,
+            Func<int, Task<List<RecentEntryDto>>>? loadHandler = null)
         {
             _failFirstLoad = failFirstLoad;
             _blockedLoadTcs = blockedLoadTcs;
+            _loadHandler = loadHandler;
         }
 
         public Task InitializeAsync() => Task.CompletedTask;
@@ -46,6 +53,11 @@ public sealed class RecentMediaCoordinatorTests
         public Task<List<RecentEntryDto>> LoadRecentEntriesAsync(int maxEntries = 100)
         {
             _loadCalls++;
+            if (_loadHandler is not null)
+            {
+                return _loadHandler(_loadCalls);
+            }
+
             if (_failFirstLoad && _loadCalls == 1)
             {
                 throw new InvalidOperationException("Simulated DB failure");
@@ -77,9 +89,10 @@ public sealed class RecentMediaCoordinatorTests
         LibraryContext LibraryContext,
         PlaylistsContext PlaylistsContext,
         DatabaseService DatabaseService,
-        GeneralSettingsContext GeneralSettings) CreateCoordinator(string dbFolderPath, bool isLoaded = true)
+        GeneralSettingsContext GeneralSettings) CreateCoordinator(string dbFolderPath)
     {
-        var recentContext = new RecentContext { IsLoaded = isLoaded };
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
         var libraryContext = new LibraryContext();
         var playlistsContext = new PlaylistsContext();
         var settingsStorage = new MemorySettingsStorage();
@@ -101,7 +114,7 @@ public sealed class RecentMediaCoordinatorTests
             metadataService,
             null!,
             NullLogger<RecentMediaCoordinator>.Instance,
-            new StrongReferenceMessenger());
+            messenger);
 
         return (coordinator, recentContext, libraryContext, playlistsContext, dbService, generalSettings);
     }
@@ -192,7 +205,7 @@ public sealed class RecentMediaCoordinatorTests
     public async Task RelinkLibraryItems_SwapsPlaceholderAlbumAndArtistWhenMusicLibraryLoads()
     {
         using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, libraryContext, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
+        var (coordinator, recentContext, libraryContext, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
         await dbService.InitializeAsync();
 
         var albumKey = AlbumViewModelFactory.GetAlbumKey("Abbey Road", "The Beatles");
@@ -238,7 +251,7 @@ public sealed class RecentMediaCoordinatorTests
     {
         using var fixture = new TestDirectoryFixture();
         var (coordinator, recentContext, _, _, dbService, generalSettings) =
-            CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
+            CreateCoordinator(fixture.DirectoryPath);
         await dbService.InitializeAsync();
 
         // 1. Initial queue session recorded
@@ -247,50 +260,68 @@ public sealed class RecentMediaCoordinatorTests
         await coordinator.HandleQueueSessionStartedAsync(session, isUpgrade: false);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.IsLoaded).IsTrue();
 
-        // 2. Toggle ShowRecent to false -> clears in-memory collection and marks IsLoaded false
+        // 2. Toggle ShowRecent to false -> clears in-memory collection
         generalSettings.ShowRecent = false;
         await Assert.That(recentContext.Recent).IsEmpty();
-        await Assert.That(recentContext.IsLoaded).IsFalse();
 
         // 3. Toggle ShowRecent back to true -> reloads the entry from SQLite
         generalSettings.ShowRecent = true;
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.IsLoaded).IsTrue();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("song1");
     }
 
     [Test]
     public async Task LoadAsync_WhenInvokedConcurrently_CoalescesIntoSingleLoad()
     {
-        using var fixture = new TestDirectoryFixture();
-        var (coordinator, recentContext, _, _, dbService, _) =
-            CreateCoordinator(fixture.DirectoryPath, isLoaded: false);
-        await dbService.InitializeAsync();
+        var tcs = new TaskCompletionSource<List<RecentEntryDto>>();
+        var db = new FlakyDatabaseService(blockedLoadTcs: tcs);
 
-        var dto = new RecentEntryDto
-        {
-            Id = Guid.NewGuid().ToString(),
-            Kind = RecentItemKind.SingleMedia,
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, "https://example.com/SavedTrack.mp3"),
-            Title = "SavedTrack",
-            SourceId = "https://example.com/SavedTrack.mp3",
-            LastPlayed = DateTimeOffset.UtcNow,
-            Items = [new RawMediaRecordDto { Path = "https://example.com/SavedTrack.mp3", Title = "SavedTrack" }]
-        };
-        await dbService.UpsertRecentEntryAsync(dto);
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var libraryContext = new LibraryContext();
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
+        var coordinator = new RecentMediaCoordinator(
+            recentContext,
+            libraryContext,
+            new PlaylistsContext(),
+            generalSettings,
+            db,
+            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
+            new TestMetadataService(),
+            null!,
+            NullLogger<RecentMediaCoordinator>.Instance,
+            messenger);
 
-        await Task.WhenAll(
+        var tasks = Task.WhenAll(
             coordinator.LoadAsync(),
             coordinator.LoadAsync(),
             coordinator.LoadAsync(),
             coordinator.LoadAsync(),
             coordinator.LoadAsync());
 
+        tcs.SetResult([
+            new RecentEntryDto
+            {
+                Id = Guid.NewGuid().ToString(),
+                Kind = RecentItemKind.SingleMedia,
+                ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, "https://example.com/SavedTrack.mp3"),
+                Title = "SavedTrack",
+                SourceId = "https://example.com/SavedTrack.mp3",
+                LastPlayed = DateTimeOffset.UtcNow,
+                Items = [new RawMediaRecordDto { Path = "https://example.com/SavedTrack.mp3", Title = "SavedTrack" }]
+            }
+        ]);
+
+        await tasks;
+
+        await Assert.That(db.LoadCallCount).IsEqualTo(1);
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.IsLoaded).IsTrue();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("SavedTrack");
+
+        // Subsequent calls remain idempotent once loaded
+        await coordinator.LoadAsync();
+        await Assert.That(db.LoadCallCount).IsEqualTo(1);
     }
 
     [Test]
@@ -307,7 +338,8 @@ public sealed class RecentMediaCoordinatorTests
             LastPlayed = DateTimeOffset.UtcNow
         });
 
-        var recentContext = new RecentContext();
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
         var libraryContext = new LibraryContext();
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
         var coordinator = new RecentMediaCoordinator(
@@ -320,15 +352,15 @@ public sealed class RecentMediaCoordinatorTests
             new TestMetadataService(),
             null!,
             NullLogger<RecentMediaCoordinator>.Instance,
-            new StrongReferenceMessenger());
+            messenger);
 
         await coordinator.LoadAsync();
-        await Assert.That(recentContext.IsLoaded).IsFalse();
+        await Assert.That(flakyDb.LoadCallCount).IsEqualTo(1);
         await Assert.That(recentContext.Recent).IsEmpty();
 
         // Retry succeeds
         await coordinator.LoadAsync();
-        await Assert.That(recentContext.IsLoaded).IsTrue();
+        await Assert.That(flakyDb.LoadCallCount).IsEqualTo(2);
         await Assert.That(recentContext.Recent).HasSingleItem();
     }
 
@@ -338,7 +370,8 @@ public sealed class RecentMediaCoordinatorTests
         var tcs = new TaskCompletionSource<List<RecentEntryDto>>();
         var blockedDb = new FlakyDatabaseService(blockedLoadTcs: tcs);
 
-        var recentContext = new RecentContext();
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
         var libraryContext = new LibraryContext();
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
         var coordinator = new RecentMediaCoordinator(
@@ -351,7 +384,7 @@ public sealed class RecentMediaCoordinatorTests
             new TestMetadataService(),
             null!,
             NullLogger<RecentMediaCoordinator>.Instance,
-            new StrongReferenceMessenger());
+            messenger);
 
         Task pendingLoad = coordinator.LoadAsync();
         await coordinator.ClearAsync();
@@ -370,5 +403,69 @@ public sealed class RecentMediaCoordinatorTests
 
         await pendingLoad;
         await Assert.That(recentContext.Recent).IsEmpty();
+    }
+
+    [Test]
+    public async Task LoadAsync_WhenShowRecentToggledRapidly_CancelsStaleLoadAndKeepsNewerResult()
+    {
+        var staleTcs = new TaskCompletionSource<List<RecentEntryDto>>();
+        var db = new FlakyDatabaseService(loadHandler: call =>
+        {
+            if (call == 1)
+            {
+                return staleTcs.Task;
+            }
+
+            return Task.FromResult(new List<RecentEntryDto>
+            {
+                new()
+                {
+                    Id = "fresh",
+                    Kind = RecentItemKind.MediaCollection,
+                    SourceId = @"C:\Fresh",
+                    Title = "Fresh",
+                    ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Fresh"),
+                    LastPlayed = DateTimeOffset.UtcNow
+                }
+            });
+        });
+
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var libraryContext = new LibraryContext();
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
+        var coordinator = new RecentMediaCoordinator(
+            recentContext,
+            libraryContext,
+            new PlaylistsContext(),
+            generalSettings,
+            db,
+            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
+            new TestMetadataService(),
+            null!,
+            NullLogger<RecentMediaCoordinator>.Instance,
+            messenger);
+
+        Task staleLoad = coordinator.LoadAsync();
+        generalSettings.ShowRecent = false;
+        generalSettings.ShowRecent = true;
+
+        staleTcs.SetResult([
+            new RecentEntryDto
+            {
+                Id = "stale",
+                Kind = RecentItemKind.MediaCollection,
+                SourceId = @"C:\Stale",
+                Title = "Stale",
+                ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Stale"),
+                LastPlayed = DateTimeOffset.UtcNow
+            }
+        ]);
+
+        await staleLoad;
+        await coordinator.LoadAsync();
+
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        await Assert.That(recentContext.Recent[0].Name).IsEqualTo("Fresh");
     }
 }

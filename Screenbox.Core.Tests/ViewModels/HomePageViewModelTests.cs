@@ -31,7 +31,7 @@ public sealed class HomePageViewModelTests
     public async Task PlaySelectedNext_QueuesSelectedItemsInNaturalForwardOrder()
     {
         var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext();
+        var recentContext = new RecentContext(messenger);
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
@@ -57,8 +57,7 @@ public sealed class HomePageViewModelTests
         album.RelatedSongs.Add(track1);
         album.RelatedSongs.Add(track2);
 
-        recentContext.Recent.Add(album);
-        recentContext.Recent.Add(track3);
+        recentContext.Recent = new IRecentItem[] { album, track3 };
 
         // Select both items via SelectionViewModel
         selection.IsSelectionModeActive = true;
@@ -89,7 +88,7 @@ public sealed class HomePageViewModelTests
     public async Task PlaySelected_MultipleItems_ClearsContainerOriginSoTracksRecordIndividually()
     {
         var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext();
+        var recentContext = new RecentContext(messenger);
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
@@ -109,8 +108,7 @@ public sealed class HomePageViewModelTests
 
         var track1 = CreateDummyMedia("Track 1");
         var track2 = CreateDummyMedia("Track 2");
-        recentContext.Recent.Add(track1);
-        recentContext.Recent.Add(track2);
+        recentContext.Recent = new IRecentItem[] { track1, track2 };
 
         selection.IsSelectionModeActive = true;
         selection.SelectRange(new ItemIndexRange(0, 2));
@@ -129,7 +127,7 @@ public sealed class HomePageViewModelTests
     public async Task ContextMedia_ResolvesAlbumArtistAndPlaylistViaPatternMatching()
     {
         var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext();
+        var recentContext = new RecentContext(messenger);
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
@@ -172,7 +170,7 @@ public sealed class HomePageViewModelTests
     public async Task Play_MediaViewModel_TogglesOnlyWhenPlayingIndividually()
     {
         var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext();
+        var recentContext = new RecentContext(messenger);
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
@@ -208,5 +206,49 @@ public sealed class HomePageViewModelTests
         track.IsPlayingIndividually = true;
         await vm.PlayCommand.ExecuteAsync(track);
         await Assert.That(toggleMessages).IsEqualTo(1);
+    }
+
+    [Test]
+    public async Task Recent_SyncsOrderingAndRemovalsFromRecentContextSnapshots()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var coordinator = new DummyCoordinator();
+        var selection = new SelectionViewModel();
+        var libraryContext = new LibraryContext();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
+
+        var track1 = CreateDummyMedia("Track 1");
+        var track2 = CreateDummyMedia("Track 2");
+        var track3 = CreateDummyMedia("Track 3");
+
+        // Pre-populated before HomePageViewModel construction
+        recentContext.Recent = new IRecentItem[] { track1, track2 };
+
+        var vm = new HomePageViewModel(
+            recentContext,
+            coordinator,
+            selection,
+            mediaFactory,
+            null!,
+            generalSettings,
+            null!,
+            messenger);
+
+        await Assert.That(vm.Recent.Count).IsEqualTo(2);
+        await Assert.That(vm.Recent[0]).IsSameReferenceAs(track1);
+        await Assert.That(vm.Recent[1]).IsSameReferenceAs(track2);
+
+        // Reorder and add item via snapshot update
+        recentContext.Recent = new IRecentItem[] { track3, track2, track1 };
+        await Assert.That(vm.Recent.Count).IsEqualTo(3);
+        await Assert.That(vm.Recent[0]).IsSameReferenceAs(track3);
+        await Assert.That(vm.Recent[1]).IsSameReferenceAs(track2);
+        await Assert.That(vm.Recent[2]).IsSameReferenceAs(track1);
+
+        // Clear
+        recentContext.Recent = Array.Empty<IRecentItem>();
+        await Assert.That(vm.Recent).IsEmpty();
     }
 }

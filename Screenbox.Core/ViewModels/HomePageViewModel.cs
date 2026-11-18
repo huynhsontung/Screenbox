@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
@@ -14,12 +15,14 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class HomePageViewModel : ObservableRecipient
+public sealed partial class HomePageViewModel : ObservableRecipient,
+    IRecipient<PropertyChangedMessage<IReadOnlyList<IRecentItem>>>
 {
-    public ObservableCollection<IRecentItem> Recent => _recentContext.Recent;
+    public ObservableCollection<IRecentItem> Recent { get; } = [];
 
     public SelectionViewModel Selection { get; }
 
@@ -52,6 +55,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient
     private readonly IFilesService _filesService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IQueueService _queueService;
+    private readonly DispatcherQueue _dispatcherQueue;
 
     public HomePageViewModel(
         RecentContext recentContext,
@@ -71,20 +75,27 @@ public sealed partial class HomePageViewModel : ObservableRecipient
         _filesService = filesService;
         _generalSettings = generalSettings;
         _queueService = queueService;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
+        Recent.SyncItems(_recentContext.Recent);
+        Messenger.Register<PropertyChangedMessage<IReadOnlyList<IRecentItem>>>(this);
+    }
+
+    public void Receive(PropertyChangedMessage<IReadOnlyList<IRecentItem>> message)
+    {
+        if (ReferenceEquals(message.Sender, _recentContext))
+        {
+            _dispatcherQueue.TryExecuteOrEnqueue(() => Recent.SyncItems(message.NewValue));
+        }
     }
 
     public async void OnLoaded()
     {
         if (_generalSettings.ShowRecent)
         {
-            if (!_recentContext.IsLoaded)
-            {
-                await _recentMediaCoordinator.LoadAsync();
-            }
-
+            await _recentMediaCoordinator.LoadAsync();
             await _recentMediaCoordinator.LoadDetailsAndThumbnailsAsync();
         }
     }
