@@ -2,12 +2,12 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Screenbox.Core.Playback;
+namespace Screenbox.Interop.LibVLC;
 
 /// <summary>
 /// P/Invoke bindings to <c>libvlccore</c> object variable functions for real-time subtitle variable updates.
 /// </summary>
-internal static partial class LibVlcCoreInterop
+public static partial class LibVlcCoreInterop
 {
     private const string LibraryName = "libvlccore";
     private const int VlcVarInteger = 0x0030;
@@ -66,7 +66,7 @@ internal static partial class LibVlcCoreInterop
     /// <see langword="true"/> to also apply the variable to direct child objects that already define it
     /// (required for variables like <c>sub-margin</c> that have a callback on <c>vout_thread_t</c>).
     /// </param>
-    internal static unsafe void SetIntegerVariable(IntPtr obj, string name, long value, bool propagateToChildren = false)
+    public static unsafe void SetIntegerVariable(IntPtr obj, string name, long value, bool propagateToChildren = false)
     {
         if (obj == IntPtr.Zero)
         {

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
+using Screenbox.Interop.LibVLC;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
