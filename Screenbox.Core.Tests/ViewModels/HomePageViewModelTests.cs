@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
@@ -171,7 +172,9 @@ public sealed class HomePageViewModelTests
         await Assert.That(vm.ContextAlbum).IsNull();
         vm.ContextMedia = new ArtistViewModel("Empty Artist", messenger);
         await Assert.That(vm.ContextArtist).IsNull();
-        vm.ContextMedia = new PlaylistViewModel(Guid.NewGuid().ToString(), "Empty Playlist", messenger);
+        var emptyPlaylist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger);
+        emptyPlaylist.LoadPlaceholder(Guid.NewGuid().ToString(), "Empty Playlist");
+        vm.ContextMedia = emptyPlaylist;
         await Assert.That(vm.ContextPlaylist).IsNull();
     }
 
@@ -284,7 +287,8 @@ public sealed class HomePageViewModelTests
 
         var emptyAlbum = new AlbumViewModel("Album A", "Artist A", messenger);
         var emptyArtist = new ArtistViewModel("Artist A", messenger);
-        var emptyPlaylist = new PlaylistViewModel(Guid.NewGuid().ToString(), "Playlist A", messenger);
+        var emptyPlaylist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger);
+        emptyPlaylist.LoadPlaceholder(Guid.NewGuid().ToString(), "Playlist A");
 
         foreach (IRecentItem placeholder in new IRecentItem[] { emptyAlbum, emptyArtist, emptyPlaylist })
         {

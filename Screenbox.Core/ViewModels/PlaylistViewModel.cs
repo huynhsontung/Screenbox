@@ -40,19 +40,11 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     private Guid _id = Guid.NewGuid();
 
-    private readonly IPlaylistService? _playlistService;
-    private readonly MediaViewModelFactory? _mediaFactory;
+    private readonly IPlaylistService _playlistService;
+    private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _playlistSaveTimer;
-    private readonly ILogger<PlaylistViewModel>? _logger;
-
-    public PlaylistViewModel(string id, string name, IMessenger messenger) : base(messenger)
-    {
-        _ = Guid.TryParse(id, out _id);
-        Name = name;
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _playlistSaveTimer = _dispatcherQueue.CreateTimer();
-    }
+    private readonly ILogger<PlaylistViewModel> _logger;
 
     public PlaylistViewModel(
         IPlaylistService playlistService,
@@ -78,13 +70,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         Items.CollectionChanged += Items_CollectionChanged;
 
         Messenger.Register<QueuePlaybackStateChangedMessage>(this);
-
-        var request = new QueuePlaybackStateRequestMessage();
-        Messenger.Send(request);
-        if (request.HasReceivedResponse)
-        {
-            UpdatePlaybackState(request.Response);
-        }
+        RefreshPlaybackState();
     }
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -104,7 +90,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
+                _logger.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
             }
         }, TimeSpan.FromMilliseconds(50));
     }
@@ -117,19 +103,24 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         };
     }
 
+    /// <summary>
+    /// Populates placeholder identity and display metadata without modifying <see cref="Items"/> or triggering persistence.
+    /// </summary>
+    public void LoadPlaceholder(string id, string displayName)
+    {
+        if (!Guid.TryParse(id, out _id)) return;
+        Name = displayName;
+        RefreshPlaybackState();
+    }
+
     public void Load(PlaylistRecordDto persistentPlaylist)
     {
-        if (_mediaFactory is null || !Guid.TryParse(persistentPlaylist.Id, out _id)) return;
+        if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
         Name = persistentPlaylist.DisplayName;
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
 
-        var request = new QueuePlaybackStateRequestMessage();
-        Messenger.Send(request);
-        if (request.HasReceivedResponse)
-        {
-            UpdatePlaybackState(request.Response);
-        }
+        RefreshPlaybackState();
         var itemSet = new HashSet<MediaViewModel>(persistentPlaylist.Items.Count);
 
         var albumFactory = new AlbumViewModelFactory();
@@ -148,10 +139,19 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public async Task SaveAsync()
     {
-        if (_playlistService is null) return;
         LastUpdated = DateTimeOffset.Now;
         var persistentPlaylist = ToPersistentPlaylist();
         await _playlistService.SavePlaylistAsync(persistentPlaylist);
+    }
+
+    private void RefreshPlaybackState()
+    {
+        var request = new QueuePlaybackStateRequestMessage();
+        Messenger.Send(request);
+        if (request.HasReceivedResponse)
+        {
+            UpdatePlaybackState(request.Response);
+        }
     }
 
     public async Task RenameAsync(string newDisplayName)
@@ -249,7 +249,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         bool existing = false;
         if (Uri.TryCreate(record.Path, UriKind.Absolute, out var uri))
         {
-            if (_mediaFactory!.TryGetOrCreate(uri, out var existingMedia))
+            if (_mediaFactory.TryGetOrCreate(uri, out var existingMedia))
             {
                 media = existingMedia!;
                 existing = true;
@@ -261,7 +261,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
         else
         {
-            media = _mediaFactory!.Create(new Uri("about:blank"));
+            media = _mediaFactory.Create(new Uri("about:blank"));
             media.IsAvailable = false;
         }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
@@ -48,6 +49,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IQueueService _queueService;
     private readonly ILogger<RecentMediaCoordinator> _logger;
+    private readonly Func<PlaylistViewModel> _playlistFactory;
 
     private readonly Dictionary<IRecentItem, RecentEntryMetadata> _metadata = new();
 
@@ -66,7 +68,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         ISourceMetadataService sourceMetadataService,
         IQueueService queueService,
         ILogger<RecentMediaCoordinator> logger,
-        IMessenger? messenger = null)
+        IMessenger? messenger = null,
+        Func<PlaylistViewModel>? playlistFactory = null)
         : base(messenger ?? WeakReferenceMessenger.Default)
     {
         _recentContext = recentContext;
@@ -78,6 +81,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         _sourceMetadataService = sourceMetadataService;
         _queueService = queueService;
         _logger = logger;
+        _playlistFactory = playlistFactory ?? Ioc.Default.GetRequiredService<PlaylistViewModel>;
 
         _playlistsContext.Playlists.CollectionChanged += Playlists_CollectionChanged;
         _generalSettings.PropertyChanged += GeneralSettings_PropertyChanged;
@@ -467,8 +471,16 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
 
             case RecentItemKind.Playlist:
-                return _playlistsContext.Playlists.FirstOrDefault(p => p.Id == entry.SourceId) ??
-                       new PlaylistViewModel(entry.SourceId, entry.Title, Messenger);
+            {
+                if (_playlistsContext.Playlists.FirstOrDefault(p => p.Id == entry.SourceId) is { } existingPlaylist)
+                {
+                    return existingPlaylist;
+                }
+
+                PlaylistViewModel placeholder = _playlistFactory();
+                placeholder.LoadPlaceholder(entry.SourceId, entry.Title);
+                return placeholder;
+            }
 
             case RecentItemKind.Album:
                 if (_libraryContext.Music.Albums.TryGetValue(entry.SourceId, out AlbumViewModel? album))
