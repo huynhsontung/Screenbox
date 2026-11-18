@@ -21,7 +21,7 @@ public sealed class HomePageViewModelTests
 
     private sealed class DummyCoordinator : IRecentMediaCoordinator
     {
-        public Task LoadAsync() => Task.CompletedTask;
+        public Task LoadAsync(bool forceReload = false) => Task.CompletedTask;
         public Task LoadDetailsAndThumbnailsAsync() => Task.CompletedTask;
         public Task RemoveAsync(IRecentItem item) => Task.CompletedTask;
         public Task ClearAsync() => Task.CompletedTask;
@@ -151,6 +151,7 @@ public sealed class HomePageViewModelTests
         track.Album = album;
         track.Artists = [artist];
         album.RelatedSongs.Add(track);
+        artist.RelatedSongs.Add(track);
 
         vm.ContextMedia = track;
         await Assert.That(vm.ContextAlbum).IsSameReferenceAs(album);
@@ -164,6 +165,14 @@ public sealed class HomePageViewModelTests
         vm.ContextMedia = artist;
         await Assert.That(vm.ContextAlbum).IsNull();
         await Assert.That(vm.ContextArtist).IsSameReferenceAs(artist);
+
+        // Empty placeholders do not expose ContextAlbum/ContextArtist/ContextPlaylist
+        vm.ContextMedia = new AlbumViewModel("Empty Album", "Artist", messenger);
+        await Assert.That(vm.ContextAlbum).IsNull();
+        vm.ContextMedia = new ArtistViewModel("Empty Artist", messenger);
+        await Assert.That(vm.ContextArtist).IsNull();
+        vm.ContextMedia = new PlaylistViewModel(Guid.NewGuid().ToString(), "Empty Playlist", messenger);
+        await Assert.That(vm.ContextPlaylist).IsNull();
     }
 
     [Test]
@@ -250,5 +259,39 @@ public sealed class HomePageViewModelTests
         // Clear
         recentContext.Recent = Array.Empty<IRecentItem>();
         await Assert.That(vm.Recent).IsEmpty();
+    }
+
+    [Test]
+    public async Task PlaceholderContainers_DisablePlayAndQueueCommands_ButAllowRemove()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var coordinator = new DummyCoordinator();
+        var selection = new SelectionViewModel();
+        var libraryContext = new LibraryContext();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
+
+        var vm = new HomePageViewModel(
+            recentContext,
+            coordinator,
+            selection,
+            mediaFactory,
+            null!,
+            generalSettings,
+            null!,
+            messenger);
+
+        var emptyAlbum = new AlbumViewModel("Album A", "Artist A", messenger);
+        var emptyArtist = new ArtistViewModel("Artist A", messenger);
+        var emptyPlaylist = new PlaylistViewModel(Guid.NewGuid().ToString(), "Playlist A", messenger);
+
+        foreach (IRecentItem placeholder in new IRecentItem[] { emptyAlbum, emptyArtist, emptyPlaylist })
+        {
+            await Assert.That(vm.PlayCommand.CanExecute(placeholder)).IsFalse();
+            await Assert.That(vm.PlayNextCommand.CanExecute(placeholder)).IsFalse();
+            await Assert.That(vm.AddToQueueCommand.CanExecute(placeholder)).IsFalse();
+            await Assert.That(vm.RemoveCommand.CanExecute(placeholder)).IsTrue();
+        }
     }
 }

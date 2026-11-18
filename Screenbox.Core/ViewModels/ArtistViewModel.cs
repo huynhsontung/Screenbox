@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,6 +27,8 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
 
     public IReadOnlyList<MediaViewModel> OrderedSongs => GetAlbumSortedSongs(RelatedSongs);
 
+    public bool HasSongs => RelatedSongs.Count > 0;
+
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial bool IsQueueActive { get; set; }
 
@@ -37,6 +40,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
     {
         Name = artist;
         RelatedSongs = new ObservableCollection<MediaViewModel>();
+        RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
 
         Messenger.Register<QueuePlaybackStateChangedMessage>(this);
 
@@ -62,7 +66,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
         IsPlaying = isActive && state.IsPlaying;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void PlayArtist()
     {
         if (RelatedSongs.Count == 0)
@@ -79,7 +83,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void PlayArtistNext()
     {
         if (RelatedSongs.Count == 0)
@@ -88,13 +92,21 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
         Messenger.SendPlayNext(OrderedSongs);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void AddArtistToQueue()
     {
         if (RelatedSongs.Count == 0)
             return;
 
         Messenger.SendAddToQueue(OrderedSongs);
+    }
+
+    private void RelatedSongsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(HasSongs));
+        PlayArtistCommand.NotifyCanExecuteChanged();
+        PlayArtistNextCommand.NotifyCanExecuteChanged();
+        AddArtistToQueueCommand.NotifyCanExecuteChanged();
     }
 
     private static List<MediaViewModel> GetAlbumSortedSongs(IEnumerable<MediaViewModel> songs)

@@ -36,15 +36,23 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public string Id => _id.ToString();
 
-    private bool HasItems => Items.Count > 0;
+    public bool HasItems => Items.Count > 0;
 
     private Guid _id = Guid.NewGuid();
 
-    private readonly IPlaylistService _playlistService;
-    private readonly MediaViewModelFactory _mediaFactory;
+    private readonly IPlaylistService? _playlistService;
+    private readonly MediaViewModelFactory? _mediaFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _playlistSaveTimer;
-    private readonly ILogger<PlaylistViewModel> _logger;
+    private readonly ILogger<PlaylistViewModel>? _logger;
+
+    public PlaylistViewModel(string id, string name, IMessenger messenger) : base(messenger)
+    {
+        _ = Guid.TryParse(id, out _id);
+        Name = name;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _playlistSaveTimer = _dispatcherQueue.CreateTimer();
+    }
 
     public PlaylistViewModel(
         IPlaylistService playlistService,
@@ -82,6 +90,10 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
+        OnPropertyChanged(nameof(HasItems));
+        PlayCommand.NotifyCanExecuteChanged();
+        PlayNextCommand.NotifyCanExecuteChanged();
+        AddToQueueCommand.NotifyCanExecuteChanged();
 
         _playlistSaveTimer.Debounce(async () =>
         {
@@ -92,12 +104,8 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
+                _logger?.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
             }
-
-            PlayCommand.NotifyCanExecuteChanged();
-            PlayNextCommand.NotifyCanExecuteChanged();
-            AddToQueueCommand.NotifyCanExecuteChanged();
         }, TimeSpan.FromMilliseconds(50));
     }
 
@@ -111,7 +119,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public void Load(PlaylistRecordDto persistentPlaylist)
     {
-        if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
+        if (_mediaFactory is null || !Guid.TryParse(persistentPlaylist.Id, out _id)) return;
         Name = persistentPlaylist.DisplayName;
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
@@ -140,6 +148,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public async Task SaveAsync()
     {
+        if (_playlistService is null) return;
         LastUpdated = DateTimeOffset.Now;
         var persistentPlaylist = ToPersistentPlaylist();
         await _playlistService.SavePlaylistAsync(persistentPlaylist);
@@ -240,7 +249,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         bool existing = false;
         if (Uri.TryCreate(record.Path, UriKind.Absolute, out var uri))
         {
-            if (_mediaFactory.TryGetOrCreate(uri, out var existingMedia))
+            if (_mediaFactory!.TryGetOrCreate(uri, out var existingMedia))
             {
                 media = existingMedia!;
                 existing = true;
@@ -252,7 +261,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
         else
         {
-            media = _mediaFactory.Create(new Uri("about:blank"));
+            media = _mediaFactory!.Create(new Uri("about:blank"));
             media.IsAvailable = false;
         }
 

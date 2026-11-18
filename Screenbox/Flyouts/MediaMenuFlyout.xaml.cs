@@ -156,7 +156,16 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
 
         // AddToPlaylist MenuFlyoutSubItem
-        if (IsAddToPlaylistButtonVisible && ContextItem is not MediaCollectionViewModel)
+        bool canAddToPlaylist = IsAddToPlaylistButtonVisible && ContextItem switch
+        {
+            MediaCollectionViewModel => false,
+            AlbumViewModel { HasSongs: false } => false,
+            ArtistViewModel { HasSongs: false } => false,
+            PlaylistViewModel { HasItems: false } => false,
+            _ => true
+        };
+
+        if (canAddToPlaylist)
         {
             AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
             AddToPlaylistSubItem.Visibility = Visibility.Visible;

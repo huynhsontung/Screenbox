@@ -10,7 +10,10 @@ public interface IRecentMediaCoordinator
     /// <summary>
     /// Loads recent media entries from persistent storage into <see cref="Contexts.RecentContext"/>.
     /// </summary>
-    Task LoadAsync();
+    /// <param name="forceReload">
+    /// <see langword="true"/> to bypass the cached loaded state and reload entries from storage.
+    /// </param>
+    Task LoadAsync(bool forceReload = false);
 
     /// <summary>
     /// Loads details and thumbnails for items in the recent media list.

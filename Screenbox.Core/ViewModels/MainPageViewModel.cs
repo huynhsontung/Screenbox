@@ -45,6 +45,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ILibraryCoordinator _libraryCoordinator;
     private readonly PlaylistsContext _playlistsContext;
     private readonly IPlaylistService _playlistService;
+    private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly ILogger<MainPageViewModel> _logger;
 
     /// <summary>
@@ -67,7 +68,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         _libraryCoordinator = libraryCoordinator;
         _playlistsContext = playlistsContext;
         _playlistService = playlistService;
-        _ = recentMediaCoordinator; // Ensure singleton coordinator is instantiated at startup
+        _recentMediaCoordinator = recentMediaCoordinator;
         _logger = logger;
         SearchQuery = string.Empty;
         CriticalErrorMessage = string.Empty;
@@ -247,6 +248,10 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             // This is necessary because playlist items may reference media that is not yet loaded in the library context
             // Fetching library may take too long so we can't wait for it to finish before fetching playlists
             await FetchPlaylistsAsync();
+
+            // Replace placeholder album/artist/playlist items now that both libraries and playlists are loaded
+            await _recentMediaCoordinator.LoadAsync(forceReload: true);
+            await _recentMediaCoordinator.LoadDetailsAndThumbnailsAsync();
         }
         catch (Exception e)
         {

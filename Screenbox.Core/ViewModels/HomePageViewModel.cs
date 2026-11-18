@@ -34,20 +34,22 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
     public AlbumViewModel? ContextAlbum => ContextMedia switch
     {
-        AlbumViewModel album => album,
+        AlbumViewModel { HasSongs: true } album => album,
         MediaViewModel media => media.Album,
         _ => null
     };
 
     public ArtistViewModel? ContextArtist => ContextMedia switch
     {
-        ArtistViewModel artist => artist,
+        ArtistViewModel { HasSongs: true } artist => artist,
         AlbumViewModel album => album.RelatedSongs.FirstOrDefault()?.MainArtist,
         MediaViewModel media => media.MainArtist,
         _ => null
     };
 
-    public PlaylistViewModel? ContextPlaylist => ContextMedia as PlaylistViewModel;
+    public PlaylistViewModel? ContextPlaylist => ContextMedia is PlaylistViewModel { HasItems: true } playlist
+        ? playlist
+        : null;
 
     private readonly RecentContext _recentContext;
     private readonly IRecentMediaCoordinator _recentMediaCoordinator;
@@ -118,9 +120,11 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(url)));
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanPlayItem))]
     private async Task PlayAsync(IRecentItem? item)
     {
+        if (!CanPlayItem(item)) return;
+
         switch (item)
         {
             case MediaViewModel media:
@@ -152,7 +156,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanPlayItem))]
     private async Task PlayNextAsync(IRecentItem? item)
     {
         if (item is null) return;
@@ -163,7 +167,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanPlayItem))]
     private async Task AddToQueueAsync(IRecentItem? item)
     {
         if (item is null) return;
@@ -261,6 +265,15 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         PlaylistViewModel playlist => Task.FromResult<IReadOnlyList<MediaViewModel>>(playlist.Items),
         MediaCollectionViewModel collection => collection.GetPlayableItemsAsync(),
         _ => Task.FromResult<IReadOnlyList<MediaViewModel>>(Array.Empty<MediaViewModel>())
+    };
+
+    private static bool CanPlayItem(IRecentItem? item) => item switch
+    {
+        AlbumViewModel album => album.HasSongs,
+        ArtistViewModel artist => artist.HasSongs,
+        PlaylistViewModel playlist => playlist.HasItems,
+        not null => true,
+        _ => false
     };
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;

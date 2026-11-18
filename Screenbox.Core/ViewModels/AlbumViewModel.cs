@@ -45,6 +45,8 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
 
     public IReadOnlyList<MediaViewModel> OrderedSongs => GetSortedSongs(RelatedSongs);
 
+    public bool HasSongs => RelatedSongs.Count > 0;
+
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial bool IsQueueActive { get; set; }
 
@@ -99,6 +101,10 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
     private void RelatedSongsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         UpdateProperties();
+        OnPropertyChanged(nameof(HasSongs));
+        PlayAlbumCommand.NotifyCanExecuteChanged();
+        PlayAlbumNextCommand.NotifyCanExecuteChanged();
+        AddAlbumToQueueCommand.NotifyCanExecuteChanged();
     }
 
     public void UpdateProperties()
@@ -117,7 +123,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
             : first.MainArtist?.Name ?? first.MediaInfo.MusicProperties.Artist ?? string.Empty;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void PlayAlbum()
     {
         if (RelatedSongs.Count == 0)
@@ -134,7 +140,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void PlayAlbumNext()
     {
         if (RelatedSongs.Count == 0)
@@ -143,7 +149,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         Messenger.SendPlayNext(OrderedSongs);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void AddAlbumToQueue()
     {
         if (RelatedSongs.Count == 0)

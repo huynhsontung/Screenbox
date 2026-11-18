@@ -224,8 +224,9 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent).HasSingleItem();
         var placeholder = (AlbumViewModel)recentContext.Recent[0];
         await Assert.That(placeholder.RelatedSongs).IsEmpty();
+        await Assert.That(placeholder.HasSongs).IsFalse();
 
-        // Populate live library and broadcast MusicLibrary update
+        // Populate live library
         var liveAlbum = new AlbumViewModel("Abbey Road", "The Beatles");
         var song = CreateDummyMedia("Come Together");
         liveAlbum.RelatedSongs.Add(song);
@@ -237,13 +238,71 @@ public sealed class RecentMediaCoordinatorTests
             Array.Empty<string>(),
             new AlbumViewModel(),
             new ArtistViewModel());
-        libraryContext.Music = musicLibrary;
 
+        // Intermediate progress updates while IsLoadingMusic == true do not trigger reload
+        libraryContext.IsLoadingMusic = true;
+        libraryContext.Music = musicLibrary;
         coordinator.Receive(new PropertyChangedMessage<MusicLibrary>(libraryContext, nameof(LibraryContext.Music), MusicLibrary.Empty, musicLibrary));
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(placeholder);
+
+        // Final MusicLibrary completion swaps placeholder with live album
+        libraryContext.IsLoadingMusic = false;
+        coordinator.Receive(new PropertyChangedMessage<MusicLibrary>(libraryContext, nameof(LibraryContext.Music), MusicLibrary.Empty, musicLibrary));
+        // Allow async void Receive continuation to complete
+        await Task.Yield();
 
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(liveAlbum);
         await Assert.That(((AlbumViewModel)recentContext.Recent[0]).RelatedSongs).HasSingleItem();
+    }
+
+    [Test]
+    public async Task LoadAsync_ForceReload_ReplacesPlaceholdersAndReusesMediaCollections()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, _, playlistsContext, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        string playlistId = Guid.NewGuid().ToString();
+        await dbService.UpsertRecentEntryAsync(new RecentEntryDto
+        {
+            Id = "entry_playlist",
+            Kind = RecentItemKind.Playlist,
+            SourceId = playlistId,
+            Title = "Road Trip",
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.Playlist, playlistId),
+            LastPlayed = DateTimeOffset.UtcNow
+        });
+
+        await dbService.UpsertRecentEntryAsync(new RecentEntryDto
+        {
+            Id = "entry_folder",
+            Kind = RecentItemKind.MediaCollection,
+            SourceId = @"C:\MusicFolder",
+            Title = "MusicFolder",
+            Token = "tok_1",
+            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\MusicFolder"),
+            LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-1)
+        });
+
+        // Initial load creates non-playable playlist placeholder and MediaCollection
+        await coordinator.LoadAsync();
+        await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
+        var placeholderPlaylist = (PlaylistViewModel)recentContext.Recent[0];
+        var initialCollection = (MediaCollectionViewModel)recentContext.Recent[1];
+        await Assert.That(placeholderPlaylist.HasItems).IsFalse();
+
+        // Simulate saved playlists finishing load after startup
+        var livePlaylist = new PlaylistViewModel(playlistId, "Road Trip", new StrongReferenceMessenger());
+        livePlaylist.Items.Add(CreateDummyMedia("Song 1"));
+        playlistsContext.Playlists.Add(livePlaylist);
+
+        await coordinator.LoadAsync(forceReload: true);
+
+        await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(livePlaylist);
+        await Assert.That(((PlaylistViewModel)recentContext.Recent[0]).HasItems).IsTrue();
+        await Assert.That(recentContext.Recent[1]).IsSameReferenceAs(initialCollection);
     }
 
     [Test]
