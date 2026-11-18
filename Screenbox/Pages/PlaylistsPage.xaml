@@ -201,6 +201,7 @@
             <interactivity:Interaction.Behaviors>
                 <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextPlaylist, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:ListViewSelectionBehavior Selection="{x:Bind ViewModel.Selection}" />
+                <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>
 

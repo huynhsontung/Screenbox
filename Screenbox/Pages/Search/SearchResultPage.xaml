@@ -303,6 +303,7 @@
                                         PlayNextCommand="{x:Bind ViewModel.ContextPlaylist.PlayNextCommand, Mode=OneWay}" />
                                 </behaviors:ListViewContextBehavior.Flyout>
                             </behaviors:ListViewContextBehavior>
+                            <behaviors:ThumbnailGridViewBehavior />
                         </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>
