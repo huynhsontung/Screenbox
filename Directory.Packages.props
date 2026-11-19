@@ -7,6 +7,9 @@
     <!-- Windows UI Library -->
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7" />
 
+    <!-- Windows Runtime (WinRT) C# projection -->
+    <PackageVersion Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
+
     <!-- XAML Interactivity -->
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.1" />
 
@@ -47,11 +50,5 @@
 
     <!-- Testing framework (TUnit) -->
     <PackageVersion Include="TUnit" Version="1.75.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Use C#/WinRT 2.3.1 directly to enable improved AOT analysis.
-         The Windows 26100 SDK uses an older version lacking these enhancements. -->
-    <GlobalPackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
   </ItemGroup>
 </Project>

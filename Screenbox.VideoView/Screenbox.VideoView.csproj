@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="LibVLCSharp.UWP" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" />
     <PackageReference Include="Vortice.Direct3D11" />
   </ItemGroup>
 </Project>

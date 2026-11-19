@@ -16,5 +16,6 @@
     <PackageReference Include="CommunityToolkit.Uwp.Animations" />
     <PackageReference Include="CommunityToolkit.Uwp.Extensions" />
     <PackageReference Include="Microsoft.UI.Xaml" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" />
   </ItemGroup>
 </Project>
