@@ -2,18 +2,18 @@
 <!-- Feel free to adapt or modify key points if necessary. -->
 ## Screenbox Media Player
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox je moderní přehrávač médií pro všechna vaše zařízení s podporou široké škály formátů.**
 
-### Description
+### Popis
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox je moderní přehrávač médií, který se snaží přinést nový, svěží pohled na tuto klasickou aplikaci. Nabízí elegantní a intuitivní uživatelské rozhraní, které se dokáže přizpůsobit možnostem vašeho systému. Screenbox, navržený pro plynulý zážitek na široké škále zařízení s Windows i konzolí Xbox, je rychlý, nenáročný a výkonný.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox podporuje širokou škálu formátů souborů a kodeků. Přehrávejte téměř jakýkoli typ médií bez nutnosti instalace dalších doplňků. Screenbox, založený na knihovně LibVLC, kombinuje to nejlepší z přehrávače VLC a moderních funkcí aplikací pro Windows. Pokročilé možnosti přehrávání lze nastavit pomocí argumentů příkazového řádku VLC.
 
-### Features
+### Funkce
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Moderní uživatelské rozhraní s podporou gest, optimalizované pro všechny typy zařízení se systémem Windows.
+- Podporuje mnoho zvukových a video formátů.
+- Procházejte a spravujte svou knihovnu hudby a videí na svém počítači nebo v síti.
+- Pomocí Chromecastu můžete přenášet obsah z vašeho zařízení na celou řadu různých zařízení.
+- Díky režimu „obraz v obraze“ můžete pracovat a zároveň si užívat svá média.
