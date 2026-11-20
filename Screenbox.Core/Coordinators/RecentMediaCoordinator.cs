@@ -119,12 +119,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public Task LoadAsync(bool forceReload = false)
     {
-        if (!_generalSettings.ShowRecent)
-        {
-            return Task.CompletedTask;
-        }
-
-        if (!forceReload && _isLoaded)
+        if ((!forceReload && _isLoaded) || !_generalSettings.ShowRecent)
         {
             return Task.CompletedTask;
         }
@@ -211,18 +206,13 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public Task LoadDetailsAsync()
     {
-        var tasks = new List<Task>();
-        foreach (IRecentItem item in _recentContext.Recent)
-        {
-            if (item is MediaViewModel { DetailsLoaded: false } media)
-            {
-                tasks.Add(SafeLoadDetailsAsync(media));
-            }
-        }
+        var tasks = _recentContext.Recent.OfType<MediaViewModel>()
+            .Where(media => !media.DetailsLoaded)
+            .Select(SafeLoadDetailsAsync);
 
         // Thumbnails (including album art loaded from AlbumViewModel.RelatedSongs[0]) are deferred
         // to ThumbnailGridViewBehavior so only visible UI containers decode thumbnails.
-        return tasks.Count > 0 ? Task.WhenAll(tasks) : Task.CompletedTask;
+        return Task.WhenAll(tasks);
     }
 
     /// <inheritdoc/>
@@ -256,7 +246,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         InvalidatePendingLoads();
         ClearRecentCollection();
         _isLoaded = true;
-        PublishRecentItems(Array.Empty<IRecentItem>());
+        PublishRecentItems([]);
 
         try
         {
@@ -489,7 +479,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 InvalidatePendingLoads();
                 ClearRecentCollection();
                 _isLoaded = false;
-                PublishRecentItems(Array.Empty<IRecentItem>());
+                PublishRecentItems([]);
             }
         }
     }
@@ -509,8 +499,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private void PublishRecentItems(IReadOnlyList<IRecentItem> items) =>
         _recentContext.Recent = items.Count == 0
-            ? Array.Empty<IRecentItem>()
-            : items as IRecentItem[] ?? items.ToArray();
+            ? []
+            : items as IRecentItem[] ?? [.. items];
 
     private async Task<MediaViewModel?> HydrateMediaViewModelAsync(RecentEntryDto entry)
     {
