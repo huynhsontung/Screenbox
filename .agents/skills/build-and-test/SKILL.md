@@ -88,7 +88,7 @@ dotnet run --project Screenbox.Core.Tests/Screenbox.Core.Tests.csproj
 Verify all XAML files adhere to XAML Styler rules:
 
 ```pwsh
-pwsh ./scripts/Test-XamlFormat.ps1
+pwsh ./scripts/Format-Xaml.ps1 -Validate
 ```
 
 To format specific modified XAML files manually:
@@ -100,5 +100,5 @@ dotnet tool run xstyler -f Screenbox/Pages/PlayerPage.xaml
 To format all XAML files in place:
 
 ```pwsh
-pwsh ./scripts/Test-XamlFormat.ps1 -Format
+pwsh ./scripts/Format-Xaml.ps1
 ```
