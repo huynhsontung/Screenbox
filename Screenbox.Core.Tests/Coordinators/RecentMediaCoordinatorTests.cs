@@ -189,11 +189,35 @@ public sealed class RecentMediaCoordinatorTests
 
         await coordinator.HandleQueueSessionStartedAsync(
             QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder"),
-            isUpgrade: true);
+            replacedEntryId: QueueOrigin.ForSingleMedia(track1).GetEntryId());
 
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("MyFolder");
+    }
+
+    [Test]
+    public async Task HandleQueueSessionStartedAsync_WithUpgradeAfterSwitchingMedia_ReplacesOriginalTrackNotNewTrack()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, _, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        var track1 = CreateDummyMedia("track1");
+        var track2 = CreateDummyMedia("track2");
+
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(track1), track1);
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(track2), track2);
+
+        // Delayed upgrade for track1 arrives after user already switched to track2
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder"),
+            replacedEntryId: QueueOrigin.ForSingleMedia(track1).GetEntryId());
+
+        await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
+        await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
+        await Assert.That(recentContext.Recent[0].Name).IsEqualTo("MyFolder");
+        await Assert.That(recentContext.Recent[1]).IsSameReferenceAs(track2);
     }
 
     [Test]

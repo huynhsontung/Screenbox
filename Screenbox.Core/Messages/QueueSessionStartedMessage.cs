@@ -10,4 +10,4 @@ namespace Screenbox.Core.Messages;
 public sealed record QueueSessionStartedMessage(
     QueueOrigin Origin,
     MediaViewModel? Media = null,
-    bool IsUpgrade = false);
+    string? ReplacedEntryId = null);

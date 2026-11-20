@@ -66,7 +66,7 @@ flowchart TD
     PlaybackInitiators -->|"PlayMediaMessage / SetQueueMessage\n(QueueSession + QueueOrigin)"| PQC
     PQC -->|"Updates ActiveSessionId, ActiveOrigin, CurrentItem\n& MediaViewModel.IsPlayingIndividually"| PQContext
     PQC -->|"QueuePlaybackStateChangedMessage"| RContext
-    PQC -->|"QueueSessionStartedMessage(Origin, Media?, IsUpgrade)"| RMC
+    PQC -->|"QueueSessionStartedMessage(Origin, Media?, ReplacedEntryId)"| RMC
     RMC <-->|"Load / Upsert / Delete / Prune 100"| DB
     RMC -->|"Publishes atomic IReadOnlyList<IRecentItem> snapshots"| RContext
     RContext -->|"PropertyChangedMessage<IReadOnlyList<IRecentItem>>"| HPVM
@@ -123,7 +123,7 @@ flowchart TD
 | Play a `Playlist`, `Album`, or `Artist` | $\ge 1$ | `Playlist` / `Album` / `Artist` | Explicit live container. |
 | Drop or pick multiple loose files, or multi-select **Play** | $\ge 2$ | Tracks played item(s) as `SingleMedia` | No persistent folder or playlist origin exists on disk to shortcut to. |
 | Open/drop a single file (with `EnqueueAllFilesInFolder` enabled) | $1$ | `SingleMedia` | Only playable file in the folder. |
-| Open/drop a single file (with `EnqueueAllFilesInFolder` enabled) | $\ge 2$ | `MediaCollection` (Folder shortcut) | Neighboring files expanded into a folder session (`IsUpgrade: true`). |
+| Open/drop a single file (with `EnqueueAllFilesInFolder` enabled) | $\ge 2$ | `MediaCollection` (Folder shortcut) | Neighboring files expanded into a folder session (`ReplacedEntryId` set). |
 
 ### Deferred Session Upgrades
 
@@ -135,7 +135,7 @@ Two playback flows start as a 1-item `SingleMedia` queue and asynchronously expa
 2. **Expandable URL Sub-Items (`PlayQueueCoordinator.CheckSubItemsAsync`)**:
    - Opening a URL starts as `SingleMedia`. If LibVLC parses $> 1$ sub-items, `CheckSubItemsAsync` upgrades `_queueSession.Origin` to `MediaCollection(title, url)` within the same `SessionId`.
 
-When `PlayQueueCoordinator` detects `_recordedSessionId == queueSession.SessionId` transitioning from `SingleMedia` to `MediaCollection`, it sends `QueueSessionStartedMessage(Origin, IsUpgrade: true)`, replacing the temporary `SingleMedia` entry in-place with the `MediaCollectionViewModel` shortcut.
+When `PlayQueueCoordinator` detects `_recordedSessionId == queueSession.SessionId` transitioning from `SingleMedia` to `MediaCollection`, it sends `QueueSessionStartedMessage(Origin, ReplacedEntryId: _recordedSingleEntryId)`, replacing the original temporary `SingleMedia` entry in-place with the `MediaCollectionViewModel` shortcut.
 
 ### In-Queue Mutations & Origin Unlinking
 

@@ -75,6 +75,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private CancellationTokenSource? _currentItemCts;
     private Guid _recordedSessionId;
     private RecentItemKind? _recordedOriginKind;
+    private string? _recordedSingleEntryId;
     private QueuePlaybackState? _lastBroadcastState;
 
     public PlayQueueCoordinator(
@@ -778,6 +779,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 if (playlist.Origin is null)
                 {
                     _recordedOriginKind = null;
+                    _recordedSingleEntryId = null;
                 }
 
                 if (!playlist.IsEmpty && playlist.Origin is { TrackItemsIndividually: false } &&
@@ -838,6 +840,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _context.IsPlaying = false;
                 _recordedSessionId = Guid.Empty;
                 _recordedOriginKind = null;
+                _recordedSingleEntryId = null;
                 _context.ShuffleMode = false;
                 BroadcastPlaybackState();
             }
@@ -1018,6 +1021,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _context.ActiveOrigin = null;
             _recordedSessionId = Guid.Empty;
             _recordedOriginKind = null;
+            _recordedSingleEntryId = null;
             RaiseCanNavigateChanged();
             BroadcastPlaybackState();
             return;
@@ -1057,6 +1061,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _queueSession.Origin = null;
             _context.ActiveOrigin = null;
             _recordedOriginKind = null;
+            _recordedSingleEntryId = null;
             UpdateCurrentItemIndividualPlayingState();
             BroadcastPlaybackState();
         }
@@ -1064,18 +1069,23 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
     private void RecordContainerOrigin(QueueOrigin origin)
     {
-        bool isUpgrade = _queueSession.SessionId == _recordedSessionId &&
-                         _recordedOriginKind == RecentItemKind.SingleMedia;
+        string? replacedEntryId = _queueSession.SessionId == _recordedSessionId &&
+                                  _recordedOriginKind == RecentItemKind.SingleMedia
+            ? _recordedSingleEntryId
+            : null;
         _recordedSessionId = _queueSession.SessionId;
         _recordedOriginKind = origin.Kind;
-        Messenger.Send(new QueueSessionStartedMessage(origin, IsUpgrade: isUpgrade));
+        _recordedSingleEntryId = null;
+        Messenger.Send(new QueueSessionStartedMessage(origin, ReplacedEntryId: replacedEntryId));
     }
 
     private void RecordSingleMedia(MediaViewModel media)
     {
+        QueueOrigin origin = QueueOrigin.ForSingleMedia(media);
         _recordedSessionId = _queueSession.SessionId;
         _recordedOriginKind = RecentItemKind.SingleMedia;
-        Messenger.Send(new QueueSessionStartedMessage(QueueOrigin.ForSingleMedia(media), media));
+        _recordedSingleEntryId = origin.GetEntryId();
+        Messenger.Send(new QueueSessionStartedMessage(origin, media));
     }
 
     private void UpdateCurrentItemIndividualPlayingState()

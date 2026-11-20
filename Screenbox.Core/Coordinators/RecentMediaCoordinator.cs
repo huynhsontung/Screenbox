@@ -44,12 +44,13 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly ILogger<RecentMediaCoordinator> _logger;
     private readonly Func<PlaylistViewModel> _playlistFactory;
 
-    private readonly Dictionary<IRecentItem, string> _entryIds = new();
+    private readonly Lock _stateLock = new();
+    private Dictionary<IRecentItem, string> _entryIds = new();
+    private IRecentItem[] _items = [];
 
     private Task? _loadTask;
     private CancellationTokenSource? _loadCts;
     private bool _isLoaded;
-    private string? _lastRecordedEntryId;
 
     public RecentMediaCoordinator(
         RecentContext recentContext,
@@ -88,7 +89,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         try
         {
-            await HandleQueueSessionStartedAsync(message.Origin, message.Media, message.IsUpgrade);
+            await HandleQueueSessionStartedAsync(message.Origin, message.Media, message.ReplacedEntryId);
         }
         catch (Exception ex)
         {
@@ -99,7 +100,13 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
-        if (!_generalSettings.ShowRecent || _libraryContext.IsLoadingMusic || !_isLoaded)
+        bool isLoaded;
+        lock (_stateLock)
+        {
+            isLoaded = _isLoaded;
+        }
+
+        if (!_generalSettings.ShowRecent || _libraryContext.IsLoadingMusic || !isLoaded)
         {
             return;
         }
@@ -119,28 +126,31 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public Task LoadAsync(bool forceReload = false)
     {
-        if ((!forceReload && _isLoaded) || !_generalSettings.ShowRecent)
+        lock (_stateLock)
         {
-            return Task.CompletedTask;
-        }
+            if ((!forceReload && _isLoaded) || !_generalSettings.ShowRecent)
+            {
+                return Task.CompletedTask;
+            }
 
-        if (!forceReload && _loadTask is { IsCompleted: false })
-        {
-            return _loadTask;
-        }
+            if (!forceReload && _loadTask is { IsCompleted: false })
+            {
+                return _loadTask;
+            }
 
-        if (forceReload)
-        {
-            InvalidatePendingLoads();
-        }
+            if (forceReload)
+            {
+                InvalidatePendingLoadsLocked();
+            }
 
-        return _loadTask = LoadInternalAsync();
+            CancellationTokenSource cts = new();
+            _loadCts = cts;
+            return _loadTask = LoadInternalAsync(cts);
+        }
     }
 
-    private async Task LoadInternalAsync()
+    private async Task LoadInternalAsync(CancellationTokenSource cts)
     {
-        using CancellationTokenSource cts = new();
-        _loadCts = cts;
         CancellationToken ct = cts.Token;
         try
         {
@@ -151,12 +161,13 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
 
             var existingCollections = new Dictionary<string, MediaCollectionViewModel>(StringComparer.Ordinal);
-            foreach (MediaCollectionViewModel collection in _recentContext.Recent.OfType<MediaCollectionViewModel>())
+            foreach (MediaCollectionViewModel collection in Volatile.Read(ref _items).OfType<MediaCollectionViewModel>())
             {
                 existingCollections.TryAdd(QueueOrigin.NormalizeLocation(collection.SourcePath), collection);
             }
 
-            var hydrated = new List<(IRecentItem Item, string EntryId)>(entries.Count);
+            var newItems = new List<IRecentItem>(entries.Count);
+            var newEntryIds = new Dictionary<IRecentItem, string>(entries.Count);
             foreach (RecentEntryDto entry in entries)
             {
                 if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
@@ -170,24 +181,25 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                     return;
                 }
 
-                if (vm is not null)
+                if (vm is not null && newEntryIds.TryAdd(vm, entry.Id))
                 {
-                    hydrated.Add((vm, entry.Id));
+                    newItems.Add(vm);
                 }
             }
 
-            var items = new List<IRecentItem>(hydrated.Count);
-            ClearRecentCollection();
-            foreach (var (item, entryId) in hydrated)
+            lock (_stateLock)
             {
-                if (_entryIds.TryAdd(item, entryId))
+                if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
                 {
-                    items.Add(item);
+                    return;
                 }
+
+                _entryIds = newEntryIds;
+                _items = ToSnapshot(newItems);
+                _isLoaded = true;
             }
 
-            _isLoaded = true;
-            PublishRecentItems(items);
+            PublishSnapshot();
         }
         catch (Exception ex)
         {
@@ -195,11 +207,16 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
         finally
         {
-            if (ReferenceEquals(_loadCts, cts))
+            lock (_stateLock)
             {
-                _loadCts = null;
-                _loadTask = null;
+                if (ReferenceEquals(_loadCts, cts))
+                {
+                    _loadCts = null;
+                    _loadTask = null;
+                }
             }
+
+            cts.Dispose();
         }
     }
 
@@ -218,11 +235,23 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async Task RemoveAsync(IRecentItem item)
     {
-        _entryIds.Remove(item, out string? entryId);
-        var items = _recentContext.Recent.ToList();
-        if (items.Remove(item))
+        string? entryId;
+        bool changed = false;
+
+        lock (_stateLock)
         {
-            PublishRecentItems(items);
+            _entryIds.Remove(item, out entryId);
+            var items = _items.ToList();
+            if (items.Remove(item))
+            {
+                _items = ToSnapshot(items);
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            PublishSnapshot();
         }
 
         if (string.IsNullOrEmpty(entryId))
@@ -243,10 +272,15 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async Task ClearAsync()
     {
-        InvalidatePendingLoads();
-        ClearRecentCollection();
-        _isLoaded = true;
-        PublishRecentItems([]);
+        lock (_stateLock)
+        {
+            InvalidatePendingLoadsLocked();
+            _entryIds = new();
+            _items = [];
+            _isLoaded = true;
+        }
+
+        PublishSnapshot();
 
         try
         {
@@ -266,7 +300,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
     }
 
-    public async Task HandleQueueSessionStartedAsync(QueueOrigin origin, MediaViewModel? media = null, bool isUpgrade = false)
+    public async Task HandleQueueSessionStartedAsync(QueueOrigin origin, MediaViewModel? media = null, string? replacedEntryId = null)
     {
         if (!_generalSettings.ShowRecent)
             return;
@@ -280,64 +314,72 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
 
         await LoadAsync();
-        if (!_generalSettings.ShowRecent)
-            return;
 
         string entryId = origin.GetEntryId();
         var now = DateTimeOffset.UtcNow;
-        string? replaceEntryId = isUpgrade ? _lastRecordedEntryId : null;
-        var items = _recentContext.Recent.ToList();
-
-        if (replaceEntryId is not null)
-        {
-            var upgradedPair = _entryIds.FirstOrDefault(kvp => kvp.Value == replaceEntryId);
-            if (upgradedPair.Key is { } upgradedTarget && upgradedPair.Value != entryId)
-            {
-                _entryIds.Remove(upgradedTarget);
-                items.Remove(upgradedTarget);
-            }
-        }
-
+        string? replaceEntryId = !string.IsNullOrEmpty(replacedEntryId) &&
+                                 !string.Equals(replacedEntryId, entryId, StringComparison.Ordinal)
+            ? replacedEntryId
+            : null;
         IRecentItem? targetVm;
 
-        var existingPair = _entryIds.FirstOrDefault(kvp => kvp.Value == entryId);
-        if (existingPair.Key is { } existing)
+        lock (_stateLock)
         {
-            if (existing is MediaCollectionViewModel collection && !string.IsNullOrEmpty(origin.Token))
-            {
-                collection.Token = origin.Token;
-            }
-
-            int existingIndex = items.IndexOf(existing);
-            if (existingIndex > 0)
-            {
-                items.RemoveAt(existingIndex);
-                items.Insert(0, existing);
-            }
-
-            targetVm = existing;
-        }
-        else
-        {
-            targetVm = ResolveLiveItemForOrigin(origin, media);
-            if (targetVm is null)
-            {
+            if (!_generalSettings.ShowRecent)
                 return;
-            }
 
-            _entryIds[targetVm] = entryId;
-            items.Insert(0, targetVm);
+            var items = _items.ToList();
 
-            while (items.Count > RecentContext.MaxRecentItems)
+            if (replaceEntryId is not null)
             {
-                IRecentItem tail = items[^1];
-                _entryIds.Remove(tail);
-                items.RemoveAt(items.Count - 1);
+                var upgradedPair = _entryIds.FirstOrDefault(kvp => kvp.Value == replaceEntryId);
+                if (upgradedPair.Key is { } upgradedTarget)
+                {
+                    _entryIds.Remove(upgradedTarget);
+                    items.Remove(upgradedTarget);
+                }
             }
+
+            var existingPair = _entryIds.FirstOrDefault(kvp => kvp.Value == entryId);
+            if (existingPair.Key is { } existing)
+            {
+                if (existing is MediaCollectionViewModel collection && !string.IsNullOrEmpty(origin.Token))
+                {
+                    collection.Token = origin.Token;
+                }
+
+                int existingIndex = items.IndexOf(existing);
+                if (existingIndex > 0)
+                {
+                    items.RemoveAt(existingIndex);
+                    items.Insert(0, existing);
+                }
+
+                targetVm = existing;
+            }
+            else
+            {
+                targetVm = ResolveLiveItemForOrigin(origin, media);
+                if (targetVm is null)
+                {
+                    return;
+                }
+
+                _entryIds[targetVm] = entryId;
+                items.Insert(0, targetVm);
+
+                while (items.Count > RecentContext.MaxRecentItems)
+                {
+                    IRecentItem tail = items[^1];
+                    _entryIds.Remove(tail);
+                    items.RemoveAt(items.Count - 1);
+                }
+            }
+
+            _items = ToSnapshot(items);
         }
 
-        _lastRecordedEntryId = entryId;
-        PublishRecentItems(items);
+        PublishSnapshot();
 
         try
         {
@@ -449,7 +491,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             {
                 foreach (PlaylistViewModel removedPlaylist in e.OldItems.OfType<PlaylistViewModel>())
                 {
-                    IRecentItem? match = _recentContext.Recent
+                    IRecentItem? match = Volatile.Read(ref _items)
                         .OfType<PlaylistViewModel>()
                         .FirstOrDefault(p => p.Id == removedPlaylist.Id);
                     if (match is not null)
@@ -476,31 +518,31 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
             else
             {
-                InvalidatePendingLoads();
-                ClearRecentCollection();
-                _isLoaded = false;
-                PublishRecentItems([]);
+                lock (_stateLock)
+                {
+                    InvalidatePendingLoadsLocked();
+                    _entryIds = new();
+                    _items = [];
+                    _isLoaded = false;
+                }
+
+                PublishSnapshot();
             }
         }
     }
 
-    private void InvalidatePendingLoads()
+    private void InvalidatePendingLoadsLocked()
     {
         _loadCts?.Cancel();
         _loadCts = null;
         _loadTask = null;
     }
 
-    private void ClearRecentCollection()
-    {
-        _entryIds.Clear();
-        _lastRecordedEntryId = null;
-    }
+    private static IRecentItem[] ToSnapshot(List<IRecentItem> items) =>
+        items.Count == 0 ? [] : [.. items];
 
-    private void PublishRecentItems(IReadOnlyList<IRecentItem> items) =>
-        _recentContext.Recent = items.Count == 0
-            ? []
-            : items as IRecentItem[] ?? [.. items];
+    private void PublishSnapshot() =>
+        _recentContext.Recent = Volatile.Read(ref _items);
 
     private async Task<MediaViewModel?> HydrateMediaViewModelAsync(RecentEntryDto entry)
     {

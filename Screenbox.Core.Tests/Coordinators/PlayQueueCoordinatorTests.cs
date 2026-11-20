@@ -186,4 +186,30 @@ public sealed partial class PlayQueueCoordinatorTests
         await Assert.That(track2.IsPlaying).IsTrue();
         await Assert.That(track2.IsPlayingIndividually).IsTrue();
     }
+
+    [Test]
+    public async Task SetQueue_WhenUpgradingSessionFromSingleToFolder_EmitsReplacedEntryId()
+    {
+        var (_, _, _, smtc, messenger) = CreatePlayQueueCoordinator();
+        using var _ = smtc;
+
+        var received = new List<QueueSessionStartedMessage>();
+        messenger.Register<QueueSessionStartedMessage>(this, (_, msg) => received.Add(msg));
+
+        var track1 = CreateDummyMedia("track1");
+        var track2 = CreateDummyMedia("track2");
+
+        var singleSession = new QueueSession(track1) { Origin = QueueOrigin.ForSingleMedia(track1) };
+        messenger.Send(new SetQueueMessage(singleSession, shouldPlay: false));
+
+        var upgradedSession = new QueueSession(0, new[] { track1, track2 }, singleSession)
+        {
+            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
+        };
+        messenger.Send(new SetQueueMessage(upgradedSession, shouldPlay: false));
+
+        await Assert.That(received.Count).IsEqualTo(2);
+        await Assert.That(received[0].ReplacedEntryId).IsNull();
+        await Assert.That(received[1].ReplacedEntryId).IsEqualTo(QueueOrigin.ForSingleMedia(track1).GetEntryId());
+    }
 }
