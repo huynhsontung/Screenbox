@@ -51,7 +51,7 @@ public interface IDatabaseService
 
     /// <summary>
     /// Upserts a recent entry and its items, optionally removing <paramref name="replaceEntryId"/>,
-    /// deduplicating by <see cref="RecentEntryDto.ContentHash"/>, and pruning entries beyond <paramref name="maxEntries"/>.
+    /// and pruning entries beyond <paramref name="maxEntries"/>.
     /// </summary>
     Task UpsertRecentEntryAsync(RecentEntryDto entry, string? replaceEntryId = null, int maxEntries = 100);
 

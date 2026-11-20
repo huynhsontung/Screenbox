@@ -1,6 +1,4 @@
 using System;
-using System.Security.Cryptography;
-using System.Text;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 
@@ -73,15 +71,15 @@ public sealed record QueueOrigin(
     }
 
     /// <summary>
-    /// Computes a deterministic SHA-256 content hash for comparing recent entries.
+    /// Gets a deterministic identifier for deduplicating recent entries by kind and normalized source key.
     /// </summary>
-    public static string ComputeContentHash(RecentItemKind kind, string sourceOrTitleKey)
-    {
-        using var sha256 = SHA256.Create();
-        string payload = $"{(int)kind}|{NormalizeLocation(sourceOrTitleKey)}";
-        byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(payload));
-        return Convert.ToHexString(hash).ToLowerInvariant();
-    }
+    public string GetEntryId() => GetEntryId(Kind, !string.IsNullOrEmpty(SourceId) ? SourceId : Title);
+
+    /// <summary>
+    /// Computes a deterministic identifier for the specified recent item kind and source or title key.
+    /// </summary>
+    public static string GetEntryId(RecentItemKind kind, string sourceOrTitleKey) =>
+        $"{(int)kind}|{NormalizeLocation(sourceOrTitleKey)}";
 
     /// <summary>
     /// Normalizes a media location or source key for comparison (case-insensitive for file paths, ordinal for non-file URIs).

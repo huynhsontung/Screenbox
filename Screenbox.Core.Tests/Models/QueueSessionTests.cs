@@ -118,16 +118,16 @@ public class QueueSessionTests
     }
 
     [Test]
-    public async Task QueueOrigin_ComputeContentHash_MatchesCaseInsensitivelyByKindAndSource()
+    public async Task QueueOrigin_GetEntryId_MatchesCaseInsensitivelyByKindAndSource()
     {
-        string hash1 = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Folder");
-        string hashSameCaseInsensitive = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"c:\folder");
-        string hashDifferentFolder = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\OtherFolder");
-        string hashDifferentKind = QueueOrigin.ComputeContentHash(RecentItemKind.Playlist, @"C:\Folder");
+        string id1 = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Folder");
+        string idSameCaseInsensitive = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"c:\folder");
+        string idDifferentFolder = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\OtherFolder");
+        string idDifferentKind = QueueOrigin.GetEntryId(RecentItemKind.Playlist, @"C:\Folder");
 
-        await Assert.That(hash1).IsEqualTo(hashSameCaseInsensitive);
-        await Assert.That(hash1).IsNotEqualTo(hashDifferentFolder);
-        await Assert.That(hash1).IsNotEqualTo(hashDifferentKind);
+        await Assert.That(id1).IsEqualTo(idSameCaseInsensitive);
+        await Assert.That(id1).IsNotEqualTo(idDifferentFolder);
+        await Assert.That(id1).IsNotEqualTo(idDifferentKind);
     }
 
     [Test]

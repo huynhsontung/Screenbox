@@ -19,8 +19,6 @@ public sealed class RecentEntryDto
 
     public string? Subtitle { get; set; }
 
-    public string ContentHash { get; set; } = string.Empty;
-
     public string? Token { get; set; }
 
     public DateTimeOffset LastPlayed { get; set; }

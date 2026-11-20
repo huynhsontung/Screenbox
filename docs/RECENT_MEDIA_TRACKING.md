@@ -155,7 +155,7 @@ Once `Origin` is unlinked, the active container card immediately clears its acti
 
 ## 🔑 Deduplication & Live Re-Playback Semantics
 
-Every entry computes a deterministic SHA-256 `ContentHash` from `(Kind, NormalizeLocation(SourceId))` (`recent_entries.content_hash`):
+Every entry computes a deterministic `id` key via `QueueOrigin.GetEntryId()` (`$"{(int)Kind}|{NormalizeLocation(SourceId)}"`):
 
 | `RecentItemKind` | Hash Key (`SourceId`) | Re-Playback Behavior from Home Page |
 |---|---|---|
@@ -188,7 +188,7 @@ Only **one** card in the Recent list displays the active playing badge at any ti
 `recent_entries` and `recent_entry_items` are replaceable cache tables managed in `DatabaseService.Schema.cs` and `DatabaseService.Recent.cs`:
 
 - **`recent_entries`**:
-  - `id` (`TEXT PRIMARY KEY`), `kind` (`INTEGER`), `source_id` (`TEXT`), `title` (`TEXT`), `subtitle` (`TEXT`), `content_hash` (`TEXT NOT NULL`), `token` (`TEXT`), `last_played` (`INTEGER`, UTC ticks).
+  - `id` (`TEXT PRIMARY KEY`), `kind` (`INTEGER`), `source_id` (`TEXT`), `title` (`TEXT`), `subtitle` (`TEXT`), `token` (`TEXT`), `last_played` (`INTEGER`, UTC ticks).
 - **`recent_entry_items`**:
   - `id` (`INTEGER PRIMARY KEY AUTOINCREMENT`), `entry_id` (`TEXT REFERENCES recent_entries(id) ON DELETE CASCADE`), `sort_order` (`INTEGER`), `path` (`TEXT`), `title` (`TEXT`), `media_type` (`INTEGER`), `duration_ticks` (`INTEGER`), `token` (`TEXT`).
   - Populated **only** for `SingleMedia` (1 row). Hydrated at startup via `LEFT JOIN media_records ON media_records.path = recent_entry_items.path` to avoid disk I/O for library files.

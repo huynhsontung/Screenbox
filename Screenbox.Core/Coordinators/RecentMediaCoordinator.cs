@@ -35,7 +35,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 {
     private sealed record RecentEntryMetadata(
         string EntryId,
-        string ContentHash,
         RecentItemKind Kind,
         string SourceId,
         DateTimeOffset LastPlayed);
@@ -127,10 +126,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         if (!_generalSettings.ShowRecent)
         {
-            InvalidatePendingLoads();
-            ClearRecentCollection();
-            _isLoaded = false;
-            PublishRecentItems(Array.Empty<IRecentItem>());
             return Task.CompletedTask;
         }
 
@@ -317,8 +312,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             ? containerOrigin
             : QueueOrigin.ForSingleMedia(fallbackItem);
 
-        string sourceKey = !string.IsNullOrEmpty(origin.SourceId) ? origin.SourceId : origin.Title;
-        string contentHash = QueueOrigin.ComputeContentHash(origin.Kind, sourceKey);
+        string entryId = origin.GetEntryId();
         var now = DateTimeOffset.UtcNow;
         string? replaceEntryId = isUpgrade ? _lastRecordedEntryId : null;
         var items = _recentContext.Recent.ToList();
@@ -326,20 +320,18 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         if (replaceEntryId is not null)
         {
             var upgradedPair = _metadata.FirstOrDefault(kvp => kvp.Value.EntryId == replaceEntryId);
-            if (upgradedPair.Key is { } upgradedTarget && upgradedPair.Value.ContentHash != contentHash)
+            if (upgradedPair.Key is { } upgradedTarget && upgradedPair.Value.EntryId != entryId)
             {
                 _metadata.Remove(upgradedTarget);
                 items.Remove(upgradedTarget);
             }
         }
 
-        string entryId = Guid.NewGuid().ToString();
         IRecentItem? targetVm = null;
 
-        var existingPair = _metadata.FirstOrDefault(kvp => kvp.Value.ContentHash == contentHash);
+        var existingPair = _metadata.FirstOrDefault(kvp => kvp.Value.EntryId == entryId);
         if (existingPair.Key is { } existing)
         {
-            entryId = existingPair.Value.EntryId;
             if (existing is MediaCollectionViewModel collection && !string.IsNullOrEmpty(origin.Token))
             {
                 collection.Token = origin.Token;
@@ -364,7 +356,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 return;
             }
 
-            var meta = new RecentEntryMetadata(entryId, contentHash, origin.Kind, origin.SourceId, now);
+            var meta = new RecentEntryMetadata(entryId, origin.Kind, origin.SourceId, now);
             _metadata[targetVm] = meta;
             items.Insert(0, targetVm);
 
@@ -389,7 +381,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             {
                 Id = entryId,
                 Kind = origin.Kind,
-                ContentHash = contentHash,
                 Title = origin.Title,
                 Subtitle = origin.Subtitle,
                 SourceId = origin.SourceId,
@@ -415,7 +406,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to persist recent media entry '{ContentHash}'.", contentHash);
+            _logger.LogError(ex, "Failed to persist recent media entry for kind '{Kind}'.", origin.Kind);
         }
     }
 
@@ -623,7 +614,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     }
 
     private static RecentEntryMetadata ToMetadata(RecentEntryDto entry) =>
-        new(entry.Id, entry.ContentHash, entry.Kind, entry.SourceId, entry.LastPlayed);
+        new(entry.Id, entry.Kind, entry.SourceId, entry.LastPlayed);
 
     private static RawMediaRecordDto ToRawMediaRecord(MediaViewModel media)
     {

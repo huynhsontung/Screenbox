@@ -288,13 +288,13 @@ public sealed class DatabaseServiceTests
         };
         await dbService.InitializeAsync();
 
+        string singleId = QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, @"C:\Music\track1.mp3");
         var singleEntry = new RecentEntryDto
         {
-            Id = "entry_1",
+            Id = singleId,
             Kind = RecentItemKind.SingleMedia,
             SourceId = @"C:\Music\track1.mp3",
             Title = "Track 1",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, @"C:\Music\track1.mp3"),
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-10),
             Items = [new RawMediaRecordDto { Path = @"C:\Music\track1.mp3", Title = "Track 1", MediaType = MediaPlaybackType.Music, Token = "token_abc" }]
         };
@@ -303,38 +303,37 @@ public sealed class DatabaseServiceTests
 
         var loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded).HasSingleItem();
-        await Assert.That(loaded[0].Id).IsEqualTo("entry_1");
+        await Assert.That(loaded[0].Id).IsEqualTo(singleId);
         await Assert.That(loaded[0].Items).HasSingleItem();
         await Assert.That(loaded[0].Items[0].Path).IsEqualTo(@"C:\Music\track1.mp3");
         await Assert.That(loaded[0].Items[0].Token).IsEqualTo("token_abc");
 
+        string folderId = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Music");
         var upgradedFolderEntry = new RecentEntryDto
         {
-            Id = "entry_2",
+            Id = folderId,
             Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\Music",
             Title = "Music",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music"),
             Token = "folder_token_123",
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-5),
         };
 
-        await dbService.UpsertRecentEntryAsync(upgradedFolderEntry, replaceEntryId: "entry_1");
+        await dbService.UpsertRecentEntryAsync(upgradedFolderEntry, replaceEntryId: singleId);
 
         loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded).HasSingleItem();
-        await Assert.That(loaded[0].Id).IsEqualTo("entry_2");
+        await Assert.That(loaded[0].Id).IsEqualTo(folderId);
         await Assert.That(loaded[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
         await Assert.That(loaded[0].Token).IsEqualTo("folder_token_123");
         await Assert.That(loaded[0].Items).IsEmpty();
 
         var duplicateFolderEntry = new RecentEntryDto
         {
-            Id = "entry_3",
+            Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"c:\music"),
             Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\Music",
             Title = "Music",
-            ContentHash = upgradedFolderEntry.ContentHash,
             Token = "folder_token_456",
             LastPlayed = DateTimeOffset.UtcNow,
         };
@@ -342,7 +341,7 @@ public sealed class DatabaseServiceTests
         await dbService.UpsertRecentEntryAsync(duplicateFolderEntry);
         loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded).HasSingleItem();
-        await Assert.That(loaded[0].Id).IsEqualTo("entry_3");
+        await Assert.That(loaded[0].Id).IsEqualTo(folderId);
         await Assert.That(loaded[0].Token).IsEqualTo("folder_token_456");
 
         for (int i = 0; i < 4; i++)
@@ -351,11 +350,10 @@ public sealed class DatabaseServiceTests
             await dbService.UpsertRecentEntryAsync(
                 new RecentEntryDto
                 {
-                    Id = $"vid_{i}",
+                    Id = QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, path),
                     Kind = RecentItemKind.SingleMedia,
                     SourceId = path,
                     Title = $"Video {i}",
-                    ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, path),
                     LastPlayed = DateTimeOffset.UtcNow.AddSeconds(i + 1),
                     Items = [new RawMediaRecordDto { Path = path, Title = $"Video {i}", MediaType = MediaPlaybackType.Video }]
                 },
@@ -364,10 +362,10 @@ public sealed class DatabaseServiceTests
 
         loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded.Count).IsEqualTo(2);
-        await Assert.That(loaded[0].Id).IsEqualTo("vid_3");
-        await Assert.That(loaded[1].Id).IsEqualTo("vid_2");
+        await Assert.That(loaded[0].Id).IsEqualTo(QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, @"C:\Videos\vid3.mp4"));
+        await Assert.That(loaded[1].Id).IsEqualTo(QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, @"C:\Videos\vid2.mp4"));
 
-        await dbService.DeleteRecentEntryAsync("vid_3");
+        await dbService.DeleteRecentEntryAsync(loaded[0].Id);
         loaded = await dbService.LoadRecentEntriesAsync();
         await Assert.That(loaded).HasSingleItem();
 

@@ -212,12 +212,11 @@ public sealed class RecentMediaCoordinatorTests
         var albumKey = AlbumViewModelFactory.GetAlbumKey("Abbey Road", "The Beatles");
         await dbService.UpsertRecentEntryAsync(new RecentEntryDto
         {
-            Id = "entry_album",
+            Id = QueueOrigin.GetEntryId(RecentItemKind.Album, albumKey),
             Kind = RecentItemKind.Album,
             SourceId = albumKey,
             Title = "Abbey Road",
             Subtitle = "The Beatles",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.Album, albumKey),
             LastPlayed = DateTimeOffset.UtcNow
         });
 
@@ -267,22 +266,20 @@ public sealed class RecentMediaCoordinatorTests
         string playlistId = Guid.NewGuid().ToString();
         await dbService.UpsertRecentEntryAsync(new RecentEntryDto
         {
-            Id = "entry_playlist",
+            Id = QueueOrigin.GetEntryId(RecentItemKind.Playlist, playlistId),
             Kind = RecentItemKind.Playlist,
             SourceId = playlistId,
             Title = "Road Trip",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.Playlist, playlistId),
             LastPlayed = DateTimeOffset.UtcNow
         });
 
         await dbService.UpsertRecentEntryAsync(new RecentEntryDto
         {
-            Id = "entry_folder",
+            Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\MusicFolder"),
             Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\MusicFolder",
             Title = "MusicFolder",
             Token = "tok_1",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\MusicFolder"),
             LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-1)
         });
 
@@ -364,9 +361,8 @@ public sealed class RecentMediaCoordinatorTests
         tcs.SetResult([
             new RecentEntryDto
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, "https://example.com/SavedTrack.mp3"),
                 Kind = RecentItemKind.SingleMedia,
-                ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.SingleMedia, "https://example.com/SavedTrack.mp3"),
                 Title = "SavedTrack",
                 SourceId = "https://example.com/SavedTrack.mp3",
                 LastPlayed = DateTimeOffset.UtcNow,
@@ -391,11 +387,10 @@ public sealed class RecentMediaCoordinatorTests
         var flakyDb = new FlakyDatabaseService(failFirstLoad: true);
         flakyDb.Entries.Add(new RecentEntryDto
         {
-            Id = "e1",
+            Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Music"),
             Kind = RecentItemKind.MediaCollection,
             SourceId = @"C:\Music",
             Title = "Music",
-            ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Music"),
             LastPlayed = DateTimeOffset.UtcNow
         });
 
@@ -453,11 +448,10 @@ public sealed class RecentMediaCoordinatorTests
         tcs.SetResult([
             new RecentEntryDto
             {
-                Id = "stale",
+                Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Stale"),
                 Kind = RecentItemKind.MediaCollection,
                 SourceId = @"C:\Stale",
                 Title = "Stale",
-                ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Stale"),
                 LastPlayed = DateTimeOffset.UtcNow
             }
         ]);
@@ -481,11 +475,10 @@ public sealed class RecentMediaCoordinatorTests
             {
                 new()
                 {
-                    Id = "fresh",
+                    Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Fresh"),
                     Kind = RecentItemKind.MediaCollection,
                     SourceId = @"C:\Fresh",
                     Title = "Fresh",
-                    ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Fresh"),
                     LastPlayed = DateTimeOffset.UtcNow
                 }
             });
@@ -514,11 +507,10 @@ public sealed class RecentMediaCoordinatorTests
         staleTcs.SetResult([
             new RecentEntryDto
             {
-                Id = "stale",
+                Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Stale"),
                 Kind = RecentItemKind.MediaCollection,
                 SourceId = @"C:\Stale",
                 Title = "Stale",
-                ContentHash = QueueOrigin.ComputeContentHash(RecentItemKind.MediaCollection, @"C:\Stale"),
                 LastPlayed = DateTimeOffset.UtcNow
             }
         ]);

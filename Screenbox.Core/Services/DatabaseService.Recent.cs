@@ -20,7 +20,7 @@ public sealed partial class DatabaseService
         using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = """
-                SELECT id, kind, source_id, title, subtitle, content_hash, token, last_played
+                SELECT id, kind, source_id, title, subtitle, token, last_played
                 FROM recent_entries
                 ORDER BY last_played DESC
                 LIMIT @max;
@@ -37,9 +37,8 @@ public sealed partial class DatabaseService
                     SourceId = reader.GetString(2),
                     Title = reader.GetString(3),
                     Subtitle = reader.IsDBNull(4) ? null : reader.GetString(4),
-                    ContentHash = reader.GetString(5),
-                    Token = reader.IsDBNull(6) ? null : reader.GetString(6),
-                    LastPlayed = new DateTimeOffset(reader.GetInt64(7), TimeSpan.Zero),
+                    Token = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    LastPlayed = new DateTimeOffset(reader.GetInt64(6), TimeSpan.Zero),
                 });
             }
         }
@@ -70,29 +69,19 @@ public sealed partial class DatabaseService
             deleteReplacedCmd.ExecuteNonQuery();
         }
 
-        // Remove any existing duplicate row with the same content_hash if its id differs
-        using (var deleteDuplicateCmd = connection.CreateCommand())
-        {
-            deleteDuplicateCmd.CommandText = "DELETE FROM recent_entries WHERE content_hash = @hash AND id <> @id;";
-            deleteDuplicateCmd.Parameters.AddWithValue("@hash", entry.ContentHash);
-            deleteDuplicateCmd.Parameters.AddWithValue("@id", entry.Id);
-            deleteDuplicateCmd.ExecuteNonQuery();
-        }
-
         using (var upsertCmd = connection.CreateCommand())
         {
             upsertCmd.CommandText = """
                 INSERT OR REPLACE INTO recent_entries
-                    (id, kind, source_id, title, subtitle, content_hash, token, last_played)
+                    (id, kind, source_id, title, subtitle, token, last_played)
                 VALUES
-                    (@id, @kind, @sourceId, @title, @subtitle, @hash, @token, @lastPlayed);
+                    (@id, @kind, @sourceId, @title, @subtitle, @token, @lastPlayed);
                 """;
             upsertCmd.Parameters.AddWithValue("@id", entry.Id);
             upsertCmd.Parameters.AddWithValue("@kind", (int)entry.Kind);
             upsertCmd.Parameters.AddWithValue("@sourceId", entry.SourceId);
             upsertCmd.Parameters.AddWithValue("@title", entry.Title);
             upsertCmd.Parameters.AddWithValue("@subtitle", (object?)entry.Subtitle ?? DBNull.Value);
-            upsertCmd.Parameters.AddWithValue("@hash", entry.ContentHash);
             upsertCmd.Parameters.AddWithValue("@token", (object?)entry.Token ?? DBNull.Value);
             upsertCmd.Parameters.AddWithValue("@lastPlayed", entry.LastPlayed.UtcTicks);
             upsertCmd.ExecuteNonQuery();
