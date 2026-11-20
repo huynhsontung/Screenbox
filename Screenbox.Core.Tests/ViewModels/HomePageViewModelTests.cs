@@ -73,7 +73,7 @@ public sealed class HomePageViewModelTests
 
         messenger.Register<SetQueueMessage>(this, (_, msg) =>
         {
-            queuedItems = msg.Value.GetCanonicalItems();
+            queuedItems = msg.Value.Items;
         });
 
         await vm.PlaySelectedNextCommand.ExecuteAsync(null);

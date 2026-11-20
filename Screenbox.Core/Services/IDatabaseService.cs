@@ -50,14 +50,14 @@ public interface IDatabaseService
     Task<List<RecentEntryDto>> LoadRecentEntriesAsync(int maxEntries = 100);
 
     /// <summary>
-    /// Upserts a recent entry and its items, optionally removing <paramref name="replaceEntryId"/>,
+    /// Upserts a recent entry, optionally removing <paramref name="replaceEntryId"/>,
     /// and pruning entries beyond <paramref name="maxEntries"/>.
     /// </summary>
     Task UpsertRecentEntryAsync(RecentEntryDto entry, string? replaceEntryId = null, int maxEntries = 100);
 
-    /// <summary>Deletes a single recent entry and cascades to its items.</summary>
+    /// <summary>Deletes a single recent entry.</summary>
     Task DeleteRecentEntryAsync(string id);
 
-    /// <summary>Clears all recent entries and their items.</summary>
+    /// <summary>Clears all recent entries.</summary>
     Task ClearRecentEntriesAsync();
 }

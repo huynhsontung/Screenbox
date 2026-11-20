@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
-using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Tests.Models;
@@ -93,28 +90,6 @@ public class QueueSessionTests
 
         await Assert.That(copy.SessionId).IsEqualTo(original.SessionId);
         await Assert.That(copy.Origin).IsSameReferenceAs(origin);
-    }
-
-    [Test]
-    public async Task QueueSession_GetCanonicalItems_ReturnsOriginalOrderMinusRemovalsWhenShuffled()
-    {
-        var item1 = CreateDummyMedia("song1");
-        var item2 = CreateDummyMedia("song2");
-        var item3 = CreateDummyMedia("song3");
-        var original = new QueueSession(0, new[] { item1, item2, item3 });
-
-        var queueService = new QueueService(null!, null!);
-        var shuffled = queueService.Shuffle(original);
-        shuffled.Items.Remove(item2);
-        queueService.UpdateShuffleBackup(
-            shuffled,
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item2));
-
-        var canonical = shuffled.GetCanonicalItems();
-
-        await Assert.That(canonical.Count).IsEqualTo(2);
-        await Assert.That(canonical[0]).IsEqualTo(item1);
-        await Assert.That(canonical[1]).IsEqualTo(item3);
     }
 
     [Test]

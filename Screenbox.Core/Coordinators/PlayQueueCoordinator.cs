@@ -54,9 +54,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private readonly PlayQueueContext _context;
     private readonly IQueueService _queueService;
     private readonly IPlaybackControlService _playbackControlService;
-
-    private readonly IFilesService _filesService;
-    private readonly GeneralSettingsContext _generalSettings;
     private readonly PlaybackSettingsContext _playbackSettings;
     private readonly ISystemMediaTransportControlsService _transportControlsService;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -84,9 +81,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         PlayQueueContext context,
         IQueueService queueService,
         IPlaybackControlService playbackControlService,
-
-        IFilesService filesService,
-        GeneralSettingsContext generalSettings,
         PlaybackSettingsContext playbackSettings,
         ISystemMediaTransportControlsService transportControlsService,
         MediaViewModelFactory mediaFactory,
@@ -99,10 +93,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _context = context;
         _queueService = queueService;
         _playbackControlService = playbackControlService;
-
-
-        _filesService = filesService;
-        _generalSettings = generalSettings;
         _playbackSettings = playbackSettings;
         _transportControlsService = transportControlsService;
         _mediaFactory = mediaFactory;
@@ -551,20 +541,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     // sees a collection origin and does not emit a separate SingleMedia session for newVms[0].
                     _queueSession.Origin = QueueOrigin.ForMediaCollection(placeholder.Name, placeholder.Location);
                     _context.ActiveOrigin = _queueSession.Origin;
-                    bool isUpgrade = _queueSession.SessionId == _recordedSessionId &&
-                                     _recordedOriginKind == RecentItemKind.SingleMedia;
-                    _recordedSessionId = _queueSession.SessionId;
-                    _recordedOriginKind = RecentItemKind.MediaCollection;
-
-                    // ReplaceItemInQueue temporarily left _queueSession.CurrentIndex at -1 when removing the active
-                    // placeholder; construct the snapshot with newVms[0] as the active item so recent-media
-                    // tracking records the expanded item's actual queue position as InitialIndex.
-                    MediaViewModel targetItem = shouldAutoPlay && _context.CurrentItem is null
-                        ? newVms[0]
-                        : (_context.CurrentItem ?? newVms[0]);
-                    Messenger.Send(new QueueSessionStartedMessage(
-                        new QueueSession(targetItem, _queueSession.Items, _queueSession),
-                        isUpgrade));
+                    RecordContainerOrigin(_queueSession.Origin);
                 }
 
                 // Only start playback of the first child if the placeholder was the active/target item.
@@ -600,29 +577,16 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     var newVms = subItems.Select(_mediaFactory.Create).ToList();
                     if (ReplaceItemInQueue(vm, newVms))
                     {
-                        bool shouldUpgradeOrigin = newVms.Count > 1 &&
-                                                   (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually);
-                        bool isUpgrade = false;
-                        if (shouldUpgradeOrigin)
+                        if (newVms.Count > 1 && (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually))
                         {
                             // Upgrade the session origin before calling SetCurrentItem so ProcessCurrentItemChangedAsync
                             // sees TrackItemsIndividually == false and does not emit a duplicate SingleMedia session.
                             _queueSession.Origin = QueueOrigin.ForMediaCollection(vm.Name, vm.Location);
                             _context.ActiveOrigin = _queueSession.Origin;
-                            isUpgrade = _queueSession.SessionId == _recordedSessionId &&
-                                        _recordedOriginKind == RecentItemKind.SingleMedia;
-                            _recordedSessionId = _queueSession.SessionId;
-                            _recordedOriginKind = RecentItemKind.MediaCollection;
+                            RecordContainerOrigin(_queueSession.Origin);
                         }
 
-                        // Select newVms[0] before broadcasting QueueSessionStartedMessage so _queueSession.CurrentIndex
-                        // and CurrentItem reflect the first expanded sub-item rather than -1 after removing vm.
                         SetCurrentItem(newVms[0], shouldPlay: true);
-
-                        if (shouldUpgradeOrigin)
-                        {
-                            Messenger.Send(new QueueSessionStartedMessage(new QueueSession(_queueSession), isUpgrade));
-                        }
                     }
                 }
 
@@ -766,14 +730,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _dispatcherQueue.TryExecuteOrEnqueue(() =>
                 {
                     if (_context.CurrentItem != value) return;
-                    _recordedSessionId = _queueSession.SessionId;
-                    _recordedOriginKind = RecentItemKind.SingleMedia;
-                    var singleQueue = new QueueSession(value)
-                    {
-                        SessionId = _queueSession.SessionId,
-                        Origin = QueueOrigin.ForSingleMedia(value)
-                    };
-                    Messenger.Send(new QueueSessionStartedMessage(singleQueue, IsUpgrade: false));
+                    RecordSingleMedia(value);
                 });
             }
 
@@ -785,10 +742,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             if (token.IsCancellationRequested || _context.CurrentItem != value) return;
 
             _bufferManager.UpdateBuffer(MediaPlayer, _queueSession, _context.RepeatMode);
-            await Task.WhenAll(
-                _generalSettings.ShowRecent ? _filesService.AddToRecentAsync(value.Source, token) : Task.CompletedTask,
-                _transportControlsService.UpdateTransportControlsDisplayAsync(value)
-            );
+            await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
         }
         catch (OperationCanceledException)
         {
@@ -829,11 +783,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 if (!playlist.IsEmpty && playlist.Origin is { TrackItemsIndividually: false } &&
                     (playlist.SessionId != _recordedSessionId || _recordedOriginKind != playlist.Origin.Kind))
                 {
-                    bool isUpgrade = playlist.SessionId == _recordedSessionId &&
-                                     _recordedOriginKind == RecentItemKind.SingleMedia;
-                    _recordedSessionId = playlist.SessionId;
-                    _recordedOriginKind = playlist.Origin.Kind;
-                    Messenger.Send(new QueueSessionStartedMessage(new QueueSession(playlist), isUpgrade));
+                    RecordContainerOrigin(playlist.Origin);
                 }
                 _context.ShuffleMode = playlist.ShuffleMode;
 
@@ -859,14 +809,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                     (playlist.Origin is null || playlist.Origin.TrackItemsIndividually) &&
                     playlist.SessionId != _recordedSessionId)
                 {
-                    _recordedSessionId = playlist.SessionId;
-                    _recordedOriginKind = RecentItemKind.SingleMedia;
-                    var singleQueue = new QueueSession(activeItem)
-                    {
-                        SessionId = playlist.SessionId,
-                        Origin = QueueOrigin.ForSingleMedia(activeItem)
-                    };
-                    Messenger.Send(new QueueSessionStartedMessage(singleQueue, IsUpgrade: false));
+                    RecordSingleMedia(activeItem);
                 }
             }
             finally
@@ -1117,6 +1060,22 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             UpdateCurrentItemIndividualPlayingState();
             BroadcastPlaybackState();
         }
+    }
+
+    private void RecordContainerOrigin(QueueOrigin origin)
+    {
+        bool isUpgrade = _queueSession.SessionId == _recordedSessionId &&
+                         _recordedOriginKind == RecentItemKind.SingleMedia;
+        _recordedSessionId = _queueSession.SessionId;
+        _recordedOriginKind = origin.Kind;
+        Messenger.Send(new QueueSessionStartedMessage(origin, IsUpgrade: isUpgrade));
+    }
+
+    private void RecordSingleMedia(MediaViewModel media)
+    {
+        _recordedSessionId = _queueSession.SessionId;
+        _recordedOriginKind = RecentItemKind.SingleMedia;
+        Messenger.Send(new QueueSessionStartedMessage(QueueOrigin.ForSingleMedia(media), media));
     }
 
     private void UpdateCurrentItemIndividualPlayingState()

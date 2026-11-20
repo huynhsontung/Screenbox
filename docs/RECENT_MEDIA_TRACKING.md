@@ -27,8 +27,9 @@ Screenbox's Recent Media system records **shortcuts to live queue origins** rath
 Key characteristics:
 - **Capacity**: Up to **100 items** (`RecentContext.MaxRecentItems = 100`), ordered by `last_played DESC`.
 - **Live Origin Shortcuts**: Recent entries represent live sources—a single file/URL (`MediaViewModel`), Folder or `.m3u`/`.m3u8` playlist file (`MediaCollectionViewModel`), User Playlist (`PlaylistViewModel`), Album (`AlbumViewModel`), or Artist (`ArtistViewModel`). Re-opening any container card resolves and plays its **current live contents** (e.g., new files added to a folder or new songs added under an artist).
-- **No Snapshot Rows for Containers**: Only `SingleMedia` stores a track record in `recent_entry_items`. Container shortcuts persist metadata and any required UWP folder/file MRU token directly on `recent_entries`.
+- **Single-Table Shortcut Storage**: All five entry types persist exclusively in a single `recent_entries` table. `SingleMedia` entries enrich metadata at startup via a single `LEFT JOIN media_records` query without duplicate child rows.
 - **Queue Mutation Unlinking**: Advancing (`Next`/`Previous`), shuffling/unshuffling, or reordering items inside an active container session preserves its `QueueOrigin`. Adding or removing items from the queue unlinks the container origin so subsequent track navigations record played tracks individually.
+- **UI-Driven Thumbnail Loading**: `HomePage.xaml` attaches `ThumbnailGridViewBehavior` to `RecentFilesGridView` so thumbnails load lazily only for realized/visible containers (`AlbumViewModel.LoadAlbumArtAsync()` decodes only `RelatedSongs[0]`).
 
 ---
 
@@ -54,18 +55,18 @@ flowchart TD
     subgraph RecentManagement["Recent Media Management (Singleton)"]
         RMC["RecentMediaCoordinator\n(IRecentMediaCoordinator)"]
         RContext["RecentContext\n(IReadOnlyList<IRecentItem>, Max=100)"]
-        DB["DatabaseService (SQLite)\nrecent_entries + recent_entry_items"]
+        DB["DatabaseService (SQLite)\nrecent_entries (+ LEFT JOIN media_records)"]
     end
 
     subgraph UI["Presentation Layer (Transient)"]
         HPVM["HomePageViewModel\n(ObservableCollection<IRecentItem> via SyncItems)"]
-        HP["HomePage.xaml\n(RecentItemTemplateSelector + GridViewItemTemplates)"]
+        HP["HomePage.xaml\n(RecentItemTemplateSelector + ThumbnailGridViewBehavior)"]
     end
 
     PlaybackInitiators -->|"PlayMediaMessage / SetQueueMessage\n(QueueSession + QueueOrigin)"| PQC
     PQC -->|"Updates ActiveSessionId, ActiveOrigin, CurrentItem\n& MediaViewModel.IsPlayingIndividually"| PQContext
     PQC -->|"QueuePlaybackStateChangedMessage"| RContext
-    PQC -->|"QueueSessionStartedMessage(Queue, IsUpgrade)"| RMC
+    PQC -->|"QueueSessionStartedMessage(Origin, Media?, IsUpgrade)"| RMC
     RMC <-->|"Load / Upsert / Delete / Prune 100"| DB
     RMC -->|"Publishes atomic IReadOnlyList<IRecentItem> snapshots"| RContext
     RContext -->|"PropertyChangedMessage<IReadOnlyList<IRecentItem>>"| HPVM
@@ -75,10 +76,10 @@ flowchart TD
 | Component | Lifetime | Responsibility |
 |---|---|---|
 | `IRecentItem` | Interface | Minimal shared contract (`INotifyPropertyChanged`, `Name`, `IsPlaying`) implemented directly by all 5 item ViewModel types. |
-| `QueueSession` | Per queue snapshot | Carries `SessionId` (`Guid`), `Origin` (`QueueOrigin?`), and `GetCanonicalItems()`. |
+| `QueueSession` | Per queue | Carries `SessionId` (`Guid`), `Items`, `CurrentIndex`, and `Origin` (`QueueOrigin?`). |
 | `QueueOrigin` | Immutable record | Describes the source container (`Kind`, `SourceId`, `Title`, `Subtitle`, `Token`, `TrackItemsIndividually`). |
 | `PlayQueueCoordinator` | Singleton | Owns the active `QueueSession`, updates `PlayQueueContext`, maintains `MediaViewModel.IsPlayingIndividually`, unlinks `Origin` on add/remove mutations, and broadcasts `QueueSessionStartedMessage` / `QueuePlaybackStateChangedMessage`. |
-| `RecentMediaCoordinator` | Singleton | Listens to `QueueSessionStartedMessage`, `PropertyChangedMessage<MusicLibrary>` (reloading on scan completion), `Playlists.CollectionChanged` (`Remove`), and `GeneralSettings.ShowRecent`; builds local item lists per operation (displaying non-playable empty ViewModels when libraries/playlists are not yet loaded, then replacing them and reusing `MediaCollectionViewModel`s on `LoadAsync(forceReload: true)`), publishes atomic snapshots to `RecentContext.Recent`, and persists entries to SQLite. |
+| `RecentMediaCoordinator` | Singleton | Listens to `QueueSessionStartedMessage`, `PropertyChangedMessage<MusicLibrary>` (reloading on scan completion), `Playlists.CollectionChanged` (`Remove`), and `GeneralSettings.ShowRecent`; builds local item lists per operation (displaying non-playable empty ViewModels when libraries/playlists are not yet loaded, then replacing them and reusing `MediaCollectionViewModel`s on `LoadAsync(forceReload: true)`), publishes atomic snapshots to `RecentContext.Recent`, and persists entries to `recent_entries`. |
 | `RecentContext` | Singleton | Observable recipient holding the snapshot `IReadOnlyList<IRecentItem> Recent` (`[NotifyPropertyChangedRecipients]`) and `MaxRecentItems = 100`. |
 | `MediaCollectionViewModel` | Per folder / `.m3u` card | Lightweight ViewModel representing a live Folder or playlist-file (`.m3u`/`.m3u8`/URI) shortcut; resolves live items on demand via MRU token and `IQueueService`. |
 | `HomePageViewModel` | Transient | Maintains a local `ObservableCollection<IRecentItem> Recent` synced from `RecentContext.Recent` via `SyncItems()` + `TryExecuteOrEnqueue()`, and handles `Play`, `PlayNext`, `AddToQueue`, `Remove`, context flyout resolution, and multi-select actions via pattern matching on `IRecentItem`. |
@@ -88,13 +89,13 @@ flowchart TD
 
 ## 📦 Supported Recent Entry Types (`IRecentItem`)
 
-| `RecentItemKind` | Concrete ViewModel | Trigger Scenarios | Home Card Template | Stored in `recent_entry_items`? |
+| `RecentItemKind` | Concrete ViewModel | Trigger Scenarios | Home Card Template | Startup Hydration Source |
 |---|---|---|---|---|
-| `SingleMedia` (`0`) | `MediaViewModel` | Single local file, network/stream URL, loose multi-file track playback, or individual track from a library-wide queue (`SongsPage`, `AllVideosPage`, `SearchResultPage` songs). | `MediaGridViewItemTemplate` | **Yes** (1 row + file MRU token) |
-| `MediaCollection` (`1`) | `MediaCollectionViewModel` | Dropped/opened Folder (`StorageFolder`), auto-enqueued neighboring folder ($\ge 2$ playable files), `.m3u`/`.m3u8` playlist file, or URL with sub-items. | `MediaCollectionGridViewItemTemplate` (`FolderGlyph` / `PlaylistGlyph`) | **No** (0 rows; container path + MRU `token` stored on `recent_entries`) |
-| `Playlist` (`2`) | `PlaylistViewModel` | Playing a saved playlist from `PlaylistsPage` or `PlaylistDetailsPage`. | `PlaylistGridViewItemTemplate` (`PlaylistGlyph`) | **No** (0 rows; resolved live from `PlaylistsContext.Playlists`) |
-| `Album` (`3`) | `AlbumViewModel` | Playing an album from `AlbumsPage`, `AlbumDetailsPage`, or `SearchResultPage`. | `AlbumGridViewItemTemplate` | **No** (0 rows; resolved/swapped live from `LibraryContext.Music.Albums`) |
-| `Artist` (`4`) | `ArtistViewModel` | Playing an artist from `ArtistsPage`, `ArtistDetailsPage`, or `SearchResultPage`. | `ArtistGridViewItemTemplate` | **No** (0 rows; resolved/swapped live from `LibraryContext.Music.Artists`) |
+| `SingleMedia` (`0`) | `MediaViewModel` | Single local file, network/stream URL, loose multi-file track playback, or individual track from a library-wide queue (`SongsPage`, `AllVideosPage`, `SearchResultPage` songs). | `MediaGridViewItemTemplate` | `recent_entries` (`token` + `LEFT JOIN media_records`) |
+| `MediaCollection` (`1`) | `MediaCollectionViewModel` | Dropped/opened Folder (`StorageFolder`), auto-enqueued neighboring folder ($\ge 2$ playable files), `.m3u`/`.m3u8` playlist file, or URL with sub-items. | `MediaCollectionGridViewItemTemplate` (`FolderGlyph` / `PlaylistGlyph`) | `recent_entries` (path + MRU `token`) |
+| `Playlist` (`2`) | `PlaylistViewModel` | Playing a saved playlist from `PlaylistsPage` or `PlaylistDetailsPage`. | `PlaylistGridViewItemTemplate` (`PlaylistGlyph`) | Resolved/swapped live from `PlaylistsContext.Playlists` |
+| `Album` (`3`) | `AlbumViewModel` | Playing an album from `AlbumsPage`, `AlbumDetailsPage`, or `SearchResultPage`. | `AlbumGridViewItemTemplate` | Resolved/swapped live from `LibraryContext.Music.Albums` |
+| `Artist` (`4`) | `ArtistViewModel` | Playing an artist from `ArtistsPage`, `ArtistDetailsPage`, or `SearchResultPage`. | `ArtistGridViewItemTemplate` | Resolved/swapped live from `LibraryContext.Music.Artists` |
 
 ---
 
@@ -134,7 +135,7 @@ Two playback flows start as a 1-item `SingleMedia` queue and asynchronously expa
 2. **Expandable URL Sub-Items (`PlayQueueCoordinator.CheckSubItemsAsync`)**:
    - Opening a URL starts as `SingleMedia`. If LibVLC parses $> 1$ sub-items, `CheckSubItemsAsync` upgrades `_queueSession.Origin` to `MediaCollection(title, url)` within the same `SessionId`.
 
-When `PlayQueueCoordinator` detects `_recordedSessionId == queueSession.SessionId` transitioning from `SingleMedia` to `MediaCollection`, it sends `QueueSessionStartedMessage(playlist, IsUpgrade: true)`, replacing the temporary `SingleMedia` entry in-place with the `MediaCollectionViewModel` shortcut.
+When `PlayQueueCoordinator` detects `_recordedSessionId == queueSession.SessionId` transitioning from `SingleMedia` to `MediaCollection`, it sends `QueueSessionStartedMessage(Origin, IsUpgrade: true)`, replacing the temporary `SingleMedia` entry in-place with the `MediaCollectionViewModel` shortcut.
 
 ### In-Queue Mutations & Origin Unlinking
 
@@ -157,7 +158,7 @@ Once `Origin` is unlinked, the active container card immediately clears its acti
 
 Every entry computes a deterministic `id` key via `QueueOrigin.GetEntryId()` (`$"{(int)Kind}|{NormalizeLocation(SourceId)}"`):
 
-| `RecentItemKind` | Hash Key (`SourceId`) | Re-Playback Behavior from Home Page |
+| `RecentItemKind` | Source Key (`SourceId`) | Re-Playback Behavior from Home Page |
 |---|---|---|
 | `SingleMedia` | File path or URL | Resolves cached `MediaViewModel` (reopening picker MRU token if outside libraries) and sends `PlayMediaMessage(media, existing: false)`. |
 | `MediaCollection` | Folder path, `.m3u` file path, or URL | Resolves live `StorageFolder` / `StorageFile` (via retained MRU `Token` or path fallback) and parses current live items via `IQueueService`. |
@@ -183,19 +184,17 @@ Only **one** card in the Recent list displays the active playing badge at any ti
 
 ## 💾 SQLite Persistence & UWP File Access
 
-### Database Tables (`screenbox.db`)
+### Database Table (`screenbox.db`)
 
-`recent_entries` and `recent_entry_items` are replaceable cache tables managed in `DatabaseService.Schema.cs` and `DatabaseService.Recent.cs`:
+`recent_entries` is a replaceable cache table managed in `DatabaseService.Schema.cs` and `DatabaseService.Recent.cs`:
 
 - **`recent_entries`**:
   - `id` (`TEXT PRIMARY KEY`), `kind` (`INTEGER`), `source_id` (`TEXT`), `title` (`TEXT`), `subtitle` (`TEXT`), `token` (`TEXT`), `last_played` (`INTEGER`, UTC ticks).
-- **`recent_entry_items`**:
-  - `id` (`INTEGER PRIMARY KEY AUTOINCREMENT`), `entry_id` (`TEXT REFERENCES recent_entries(id) ON DELETE CASCADE`), `sort_order` (`INTEGER`), `path` (`TEXT`), `title` (`TEXT`), `media_type` (`INTEGER`), `duration_ticks` (`INTEGER`), `token` (`TEXT`).
-  - Populated **only** for `SingleMedia` (1 row). Hydrated at startup via `LEFT JOIN media_records ON media_records.path = recent_entry_items.path` to avoid disk I/O for library files.
+  - Loaded in a **single query** with `LEFT JOIN media_records ON re.kind = @singleKind AND mr.path = re.source_id` so library-indexed `SingleMedia` entries hydrate cached metadata without disk I/O.
 
 ### UWP Sandbox Access (`MostRecentlyUsedList`)
 
-Because Screenbox runs in the UWP app container without `broadFileSystemAccess`, files and folders outside the Music/Videos libraries require OS-level capability tokens across app restarts:
-- **Single files (`SingleMedia`)**: `RecentMediaCoordinator.ToRawMediaRecord` captures/retains the file's MRU token in `recent_entry_items.token` and `IFileMediaSource.Token`, reopening `StorageFile` via `MostRecentlyUsedList.GetFileAsync(token)` on startup hydration.
+Because Screenbox runs in the UWP app container without `broadFileSystemAccess`, files and folders outside the Music/Videos libraries require OS-level capability tokens across app restarts. Because `MostRecentlyUsedList` is capped at 25 entries, only top-level persisted recent shortcuts register tokens:
+- **Single files (`SingleMedia`)**: `RecentMediaCoordinator.EnsureFileAccessToken` retains the file's MRU token in `recent_entries.token` and `IFileMediaSource.Token`, reopening `StorageFile` via `MostRecentlyUsedList.GetFileAsync(token)` on startup hydration.
 - **Folders and playlist files (`MediaCollection`)**: `QueueService` captures the MRU token returned by `IFilesService.AddToRecent(item)` into `QueueOrigin.Token`, which `RecentMediaCoordinator` stores in `recent_entries.token`. On startup hydration, `MediaCollectionViewModel` uses `MostRecentlyUsedList.GetFolderAsync(token)` or `GetFileAsync(token)` to access live folder/playlist contents across sessions.
-- SQLite owns the entire recent list history and ordering; legacy Windows MRU migration is not used.
+- SQLite owns the entire recent list history and ordering; tracks played inside container sessions do not overwrite MRU slots.

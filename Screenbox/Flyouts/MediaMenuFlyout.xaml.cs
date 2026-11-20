@@ -73,10 +73,6 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     /// Gets or sets a value that indicates whether advanced playback options are enabled.
     /// </summary>
     /// <value><see langword="true"/> if advanced playback options should be displayed; otherwise, <see langword="false"/>.</value>
-    /// <summary>
-    /// Gets or sets a value that indicates whether advanced playback options are enabled.
-    /// </summary>
-    /// <value><see langword="true"/> if advanced playback options should be displayed; otherwise, <see langword="false"/>.</value>
     public bool IsAdvancedModeEnabled { get; set; }
 
     /// <summary>

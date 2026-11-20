@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Screenbox.Core.Enums;
@@ -17,38 +16,53 @@ public sealed partial class DatabaseService
         using var connection = CreateConnection();
 
         var entries = new List<RecentEntryDto>();
-        using (var cmd = connection.CreateCommand())
-        {
-            cmd.CommandText = """
-                SELECT id, kind, source_id, title, subtitle, token, last_played
-                FROM recent_entries
-                ORDER BY last_played DESC
-                LIMIT @max;
-                """;
-            cmd.Parameters.AddWithValue("@max", maxEntries);
+        using var cmd = connection.CreateCommand();
+        cmd.CommandText = SelectRecentEntriesWithMetadataSql;
+        cmd.Parameters.AddWithValue("@singleKind", (int)RecentItemKind.SingleMedia);
+        cmd.Parameters.AddWithValue("@max", maxEntries);
 
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            string title = reader.GetString(3);
+            var entry = new RecentEntryDto
             {
-                entries.Add(new RecentEntryDto
+                Id = reader.GetString(0),
+                Kind = (RecentItemKind)reader.GetInt32(1),
+                SourceId = reader.GetString(2),
+                Title = title,
+                Subtitle = reader.IsDBNull(4) ? null : reader.GetString(4),
+                Token = reader.IsDBNull(5) ? null : reader.GetString(5),
+                LastPlayed = new DateTimeOffset(reader.GetInt64(6), TimeSpan.Zero),
+            };
+
+            if (!reader.IsDBNull(7))
+            {
+                entry.MediaRecord = new RawMediaRecordDto
                 {
-                    Id = reader.GetString(0),
-                    Kind = (RecentItemKind)reader.GetInt32(1),
-                    SourceId = reader.GetString(2),
-                    Title = reader.GetString(3),
-                    Subtitle = reader.IsDBNull(4) ? null : reader.GetString(4),
-                    Token = reader.IsDBNull(5) ? null : reader.GetString(5),
-                    LastPlayed = new DateTimeOffset(reader.GetInt64(6), TimeSpan.Zero),
-                });
+                    Path = reader.GetString(7),
+                    Title = reader.IsDBNull(8) ? title : reader.GetString(8),
+                    MediaType = (MediaPlaybackType)(reader.IsDBNull(9) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(9)),
+                    DateAdded = reader.IsDBNull(10) ? default : new DateTimeOffset(reader.GetInt64(10), TimeSpan.Zero),
+                    Duration = reader.IsDBNull(11) ? default : TimeSpan.FromTicks(reader.GetInt64(11)),
+                    Year = reader.IsDBNull(12) ? 0u : (uint)reader.GetInt64(12),
+                    Artist = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
+                    Album = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
+                    AlbumArtist = reader.IsDBNull(15) ? string.Empty : reader.GetString(15),
+                    Composers = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
+                    Genre = reader.IsDBNull(17) ? string.Empty : reader.GetString(17),
+                    TrackNumber = reader.IsDBNull(18) ? 0u : (uint)reader.GetInt64(18),
+                    Subtitle = reader.IsDBNull(19) ? string.Empty : reader.GetString(19),
+                    Producers = reader.IsDBNull(20) ? string.Empty : reader.GetString(20),
+                    Writers = reader.IsDBNull(21) ? string.Empty : reader.GetString(21),
+                    Bitrate = reader.IsDBNull(22) ? 0u : (uint)reader.GetInt64(22),
+                    Width = reader.IsDBNull(23) ? 0u : (uint)reader.GetInt64(23),
+                    Height = reader.IsDBNull(24) ? 0u : (uint)reader.GetInt64(24),
+                    VideoBitrate = reader.IsDBNull(25) ? 0u : (uint)reader.GetInt64(25),
+                };
             }
-        }
 
-        foreach (RecentEntryDto entry in entries)
-        {
-            if (entry.Kind is RecentItemKind.SingleMedia)
-            {
-                entry.Items = ReadRecentEntryItems(connection, entry.Id);
-            }
+            entries.Add(entry);
         }
 
         return entries;
@@ -87,45 +101,6 @@ public sealed partial class DatabaseService
             upsertCmd.ExecuteNonQuery();
         }
 
-        using (var clearItemsCmd = connection.CreateCommand())
-        {
-            clearItemsCmd.CommandText = "DELETE FROM recent_entry_items WHERE entry_id = @id;";
-            clearItemsCmd.Parameters.AddWithValue("@id", entry.Id);
-            clearItemsCmd.ExecuteNonQuery();
-        }
-
-        if (entry.Kind is RecentItemKind.SingleMedia && entry.Items.Count > 0)
-        {
-            using var insertItemCmd = connection.CreateCommand();
-            insertItemCmd.CommandText = """
-                INSERT INTO recent_entry_items
-                    (entry_id, sort_order, path, title, media_type, duration_ticks, token)
-                VALUES
-                    (@eid, @order, @path, @title, @mediaType, @duration, @token);
-                """;
-
-            var p = insertItemCmd.Parameters;
-            p.AddWithValue("@eid", entry.Id);
-            var pOrder = p.Add("@order", SqliteType.Integer);
-            var pPath = p.Add("@path", SqliteType.Text);
-            var pTitle = p.Add("@title", SqliteType.Text);
-            var pMediaType = p.Add("@mediaType", SqliteType.Integer);
-            var pDuration = p.Add("@duration", SqliteType.Integer);
-            var pToken = p.Add("@token", SqliteType.Text);
-
-            for (int i = 0; i < entry.Items.Count; i++)
-            {
-                RawMediaRecordDto item = entry.Items[i];
-                pOrder.Value = i;
-                pPath.Value = item.Path;
-                pTitle.Value = string.IsNullOrEmpty(item.Title) ? DBNull.Value : item.Title;
-                pMediaType.Value = (int)item.MediaType;
-                pDuration.Value = item.Duration.Ticks;
-                pToken.Value = string.IsNullOrEmpty(item.Token) ? DBNull.Value : item.Token;
-                insertItemCmd.ExecuteNonQuery();
-            }
-        }
-
         if (maxEntries > 0)
         {
             using var pruneCmd = connection.CreateCommand();
@@ -160,72 +135,17 @@ public sealed partial class DatabaseService
     {
         await EnsureInitializedAsync();
         using var connection = CreateConnection();
-        using var transaction = connection.BeginTransaction();
-        ExecuteNonQuery(connection, "DELETE FROM recent_entry_items;");
         ExecuteNonQuery(connection, "DELETE FROM recent_entries;");
-        transaction.Commit();
     }
 
-    private static List<RawMediaRecordDto> ReadRecentEntryItems(SqliteConnection connection, string entryId)
-    {
-        using var cmd = connection.CreateCommand();
-        cmd.CommandText = SelectRecentEntryItemsWithMetadataSql;
-        cmd.Parameters.AddWithValue("@eid", entryId);
-
-        var items = new List<RawMediaRecordDto>();
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            string path = reader.GetString(0);
-            string? savedTitle = reader.IsDBNull(1) ? null : reader.GetString(1);
-            int savedMediaType = reader.IsDBNull(2) ? (int)MediaPlaybackType.Unknown : reader.GetInt32(2);
-            long savedDurationTicks = reader.IsDBNull(3) ? 0L : reader.GetInt64(3);
-            string? token = reader.IsDBNull(4) ? null : reader.GetString(4);
-
-            string fallbackTitle = !string.IsNullOrWhiteSpace(savedTitle)
-                ? savedTitle!
-                : Path.GetFileName(path);
-            if (string.IsNullOrWhiteSpace(fallbackTitle))
-            {
-                fallbackTitle = path;
-            }
-
-            items.Add(new RawMediaRecordDto
-            {
-                Path = path,
-                Title = reader.IsDBNull(5) ? fallbackTitle : reader.GetString(5),
-                MediaType = (MediaPlaybackType)(reader.IsDBNull(6) ? savedMediaType : reader.GetInt32(6)),
-                DateAdded = reader.IsDBNull(7) ? default : new DateTimeOffset(reader.GetInt64(7), TimeSpan.Zero),
-                Duration = reader.IsDBNull(8) ? TimeSpan.FromTicks(savedDurationTicks) : TimeSpan.FromTicks(reader.GetInt64(8)),
-                Year = reader.IsDBNull(9) ? 0u : (uint)reader.GetInt64(9),
-                Artist = reader.IsDBNull(10) ? string.Empty : reader.GetString(10),
-                Album = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
-                AlbumArtist = reader.IsDBNull(12) ? string.Empty : reader.GetString(12),
-                Composers = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
-                Genre = reader.IsDBNull(14) ? string.Empty : reader.GetString(14),
-                TrackNumber = reader.IsDBNull(15) ? 0u : (uint)reader.GetInt64(15),
-                Subtitle = reader.IsDBNull(16) ? string.Empty : reader.GetString(16),
-                Producers = reader.IsDBNull(17) ? string.Empty : reader.GetString(17),
-                Writers = reader.IsDBNull(18) ? string.Empty : reader.GetString(18),
-                Bitrate = reader.IsDBNull(19) ? 0u : (uint)reader.GetInt64(19),
-                Width = reader.IsDBNull(20) ? 0u : (uint)reader.GetInt64(20),
-                Height = reader.IsDBNull(21) ? 0u : (uint)reader.GetInt64(21),
-                VideoBitrate = reader.IsDBNull(22) ? 0u : (uint)reader.GetInt64(22),
-                Token = token,
-            });
-        }
-
-        return items;
-    }
-
-    private const string SelectRecentEntryItemsWithMetadataSql = """
-        SELECT rei.path, rei.title, rei.media_type, rei.duration_ticks, rei.token,
-               mr.title, mr.media_type, mr.date_added, mr.duration_ticks, mr.year,
+    private const string SelectRecentEntriesWithMetadataSql = """
+        SELECT re.id, re.kind, re.source_id, re.title, re.subtitle, re.token, re.last_played,
+               mr.path, mr.title, mr.media_type, mr.date_added, mr.duration_ticks, mr.year,
                mr.artist, mr.album, mr.album_artist, mr.composers, mr.genre, mr.track_number,
                mr.subtitle, mr.producers, mr.writers, mr.bitrate, mr.width, mr.height, mr.video_bitrate
-        FROM recent_entry_items rei
-        LEFT JOIN media_records mr ON mr.path = rei.path
-        WHERE rei.entry_id = @eid
-        ORDER BY rei.sort_order, rei.id;
+        FROM recent_entries re
+        LEFT JOIN media_records mr ON re.kind = @singleKind AND mr.path = re.source_id
+        ORDER BY re.last_played DESC
+        LIMIT @max;
         """;
 }

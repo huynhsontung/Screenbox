@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -39,7 +38,6 @@ public sealed partial class PlayQueueCoordinatorTests
         public Task OpenFileLocationAsync(string path) => Task.CompletedTask;
         public Task OpenFileLocationAsync(StorageFile file) => Task.CompletedTask;
         public string? AddToRecent(IStorageItem item) => null;
-        public Task AddToRecentAsync(IMediaSource? source, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Windows.Foundation.IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token) => throw new NotSupportedException();
     }
 
@@ -98,8 +96,6 @@ public sealed partial class PlayQueueCoordinatorTests
             context,
             queueService,
             playbackControl,
-            filesService,
-            generalSettings,
             playbackSettings,
             smtc,
             mediaFactory,

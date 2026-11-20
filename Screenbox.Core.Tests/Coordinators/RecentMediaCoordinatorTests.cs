@@ -91,18 +91,27 @@ public sealed class RecentMediaCoordinatorTests
         DatabaseService DatabaseService,
         GeneralSettingsContext GeneralSettings) CreateCoordinator(string dbFolderPath)
     {
-        var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext(messenger);
-        var libraryContext = new LibraryContext();
-        var playlistsContext = new PlaylistsContext();
-        var settingsStorage = new MemorySettingsStorage();
-        var generalSettings = new GeneralSettingsContext(settingsStorage) { ShowRecent = true };
         var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
         {
             DbFolderPath = dbFolderPath
         };
+        var (coordinator, recentContext, libraryContext, playlistsContext, generalSettings) = CreateCoordinatorWithDb(dbService);
+        return (coordinator, recentContext, libraryContext, playlistsContext, dbService, generalSettings);
+    }
+
+    private static (
+        RecentMediaCoordinator Coordinator,
+        RecentContext RecentContext,
+        LibraryContext LibraryContext,
+        PlaylistsContext PlaylistsContext,
+        GeneralSettingsContext GeneralSettings) CreateCoordinatorWithDb(IDatabaseService dbService)
+    {
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var libraryContext = new LibraryContext();
+        var playlistsContext = new PlaylistsContext();
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
         var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
-        var metadataService = new TestMetadataService();
 
         var coordinator = new RecentMediaCoordinator(
             recentContext,
@@ -111,13 +120,13 @@ public sealed class RecentMediaCoordinatorTests
             generalSettings,
             dbService,
             mediaFactory,
-            metadataService,
+            new TestMetadataService(),
             null!,
             NullLogger<RecentMediaCoordinator>.Instance,
             messenger,
             () => new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger));
 
-        return (coordinator, recentContext, libraryContext, playlistsContext, dbService, generalSettings);
+        return (coordinator, recentContext, libraryContext, playlistsContext, generalSettings);
     }
 
     [Test]
@@ -127,46 +136,36 @@ public sealed class RecentMediaCoordinatorTests
         var (coordinator, recentContext, _, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
         await dbService.InitializeAsync();
 
-        var track1 = CreateDummyMedia("track1");
-        var track2 = CreateDummyMedia("track2");
+        var track3 = CreateDummyMedia("track3");
         var single = CreateDummyMedia("single");
 
-        var folderSession1 = new QueueSession(0, new[] { track1, track2 })
-        {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA", token: "tok_a")
-        };
-
-        await coordinator.HandleQueueSessionStartedAsync(folderSession1, isUpgrade: false);
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA", token: "tok_a"));
 
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
         await Assert.That(((MediaCollectionViewModel)recentContext.Recent[0]).Token).IsEqualTo("tok_a");
 
         // Play a single media item -> moves to top
-        var singleSession = new QueueSession(single)
-        {
-            Origin = QueueOrigin.ForSingleMedia(single)
-        };
-        await coordinator.HandleQueueSessionStartedAsync(singleSession, isUpgrade: false);
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForSingleMedia(single),
+            single);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
         await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(single);
 
-        // Replay the same folder (even with extra tracks on disk) -> promotes the existing single shortcut
-        var track3 = CreateDummyMedia("track3");
-        var folderSession2 = new QueueSession(0, new[] { track1, track2, track3 })
-        {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA", token: "tok_b")
-        };
-        await coordinator.HandleQueueSessionStartedAsync(folderSession2, isUpgrade: false);
+        // Replay the same folder -> promotes the existing shortcut and refreshes token
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA", token: "tok_b"));
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
         await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
         await Assert.That(((MediaCollectionViewModel)recentContext.Recent[0]).Token).IsEqualTo("tok_b");
 
-        // Loose multi-file queue (Origin == null) tracks the active item individually
-        var looseSession = new QueueSession(1, new[] { track1, track3 });
-        await coordinator.HandleQueueSessionStartedAsync(looseSession, isUpgrade: false);
+        // Collection origin with empty source path tracks the active item individually as SingleMedia
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForMediaCollection("Loose", null),
+            track3);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(3);
         await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(track3);
@@ -180,22 +179,17 @@ public sealed class RecentMediaCoordinatorTests
         await dbService.InitializeAsync();
 
         var track1 = CreateDummyMedia("track1");
-        var track2 = CreateDummyMedia("track2");
 
-        var initialSingle = new QueueSession(track1)
-        {
-            Origin = QueueOrigin.ForSingleMedia(track1)
-        };
-        await coordinator.HandleQueueSessionStartedAsync(initialSingle, isUpgrade: false);
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForSingleMedia(track1),
+            track1);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(track1);
 
-        var upgradedPlaylist = new QueueSession(0, new[] { track1, track2 }, initialSingle)
-        {
-            Origin = QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder")
-        };
-        await coordinator.HandleQueueSessionStartedAsync(upgradedPlaylist, isUpgrade: true);
+        await coordinator.HandleQueueSessionStartedAsync(
+            QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder"),
+            isUpgrade: true);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
@@ -203,7 +197,7 @@ public sealed class RecentMediaCoordinatorTests
     }
 
     [Test]
-    public async Task RelinkLibraryItems_SwapsPlaceholderAlbumAndArtistWhenMusicLibraryLoads()
+    public async Task ReceiveMusicLibraryChanged_SwapsPlaceholderAlbumWhenMusicLibraryLoads()
     {
         using var fixture = new TestDirectoryFixture();
         var (coordinator, recentContext, libraryContext, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
@@ -314,8 +308,7 @@ public sealed class RecentMediaCoordinatorTests
 
         // 1. Initial queue session recorded
         var track = CreateDummyMedia("song1");
-        var session = new QueueSession(track) { Origin = QueueOrigin.ForSingleMedia(track) };
-        await coordinator.HandleQueueSessionStartedAsync(session, isUpgrade: false);
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(track), track);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
 
@@ -334,22 +327,7 @@ public sealed class RecentMediaCoordinatorTests
     {
         var tcs = new TaskCompletionSource<List<RecentEntryDto>>();
         var db = new FlakyDatabaseService(blockedLoadTcs: tcs);
-
-        var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext(messenger);
-        var libraryContext = new LibraryContext();
-        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
-        var coordinator = new RecentMediaCoordinator(
-            recentContext,
-            libraryContext,
-            new PlaylistsContext(),
-            generalSettings,
-            db,
-            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
-            new TestMetadataService(),
-            null!,
-            NullLogger<RecentMediaCoordinator>.Instance,
-            messenger);
+        var (coordinator, recentContext, _, _, _) = CreateCoordinatorWithDb(db);
 
         var tasks = Task.WhenAll(
             coordinator.LoadAsync(),
@@ -365,8 +343,7 @@ public sealed class RecentMediaCoordinatorTests
                 Kind = RecentItemKind.SingleMedia,
                 Title = "SavedTrack",
                 SourceId = "https://example.com/SavedTrack.mp3",
-                LastPlayed = DateTimeOffset.UtcNow,
-                Items = [new RawMediaRecordDto { Path = "https://example.com/SavedTrack.mp3", Title = "SavedTrack" }]
+                LastPlayed = DateTimeOffset.UtcNow
             }
         ]);
 
@@ -394,21 +371,7 @@ public sealed class RecentMediaCoordinatorTests
             LastPlayed = DateTimeOffset.UtcNow
         });
 
-        var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext(messenger);
-        var libraryContext = new LibraryContext();
-        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
-        var coordinator = new RecentMediaCoordinator(
-            recentContext,
-            libraryContext,
-            new PlaylistsContext(),
-            generalSettings,
-            flakyDb,
-            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
-            new TestMetadataService(),
-            null!,
-            NullLogger<RecentMediaCoordinator>.Instance,
-            messenger);
+        var (coordinator, recentContext, _, _, _) = CreateCoordinatorWithDb(flakyDb);
 
         await coordinator.LoadAsync();
         await Assert.That(flakyDb.LoadCallCount).IsEqualTo(1);
@@ -425,22 +388,7 @@ public sealed class RecentMediaCoordinatorTests
     {
         var tcs = new TaskCompletionSource<List<RecentEntryDto>>();
         var blockedDb = new FlakyDatabaseService(blockedLoadTcs: tcs);
-
-        var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext(messenger);
-        var libraryContext = new LibraryContext();
-        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
-        var coordinator = new RecentMediaCoordinator(
-            recentContext,
-            libraryContext,
-            new PlaylistsContext(),
-            generalSettings,
-            blockedDb,
-            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
-            new TestMetadataService(),
-            null!,
-            NullLogger<RecentMediaCoordinator>.Instance,
-            messenger);
+        var (coordinator, recentContext, _, _, _) = CreateCoordinatorWithDb(blockedDb);
 
         Task pendingLoad = coordinator.LoadAsync();
         await coordinator.ClearAsync();
@@ -484,21 +432,7 @@ public sealed class RecentMediaCoordinatorTests
             });
         });
 
-        var messenger = new StrongReferenceMessenger();
-        var recentContext = new RecentContext(messenger);
-        var libraryContext = new LibraryContext();
-        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
-        var coordinator = new RecentMediaCoordinator(
-            recentContext,
-            libraryContext,
-            new PlaylistsContext(),
-            generalSettings,
-            db,
-            new MediaViewModelFactory(new MediaSourceFactory(), libraryContext),
-            new TestMetadataService(),
-            null!,
-            NullLogger<RecentMediaCoordinator>.Instance,
-            messenger);
+        var (coordinator, recentContext, _, _, generalSettings) = CreateCoordinatorWithDb(db);
 
         Task staleLoad = coordinator.LoadAsync();
         generalSettings.ShowRecent = false;

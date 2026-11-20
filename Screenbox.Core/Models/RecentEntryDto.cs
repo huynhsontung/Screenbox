@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Screenbox.Core.Enums;
 
 namespace Screenbox.Core.Models;
@@ -23,5 +22,8 @@ public sealed class RecentEntryDto
 
     public DateTimeOffset LastPlayed { get; set; }
 
-    public List<RawMediaRecordDto> Items { get; set; } = [];
+    /// <summary>
+    /// Optional cached library metadata joined from <c>media_records</c> on load for <see cref="RecentItemKind.SingleMedia"/> entries.
+    /// </summary>
+    public RawMediaRecordDto? MediaRecord { get; set; }
 }

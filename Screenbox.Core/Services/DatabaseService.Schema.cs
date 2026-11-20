@@ -65,8 +65,6 @@ public sealed partial class DatabaseService
         EnsureReplaceableTable(connection, "playback_progress", CreatePlaybackProgressSql, "location", "position_ticks");
         EnsureReplaceableTable(connection, "recent_entries", CreateRecentEntriesSql,
             "id", "kind", "source_id", "title", "subtitle", "token", "last_played");
-        EnsureReplaceableTable(connection, "recent_entry_items", CreateRecentEntryItemsSql,
-            "id", "entry_id", "sort_order", "path", "title", "media_type", "duration_ticks", "token");
         EnsurePlaylistsTable(connection);
         EnsurePlaylistItemsTable(connection);
         migrationComplete = await TryImportLegacyPlaylistsAsync(connection);
@@ -95,7 +93,6 @@ public sealed partial class DatabaseService
         ExecuteNonQuery(connection, CreateMediaRecordsSql);
         ExecuteNonQuery(connection, CreatePlaybackProgressSql);
         ExecuteNonQuery(connection, CreateRecentEntriesSql);
-        ExecuteNonQuery(connection, CreateRecentEntryItemsSql);
         ExecuteNonQuery(connection, CreatePlaylistsSql);
         ExecuteNonQuery(connection, CreatePlaylistItemsSql);
         transaction.Commit();
@@ -382,19 +379,6 @@ public sealed partial class DatabaseService
             subtitle    TEXT,
             token       TEXT,
             last_played INTEGER NOT NULL
-        );
-        """;
-
-    private const string CreateRecentEntryItemsSql = """
-        CREATE TABLE IF NOT EXISTS recent_entry_items (
-            id             INTEGER PRIMARY KEY AUTOINCREMENT,
-            entry_id       TEXT    NOT NULL REFERENCES recent_entries(id) ON DELETE CASCADE,
-            sort_order     INTEGER NOT NULL,
-            path           TEXT    NOT NULL,
-            title          TEXT,
-            media_type     INTEGER NOT NULL,
-            duration_ticks INTEGER NOT NULL,
-            token          TEXT
         );
         """;
 

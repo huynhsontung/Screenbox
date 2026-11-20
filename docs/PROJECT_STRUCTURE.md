@@ -288,7 +288,7 @@ Available coordinators:
 
 - **`LibraryCoordinator` / `ILibraryCoordinator`**: Stateful coordinator that owns library `StorageFileQueryResult` watchers, debounce timers, and Xbox removable-storage device watchers. Calls `ILibraryService.FetchMusicAsync` / `FetchVideosAsync` with an `IProgress<T>` handler that updates `LibraryContext.Music` / `LibraryContext.Videos` incrementally as each batch arrives, then applies the final result on completion. This provides live UI progress updates during long library scans.
 - **`PlayQueueCoordinator` / `IPlayQueueCoordinator`**: Stateful coordinator that owns the global play queue for the app session. Handles `PlayMediaMessage`, `SetQueueMessage`, `ClearQueueMessage`, and `QueueRequestMessage`. Wires Windows System Media Transport Controls (hardware media keys, repeat mode). Pre-buffers thumbnails for items adjacent to the current position. Drives `PlayQueueContext` state as a side effect of all queue mutations and broadcasts `QueueSessionStartedMessage` when queue sessions start or upgrade.
-- **`RecentMediaCoordinator` / `IRecentMediaCoordinator`**: Stateful coordinator that manages the Recent Media list on the Home page. Listens to `QueueSessionStartedMessage`, `LibraryContext`, `PlaylistsContext`, and `GeneralSettingsContext` changes to track live recent shortcuts (`MediaViewModel`, `MediaCollectionViewModel`, `PlaylistViewModel`, `AlbumViewModel`, and `ArtistViewModel`), refreshes placeholders after `MainPageViewModel.FetchLibraries()` and background music rescans, and persists entries to SQLite (`recent_entries` and `recent_entry_items`). See [`RECENT_MEDIA_TRACKING.md`](RECENT_MEDIA_TRACKING.md) for full details.
+- **`RecentMediaCoordinator` / `IRecentMediaCoordinator`**: Stateful coordinator that manages the Recent Media list on the Home page. Listens to `QueueSessionStartedMessage`, `LibraryContext`, `PlaylistsContext`, and `GeneralSettingsContext` changes to track live recent shortcuts (`MediaViewModel`, `MediaCollectionViewModel`, `PlaylistViewModel`, `AlbumViewModel`, and `ArtistViewModel`), refreshes placeholders after `MainPageViewModel.FetchLibraries()` and background music rescans, and persists entries to SQLite (`recent_entries`). See [`RECENT_MEDIA_TRACKING.md`](RECENT_MEDIA_TRACKING.md) for full details.
 
 #### Helper Classes
 
@@ -341,7 +341,6 @@ The library tables in `screenbox.db` (SQLite, `LocalFolder`) are rebuildable cac
 | `media_records` | Caches media-file metadata indexed by path; queried instead of crawling disk on subsequent launches |
 | `playback_progress` | Stores the last playback position per media location for resume-from-position |
 | `recent_entries` | Stores up to 100 recent media and playlist/container entries ordered by `last_played` |
-| `recent_entry_items` | Stores the media metadata for `SingleMedia` recent entries; cascade-deleted with `recent_entries` |
 | `playlists` | One row per saved playlist (id, display name, last-updated timestamp) |
 | `playlist_items` | Ordered list of media snapshots for each playlist; cascade-deleted with the parent playlist |
 
