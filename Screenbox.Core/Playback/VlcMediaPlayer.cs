@@ -176,6 +176,66 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         }
     }
 
+    public int SubtitleTextScale
+    {
+        get => _subtitleTextScale;
+        set
+        {
+            _subtitleTextScale = value;
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "sub-text-scale", value);
+        }
+    }
+
+    public int SubtitleMargin
+    {
+        get => _subtitleMargin;
+        set
+        {
+            _subtitleMargin = value;
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "sub-margin", value, propagateToChildren: true);
+        }
+    }
+
+    public int SubtitleColor
+    {
+        get => _subtitleColor;
+        set
+        {
+            _subtitleColor = value;
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-color", value);
+        }
+    }
+
+    public int SubtitleOutlineThickness
+    {
+        get => _subtitleOutlineThickness;
+        set
+        {
+            _subtitleOutlineThickness = value;
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-outline-thickness", value);
+        }
+    }
+
+    public int SubtitleBackgroundOpacity
+    {
+        get => _subtitleBackgroundOpacity;
+        set
+        {
+            _subtitleBackgroundOpacity = value;
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-background-opacity", value);
+        }
+    }
+
+    public int SubtitleBackgroundColor
+    {
+        get => _subtitleBackgroundColor;
+        set
+        {
+            _subtitleBackgroundColor = value;
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-background-color", value);
+        }
+    }
+
     public Rect NormalizedSourceRect
     {
         get => _normalizedSourceRect;
@@ -277,6 +337,12 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     private TimeSpan _position;
     private MediaPlaybackState _playbackState;
     private VlcPlaybackItem? _playbackItem;
+    private int _subtitleTextScale = 100;
+    private int _subtitleMargin;
+    private int _subtitleColor = 0x00FFFFFF;
+    private int _subtitleOutlineThickness = 4;
+    private int _subtitleBackgroundOpacity;
+    private int _subtitleBackgroundColor;
 
     public VlcMediaPlayer(LibVLC libVlc)
     {
@@ -389,6 +455,11 @@ public sealed class VlcMediaPlayer : IMediaPlayer
     private void VlcPlayer_Playing(object? sender, EventArgs e)
     {
         PlaybackState = MediaPlaybackState.Playing;
+        if (_subtitleMargin != 0)
+        {
+            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "sub-margin", _subtitleMargin, propagateToChildren: true);
+        }
+
         if (!_updateMediaProperties) return;
         _updateMediaProperties = false;
 

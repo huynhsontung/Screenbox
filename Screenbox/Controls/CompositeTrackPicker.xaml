@@ -29,6 +29,21 @@
                 </interactivity:Interaction.Behaviors>
             </TextBlock>
         </DataTemplate>
+
+        <DataTemplate x:Key="ColorOptionDataTemplate" x:DataType="x:Int32">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Rectangle
+                    Width="14"
+                    Height="14"
+                    VerticalAlignment="Center"
+                    Fill="{x:Bind controls:CompositeTrackPicker.IntToColorBrush((x:Int32))}"
+                    RadiusX="3"
+                    RadiusY="3"
+                    Stroke="{ThemeResource ControlStrokeColorDefaultBrush}"
+                    StrokeThickness="1" />
+                <TextBlock VerticalAlignment="Center" Text="{x:Bind controls:CompositeTrackPicker.FormatColorHex((x:Int32))}" />
+            </StackPanel>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid Width="224">
@@ -270,8 +285,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Button
@@ -307,70 +320,181 @@
                 VerticalAlignment="Center"
                 Text="{x:Bind strings:Resources.Subtitles}" />
 
-            <!--  Offset  -->
-            <TextBlock
+            <ScrollViewer
                 Grid.Row="1"
-                Margin="16,12,16,8"
-                Style="{StaticResource BodyStrongTextBlockStyle}"
-                Text="{x:Bind strings:Resources.TimingOffset}" />
+                MaxHeight="380"
+                VerticalScrollBarVisibility="Auto"
+                VerticalScrollMode="Auto">
+                <StackPanel Orientation="Vertical">
+                    <!--  Offset  -->
+                    <TextBlock
+                        Margin="16,12,16,8"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.TimingOffset}" />
 
-            <Grid
-                Grid.Row="2"
-                Margin="12,0"
-                FlowDirection="LeftToRight">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                    <Grid Margin="12,0" FlowDirection="LeftToRight">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                <RepeatButton
-                    x:Name="DecreaseSubtitleTimingOffsetButton"
-                    Grid.Column="0"
-                    MinWidth="32"
-                    Padding="0"
-                    VerticalAlignment="Stretch"
-                    AutomationProperties.Name="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}"
-                    Background="{ThemeResource SubtleButtonBackground}"
-                    BorderThickness="0"
-                    Click="DecreaseSubtitleTimingOffsetButton_OnClick"
-                    Content="&#xF8AB;"
-                    FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    IsTextScaleFactorEnabled="False" />
+                        <RepeatButton
+                            x:Name="DecreaseSubtitleTimingOffsetButton"
+                            Grid.Column="0"
+                            MinWidth="32"
+                            Padding="0"
+                            VerticalAlignment="Stretch"
+                            AutomationProperties.Name="{x:Bind strings:Resources.DecreaseValue(strings:Resources.TimingOffset)}"
+                            Background="{ThemeResource SubtleButtonBackground}"
+                            BorderThickness="0"
+                            Click="DecreaseSubtitleTimingOffsetButton_OnClick"
+                            Content="&#xF8AB;"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="{StaticResource CaptionTextBlockFontSize}"
+                            IsTextScaleFactorEnabled="False" />
 
-                <Slider
-                    Grid.Column="1"
-                    Margin="8,0,8,0"
-                    AutomationProperties.Name="{x:Bind strings:Resources.TimingOffset}"
-                    IsThumbToolTipEnabled="False"
-                    Maximum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMax}"
-                    Minimum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMin}"
-                    SmallChange="25"
-                    StepFrequency="50"
-                    Value="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=TwoWay}" />
+                        <Slider
+                            Grid.Column="1"
+                            Margin="8,0,8,0"
+                            AutomationProperties.Name="{x:Bind strings:Resources.TimingOffset}"
+                            IsThumbToolTipEnabled="False"
+                            Maximum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMax}"
+                            Minimum="{x:Bind controls:CompositeTrackPicker.TimingOffsetMin}"
+                            SmallChange="25"
+                            StepFrequency="50"
+                            Value="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=TwoWay}" />
 
-                <RepeatButton
-                    x:Name="IncreaseSubtitleTimingOffsetButton"
-                    Grid.Column="2"
-                    MinWidth="32"
-                    Padding="0"
-                    VerticalAlignment="Stretch"
-                    AutomationProperties.Name="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}"
-                    Background="{ThemeResource SubtleButtonBackground}"
-                    BorderThickness="0"
-                    Click="IncreaseSubtitleTimingOffsetButton_OnClick"
-                    Content="&#xF8AA;"
-                    FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="{StaticResource CaptionTextBlockFontSize}"
-                    IsTextScaleFactorEnabled="False" />
-            </Grid>
+                        <RepeatButton
+                            x:Name="IncreaseSubtitleTimingOffsetButton"
+                            Grid.Column="2"
+                            MinWidth="32"
+                            Padding="0"
+                            VerticalAlignment="Stretch"
+                            AutomationProperties.Name="{x:Bind strings:Resources.IncreaseValue(strings:Resources.TimingOffset)}"
+                            Background="{ThemeResource SubtleButtonBackground}"
+                            BorderThickness="0"
+                            Click="IncreaseSubtitleTimingOffsetButton_OnClick"
+                            Content="&#xF8AA;"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontSize="{StaticResource CaptionTextBlockFontSize}"
+                            IsTextScaleFactorEnabled="False" />
+                    </Grid>
 
-            <TextBlock
-                Grid.Row="3"
-                Margin="12,8,12,11"
-                HorizontalAlignment="Center"
-                Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=OneWay}" /> <Run Text="ms" /></TextBlock>
+                    <TextBlock
+                        Margin="12,8,12,8"
+                        HorizontalAlignment="Center"
+                        Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.SubtitleTimingOffset, Mode=OneWay}" /> <Run Text="ms" /></TextBlock>
+
+                    <!--  Text scale (sub-text-scale)  -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.SubtitleTextScale}" />
+                    <Slider
+                        Margin="16,0"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SubtitleTextScale}"
+                        FlowDirection="LeftToRight"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="{x:Bind controls:CompositeTrackPicker.TextScaleMax}"
+                        Minimum="{x:Bind controls:CompositeTrackPicker.TextScaleMin}"
+                        SmallChange="{x:Bind controls:CompositeTrackPicker.TextScaleStep}"
+                        StepFrequency="{x:Bind controls:CompositeTrackPicker.TextScaleStep}"
+                        Value="{x:Bind PlaybackSession.SubtitleTextScale, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="12,0,12,8"
+                        HorizontalAlignment="Center"
+                        Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.SubtitleTextScale, Mode=OneWay}" /><Run Text="%" /></TextBlock>
+
+                    <!--  Vertical margin (sub-margin)  -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.SubtitleMargin}" />
+                    <Slider
+                        Margin="16,0"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SubtitleMargin}"
+                        FlowDirection="LeftToRight"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="{x:Bind controls:CompositeTrackPicker.MarginMax}"
+                        Minimum="{x:Bind controls:CompositeTrackPicker.MarginMin}"
+                        SmallChange="{x:Bind controls:CompositeTrackPicker.MarginStep}"
+                        StepFrequency="{x:Bind controls:CompositeTrackPicker.MarginStep}"
+                        Value="{x:Bind PlaybackSession.SubtitleMargin, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="12,0,12,8"
+                        HorizontalAlignment="Center"
+                        Typography.NumeralAlignment="Tabular"><Run Text="{x:Bind PlaybackSession.SubtitleMargin, Mode=OneWay}" /> <Run Text="px" /></TextBlock>
+
+                    <!--  Text color (freetype-color)  -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.SubtitleColor}" />
+                    <ComboBox
+                        Margin="16,0,16,8"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SubtitleColor}"
+                        ItemTemplate="{StaticResource ColorOptionDataTemplate}"
+                        ItemsSource="{x:Bind PlaybackSession.SubtitleColorOptions}"
+                        SelectedIndex="{x:Bind PlaybackSession.SubtitleColorIndex, Mode=TwoWay}" />
+
+                    <!--  Outline thickness (freetype-outline-thickness)  -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.SubtitleOutlineThickness}" />
+                    <Slider
+                        Margin="16,0"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SubtitleOutlineThickness}"
+                        FlowDirection="LeftToRight"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="{x:Bind controls:CompositeTrackPicker.OutlineThicknessMax}"
+                        Minimum="{x:Bind controls:CompositeTrackPicker.OutlineThicknessMin}"
+                        SmallChange="{x:Bind controls:CompositeTrackPicker.OutlineThicknessStep}"
+                        StepFrequency="{x:Bind controls:CompositeTrackPicker.OutlineThicknessStep}"
+                        Value="{x:Bind PlaybackSession.SubtitleOutlineThickness, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="12,0,12,8"
+                        HorizontalAlignment="Center"
+                        Text="{x:Bind PlaybackSession.SubtitleOutlineThickness, Mode=OneWay}"
+                        Typography.NumeralAlignment="Tabular" />
+
+                    <!--  Background opacity (freetype-background-opacity)  -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.SubtitleBackgroundOpacity}" />
+                    <Slider
+                        Margin="16,0"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SubtitleBackgroundOpacity}"
+                        FlowDirection="LeftToRight"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="{x:Bind controls:CompositeTrackPicker.BackgroundOpacityMax}"
+                        Minimum="{x:Bind controls:CompositeTrackPicker.BackgroundOpacityMin}"
+                        SmallChange="{x:Bind controls:CompositeTrackPicker.BackgroundOpacityStep}"
+                        StepFrequency="{x:Bind controls:CompositeTrackPicker.BackgroundOpacityStep}"
+                        Value="{x:Bind PlaybackSession.SubtitleBackgroundOpacity, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="12,0,12,8"
+                        HorizontalAlignment="Center"
+                        Text="{x:Bind PlaybackSession.SubtitleBackgroundOpacity, Mode=OneWay}"
+                        Typography.NumeralAlignment="Tabular" />
+
+                    <!--  Background color (freetype-background-color)  -->
+                    <TextBlock
+                        Margin="16,8,16,4"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.SubtitleBackgroundColor}" />
+                    <ComboBox
+                        Margin="16,0,16,12"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{x:Bind strings:Resources.SubtitleBackgroundColor}"
+                        ItemTemplate="{StaticResource ColorOptionDataTemplate}"
+                        ItemsSource="{x:Bind PlaybackSession.SubtitleColorOptions}"
+                        SelectedIndex="{x:Bind PlaybackSession.SubtitleBackgroundColorIndex, Mode=TwoWay}" />
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
         <!--#endregion-->
 
