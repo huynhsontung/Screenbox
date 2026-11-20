@@ -638,14 +638,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             }
         }
 
-        return new RawMediaRecordDto
-        {
-            Path = media.Location,
-            Title = media.Name,
-            MediaType = media.MediaType,
-            Duration = media.Duration,
-            Token = token
-        };
+        RawMediaRecordDto record = RawMediaRecordDto.FromMediaViewModel(media);
+        record.Token = token;
+        return record;
     }
 
     private async Task SafeLoadDetailsAsync(MediaViewModel media)
