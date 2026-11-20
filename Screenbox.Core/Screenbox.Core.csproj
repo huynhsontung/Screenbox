@@ -21,4 +21,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Screenbox.Interop.LibVLC\Screenbox.Interop.LibVLC.csproj" />
+  </ItemGroup>
 </Project>
