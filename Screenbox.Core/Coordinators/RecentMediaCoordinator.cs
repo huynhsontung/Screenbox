@@ -112,8 +112,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
         try
         {
+            // Replacing placeholders swaps in linked library items; visible containers then load
+            // only the thumbnail needed for display (e.g., RelatedSongs[0] for albums) via ThumbnailGridViewBehavior.
             await LoadAsync(forceReload: true);
-            await LoadAlbumArtForLinkedAlbumsAsync();
         }
         catch (Exception ex)
         {
@@ -217,29 +218,19 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     }
 
     /// <inheritdoc/>
-    public Task LoadDetailsAndThumbnailsAsync()
+    public Task LoadDetailsAsync()
     {
         var tasks = new List<Task>();
         foreach (IRecentItem item in _recentContext.Recent)
         {
-            if (item is MediaViewModel media)
+            if (item is MediaViewModel { DetailsLoaded: false } media)
             {
-                if (!media.DetailsLoaded)
-                {
-                    tasks.Add(SafeLoadDetailsAsync(media));
-                }
-
-                if (media.Thumbnail is null)
-                {
-                    tasks.Add(SafeLoadThumbnailAsync(media));
-                }
-            }
-            else if (item is AlbumViewModel { AlbumArt: null } album)
-            {
-                tasks.Add(album.LoadAlbumArtAsync());
+                tasks.Add(SafeLoadDetailsAsync(media));
             }
         }
 
+        // Thumbnails (including album art loaded from AlbumViewModel.RelatedSongs[0]) are deferred
+        // to ThumbnailGridViewBehavior so only visible UI containers decode thumbnails.
         return tasks.Count > 0 ? Task.WhenAll(tasks) : Task.CompletedTask;
     }
 
@@ -523,7 +514,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             if (_generalSettings.ShowRecent)
             {
                 await LoadAsync();
-                await LoadDetailsAndThumbnailsAsync();
+                await LoadDetailsAsync();
             }
             else
             {
@@ -597,20 +588,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         }
 
         return media;
-    }
-
-    private async Task LoadAlbumArtForLinkedAlbumsAsync()
-    {
-        var tasks = _recentContext.Recent
-            .OfType<AlbumViewModel>()
-            .Where(album => album.AlbumArt is null)
-            .Select(album => album.LoadAlbumArtAsync())
-            .ToList();
-
-        if (tasks.Count > 0)
-        {
-            await Task.WhenAll(tasks);
-        }
     }
 
     private static RecentEntryMetadata ToMetadata(RecentEntryDto entry) =>

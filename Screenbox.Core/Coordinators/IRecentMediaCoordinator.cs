@@ -16,9 +16,9 @@ public interface IRecentMediaCoordinator
     Task LoadAsync(bool forceReload = false);
 
     /// <summary>
-    /// Loads details and thumbnails for items in the recent media list.
+    /// Loads metadata details for single media items in the recent media list.
     /// </summary>
-    Task LoadDetailsAndThumbnailsAsync();
+    Task LoadDetailsAsync();
 
     /// <summary>
     /// Removes a single recent entry from the list and persistent storage.

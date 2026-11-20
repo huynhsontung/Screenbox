@@ -98,7 +98,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         if (_generalSettings.ShowRecent)
         {
             await _recentMediaCoordinator.LoadAsync();
-            await _recentMediaCoordinator.LoadDetailsAndThumbnailsAsync();
+            await _recentMediaCoordinator.LoadDetailsAsync();
         }
     }
 

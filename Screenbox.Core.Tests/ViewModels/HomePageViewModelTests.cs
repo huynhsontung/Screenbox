@@ -23,7 +23,7 @@ public sealed class HomePageViewModelTests
     private sealed class DummyCoordinator : IRecentMediaCoordinator
     {
         public Task LoadAsync(bool forceReload = false) => Task.CompletedTask;
-        public Task LoadDetailsAndThumbnailsAsync() => Task.CompletedTask;
+        public Task LoadDetailsAsync() => Task.CompletedTask;
         public Task RemoveAsync(IRecentItem item) => Task.CompletedTask;
         public Task ClearAsync() => Task.CompletedTask;
     }

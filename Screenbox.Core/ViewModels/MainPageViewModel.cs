@@ -251,7 +251,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 
             // Replace placeholder album/artist/playlist items now that both libraries and playlists are loaded
             await _recentMediaCoordinator.LoadAsync(forceReload: true);
-            await _recentMediaCoordinator.LoadDetailsAndThumbnailsAsync();
+            await _recentMediaCoordinator.LoadDetailsAsync();
         }
         catch (Exception e)
         {

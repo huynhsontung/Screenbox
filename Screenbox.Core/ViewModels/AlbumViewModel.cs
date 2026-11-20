@@ -89,10 +89,14 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         IsPlaying = isActive && state.IsPlaying;
     }
 
+    /// <summary>
+    /// Loads the album's UI cover thumbnail from only its first track so large albums do not decode thumbnails for all songs.
+    /// </summary>
     public async Task LoadAlbumArtAsync()
     {
         if (RelatedSongs.Count > 0)
         {
+            // An album card only displays a single cover image, so only the first track's thumbnail is needed.
             await RelatedSongs[0].LoadThumbnailAsync();
             UpdateProperties();
         }
