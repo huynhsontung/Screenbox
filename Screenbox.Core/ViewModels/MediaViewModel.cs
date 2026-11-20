@@ -123,7 +123,7 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     public void SetOptions(string options)
     {
-        string[] opts = options.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        string[] opts =         VlcArgumentHelper.ParseArguments(options)
             .Where(o => o.StartsWith(':') && o.Length > 1).ToArray();
 
         // Check if new options and existing options are the same

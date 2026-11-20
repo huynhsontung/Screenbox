@@ -139,7 +139,7 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
                 var args = new List<string>();
                 if (_playerSettings.GlobalArguments.Length > 0)
                 {
-                    args.AddRange(_playerSettings.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                    args.AddRange(VlcArgumentHelper.ParseArguments(_playerSettings.GlobalArguments));
                 }
 
                 if (_playerSettings.VideoUpscale != VideoUpscaleOption.Linear)

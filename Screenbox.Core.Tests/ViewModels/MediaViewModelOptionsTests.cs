@@ -25,6 +25,17 @@ public class MediaViewModelOptionsTests
     }
 
     [Test]
+    public async Task SetOptions_QuotedValueWithSpaces_KeptAsSingleOption()
+    {
+        var media = CreateMedia();
+        media.SetOptions(":freetype-font=\"Arial Rounded MT Bold\" :sub-delay=100");
+
+        await Assert.That(media.Options.Count).IsEqualTo(2);
+        await Assert.That(media.Options[0]).IsEqualTo(":freetype-font=Arial Rounded MT Bold");
+        await Assert.That(media.Options[1]).IsEqualTo(":sub-delay=100");
+    }
+
+    [Test]
     public async Task SetOptions_InvalidTokensAndWhitespace_FiltersNonColonArgs()
     {
         var media = CreateMedia();
