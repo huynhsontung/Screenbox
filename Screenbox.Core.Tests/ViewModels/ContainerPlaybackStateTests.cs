@@ -211,4 +211,45 @@ public class ContainerPlaybackStateTests
             messenger.UnregisterAll(this);
         }
     }
+
+    [Test]
+    public async Task SendPlayNext_And_SendAddToQueue_UnlinkContainerOriginOnNonEmptyQueue()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var album = new AlbumViewModel("Abbey Road", "The Beatles", messenger);
+        var song1 = CreateDummyMedia("Come Together");
+        var song2 = CreateDummyMedia("Something");
+        var extraSong = CreateDummyMedia("Extra");
+
+        var activeQueue = new QueueSession(0, new[] { song1, song2 })
+        {
+            Origin = QueueOrigin.ForAlbum(album)
+        };
+
+        messenger.Register<ContainerPlaybackStateTests, QueueRequestMessage>(
+            this,
+            (_, m) => m.Reply(new QueueSession(activeQueue)));
+
+        SetQueueMessage? lastSent = null;
+        messenger.Register<ContainerPlaybackStateTests, SetQueueMessage>(
+            this,
+            (_, m) => lastSent = m);
+
+        try
+        {
+            messenger.SendPlayNext(extraSong);
+            await Assert.That(lastSent).IsNotNull();
+            await Assert.That(lastSent!.Value.Origin).IsNull();
+            await Assert.That(lastSent.Value.Items.Count).IsEqualTo(3);
+
+            lastSent = null;
+            messenger.SendAddToQueue(extraSong);
+            await Assert.That(lastSent).IsNotNull();
+            await Assert.That(lastSent!.Value.Origin).IsNull();
+        }
+        finally
+        {
+            messenger.UnregisterAll(this);
+        }
+    }
 }

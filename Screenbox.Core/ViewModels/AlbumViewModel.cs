@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class AlbumViewModel : ObservableRecipient,
+    IRecentItem,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
     public string Name { get; }
@@ -43,6 +44,8 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
     public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
     public IReadOnlyList<MediaViewModel> OrderedSongs => GetSortedSongs(RelatedSongs);
+
+    public bool HasSongs => RelatedSongs.Count > 0;
 
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial bool IsQueueActive { get; set; }
@@ -86,10 +89,14 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         IsPlaying = isActive && state.IsPlaying;
     }
 
+    /// <summary>
+    /// Loads the album's UI cover thumbnail from only its first track so large albums do not decode thumbnails for all songs.
+    /// </summary>
     public async Task LoadAlbumArtAsync()
     {
         if (RelatedSongs.Count > 0)
         {
+            // An album card only displays a single cover image, so only the first track's thumbnail is needed.
             await RelatedSongs[0].LoadThumbnailAsync();
             UpdateProperties();
         }
@@ -98,6 +105,10 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
     private void RelatedSongsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         UpdateProperties();
+        OnPropertyChanged(nameof(HasSongs));
+        PlayAlbumCommand.NotifyCanExecuteChanged();
+        PlayAlbumNextCommand.NotifyCanExecuteChanged();
+        AddAlbumToQueueCommand.NotifyCanExecuteChanged();
     }
 
     public void UpdateProperties()
@@ -116,7 +127,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
             : first.MainArtist?.Name ?? first.MediaInfo.MusicProperties.Artist ?? string.Empty;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void PlayAlbum()
     {
         if (RelatedSongs.Count == 0)
@@ -133,7 +144,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void PlayAlbumNext()
     {
         if (RelatedSongs.Count == 0)
@@ -142,7 +153,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         Messenger.SendPlayNext(OrderedSongs);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(HasSongs))]
     private void AddAlbumToQueue()
     {
         if (RelatedSongs.Count == 0)

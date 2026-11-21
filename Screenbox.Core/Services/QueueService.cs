@@ -51,13 +51,19 @@ public sealed class QueueService : IQueueService
             return await CreateSingleFileQueueAsync(file, neighboringFilesQuery, cancellationToken);
         }
 
+        string? containerToken = null;
         if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder)
         {
-            TrackInRecentIfEnabled(folder);
+            containerToken = TrackInRecentIfEnabled(folder);
         }
 
         var session = await TryParseQueueAsync(storageItems, cancellationToken: cancellationToken);
         if (session is null) return null;
+
+        if (!string.IsNullOrEmpty(containerToken) && session.Origin is { Kind: RecentItemKind.MediaCollection } origin)
+        {
+            session.Origin = origin with { Token = containerToken };
+        }
 
         session.NeighboringFilesQuery = neighboringFilesQuery;
         return session;
@@ -114,11 +120,13 @@ public sealed class QueueService : IQueueService
             {
                 var vms = items.Select(_mediaFactory.Create).ToList();
                 string title = Path.GetFileNameWithoutExtension(media.Name);
+                string? token = (media.Source as IFileMediaSource)?.Token;
                 return new QueueSession(0, vms)
                 {
                     Origin = QueueOrigin.ForMediaCollection(
                         string.IsNullOrWhiteSpace(title) ? media.Name : title,
-                        media.Location)
+                        media.Location,
+                        token)
                 };
             }
         }
@@ -151,9 +159,13 @@ public sealed class QueueService : IQueueService
         {
             neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
         }
-        else if (session.Origin?.Kind == RecentItemKind.MediaCollection)
+        else if (session.Origin is { Kind: RecentItemKind.MediaCollection } origin)
         {
-            TrackInRecentIfEnabled(file);
+            string? fileToken = TrackInRecentIfEnabled(file);
+            if (!string.IsNullOrEmpty(fileToken))
+            {
+                session.Origin = origin with { Token = fileToken };
+            }
         }
 
         session.NeighboringFilesQuery = neighboringFilesQuery;
@@ -194,7 +206,7 @@ public sealed class QueueService : IQueueService
 
     [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private static QueueOrigin ResolveStorageItemsOrigin(
+    private static QueueOrigin? ResolveStorageItemsOrigin(
         IReadOnlyList<IStorageItem> storageItems,
         IReadOnlyList<MediaViewModel> queue)
     {
@@ -214,9 +226,8 @@ public sealed class QueueService : IQueueService
                 singleFile.Path);
         }
 
-        return queue.Count > 1
-            ? QueueOrigin.ForMediaCollection(queue[0].Name)
-            : QueueOrigin.ForSingleMedia(queue[0]);
+        // Loose multi-file drops/selections track whichever item plays individually.
+        return queue.Count == 1 ? QueueOrigin.ForSingleMedia(queue[0]) : null;
     }
 
     #endregion
@@ -250,6 +261,7 @@ public sealed class QueueService : IQueueService
     {
         string folderName = string.Empty;
         string? folderPath = null;
+        string? folderToken = null;
         try
         {
             if (neighboringFilesQuery.Folder is { } parentFolder)
@@ -258,7 +270,7 @@ public sealed class QueueService : IQueueService
                     ? parentFolder.DisplayName
                     : parentFolder.Name;
                 folderPath = parentFolder.Path;
-                TrackInRecentIfEnabled(parentFolder);
+                folderToken = TrackInRecentIfEnabled(parentFolder);
             }
         }
         catch
@@ -279,7 +291,7 @@ public sealed class QueueService : IQueueService
             folderName = fallbackItem.Name;
         }
 
-        return QueueOrigin.ForMediaCollection(folderName, folderPath);
+        return QueueOrigin.ForMediaCollection(folderName, folderPath, folderToken);
     }
 
     private static QueueSession MergeCurrentItemIntoNeighboringQueue(
@@ -480,13 +492,15 @@ public sealed class QueueService : IQueueService
 
     #endregion
 
-    private void TrackInRecentIfEnabled(IStorageItem item)
+    private string? TrackInRecentIfEnabled(IStorageItem item)
     {
         // Register the storage item (e.g. playlist file or folder) with the Windows Most Recently Used (MRU)
         // list so the app retains persistent file-access permission to reload it across future sessions.
         if (_generalSettings?.ShowRecent != false)
         {
-            _filesService.AddToRecent(item);
+            return _filesService.AddToRecent(item);
         }
+
+        return null;
     }
 }

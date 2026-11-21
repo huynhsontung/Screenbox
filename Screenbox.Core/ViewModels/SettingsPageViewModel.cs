@@ -57,8 +57,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
 
     private readonly IFilesService _filesService;
     private readonly LibraryContext _libraryContext;
-    private readonly RecentContext _recentContext;
     private readonly ILibraryCoordinator _libraryCoordinator;
+    private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
     private readonly DeviceWatcher? _portableStorageDeviceWatcher;
@@ -83,8 +83,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         GeneralSettingsContext generalSettings,
         IFilesService filesService,
         LibraryContext libraryContext,
-        RecentContext recentContext,
         ILibraryCoordinator libraryCoordinator,
+        IRecentMediaCoordinator recentMediaCoordinator,
         IPlaybackProgressTracker playbackProgressTracker,
         ILogger<SettingsPageViewModel> logger)
     {
@@ -94,8 +94,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         GeneralSettings = generalSettings;
         _filesService = filesService;
         _libraryContext = libraryContext;
-        _recentContext = recentContext;
         _libraryCoordinator = libraryCoordinator;
+        _recentMediaCoordinator = recentMediaCoordinator;
         _playbackProgressTracker = playbackProgressTracker;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -134,10 +134,6 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     partial void OnShowRecentChanged(bool value)
     {
         GeneralSettings.ShowRecent = value;
-        if (!value)
-        {
-            ClearRecentContext();
-        }
     }
 
     partial void OnSearchRemovableStorageChanged(bool value)
@@ -257,18 +253,9 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void ClearRecentHistory()
+    private async Task ClearRecentHistory()
     {
-        ClearRecentContext();
-        StorageApplicationPermissions.MostRecentlyUsedList.Clear();
-    }
-
-    private void ClearRecentContext()
-    {
-        _recentContext.Recent.Clear();
-        _recentContext.PathToMruMappings.Clear();
-        _recentContext.TokenToMediaMappings.Clear();
-        _recentContext.IsLoaded = true;
+        await _recentMediaCoordinator.ClearAsync();
     }
 
     [RelayCommand]

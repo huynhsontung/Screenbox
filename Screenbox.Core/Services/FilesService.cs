@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.MediaSources;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -146,33 +144,18 @@ public sealed class FilesService : IFilesService
         }
     }
 
-    public void AddToRecent(IStorageItem item)
+    public string? AddToRecent(IStorageItem item)
     {
         string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         try
         {
-            StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
+            return StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
         }
         catch (Exception)
         {
             // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
             // Ownership issue?
-        }
-    }
-
-    public async Task AddToRecentAsync(IMediaSource? source, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            if (source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
-            {
-                if (cancellationToken.IsCancellationRequested) return;
-                AddToRecent(file);
-            }
-        }
-        catch
-        {
-            // Silently ignore — recent-files tracking is best-effort.
+            return null;
         }
     }
 

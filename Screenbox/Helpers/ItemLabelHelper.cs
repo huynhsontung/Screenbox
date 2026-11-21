@@ -220,4 +220,26 @@ public static class ItemLabelHelper
     {
         return string.IsNullOrEmpty(value) ? fallback : value;
     }
+
+    /// <summary>
+    /// Gets a localized caption for a live media collection shortcut (folder or playlist file).
+    /// </summary>
+    /// <param name="isPlaylistFile"><see langword="true"/> if the collection originates from a playlist file; otherwise <see langword="false"/>.</param>
+    /// <returns>A localized caption string.</returns>
+    public static string GetMediaCollectionCaption(bool isPlaylistFile)
+    {
+        return isPlaylistFile ? string.Empty : Strings.Resources.Folder;
+    }
+
+    /// <summary>
+    /// Formats an accessible name for a live media collection shortcut.
+    /// </summary>
+    /// <param name="name">The display name of the folder or playlist.</param>
+    /// <param name="isPlaylistFile"><see langword="true"/> if the collection originates from a playlist file; otherwise <see langword="false"/>.</param>
+    /// <returns>A formatted accessible name.</returns>
+    public static string FormatAccessibleMediaCollectionName(string name, bool isPlaylistFile)
+    {
+        string caption = GetMediaCollectionCaption(isPlaylistFile);
+        return string.IsNullOrEmpty(caption) ? name : FormatAccessibleName(name, caption);
+    }
 }

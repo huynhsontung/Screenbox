@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
-using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Tests.Models;
@@ -96,52 +93,28 @@ public class QueueSessionTests
     }
 
     [Test]
-    public async Task QueueSession_GetCanonicalItems_ReturnsOriginalOrderMinusRemovalsWhenShuffled()
+    public async Task QueueOrigin_GetEntryId_MatchesCaseInsensitivelyByKindAndSource()
     {
-        var item1 = CreateDummyMedia("song1");
-        var item2 = CreateDummyMedia("song2");
-        var item3 = CreateDummyMedia("song3");
-        var original = new QueueSession(0, new[] { item1, item2, item3 });
+        string id1 = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Folder");
+        string idSameCaseInsensitive = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"c:\folder");
+        string idDifferentFolder = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\OtherFolder");
+        string idDifferentKind = QueueOrigin.GetEntryId(RecentItemKind.Playlist, @"C:\Folder");
 
-        var queueService = new QueueService(null!, null!);
-        var shuffled = queueService.Shuffle(original);
-        shuffled.Items.Remove(item2);
-        queueService.UpdateShuffleBackup(
-            shuffled,
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item2));
-
-        var canonical = shuffled.GetCanonicalItems();
-
-        await Assert.That(canonical.Count).IsEqualTo(2);
-        await Assert.That(canonical[0]).IsEqualTo(item1);
-        await Assert.That(canonical[1]).IsEqualTo(item3);
+        await Assert.That(id1).IsEqualTo(idSameCaseInsensitive);
+        await Assert.That(id1).IsNotEqualTo(idDifferentFolder);
+        await Assert.That(id1).IsNotEqualTo(idDifferentKind);
     }
 
     [Test]
-    public async Task QueueOrigin_ComputeContentHash_MatchesIdenticalMediaCollectionAndDiffersWhenOrderOrItemsChange()
+    public async Task QueueOrigin_TrackItemsIndividually_IsTrueForEmptyMediaCollectionAndSingleMedia()
     {
-        string hash1 = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"C:\Folder",
-            new[] { @"C:\Folder\a.mp3", @"C:\Folder\b.mp3" });
+        var item = CreateDummyMedia("song1");
+        var looseCollection = QueueOrigin.ForMediaCollection("Loose", null);
+        var folderCollection = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA");
+        var single = QueueOrigin.ForSingleMedia(item);
 
-        string hashSameCaseInsensitive = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"c:\folder",
-            new[] { @"c:\folder\A.MP3", @"c:\folder\B.MP3" });
-
-        string hashDifferentOrder = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"C:\Folder",
-            new[] { @"C:\Folder\b.mp3", @"C:\Folder\a.mp3" });
-
-        string hashExtraFile = QueueOrigin.ComputeContentHash(
-            RecentItemKind.MediaCollection,
-            @"C:\Folder",
-            new[] { @"C:\Folder\a.mp3", @"C:\Folder\b.mp3", @"C:\Folder\c.mp3" });
-
-        await Assert.That(hash1).IsEqualTo(hashSameCaseInsensitive);
-        await Assert.That(hash1).IsNotEqualTo(hashDifferentOrder);
-        await Assert.That(hash1).IsNotEqualTo(hashExtraFile);
+        await Assert.That(looseCollection.TrackItemsIndividually).IsTrue();
+        await Assert.That(folderCollection.TrackItemsIndividually).IsFalse();
+        await Assert.That(single.TrackItemsIndividually).IsTrue();
     }
 }

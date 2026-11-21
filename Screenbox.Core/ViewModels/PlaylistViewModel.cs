@@ -21,6 +21,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlaylistViewModel : ObservableRecipient,
+    IRecentItem,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();
@@ -35,7 +36,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public string Id => _id.ToString();
 
-    private bool HasItems => Items.Count > 0;
+    public bool HasItems => Items.Count > 0;
 
     private Guid _id = Guid.NewGuid();
 
@@ -69,18 +70,16 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         Items.CollectionChanged += Items_CollectionChanged;
 
         Messenger.Register<QueuePlaybackStateChangedMessage>(this);
-
-        var request = new QueuePlaybackStateRequestMessage();
-        Messenger.Send(request);
-        if (request.HasReceivedResponse)
-        {
-            UpdatePlaybackState(request.Response);
-        }
+        RefreshPlaybackState();
     }
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(ItemsCount));
+        OnPropertyChanged(nameof(HasItems));
+        PlayCommand.NotifyCanExecuteChanged();
+        PlayNextCommand.NotifyCanExecuteChanged();
+        AddToQueueCommand.NotifyCanExecuteChanged();
 
         _playlistSaveTimer.Debounce(async () =>
         {
@@ -93,10 +92,6 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             {
                 _logger.LogError(ex, "Failed to persist playlist '{PlaylistId}'.", Id);
             }
-
-            PlayCommand.NotifyCanExecuteChanged();
-            PlayNextCommand.NotifyCanExecuteChanged();
-            AddToQueueCommand.NotifyCanExecuteChanged();
         }, TimeSpan.FromMilliseconds(50));
     }
 
@@ -108,6 +103,16 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         };
     }
 
+    /// <summary>
+    /// Populates placeholder identity and display metadata without modifying <see cref="Items"/> or triggering persistence.
+    /// </summary>
+    public void LoadPlaceholder(string id, string displayName)
+    {
+        if (!Guid.TryParse(id, out _id)) return;
+        Name = displayName;
+        RefreshPlaybackState();
+    }
+
     public void Load(PlaylistRecordDto persistentPlaylist)
     {
         if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
@@ -115,12 +120,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
 
-        var request = new QueuePlaybackStateRequestMessage();
-        Messenger.Send(request);
-        if (request.HasReceivedResponse)
-        {
-            UpdatePlaybackState(request.Response);
-        }
+        RefreshPlaybackState();
         var itemSet = new HashSet<MediaViewModel>(persistentPlaylist.Items.Count);
 
         var albumFactory = new AlbumViewModelFactory();
@@ -142,6 +142,16 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         LastUpdated = DateTimeOffset.Now;
         var persistentPlaylist = ToPersistentPlaylist();
         await _playlistService.SavePlaylistAsync(persistentPlaylist);
+    }
+
+    private void RefreshPlaybackState()
+    {
+        var request = new QueuePlaybackStateRequestMessage();
+        Messenger.Send(request);
+        if (request.HasReceivedResponse)
+        {
+            UpdatePlaybackState(request.Response);
+        }
     }
 
     public async Task RenameAsync(string newDisplayName)

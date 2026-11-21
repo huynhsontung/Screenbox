@@ -21,6 +21,8 @@ public class FileMediaSource : IFileMediaSource
 
     public StorageFile? StorageFile { get; private set; }
 
+    public string? Token { get; set; }
+
     public FileMediaSource(StorageFile file)
     {
         StorageFile = file;
@@ -30,12 +32,13 @@ public class FileMediaSource : IFileMediaSource
         MediaType = FilesHelpers.GetMediaTypeForFile(file);
     }
 
-    public FileMediaSource(string path)
+    public FileMediaSource(string path, string? token = null)
     {
         Path = path;
         FileType = System.IO.Path.GetExtension(path);
         Name = System.IO.Path.GetFileName(path);
         MediaType = FilesHelpers.GetMediaTypeForExtension(FileType);
+        Token = token;
     }
 
     public async Task<StorageFile?> GetStorageFileAsync()
@@ -45,7 +48,8 @@ public class FileMediaSource : IFileMediaSource
             return StorageFile;
         }
 
-        if (!string.IsNullOrEmpty(Path))
+        StorageFile = await FilesHelpers.TryGetFileFromTokenAsync(Token);
+        if (StorageFile == null && !string.IsNullOrEmpty(Path))
         {
             StorageFile = await FilesHelpers.TryGetFileFromPathAsync(Path);
         }
