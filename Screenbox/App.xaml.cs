@@ -140,8 +140,6 @@ sealed partial class App : Application
 #endif
             builder.AddSentry(options =>
             {
-                ConfigureSentryOptions(options);
-                options.InitializeSdk = false;
                 options.MinimumEventLevel = Microsoft.Extensions.Logging.LogLevel.Error;
                 options.MinimumBreadcrumbLevel = Microsoft.Extensions.Logging.LogLevel.Information;
             });

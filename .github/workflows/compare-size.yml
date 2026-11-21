@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       head_ref:
-        description: 'Enter a branch, tag, or SHA to compare to (default: current commit)'
+        description: 'Enter a branch, tag, or SHA to compare (default: latest commit of selected branch)'
         required: false
         type: string
       architecture:
@@ -66,6 +66,12 @@ jobs:
         with:
           ref: ${{ matrix.ref }}
           path: ${{ matrix.checkout_path }}
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+          skip-lts-prepass: true
 
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v3
@@ -128,14 +134,10 @@ jobs:
           skip-decompress: true
 
       - name: Install Sizoscope CLI
-        run: dotnet tool install --tool-path Tools sizoscope-cli
+        run: dotnet tool install --global sizoscope-cli
 
       - name: Compare .mstat files
-        run: |
-          & "Tools/sizoscope-cli.exe" `
-            downloads/baseline.zip `
-            downloads/compare.zip `
-            --output "sizoscope-diff.txt"
+        run: sizoscope-cli downloads/baseline.zip downloads/compare.zip --output sizoscope-diff.txt
 
       - name: Publish report to summary
         run: ./scripts/ConvertTo-SizoscopeSummary.ps1 -InputPath sizoscope-diff.txt -OutputPath "$env:GITHUB_STEP_SUMMARY"
