@@ -498,4 +498,105 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(clone);
         await Assert.That(((MediaViewModel)recentContext.Recent[0]).IsPlayingIndividually).IsTrue();
     }
+
+    [Test]
+    public async Task ReceiveMusicLibraryChanged_WhileShowRecentDisabled_InvalidatesLoadedStateSoReenablingRefreshesAlbum()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, libraryContext, _, dbService, generalSettings) = CreateCoordinator(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        string albumKey = AlbumViewModelFactory.GetAlbumKey("Abbey Road", "The Beatles");
+        await dbService.UpsertRecentEntryAsync(new RecentEntryDto
+        {
+            Id = QueueOrigin.GetEntryId(RecentItemKind.Album, albumKey),
+            Kind = RecentItemKind.Album,
+            SourceId = albumKey,
+            Title = "Abbey Road",
+            Subtitle = "The Beatles",
+            LastPlayed = DateTimeOffset.UtcNow
+        });
+
+        var albumV1 = new AlbumViewModel("Abbey Road", "The Beatles");
+        var song1 = CreateDummyMedia("song1");
+        albumV1.RelatedSongs.Add(song1);
+        var libraryV1 = new MusicLibrary(
+            new[] { song1 },
+            new Dictionary<string, AlbumViewModel> { [albumKey] = albumV1 },
+            new Dictionary<string, ArtistViewModel>(),
+            Array.Empty<string>(),
+            new AlbumViewModel(),
+            new ArtistViewModel());
+        libraryContext.Music = libraryV1;
+
+        await coordinator.LoadAsync();
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(albumV1);
+
+        // Disable ShowRecent while a library rescan produces a new AlbumViewModel instance
+        generalSettings.ShowRecent = false;
+        var albumV2 = new AlbumViewModel("Abbey Road", "The Beatles");
+        var song2 = CreateDummyMedia("song2");
+        albumV2.RelatedSongs.Add(song1);
+        albumV2.RelatedSongs.Add(song2);
+        var libraryV2 = new MusicLibrary(
+            new[] { song1, song2 },
+            new Dictionary<string, AlbumViewModel> { [albumKey] = albumV2 },
+            new Dictionary<string, ArtistViewModel>(),
+            Array.Empty<string>(),
+            new AlbumViewModel(),
+            new ArtistViewModel());
+        libraryContext.Music = libraryV2;
+        coordinator.Receive(new PropertyChangedMessage<MusicLibrary>(libraryContext, nameof(LibraryContext.Music), libraryV1, libraryV2));
+
+        // Re-enabling ShowRecent and calling LoadAsync() (without forceReload) must refresh to albumV2
+        generalSettings.ShowRecent = true;
+        await coordinator.LoadAsync();
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(albumV2);
+    }
+
+    [Test]
+    public async Task LoadAsync_ForceReload_UpgradesSingleMediaToLinkedLibraryInstance_UnlessPlayingIndividually()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, libraryContext, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        const string songUrl = "https://example.com/song1.mp3";
+        await dbService.UpsertRecentEntryAsync(new RecentEntryDto
+        {
+            Id = QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, songUrl),
+            Kind = RecentItemKind.SingleMedia,
+            SourceId = songUrl,
+            Title = "song1",
+            LastPlayed = DateTimeOffset.UtcNow
+        });
+
+        // Initial load before library scan produces an unlinked MediaViewModel
+        await coordinator.LoadAsync();
+        var initialMedia = (MediaViewModel)recentContext.Recent[0];
+        await Assert.That(initialMedia.Album).IsNull();
+
+        // Populate music library with linked MediaViewModel carrying Album
+        var album = new AlbumViewModel("Abbey Road", "The Beatles");
+        var librarySong = CreateDummyMedia("song1");
+        librarySong.Album = album;
+        libraryContext.Music = new MusicLibrary(
+            new[] { librarySong },
+            new Dictionary<string, AlbumViewModel> { [album.AlbumKey] = album },
+            new Dictionary<string, ArtistViewModel>(),
+            Array.Empty<string>(),
+            new AlbumViewModel(),
+            new ArtistViewModel());
+
+        // While actively playing individually, forceReload preserves the active instance
+        initialMedia.IsPlayingIndividually = true;
+        await coordinator.LoadAsync(forceReload: true);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(initialMedia);
+
+        // Once not playing individually, forceReload swaps in the linked library MediaViewModel
+        initialMedia.IsPlayingIndividually = false;
+        await coordinator.LoadAsync(forceReload: true);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(librarySong);
+        await Assert.That(((MediaViewModel)recentContext.Recent[0]).Album).IsSameReferenceAs(album);
+    }
 }

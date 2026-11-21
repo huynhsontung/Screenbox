@@ -98,13 +98,24 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public async void Receive(PropertyChangedMessage<MusicLibrary> message)
     {
+        if (_libraryContext.IsLoadingMusic)
+        {
+            return;
+        }
+
         bool isLoaded;
         lock (_stateLock)
         {
             isLoaded = _isLoaded;
+            if (!_generalSettings.ShowRecent)
+            {
+                // Mark stale so re-enabling ShowRecent refreshes retained album/artist cards against the new library.
+                _isLoaded = false;
+                return;
+            }
         }
 
-        if (!_generalSettings.ShowRecent || _libraryContext.IsLoadingMusic || !isLoaded)
+        if (!isLoaded)
         {
             return;
         }
@@ -467,6 +478,12 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 if (existingByEntryId.TryGetValue(entry.Id, out IRecentItem? existing) &&
                     existing is MediaViewModel existingMedia)
                 {
+                    if (!existingMedia.IsPlayingIndividually &&
+                        FindMusicLibrarySong(entry.SourceId) is { } librarySong)
+                    {
+                        return librarySong;
+                    }
+
                     if (existingMedia.Source is IFileMediaSource fileSource && !string.IsNullOrEmpty(entry.Token))
                     {
                         fileSource.Token = entry.Token;
@@ -560,6 +577,18 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private void PublishSnapshot() =>
         _recentContext.Recent = Volatile.Read(ref _items);
+
+    private MediaViewModel? FindMusicLibrarySong(string location)
+    {
+        string normalized = QueueOrigin.NormalizeLocation(location);
+        if (string.IsNullOrEmpty(normalized))
+            return null;
+
+        // Only music library songs carry live Album/Artist links needed for Show Album / Show Artist actions;
+        // video library items have no relational container entities to relink.
+        return _libraryContext.Music.Songs.FirstOrDefault(song =>
+            string.Equals(QueueOrigin.NormalizeLocation(song.Location), normalized, StringComparison.Ordinal));
+    }
 
     private async Task<MediaViewModel?> HydrateMediaViewModelAsync(RecentEntryDto entry)
     {
