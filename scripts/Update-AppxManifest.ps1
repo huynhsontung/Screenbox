@@ -45,7 +45,8 @@ param (
 
 New-Variable -Name StoreIdentityName -Value "18496Starpine.Screenbox" -Option Constant
 New-Variable -Name StoreIdentityPublisher -Value "CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C" -Option Constant
-New-Variable -Name StoreDisplayName -Value "Screenbox" -Option Constant
+New-Variable -Name StoreDisplayName -Value "ms-resource:ManifestResources/FriendlyAppDisplayName" -Option Constant
+New-Variable -Name SideloadDisplayName -Value "Screenbox Media Player Dev" -Option Constant
 
 New-Variable -Name UnsignedOid -Value "2.25.311729368913984317654407730594956997722=1" -Option Constant
 
@@ -56,13 +57,13 @@ switch ($Identity) {
     'Store' {
         $identityName = $StoreIdentityName
         $displayName = $StoreDisplayName
-        $visualDisplayName = "ms-resource:ManifestResources/AppDisplayName"
+        $visualDisplayName = $StoreDisplayName
         break
     }
     { $_ -in 'Sideload', 'SideloadUnsigned' } {
         $identityName = "$StoreIdentityName.Dev"
-        $displayName = "$StoreDisplayName Dev"
-        $visualDisplayName = "$StoreDisplayName Dev"
+        $displayName = $SideloadDisplayName
+        $visualDisplayName = $SideloadDisplayName
         break
     }
 }
