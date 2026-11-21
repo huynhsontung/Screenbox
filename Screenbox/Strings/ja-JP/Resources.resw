@@ -876,7 +876,7 @@
     <value>並び替え</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value/>
+    <value>並べ替え条件: {0} を選択中</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">

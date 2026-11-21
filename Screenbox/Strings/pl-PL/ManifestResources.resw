@@ -121,7 +121,7 @@
     <value>Screenbox</value>
   </data>
   <data name="FriendlyAppDisplayName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Odtwarzacz Screenbox</value>
     <comment>Do not translate "Screenbox". Only translate the "Media Player" portion.</comment>
   </data>
   <data name="AppShortName" xml:space="preserve">
