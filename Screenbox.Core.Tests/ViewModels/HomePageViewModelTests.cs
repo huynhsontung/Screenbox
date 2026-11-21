@@ -341,4 +341,40 @@ public sealed class HomePageViewModelTests
         await Assert.That(toggleCount).IsEqualTo(1);
         await Assert.That(playMediaCount).IsEqualTo(1);
     }
+
+    [Test]
+    public async Task ShowRecent_WhenDisabled_HidesRecentItems()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var coordinator = new DummyCoordinator();
+        var selection = new SelectionViewModel();
+        var libraryContext = new LibraryContext();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = false };
+
+        var track1 = CreateDummyMedia("Track 1");
+        recentContext.Recent = (IRecentItem[])[track1];
+
+        var vm = new HomePageViewModel(
+            recentContext,
+            coordinator,
+            selection,
+            mediaFactory,
+            null!,
+            generalSettings,
+            null!,
+            messenger);
+
+        await Assert.That(vm.Recent).IsEmpty();
+
+        // Context updates while ShowRecent is false stay hidden in the ViewModel
+        recentContext.Recent = (IRecentItem[])[track1, CreateDummyMedia("Track 2")];
+        await Assert.That(vm.Recent).IsEmpty();
+
+        // Enabling ShowRecent and calling OnLoaded surfaces the items
+        generalSettings.ShowRecent = true;
+        vm.OnLoaded();
+        await Assert.That(vm.Recent.Count).IsEqualTo(2);
+    }
 }

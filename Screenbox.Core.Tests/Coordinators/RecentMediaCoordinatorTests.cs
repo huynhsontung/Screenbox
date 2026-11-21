@@ -323,25 +323,26 @@ public sealed class RecentMediaCoordinatorTests
     }
 
     [Test]
-    public async Task ShowRecent_Toggle_ClearsAndReloadsFromDatabase()
+    public async Task ShowRecent_WhenDisabled_SkipsRecordingAndPreservesExistingEntries()
     {
         using var fixture = new TestDirectoryFixture();
         var (coordinator, recentContext, _, _, dbService, generalSettings) =
             CreateCoordinator(fixture.DirectoryPath);
         await dbService.InitializeAsync();
 
-        // 1. Initial queue session recorded
-        var track = CreateDummyMedia("song1");
-        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(track), track);
-
+        // 1. Initial queue session recorded while ShowRecent is enabled
+        var track1 = CreateDummyMedia("song1");
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(track1), track1);
         await Assert.That(recentContext.Recent).HasSingleItem();
 
-        // 2. Toggle ShowRecent to false -> clears in-memory collection
+        // 2. Disable ShowRecent -> new playback is not recorded and existing history is untouched
         generalSettings.ShowRecent = false;
-        await Assert.That(recentContext.Recent).IsEmpty();
+        var track2 = CreateDummyMedia("song2");
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(track2), track2);
 
-        // 3. Toggle ShowRecent back to true -> reloads the entry from SQLite
-        generalSettings.ShowRecent = true;
+        var persisted = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(persisted).HasSingleItem();
+        await Assert.That(persisted[0].Title).IsEqualTo("song1");
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("song1");
     }
@@ -433,7 +434,7 @@ public sealed class RecentMediaCoordinatorTests
     }
 
     [Test]
-    public async Task LoadAsync_WhenShowRecentToggledRapidly_CancelsStaleLoadAndKeepsNewerResult()
+    public async Task LoadAsync_WhenForceReloadStartsWhileInFlight_CancelsStaleLoadAndKeepsNewerResult()
     {
         var staleTcs = new TaskCompletionSource<List<RecentEntryDto>>();
         var db = new FlakyDatabaseService(loadHandler: call =>
@@ -456,11 +457,10 @@ public sealed class RecentMediaCoordinatorTests
             });
         });
 
-        var (coordinator, recentContext, _, _, generalSettings) = CreateCoordinatorWithDb(db);
+        var (coordinator, recentContext, _, _, _) = CreateCoordinatorWithDb(db);
 
         Task staleLoad = coordinator.LoadAsync();
-        generalSettings.ShowRecent = false;
-        generalSettings.ShowRecent = true;
+        Task freshLoad = coordinator.LoadAsync(forceReload: true);
 
         staleTcs.SetResult([
             new RecentEntryDto
@@ -473,8 +473,7 @@ public sealed class RecentMediaCoordinatorTests
             }
         ]);
 
-        await staleLoad;
-        await coordinator.LoadAsync();
+        await Task.WhenAll(staleLoad, freshLoad);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("Fresh");

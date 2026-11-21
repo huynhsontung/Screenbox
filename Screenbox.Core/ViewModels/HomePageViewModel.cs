@@ -82,13 +82,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
-        Recent.SyncItems(_recentContext.Recent);
+        if (_generalSettings.ShowRecent)
+        {
+            Recent.SyncItems(_recentContext.Recent);
+        }
+
         Messenger.Register<PropertyChangedMessage<IReadOnlyList<IRecentItem>>>(this);
     }
 
     public void Receive(PropertyChangedMessage<IReadOnlyList<IRecentItem>> message)
     {
-        if (ReferenceEquals(message.Sender, _recentContext))
+        if (ReferenceEquals(message.Sender, _recentContext) && _generalSettings.ShowRecent)
         {
             _dispatcherQueue.TryExecuteOrEnqueue(() => Recent.SyncItems(message.NewValue));
         }
@@ -98,8 +102,13 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         if (_generalSettings.ShowRecent)
         {
+            Recent.SyncItems(_recentContext.Recent);
             await _recentMediaCoordinator.LoadAsync();
             await _recentMediaCoordinator.LoadDetailsAsync();
+        }
+        else
+        {
+            Recent.Clear();
         }
     }
 

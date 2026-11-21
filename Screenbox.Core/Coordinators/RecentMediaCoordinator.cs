@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -78,7 +77,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         _playlistFactory = playlistFactory ?? Ioc.Default.GetRequiredService<PlaylistViewModel>;
 
         _playlistsContext.Playlists.CollectionChanged += Playlists_CollectionChanged;
-        _generalSettings.PropertyChanged += GeneralSettings_PropertyChanged;
 
         Messenger.Register<QueueSessionStartedMessage>(this);
         Messenger.Register<PropertyChangedMessage<MusicLibrary>>(this);
@@ -160,7 +158,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         try
         {
             var entries = await _databaseService.LoadRecentEntriesAsync(RecentContext.MaxRecentItems);
-            if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
+            if (ct.IsCancellationRequested)
             {
                 return;
             }
@@ -179,13 +177,13 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             var newEntryIds = new Dictionary<IRecentItem, string>(entries.Count);
             foreach (RecentEntryDto entry in entries)
             {
-                if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
+                if (ct.IsCancellationRequested)
                 {
                     return;
                 }
 
                 IRecentItem? vm = await HydrateRecentItemAsync(entry, existingByEntryId);
-                if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
+                if (ct.IsCancellationRequested)
                 {
                     return;
                 }
@@ -198,7 +196,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
             lock (_stateLock)
             {
-                if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
+                if (ct.IsCancellationRequested)
                 {
                     return;
                 }
@@ -547,30 +545,6 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to update recent items after playlists changed.");
-        }
-    }
-
-    private async void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(GeneralSettingsContext.ShowRecent))
-        {
-            if (_generalSettings.ShowRecent)
-            {
-                await LoadAsync();
-                await LoadDetailsAsync();
-            }
-            else
-            {
-                lock (_stateLock)
-                {
-                    InvalidatePendingLoadsLocked();
-                    _entryIds = new();
-                    _items = [];
-                    _isLoaded = false;
-                }
-
-                PublishSnapshot();
-            }
         }
     }
 
