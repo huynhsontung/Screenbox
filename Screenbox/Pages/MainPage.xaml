@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:appModel="using:Windows.ApplicationModel"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
@@ -59,7 +58,7 @@
     <Grid>
         <sbuc:TitleBar
             x:Name="AppTitleBar"
-            Title="{x:Bind appModel:Package.Current.DisplayName}"
+            Title="{x:Bind strings:ManifestResources.AppShortName}"
             Margin="{StaticResource AppTitleBarExpandedMargin}"
             ctAnimations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
             ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
