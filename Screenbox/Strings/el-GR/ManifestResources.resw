@@ -120,6 +120,10 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>Screenbox</value>
   </data>
+  <data name="FriendlyAppDisplayName" xml:space="preserve">
+    <value>Screenbox Media Player</value>
+    <comment>Do not translate "Screenbox". Only translate the "Media Player" portion.</comment>
+  </data>
   <data name="AppShortName" xml:space="preserve">
     <value>Screenbox</value>
   </data>
@@ -239,7 +243,7 @@
     <comment>Display name for the file type ".ogv"</comment>
   </data>
   <data name="FileDisplayNameOggMedia" xml:space="preserve">
-    <value>Ogg Media File</value>
+    <value>Αρχείο Μέσων Ogg</value>
     <comment>Display name for the file type ".ogm"</comment>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">

@@ -149,11 +149,11 @@
     <value>Συνολική διάρκεια</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>Κεφάλαιο</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>Κεφάλαια</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -232,7 +232,7 @@
     <value>Προσθήκη στην ουρά</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Επιλογή</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Επιλογή όλων</value>
@@ -319,7 +319,7 @@
     <value>Άγνωστο είδος</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>Όλα τα είδη</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Προσθήκη φακέλου</value>
@@ -367,10 +367,10 @@
     <value>Άνοιγμα θέσης αρχείου</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>Άνοιγμα στον περιηγητή αρχείων</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open with</value>
+    <value>Άνοιγμα με</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Άλμπουμ</value>
@@ -562,6 +562,10 @@
     <value>Αποτελέσματα βίντεο για "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>Αποτελέσματα λιστών αναπαραγωγής για "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>Κανένα άλμπουμ</value>
     <comment>#Format[Plural Int]</comment>
@@ -672,10 +676,10 @@
     <value>Επιτρέψτε τη μέγιστη ένταση να υπερβαίνει το 100%</value>
   </data>
   <data name="SettingsRewindDescription" xml:space="preserve">
-    <value>The amount of time skipped backward when you rewind</value>
+    <value>Ο χρόνος που επαναφέρεται κατά την 'Επαναφορά'</value>
   </data>
   <data name="SettingsFastForwardDescription" xml:space="preserve">
-    <value>The amount of time skipped forward when you fast forward</value>
+    <value>Ο χρόνος που προσπερνάται κατά τη 'Γρήγορη Προώθηση'</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
     <value>Στοιχεία ελέγχου οθόνης</value>
@@ -721,15 +725,15 @@
     <value>Υπότιτλος προστέθηκε</value>
   </data>
   <data name="PlaylistCreatedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" created</value>
+    <value>Η λίστα αναπαραγωγής "{0}" δημιουργήθηκε</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistDeletedNotificationTitle" xml:space="preserve">
-    <value>Playlist "{0}" deleted</value>
+    <value>Η λίστα αναπαραγωγής "{0}" διαγράφηκε</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="PlaylistRenamedNotificationTitle" xml:space="preserve">
-    <value>Playlist renamed to "{0}"</value>
+    <value>Η λίστα αναπαραγωγής μετονομάστηκε σε "{0}"</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="CriticalError" xml:space="preserve">
@@ -776,7 +780,7 @@
     <value>Σύνθετα</value>
   </data>
   <data name="SettingsCategoryPrivacy" xml:space="preserve">
-    <value>Privacy</value>
+    <value>Ιδιωτικότητα</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Σύνθετη λειτουργία</value>
@@ -876,7 +880,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>Φιλτράρισμα κατά επιλεγμένο είδος {0} </value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -951,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Προσθήκη όλων των αρχείων στο φάκελο στην ουρά</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>Χρήση ρύθμισης συστήματος</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>Σκοτεινό</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>Φωτεινό</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Αλλαγή του συνολικού συνδυασμού χρωμάτων της εφαρμογής</value>
   </data>
@@ -1021,180 +1016,189 @@
     <value>Φάκελος</value>
   </data>
   <data name="SettingsGestureTapHeader" xml:space="preserve">
-    <value>Tap</value>
+    <value>Πατήστε</value>
   </data>
   <data name="SettingsGestureSwipeUpHeader" xml:space="preserve">
-    <value>Swipe up</value>
+    <value>Σύρσιμο πάνω</value>
   </data>
   <data name="SettingsGestureSwipeDownHeader" xml:space="preserve">
-    <value>Swipe down</value>
+    <value>Σύρσιμο Κάτω</value>
   </data>
   <data name="SettingsGestureSwipeLeftHeader" xml:space="preserve">
-    <value>Swipe left</value>
+    <value>Σύρσιμο αριστερά</value>
   </data>
   <data name="SettingsGestureSwipeRightHeader" xml:space="preserve">
-    <value>Swipe right</value>
+    <value>Σύρσιμο δεξιά</value>
   </data>
   <data name="SettingsGesturePressAndHoldHeader" xml:space="preserve">
-    <value>Enable press and hold to increase playback speed</value>
+    <value>Ενεργοποίηση παρατεταμένου πατήματος για αύξηση ταχύτητας αναπαραγωγής</value>
   </data>
   <data name="PlaybackActionKindNone" xml:space="preserve">
-    <value>Nothing</value>
+    <value>Τίποτα</value>
   </data>
   <data name="PlayPause" xml:space="preserve">
-    <value>Play/pause</value>
+    <value>Αναπαραγωγή/παύση</value>
   </data>
   <data name="Rewind" xml:space="preserve">
-    <value>Rewind</value>
+    <value>Επαναφορά</value>
   </data>
   <data name="FastForward" xml:space="preserve">
-    <value>Fast forward</value>
+    <value>Γρήγορη προώθηση</value>
   </data>
   <data name="DecreaseVolume" xml:space="preserve">
-    <value>Decrease volume</value>
+    <value>Μειώστε ένταση</value>
   </data>
   <data name="IncreaseVolume" xml:space="preserve">
-    <value>Increase volume</value>
+    <value>Αύξηση έντασης</value>
   </data>
   <data name="DecreaseRate" xml:space="preserve">
-    <value>Decrease speed</value>
+    <value>Μείωση ταχύτητας</value>
   </data>
   <data name="IncreaseRate" xml:space="preserve">
-    <value>Increase speed</value>
+    <value>Αύξηση ταχύτητας</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>Επόμενο κομμάτι</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>Προηγούμενο κομμάτι</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>Επόμενο κεφάλαιο</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>Προηγούμενο κεφάλαιο</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to playlist</value>
+    <value>Προσθήκη στη λίστα αναπαραγωγής</value>
   </data>
   <data name="CreateNewPlaylist" xml:space="preserve">
-    <value>Create new playlist</value>
+    <value>Δημιουργία νέας λίστας αναπαραγωγής</value>
   </data>
   <data name="NewPlaylist" xml:space="preserve">
-    <value>New playlist</value>
+    <value>Νέα λίστα αναπαραγωγής</value>
   </data>
   <data name="ImportPlaylist" xml:space="preserve">
-    <value>Import playlist</value>
+    <value>Εισαγωγή λίστας αναπαραγωγής</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Εξαγωγή</value>
   </data>
   <data name="SelectedItem" xml:space="preserve">
-    <value>Selected item</value>
+    <value>Επιλεγμένο στοιχείο</value>
   </data>
   <data name="SelectedItems" xml:space="preserve">
-    <value>Selected items</value>
+    <value>Επιλεγμένα στοιχεία</value>
   </data>
   <data name="NoPlaylists" xml:space="preserve">
-    <value>No playlists</value>
+    <value>Καμία λίστα αναπαραγωγής</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Δημιουργήστε</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Ακύρωση</value>
   </data>
   <data name="NewPlaylistDefaultName" xml:space="preserve">
-    <value>Untitled playlist</value>
+    <value>Λίστα αναπαραγωγής χωρίς τίτλο</value>
   </data>
   <data name="CreatePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a name for this playlist</value>
+    <value>Εισάγετε ένα όνομα για αυτήν τη λίστα αναπαραγωγής</value>
   </data>
   <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>Λίστες αναπαραγωγής</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Διαγραφή</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>Μετονομασία</value>
   </data>
   <data name="RenamePlaylistPlaceholder" xml:space="preserve">
-    <value>Enter a new name for this playlist</value>
+    <value>Εισάγετε ένα νέο όνομα για αυτήν τη λίστα αναπαραγωγής</value>
   </data>
   <data name="RenamePlaylist" xml:space="preserve">
-    <value>Rename playlist</value>
+    <value>Μετονομασία λίστας αναπαραγωγής</value>
   </data>
   <data name="DeletePlaylist" xml:space="preserve">
-    <value>Delete playlist</value>
+    <value>Διαγραφή λίστας αναπαραγωγής</value>
   </data>
   <data name="DeletePlaylistConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}' playlist? You cannot undo this action.</value>
+    <value>Είστε σίγουροι ότι θέλετε να διαγράψετε τη λίστα αναπαραγωγής '{0}'; Αυτή η πράξη δεν αναιρείται.</value>
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>Επιλέχθηκε {0} λίστα αναπαραγωγής</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>Επιλέχθηκαν {0} λίστες αναπαραγωγής </value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
-    <value>Playback position history</value>
+    <value>Ιστορικό θέσης αναπαραγωγής</value>
   </data>
   <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
-    <value>Store my playback position history on this device to enable quick session resumption</value>
+    <value>Αποθήκευση ιστορικού θέσης αναπαραγωγής σε αυτήν τη συσκευή για να ενεργοποίηση γρήγορης επανάληψης της συνεδρίας</value>
   </data>
   <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
-    <value>Clear device playback position history</value>
+    <value>Εκκαθάριση ιστορικού θέσης αναπαραγωγής συσκευής</value>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_One" xml:space="preserve">
-    <value>Added {0} item to playlist "{1}"</value>
+    <value>Προστέθηκε {0} στοιχείο στη λίστα αναπαραγωγής "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="PlaylistItemsAddedNotificationTitle_Other" xml:space="preserve">
-    <value>Added {0} items to playlist "{1}"</value>
+    <value>Προστέθηκαν {0} αντικείμενα στη λίστα αναπαραγωγής "{1}"</value>
     <comment>#Format[Plural count, String name]</comment>
   </data>
   <data name="NoPlaylistsPanelHeader" xml:space="preserve">
-    <value>You don't have any playlists</value>
+    <value>Δεν έχετε καμία λίστα αναπαραγωγής</value>
   </data>
   <data name="NoPlaylistsPanelSubtext" xml:space="preserve">
-    <value>Create your first playlist to organize your favorite videos and music.</value>
+    <value>Δημιουργήστε την πρώτη σας λίστα αναπαραγωγής για να οργανώσετε τα αγαπημένα σας βίντεο και μουσική.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>Δεν υπάρχουν αντικείμενα σε αυτήν τη λίστα αναπαραγωγής.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>Οι καταγραφές πλαισίων θα αποθηκευτούν σε</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>Τοποθεσία λήψης καρέ</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>Αλλαγή φακέλου</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Αλλαγή</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>Αναλογία οθόνης: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>Ρυθμίσεις ήχου</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>Ρυθμίσεις υποτίτλων</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>Μείωση {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>Αύξηση {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>Χρήση ρύθμισης συστήματος</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Ανοιχτόχρωμη</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Σκουρόχρωμη</value>
   </data>
 </root>
 
