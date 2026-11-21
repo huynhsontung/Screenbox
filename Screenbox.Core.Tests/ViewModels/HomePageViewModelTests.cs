@@ -298,4 +298,47 @@ public sealed class HomePageViewModelTests
             await Assert.That(vm.RemoveCommand.CanExecute(placeholder)).IsTrue();
         }
     }
+
+    [Test]
+    public async Task PlayCommand_PausedSingleMediaInIndividualQueue_ResumesInsteadOfReplacingQueue()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var coordinator = new DummyCoordinator();
+        var selection = new SelectionViewModel();
+        var libraryContext = new LibraryContext();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
+
+        var vm = new HomePageViewModel(
+            recentContext,
+            coordinator,
+            selection,
+            mediaFactory,
+            null!,
+            generalSettings,
+            null!,
+            messenger);
+
+        var track = CreateDummyMedia("Track 1");
+        var album = new AlbumViewModel("Album A", "Artist A", messenger);
+        QueuePlaybackState currentState = new(Guid.NewGuid(), QueueOrigin.ForSingleMedia(track), track, IsPlaying: false);
+
+        int toggleCount = 0;
+        int playMediaCount = 0;
+        messenger.Register<QueuePlaybackStateRequestMessage>(this, (_, msg) => msg.Reply(currentState));
+        messenger.Register<TogglePlayPauseMessage>(this, (_, _) => toggleCount++);
+        messenger.Register<PlayMediaMessage>(this, (_, _) => playMediaCount++);
+
+        // Paused in an individually tracked queue -> toggles play/pause instead of replacing queue
+        await vm.PlayCommand.ExecuteAsync(track);
+        await Assert.That(toggleCount).IsEqualTo(1);
+        await Assert.That(playMediaCount).IsEqualTo(0);
+
+        // Paused inside a container queue (Album) -> starts track standalone via PlayMediaMessage
+        currentState = new QueuePlaybackState(Guid.NewGuid(), QueueOrigin.ForAlbum(album), track, IsPlaying: false);
+        await vm.PlayCommand.ExecuteAsync(track);
+        await Assert.That(toggleCount).IsEqualTo(1);
+        await Assert.That(playMediaCount).IsEqualTo(1);
+    }
 }

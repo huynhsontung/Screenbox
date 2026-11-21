@@ -13,6 +13,7 @@ using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.System;
@@ -128,7 +129,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         switch (item)
         {
             case MediaViewModel media:
-                if (media.IsPlayingIndividually)
+                if (IsActiveIndividually(media))
                 {
                     Messenger.Send(new TogglePlayPauseMessage(false));
                 }
@@ -275,6 +276,33 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         not null => true,
         _ => false
     };
+
+    private bool IsActiveIndividually(MediaViewModel media)
+    {
+        if (media.IsPlayingIndividually)
+        {
+            return true;
+        }
+
+        var request = new QueuePlaybackStateRequestMessage();
+        Messenger.Send(request);
+        if (!request.HasReceivedResponse)
+        {
+            return false;
+        }
+
+        QueuePlaybackState state = request.Response;
+        if (state.CurrentItem is null || (state.Origin is not null && !state.Origin.TrackItemsIndividually))
+        {
+            return false;
+        }
+
+        return ReferenceEquals(state.CurrentItem, media) ||
+               string.Equals(
+                   QueueOrigin.NormalizeLocation(state.CurrentItem.Location),
+                   QueueOrigin.NormalizeLocation(media.Location),
+                   StringComparison.Ordinal);
+    }
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }

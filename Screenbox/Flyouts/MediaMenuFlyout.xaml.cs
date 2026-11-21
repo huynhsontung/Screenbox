@@ -154,7 +154,6 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         // AddToPlaylist MenuFlyoutSubItem
         bool canAddToPlaylist = IsAddToPlaylistButtonVisible && ContextItem switch
         {
-            MediaCollectionViewModel => false,
             AlbumViewModel { HasSongs: false } => false,
             ArtistViewModel { HasSongs: false } => false,
             PlaylistViewModel { HasItems: false } => false,

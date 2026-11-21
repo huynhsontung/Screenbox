@@ -128,7 +128,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         lock (_stateLock)
         {
-            if ((!forceReload && _isLoaded) || !_generalSettings.ShowRecent)
+            if (!_generalSettings.ShowRecent)
             {
                 return Task.CompletedTask;
             }
@@ -136,6 +136,11 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             if (!forceReload && _loadTask is { IsCompleted: false })
             {
                 return _loadTask;
+            }
+
+            if (!forceReload && _isLoaded)
+            {
+                return Task.CompletedTask;
             }
 
             if (forceReload)
@@ -160,10 +165,14 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                 return;
             }
 
-            var existingCollections = new Dictionary<string, MediaCollectionViewModel>(StringComparer.Ordinal);
-            foreach (MediaCollectionViewModel collection in Volatile.Read(ref _items).OfType<MediaCollectionViewModel>())
+            Dictionary<string, IRecentItem> existingByEntryId;
+            lock (_stateLock)
             {
-                existingCollections.TryAdd(QueueOrigin.NormalizeLocation(collection.SourcePath), collection);
+                existingByEntryId = new Dictionary<string, IRecentItem>(_entryIds.Count, StringComparer.Ordinal);
+                foreach (var (item, id) in _entryIds)
+                {
+                    existingByEntryId.TryAdd(id, item);
+                }
             }
 
             var newItems = new List<IRecentItem>(entries.Count);
@@ -175,7 +184,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                     return;
                 }
 
-                IRecentItem? vm = await HydrateRecentItemAsync(entry, existingCollections);
+                IRecentItem? vm = await HydrateRecentItemAsync(entry, existingByEntryId);
                 if (ct.IsCancellationRequested || !_generalSettings.ShowRecent)
                 {
                     return;
@@ -343,19 +352,40 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             var existingPair = _entryIds.FirstOrDefault(kvp => kvp.Value == entryId);
             if (existingPair.Key is { } existing)
             {
-                if (existing is MediaCollectionViewModel collection && !string.IsNullOrEmpty(origin.Token))
+                IRecentItem promoted = existing;
+                if (origin.Kind == RecentItemKind.SingleMedia &&
+                    existing is MediaViewModel &&
+                    media is not null &&
+                    !ReferenceEquals(existing, media))
+                {
+                    // Swap to the live playing instance (e.g. a clone created by SendPlayNext / SendAddToQueue / InsertNext)
+                    // so the Home card stays bound to the instance receiving IsPlayingIndividually updates.
+                    _entryIds.Remove(existing);
+                    _entryIds[media] = entryId;
+                    promoted = media;
+                }
+                else if (existing is MediaCollectionViewModel collection && !string.IsNullOrEmpty(origin.Token))
                 {
                     collection.Token = origin.Token;
                 }
 
                 int existingIndex = items.IndexOf(existing);
-                if (existingIndex > 0)
+                if (!ReferenceEquals(existing, promoted))
+                {
+                    if (existingIndex >= 0)
+                    {
+                        items.RemoveAt(existingIndex);
+                    }
+
+                    items.Insert(0, promoted);
+                }
+                else if (existingIndex > 0)
                 {
                     items.RemoveAt(existingIndex);
                     items.Insert(0, existing);
                 }
 
-                targetVm = existing;
+                targetVm = promoted;
             }
             else
             {
@@ -430,20 +460,33 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
     private async Task<IRecentItem?> HydrateRecentItemAsync(
         RecentEntryDto entry,
-        IReadOnlyDictionary<string, MediaCollectionViewModel> existingCollections)
+        IReadOnlyDictionary<string, IRecentItem> existingByEntryId)
     {
         switch (entry.Kind)
         {
             case RecentItemKind.SingleMedia:
+            {
+                if (existingByEntryId.TryGetValue(entry.Id, out IRecentItem? existing) &&
+                    existing is MediaViewModel existingMedia)
+                {
+                    if (existingMedia.Source is IFileMediaSource fileSource && !string.IsNullOrEmpty(entry.Token))
+                    {
+                        fileSource.Token = entry.Token;
+                    }
+
+                    return existingMedia;
+                }
+
                 return await HydrateMediaViewModelAsync(entry);
+            }
 
             case RecentItemKind.MediaCollection:
             {
                 if (string.IsNullOrEmpty(entry.SourceId))
                     return null;
 
-                string key = QueueOrigin.NormalizeLocation(entry.SourceId);
-                if (existingCollections.TryGetValue(key, out MediaCollectionViewModel? existingCollection))
+                if (existingByEntryId.TryGetValue(entry.Id, out IRecentItem? existing) &&
+                    existing is MediaCollectionViewModel existingCollection)
                 {
                     if (!string.IsNullOrEmpty(entry.Token))
                     {

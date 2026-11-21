@@ -54,7 +54,9 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         set => SetValue(TargetSubItemProperty, value);
     }
 
-    private IAsyncRelayCommand<IEnumerable<MediaViewModel>> CreatePlaylistCommand { get; }
+    private IAsyncRelayCommand<object[]> CreatePlaylistCommand { get; }
+
+    private IAsyncRelayCommand<(PlaylistViewModel Playlist, object[] Targets)> AddToPlaylistCommand { get; }
 
     private readonly PlaylistsContext _playlistsContext;
     private FrameworkElement? _flyoutTarget;
@@ -62,7 +64,8 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
     public AddToPlaylistFlyoutBehavior()
     {
         _playlistsContext = Ioc.Default.GetRequiredService<PlaylistsContext>();
-        CreatePlaylistCommand = new AsyncRelayCommand<IEnumerable<MediaViewModel>>(CreatePlaylistAsync);
+        CreatePlaylistCommand = new AsyncRelayCommand<object[]>(CreatePlaylistAsync);
+        AddToPlaylistCommand = new AsyncRelayCommand<(PlaylistViewModel Playlist, object[] Targets)>(AddToPlaylistAsync);
     }
 
     protected override void OnAttached()
@@ -98,28 +101,7 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         // If no DataContext is set at the behavior or sub-menu level, we can try to fall back to the target element's DataContext
         dataContext ??= _flyoutTarget?.DataContext;
 
-        MediaViewModel[] contextItems = dataContext switch
-        {
-            StorageItemViewModel { Media: { } media } => [media],
-            MediaViewModel vm => [vm],
-            AlbumViewModel album => album.OrderedSongs.ToArray(),
-            ArtistViewModel artist => artist.OrderedSongs.ToArray(),
-            PlaylistViewModel playlist => playlist.Items.ToArray(),
-            SelectionViewModel selection => selection.GetSelectedItems<object>()
-                .SelectMany(o => o switch
-                {
-                    MediaViewModel m => (MediaViewModel[])[m],
-                    AlbumViewModel album => album.OrderedSongs,
-                    ArtistViewModel artist => artist.OrderedSongs,
-                    PlaylistViewModel playlist => playlist.Items,
-                    _ => Array.Empty<MediaViewModel>()
-                })
-                .ToArray(),
-            IReadOnlyList<MediaViewModel> list => list.ToArray(),
-            IEnumerable<MediaViewModel> collection => collection.ToArray(),
-            IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToArray(),
-            _ => [],
-        };
+        object[] targets = SnapshotTargets(dataContext);
 
         menuItems.Clear();
         menuItems.Add(new MenuFlyoutItem
@@ -127,7 +109,7 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
             Icon = new SymbolIcon(Symbol.Add),
             Text = Strings.Resources.CreateNewPlaylist,
             Command = CreatePlaylistCommand,
-            CommandParameter = contextItems
+            CommandParameter = targets
         });
 
         menuItems.Add(new MenuFlyoutSeparator());
@@ -147,26 +129,89 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
             menuItems.Add(new MenuFlyoutItem
             {
                 Text = playlist.Name,
-                Command = playlist.AddItemsCommand,
-                CommandParameter = contextItems
+                Command = AddToPlaylistCommand,
+                CommandParameter = (playlist, targets)
             });
         }
     }
 
-    private async Task CreatePlaylistAsync(IEnumerable<MediaViewModel>? itemsToAdd)
+    private static object[] SnapshotTargets(object? dataContext) => dataContext switch
+    {
+        StorageItemViewModel { Media: { } media } => [media],
+        MediaViewModel vm => [vm],
+        AlbumViewModel album => [album],
+        ArtistViewModel artist => [artist],
+        PlaylistViewModel playlist => [playlist],
+        MediaCollectionViewModel collection => [collection],
+        SelectionViewModel selection => selection.GetSelectedItems<object>().ToArray(),
+        IReadOnlyList<MediaViewModel> list => list.Cast<object>().ToArray(),
+        IEnumerable<MediaViewModel> collection => collection.Cast<object>().ToArray(),
+        IEnumerable<object> objects => objects.ToArray(),
+        _ => [],
+    };
+
+    private static async Task<MediaViewModel[]> ResolveMediaItemsAsync(object[]? targets)
+    {
+        if (targets is null or { Length: 0 })
+            return [];
+
+        var resolved = new List<MediaViewModel>();
+        foreach (object target in targets)
+        {
+            switch (target)
+            {
+                case MediaViewModel vm:
+                    resolved.Add(vm);
+                    break;
+                case StorageItemViewModel { Media: { } media }:
+                    resolved.Add(media);
+                    break;
+                case AlbumViewModel album:
+                    resolved.AddRange(album.OrderedSongs);
+                    break;
+                case ArtistViewModel artist:
+                    resolved.AddRange(artist.OrderedSongs);
+                    break;
+                case PlaylistViewModel playlist:
+                    resolved.AddRange(playlist.Items);
+                    break;
+                case MediaCollectionViewModel collection:
+                    try
+                    {
+                        resolved.AddRange(await collection.GetPlayableItemsAsync());
+                    }
+                    catch
+                    {
+                        // Best-effort: skip collections that can no longer be resolved from disk/URI.
+                    }
+                    break;
+            }
+        }
+
+        return resolved.ToArray();
+    }
+
+    private async Task AddToPlaylistAsync((PlaylistViewModel Playlist, object[] Targets) args)
+    {
+        MediaViewModel[] itemsToAdd = await ResolveMediaItemsAsync(args.Targets);
+        if (itemsToAdd.Length > 0 && args.Playlist.AddItemsCommand.CanExecute(itemsToAdd))
+        {
+            args.Playlist.AddItemsCommand.Execute(itemsToAdd);
+        }
+    }
+
+    private async Task CreatePlaylistAsync(object[]? targets)
     {
         var playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (string.IsNullOrWhiteSpace(playlistName))
             return;
 
+        MediaViewModel[] itemsToAdd = await ResolveMediaItemsAsync(targets);
         var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
         playlist.Name = playlistName!;
-        if (itemsToAdd != null)
+        foreach (var item in itemsToAdd)
         {
-            foreach (var item in itemsToAdd)
-            {
-                playlist.Items.Add(item);
-            }
+            playlist.Items.Add(item);
         }
 
         await playlist.SaveAsync();

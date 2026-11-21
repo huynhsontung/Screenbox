@@ -479,4 +479,24 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent).HasSingleItem();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("Fresh");
     }
+
+    [Test]
+    public async Task HandleQueueSessionStartedAsync_WhenClonedSingleMediaPlays_ReplacesRetainedInstance()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var (coordinator, recentContext, _, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
+        await dbService.InitializeAsync();
+
+        var original = CreateDummyMedia("song1");
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(original), original);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(original);
+
+        // Simulate SendPlayNext / SendAddToQueue / InsertNext cloning the MediaViewModel
+        var clone = new MediaViewModel(original) { IsPlayingIndividually = true };
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(clone), clone);
+
+        await Assert.That(recentContext.Recent).HasSingleItem();
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(clone);
+        await Assert.That(((MediaViewModel)recentContext.Recent[0]).IsPlayingIndividually).IsTrue();
+    }
 }
