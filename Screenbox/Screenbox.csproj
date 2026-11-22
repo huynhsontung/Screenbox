@@ -57,8 +57,6 @@
     <PRIResource Include="**\*.resw" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     <!-- Pending translations are explicitly removed. Remove the language below when a translation is complete. -->
     <PRIResource Remove="Strings\af-ZA\*.resw" />
-    <PRIResource Remove="Strings\ca-ES\*.resw" />
-    <PRIResource Remove="Strings\cs-CZ\*.resw" />
     <PRIResource Remove="Strings\da-DK\*.resw" />
     <PRIResource Remove="Strings\fa-IR\*.resw" />
     <PRIResource Remove="Strings\no-NO\*.resw" />
