@@ -102,7 +102,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
             saveFileTypes, Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
         if (file is null) return;
 
-        await _playlistService.ExportPlaylistItemsAsync(playlist.Items, file);
+        await _playlistService.ExportPlaylistItemsAsync(playlist.Items.Select(item => item.Media).ToList(), file);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -111,6 +111,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         var selectedPlaylists = Selection.GetSelectedItems<PlaylistViewModel>();
         var items = selectedPlaylists
             .SelectMany(p => p.Items)
+            .Select(item => item.Media)
             .ToArray();
         if (items.Length > 0)
         {
@@ -132,7 +133,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         selectedItems.Reverse();
         foreach (var item in selectedItems)
         {
-            Messenger.SendPlayNext(item.Items);
+            Messenger.SendPlayNext(item.Items.Select(i => i.Media).ToList());
         }
 
         Selection.DisableSelectionMode();
@@ -144,7 +145,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
         foreach (var item in selectedItems)
         {
-            Messenger.SendAddToQueue(item.Items);
+            Messenger.SendAddToQueue(item.Items.Select(i => i.Media).ToList());
         }
 
         Selection.DisableSelectionMode();

@@ -82,25 +82,6 @@ public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlayback
 
     private WeakReference<BitmapImage>? _thumbnailRef;
 
-    // Play queue callers now wrap MediaViewModel in QueueItemViewModel; only PlaylistViewModel
-    // still uses this copy constructor until PlaylistItemViewModel is introduced.
-    public MediaViewModel(MediaViewModel source)
-    {
-        Name = source.Name;
-        _thumbnailRef = source._thumbnailRef;
-        MediaInfo = source.MediaInfo;
-        Artists = source.Artists;
-        Album = source.Album;
-        Caption = source.Caption;
-        AltCaption = source.AltCaption;
-        _options = new List<string>(source.Options);
-        Options = new ReadOnlyCollection<string>(_options);
-        Source = source.Source;
-        DateAdded = source.DateAdded;
-        IsFromLibrary = source.IsFromLibrary;
-        DetailsLoaded = source.DetailsLoaded;
-    }
-
     public MediaViewModel(IMediaSource source, MediaInfo? mediaInfo = null)
     {
         Source = source;

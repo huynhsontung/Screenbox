@@ -23,7 +23,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class PlaylistViewModel : ObservableRecipient,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
-    public ObservableCollection<MediaViewModel> Items { get; } = new();
+    public ObservableCollection<PlaylistItemViewModel> Items { get; } = new();
 
     public double ItemsCount => Items.Count;    // For binding
 
@@ -102,7 +102,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public QueueSession ToQueueSession()
     {
-        return new QueueSession(0, Items)
+        return new QueueSession(0, Items.Select(item => item.Media).ToList())
         {
             Origin = QueueOrigin.ForPlaylist(this)
         };
@@ -121,7 +121,6 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         {
             UpdatePlaybackState(request.Response);
         }
-        var itemSet = new HashSet<MediaViewModel>(persistentPlaylist.Items.Count);
 
         var albumFactory = new AlbumViewModelFactory();
         var artistFactory = new ArtistViewModelFactory();
@@ -131,7 +130,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             try
             {
                 var vm = ToMediaViewModel(item, albumFactory, artistFactory);
-                Items.Add(itemSet.Add(vm) ? vm : new MediaViewModel(vm));
+                Items.Add(new PlaylistItemViewModel(vm));
             }
             catch { }
         }
@@ -179,13 +178,13 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     [RelayCommand(CanExecute = nameof(HasItems))]
     private void PlayNext()
     {
-        Messenger.SendPlayNext(Items);
+        Messenger.SendPlayNext(Items.Select(item => item.Media).ToList());
     }
 
     [RelayCommand(CanExecute = nameof(HasItems))]
     private void AddToQueue()
     {
-        Messenger.SendAddToQueue(Items);
+        Messenger.SendAddToQueue(Items.Select(item => item.Media).ToList());
     }
 
     [RelayCommand]
@@ -194,7 +193,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         if (items.Count == 0) return;
         foreach (var item in items)
         {
-            Items.Add(Items.Contains(item) ? new MediaViewModel(item) : item);
+            Items.Add(new PlaylistItemViewModel(item));
         }
 
         //await SaveAsync();
@@ -207,13 +206,14 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
         foreach (var item in items)
         {
+            var entry = new PlaylistItemViewModel(item);
             if (insertIndex < 0 || insertIndex >= Items.Count)
             {
-                Items.Add(Items.Contains(item) ? new MediaViewModel(item) : item);
+                Items.Add(entry);
             }
             else
             {
-                Items.Insert(insertIndex, Items.Contains(item) ? new MediaViewModel(item) : item);
+                Items.Insert(insertIndex, entry);
                 insertIndex++;
             }
         }
@@ -229,7 +229,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             Id = _id.ToString(),
             DisplayName = Name,
             LastUpdated = LastUpdated,
-            Items = Items.Select(RawMediaRecordDto.FromMediaViewModel).ToList()
+            Items = Items.Select(item => RawMediaRecordDto.FromMediaViewModel(item.Media)).ToList()
         };
     }
 

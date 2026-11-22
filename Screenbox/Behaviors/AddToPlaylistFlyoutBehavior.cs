@@ -159,7 +159,7 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         {
             foreach (var item in itemsToAdd)
             {
-                playlist.Items.Add(item);
+                playlist.Items.Add(new PlaylistItemViewModel(item));
             }
         }
 
