@@ -9,11 +9,6 @@ namespace Screenbox.Core.ViewModels;
 /// </summary>
 public sealed partial class QueueItemViewModel : ObservableObject, IMediaContainer, IMediaPlaybackState
 {
-    /// <summary>
-    /// Gets the unique identifier for this play queue slot.
-    /// </summary>
-    public Guid Id { get; } = Guid.NewGuid();
-
     /// <inheritdoc/>
     public MediaViewModel Media { get; }
 
