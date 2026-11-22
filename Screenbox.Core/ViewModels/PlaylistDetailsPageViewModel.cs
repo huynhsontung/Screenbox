@@ -42,6 +42,18 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IPlaylistService playlistService,
         IQueueService queueService,
         MediaViewModelFactory mediaFactory)
+        : this(filesService, sourceMetadataService, playlistService, queueService, mediaFactory, WeakReferenceMessenger.Default)
+    {
+    }
+
+    public PlaylistDetailsPageViewModel(
+        IFilesService filesService,
+        ISourceMetadataService sourceMetadataService,
+        IPlaylistService playlistService,
+        IQueueService queueService,
+        MediaViewModelFactory mediaFactory,
+        IMessenger messenger)
+        : base(messenger)
     {
         _filesService = filesService;
         _sourceMetadataService = sourceMetadataService;

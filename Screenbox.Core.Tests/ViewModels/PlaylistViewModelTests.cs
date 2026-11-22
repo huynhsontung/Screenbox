@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
+using Screenbox.Core.Messages;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Tests.ViewModels;
@@ -85,5 +86,35 @@ public class PlaylistViewModelTests
         await Assert.That(session.Items[1].Media).IsSameReferenceAs(media2);
         await Assert.That(session.Items[2].Media).IsSameReferenceAs(media1);
         await Assert.That(session.Items[0]).IsNotSameReferenceAs(session.Items[2]);
+    }
+
+    [Test]
+    public async Task PlayCommand_DuplicateEntryClicked_StartsQueueAtClickedIndex()
+    {
+        var messenger = new WeakReferenceMessenger();
+        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger)
+        {
+            Name = "Favorites"
+        };
+        var mediaA = CreateDummyMedia("songA");
+        var mediaB = CreateDummyMedia("songB");
+        await playlist.AddItemsAsync(new[] { mediaA, mediaB, mediaA });
+
+        var detailsVm = new PlaylistDetailsPageViewModel(null!, null!, null!, null!, null!, messenger);
+        detailsVm.OnNavigatedTo(playlist);
+
+        SetQueueMessage? sentMessage = null;
+        var recipient = new object();
+        messenger.Register<object, SetQueueMessage>(recipient, (_, msg) => sentMessage = msg);
+
+        detailsVm.PlayCommand.Execute(playlist.Items[2]);
+
+        await Assert.That(sentMessage).IsNotNull();
+        await Assert.That(sentMessage!.ShouldPlay).IsTrue();
+        await Assert.That(sentMessage.Value.CurrentIndex).IsEqualTo(2);
+        await Assert.That(sentMessage.Value.CurrentItem?.Media).IsSameReferenceAs(mediaA);
+        await Assert.That(sentMessage.Value.Items.Count).IsEqualTo(3);
+        await Assert.That(sentMessage.Value.Origin?.Kind).IsEqualTo(RecentItemKind.Playlist);
+        await Assert.That(sentMessage.Value.Origin?.SourceId).IsEqualTo(playlist.Id);
     }
 }
