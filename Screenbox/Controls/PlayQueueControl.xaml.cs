@@ -77,7 +77,7 @@ public sealed partial class PlayQueueControl : UserControl
 
     // Intentionally only recalculate the runtime when the collection is updated,
     // without listening to duration changes on each media item for simplicity.
-    private string GetSubtext(IReadOnlyCollection<MediaViewModel> items)
+    private string GetSubtext(IReadOnlyCollection<QueueItemViewModel> items)
     {
         int itemsCount = items.Count;
         TimeSpan duration = GetTotalDuration(items);
@@ -87,12 +87,12 @@ public sealed partial class PlayQueueControl : UserControl
         return $"{itemsCountText} • {runTime}";
     }
 
-    private static TimeSpan GetTotalDuration(IReadOnlyCollection<MediaViewModel> items)
+    private static TimeSpan GetTotalDuration(IReadOnlyCollection<QueueItemViewModel> items)
     {
         TimeSpan duration = TimeSpan.Zero;
-        foreach (MediaViewModel item in items)
+        foreach (QueueItemViewModel item in items)
         {
-            duration += item.Duration;
+            duration += item.Media.Duration;
         }
 
         return duration;

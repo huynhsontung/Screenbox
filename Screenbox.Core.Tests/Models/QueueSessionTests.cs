@@ -23,7 +23,7 @@ public class QueueSessionTests
 
         await Assert.That(queue.Items.Count).IsEqualTo(1);
         await Assert.That(queue.CurrentIndex).IsEqualTo(0);
-        await Assert.That(queue.CurrentItem).IsEqualTo(item);
+        await Assert.That(queue.CurrentItem?.Media).IsEqualTo(item);
         await Assert.That(queue.IsEmpty).IsFalse();
     }
 
@@ -40,7 +40,7 @@ public class QueueSessionTests
 
         await Assert.That(queue.Items.Count).IsEqualTo(1);
         await Assert.That(queue.CurrentIndex).IsEqualTo(0);
-        await Assert.That(queue.CurrentItem).IsEqualTo(item);
+        await Assert.That(queue.CurrentItem?.Media).IsEqualTo(item);
         await Assert.That(queue.ShuffleMode).IsTrue();
     }
 
@@ -75,7 +75,7 @@ public class QueueSessionTests
         var queue = new QueueSession(item2, new[] { item1, item2 });
 
         await Assert.That(queue.CurrentIndex).IsEqualTo(1);
-        await Assert.That(queue.CurrentItem).IsEqualTo(item2);
+        await Assert.That(queue.CurrentItem?.Media).IsEqualTo(item2);
     }
 
     [Test]
@@ -102,19 +102,45 @@ public class QueueSessionTests
         var item2 = CreateDummyMedia("song2");
         var item3 = CreateDummyMedia("song3");
         var original = new QueueSession(0, new[] { item1, item2, item3 });
+        var removedSlot = original.Items[1];
 
         var queueService = new QueueService(null!, null!);
         var shuffled = queueService.Shuffle(original);
-        shuffled.Items.Remove(item2);
+        shuffled.Items.Remove(removedSlot);
         queueService.UpdateShuffleBackup(
             shuffled,
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item2));
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedSlot));
 
         var canonical = shuffled.GetCanonicalItems();
 
         await Assert.That(canonical.Count).IsEqualTo(2);
-        await Assert.That(canonical[0]).IsEqualTo(item1);
-        await Assert.That(canonical[1]).IsEqualTo(item3);
+        await Assert.That(canonical[0].Media).IsEqualTo(item1);
+        await Assert.That(canonical[1].Media).IsEqualTo(item3);
+    }
+
+    [Test]
+    public async Task QueueSession_DuplicateMediaSlots_TrackDistinctIndicesAndRemovals()
+    {
+        var media = CreateDummyMedia("song1");
+        var slot1 = new QueueItemViewModel(media);
+        var slot2 = new QueueItemViewModel(media);
+        var session = new QueueSession(slot2, new[] { slot1, slot2 });
+
+        await Assert.That(session.CurrentIndex).IsEqualTo(1);
+        await Assert.That(session.CurrentItem).IsSameReferenceAs(slot2);
+
+        var queueService = new QueueService(null!, null!);
+        var shuffled = queueService.Shuffle(session);
+        shuffled.Items.Remove(slot1);
+        queueService.UpdateShuffleBackup(
+            shuffled,
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, slot1));
+
+        var canonical = shuffled.GetCanonicalItems();
+
+        await Assert.That(canonical.Count).IsEqualTo(1);
+        await Assert.That(canonical[0]).IsSameReferenceAs(slot2);
+        await Assert.That(canonical[0].Media).IsSameReferenceAs(media);
     }
 
     [Test]

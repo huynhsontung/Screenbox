@@ -14,24 +14,34 @@ namespace Screenbox.Core.Playback;
 public interface IPlayQueueBufferManager : IDisposable
 {
     /// <summary>
-    /// Gets the media items currently in the active buffer window.
+    /// Gets the queue items currently in the active buffer window.
     /// </summary>
-    IReadOnlyList<MediaViewModel> BufferedItems { get; }
+    IReadOnlyList<QueueItemViewModel> BufferedItems { get; }
 
     /// <summary>
-    /// Attempts to retrieve an already buffered playback item for the specified media without creating a new one.
+    /// Attempts to retrieve an already buffered playback item for the specified queue item without creating a new one.
+    /// </summary>
+    bool TryGetPlaybackItem(QueueItemViewModel queueItem, [NotNullWhen(true)] out IPlaybackItem? item);
+
+    /// <summary>
+    /// Attempts to retrieve an already buffered playback item for any queued slot matching the specified media without creating a new one.
     /// </summary>
     bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item);
 
     /// <summary>
-    /// Gets an existing playback item or creates a new one for the specified media.
+    /// Gets an existing playback item or creates a new one for the specified queue item.
     /// </summary>
-    IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, MediaViewModel vm);
+    IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, QueueItemViewModel queueItem);
 
     /// <summary>
-    /// Evicts and disposes the cached playback item for the specified media.
+    /// Evicts and disposes the cached playback item for the specified queue item.
     /// </summary>
-    void CleanPlaybackItem(MediaViewModel vm);
+    void CleanPlaybackItem(QueueItemViewModel queueItem);
+
+    /// <summary>
+    /// Evicts and disposes all cached playback items associated with the specified media, optionally excluding one queue item.
+    /// </summary>
+    void CleanPlaybackItems(MediaViewModel vm, QueueItemViewModel? exclude = null);
 
     /// <summary>
     /// Clears and disposes all buffered playback items and resets the buffer window.

@@ -35,7 +35,7 @@
 
                 <flyouts:MediaMenuFlyout
                     x:Key="ItemFlyout"
-                    ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                    ContextItem="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                     IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                     PlayCommand="{x:Bind ViewModel.PlaySingleCommand}"
                     PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
@@ -44,26 +44,26 @@
                     <flyouts:MediaMenuFlyout.AdditionalItems>
                         <MenuFlyoutItem
                             Command="{x:Bind ViewModel.MoveItemUpCommand}"
-                            CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                            CommandParameter="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                             Icon="{ui:FontIcon Glyph=&#xE74A;}"
                             Text="{x:Bind strings:Resources.MoveUp}" />
                         <MenuFlyoutItem
                             Command="{x:Bind ViewModel.MoveItemDownCommand}"
-                            CommandParameter="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                            CommandParameter="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                             Icon="{ui:FontIcon Glyph=&#xE74B;}"
                             Text="{x:Bind strings:Resources.MoveDown}" />
                         <MenuFlyoutItem
                             Command="{x:Bind Common.OpenAlbumCommand}"
-                            CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
+                            CommandParameter="{x:Bind ViewModel.ContextItem.Media.Album, Mode=OneWay}"
                             Icon="{ui:FontIcon Glyph=&#xE93C;}"
                             Text="{x:Bind strings:Resources.ShowAlbum}"
-                            Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind ViewModel.ContextItem.Media.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                         <MenuFlyoutItem
                             Command="{x:Bind Common.OpenArtistCommand}"
-                            CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                            CommandParameter="{x:Bind ViewModel.ContextItem.Media.MainArtist, Mode=OneWay}"
                             Icon="{ui:FontIcon Glyph=&#xE77B;}"
                             Text="{x:Bind strings:Resources.ShowArtist}"
-                            Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                            Visibility="{x:Bind ViewModel.ContextItem.Media.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                     </flyouts:MediaMenuFlyout.AdditionalItems>
                 </flyouts:MediaMenuFlyout>
             </ResourceDictionary>
@@ -235,7 +235,7 @@
                 <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
             </ListView.Resources>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:MediaViewModel">
+                <DataTemplate x:DataType="viewModels:QueueItemViewModel">
                     <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{StaticResource PlaySingleCommand}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -253,7 +253,7 @@
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextMedia, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextItem, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:ListViewSelectionBehavior Selection="{x:Bind ViewModel.Selection}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:FocusOnItemClickBehavior />

@@ -83,7 +83,7 @@ public sealed class PlaylistService : IPlaylistService
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
         var queue = await _queueService.ParseQueueAsync(file);
-        return queue.Items;
+        return queue.Items.Select(item => item.Media).ToList();
     }
 
     public async Task ExportPlaylistItemsAsync(IReadOnlyList<MediaViewModel> items, StorageFile file)

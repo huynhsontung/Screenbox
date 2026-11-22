@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class MediaViewModel : ObservableRecipient
+public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlaybackState
 {
     public string Location => Source.Location;
 
@@ -82,6 +82,8 @@ public sealed partial class MediaViewModel : ObservableRecipient
 
     private WeakReference<BitmapImage>? _thumbnailRef;
 
+    // Play queue callers now wrap MediaViewModel in QueueItemViewModel; only PlaylistViewModel
+    // still uses this copy constructor until PlaylistItemViewModel is introduced.
     public MediaViewModel(MediaViewModel source)
     {
         Name = source.Name;

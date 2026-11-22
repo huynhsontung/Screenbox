@@ -61,6 +61,9 @@ public partial class PlayQueueBufferManagerTests
     private static MediaViewModel CreateMedia(string name) =>
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };
 
+    private static QueueItemViewModel CreateQueueItem(string name) =>
+        new(CreateMedia(name));
+
     [Test]
     public async Task GetOrCreatePlaybackItem_CachesAndReturnsSameItem()
     {
@@ -68,14 +71,34 @@ public partial class PlayQueueBufferManagerTests
         var queueService = new QueueService(null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
-        var media = CreateMedia("test1");
+        var queueItem = CreateQueueItem("test1");
 
-        var item1 = bufferManager.GetOrCreatePlaybackItem(player, media);
-        var item2 = bufferManager.GetOrCreatePlaybackItem(player, media);
+        var item1 = bufferManager.GetOrCreatePlaybackItem(player, queueItem);
+        var item2 = bufferManager.GetOrCreatePlaybackItem(player, queueItem);
 
         await Assert.That(item1).IsNotNull();
         await Assert.That(item1).IsSameReferenceAs(item2);
         await Assert.That(playerService.CreateCount).IsEqualTo(1);
+    }
+
+    [Test]
+    public async Task GetOrCreatePlaybackItem_DuplicateMediaInDifferentQueueSlots_BuffersIndependently()
+    {
+        var playerService = new MockPlayerService();
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
+        var player = new TestMediaPlayer();
+        var sharedMedia = CreateMedia("shared");
+        var slot1 = new QueueItemViewModel(sharedMedia);
+        var slot2 = new QueueItemViewModel(sharedMedia);
+
+        var playback1 = bufferManager.GetOrCreatePlaybackItem(player, slot1);
+        var playback2 = bufferManager.GetOrCreatePlaybackItem(player, slot2);
+
+        await Assert.That(playback1).IsNotNull();
+        await Assert.That(playback2).IsNotNull();
+        await Assert.That(playback1).IsNotSameReferenceAs(playback2);
+        await Assert.That(playerService.CreateCount).IsEqualTo(2);
     }
 
     [Test]
@@ -85,17 +108,44 @@ public partial class PlayQueueBufferManagerTests
         var queueService = new QueueService(null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
-        var media = CreateMedia("test1");
+        var queueItem = CreateQueueItem("test1");
 
-        var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, media)!;
+        var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, queueItem)!;
         await Assert.That(item1.IsDisposed).IsFalse();
 
-        bufferManager.CleanPlaybackItem(media);
+        bufferManager.CleanPlaybackItem(queueItem);
         await Assert.That(item1.IsDisposed).IsTrue();
 
-        var item2 = bufferManager.GetOrCreatePlaybackItem(player, media);
+        var item2 = bufferManager.GetOrCreatePlaybackItem(player, queueItem);
         await Assert.That(item2).IsNotSameReferenceAs(item1);
         await Assert.That(playerService.CreateCount).IsEqualTo(2);
+    }
+
+    [Test]
+    public async Task CleanPlaybackItems_EvictsMatchingMediaSlotsExceptExcluded()
+    {
+        var playerService = new MockPlayerService();
+        var queueService = new QueueService(null!, null!);
+        using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
+        var player = new TestMediaPlayer();
+        var sharedMedia = CreateMedia("shared");
+        var otherMedia = CreateMedia("other");
+        var activeSlot = new QueueItemViewModel(sharedMedia);
+        var queuedDuplicateSlot = new QueueItemViewModel(sharedMedia);
+        var otherSlot = new QueueItemViewModel(otherMedia);
+
+        var activePlayback = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, activeSlot)!;
+        var duplicatePlayback = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, queuedDuplicateSlot)!;
+        var otherPlayback = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, otherSlot)!;
+
+        bufferManager.CleanPlaybackItems(sharedMedia, exclude: activeSlot);
+
+        await Assert.That(activePlayback.IsDisposed).IsFalse();
+        await Assert.That(duplicatePlayback.IsDisposed).IsTrue();
+        await Assert.That(otherPlayback.IsDisposed).IsFalse();
+        await Assert.That(bufferManager.TryGetPlaybackItem(activeSlot, out _)).IsTrue();
+        await Assert.That(bufferManager.TryGetPlaybackItem(queuedDuplicateSlot, out _)).IsFalse();
+        await Assert.That(bufferManager.TryGetPlaybackItem(otherSlot, out _)).IsTrue();
     }
 
     [Test]
@@ -105,11 +155,11 @@ public partial class PlayQueueBufferManagerTests
         var queueService = new QueueService(null!, null!);
         using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
-        var media1 = CreateMedia("test1");
-        var media2 = CreateMedia("test2");
+        var slot1 = CreateQueueItem("test1");
+        var slot2 = CreateQueueItem("test2");
 
-        var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, media1)!;
-        var item2 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, media2)!;
+        var item1 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, slot1)!;
+        var item2 = (DummyPlaybackItem)bufferManager.GetOrCreatePlaybackItem(player, slot2)!;
 
         bufferManager.Clear();
 
@@ -126,13 +176,13 @@ public partial class PlayQueueBufferManagerTests
         using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
 
-        var items = new List<MediaViewModel>
+        var items = new List<QueueItemViewModel>
         {
-            CreateMedia("song0"),
-            CreateMedia("song1"),
-            CreateMedia("song2"),
-            CreateMedia("song3"),
-            CreateMedia("song4")
+            CreateQueueItem("song0"),
+            CreateQueueItem("song1"),
+            CreateQueueItem("song2"),
+            CreateQueueItem("song3"),
+            CreateQueueItem("song4")
         };
 
         var queue = new QueueSession(items[0], items);
@@ -169,14 +219,19 @@ public partial class PlayQueueBufferManagerTests
         using var bufferManager = new PlayQueueBufferManager(playerService, queueService);
         var player = new TestMediaPlayer();
         var media = CreateMedia("test1");
+        var queueItem = new QueueItemViewModel(media);
 
-        await Assert.That(bufferManager.TryGetPlaybackItem(media, out var unbuffered)).IsFalse();
-        await Assert.That(unbuffered).IsNull();
+        await Assert.That(bufferManager.TryGetPlaybackItem(queueItem, out var unbufferedSlot)).IsFalse();
+        await Assert.That(unbufferedSlot).IsNull();
+        await Assert.That(bufferManager.TryGetPlaybackItem(media, out var unbufferedMedia)).IsFalse();
+        await Assert.That(unbufferedMedia).IsNull();
         await Assert.That(playerService.CreateCount).IsEqualTo(0);
 
-        var created = bufferManager.GetOrCreatePlaybackItem(player, media);
-        await Assert.That(bufferManager.TryGetPlaybackItem(media, out var buffered)).IsTrue();
-        await Assert.That(buffered).IsSameReferenceAs(created);
+        var created = bufferManager.GetOrCreatePlaybackItem(player, queueItem);
+        await Assert.That(bufferManager.TryGetPlaybackItem(queueItem, out var bufferedSlot)).IsTrue();
+        await Assert.That(bufferedSlot).IsSameReferenceAs(created);
+        await Assert.That(bufferManager.TryGetPlaybackItem(media, out var bufferedMedia)).IsTrue();
+        await Assert.That(bufferedMedia).IsSameReferenceAs(created);
         await Assert.That(playerService.CreateCount).IsEqualTo(1);
     }
 }

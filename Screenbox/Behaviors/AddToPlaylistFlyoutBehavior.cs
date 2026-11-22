@@ -101,12 +101,17 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         {
             StorageItemViewModel { Media: { } media } => [media],
             MediaViewModel vm => [vm],
+            IMediaContainer container => [container.Media],
             AlbumViewModel album => album.OrderedSongs.ToArray(),
             ArtistViewModel artist => artist.OrderedSongs.ToArray(),
-            SelectionViewModel selection => selection.GetSelectedItems<MediaViewModel>().ToArray(),
+            SelectionViewModel selection => selection.GetSelectedItems<object>()
+                .Select(UnwrapMedia)
+                .OfType<MediaViewModel>()
+                .ToArray(),
             IReadOnlyList<MediaViewModel> list => list.ToArray(),
             IEnumerable<MediaViewModel> collection => collection.ToArray(),
-            IEnumerable<object> objects => objects.OfType<MediaViewModel>().ToArray(),
+            IEnumerable<IMediaContainer> containers => containers.Select(c => c.Media).ToArray(),
+            IEnumerable<object> objects => objects.Select(UnwrapMedia).OfType<MediaViewModel>().ToArray(),
             _ => [],
         };
 
@@ -163,4 +168,12 @@ internal sealed partial class AddToPlaylistFlyoutBehavior : Behavior<MenuFlyout>
         // Assume sort by last updated
         _playlistsContext.Playlists.Insert(0, playlist);
     }
+
+    private static MediaViewModel? UnwrapMedia(object? item) => item switch
+    {
+        MediaViewModel media => media,
+        IMediaContainer container => container.Media,
+        StorageItemViewModel { Media: { } storageMedia } => storageMedia,
+        _ => null,
+    };
 }

@@ -21,15 +21,15 @@ namespace Screenbox.Core.Playback;
 public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
 {
     /// <inheritdoc/>
-    public IReadOnlyList<MediaViewModel> BufferedItems => _mediaBuffer;
+    public IReadOnlyList<QueueItemViewModel> BufferedItems => _mediaBuffer;
 
     private readonly IPlayerService _playerService;
     private readonly IQueueService _queueService;
     private readonly IMessenger _messenger;
     private readonly ILogger<PlayQueueBufferManager> _logger;
 
-    private readonly Dictionary<MediaViewModel, IPlaybackItem> _bufferedPlaybackItems = new();
-    private List<MediaViewModel> _mediaBuffer = new();
+    private readonly Dictionary<QueueItemViewModel, IPlaybackItem> _bufferedPlaybackItems = new();
+    private List<QueueItemViewModel> _mediaBuffer = new();
     private bool _isDisposed;
 
     public PlayQueueBufferManager(
@@ -45,9 +45,9 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     }
 
     /// <inheritdoc/>
-    public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item)
+    public bool TryGetPlaybackItem(QueueItemViewModel queueItem, [NotNullWhen(true)] out IPlaybackItem? item)
     {
-        if (!_isDisposed && _bufferedPlaybackItems.TryGetValue(vm, out item))
+        if (!_isDisposed && _bufferedPlaybackItems.TryGetValue(queueItem, out item))
         {
             return true;
         }
@@ -57,21 +57,44 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     }
 
     /// <inheritdoc/>
-    public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, MediaViewModel vm)
+    public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item)
     {
-        if (player is null || _isDisposed) return null;
-
-        if (!_bufferedPlaybackItems.TryGetValue(vm, out var item))
+        if (!_isDisposed)
         {
+            foreach (var entry in _bufferedPlaybackItems)
+            {
+                if (ReferenceEquals(entry.Key.Media, vm))
+                {
+                    item = entry.Value;
+                    return true;
+                }
+            }
+        }
+
+        item = null;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, QueueItemViewModel queueItem)
+    {
+        if (player is null || _isDisposed)
+        {
+            return null;
+        }
+
+        if (!_bufferedPlaybackItems.TryGetValue(queueItem, out var item))
+        {
+            MediaViewModel media = queueItem.Media;
             try
             {
-                item = _playerService.CreatePlaybackItem(player, vm.Source, vm.Options.ToArray());
-                _bufferedPlaybackItems[vm] = item;
+                item = _playerService.CreatePlaybackItem(player, media.Source, media.Options.ToArray());
+                _bufferedPlaybackItems[queueItem] = item;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to create playback item for {Location}", vm.Location);
-                _messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{vm.Location}{Environment.NewLine}{e.Message}"));
+                _logger.LogError(e, "Failed to create playback item for {Location}", media.Location);
+                _messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.MediaLoadFailed, message: $"{media.Location}{Environment.NewLine}{e.Message}"));
                 return null;
             }
         }
@@ -80,11 +103,24 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     }
 
     /// <inheritdoc/>
-    public void CleanPlaybackItem(MediaViewModel vm)
+    public void CleanPlaybackItem(QueueItemViewModel queueItem)
     {
-        if (_bufferedPlaybackItems.Remove(vm, out var item))
+        if (_bufferedPlaybackItems.Remove(queueItem, out var item))
         {
             item.Dispose();
+        }
+    }
+
+    /// <inheritdoc/>
+    public void CleanPlaybackItems(MediaViewModel vm, QueueItemViewModel? exclude = null)
+    {
+        var keysToRemove = _bufferedPlaybackItems.Keys
+            .Where(key => ReferenceEquals(key.Media, vm) && !ReferenceEquals(key, exclude))
+            .ToList();
+
+        foreach (var key in keysToRemove)
+        {
+            CleanPlaybackItem(key);
         }
     }
 
@@ -95,6 +131,7 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
         {
             item.Dispose();
         }
+
         _bufferedPlaybackItems.Clear();
         _mediaBuffer.Clear();
     }
@@ -102,23 +139,26 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
     /// <inheritdoc/>
     public void UpdateBuffer(IMediaPlayer? player, QueueSession session, MediaPlaybackAutoRepeatMode repeatMode)
     {
-        if (_isDisposed) return;
+        if (_isDisposed)
+        {
+            return;
+        }
 
         var bufferIndices = _queueService.GetMediaBufferIndices(session.CurrentIndex, session.Items.Count, repeatMode);
         var newBuffer = bufferIndices.Select(i => session.Items[i]).ToList();
 
         var toClean = _mediaBuffer.Except(newBuffer).ToList();
 
-        foreach (var media in toClean)
+        foreach (var item in toClean)
         {
-            CleanPlaybackItem(media);
+            CleanPlaybackItem(item);
         }
 
         if (player is not null)
         {
-            foreach (var media in newBuffer)
+            foreach (var item in newBuffer)
             {
-                GetOrCreatePlaybackItem(player, media);
+                GetOrCreatePlaybackItem(player, item);
             }
         }
 
@@ -127,7 +167,11 @@ public sealed partial class PlayQueueBufferManager : IPlayQueueBufferManager
 
     public void Dispose()
     {
-        if (_isDisposed) return;
+        if (_isDisposed)
+        {
+            return;
+        }
+
         _isDisposed = true;
         Clear();
     }

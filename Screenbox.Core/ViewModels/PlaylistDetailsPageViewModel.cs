@@ -135,7 +135,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         var queue = await _queueService.TryParseQueueAsync(items);
         if (queue?.Items.Count > 0)
         {
-            await Source.AddItemsAtIndexAsync(queue.Items, insertIndex);
+            await Source.AddItemsAtIndexAsync(queue.Items.Select(item => item.Media).ToList(), insertIndex);
         }
     }
 

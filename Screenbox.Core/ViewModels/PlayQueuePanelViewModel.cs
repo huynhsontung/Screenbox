@@ -25,7 +25,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
 {
     [ObservableProperty]
-    public partial MediaViewModel? ContextMedia { get; set; }
+    public partial QueueItemViewModel? ContextItem { get; set; }
 
     /// <summary>The observable play queue state for data binding.</summary>
     public PlayQueueContext Queue { get; }
@@ -86,50 +86,50 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void RemoveSelected()
     {
-        List<MediaViewModel> copy = Selection.GetSelectedItems<MediaViewModel>();
+        List<QueueItemViewModel> copy = Selection.GetSelectedItems<QueueItemViewModel>();
         Selection.ClearSelection();
-        foreach (MediaViewModel item in copy)
+        foreach (QueueItemViewModel item in copy)
         {
             Remove(item);
         }
     }
 
     [RelayCommand]
-    private void Remove(MediaViewModel item)
+    private void Remove(QueueItemViewModel item)
     {
         _coordinator.Remove(item);
     }
 
     [RelayCommand]
-    private void PlaySingle(MediaViewModel media)
+    private async Task PlaySingleAsync(QueueItemViewModel item)
     {
-        if (Queue.CurrentItem == media && media.IsPlaying)
+        if (Queue.CurrentItem == item && item.IsPlaying)
         {
             Messenger.Send(new TogglePlayPauseMessage(false));
         }
         else
         {
-            Messenger.Send(new PlayMediaMessage(media, true));
+            await _coordinator.PlayAsync(item);
         }
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void PlaySelectedNext()
     {
-        List<MediaViewModel> reverse = Selection.GetSelectedItems<MediaViewModel>();
+        List<QueueItemViewModel> reverse = Selection.GetSelectedItems<QueueItemViewModel>();
         if (reverse.Count == 0) return;
         reverse.Reverse();
         Selection.ClearSelection();
-        foreach (MediaViewModel item in reverse)
+        foreach (QueueItemViewModel item in reverse)
         {
             PlayNext(item);
         }
     }
 
     [RelayCommand]
-    private void PlayNext(MediaViewModel item)
+    private void PlayNext(QueueItemViewModel item)
     {
-        _coordinator.InsertNext(item);
+        _coordinator.InsertNext(item.Media);
     }
 
     [RelayCommand(CanExecute = nameof(IsSelectedItemNotFirst))]
@@ -149,7 +149,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
-    private void MoveItemUp(MediaViewModel item)
+    private void MoveItemUp(QueueItemViewModel item)
     {
         int index = Queue.Items.IndexOf(item);
         if (index <= 0) return;
@@ -172,7 +172,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
     }
 
     [RelayCommand(CanExecute = nameof(IsItemNotLast))]
-    private void MoveItemDown(MediaViewModel item)
+    private void MoveItemDown(QueueItemViewModel item)
     {
         int index = Queue.Items.IndexOf(item);
         if (index == -1 || index >= Queue.Items.Count - 1) return;
@@ -228,7 +228,7 @@ public sealed partial class PlayQueuePanelViewModel : ObservableRecipient
         Queue.Items.Count > 0 &&
         Selection.SelectedRanges[0].LastIndex < Queue.Items.Count - 1;
 
-    private bool IsItemNotFirst(MediaViewModel item) => Queue.Items.Count > 0 && Queue.Items[0] != item;
+    private bool IsItemNotFirst(QueueItemViewModel item) => Queue.Items.Count > 0 && Queue.Items[0] != item;
 
-    private bool IsItemNotLast(MediaViewModel item) => Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != item;
+    private bool IsItemNotLast(QueueItemViewModel item) => Queue.Items.Count > 0 && Queue.Items[Queue.Items.Count - 1] != item;
 }

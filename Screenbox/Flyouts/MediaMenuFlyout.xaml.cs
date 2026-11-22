@@ -104,10 +104,11 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         UpdateAdditionalItems();
 
         // Resolve the underlying MediaViewModel regardless of whether ContextItem is a
-        // MediaViewModel directly or a StorageItemViewModel wrapping one.
+        // MediaViewModel directly, an IMediaContainer, or a StorageItemViewModel wrapping one.
         var mediaVm = ContextItem switch
         {
             MediaViewModel media => media,
+            IMediaContainer container => container.Media,
             StorageItemViewModel storageItem => storageItem.Media,
             _ => null,
         };
@@ -116,7 +117,8 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         {
             AlbumViewModel album => album.IsPlaying,
             ArtistViewModel artist => artist.IsPlaying,
-            MediaViewModel media => media.IsPlaying,
+            IMediaPlaybackState state => state.IsPlaying,
+            IMediaContainer container => container.Media.IsPlaying,
             PlaylistViewModel playlist => playlist.IsPlaying,
             StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
             _ => false,
