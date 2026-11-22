@@ -47,7 +47,7 @@ public class QueueServiceTests
 
         await Assert.That(queue.Items.Count).IsEqualTo(1);
         await Assert.That(queue.CurrentIndex).IsEqualTo(0);
-        await Assert.That(queue.CurrentItem).IsSameReferenceAs(item);
+        await Assert.That(queue.CurrentItem?.Media).IsSameReferenceAs(item);
     }
 
     [Test]
@@ -64,8 +64,8 @@ public class QueueServiceTests
 
         await Assert.That(queue.Items.Count).IsEqualTo(2);
         await Assert.That(queue.CurrentIndex).IsEqualTo(0);
-        await Assert.That(queue.Items[0].Name).IsEqualTo("Track 1");
-        await Assert.That(queue.Items[1].Name).IsEqualTo("Track 2");
+        await Assert.That(queue.Items[0].Media.Name).IsEqualTo("Track 1");
+        await Assert.That(queue.Items[1].Media.Name).IsEqualTo("Track 2");
     }
 
     [Test]
@@ -77,7 +77,7 @@ public class QueueServiceTests
 
         await Assert.That(queue.Items.Count).IsEqualTo(1);
         await Assert.That(queue.CurrentIndex).IsEqualTo(0);
-        await Assert.That(queue.CurrentItem).IsSameReferenceAs(expandableVm);
+        await Assert.That(queue.CurrentItem?.Media).IsSameReferenceAs(expandableVm);
     }
 
     [Test]
@@ -88,7 +88,7 @@ public class QueueServiceTests
 
         await Assert.That(queue.Items.Count).IsEqualTo(1);
         await Assert.That(queue.CurrentIndex).IsEqualTo(0);
-        await Assert.That(queue.CurrentItem!.Location).IsEqualTo("https://example.com/stream.mp3");
+        await Assert.That(queue.CurrentItem!.Media.Location).IsEqualTo("https://example.com/stream.mp3");
     }
 
     [Test]
@@ -103,7 +103,7 @@ public class QueueServiceTests
 
         await Assert.That(shuffled.ShuffleMode).IsTrue();
         await Assert.That(shuffled.CanRestoreFromShuffle).IsTrue();
-        await Assert.That(shuffled.Items[0]).IsEqualTo(item1);
+        await Assert.That(shuffled.Items[0].Media).IsEqualTo(item1);
 
         var restored = _service.RestoreFromShuffle(shuffled);
         await Assert.That(restored.Items.Count).IsEqualTo(3);
@@ -120,9 +120,9 @@ public class QueueServiceTests
         var shuffled = _service.Shuffle(queue);
         var restored = _service.RestoreFromShuffle(shuffled);
 
-        await Assert.That(restored.Items[0]).IsEqualTo(item1);
-        await Assert.That(restored.Items[1]).IsEqualTo(item2);
-        await Assert.That(restored.Items[2]).IsEqualTo(item3);
+        await Assert.That(restored.Items[0].Media).IsEqualTo(item1);
+        await Assert.That(restored.Items[1].Media).IsEqualTo(item2);
+        await Assert.That(restored.Items[2].Media).IsEqualTo(item3);
     }
 
     [Test]
@@ -132,13 +132,14 @@ public class QueueServiceTests
         var item2 = CreateMedia("song2");
         var item3 = CreateMedia("song3");
         var queue = new QueueSession(item1, new List<MediaViewModel> { item1, item2, item3 });
+        var removedSlot = queue.Items[1];
         var shuffled = _service.Shuffle(queue);
 
-        var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item2, 1);
+        var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedSlot, 1);
         _service.UpdateShuffleBackup(shuffled, args);
 
         var restored = _service.RestoreFromShuffle(shuffled);
-        await Assert.That(restored.Items.Contains(item2)).IsFalse();
+        await Assert.That(restored.Items.Contains(removedSlot)).IsFalse();
         await Assert.That(restored.Items.Count).IsEqualTo(2);
     }
 
@@ -148,15 +149,16 @@ public class QueueServiceTests
         var item1 = CreateMedia("song1");
         var item2 = CreateMedia("song2");
         var queue = new QueueSession(item1, new List<MediaViewModel> { item1, item2 });
+        var originalSlot = queue.Items[0];
         var shuffled = _service.Shuffle(queue);
 
-        var newItem = CreateMedia("song1_replaced");
-        var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, item1, 0);
+        var newSlot = new QueueItemViewModel(CreateMedia("song1_replaced"));
+        var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newSlot, originalSlot, 0);
         _service.UpdateShuffleBackup(shuffled, args);
 
         var restored = _service.RestoreFromShuffle(shuffled);
-        await Assert.That(restored.Items.Contains(newItem)).IsTrue();
-        await Assert.That(restored.Items.Contains(item1)).IsFalse();
+        await Assert.That(restored.Items.Contains(newSlot)).IsTrue();
+        await Assert.That(restored.Items.Contains(originalSlot)).IsFalse();
     }
 
     [Test]

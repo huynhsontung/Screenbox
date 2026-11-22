@@ -52,6 +52,7 @@ internal sealed partial class SetPlaybackOptionsCommand : IRelayCommand
     private static MediaViewModel? TryGetMedia(object? parameter) => parameter switch
     {
         MediaViewModel media => media,
+        IMediaContainer container => container.Media,
         StorageItemViewModel storageItemViewModel => storageItemViewModel.Media,
         _ => null
     };

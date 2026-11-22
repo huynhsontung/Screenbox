@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Screenbox.Core.ViewModels;
@@ -47,25 +46,31 @@ public interface IPlayQueueCoordinator
     void Clear();
 
     /// <summary>
-    /// Appends or inserts the given media items into the play queue.
+    /// Starts playback of an existing queue slot item.
+    /// </summary>
+    /// <param name="item">The queue item to play.</param>
+    Task PlayAsync(QueueItemViewModel item);
+
+    /// <summary>
+    /// Appends or inserts the given queue items into the play queue.
     /// </summary>
     /// <param name="items">The items to enqueue.</param>
     /// <param name="insertIndex">
     /// The zero-based index at which to insert. Pass -1 (default) to append at the end.
     /// </param>
-    void Enqueue(IReadOnlyList<MediaViewModel> items, int insertIndex = -1);
+    void Enqueue(IReadOnlyList<QueueItemViewModel> items, int insertIndex = -1);
 
     /// <summary>
     /// Removes an item from the play queue.
     /// If the item is currently playing, playback is stopped before removal.
     /// </summary>
-    /// <param name="item">The item to remove.</param>
-    void Remove(MediaViewModel item);
+    /// <param name="item">The queue item to remove.</param>
+    void Remove(QueueItemViewModel item);
 
     /// <summary>
-    /// Inserts a copy of <paramref name="item"/> immediately after the currently playing item.
+    /// Inserts a new queue slot for <paramref name="item"/> immediately after the currently playing item.
     /// </summary>
-    /// <param name="item">The item to insert next.</param>
+    /// <param name="item">The media item to insert next.</param>
     void InsertNext(MediaViewModel item);
 
     /// <summary>

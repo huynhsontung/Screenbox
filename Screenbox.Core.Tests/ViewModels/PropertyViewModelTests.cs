@@ -72,15 +72,22 @@ public partial class PropertyViewModelTests
     {
         private readonly Dictionary<MediaViewModel, IPlaybackItem> _items = new();
 
-        public IReadOnlyList<MediaViewModel> BufferedItems => Array.Empty<MediaViewModel>();
+        public IReadOnlyList<QueueItemViewModel> BufferedItems => Array.Empty<QueueItemViewModel>();
 
         public void AddBufferedItem(MediaViewModel vm, IPlaybackItem item) => _items[vm] = item;
+
+        public bool TryGetPlaybackItem(QueueItemViewModel queueItem, [NotNullWhen(true)] out IPlaybackItem? item)
+        {
+            item = null;
+            return false;
+        }
 
         public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item) =>
             _items.TryGetValue(vm, out item);
 
-        public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, MediaViewModel vm) => null;
-        public void CleanPlaybackItem(MediaViewModel vm) { }
+        public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, QueueItemViewModel queueItem) => null;
+        public void CleanPlaybackItem(QueueItemViewModel queueItem) { }
+        public void CleanPlaybackItems(MediaViewModel vm, QueueItemViewModel? exclude = null) { }
         public void Clear() { }
         public void UpdateBuffer(IMediaPlayer? player, QueueSession queue, MediaPlaybackAutoRepeatMode repeatMode) { }
         public void Dispose() { }

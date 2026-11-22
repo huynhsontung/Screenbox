@@ -86,7 +86,7 @@
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{StaticResource OpenWithCommand}"
-                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
+                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem.Media, Mode=OneWay, FallbackValue={x:Null}}"
                     Icon="{ui:FontIcon Glyph=&#xE7AC;,
                                        MirroredWhenRightToLeft=True}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
@@ -94,7 +94,7 @@
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource OpenInFileExplorerCommand}"
-                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
+                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem.Media, Mode=OneWay, FallbackValue={x:Null}}"
                     Icon="{ui:FontIcon Glyph=&#xEC50;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.OpenInFileExplorer}"
@@ -102,7 +102,7 @@
                 <MenuFlyoutItem
                     AccessKey="{x:Bind strings:KeyboardResources.MenuItemPropertiesKey}"
                     Command="{StaticResource ShowPropertiesCommand}"
-                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem, Mode=OneWay}"
+                    CommandParameter="{x:Bind ViewModel.PlayQueue.CurrentItem.Media, Mode=OneWay, FallbackValue={x:Null}}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.Properties}">

@@ -7,15 +7,15 @@ namespace Screenbox.Core.Models;
 /// </summary>
 public sealed class PlaybackNavigationResult
 {
-    public MediaViewModel NextItem { get; }
+    public QueueItemViewModel NextItem { get; }
     public QueueSession? UpdatedQueue { get; }
 
-    public PlaybackNavigationResult(MediaViewModel nextItem)
+    public PlaybackNavigationResult(QueueItemViewModel nextItem)
     {
         NextItem = nextItem;
     }
 
-    public PlaybackNavigationResult(QueueSession updatedQueue, MediaViewModel nextItem) : this(nextItem)
+    public PlaybackNavigationResult(QueueSession updatedQueue, QueueItemViewModel nextItem) : this(nextItem)
     {
         UpdatedQueue = updatedQueue;
     }

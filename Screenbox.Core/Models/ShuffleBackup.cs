@@ -8,12 +8,12 @@ namespace Screenbox.Core.Models;
 /// </summary>
 internal sealed class ShuffleBackup
 {
-    public List<MediaViewModel> OriginalItems { get; }
-    public List<MediaViewModel> Removals { get; }
+    public List<QueueItemViewModel> OriginalItems { get; }
+    public List<QueueItemViewModel> Removals { get; }
 
-    public ShuffleBackup(List<MediaViewModel> originalItems, List<MediaViewModel>? removals = null)
+    public ShuffleBackup(List<QueueItemViewModel> originalItems, List<QueueItemViewModel>? removals = null)
     {
         OriginalItems = originalItems;
-        Removals = removals ?? new List<MediaViewModel>();
+        Removals = removals ?? new List<QueueItemViewModel>();
     }
 }

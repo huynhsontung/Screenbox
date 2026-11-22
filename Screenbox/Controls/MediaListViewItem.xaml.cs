@@ -34,7 +34,21 @@ public sealed partial class MediaListViewItem : UserControl, INotifyPropertyChan
 
     private CommonViewModel Common { get; }
 
-    private MediaViewModel? ViewModel => DataContext as MediaViewModel;
+    private MediaViewModel? ViewModel => DataContext switch
+    {
+        MediaViewModel media => media,
+        IMediaContainer container => container.Media,
+        _ => null
+    };
+
+    private IMediaPlaybackState? PlaybackState => DataContext switch
+    {
+        IMediaPlaybackState state => state,
+        IMediaContainer container => container.Media,
+        _ => null
+    };
+
+    private object? CommandItem => DataContext;
 
     public MediaListViewItem()
     {
@@ -49,6 +63,8 @@ public sealed partial class MediaListViewItem : UserControl, INotifyPropertyChan
     private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PlaybackState)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CommandItem)));
 
         _firstPlay = true;
         AdaptiveLayoutBehavior.Override = ViewModel?.MediaType != MediaPlaybackType.Music ? 0 : -1;

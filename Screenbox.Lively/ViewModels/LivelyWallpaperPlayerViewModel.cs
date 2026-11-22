@@ -246,7 +246,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     private void LoadMedia()
     {
         QueueSession reply = Messenger.Send(new QueueRequestMessage());
-        Media = reply.CurrentItem;
+        Media = reply.CurrentItem?.Media;
     }
 
     private static async Task<string> ReadToBase64Async(IRandomAccessStream source)

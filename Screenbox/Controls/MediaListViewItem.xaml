@@ -76,13 +76,13 @@
             Height="32"
             Padding="0"
             contract14Present:AutomationProperties.AutomationControlType="Button"
-            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatPlayPauseLabel(ViewModel.IsPlaying, ViewModel.Name), Mode=OneWay}"
+            AutomationProperties.Name="{x:Bind helpers:ItemLabelHelper.FormatPlayPauseLabel(PlaybackState.IsPlaying, ViewModel.Name), Mode=OneWay}"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
-            CommandParameter="{x:Bind ViewModel, Mode=OneWay}"
+            CommandParameter="{x:Bind CommandItem, Mode=OneWay}"
             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-            ToolTipService.ToolTip="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(ViewModel.IsPlaying), Mode=OneWay}"
+            ToolTipService.ToolTip="{x:Bind helpers:ItemLabelHelper.GetPlayPauseLabel(PlaybackState.IsPlaying), Mode=OneWay}"
             Visibility="Collapsed">
-            <FontIcon Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
+            <FontIcon Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(PlaybackState.IsPlaying), Mode=OneWay}" />
         </HyperlinkButton>
 
         <TextBlock
@@ -172,7 +172,7 @@
             <VisualStateGroup x:Name="ActivityStates">
                 <VisualState x:Name="ItemActive">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsMediaActive, Mode=OneWay, FallbackValue=False}" />
+                        <StateTrigger IsActive="{x:Bind PlaybackState.IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.Visibility" Value="Visible" />
@@ -210,7 +210,7 @@
             <VisualStateGroup x:Name="PlayingStates">
                 <VisualState x:Name="Playing">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsPlaying, Mode=OneWay, FallbackValue=False}" />
+                        <StateTrigger IsActive="{x:Bind PlaybackState.IsPlaying, Mode=OneWay, FallbackValue=False}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.PlaybackRate" Value="1" />
@@ -218,7 +218,7 @@
                 </VisualState>
                 <VisualState x:Name="NotPlaying">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsPlaying, Mode=OneWay, Converter={StaticResource BoolNegationConverter}, FallbackValue=True}" />
+                        <StateTrigger IsActive="{x:Bind PlaybackState.IsPlaying, Mode=OneWay, Converter={StaticResource BoolNegationConverter}, FallbackValue=True}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.PlaybackRate" Value="0" />

@@ -19,13 +19,13 @@ namespace Screenbox.Core.Contexts;
 public sealed partial class PlayQueueContext : ObservableObject
 {
     /// <summary>
-    /// The ordered list of media items in the current play queue.
+    /// The ordered list of queue items in the current play queue.
     /// Created once and mutated in-place by <see cref="Coordinators.PlayQueueCoordinator"/>.
     /// </summary>
-    public ObservableCollection<MediaViewModel> Items { get; } = new();
+    public ObservableCollection<QueueItemViewModel> Items { get; } = new();
 
-    /// <summary>The media item currently playing or selected for playback.</summary>
-    [ObservableProperty] public partial MediaViewModel? CurrentItem { get; set; }
+    /// <summary>The queue item currently playing or selected for playback.</summary>
+    [ObservableProperty] public partial QueueItemViewModel? CurrentItem { get; set; }
 
     /// <summary>The zero-based index of <see cref="CurrentItem"/> within <see cref="Items"/>, or -1 when nothing is active.</summary>
     [ObservableProperty] public partial int CurrentIndex { get; set; } = -1;

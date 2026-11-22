@@ -239,7 +239,7 @@ public sealed class QueueService : IQueueService
             return session;
         }
 
-        var folderOrigin = ResolveNeighboringFolderOrigin(neighboringFilesQuery, session.CurrentItem, result.Items[0]);
+        var folderOrigin = ResolveNeighboringFolderOrigin(neighboringFilesQuery, session.CurrentItem?.Media, result.Items[0].Media);
         return MergeCurrentItemIntoNeighboringQueue(session, result.Items, folderOrigin);
     }
 
@@ -284,7 +284,7 @@ public sealed class QueueService : IQueueService
 
     private static QueueSession MergeCurrentItemIntoNeighboringQueue(
         QueueSession session,
-        List<MediaViewModel> neighboringItems,
+        List<QueueItemViewModel> neighboringItems,
         QueueOrigin folderOrigin)
     {
         if (session.CurrentItem is not { } currentItem)
@@ -296,13 +296,13 @@ public sealed class QueueService : IQueueService
         }
 
         // Replace the matching item (by location) with the existing CurrentItem to preserve
-        // VM identity. Without this, GetOrCreate creates a new VM for the same file that is a
-        // different object reference. QueueSession uses IndexOf (reference equality) to find
-        // CurrentItem in the new list; if it fails, CurrentIndex becomes -1, which causes
+        // queue item identity. Without this, GetOrCreate creates a new VM / QueueItemViewModel
+        // that is a different object reference. QueueSession uses IndexOf (reference equality) to
+        // find CurrentItem in the new list; if it fails, CurrentIndex becomes -1, which causes
         // LoadFromPlaylist to set PlaybackItem to null and call VlcPlayer.Stop() on the UI
         // thread, freezing the app.
-        int matchIndex = neighboringItems.FindIndex(vm =>
-            vm.Location.Equals(currentItem.Location, StringComparison.OrdinalIgnoreCase));
+        int matchIndex = neighboringItems.FindIndex(item =>
+            item.Media.Location.Equals(currentItem.Media.Location, StringComparison.OrdinalIgnoreCase));
         if (matchIndex >= 0)
         {
             neighboringItems[matchIndex] = currentItem;
@@ -323,7 +323,7 @@ public sealed class QueueService : IQueueService
 
     public QueueSession Shuffle(QueueSession session, int? preserveIndex = null)
     {
-        var shuffleBackup = new ShuffleBackup(new List<MediaViewModel>(session.Items));
+        var shuffleBackup = new ShuffleBackup(new List<QueueItemViewModel>(session.Items));
         var shuffled = new QueueSession(session)
         {
             ShuffleMode = true,
@@ -352,14 +352,14 @@ public sealed class QueueService : IQueueService
     {
         Guard.IsNotNull(session.ShuffleBackup, nameof(session.ShuffleBackup));
         var shuffleBackup = session.ShuffleBackup;
-        var backup = new List<MediaViewModel>(shuffleBackup.OriginalItems);
+        var backup = new List<QueueItemViewModel>(shuffleBackup.OriginalItems);
 
         foreach (var removal in shuffleBackup.Removals)
         {
             backup.Remove(removal);
         }
 
-        var restored = session.CurrentItem != null
+        var restored = session.CurrentItem is not null
             ? new QueueSession(session.CurrentItem, backup, session)
             : new QueueSession(backup, session);
         restored.ShuffleMode = false;
@@ -384,9 +384,9 @@ public sealed class QueueService : IQueueService
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Remove when e.OldItems?.Count > 0:
-                foreach (MediaViewModel vm in e.OldItems.OfType<MediaViewModel>())
+                foreach (QueueItemViewModel item in e.OldItems.OfType<QueueItemViewModel>())
                 {
-                    backup.Removals.Add(vm);
+                    backup.Removals.Add(item);
                 }
                 break;
 
@@ -442,7 +442,7 @@ public sealed class QueueService : IQueueService
     {
         for (int i = 0; i < oldItems.Count; i++)
         {
-            if (oldItems[i] is not MediaViewModel oldItem || newItems[i] is not MediaViewModel newItem)
+            if (oldItems[i] is not QueueItemViewModel oldItem || newItems[i] is not QueueItemViewModel newItem)
             {
                 continue;
             }
@@ -457,9 +457,9 @@ public sealed class QueueService : IQueueService
 
     private static void ApplyShuffleAdd(QueueSession session, ShuffleBackup backup, IList newItems)
     {
-        foreach (MediaViewModel vm in newItems.OfType<MediaViewModel>())
+        foreach (QueueItemViewModel item in newItems.OfType<QueueItemViewModel>())
         {
-            if (!backup.Removals.Remove(vm))
+            if (!backup.Removals.Remove(item))
             {
                 session.ShuffleBackup = null;
                 break;

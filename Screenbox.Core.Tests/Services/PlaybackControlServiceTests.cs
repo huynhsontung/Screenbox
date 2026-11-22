@@ -91,7 +91,7 @@ public class PlaybackControlServiceTests
 
         var result = await _service.GetNextAsync(queue);
         await Assert.That(result).IsNotNull();
-        await Assert.That(result!.NextItem).IsEqualTo(item2);
+        await Assert.That(result!.NextItem.Media).IsEqualTo(item2);
     }
 
     [Test]
@@ -103,6 +103,6 @@ public class PlaybackControlServiceTests
 
         var result = await _service.GetPreviousAsync(queue);
         await Assert.That(result).IsNotNull();
-        await Assert.That(result!.NextItem).IsEqualTo(item1);
+        await Assert.That(result!.NextItem.Media).IsEqualTo(item1);
     }
 }
