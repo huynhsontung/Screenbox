@@ -37,18 +37,16 @@
 
     <!-- .NET runtime extensions (Dependency Injection, Logging) -->
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0" />
 
     <!-- .NET data access (SQLite) -->
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="11.0.0" />
 
     <!-- Error tracking (Sentry) -->
-    <PackageVersion Include="Sentry.Extensions.Logging" Version="7.0.0" />
+    <PackageVersion Include="Sentry.Extensions.Logging" Version="7.0.1" />
 
     <!-- Testing framework (TUnit) -->
-    <PackageVersion Include="TUnit" Version="1.75.0" />
+    <PackageVersion Include="TUnit" Version="1.87.12" />
   </ItemGroup>
 </Project>

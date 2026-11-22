@@ -18,8 +18,6 @@
     <PackageReference Include="CommunityToolkit.Uwp.Extensions" />
     <PackageReference Include="LibVLCSharp.UWP" />
     <PackageReference Include="Microsoft.Data.Sqlite" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" />
   </ItemGroup>
 </Project>
