@@ -90,9 +90,7 @@ jobs:
           msbuild-architecture: x64
 
       - name: Setup Windows App Developer CLI
-        uses: microsoft/setup-WinAppCli@v0.2
-        with:
-          version: latest
+        uses: microsoft/setup-WinAppCli@v0.3
 
       - name: Update package manifest
         run: ./scripts/Update-AppxManifest.ps1 -Identity Sideload
@@ -101,24 +99,21 @@ jobs:
         run: ./scripts/Update-ProjectVersion.ps1
 
       - name: Create self-signed certificate
+        id: certificate
         env:
-          TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
           WINAPP_CLI_TELEMETRY_OPTOUT: '1'
         run: |
+          $certPassword = [Convert]::ToBase64String([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(32)).TrimEnd('=')
+          Write-Output "::add-mask::$certPassword"
           winapp cert generate `
             --manifest "$env:APP_PROJ_PATH/Package.appxmanifest" `
-            --password "$env:TEMP_CERT_PASSWORD" `
+            --password "$certPassword" `
             --output "$env:APP_PROJ_PATH/Screenbox_TemporaryKey.pfx" `
             --install
 
-      - name: Extract self-signed certificate thumbprint
-        id: cert_thumb
-        env:
-          TEMP_CERT_PASSWORD: ${{ secrets.TEMP_CERT_PASSWORD }}
-        run: |
           $cert = Get-PfxCertificate `
             -FilePath "$env:APP_PROJ_PATH/Screenbox_TemporaryKey.pfx" `
-            -Password (ConvertTo-SecureString $env:TEMP_CERT_PASSWORD -AsPlainText -Force)
+            -Password (ConvertTo-SecureString -String $certPassword -AsPlainText -Force)
           "thumbprint=$($cert.Thumbprint)" >> $env:GITHUB_OUTPUT
 
       - name: Cache NuGet packages
@@ -139,7 +134,7 @@ jobs:
             -p:Platform=x64 `
             -p:UapAppxPackageBuildMode=SideloadOnly `
             -p:AppxPackageSigningEnabled=True `
-            -p:PackageCertificateThumbprint=${{ steps.cert_thumb.outputs.thumbprint }}
+            -p:PackageCertificateThumbprint=${{ steps.certificate.outputs.thumbprint }}
 
       - name: Upload sideload app package artifact
         uses: actions/upload-artifact@v7
