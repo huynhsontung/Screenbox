@@ -50,8 +50,8 @@
     <PackageReference Include="Microsoft.UI.Xaml" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" />
-    <PackageReference Include="Sentry.Extensions.Logging" />
     <PackageReference Include="ReswPlus" />
+    <PackageReference Include="Sentry.Extensions.Logging" />
   </ItemGroup>
 
   <ItemGroup Label="Localization">
