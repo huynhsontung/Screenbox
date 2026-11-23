@@ -88,6 +88,7 @@ public static class MessengerExtensions
         {
             queue.Items.Insert(Math.Min(queue.CurrentIndex + 1, queue.Items.Count), new QueueItemViewModel(media));
             queue.ShuffleBackup = null;
+            queue.Origin = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }
@@ -102,9 +103,7 @@ public static class MessengerExtensions
             // Queue all items and play the first one
             var updatedQueue = new QueueSession(0, items)
             {
-                Origin = items.Count > 1
-                    ? QueueOrigin.ForMediaCollection(items[0].Name)
-                    : QueueOrigin.ForSingleMedia(items[0])
+                Origin = items.Count == 1 ? QueueOrigin.ForSingleMedia(items[0]) : null
             };
             messenger.Send(new SetQueueMessage(updatedQueue, true));
         }
@@ -119,6 +118,7 @@ public static class MessengerExtensions
             }
 
             queue.ShuffleBackup = null;
+            queue.Origin = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }
@@ -135,6 +135,7 @@ public static class MessengerExtensions
         {
             queue.Items.Add(new QueueItemViewModel(media));
             queue.ShuffleBackup = null;
+            queue.Origin = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }
@@ -149,9 +150,7 @@ public static class MessengerExtensions
             // Queue all items and play the first one
             var updatedQueue = new QueueSession(0, items)
             {
-                Origin = items.Count > 1
-                    ? QueueOrigin.ForMediaCollection(items[0].Name)
-                    : QueueOrigin.ForSingleMedia(items[0])
+                Origin = items.Count == 1 ? QueueOrigin.ForSingleMedia(items[0]) : null
             };
             messenger.Send(new SetQueueMessage(updatedQueue, true));
         }
@@ -164,6 +163,7 @@ public static class MessengerExtensions
             }
 
             queue.ShuffleBackup = null;
+            queue.Origin = null;
             messenger.Send(new SetQueueMessage(queue, false));
         }
     }

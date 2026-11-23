@@ -96,24 +96,4 @@ public sealed class QueueSession
 
     public QueueItemViewModel? CurrentItem =>
         CurrentIndex >= 0 && CurrentIndex < Items.Count ? Items[CurrentIndex] : null;
-
-    /// <summary>
-    /// Returns the canonical (unshuffled) list of items in this queue session.
-    /// When a shuffle backup is present, returns the original queue order with any removed items excluded.
-    /// </summary>
-    public IReadOnlyList<QueueItemViewModel> GetCanonicalItems()
-    {
-        if (ShuffleBackup is null)
-        {
-            return Items;
-        }
-
-        var canonical = new List<QueueItemViewModel>(ShuffleBackup.OriginalItems);
-        foreach (QueueItemViewModel removal in ShuffleBackup.Removals)
-        {
-            canonical.Remove(removal);
-        }
-
-        return canonical;
-    }
 }

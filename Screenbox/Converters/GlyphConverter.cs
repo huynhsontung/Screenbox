@@ -299,5 +299,18 @@ public static partial class GlyphConverter
             _ => GlobeGlyph,
         };
     }
+
+    /// <summary>
+    /// Gets the placeholder glyph code for a live media collection (folder or playlist file).
+    /// </summary>
+    /// <param name="isPlaylistFile"><see langword="true"/> if the collection originates from a playlist file; otherwise <see langword="false"/>.</param>
+    /// <returns>A glyph code representing either a playlist or folder icon.</returns>
+    public static string ToMediaCollectionGlyph(bool isPlaylistFile)
+    {
+        const string FolderGlyph = "\uE8B7";
+        const string PlaylistGlyph = "\U000F00A8";
+
+        return isPlaylistFile ? PlaylistGlyph : FolderGlyph;
+    }
 }
 

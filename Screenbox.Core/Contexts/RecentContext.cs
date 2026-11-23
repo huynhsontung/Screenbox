@@ -1,33 +1,29 @@
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.ViewModels;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Screenbox.Core.Contexts;
 
 /// <summary>
-/// Context for holding the application-wide recent media items and their MRU token mappings.
+/// Context for holding the application-wide recent media items.
 /// </summary>
-public sealed partial class RecentContext : ObservableObject
+public sealed partial class RecentContext : ObservableRecipient
 {
     /// <summary>
-    /// Gets the collection of recent media items.
+    /// The maximum number of items retained in the recent list.
     /// </summary>
-    public ObservableCollection<MediaViewModel> Recent { get; } = new();
+    public const int MaxRecentItems = 100;
+
+    public RecentContext(IMessenger? messenger = null)
+        : base(messenger ?? WeakReferenceMessenger.Default)
+    {
+    }
 
     /// <summary>
-    /// Gets the mapping from media location or path to MRU token.
-    /// </summary>
-    public Dictionary<string, string> PathToMruMappings { get; } = new();
-
-    /// <summary>
-    /// Gets the mapping from MRU token to media view model.
-    /// </summary>
-    public Dictionary<string, MediaViewModel> TokenToMediaMappings { get; } = new();
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the recent media list has been loaded from storage.
+    /// Gets or sets the snapshot of recent media items.
     /// </summary>
     [ObservableProperty]
-    public partial bool IsLoaded { get; set; }
+    [NotifyPropertyChangedRecipients]
+    public partial IReadOnlyList<IRecentItem> Recent { get; set; } = Array.Empty<IRecentItem>();
 }

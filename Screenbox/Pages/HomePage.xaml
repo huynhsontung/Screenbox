@@ -32,28 +32,44 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <templates:RecentItemTemplateSelector
+                x:Key="RecentItemTemplateSelector"
+                AlbumTemplate="{StaticResource AlbumGridViewItemTemplate}"
+                ArtistTemplate="{StaticResource ArtistGridViewItemTemplate}"
+                MediaCollectionTemplate="{StaticResource MediaCollectionGridViewItemTemplate}"
+                MediaTemplate="{StaticResource MediaGridViewItemTemplate}"
+                PlaylistTemplate="{StaticResource PlaylistGridViewItemTemplate}" />
+
             <flyouts:MediaMenuFlyout
                 x:Key="ItemFlyout"
-                AddToQueueCommand="{x:Bind Common.AddToQueueCommand}"
+                AddToQueueCommand="{x:Bind ViewModel.AddToQueueCommand}"
                 ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
                 IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
-                PlayNextCommand="{x:Bind Common.PlayNextCommand}"
+                PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
                 RemoveCommand="{x:Bind ViewModel.RemoveCommand}"
-                SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}">
+                SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}"
+                UseIndividualPlaybackState="True">
                 <flyouts:MediaMenuFlyout.AdditionalItems>
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenAlbumCommand}"
-                        CommandParameter="{x:Bind ViewModel.ContextMedia.Album, Mode=OneWay}"
+                        CommandParameter="{x:Bind ViewModel.ContextAlbum, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE93C;}"
                         Text="{x:Bind strings:Resources.ShowAlbum}"
-                        Visibility="{x:Bind ViewModel.ContextMedia.Album, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.ContextAlbum, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenArtistCommand}"
-                        CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                        CommandParameter="{x:Bind ViewModel.ContextArtist, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE77B;}"
                         Text="{x:Bind strings:Resources.ShowArtist}"
-                        Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.ContextArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenPlaylistCommand}"
+                        CommandParameter="{x:Bind ViewModel.ContextPlaylist, Mode=OneWay}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlaylistGlyph}}"
+                        Text="{x:Bind strings:Resources.Open}"
+                        Visibility="{x:Bind ViewModel.ContextPlaylist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 </flyouts:MediaMenuFlyout.AdditionalItems>
             </flyouts:MediaMenuFlyout>
 
@@ -171,7 +187,7 @@
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
-            ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
+            ItemTemplateSelector="{StaticResource RecentItemTemplateSelector}"
             ItemsSource="{x:Bind ViewModel.Recent}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionMode="None">
@@ -191,6 +207,7 @@
                 <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextMedia, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:ListViewSelectionBehavior Selection="{x:Bind ViewModel.Selection}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>
 

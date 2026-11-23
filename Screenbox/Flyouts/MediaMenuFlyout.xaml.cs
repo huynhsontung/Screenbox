@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Screenbox.Behaviors;
 using Screenbox.Commands;
 using Screenbox.Converters;
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
@@ -75,6 +76,12 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public bool IsAdvancedModeEnabled { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether <see cref="MediaViewModel"/> items should use
+    /// <see cref="MediaViewModel.IsPlayingIndividually"/> rather than <see cref="MediaViewModel.IsPlaying"/>.
+    /// </summary>
+    public bool UseIndividualPlaybackState { get; set; }
+
+    /// <summary>
     /// Gets the collection used to generate the additional content of the menu.
     /// </summary>
     /// <value>
@@ -115,11 +122,10 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
         bool isPlaying = ContextItem switch
         {
-            AlbumViewModel album => album.IsPlaying,
-            ArtistViewModel artist => artist.IsPlaying,
+            MediaViewModel media => UseIndividualPlaybackState ? media.IsPlayingIndividually : media.IsPlaying,
+            IRecentItem recentItem => recentItem.IsPlaying,
             IMediaPlaybackState state => state.IsPlaying,
             IMediaContainer container => container.Media.IsPlaying,
-            PlaylistViewModel playlist => playlist.IsPlaying,
             StorageItemViewModel storageItem => storageItem.Media?.IsPlaying ?? false,
             _ => false,
         };
@@ -149,13 +155,25 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
 
         // AddToPlaylist MenuFlyoutSubItem
-        if (IsAddToPlaylistButtonVisible)
+        bool canAddToPlaylist = IsAddToPlaylistButtonVisible && ContextItem switch
+        {
+            AlbumViewModel { HasSongs: false } => false,
+            ArtistViewModel { HasSongs: false } => false,
+            PlaylistViewModel { HasItems: false } => false,
+            _ => true
+        };
+
+        if (canAddToPlaylist)
         {
             AddToPlaylistSubItem.Text = Strings.Resources.AddToPlaylist;
             AddToPlaylistSubItem.Visibility = Visibility.Visible;
             AddToPlaylistSubItemIcon.Glyph = !_isApiContract14Present
                 ? GetGlyphForTextDirection("\U000F00AA", "\U000F00AB")
                 : "\U000F00AA";
+        }
+        else
+        {
+            AddToPlaylistSubItem.Visibility = Visibility.Collapsed;
         }
 
         // Remove MenuFlyoutItem
@@ -189,6 +207,13 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             PropertiesItem.CommandParameter = mediaVm;
             PropertiesItem.Visibility = Visibility.Visible;
         }
+        else
+        {
+            OpenWithItem.Visibility = Visibility.Collapsed;
+            OpenInFileExplorerItem.Visibility = Visibility.Collapsed;
+            OpenInFileExplorerItemKeyboardAccelerator.IsEnabled = false;
+            PropertiesItem.Visibility = Visibility.Collapsed;
+        }
 
         // Select MenuFlyoutItem
         if (SelectCommand is not null)
@@ -203,7 +228,7 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
         }
 
         // Advanced PlaybackOptions MenuFlyoutItem
-        if (IsAdvancedModeEnabled)
+        if (IsAdvancedModeEnabled && mediaVm is not null)
         {
             AdvancedModeSeparator.Visibility = Visibility.Visible;
 
@@ -212,6 +237,11 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
             SetPlaybackOptionsItem.Command = _setPlaybackOptionsCommand;
             SetPlaybackOptionsItem.CommandParameter = ContextItem;
             SetPlaybackOptionsItem.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            AdvancedModeSeparator.Visibility = Visibility.Collapsed;
+            SetPlaybackOptionsItem.Visibility = Visibility.Collapsed;
         }
     }
 

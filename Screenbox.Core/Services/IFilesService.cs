@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using Screenbox.Core.MediaSources;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -24,8 +22,7 @@ public interface IFilesService
     public IAsyncOperation<StorageFolder> PickFolderAsync();
     public Task OpenFileLocationAsync(string path);
     public Task OpenFileLocationAsync(StorageFile file);
-    public void AddToRecent(IStorageItem item);
-    public Task AddToRecentAsync(IMediaSource? source, CancellationToken cancellationToken = default);
+    public string? AddToRecent(IStorageItem item);
 
     /// <summary>
     /// Retrieves the frame captures <see cref="StorageFolder"/> for the given token.
