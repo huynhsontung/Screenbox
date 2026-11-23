@@ -783,14 +783,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
                 if (currentItemUnchanged && !playlist.IsEmpty && playlist.CurrentItem is { } activeItem)
                 {
-                    // Handle in-place origin upgrades (e.g. AddNeighboringFilesAsync upgrading the active
-                    // single-file slot to a folder MediaCollection) or a new session retaining the same slot.
-                    string? replacedEntryId = _queueSession.SessionId == _lastBroadcastSessionId &&
-                                              _lastBroadcastOriginKind == RecentItemKind.SingleMedia &&
-                                              activeItem.Origin is { TrackItemsIndividually: false }
-                        ? _lastBroadcastEntryId
-                        : null;
-                    BroadcastSessionStarted(activeItem, replacedEntryId);
+                    BroadcastSessionStarted(activeItem);
                 }
             }
             finally

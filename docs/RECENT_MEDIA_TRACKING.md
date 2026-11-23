@@ -71,16 +71,11 @@ A queue often starts from one container (such as an album) and is later modified
 
 - If the active slot has a container origin (`Origin is { TrackItemsIndividually: false }`), that container is recorded; otherwise the track is recorded individually as `SingleMedia`.
 - Advancing between consecutive tracks of the same container within the same `SessionId` produces the same `entryId`, so no duplicate `QueueSessionStartedMessage` is emitted.
-- Loose multi-file drops/selections and library-wide queues (e.g. *Songs*, *All Videos*, *Search*) have no persistent container to shortcut to, so their slots have `Origin == null` and each played track is recorded individually.
+- Loose multi-file drops/selections, neighboring files auto-enqueued around a single opened file, and library-wide queues (e.g. *Songs*, *All Videos*, *FolderView*, *Search*) have `Origin == null` so each played track is recorded individually. Only explicitly opened or dropped folders create a folder `MediaCollection` entry.
 
 ### Deferred In-Place Upgrades
 
-Two playback flows start immediately as a single-item slot so playback is never blocked, and then asynchronously expand within the same `SessionId`:
-
-1. **Neighboring files auto-enqueue** (`PlayFilesAsync` → `QueueService.AddNeighboringFilesAsync`): when a single file is opened with *Enqueue all files in folder* enabled and the folder contains multiple playable files, the existing `QueueItemViewModel` slot is retained and all slots are stamped with the folder's `MediaCollection` origin.
-2. **Expandable URL sub-items** (`PlayQueueCoordinator.CheckSubItemsAsync`): when LibVLC discovers multiple sub-items for a stream URL, the slot is replaced with sub-item slots carrying a `MediaCollection` origin.
-
-In both cases, `PlayQueueCoordinator` sends `QueueSessionStartedMessage` with `ReplacedEntryId` set to the temporary `SingleMedia` entry ID. `RecentMediaCoordinator` removes that specific entry and inserts the `MediaCollection` shortcut atomically — ensuring a delayed upgrade never accidentally removes a different track if the user already switched playback.
+When opening an expandable stream URL (`PlayQueueCoordinator.CheckSubItemsAsync`), playback starts immediately as a single-item slot so playback is never blocked. If LibVLC subsequently discovers multiple sub-items for a standalone slot (`Origin == null`), the slot is replaced with sub-item slots carrying a `MediaCollection` origin, and `PlayQueueCoordinator` sends `QueueSessionStartedMessage` with `ReplacedEntryId` set to the temporary `SingleMedia` entry ID. `RecentMediaCoordinator` removes that specific entry and inserts the `MediaCollection` shortcut atomically — ensuring a delayed upgrade never accidentally removes a different track if the user already switched playback. (If the expandable item already belongs to a container such as a saved playlist, its expanded children preserve that container origin.)
 
 ---
 

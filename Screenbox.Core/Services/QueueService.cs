@@ -242,60 +242,18 @@ public sealed class QueueService : IQueueService
             return session;
         }
 
-        var folderOrigin = ResolveNeighboringFolderOrigin(neighboringFilesQuery, session.CurrentItem?.Media, result.Items[0].Media);
-        return MergeCurrentItemIntoNeighboringQueue(session, result.Items, folderOrigin);
-    }
-
-    private QueueOrigin ResolveNeighboringFolderOrigin(
-        StorageFileQueryResult neighboringFilesQuery,
-        MediaViewModel? currentItem,
-        MediaViewModel fallbackItem)
-    {
-        string folderName = string.Empty;
-        string? folderPath = null;
-        string? folderToken = null;
-        try
-        {
-            if (neighboringFilesQuery.Folder is { } parentFolder)
-            {
-                folderName = !string.IsNullOrWhiteSpace(parentFolder.DisplayName)
-                    ? parentFolder.DisplayName
-                    : parentFolder.Name;
-                folderPath = parentFolder.Path;
-                folderToken = TrackInRecentIfEnabled(parentFolder);
-            }
-        }
-        catch
-        {
-            // Best-effort folder inspection
-        }
-
-        if (string.IsNullOrWhiteSpace(folderName) && currentItem is not null)
-        {
-            folderPath ??= Path.GetDirectoryName(currentItem.Location);
-            folderName = !string.IsNullOrWhiteSpace(folderPath)
-                ? Path.GetFileName(folderPath)
-                : currentItem.Name;
-        }
-
-        if (string.IsNullOrWhiteSpace(folderName))
-        {
-            folderName = fallbackItem.Name;
-        }
-
-        return QueueOrigin.ForMediaCollection(folderName, folderPath, folderToken);
+        // Neighboring files auto-enqueued around a single opened file remain individually tracked
+        // (Origin = null); only explicitly opened/dropped folders create a MediaCollection origin.
+        return MergeCurrentItemIntoNeighboringQueue(session, result.Items);
     }
 
     private static QueueSession MergeCurrentItemIntoNeighboringQueue(
         QueueSession session,
-        List<QueueItemViewModel> neighboringItems,
-        QueueOrigin folderOrigin)
+        List<QueueItemViewModel> neighboringItems)
     {
         if (session.CurrentItem is not { } currentItem)
         {
-            var merged = new QueueSession(neighboringItems, session);
-            merged.SetOrigin(folderOrigin);
-            return merged;
+            return new QueueSession(neighboringItems, session);
         }
 
         // Replace the matching item (by location) with the existing CurrentItem to preserve
@@ -309,9 +267,7 @@ public sealed class QueueService : IQueueService
         if (matchIndex >= 0)
         {
             neighboringItems[matchIndex] = currentItem;
-            var merged = new QueueSession(currentItem, neighboringItems, session);
-            merged.SetOrigin(folderOrigin);
-            return merged;
+            return new QueueSession(currentItem, neighboringItems, session);
         }
 
         // Current item not found in neighboring files (edge case).

@@ -213,9 +213,9 @@ public sealed partial class PlayQueueCoordinatorTests
     }
 
     [Test]
-    public async Task SetQueue_WhenUpgradingSessionFromSingleToFolder_EmitsReplacedEntryId()
+    public async Task SetQueue_WhenNeighboringFilesAddedToSingleSession_TracksItemsIndividually()
     {
-        var (_, _, _, smtc, messenger) = CreatePlayQueueCoordinator();
+        var (coordinator, context, _, smtc, messenger) = CreatePlayQueueCoordinator();
         using var _ = smtc;
 
         var received = new List<QueueSessionStartedMessage>();
@@ -227,19 +227,22 @@ public sealed partial class PlayQueueCoordinatorTests
         var singleSession = new QueueSession(track1);
         messenger.Send(new SetQueueMessage(singleSession, shouldPlay: false));
 
-        var folderOrigin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA");
         var existingSlot = singleSession.CurrentItem!;
-        var upgradedSession = new QueueSession(
+        var neighboringSession = new QueueSession(
             existingSlot,
             new[] { existingSlot, new QueueItemViewModel(track2) },
             singleSession);
-        upgradedSession.SetOrigin(folderOrigin);
-        messenger.Send(new SetQueueMessage(upgradedSession, shouldPlay: false));
+        messenger.Send(new SetQueueMessage(neighboringSession, shouldPlay: false));
 
+        await Assert.That(context.ActiveOrigin).IsNull();
+        await Assert.That(received.Count).IsEqualTo(1);
+        await Assert.That(received[0].Origin).IsEqualTo(QueueOrigin.ForSingleMedia(track1));
+
+        // Advancing to the neighboring file records it individually as SingleMedia
+        await coordinator.NextAsync();
+        await Assert.That(context.ActiveOrigin).IsNull();
         await Assert.That(received.Count).IsEqualTo(2);
-        await Assert.That(received[0].ReplacedEntryId).IsNull();
-        await Assert.That(received[1].Origin).IsEqualTo(folderOrigin);
-        await Assert.That(received[1].ReplacedEntryId).IsEqualTo(QueueOrigin.ForSingleMedia(track1).GetEntryId());
+        await Assert.That(received[1].Origin).IsEqualTo(QueueOrigin.ForSingleMedia(track2));
     }
 
     private sealed class StubExpandableMediaSource : IExpandableMediaSource
