@@ -520,9 +520,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 return;
             }
 
-            QueueOrigin? expandedOrigin = expandedItems.Count > 1
+            QueueOrigin? expandedOrigin = placeholder.Origin ?? (expandedItems.Count > 1
                 ? QueueOrigin.ForMediaCollection(placeholder.Media.Name, placeholder.Media.Location)
-                : placeholder.Origin;
+                : null);
             var newItems = expandedItems
                 .Select(item => new QueueItemViewModel(_mediaFactory.Create(item), expandedOrigin))
                 .ToList();
@@ -562,9 +562,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     if (_context.CurrentItem != item) return;
 
-                    QueueOrigin? expandedOrigin = subItems.Count > 1
+                    QueueOrigin? expandedOrigin = item.Origin ?? (subItems.Count > 1
                         ? QueueOrigin.ForMediaCollection(item.Media.Name, item.Media.Location)
-                        : item.Origin;
+                        : null);
                     var newItems = subItems
                         .Select(sub => new QueueItemViewModel(_mediaFactory.Create(sub), expandedOrigin))
                         .ToList();

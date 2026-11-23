@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Coordinators;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
@@ -238,5 +240,77 @@ public sealed partial class PlayQueueCoordinatorTests
         await Assert.That(received[0].ReplacedEntryId).IsNull();
         await Assert.That(received[1].Origin).IsEqualTo(folderOrigin);
         await Assert.That(received[1].ReplacedEntryId).IsEqualTo(QueueOrigin.ForSingleMedia(track1).GetEntryId());
+    }
+
+    private sealed class StubExpandableMediaSource : IExpandableMediaSource
+    {
+        private readonly IReadOnlyList<ExpandedMediaItem> _children;
+
+        public StubExpandableMediaSource(string name, string location, IReadOnlyList<ExpandedMediaItem> children)
+        {
+            Name = name;
+            Location = location;
+            _children = children;
+        }
+
+        public string Location { get; }
+        public string Name { get; }
+        public Enums.MediaPlaybackType MediaType => Enums.MediaPlaybackType.Playlist;
+
+        public Task<IReadOnlyList<ExpandedMediaItem>> ExpandAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(_children);
+    }
+
+    [Test]
+    public async Task ExpandAndPlayAsync_PreservesContainerOrigin_AndUpgradesStandaloneItem()
+    {
+        var (coordinator, context, _, smtc, messenger) = CreatePlayQueueCoordinator();
+        using var _ = smtc;
+
+        var received = new List<QueueSessionStartedMessage>();
+        messenger.Register<QueueSessionStartedMessage>(this, (_, msg) => received.Add(msg));
+
+        var children = new[]
+        {
+            new ExpandedMediaItem(new UriMediaSource(new Uri("https://example.com/ch1.mp3")), "Channel 1"),
+            new ExpandedMediaItem(new UriMediaSource(new Uri("https://example.com/ch2.mp3")), "Channel 2")
+        };
+
+        // 1. Expandable track inside a saved Playlist preserves the Playlist origin
+        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger)
+        {
+            Name = "Radio Mix"
+        };
+        var playlistOrigin = QueueOrigin.ForPlaylist(playlist);
+        var streamMedia = new MediaViewModel(new StubExpandableMediaSource("Radio", "https://example.com/radio.m3u8", children));
+        var regularTrack = CreateDummyMedia("regular");
+
+        var playlistSession = new QueueSession(0, new[] { regularTrack, streamMedia }, origin: playlistOrigin);
+        messenger.Send(new SetQueueMessage(playlistSession, shouldPlay: false));
+        await Assert.That(received.Count).IsEqualTo(1);
+        await Assert.That(received[0].Origin).IsEqualTo(playlistOrigin);
+
+        await coordinator.PlayAsync(context.Items[1]);
+
+        await Assert.That(context.Items.Count).IsEqualTo(3);
+        await Assert.That(context.CurrentItem?.Origin).IsEqualTo(playlistOrigin);
+        await Assert.That(context.Items[2].Origin).IsEqualTo(playlistOrigin);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(playlistOrigin);
+        await Assert.That(received.Count).IsEqualTo(1);
+
+        // 2. Standalone expandable item (Origin == null) upgrades its expanded slots to MediaCollection
+        var standaloneStream = new MediaViewModel(new StubExpandableMediaSource("Standalone", "https://example.com/standalone.m3u8", children));
+        var standaloneSession = new QueueSession(new[] { standaloneStream });
+        messenger.Send(new SetQueueMessage(standaloneSession, shouldPlay: false));
+
+        await coordinator.PlayAsync(context.Items[0]);
+
+        var expectedCollectionOrigin = QueueOrigin.ForMediaCollection("Standalone", "https://example.com/standalone.m3u8");
+        await Assert.That(context.Items.Count).IsEqualTo(2);
+        await Assert.That(context.CurrentItem?.Origin).IsEqualTo(expectedCollectionOrigin);
+        await Assert.That(context.Items[1].Origin).IsEqualTo(expectedCollectionOrigin);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(expectedCollectionOrigin);
+        await Assert.That(received.Count).IsEqualTo(2);
+        await Assert.That(received[1].Origin).IsEqualTo(expectedCollectionOrigin);
     }
 }

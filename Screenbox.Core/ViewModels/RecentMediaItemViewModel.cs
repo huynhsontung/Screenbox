@@ -57,10 +57,11 @@ public sealed partial class RecentMediaItemViewModel : ObservableRecipient,
                         state.CurrentItem is not null &&
                         (state.Origin is null || state.Origin.TrackItemsIndividually) &&
                         (ReferenceEquals(state.CurrentItem, Media) ||
-                         string.Equals(
-                             QueueOrigin.NormalizeLocation(state.CurrentItem.Location),
-                             QueueOrigin.NormalizeLocation(Media.Location),
-                             StringComparison.Ordinal));
+                         (!string.IsNullOrEmpty(Media.Location) &&
+                          string.Equals(
+                              QueueOrigin.NormalizeLocation(state.CurrentItem.Location),
+                              QueueOrigin.NormalizeLocation(Media.Location),
+                              StringComparison.Ordinal)));
         IsMediaActive = isActive;
         IsPlaying = isActive && state.IsPlaying;
     }

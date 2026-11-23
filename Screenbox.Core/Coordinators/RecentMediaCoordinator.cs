@@ -654,14 +654,20 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             return null;
 
         string? token = fileSource.Token;
-        if (string.IsNullOrEmpty(token) && fileSource.StorageFile is { } file)
+        if (fileSource.StorageFile is { } file)
         {
             try
             {
-                token = StorageApplicationPermissions.MostRecentlyUsedList.Add(
-                    file,
-                    DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
-                fileSource.Token = token;
+                bool hasValidToken = !string.IsNullOrEmpty(token) &&
+                                     (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token) ||
+                                      StorageApplicationPermissions.FutureAccessList.ContainsItem(token));
+                if (!hasValidToken)
+                {
+                    token = StorageApplicationPermissions.MostRecentlyUsedList.Add(
+                        file,
+                        DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+                    fileSource.Token = token;
+                }
             }
             catch
             {
