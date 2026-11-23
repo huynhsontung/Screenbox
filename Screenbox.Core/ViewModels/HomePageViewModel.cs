@@ -274,11 +274,17 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     }
 
     [RelayCommand]
-    private void Play(MediaViewModel media)
+    private async Task Play(MediaViewModel media)
     {
         if (media.IsMediaActive)
         {
             Messenger.Send(new TogglePlayPauseMessage(false));
+            return;
+        }
+
+        if (media.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+        {
+            await Messenger.PlayFilesAsync(new[] { file }, _playlistService, _generalSettings.EnqueueAllFilesInFolder);
         }
         else
         {
