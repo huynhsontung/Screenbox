@@ -311,7 +311,7 @@ public sealed class RecentMediaCoordinatorTests
         // Simulate saved playlists finishing load after startup
         var livePlaylist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, new StrongReferenceMessenger());
         livePlaylist.LoadPlaceholder(playlistId, "Road Trip");
-        livePlaylist.Items.Add(CreateDummyMedia("Song 1"));
+        livePlaylist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia("Song 1")));
         playlistsContext.Playlists.Add(livePlaylist);
 
         await coordinator.LoadAsync(forceReload: true);
@@ -490,12 +490,12 @@ public sealed class RecentMediaCoordinatorTests
         await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(original), original);
         await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(original);
 
-        // Simulate SendPlayNext / SendAddToQueue / InsertNext cloning the MediaViewModel
-        var clone = new MediaViewModel(original) { IsPlayingIndividually = true };
-        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(clone), clone);
+        // Simulate playing a different live MediaViewModel instance for the same media source
+        var liveInstance = new MediaViewModel(original.Source) { Name = original.Name, IsPlayingIndividually = true };
+        await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(liveInstance), liveInstance);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(clone);
+        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(liveInstance);
         await Assert.That(((MediaViewModel)recentContext.Recent[0]).IsPlayingIndividually).IsTrue();
     }
 

@@ -64,11 +64,11 @@ public sealed class HomePageViewModelTests
         selection.IsSelectionModeActive = true;
         selection.SelectRange(new ItemIndexRange(0, 2));
 
-        IReadOnlyList<MediaViewModel>? queuedItems = null;
+        IReadOnlyList<QueueItemViewModel>? queuedItems = null;
 
         messenger.Register<QueueRequestMessage>(this, (_, msg) =>
         {
-            msg.Reply(new QueueSession(0, []));
+            msg.Reply(new QueueSession());
         });
 
         messenger.Register<SetQueueMessage>(this, (_, msg) =>
@@ -80,9 +80,9 @@ public sealed class HomePageViewModelTests
 
         await Assert.That(queuedItems).IsNotNull();
         await Assert.That(queuedItems!.Count).IsEqualTo(3);
-        await Assert.That(queuedItems[0].Name).IsEqualTo("Track 1");
-        await Assert.That(queuedItems[1].Name).IsEqualTo("Track 2");
-        await Assert.That(queuedItems[2].Name).IsEqualTo("Track 3");
+        await Assert.That(queuedItems[0].Media.Name).IsEqualTo("Track 1");
+        await Assert.That(queuedItems[1].Media.Name).IsEqualTo("Track 2");
+        await Assert.That(queuedItems[2].Media.Name).IsEqualTo("Track 3");
     }
 
     [Test]
@@ -121,7 +121,8 @@ public sealed class HomePageViewModelTests
 
         await Assert.That(sentQueue).IsNotNull();
         await Assert.That(sentQueue!.Items.Count).IsEqualTo(2);
-        await Assert.That(sentQueue.Origin).IsNull();
+        await Assert.That(sentQueue.Items[0].Origin).IsNull();
+        await Assert.That(sentQueue.Items[1].Origin).IsNull();
     }
 
     [Test]
@@ -376,5 +377,48 @@ public sealed class HomePageViewModelTests
         generalSettings.ShowRecent = true;
         vm.OnLoaded();
         await Assert.That(vm.Recent.Count).IsEqualTo(2);
+    }
+
+    [Test]
+    public async Task PlaySelected_MixedRecentOrigins_PreservesPerItemOrigins()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var recentContext = new RecentContext(messenger);
+        var coordinator = new DummyCoordinator();
+        var selection = new SelectionViewModel();
+        var libraryContext = new LibraryContext();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
+
+        var vm = new HomePageViewModel(
+            recentContext,
+            coordinator,
+            selection,
+            mediaFactory,
+            null!,
+            generalSettings,
+            null!,
+            messenger);
+
+        var album = new AlbumViewModel("Album A", "Artist A", messenger);
+        var albumTrack = CreateDummyMedia("Album Track");
+        album.RelatedSongs.Add(albumTrack);
+        var singleTrack = CreateDummyMedia("Single Track");
+
+        recentContext.Recent = (IRecentItem[])[album, singleTrack];
+        selection.IsSelectionModeActive = true;
+        selection.SelectRange(new ItemIndexRange(0, 2));
+
+        QueueSession? sentQueue = null;
+        messenger.Register<SetQueueMessage>(this, (_, msg) => sentQueue = msg.Value);
+
+        await vm.PlaySelectedCommand.ExecuteAsync(null);
+
+        await Assert.That(sentQueue).IsNotNull();
+        await Assert.That(sentQueue!.Items.Count).IsEqualTo(2);
+        await Assert.That(sentQueue.Items[0].Media).IsSameReferenceAs(albumTrack);
+        await Assert.That(sentQueue.Items[0].Origin).IsEqualTo(QueueOrigin.ForAlbum(album));
+        await Assert.That(sentQueue.Items[1].Media).IsSameReferenceAs(singleTrack);
+        await Assert.That(sentQueue.Items[1].Origin).IsNull();
     }
 }

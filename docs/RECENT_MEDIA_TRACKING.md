@@ -133,24 +133,21 @@ Two playback flows start as a 1-item `SingleMedia` queue and asynchronously expa
    - `PlayFilesAsync` immediately sends a 1-item `SetQueueMessage` (`SingleMedia`) so playback begins immediately.
    - `AddNeighboringFilesAsync` enumerates the parent folder; if $> 1$ playable files are found, it updates `Origin = QueueOrigin.ForMediaCollection(folderName, folderPath, folderToken)` within the same `SessionId`.
 2. **Expandable URL Sub-Items (`PlayQueueCoordinator.CheckSubItemsAsync`)**:
-   - Opening a URL starts as `SingleMedia`. If LibVLC parses $> 1$ sub-items, `CheckSubItemsAsync` upgrades `_queueSession.Origin` to `MediaCollection(title, url)` within the same `SessionId`.
+   - Opening a URL starts as an individual slot (`Origin == null`). If LibVLC parses $> 1$ sub-items, `CheckSubItemsAsync` replaces that slot with `QueueItemViewModel`s carrying `MediaCollection(title, url)` within the same `SessionId`.
 
-When `PlayQueueCoordinator` detects `_recordedSessionId == queueSession.SessionId` transitioning from `SingleMedia` to `MediaCollection`, it sends `QueueSessionStartedMessage(Origin, ReplacedEntryId: _recordedSingleEntryId)`, replacing the original temporary `SingleMedia` entry in-place with the `MediaCollectionViewModel` shortcut.
+When `PlayQueueCoordinator` detects `_recordedSessionId == queueSession.SessionId` transitioning from `SingleMedia` to `MediaCollection`, it sends `QueueSessionStartedMessage(Origin, ReplacedEntryId: _lastRecordedEntryId)`, replacing the original temporary `SingleMedia` entry in-place with the `MediaCollectionViewModel` shortcut.
 
-### In-Queue Mutations & Origin Unlinking
+### Per-Item Origin & Mixed-Origin Queues
 
-- **Operations that preserve `Origin`**:
-  - `Next` / `Previous` track navigation
-  - Selecting an existing track in the Play Queue (`PlayMediaMessage(item, existing: true)`)
-  - Shuffling / unshuffling (`HandleShuffleModeChanged`)
-  - Reordering items within the queue (`MoveItemUp`, `MoveItemDown`, drag-and-drop reorder)
-- **Operations that unlink `Origin` (`UnlinkOrigin()` → `_queueSession.Origin = null`)**:
-  - `Enqueue` (appending/dropping files into the active queue)
-  - `InsertNext` (inserting a track next from the queue panel)
-  - `Remove` (removing an item from the active queue)
-  - `MessengerExtensions.SendPlayNext` / `MessengerExtensions.SendAddToQueue`
+Each `QueueItemViewModel` slot carries its own optional container `Origin` (`QueueOrigin?`; `null` indicates an individually tracked item):
 
-Once `Origin` is unlinked, the active container card immediately clears its active/playing highlight, and every subsequent track navigation records the newly played track individually as `SingleMedia`. Clearing the queue (`ClearQueue()`) resets `ActiveSessionId = Guid.Empty` and `ActiveOrigin = null`.
+- **Preserved across all queue mutations**:
+  - `Next` / `Previous` track navigation, shuffling/unshuffling, reordering, `Remove`, `Enqueue`, `InsertNext`, and `SendPlayNext` / `SendAddToQueue` all preserve existing items' `Origin` without unlinking.
+  - Newly inserted container items (e.g. `Play Next` or `Add to Queue` on an Album, Artist, Playlist, or MediaCollection) stamp their own `QueueOrigin` onto the inserted `QueueItemViewModel` slots; individual items leave `Origin = null`.
+- **Active origin and recent recording**:
+  - `PlayQueueContext.ActiveOrigin` always reflects `_context.CurrentItem?.Origin`.
+  - When playback transitions between tracks of the same container origin within a session, no duplicate `QueueSessionStartedMessage` is emitted.
+  - When playback advances into an item from a different origin (e.g., from an Album into a queued Playlist or single track), `ActiveOrigin` updates, the previous container card deactivates, the new container (or `MediaViewModel.IsPlayingIndividually`) activates, and the new origin is recorded/promoted in Recent Media. Clearing the queue (`ClearQueue()`) resets `ActiveSessionId = Guid.Empty` and `ActiveOrigin = null`.
 
 ---
 

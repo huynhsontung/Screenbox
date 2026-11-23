@@ -89,7 +89,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
         if (RelatedSongs.Count == 0)
             return;
 
-        Messenger.SendPlayNext(OrderedSongs);
+        Messenger.SendPlayNext(OrderedSongs, QueueOrigin.ForArtist(this));
     }
 
     [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -98,7 +98,7 @@ public sealed partial class ArtistViewModel : ObservableRecipient,
         if (RelatedSongs.Count == 0)
             return;
 
-        Messenger.SendAddToQueue(OrderedSongs);
+        Messenger.SendAddToQueue(OrderedSongs, QueueOrigin.ForArtist(this));
     }
 
     private void RelatedSongsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

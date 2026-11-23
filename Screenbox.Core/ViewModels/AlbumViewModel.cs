@@ -150,7 +150,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         if (RelatedSongs.Count == 0)
             return;
 
-        Messenger.SendPlayNext(OrderedSongs);
+        Messenger.SendPlayNext(OrderedSongs, QueueOrigin.ForAlbum(this));
     }
 
     [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -159,7 +159,7 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
         if (RelatedSongs.Count == 0)
             return;
 
-        Messenger.SendAddToQueue(OrderedSongs);
+        Messenger.SendAddToQueue(OrderedSongs, QueueOrigin.ForAlbum(this));
     }
 
     private static IReadOnlyList<MediaViewModel> GetSortedSongs(IEnumerable<MediaViewModel> songs)

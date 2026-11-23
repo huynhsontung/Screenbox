@@ -60,9 +60,9 @@ public sealed class QueueService : IQueueService
         var session = await TryParseQueueAsync(storageItems, cancellationToken: cancellationToken);
         if (session is null) return null;
 
-        if (!string.IsNullOrEmpty(containerToken) && session.Origin is { Kind: RecentItemKind.MediaCollection } origin)
+        if (!string.IsNullOrEmpty(containerToken) && session.CurrentItem?.Origin is { Kind: RecentItemKind.MediaCollection } origin)
         {
-            session.Origin = origin with { Token = containerToken };
+            session.SetOrigin(origin with { Token = containerToken });
         }
 
         session.NeighboringFilesQuery = neighboringFilesQuery;
@@ -105,10 +105,7 @@ public sealed class QueueService : IQueueService
             return null;
         }
 
-        return new QueueSession(next ?? queue[0], queue)
-        {
-            Origin = ResolveStorageItemsOrigin(storageItems, queue)
-        };
+        return new QueueSession(next ?? queue[0], queue, origin: ResolveStorageItemsOrigin(storageItems, queue));
     }
 
     public async Task<QueueSession> ParseQueueAsync(MediaViewModel media, CancellationToken cancellationToken = default)
@@ -121,20 +118,15 @@ public sealed class QueueService : IQueueService
                 var vms = items.Select(_mediaFactory.Create).ToList();
                 string title = Path.GetFileNameWithoutExtension(media.Name);
                 string? token = (media.Source as IFileMediaSource)?.Token;
-                return new QueueSession(0, vms)
-                {
-                    Origin = QueueOrigin.ForMediaCollection(
-                        string.IsNullOrWhiteSpace(title) ? media.Name : title,
-                        media.Location,
-                        token)
-                };
+                var origin = QueueOrigin.ForMediaCollection(
+                    string.IsNullOrWhiteSpace(title) ? media.Name : title,
+                    media.Location,
+                    token);
+                return new QueueSession(0, vms, origin: origin);
             }
         }
 
-        return new QueueSession(media)
-        {
-            Origin = QueueOrigin.ForSingleMedia(media)
-        };
+        return new QueueSession(media);
     }
 
     public async Task<QueueSession> ParseQueueAsync(StorageFile file, CancellationToken cancellationToken = default)
@@ -155,16 +147,16 @@ public sealed class QueueService : IQueueService
         CancellationToken cancellationToken)
     {
         var session = await ParseQueueAsync(file, cancellationToken);
-        if (session.Items.Count == 1 && session.Origin?.Kind == RecentItemKind.SingleMedia)
+        if (session.Items.Count == 1 && session.CurrentItem?.Origin is null)
         {
             neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
         }
-        else if (session.Origin is { Kind: RecentItemKind.MediaCollection } origin)
+        else if (session.CurrentItem?.Origin is { Kind: RecentItemKind.MediaCollection } origin)
         {
             string? fileToken = TrackInRecentIfEnabled(file);
             if (!string.IsNullOrEmpty(fileToken))
             {
-                session.Origin = origin with { Token = fileToken };
+                session.SetOrigin(origin with { Token = fileToken });
             }
         }
 
@@ -301,10 +293,9 @@ public sealed class QueueService : IQueueService
     {
         if (session.CurrentItem is not { } currentItem)
         {
-            return new QueueSession(neighboringItems, session)
-            {
-                Origin = folderOrigin
-            };
+            var merged = new QueueSession(neighboringItems, session);
+            merged.SetOrigin(folderOrigin);
+            return merged;
         }
 
         // Replace the matching item (by location) with the existing CurrentItem to preserve
@@ -318,10 +309,9 @@ public sealed class QueueService : IQueueService
         if (matchIndex >= 0)
         {
             neighboringItems[matchIndex] = currentItem;
-            return new QueueSession(currentItem, neighboringItems, session)
-            {
-                Origin = folderOrigin
-            };
+            var merged = new QueueSession(currentItem, neighboringItems, session);
+            merged.SetOrigin(folderOrigin);
+            return merged;
         }
 
         // Current item not found in neighboring files (edge case).

@@ -97,10 +97,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public QueueSession ToQueueSession()
     {
-        return new QueueSession(0, Items.Select(item => item.Media).ToList())
-        {
-            Origin = QueueOrigin.ForPlaylist(this)
-        };
+        return new QueueSession(0, Items.Select(item => item.Media).ToList(), origin: QueueOrigin.ForPlaylist(this));
     }
 
     /// <summary>
@@ -188,13 +185,13 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     [RelayCommand(CanExecute = nameof(HasItems))]
     private void PlayNext()
     {
-        Messenger.SendPlayNext(Items.Select(item => item.Media).ToList());
+        Messenger.SendPlayNext(Items.Select(item => item.Media).ToList(), QueueOrigin.ForPlaylist(this));
     }
 
     [RelayCommand(CanExecute = nameof(HasItems))]
     private void AddToQueue()
     {
-        Messenger.SendAddToQueue(Items.Select(item => item.Media).ToList());
+        Messenger.SendAddToQueue(Items.Select(item => item.Media).ToList(), QueueOrigin.ForPlaylist(this));
     }
 
     [RelayCommand]

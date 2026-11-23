@@ -54,14 +54,20 @@ public sealed partial class PlayQueueCoordinatorTests
 
     private sealed partial class StubBufferManager : IPlayQueueBufferManager
     {
-        public IReadOnlyList<MediaViewModel> BufferedItems => Array.Empty<MediaViewModel>();
+        public IReadOnlyList<QueueItemViewModel> BufferedItems => Array.Empty<QueueItemViewModel>();
+        public bool TryGetPlaybackItem(QueueItemViewModel item, [NotNullWhen(true)] out IPlaybackItem? playbackItem)
+        {
+            playbackItem = null;
+            return false;
+        }
         public bool TryGetPlaybackItem(MediaViewModel vm, [NotNullWhen(true)] out IPlaybackItem? item)
         {
             item = null;
             return false;
         }
-        public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, MediaViewModel vm) => null;
-        public void CleanPlaybackItem(MediaViewModel vm) { }
+        public IPlaybackItem? GetOrCreatePlaybackItem(IMediaPlayer? player, QueueItemViewModel item) => null;
+        public void CleanPlaybackItem(QueueItemViewModel item) { }
+        public void CleanPlaybackItems(MediaViewModel media, QueueItemViewModel? exclude = null) { }
         public void Clear() { }
         public void UpdateBuffer(IMediaPlayer? player, QueueSession session, MediaPlaybackAutoRepeatMode repeatMode) { }
         public void Dispose() { }
@@ -108,59 +114,72 @@ public sealed partial class PlayQueueCoordinatorTests
     }
 
     [Test]
-    public async Task QueueMutations_UnlinkContainerOrigin_WhileShuffleAndReorderPreserveIt()
+    public async Task QueueMutations_PreservePerItemOrigins_AndTrackMixedOriginTransitions()
     {
         var (coordinator, context, player, smtc, messenger) = CreatePlayQueueCoordinator();
         using var _ = smtc;
 
+        var received = new List<QueueSessionStartedMessage>();
+        messenger.Register<QueueSessionStartedMessage>(this, (_, msg) => received.Add(msg));
+
         var track1 = CreateDummyMedia("track1");
         var track2 = CreateDummyMedia("track2");
         var extra = CreateDummyMedia("extra");
+        var playlistTrack = CreateDummyMedia("playlistTrack");
         var album = new AlbumViewModel("AlbumA", "ArtistA", messenger);
-        var folderOrigin = QueueOrigin.ForAlbum(album);
+        var albumOrigin = QueueOrigin.ForAlbum(album);
+        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger) { Name = "Roadtrip" };
+        var playlistOrigin = QueueOrigin.ForPlaylist(playlist);
 
-        var session = new QueueSession(0, new[] { track1, track2 }) { Origin = folderOrigin };
+        var session = new QueueSession(0, new[] { track1, track2 }, origin: albumOrigin);
         messenger.Send(new SetQueueMessage(session, shouldPlay: true));
 
-        await Assert.That(context.ActiveOrigin).IsEqualTo(folderOrigin);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(albumOrigin);
+        await Assert.That(received.Count).IsEqualTo(1);
+        await Assert.That(received[0].Origin).IsEqualTo(albumOrigin);
 
-        // Shuffle preserves container origin
+        // Shuffle preserves per-item origin
         context.ShuffleMode = true;
-        await Assert.That(context.ActiveOrigin).IsEqualTo(folderOrigin);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(albumOrigin);
 
         context.ShuffleMode = false;
-        await Assert.That(context.ActiveOrigin).IsEqualTo(folderOrigin);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(albumOrigin);
 
-        // Next preserves container origin
-        await coordinator.NextAsync();
-        await Assert.That(context.CurrentItem).IsSameReferenceAs(track2);
-        await Assert.That(context.ActiveOrigin).IsEqualTo(folderOrigin);
-
-        // Enqueue / InsertNext / Remove unlinks container origin
-        coordinator.Enqueue(new[] { extra });
-        await Assert.That(context.ActiveOrigin).IsNull();
-
-        // Re-establish album session and verify InsertNext unlinks
-        messenger.Send(new SetQueueMessage(
-            new QueueSession(0, new[] { track1, track2 }) { Origin = folderOrigin },
-            shouldPlay: false));
-        await Assert.That(context.ActiveOrigin).IsEqualTo(folderOrigin);
-
+        // InsertNext single item and Enqueue playlist item without unlinking active album item
         coordinator.InsertNext(extra);
-        await Assert.That(context.ActiveOrigin).IsNull();
+        coordinator.Enqueue(new[] { new QueueItemViewModel(playlistTrack, playlistOrigin) });
+        await Assert.That(context.ActiveOrigin).IsEqualTo(albumOrigin);
+        await Assert.That(received.Count).IsEqualTo(1);
 
-        // Re-establish album session and verify Remove unlinks
-        messenger.Send(new SetQueueMessage(
-            new QueueSession(0, new[] { track1, track2 }) { Origin = folderOrigin },
-            shouldPlay: false));
-        await Assert.That(context.ActiveOrigin).IsEqualTo(folderOrigin);
-
-        coordinator.Remove(track2);
+        // Advance to inserted single item -> ActiveOrigin becomes null, records SingleMedia
+        await coordinator.NextAsync();
+        await Assert.That(context.CurrentItem?.Media).IsSameReferenceAs(extra);
         await Assert.That(context.ActiveOrigin).IsNull();
+        await Assert.That(received.Count).IsEqualTo(2);
+        await Assert.That(received[1].Origin).IsEqualTo(QueueOrigin.ForSingleMedia(extra));
+        await Assert.That(received[1].Media).IsSameReferenceAs(extra);
+
+        // Advance to track2 (still from AlbumA) -> ActiveOrigin returns to AlbumA, promotes AlbumA
+        await coordinator.NextAsync();
+        await Assert.That(context.CurrentItem?.Media).IsSameReferenceAs(track2);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(albumOrigin);
+        await Assert.That(received.Count).IsEqualTo(3);
+        await Assert.That(received[2].Origin).IsEqualTo(albumOrigin);
+
+        // Advance to enqueued playlistTrack -> ActiveOrigin switches to Playlist, records Playlist
+        await coordinator.NextAsync();
+        await Assert.That(context.CurrentItem?.Media).IsSameReferenceAs(playlistTrack);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(playlistOrigin);
+        await Assert.That(received.Count).IsEqualTo(4);
+        await Assert.That(received[3].Origin).IsEqualTo(playlistOrigin);
+
+        // Removing another item keeps active item's origin intact
+        coordinator.Remove(context.Items[0]);
+        await Assert.That(context.ActiveOrigin).IsEqualTo(playlistOrigin);
     }
 
     [Test]
-    public async Task IsPlayingIndividually_FalseInsideContainer_TrueWhenStandaloneOrUnlinked()
+    public async Task IsPlayingIndividually_FalseForContainerItem_TrueForIndividualItem()
     {
         var (coordinator, context, player, smtc, messenger) = CreatePlayQueueCoordinator();
         using var _ = smtc;
@@ -171,15 +190,15 @@ public sealed partial class PlayQueueCoordinatorTests
 
         player.PlaybackState = MediaPlaybackState.Playing;
 
-        // Container session -> IsPlaying is true on CurrentItem, IsPlayingIndividually is false
-        var albumSession = new QueueSession(0, new[] { track1, track2 }) { Origin = QueueOrigin.ForAlbum(album) };
+        // Container item -> IsPlaying is true on Media, IsPlayingIndividually is false
+        var albumSession = new QueueSession(0, new[] { track1, track2 }, origin: QueueOrigin.ForAlbum(album));
         messenger.Send(new SetQueueMessage(albumSession, shouldPlay: true));
 
         await Assert.That(track1.IsPlaying).IsTrue();
         await Assert.That(track1.IsPlayingIndividually).IsFalse();
 
-        // Standalone single media -> both IsPlaying and IsPlayingIndividually are true
-        var singleSession = new QueueSession(track2) { Origin = QueueOrigin.ForSingleMedia(track2) };
+        // Individual item -> both IsPlaying and IsPlayingIndividually are true
+        var singleSession = new QueueSession(track2);
         messenger.Send(new SetQueueMessage(singleSession, shouldPlay: true));
 
         await Assert.That(track1.IsPlayingIndividually).IsFalse();
@@ -199,17 +218,21 @@ public sealed partial class PlayQueueCoordinatorTests
         var track1 = CreateDummyMedia("track1");
         var track2 = CreateDummyMedia("track2");
 
-        var singleSession = new QueueSession(track1) { Origin = QueueOrigin.ForSingleMedia(track1) };
+        var singleSession = new QueueSession(track1);
         messenger.Send(new SetQueueMessage(singleSession, shouldPlay: false));
 
-        var upgradedSession = new QueueSession(0, new[] { track1, track2 }, singleSession)
-        {
-            Origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA")
-        };
+        var folderOrigin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA");
+        var existingSlot = singleSession.CurrentItem!;
+        var upgradedSession = new QueueSession(
+            existingSlot,
+            new[] { existingSlot, new QueueItemViewModel(track2) },
+            singleSession);
+        upgradedSession.SetOrigin(folderOrigin);
         messenger.Send(new SetQueueMessage(upgradedSession, shouldPlay: false));
 
         await Assert.That(received.Count).IsEqualTo(2);
         await Assert.That(received[0].ReplacedEntryId).IsNull();
+        await Assert.That(received[1].Origin).IsEqualTo(folderOrigin);
         await Assert.That(received[1].ReplacedEntryId).IsEqualTo(QueueOrigin.ForSingleMedia(track1).GetEntryId());
     }
 }

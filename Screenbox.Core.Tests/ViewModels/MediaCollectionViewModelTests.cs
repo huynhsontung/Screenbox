@@ -121,13 +121,13 @@ public sealed class MediaCollectionViewModelTests
 
         await Assert.That(sentQueue).IsNotNull();
         await Assert.That(sentQueue!.ShouldPlay).IsTrue();
-        await Assert.That(sentQueue.Value.Origin?.Kind).IsEqualTo(RecentItemKind.MediaCollection);
-        await Assert.That(sentQueue.Value.Origin?.SourceId).IsEqualTo("https://example.com/playlist.m3u8");
+        await Assert.That(sentQueue.Value.CurrentItem?.Origin?.Kind).IsEqualTo(RecentItemKind.MediaCollection);
+        await Assert.That(sentQueue.Value.CurrentItem?.Origin?.SourceId).IsEqualTo("https://example.com/playlist.m3u8");
         await Assert.That(sentQueue.Value.Items.Count).IsEqualTo(2);
 
         // Simulate active state -> PlayAsync toggles play/pause instead of recreating queue
         messenger.Send(new QueuePlaybackStateChangedMessage(
-            new QueuePlaybackState(liveSession.SessionId, sentQueue.Value.Origin, track1, IsPlaying: true)));
+            new QueuePlaybackState(liveSession.SessionId, sentQueue.Value.CurrentItem?.Origin, track1, IsPlaying: true)));
 
         await collection.PlayAsync();
         await Assert.That(toggledPlayPause).IsTrue();

@@ -80,8 +80,8 @@ public class PlaylistViewModelTests
 
         await Assert.That(session.Items.Count).IsEqualTo(3);
         await Assert.That(session.CurrentIndex).IsEqualTo(0);
-        await Assert.That(session.Origin?.Kind).IsEqualTo(RecentItemKind.Playlist);
-        await Assert.That(session.Origin?.SourceId).IsEqualTo(playlist.Id);
+        await Assert.That(session.CurrentItem?.Origin?.Kind).IsEqualTo(RecentItemKind.Playlist);
+        await Assert.That(session.CurrentItem?.Origin?.SourceId).IsEqualTo(playlist.Id);
         await Assert.That(session.Items[0].Media).IsSameReferenceAs(media1);
         await Assert.That(session.Items[1].Media).IsSameReferenceAs(media2);
         await Assert.That(session.Items[2].Media).IsSameReferenceAs(media1);
@@ -114,7 +114,7 @@ public class PlaylistViewModelTests
         await Assert.That(sentMessage.Value.CurrentIndex).IsEqualTo(2);
         await Assert.That(sentMessage.Value.CurrentItem?.Media).IsSameReferenceAs(mediaA);
         await Assert.That(sentMessage.Value.Items.Count).IsEqualTo(3);
-        await Assert.That(sentMessage.Value.Origin?.Kind).IsEqualTo(RecentItemKind.Playlist);
-        await Assert.That(sentMessage.Value.Origin?.SourceId).IsEqualTo(playlist.Id);
+        await Assert.That(sentMessage.Value.CurrentItem?.Origin?.Kind).IsEqualTo(RecentItemKind.Playlist);
+        await Assert.That(sentMessage.Value.CurrentItem?.Origin?.SourceId).IsEqualTo(playlist.Id);
     }
 }

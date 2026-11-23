@@ -76,20 +76,18 @@ public class QueueSessionTests
     }
 
     [Test]
-    public async Task QueueSession_CopyConstructor_PreservesSessionIdAndOrigin()
+    public async Task QueueSession_CopyConstructor_PreservesSessionIdAndItemOrigins()
     {
         var item1 = CreateDummyMedia("song1");
         var item2 = CreateDummyMedia("song2");
         var origin = QueueOrigin.ForMediaCollection("FolderA", @"C:\FolderA");
-        var original = new QueueSession(0, new[] { item1, item2 })
-        {
-            Origin = origin
-        };
+        var original = new QueueSession(0, new[] { item1, item2 }, origin: origin);
 
-        var copy = new QueueSession(1, new[] { item1, item2 }, original);
+        var copy = new QueueSession(1, original.Items, original);
 
         await Assert.That(copy.SessionId).IsEqualTo(original.SessionId);
-        await Assert.That(copy.Origin).IsSameReferenceAs(origin);
+        await Assert.That(copy.Items[0].Origin).IsSameReferenceAs(origin);
+        await Assert.That(copy.Items[1].Origin).IsSameReferenceAs(origin);
     }
 
     [Test]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -84,7 +85,7 @@ public sealed partial class MediaCollectionViewModel : ObservableRecipient,
         QueueSession? session = await ResolveLiveSessionAsync();
         if (session is { IsEmpty: false })
         {
-            session.Origin = QueueOrigin.ForMediaCollection(Name, SourcePath, Token);
+            session.SetOrigin(QueueOrigin.ForMediaCollection(Name, SourcePath, Token));
             Messenger.Send(new SetQueueMessage(session, shouldPlay: true));
         }
     }
@@ -92,7 +93,9 @@ public sealed partial class MediaCollectionViewModel : ObservableRecipient,
     public async Task<IReadOnlyList<MediaViewModel>> GetPlayableItemsAsync()
     {
         QueueSession? session = await ResolveLiveSessionAsync();
-        return session?.Items ?? (IReadOnlyList<MediaViewModel>)Array.Empty<MediaViewModel>();
+        return session is { IsEmpty: false }
+            ? session.Items.Select(item => item.Media).ToList()
+            : Array.Empty<MediaViewModel>();
     }
 
     private async Task<QueueSession?> ResolveLiveSessionAsync()

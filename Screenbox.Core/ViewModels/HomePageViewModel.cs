@@ -170,7 +170,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private async Task PlayNextAsync(IRecentItem? item)
     {
         if (item is null) return;
-        var items = await ResolvePlayableItemsAsync(item);
+        var items = await ResolveQueueItemsAsync(item);
         if (items.Count > 0)
         {
             Messenger.SendPlayNext(items);
@@ -181,7 +181,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     private async Task AddToQueueAsync(IRecentItem? item)
     {
         if (item is null) return;
-        var items = await ResolvePlayableItemsAsync(item);
+        var items = await ResolveQueueItemsAsync(item);
         if (items.Count > 0)
         {
             Messenger.SendAddToQueue(items);
@@ -215,10 +215,10 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         }
         else if (selected.Count > 1)
         {
-            var items = await ResolveSelectedPlayableItemsAsync(selected);
+            var items = await ResolveSelectedQueueItemsAsync(selected);
             if (items.Length > 0)
             {
-                Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false, origin: null);
+                Messenger.Send(new SetQueueMessage(new QueueSession(0, items), shouldPlay: true));
             }
         }
     }
@@ -229,7 +229,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var selected = Selection.GetSelectedItems<IRecentItem>();
         Selection.DisableSelectionMode();
 
-        var items = await ResolveSelectedPlayableItemsAsync(selected);
+        var items = await ResolveSelectedQueueItemsAsync(selected);
         if (items.Length > 0)
         {
             Messenger.SendPlayNext(items);
@@ -242,7 +242,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         var selected = Selection.GetSelectedItems<IRecentItem>();
         Selection.DisableSelectionMode();
 
-        var items = await ResolveSelectedPlayableItemsAsync(selected);
+        var items = await ResolveSelectedQueueItemsAsync(selected);
         if (items.Length > 0)
         {
             Messenger.SendAddToQueue(items);
@@ -261,21 +261,43 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Selection.DisableSelectionMode();
     }
 
-    private static async Task<MediaViewModel[]> ResolveSelectedPlayableItemsAsync(IReadOnlyList<IRecentItem> selected)
+    private static async Task<QueueItemViewModel[]> ResolveSelectedQueueItemsAsync(IReadOnlyList<IRecentItem> selected)
     {
-        var resolvedLists = await Task.WhenAll(selected.Select(ResolvePlayableItemsAsync));
+        var resolvedLists = await Task.WhenAll(selected.Select(ResolveQueueItemsAsync));
         return resolvedLists.SelectMany(list => list).ToArray();
     }
 
-    private static Task<IReadOnlyList<MediaViewModel>> ResolvePlayableItemsAsync(IRecentItem item) => item switch
+    private static async Task<IReadOnlyList<QueueItemViewModel>> ResolveQueueItemsAsync(IRecentItem item)
     {
-        MediaViewModel media => Task.FromResult<IReadOnlyList<MediaViewModel>>(new[] { media }),
-        AlbumViewModel album => Task.FromResult(album.OrderedSongs),
-        ArtistViewModel artist => Task.FromResult(artist.OrderedSongs),
-        PlaylistViewModel playlist => Task.FromResult<IReadOnlyList<MediaViewModel>>(playlist.Items),
-        MediaCollectionViewModel collection => collection.GetPlayableItemsAsync(),
-        _ => Task.FromResult<IReadOnlyList<MediaViewModel>>(Array.Empty<MediaViewModel>())
-    };
+        switch (item)
+        {
+            case MediaViewModel media:
+                return new[] { new QueueItemViewModel(media) };
+            case AlbumViewModel album:
+            {
+                QueueOrigin origin = QueueOrigin.ForAlbum(album);
+                return album.OrderedSongs.Select(song => new QueueItemViewModel(song, origin)).ToArray();
+            }
+            case ArtistViewModel artist:
+            {
+                QueueOrigin origin = QueueOrigin.ForArtist(artist);
+                return artist.OrderedSongs.Select(song => new QueueItemViewModel(song, origin)).ToArray();
+            }
+            case PlaylistViewModel playlist:
+            {
+                QueueOrigin origin = QueueOrigin.ForPlaylist(playlist);
+                return playlist.Items.Select(entry => new QueueItemViewModel(entry.Media, origin)).ToArray();
+            }
+            case MediaCollectionViewModel collection:
+            {
+                QueueOrigin origin = QueueOrigin.ForMediaCollection(collection.Name, collection.SourcePath, collection.Token);
+                var playable = await collection.GetPlayableItemsAsync();
+                return playable.Select(media => new QueueItemViewModel(media, origin)).ToArray();
+            }
+            default:
+                return Array.Empty<QueueItemViewModel>();
+        }
+    }
 
     private static bool CanPlayItem(IRecentItem? item) => item switch
     {

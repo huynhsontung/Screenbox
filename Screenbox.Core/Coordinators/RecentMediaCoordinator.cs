@@ -367,7 +367,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
                     media is not null &&
                     !ReferenceEquals(existing, media))
                 {
-                    // Swap to the live playing instance (e.g. a clone created by SendPlayNext / SendAddToQueue / InsertNext)
+                    // Swap to the live playing instance (e.g. replacing a hydrated placeholder with a live library/file VM)
                     // so the Home card stays bound to the instance receiving IsPlayingIndividually updates.
                     _entryIds.Remove(existing);
                     _entryIds[media] = entryId;

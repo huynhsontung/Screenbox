@@ -90,8 +90,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
                 var result = await _queueService.ParseQueueAsync(nextFile);
                 var newQueue = new QueueSession(result.CurrentIndex, result.Items, session)
                 {
-                    SessionId = result.SessionId,
-                    Origin = result.Origin
+                    SessionId = result.SessionId
                 };
                 if (newQueue.CurrentItem is { } nextItem)
                 {
@@ -136,8 +135,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
                 var result = await _queueService.ParseQueueAsync(previousFile);
                 var newQueue = new QueueSession(result.CurrentIndex, result.Items, session)
                 {
-                    SessionId = result.SessionId,
-                    Origin = result.Origin
+                    SessionId = result.SessionId
                 };
                 if (newQueue.CurrentItem is { } nextItem)
                 {
