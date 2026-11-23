@@ -76,12 +76,6 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
     public bool IsAdvancedModeEnabled { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether <see cref="MediaViewModel"/> items should use
-    /// <see cref="MediaViewModel.IsPlayingIndividually"/> rather than <see cref="MediaViewModel.IsPlaying"/>.
-    /// </summary>
-    public bool UseIndividualPlaybackState { get; set; }
-
-    /// <summary>
     /// Gets the collection used to generate the additional content of the menu.
     /// </summary>
     /// <value>
@@ -122,7 +116,6 @@ public sealed partial class MediaMenuFlyout : MenuFlyout
 
         bool isPlaying = ContextItem switch
         {
-            MediaViewModel media => UseIndividualPlaybackState ? media.IsPlayingIndividually : media.IsPlaying,
             IRecentItem recentItem => recentItem.IsPlaying,
             IMediaPlaybackState state => state.IsPlaying,
             IMediaContainer container => container.Media.IsPlaying,

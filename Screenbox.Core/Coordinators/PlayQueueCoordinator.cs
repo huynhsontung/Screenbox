@@ -640,7 +640,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     previousItem.Media.IsMediaActive = false;
                     previousItem.Media.IsPlaying = false;
-                    previousItem.Media.IsPlayingIndividually = false;
                 }
             }
 
@@ -670,7 +669,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 value.IsPlaying = _context.IsPlaying;
                 value.Media.IsPlaying = _context.IsPlaying;
-                UpdateCurrentItemIndividualPlayingState();
             }
 
             BroadcastPlaybackState();
@@ -888,7 +886,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             {
                 _context.CurrentItem.IsPlaying = false;
                 _context.CurrentItem.Media.IsPlaying = false;
-                _context.CurrentItem.Media.IsPlayingIndividually = false;
                 _context.CurrentItem.Media.IsAvailable = false;
             }
 
@@ -913,7 +910,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
                 _context.CurrentItem.IsPlaying = isPlaying;
                 _context.CurrentItem.Media.IsPlaying = isPlaying;
-                UpdateCurrentItemIndividualPlayingState();
             }
 
             BroadcastPlaybackState();
@@ -1023,7 +1019,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
 
             _context.ActiveSessionId = _queueSession.SessionId;
             _context.ActiveOrigin = _context.CurrentItem?.Origin;
-            UpdateCurrentItemIndividualPlayingState();
             BroadcastPlaybackState();
         }
 
@@ -1056,15 +1051,6 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             ? item.Media
             : null;
         Messenger.Send(new QueueSessionStartedMessage(effectiveOrigin, singleMedia, replacedEntryId));
-    }
-
-    private void UpdateCurrentItemIndividualPlayingState()
-    {
-        if (_context.CurrentItem is not null)
-        {
-            bool isIndividualMode = _context.CurrentItem.Origin is not { TrackItemsIndividually: false };
-            _context.CurrentItem.Media.IsPlayingIndividually = _context.IsPlaying && isIndividualMode;
-        }
     }
 
     #endregion

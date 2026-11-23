@@ -27,7 +27,7 @@ internal sealed partial class RecentItemTemplateSelector : DataTemplateSelector
             ArtistViewModel => ArtistTemplate,
             PlaylistViewModel => PlaylistTemplate,
             MediaCollectionViewModel => MediaCollectionTemplate,
-            MediaViewModel => MediaTemplate,
+            RecentMediaItemViewModel => MediaTemplate,
             _ => base.SelectTemplateCore(item),
         };
     }

@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
 
-public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlaybackState, IRecentItem
+public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlaybackState
 {
     public string Location => Source.Location;
 
@@ -79,9 +79,6 @@ public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlayback
 
     [ObservableProperty]
     public partial bool IsPlaying { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsPlayingIndividually { get; set; }
 
     private WeakReference<BitmapImage>? _thumbnailRef;
 

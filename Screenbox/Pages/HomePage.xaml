@@ -48,8 +48,7 @@
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
                 PlayNextCommand="{x:Bind ViewModel.PlayNextCommand}"
                 RemoveCommand="{x:Bind ViewModel.RemoveCommand}"
-                SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}"
-                UseIndividualPlaybackState="True">
+                SelectCommand="{x:Bind ViewModel.Selection.SelectItemCommand}">
                 <flyouts:MediaMenuFlyout.AdditionalItems>
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenAlbumCommand}"

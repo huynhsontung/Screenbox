@@ -36,7 +36,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     public AlbumViewModel? ContextAlbum => ContextMedia switch
     {
         AlbumViewModel { HasSongs: true } album => album,
-        MediaViewModel media => media.Album,
+        RecentMediaItemViewModel mediaItem => mediaItem.Media.Album,
         _ => null
     };
 
@@ -44,7 +44,7 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         ArtistViewModel { HasSongs: true } artist => artist,
         AlbumViewModel album => album.RelatedSongs.FirstOrDefault()?.MainArtist,
-        MediaViewModel media => media.MainArtist,
+        RecentMediaItemViewModel mediaItem => mediaItem.Media.MainArtist,
         _ => null
     };
 
@@ -137,14 +137,14 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
 
         switch (item)
         {
-            case MediaViewModel media:
-                if (IsActiveIndividually(media))
+            case RecentMediaItemViewModel mediaItem:
+                if (mediaItem.IsMediaActive)
                 {
                     Messenger.Send(new TogglePlayPauseMessage(false));
                 }
                 else
                 {
-                    Messenger.Send(new PlayMediaMessage(media, false));
+                    Messenger.Send(new PlayMediaMessage(mediaItem.Media, false));
                 }
                 break;
 
@@ -271,8 +271,8 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         switch (item)
         {
-            case MediaViewModel media:
-                return new[] { new QueueItemViewModel(media) };
+            case RecentMediaItemViewModel mediaItem:
+                return new[] { new QueueItemViewModel(mediaItem.Media) };
             case AlbumViewModel album:
             {
                 QueueOrigin origin = QueueOrigin.ForAlbum(album);
@@ -307,33 +307,6 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         not null => true,
         _ => false
     };
-
-    private bool IsActiveIndividually(MediaViewModel media)
-    {
-        if (media.IsPlayingIndividually)
-        {
-            return true;
-        }
-
-        var request = new QueuePlaybackStateRequestMessage();
-        Messenger.Send(request);
-        if (!request.HasReceivedResponse)
-        {
-            return false;
-        }
-
-        QueuePlaybackState state = request.Response;
-        if (state.CurrentItem is null || (state.Origin is not null && !state.Origin.TrackItemsIndividually))
-        {
-            return false;
-        }
-
-        return ReferenceEquals(state.CurrentItem, media) ||
-               string.Equals(
-                   QueueOrigin.NormalizeLocation(state.CurrentItem.Location),
-                   QueueOrigin.NormalizeLocation(media.Location),
-                   StringComparison.Ordinal);
-    }
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }

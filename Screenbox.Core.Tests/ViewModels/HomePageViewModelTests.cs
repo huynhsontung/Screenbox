@@ -58,7 +58,7 @@ public sealed class HomePageViewModelTests
         album.RelatedSongs.Add(track1);
         album.RelatedSongs.Add(track2);
 
-        recentContext.Recent = new IRecentItem[] { album, track3 };
+        recentContext.Recent = new IRecentItem[] { album, new RecentMediaItemViewModel(track3, messenger) };
 
         // Select both items via SelectionViewModel
         selection.IsSelectionModeActive = true;
@@ -107,8 +107,8 @@ public sealed class HomePageViewModelTests
             null!,
             messenger);
 
-        var track1 = CreateDummyMedia("Track 1");
-        var track2 = CreateDummyMedia("Track 2");
+        var track1 = new RecentMediaItemViewModel(CreateDummyMedia("Track 1"), messenger);
+        var track2 = new RecentMediaItemViewModel(CreateDummyMedia("Track 2"), messenger);
         recentContext.Recent = new IRecentItem[] { track1, track2 };
 
         selection.IsSelectionModeActive = true;
@@ -155,7 +155,7 @@ public sealed class HomePageViewModelTests
         album.RelatedSongs.Add(track);
         artist.RelatedSongs.Add(track);
 
-        vm.ContextMedia = track;
+        vm.ContextMedia = new RecentMediaItemViewModel(track, messenger);
         await Assert.That(vm.ContextAlbum).IsSameReferenceAs(album);
         await Assert.That(vm.ContextArtist).IsSameReferenceAs(artist);
         await Assert.That(vm.ContextPlaylist).IsNull();
@@ -202,22 +202,28 @@ public sealed class HomePageViewModelTests
             messenger);
 
         var track = CreateDummyMedia("Track 1");
-        track.IsPlaying = true;
-        track.IsPlayingIndividually = false;
+        var recentTrack = new RecentMediaItemViewModel(track, messenger);
+        var album = new AlbumViewModel("Album A", "Artist A", messenger);
 
         int playMessages = 0;
         int toggleMessages = 0;
         messenger.Register<PlayMediaMessage>(this, (_, _) => playMessages++);
         messenger.Register<TogglePlayPauseMessage>(this, (_, _) => toggleMessages++);
 
-        // Playing inside an album -> clicking card starts it standalone instead of pausing album
-        await vm.PlayCommand.ExecuteAsync(track);
+        // Playing inside an album -> RecentMediaItemViewModel is inactive -> clicking card starts it standalone
+        messenger.Send(new QueuePlaybackStateChangedMessage(
+            new QueuePlaybackState(Guid.NewGuid(), QueueOrigin.ForAlbum(album), track, IsPlaying: true)));
+        await Assert.That(recentTrack.IsMediaActive).IsFalse();
+        await vm.PlayCommand.ExecuteAsync(recentTrack);
         await Assert.That(playMessages).IsEqualTo(1);
         await Assert.That(toggleMessages).IsEqualTo(0);
 
-        // Playing individually -> clicking card toggles play/pause
-        track.IsPlayingIndividually = true;
-        await vm.PlayCommand.ExecuteAsync(track);
+        // Playing individually -> RecentMediaItemViewModel is active -> clicking card toggles play/pause
+        messenger.Send(new QueuePlaybackStateChangedMessage(
+            new QueuePlaybackState(Guid.NewGuid(), null, track, IsPlaying: true)));
+        await Assert.That(recentTrack.IsMediaActive).IsTrue();
+        await Assert.That(recentTrack.IsPlaying).IsTrue();
+        await vm.PlayCommand.ExecuteAsync(recentTrack);
         await Assert.That(toggleMessages).IsEqualTo(1);
     }
 
@@ -232,9 +238,9 @@ public sealed class HomePageViewModelTests
         var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
 
-        var track1 = CreateDummyMedia("Track 1");
-        var track2 = CreateDummyMedia("Track 2");
-        var track3 = CreateDummyMedia("Track 3");
+        var track1 = new RecentMediaItemViewModel(CreateDummyMedia("Track 1"), messenger);
+        var track2 = new RecentMediaItemViewModel(CreateDummyMedia("Track 2"), messenger);
+        var track3 = new RecentMediaItemViewModel(CreateDummyMedia("Track 3"), messenger);
 
         // Pre-populated before HomePageViewModel construction
         recentContext.Recent = new IRecentItem[] { track1, track2 };
@@ -323,7 +329,7 @@ public sealed class HomePageViewModelTests
 
         var track = CreateDummyMedia("Track 1");
         var album = new AlbumViewModel("Album A", "Artist A", messenger);
-        QueuePlaybackState currentState = new(Guid.NewGuid(), QueueOrigin.ForSingleMedia(track), track, IsPlaying: false);
+        QueuePlaybackState currentState = new(Guid.NewGuid(), null, track, IsPlaying: false);
 
         int toggleCount = 0;
         int playMediaCount = 0;
@@ -331,14 +337,20 @@ public sealed class HomePageViewModelTests
         messenger.Register<TogglePlayPauseMessage>(this, (_, _) => toggleCount++);
         messenger.Register<PlayMediaMessage>(this, (_, _) => playMediaCount++);
 
+        var recentTrack = new RecentMediaItemViewModel(track, messenger);
+
         // Paused in an individually tracked queue -> toggles play/pause instead of replacing queue
-        await vm.PlayCommand.ExecuteAsync(track);
+        await Assert.That(recentTrack.IsMediaActive).IsTrue();
+        await Assert.That(recentTrack.IsPlaying).IsFalse();
+        await vm.PlayCommand.ExecuteAsync(recentTrack);
         await Assert.That(toggleCount).IsEqualTo(1);
         await Assert.That(playMediaCount).IsEqualTo(0);
 
         // Paused inside a container queue (Album) -> starts track standalone via PlayMediaMessage
-        currentState = new QueuePlaybackState(Guid.NewGuid(), QueueOrigin.ForAlbum(album), track, IsPlaying: false);
-        await vm.PlayCommand.ExecuteAsync(track);
+        messenger.Send(new QueuePlaybackStateChangedMessage(
+            new QueuePlaybackState(Guid.NewGuid(), QueueOrigin.ForAlbum(album), track, IsPlaying: false)));
+        await Assert.That(recentTrack.IsMediaActive).IsFalse();
+        await vm.PlayCommand.ExecuteAsync(recentTrack);
         await Assert.That(toggleCount).IsEqualTo(1);
         await Assert.That(playMediaCount).IsEqualTo(1);
     }
@@ -354,7 +366,7 @@ public sealed class HomePageViewModelTests
         var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = false };
 
-        var track1 = CreateDummyMedia("Track 1");
+        var track1 = new RecentMediaItemViewModel(CreateDummyMedia("Track 1"), messenger);
         recentContext.Recent = (IRecentItem[])[track1];
 
         var vm = new HomePageViewModel(
@@ -370,7 +382,7 @@ public sealed class HomePageViewModelTests
         await Assert.That(vm.Recent).IsEmpty();
 
         // Context updates while ShowRecent is false stay hidden in the ViewModel
-        recentContext.Recent = (IRecentItem[])[track1, CreateDummyMedia("Track 2")];
+        recentContext.Recent = (IRecentItem[])[track1, new RecentMediaItemViewModel(CreateDummyMedia("Track 2"), messenger)];
         await Assert.That(vm.Recent).IsEmpty();
 
         // Enabling ShowRecent and calling OnLoaded surfaces the items
@@ -405,7 +417,7 @@ public sealed class HomePageViewModelTests
         album.RelatedSongs.Add(albumTrack);
         var singleTrack = CreateDummyMedia("Single Track");
 
-        recentContext.Recent = (IRecentItem[])[album, singleTrack];
+        recentContext.Recent = (IRecentItem[])[album, new RecentMediaItemViewModel(singleTrack, messenger)];
         selection.IsSelectionModeActive = true;
         selection.SelectRange(new ItemIndexRange(0, 2));
 

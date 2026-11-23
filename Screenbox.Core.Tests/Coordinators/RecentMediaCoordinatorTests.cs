@@ -152,7 +152,7 @@ public sealed class RecentMediaCoordinatorTests
             single);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(single);
+        await Assert.That(((RecentMediaItemViewModel)recentContext.Recent[0]).Media).IsSameReferenceAs(single);
 
         // Replay the same folder -> promotes the existing shortcut and refreshes token
         await coordinator.HandleQueueSessionStartedAsync(
@@ -168,7 +168,7 @@ public sealed class RecentMediaCoordinatorTests
             track3);
 
         await Assert.That(recentContext.Recent.Count).IsEqualTo(3);
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(track3);
+        await Assert.That(((RecentMediaItemViewModel)recentContext.Recent[0]).Media).IsSameReferenceAs(track3);
     }
 
     [Test]
@@ -185,7 +185,7 @@ public sealed class RecentMediaCoordinatorTests
             track1);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(track1);
+        await Assert.That(((RecentMediaItemViewModel)recentContext.Recent[0]).Media).IsSameReferenceAs(track1);
 
         await coordinator.HandleQueueSessionStartedAsync(
             QueueOrigin.ForMediaCollection("MyFolder", @"C:\MyFolder"),
@@ -217,7 +217,7 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(recentContext.Recent.Count).IsEqualTo(2);
         await Assert.That(recentContext.Recent[0]).IsTypeOf<MediaCollectionViewModel>();
         await Assert.That(recentContext.Recent[0].Name).IsEqualTo("MyFolder");
-        await Assert.That(recentContext.Recent[1]).IsSameReferenceAs(track2);
+        await Assert.That(((RecentMediaItemViewModel)recentContext.Recent[1]).Media).IsSameReferenceAs(track2);
     }
 
     [Test]
@@ -480,7 +480,7 @@ public sealed class RecentMediaCoordinatorTests
     }
 
     [Test]
-    public async Task HandleQueueSessionStartedAsync_WhenClonedSingleMediaPlays_ReplacesRetainedInstance()
+    public async Task HandleQueueSessionStartedAsync_WhenLiveSingleMediaPlays_ReplacesRetainedMediaInstance()
     {
         using var fixture = new TestDirectoryFixture();
         var (coordinator, recentContext, _, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
@@ -488,15 +488,14 @@ public sealed class RecentMediaCoordinatorTests
 
         var original = CreateDummyMedia("song1");
         await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(original), original);
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(original);
+        await Assert.That(((RecentMediaItemViewModel)recentContext.Recent[0]).Media).IsSameReferenceAs(original);
 
         // Simulate playing a different live MediaViewModel instance for the same media source
-        var liveInstance = new MediaViewModel(original.Source) { Name = original.Name, IsPlayingIndividually = true };
+        var liveInstance = new MediaViewModel(original.Source) { Name = original.Name };
         await coordinator.HandleQueueSessionStartedAsync(QueueOrigin.ForSingleMedia(liveInstance), liveInstance);
 
         await Assert.That(recentContext.Recent).HasSingleItem();
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(liveInstance);
-        await Assert.That(((MediaViewModel)recentContext.Recent[0]).IsPlayingIndividually).IsTrue();
+        await Assert.That(((RecentMediaItemViewModel)recentContext.Recent[0]).Media).IsSameReferenceAs(liveInstance);
     }
 
     [Test]
@@ -555,7 +554,7 @@ public sealed class RecentMediaCoordinatorTests
     }
 
     [Test]
-    public async Task LoadAsync_ForceReload_UpgradesSingleMediaToLinkedLibraryInstance_UnlessPlayingIndividually()
+    public async Task LoadAsync_ForceReload_UpgradesSingleMediaToLinkedLibraryInstance()
     {
         using var fixture = new TestDirectoryFixture();
         var (coordinator, recentContext, libraryContext, _, dbService, _) = CreateCoordinator(fixture.DirectoryPath);
@@ -573,8 +572,8 @@ public sealed class RecentMediaCoordinatorTests
 
         // Initial load before library scan produces an unlinked MediaViewModel
         await coordinator.LoadAsync();
-        var initialMedia = (MediaViewModel)recentContext.Recent[0];
-        await Assert.That(initialMedia.Album).IsNull();
+        var initialItem = (RecentMediaItemViewModel)recentContext.Recent[0];
+        await Assert.That(initialItem.Media.Album).IsNull();
 
         // Populate music library with linked MediaViewModel carrying Album
         var album = new AlbumViewModel("Abbey Road", "The Beatles");
@@ -588,15 +587,10 @@ public sealed class RecentMediaCoordinatorTests
             new AlbumViewModel(),
             new ArtistViewModel());
 
-        // While actively playing individually, forceReload preserves the active instance
-        initialMedia.IsPlayingIndividually = true;
+        // forceReload swaps in a wrapper around the linked library MediaViewModel
         await coordinator.LoadAsync(forceReload: true);
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(initialMedia);
-
-        // Once not playing individually, forceReload swaps in the linked library MediaViewModel
-        initialMedia.IsPlayingIndividually = false;
-        await coordinator.LoadAsync(forceReload: true);
-        await Assert.That(recentContext.Recent[0]).IsSameReferenceAs(librarySong);
-        await Assert.That(((MediaViewModel)recentContext.Recent[0]).Album).IsSameReferenceAs(album);
+        var upgradedItem = (RecentMediaItemViewModel)recentContext.Recent[0];
+        await Assert.That(upgradedItem.Media).IsSameReferenceAs(librarySong);
+        await Assert.That(upgradedItem.Media.Album).IsSameReferenceAs(album);
     }
 }

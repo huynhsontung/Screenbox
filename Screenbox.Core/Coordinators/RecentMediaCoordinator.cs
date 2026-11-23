@@ -241,7 +241,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     /// <inheritdoc/>
     public Task LoadDetailsAsync()
     {
-        var tasks = _recentContext.Recent.OfType<MediaViewModel>()
+        var tasks = _recentContext.Recent.OfType<RecentMediaItemViewModel>()
+            .Select(item => item.Media)
             .Where(media => !media.DetailsLoaded)
             .Select(SafeLoadDetailsAsync);
 
@@ -363,15 +364,16 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             {
                 IRecentItem promoted = existing;
                 if (origin.Kind == RecentItemKind.SingleMedia &&
-                    existing is MediaViewModel &&
+                    existing is RecentMediaItemViewModel existingRecent &&
                     media is not null &&
-                    !ReferenceEquals(existing, media))
+                    !ReferenceEquals(existingRecent.Media, media))
                 {
-                    // Swap to the live playing instance (e.g. replacing a hydrated placeholder with a live library/file VM)
-                    // so the Home card stays bound to the instance receiving IsPlayingIndividually updates.
+                    // Swap to a wrapper around the live playing instance (e.g. replacing a hydrated placeholder
+                    // with a live library/file VM) so metadata, album/artist links, and thumbnails stay live.
+                    var updated = new RecentMediaItemViewModel(media, Messenger);
                     _entryIds.Remove(existing);
-                    _entryIds[media] = entryId;
-                    promoted = media;
+                    _entryIds[updated] = entryId;
+                    promoted = updated;
                 }
                 else if (existing is MediaCollectionViewModel collection && !string.IsNullOrEmpty(origin.Token))
                 {
@@ -422,8 +424,8 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
         try
         {
-            string? token = origin.Kind == RecentItemKind.SingleMedia && targetVm is MediaViewModel mediaVm
-                ? EnsureFileAccessToken(mediaVm)
+            string? token = origin.Kind == RecentItemKind.SingleMedia && targetVm is RecentMediaItemViewModel recentMedia
+                ? EnsureFileAccessToken(recentMedia.Media)
                 : origin.Token;
 
             var dto = new RecentEntryDto
@@ -439,9 +441,9 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
 
             await _databaseService.UpsertRecentEntryAsync(dto, replaceEntryId, RecentContext.MaxRecentItems);
 
-            if (targetVm is MediaViewModel { DetailsLoaded: false } singleMedia)
+            if (targetVm is RecentMediaItemViewModel { Media.DetailsLoaded: false } singleMedia)
             {
-                await SafeLoadDetailsAsync(singleMedia);
+                await SafeLoadDetailsAsync(singleMedia.Media);
             }
         }
         catch (Exception ex)
@@ -454,7 +456,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     {
         return origin.Kind switch
         {
-            RecentItemKind.SingleMedia => singleMedia,
+            RecentItemKind.SingleMedia => singleMedia is not null ? new RecentMediaItemViewModel(singleMedia, Messenger) : null,
             RecentItemKind.Playlist => _playlistsContext.Playlists.FirstOrDefault(p => p.Id == origin.SourceId),
             RecentItemKind.Album => _libraryContext.Music.Albums.TryGetValue(origin.SourceId, out AlbumViewModel? album)
                 ? album
@@ -476,23 +478,25 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
             case RecentItemKind.SingleMedia:
             {
                 if (existingByEntryId.TryGetValue(entry.Id, out IRecentItem? existing) &&
-                    existing is MediaViewModel existingMedia)
+                    existing is RecentMediaItemViewModel existingRecent)
                 {
-                    if (!existingMedia.IsPlayingIndividually &&
-                        FindMusicLibrarySong(entry.SourceId) is { } librarySong)
+                    if (FindMusicLibrarySong(entry.SourceId) is { } librarySong &&
+                        !ReferenceEquals(existingRecent.Media, librarySong))
                     {
-                        return librarySong;
+                        return new RecentMediaItemViewModel(librarySong, Messenger);
                     }
 
-                    if (existingMedia.Source is IFileMediaSource fileSource && !string.IsNullOrEmpty(entry.Token))
+                    if (existingRecent.Media.Source is IFileMediaSource fileSource && !string.IsNullOrEmpty(entry.Token))
                     {
                         fileSource.Token = entry.Token;
                     }
 
-                    return existingMedia;
+                    return existingRecent;
                 }
 
-                return await HydrateMediaViewModelAsync(entry);
+                return await HydrateMediaViewModelAsync(entry) is { } hydratedMedia
+                    ? new RecentMediaItemViewModel(hydratedMedia, Messenger)
+                    : null;
             }
 
             case RecentItemKind.MediaCollection:

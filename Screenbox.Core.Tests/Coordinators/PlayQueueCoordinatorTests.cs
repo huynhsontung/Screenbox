@@ -179,31 +179,35 @@ public sealed partial class PlayQueueCoordinatorTests
     }
 
     [Test]
-    public async Task IsPlayingIndividually_FalseForContainerItem_TrueForIndividualItem()
+    public async Task RecentMediaItemViewModel_IsPlaying_FalseForContainerItem_TrueForIndividualItem()
     {
         var (coordinator, context, player, smtc, messenger) = CreatePlayQueueCoordinator();
         using var _ = smtc;
 
         var track1 = CreateDummyMedia("track1");
         var track2 = CreateDummyMedia("track2");
+        var recentTrack1 = new RecentMediaItemViewModel(track1, messenger);
+        var recentTrack2 = new RecentMediaItemViewModel(track2, messenger);
         var album = new AlbumViewModel("AlbumA", "ArtistA", messenger);
 
         player.PlaybackState = MediaPlaybackState.Playing;
 
-        // Container item -> IsPlaying is true on Media, IsPlayingIndividually is false
+        // Container item -> Media.IsPlaying is true, RecentMediaItemViewModel.IsPlaying is false
         var albumSession = new QueueSession(0, new[] { track1, track2 }, origin: QueueOrigin.ForAlbum(album));
         messenger.Send(new SetQueueMessage(albumSession, shouldPlay: true));
 
         await Assert.That(track1.IsPlaying).IsTrue();
-        await Assert.That(track1.IsPlayingIndividually).IsFalse();
+        await Assert.That(recentTrack1.IsMediaActive).IsFalse();
+        await Assert.That(recentTrack1.IsPlaying).IsFalse();
 
-        // Individual item -> both IsPlaying and IsPlayingIndividually are true
+        // Individual item -> both Media.IsPlaying and RecentMediaItemViewModel.IsPlaying are true
         var singleSession = new QueueSession(track2);
         messenger.Send(new SetQueueMessage(singleSession, shouldPlay: true));
 
-        await Assert.That(track1.IsPlayingIndividually).IsFalse();
+        await Assert.That(recentTrack1.IsPlaying).IsFalse();
         await Assert.That(track2.IsPlaying).IsTrue();
-        await Assert.That(track2.IsPlayingIndividually).IsTrue();
+        await Assert.That(recentTrack2.IsMediaActive).IsTrue();
+        await Assert.That(recentTrack2.IsPlaying).IsTrue();
     }
 
     [Test]

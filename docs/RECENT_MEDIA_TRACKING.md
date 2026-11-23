@@ -63,8 +63,8 @@ flowchart TD
         HP["HomePage.xaml\n(RecentItemTemplateSelector + ThumbnailGridViewBehavior)"]
     end
 
-    PlaybackInitiators -->|"PlayMediaMessage / SetQueueMessage\n(QueueSession + QueueOrigin)"| PQC
-    PQC -->|"Updates ActiveSessionId, ActiveOrigin, CurrentItem\n& MediaViewModel.IsPlayingIndividually"| PQContext
+    PlaybackInitiators -->|"PlayMediaMessage / SetQueueMessage\n(QueueSession + QueueItemViewModel.Origin)"| PQC
+    PQC -->|"Updates ActiveSessionId, ActiveOrigin & CurrentItem"| PQContext
     PQC -->|"QueuePlaybackStateChangedMessage"| RContext
     PQC -->|"QueueSessionStartedMessage(Origin, Media?, ReplacedEntryId)"| RMC
     RMC <-->|"Load / Upsert / Delete / Prune 100"| DB
@@ -75,10 +75,11 @@ flowchart TD
 
 | Component | Lifetime | Responsibility |
 |---|---|---|
-| `IRecentItem` | Interface | Minimal shared contract (`INotifyPropertyChanged`, `Name`, `IsPlaying`) implemented directly by all 5 item ViewModel types. |
-| `QueueSession` | Per queue | Carries `SessionId` (`Guid`), `Items`, `CurrentIndex`, and `Origin` (`QueueOrigin?`). |
+| `IRecentItem` | Interface | Minimal shared contract (`INotifyPropertyChanged`, `Name`, `IsPlaying`) implemented by `RecentMediaItemViewModel`, `MediaCollectionViewModel`, `PlaylistViewModel`, `AlbumViewModel`, and `ArtistViewModel`. |
+| `RecentMediaItemViewModel` | Per single-media card | Lightweight `IMediaContainer` + `IMediaPlaybackState` wrapper around canonical `MediaViewModel` that tracks individual active/playing state via `QueuePlaybackStateChangedMessage`. |
+| `QueueItemViewModel` | Per queue slot | Wraps canonical `MediaViewModel` with slot playback state and optional container `Origin` (`QueueOrigin?`). |
 | `QueueOrigin` | Immutable record | Describes the source container (`Kind`, `SourceId`, `Title`, `Subtitle`, `Token`, `TrackItemsIndividually`). |
-| `PlayQueueCoordinator` | Singleton | Owns the active `QueueSession`, updates `PlayQueueContext`, maintains `MediaViewModel.IsPlayingIndividually`, unlinks `Origin` on add/remove mutations, and broadcasts `QueueSessionStartedMessage` / `QueuePlaybackStateChangedMessage`. |
+| `PlayQueueCoordinator` | Singleton | Owns the active `QueueSession`, updates `PlayQueueContext` (`ActiveOrigin = CurrentItem?.Origin`), and broadcasts `QueueSessionStartedMessage` / `QueuePlaybackStateChangedMessage`. |
 | `RecentMediaCoordinator` | Singleton | Listens to `QueueSessionStartedMessage`, `PropertyChangedMessage<MusicLibrary>` (reloading on scan completion), and `Playlists.CollectionChanged` (`Remove`); skips recording/loading when `GeneralSettings.ShowRecent` is off; builds local item lists per operation (displaying non-playable empty ViewModels when libraries/playlists are not yet loaded, then replacing them and reusing `MediaCollectionViewModel` / `MediaViewModel` instances on `LoadAsync(forceReload: true)`), publishes atomic snapshots to `RecentContext.Recent`, and persists entries to `recent_entries`. |
 | `RecentContext` | Singleton | Observable recipient holding the snapshot `IReadOnlyList<IRecentItem> Recent` (`[NotifyPropertyChangedRecipients]`) and `MaxRecentItems = 100`. |
 | `MediaCollectionViewModel` | Per folder / `.m3u` card | Lightweight ViewModel representing a live Folder or playlist-file (`.m3u`/`.m3u8`/URI) shortcut; resolves live items on demand via MRU token and `IQueueService`. |
@@ -147,7 +148,7 @@ Each `QueueItemViewModel` slot carries its own optional container `Origin` (`Que
 - **Active origin and recent recording**:
   - `PlayQueueContext.ActiveOrigin` always reflects `_context.CurrentItem?.Origin`.
   - When playback transitions between tracks of the same container origin within a session, no duplicate `QueueSessionStartedMessage` is emitted.
-  - When playback advances into an item from a different origin (e.g., from an Album into a queued Playlist or single track), `ActiveOrigin` updates, the previous container card deactivates, the new container (or `MediaViewModel.IsPlayingIndividually`) activates, and the new origin is recorded/promoted in Recent Media. Clearing the queue (`ClearQueue()`) resets `ActiveSessionId = Guid.Empty` and `ActiveOrigin = null`.
+  - When playback advances into an item from a different origin (e.g., from an Album into a queued Playlist or single track), `ActiveOrigin` updates, the previous container card deactivates, the new container (or `RecentMediaItemViewModel`) activates, and the new origin is recorded/promoted in Recent Media. Clearing the queue (`ClearQueue()`) resets `ActiveSessionId = Guid.Empty` and `ActiveOrigin = null`.
 
 ---
 
@@ -172,10 +173,11 @@ Only **one** card in the Recent list displays the active playing badge at any ti
 - **`AlbumViewModel`, `ArtistViewModel`, `PlaylistViewModel`, and `MediaCollectionViewModel`** each listen to `QueuePlaybackStateChangedMessage` and set:
   - `IsQueueActive = state.SessionId != Guid.Empty && state.CurrentItem is not null && (state.Origin?.Matches(kind, sourceId) ?? false)`
   - `IsPlaying = IsQueueActive && state.IsPlaying`
-- **`MediaViewModel`** retains `IsPlaying` for track-level UI (`SongsPage`, `AlbumDetailsPage`, `AllVideosPage`, `PlayQueuePanel`), while `PlayQueueCoordinator` also updates **`MediaViewModel.IsPlayingIndividually`**:
-  - `IsPlayingIndividually = _context.IsPlaying && (_queueSession.Origin is null || _queueSession.Origin.TrackItemsIndividually)`
-  - `MediaGridViewItemTemplate` binds `IsPlaying="{x:Bind IsPlayingIndividually, Mode=OneWay}"`, and `HomePage.xaml` sets `UseIndividualPlaybackState="True"` on `MediaMenuFlyout`.
-  - When a track inside an Album/Artist/Playlist/Folder is playing, only that container card shows the Pause badge (`IsPlayingIndividually` is `false` on standalone `SingleMedia` cards), and clicking a `SingleMedia` card starts it standalone instead of pausing the container queue.
+- **`RecentMediaItemViewModel`** (`IMediaContainer` + `IMediaPlaybackState`) wraps canonical `MediaViewModel` for `SingleMedia` cards and listens to `QueuePlaybackStateChangedMessage`:
+  - `IsMediaActive = state.SessionId != Guid.Empty && state.CurrentItem is not null && (state.Origin is null || state.Origin.TrackItemsIndividually) && matches Media`
+  - `IsPlaying = IsMediaActive && state.IsPlaying`
+  - `MediaViewModel` stays completely free of HomePage-specific state (retaining `IsPlaying` strictly for track-level UI), and `MediaMenuFlyout` handles `RecentMediaItemViewModel` out of the box via `IMediaContainer` and `IMediaPlaybackState`.
+  - When a track inside an Album/Artist/Playlist/Folder is playing, only that container card shows the Pause badge (`RecentMediaItemViewModel.IsMediaActive` is `false`), and clicking a `SingleMedia` card starts it standalone instead of pausing the container queue.
 
 ---
 

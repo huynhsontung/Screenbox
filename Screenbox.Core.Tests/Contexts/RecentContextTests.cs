@@ -29,7 +29,8 @@ public class RecentContextTests
         context.PropertyChanged += (_, e) => changedProperty = e.PropertyName;
         messenger.Register<PropertyChangedMessage<IReadOnlyList<IRecentItem>>>(this, (_, m) => receivedMessage = m);
 
-        var item = new MediaViewModel(new UriMediaSource(new Uri("https://example.com/song.mp3"))) { Name = "Song" };
+        var media = new MediaViewModel(new UriMediaSource(new Uri("https://example.com/song.mp3"))) { Name = "Song" };
+        var item = new RecentMediaItemViewModel(media, messenger);
         IReadOnlyList<IRecentItem> snapshot = new IRecentItem[] { item };
         context.Recent = snapshot;
 
