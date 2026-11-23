@@ -16,9 +16,51 @@ public static class CollectionExtensions
         }
     }
 
+    /// <summary>
+    /// Synchronizes <paramref name="target"/> in place to match the items and order of <paramref name="reference"/>
+    /// while minimizing collection mutations.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the collections.</typeparam>
+    /// <param name="target">The mutable list to update in place.</param>
+    /// <param name="reference">The desired sequence of items.</param>
     public static void SyncItems<T>(this IList<T> target, IReadOnlyList<T> reference)
     {
-        // Sync items in order. Assume items are unique
+        if (ReferenceEquals(target, reference)) return;
+
+        if (reference.Count == 0)
+        {
+            for (int i = target.Count - 1; i >= 0; i--)
+            {
+                target.RemoveAt(i);
+            }
+
+            return;
+        }
+
+        if (target.Count == 0)
+        {
+            for (int i = 0; i < reference.Count; i++)
+            {
+                target.Add(reference[i]);
+            }
+
+            return;
+        }
+
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+
+        // Remove items not in "reference" first so subsequent items stay in place
+        // without unnecessary removals and reinsertions.
+        HashSet<T> referenceSet = new(reference, comparer);
+        for (int i = target.Count - 1; i >= 0; i--)
+        {
+            if (!referenceSet.Contains(target[i]))
+            {
+                target.RemoveAt(i);
+            }
+        }
+
+        // Sync items in order
         for (int i = 0; i < reference.Count; i++)
         {
             T item = reference[i];
@@ -26,11 +68,12 @@ public static class CollectionExtensions
             {
                 target.Add(item);
             }
-            else
+            else if (!comparer.Equals(target[i], item))
             {
-                int existingIndex = target.IndexOf(item);
-                if (existingIndex == i) continue;
-                if (existingIndex >= 0 && existingIndex != i)
+                // Use RemoveAt + Insert rather than ObservableCollection.Move because WinRT
+                // IObservableVector has no Move action and projects Move as a full Reset.
+                int existingIndex = IndexOf(target, item, i + 1, comparer);
+                if (existingIndex >= 0)
                 {
                     target.RemoveAt(existingIndex);
                 }
@@ -39,11 +82,24 @@ public static class CollectionExtensions
             }
         }
 
-        // Remove items not in "reference"
+        // Trim any leftover trailing items (e.g. excess duplicates)
         for (int i = target.Count - 1; i >= reference.Count; i--)
         {
             target.RemoveAt(i);
         }
+    }
+
+    private static int IndexOf<T>(IList<T> list, T item, int startIndex, IEqualityComparer<T> comparer)
+    {
+        for (int i = startIndex; i < list.Count; i++)
+        {
+            if (comparer.Equals(list[i], item))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public static void SyncObservableGroups<TKey, TValue>(this IList<ObservableGroup<TKey, TValue>> target,
