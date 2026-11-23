@@ -73,9 +73,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
     private bool _deferCollectionChanged;
 
     private CancellationTokenSource? _currentItemCts;
-    private Guid _recordedSessionId;
-    private string? _lastRecordedEntryId;
-    private RecentItemKind? _lastRecordedOriginKind;
+    private Guid _lastBroadcastSessionId;
+    private string? _lastBroadcastEntryId;
+    private RecentItemKind? _lastBroadcastOriginKind;
     private QueuePlaybackState? _lastBroadcastState;
 
     public PlayQueueCoordinator(
@@ -573,12 +573,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                         if (expandedOrigin is { TrackItemsIndividually: false } && item.Origin is null)
                         {
                             // Upgrade from the single-media entry before SetCurrentItem so ProcessCurrentItemChangedAsync
-                            // sees the already-recorded collection entry and does not emit a duplicate message.
-                            string? replacedEntryId = _queueSession.SessionId == _recordedSessionId &&
-                                                      _lastRecordedOriginKind == RecentItemKind.SingleMedia
-                                ? _lastRecordedEntryId
+                            // sees the already-broadcast collection entry and does not emit a duplicate message.
+                            string? replacedEntryId = _queueSession.SessionId == _lastBroadcastSessionId &&
+                                                      _lastBroadcastOriginKind == RecentItemKind.SingleMedia
+                                ? _lastBroadcastEntryId
                                 : null;
-                            RecordItemOrigin(newItems[0], replacedEntryId);
+                            BroadcastSessionStarted(newItems[0], replacedEntryId);
                         }
 
                         SetCurrentItem(newItems[0], shouldPlay: true);
@@ -723,7 +723,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _dispatcherQueue.TryExecuteOrEnqueue(() =>
             {
                 if (_context.CurrentItem != value) return;
-                RecordItemOrigin(value);
+                BroadcastSessionStarted(value);
             });
 
             if (media.Source is IUriMediaSource && MediaPlayer?.PlaybackItem is { } currentPlaybackItem)
@@ -785,12 +785,12 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 {
                     // Handle in-place origin upgrades (e.g. AddNeighboringFilesAsync upgrading the active
                     // single-file slot to a folder MediaCollection) or a new session retaining the same slot.
-                    string? replacedEntryId = _queueSession.SessionId == _recordedSessionId &&
-                                              _lastRecordedOriginKind == RecentItemKind.SingleMedia &&
+                    string? replacedEntryId = _queueSession.SessionId == _lastBroadcastSessionId &&
+                                              _lastBroadcastOriginKind == RecentItemKind.SingleMedia &&
                                               activeItem.Origin is { TrackItemsIndividually: false }
-                        ? _lastRecordedEntryId
+                        ? _lastBroadcastEntryId
                         : null;
-                    RecordItemOrigin(activeItem, replacedEntryId);
+                    BroadcastSessionStarted(activeItem, replacedEntryId);
                 }
             }
             finally
@@ -817,9 +817,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
                 _context.ActiveSessionId = Guid.Empty;
                 _context.ActiveOrigin = null;
                 _context.IsPlaying = false;
-                _recordedSessionId = Guid.Empty;
-                _lastRecordedEntryId = null;
-                _lastRecordedOriginKind = null;
+                _lastBroadcastSessionId = Guid.Empty;
+                _lastBroadcastEntryId = null;
+                _lastBroadcastOriginKind = null;
                 _context.ShuffleMode = false;
                 BroadcastPlaybackState();
             }
@@ -998,9 +998,9 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
             _queueSession = new QueueSession { SessionId = Guid.Empty };
             _context.ActiveSessionId = Guid.Empty;
             _context.ActiveOrigin = null;
-            _recordedSessionId = Guid.Empty;
-            _lastRecordedEntryId = null;
-            _lastRecordedOriginKind = null;
+            _lastBroadcastSessionId = Guid.Empty;
+            _lastBroadcastEntryId = null;
+            _lastBroadcastOriginKind = null;
             RaiseCanNavigateChanged();
             BroadcastPlaybackState();
             return;
@@ -1027,7 +1027,7 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         _queueService.UpdateShuffleBackup(_queueSession, e);
     }
 
-    private void RecordItemOrigin(QueueItemViewModel item, string? replacedEntryId = null)
+    private void BroadcastSessionStarted(QueueItemViewModel item, string? replacedEntryId = null)
     {
         QueueOrigin effectiveOrigin = item.Origin is { TrackItemsIndividually: false } containerOrigin
             ? containerOrigin
@@ -1037,15 +1037,15 @@ public sealed partial class PlayQueueCoordinator : ObservableRecipient, IPlayQue
         // Skip redundant broadcasts when advancing between tracks of the same container origin in the same session,
         // unless this is an explicit upgrade replacing a prior entry.
         if (replacedEntryId is null &&
-            _queueSession.SessionId == _recordedSessionId &&
-            string.Equals(entryId, _lastRecordedEntryId, StringComparison.Ordinal))
+            _queueSession.SessionId == _lastBroadcastSessionId &&
+            string.Equals(entryId, _lastBroadcastEntryId, StringComparison.Ordinal))
         {
             return;
         }
 
-        _recordedSessionId = _queueSession.SessionId;
-        _lastRecordedEntryId = entryId;
-        _lastRecordedOriginKind = effectiveOrigin.Kind;
+        _lastBroadcastSessionId = _queueSession.SessionId;
+        _lastBroadcastEntryId = entryId;
+        _lastBroadcastOriginKind = effectiveOrigin.Kind;
 
         MediaViewModel? singleMedia = effectiveOrigin.Kind == RecentItemKind.SingleMedia
             ? item.Media

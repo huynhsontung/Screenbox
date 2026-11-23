@@ -67,7 +67,7 @@ A queue often starts from one container (such as an album) and is later modified
 
 ### Recording & Deduplication
 
-`PlayQueueCoordinator.RecordItemOrigin` runs whenever `CurrentItem` changes (or upgrades in-place):
+`PlayQueueCoordinator.BroadcastSessionStarted` runs whenever `CurrentItem` changes (or upgrades in-place):
 
 - If the active slot has a container origin (`Origin is { TrackItemsIndividually: false }`), that container is recorded; otherwise the track is recorded individually as `SingleMedia`.
 - Advancing between consecutive tracks of the same container within the same `SessionId` produces the same `entryId`, so no duplicate `QueueSessionStartedMessage` is emitted.
