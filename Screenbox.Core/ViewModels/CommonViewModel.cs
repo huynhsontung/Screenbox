@@ -99,16 +99,29 @@ public sealed partial class CommonViewModel : ObservableRecipient,
     }
 
     [RelayCommand]
-    private void PlayNext(MediaViewModel media)
+    private void PlayNext(object? item)
     {
-        Messenger.SendPlayNext(media);
+        if (TryGetMedia(item) is { } media)
+        {
+            Messenger.SendPlayNext(media);
+        }
     }
 
     [RelayCommand]
-    private void AddToQueue(MediaViewModel media)
+    private void AddToQueue(object? item)
     {
-        Messenger.SendAddToQueue(media);
+        if (TryGetMedia(item) is { } media)
+        {
+            Messenger.SendAddToQueue(media);
+        }
     }
+
+    private static MediaViewModel? TryGetMedia(object? item) => item switch
+    {
+        MediaViewModel media => media,
+        IMediaContainer container => container.Media,
+        _ => null
+    };
 
     [RelayCommand]
     private void OpenAlbum(AlbumViewModel? album)

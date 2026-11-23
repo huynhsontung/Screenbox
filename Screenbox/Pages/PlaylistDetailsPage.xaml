@@ -15,6 +15,7 @@
     xmlns:sbuc="using:Screenbox.UI.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     Loaded="PlaylistDetailsPage_OnLoaded"
     mc:Ignorable="d">
 
@@ -29,7 +30,7 @@
             <flyouts:MediaMenuFlyout
                 x:Key="ItemFlyout"
                 AddToQueueCommand="{x:Bind Common.AddToQueueCommand}"
-                ContextItem="{x:Bind ViewModel.ContextMedia, Mode=OneWay}"
+                ContextItem="{x:Bind ViewModel.ContextItem, Mode=OneWay}"
                 IsAdvancedModeEnabled="{x:Bind Common.IsAdvancedModeEnabled}"
                 PlayCommand="{x:Bind ViewModel.PlayCommand}"
                 PlayNextCommand="{x:Bind Common.PlayNextCommand}"
@@ -37,10 +38,10 @@
                 <flyouts:MediaMenuFlyout.AdditionalItems>
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenArtistCommand}"
-                        CommandParameter="{x:Bind ViewModel.ContextMedia.MainArtist, Mode=OneWay}"
+                        CommandParameter="{x:Bind ViewModel.ContextItem.Media.MainArtist, Mode=OneWay}"
                         Icon="{ui:FontIcon Glyph=&#xE77B;}"
                         Text="{x:Bind strings:Resources.ShowArtist}"
-                        Visibility="{x:Bind ViewModel.ContextMedia.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind ViewModel.ContextItem.Media.MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}, Mode=OneWay}" />
                 </flyouts:MediaMenuFlyout.AdditionalItems>
             </flyouts:MediaMenuFlyout>
         </ResourceDictionary>
@@ -218,7 +219,7 @@
             SelectionMode="None"
             Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="viewModels:PlaylistItemViewModel">
                     <controls:MediaListViewItem
                         IsAlbumColumnVisible="True"
                         IsTrackNumberVisible="False"
@@ -236,7 +237,7 @@
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
-                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextMedia, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
+                <behaviors:ListViewContextBehavior ContextItem="{x:Bind ViewModel.ContextItem, Mode=TwoWay}" Flyout="{StaticResource ItemFlyout}" />
                 <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <behaviors:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>

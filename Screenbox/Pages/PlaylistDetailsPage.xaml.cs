@@ -204,7 +204,7 @@ public sealed partial class PlaylistDetailsPage : Page
         return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
     }
 
-    public static string GetSubtext(IReadOnlyCollection<MediaViewModel>? items)
+    public static string GetSubtext(IReadOnlyCollection<PlaylistItemViewModel>? items)
     {
         if (items == null) return string.Empty;
 
@@ -216,14 +216,14 @@ public sealed partial class PlaylistDetailsPage : Page
         return $"{itemsCountText} • {runTime}";
     }
 
-    public static TimeSpan GetTotalDuration(IReadOnlyCollection<MediaViewModel>? items)
+    public static TimeSpan GetTotalDuration(IReadOnlyCollection<PlaylistItemViewModel>? items)
     {
         if (items == null) return TimeSpan.Zero;
 
         TimeSpan duration = TimeSpan.Zero;
-        foreach (MediaViewModel item in items)
+        foreach (PlaylistItemViewModel item in items)
         {
-            duration += item.Duration;
+            duration += item.Media.Duration;
         }
 
         return duration;

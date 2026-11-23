@@ -24,10 +24,10 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     public partial PlaylistViewModel? Source { get; set; }
 
     [ObservableProperty]
-    public partial MediaViewModel? ContextMedia { get; set; }
+    public partial PlaylistItemViewModel? ContextItem { get; set; }
 
     [ObservableProperty]
-    public partial MediaViewModel? FirstItem { get; set; }
+    public partial PlaylistItemViewModel? FirstItem { get; set; }
 
     private readonly IFilesService _filesService;
     private readonly ISourceMetadataService _sourceMetadataService;
@@ -42,6 +42,18 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IPlaylistService playlistService,
         IQueueService queueService,
         MediaViewModelFactory mediaFactory)
+        : this(filesService, sourceMetadataService, playlistService, queueService, mediaFactory, WeakReferenceMessenger.Default)
+    {
+    }
+
+    public PlaylistDetailsPageViewModel(
+        IFilesService filesService,
+        ISourceMetadataService sourceMetadataService,
+        IPlaylistService playlistService,
+        IQueueService queueService,
+        MediaViewModelFactory mediaFactory,
+        IMessenger messenger)
+        : base(messenger)
     {
         _filesService = filesService;
         _sourceMetadataService = sourceMetadataService;
@@ -83,15 +95,18 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         }, TimeSpan.FromMilliseconds(50));
     }
 
-    private static bool NotNull(MediaViewModel? item) => item != null;
+    private static bool NotNull(PlaylistItemViewModel? item) => item is not null;
 
     private static bool NotEmpty(PlaylistViewModel? playlist) => playlist?.ItemsCount > 0;
 
     [RelayCommand(CanExecute = nameof(NotNull))]
-    private void Play(MediaViewModel? item)
+    private void Play(PlaylistItemViewModel? item)
     {
-        if (Source == null || item == null) return;
-        var queue = new QueueSession(item, Source.Items)
+        if (Source is null || item is null) return;
+        int startIndex = Source.Items.IndexOf(item);
+        if (startIndex < 0) startIndex = 0;
+
+        var queue = new QueueSession(startIndex, Source.Items.Select(i => i.Media).ToList())
         {
             Origin = QueueOrigin.ForPlaylist(Source)
         };
@@ -101,14 +116,14 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     [RelayCommand(CanExecute = nameof(NotEmpty))]
     private void ShuffleAndPlay(PlaylistViewModel? playlist)
     {
-        if (playlist == null || playlist.Items.Count == 0) return;
-        Messenger.SendShuffleAndPlay(playlist.Items, QueueOrigin.ForPlaylist(playlist));
+        if (playlist is null || playlist.Items.Count == 0) return;
+        Messenger.SendShuffleAndPlay(playlist.Items.Select(item => item.Media).ToList(), QueueOrigin.ForPlaylist(playlist));
     }
 
     [RelayCommand(CanExecute = nameof(NotNull))]
-    private async Task Remove(MediaViewModel? item)
+    private async Task Remove(PlaylistItemViewModel? item)
     {
-        if (Source == null || item == null) return;
+        if (Source is null || item is null) return;
         Source.Items.Remove(item);
         await Source.SaveAsync();
     }
@@ -148,7 +163,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
             saveFileTypes, Windows.Storage.Pickers.PickerLocationId.MusicLibrary);
         if (file is null) return;
 
-        await _playlistService.ExportPlaylistItemsAsync(Source.Items, file);
+        await _playlistService.ExportPlaylistItemsAsync(Source.Items.Select(item => item.Media).ToList(), file);
     }
 
     public async Task<bool> DeletePlaylistAsync()
