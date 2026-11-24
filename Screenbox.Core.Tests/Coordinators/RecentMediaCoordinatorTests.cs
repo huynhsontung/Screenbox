@@ -126,7 +126,7 @@ public sealed class RecentMediaCoordinatorTests
             null!,
             NullLogger<RecentMediaCoordinator>.Instance,
             messenger,
-            () => new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger));
+            () => new PlaylistViewModel(null!, null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger));
 
         return (coordinator, recentContext, libraryContext, playlistsContext, generalSettings);
     }
@@ -311,7 +311,7 @@ public sealed class RecentMediaCoordinatorTests
         await Assert.That(placeholderPlaylist.HasItems).IsFalse();
 
         // Simulate saved playlists finishing load after startup
-        var livePlaylist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, new StrongReferenceMessenger());
+        var livePlaylist = new PlaylistViewModel(null!, null!, null!, NullLogger<PlaylistViewModel>.Instance, new StrongReferenceMessenger());
         livePlaylist.LoadPlaceholder(playlistId, "Road Trip");
         livePlaylist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia("Song 1")));
         playlistsContext.Playlists.Add(livePlaylist);

@@ -50,7 +50,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     private Task? _thumbnailLoadTask;
 
     private readonly IPlaylistService _playlistService;
-    private readonly IPlaylistThumbnailService? _thumbnailService;
+    private readonly IPlaylistThumbnailService _thumbnailService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _playlistSaveTimer;
@@ -62,16 +62,16 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         IPlaylistThumbnailService thumbnailService,
         MediaViewModelFactory mediaFactory,
         ILogger<PlaylistViewModel> logger)
-        : this(playlistService, mediaFactory, logger, WeakReferenceMessenger.Default, thumbnailService)
+        : this(playlistService, thumbnailService, mediaFactory, logger, WeakReferenceMessenger.Default)
     {
     }
 
     public PlaylistViewModel(
         IPlaylistService playlistService,
+        IPlaylistThumbnailService thumbnailService,
         MediaViewModelFactory mediaFactory,
         ILogger<PlaylistViewModel> logger,
-        IMessenger messenger,
-        IPlaylistThumbnailService? thumbnailService = null)
+        IMessenger messenger)
         : base(messenger)
     {
         _playlistService = playlistService;
@@ -187,7 +187,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     /// <returns>A task that represents the asynchronous load operation.</returns>
     public Task LoadThumbnailAsync()
     {
-        if (Thumbnail is not null || _thumbnailService is null)
+        if (Thumbnail is not null)
             return Task.CompletedTask;
 
         if (_thumbnailLoadTask is { IsCompleted: false } existingTask)
@@ -201,9 +201,6 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     private async Task LoadThumbnailCoreAsync()
     {
-        if (_thumbnailService is null)
-            return;
-
         (int version, CancellationToken ct) = BeginThumbnailOperation();
         try
         {
@@ -334,9 +331,6 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     internal async Task UpdateThumbnailCollageAsync()
     {
-        if (_thumbnailService is null)
-            return;
-
         (int version, CancellationToken ct) = BeginThumbnailOperation();
 
         if (Items.Count == 0)
@@ -374,9 +368,6 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     private async Task GenerateThumbnailCoreAsync(int version, CancellationToken cancellationToken)
     {
-        if (_thumbnailService is null)
-            return;
-
         MediaViewModel[] itemsSnapshot = Items.Select(item => item.Media).ToArray();
         byte[]? encodedBytes = await _thumbnailService.BuildAndCacheThumbnailAsync(Id, itemsSnapshot, cancellationToken);
         if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)

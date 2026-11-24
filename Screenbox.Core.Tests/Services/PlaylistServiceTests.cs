@@ -80,7 +80,7 @@ public class PlaylistServiceTests
         };
         await db.SavePlaylistAsync(playlist);
 
-        var service = new PlaylistService(db, null!);
+        var service = new PlaylistService(db, null!, null!);
         var media = new MediaViewModel(new Screenbox.Core.MediaSources.UriMediaSource(new Uri("https://example.com/test.mp3")))
         {
             Name = "Test Song"
@@ -98,7 +98,7 @@ public class PlaylistServiceTests
     public async Task AddToPlaylistAsync_NonExistentPlaylist_ThrowsInvalidOperationException()
     {
         var db = new FakeDatabaseService();
-        var service = new PlaylistService(db, null!);
+        var service = new PlaylistService(db, null!, null!);
         var media = new MediaViewModel(new Screenbox.Core.MediaSources.UriMediaSource(new Uri("https://example.com/test.mp3")));
 
         await Assert.That(async () => await service.AddToPlaylistAsync("non-existent", new[] { media }))

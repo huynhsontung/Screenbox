@@ -15,12 +15,12 @@ public sealed class PlaylistService : IPlaylistService
 {
     private readonly IDatabaseService _databaseService;
     private readonly IQueueService _queueService;
-    private readonly IPlaylistThumbnailService? _thumbnailService;
+    private readonly IPlaylistThumbnailService _thumbnailService;
 
     public PlaylistService(
         IDatabaseService databaseService,
         IQueueService queueService,
-        IPlaylistThumbnailService? thumbnailService = null)
+        IPlaylistThumbnailService thumbnailService)
     {
         _databaseService = databaseService;
         _queueService = queueService;
@@ -57,10 +57,7 @@ public sealed class PlaylistService : IPlaylistService
     public async Task DeletePlaylistAsync(string id)
     {
         await _databaseService.DeletePlaylistAsync(id);
-        if (_thumbnailService is not null)
-        {
-            await _thumbnailService.DeleteThumbnailAsync(id);
-        }
+        await _thumbnailService.DeleteThumbnailAsync(id);
     }
 
     /// <summary>

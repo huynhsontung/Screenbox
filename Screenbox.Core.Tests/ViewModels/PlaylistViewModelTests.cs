@@ -48,7 +48,7 @@ public class PlaylistViewModelTests
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };
 
     private static PlaylistViewModel CreatePlaylist(IPlaylistThumbnailService? thumbnailService = null) =>
-        new(null!, null!, NullLogger<PlaylistViewModel>.Instance, new WeakReferenceMessenger(), thumbnailService)
+        new(null!, thumbnailService ?? new FakePlaylistThumbnailService(), null!, NullLogger<PlaylistViewModel>.Instance, new WeakReferenceMessenger())
         {
             Name = "Favorites"
         };
@@ -125,7 +125,7 @@ public class PlaylistViewModelTests
     public async Task PlayCommand_DuplicateEntryClicked_StartsQueueAtClickedIndex()
     {
         var messenger = new WeakReferenceMessenger();
-        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger)
+        var playlist = new PlaylistViewModel(null!, new FakePlaylistThumbnailService(), null!, NullLogger<PlaylistViewModel>.Instance, messenger)
         {
             Name = "Favorites"
         };
