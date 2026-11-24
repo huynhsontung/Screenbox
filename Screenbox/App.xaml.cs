@@ -194,7 +194,6 @@ sealed partial class App : Application
         options.IsGlobalModeEnabled = true;
         options.AutoSessionTracking = true;
         options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
-        options.SetBeforeSendLog(_ => null);
     }
 
     private void SetMinWindowSize()
