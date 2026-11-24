@@ -51,13 +51,19 @@ public sealed class QueueService : IQueueService
             return await CreateSingleFileQueueAsync(file, neighboringFilesQuery, cancellationToken);
         }
 
+        string? containerToken = null;
         if (storageItems.Count == 1 && storageItems[0] is StorageFolder folder)
         {
-            TrackInRecentIfEnabled(folder);
+            containerToken = TrackInRecentIfEnabled(folder);
         }
 
         var session = await TryParseQueueAsync(storageItems, cancellationToken: cancellationToken);
         if (session is null) return null;
+
+        if (!string.IsNullOrEmpty(containerToken) && session.CurrentItem?.Origin is { Kind: RecentItemKind.MediaCollection } origin)
+        {
+            session.SetOrigin(origin with { Token = containerToken });
+        }
 
         session.NeighboringFilesQuery = neighboringFilesQuery;
         return session;
@@ -99,10 +105,7 @@ public sealed class QueueService : IQueueService
             return null;
         }
 
-        return new QueueSession(next ?? queue[0], queue)
-        {
-            Origin = ResolveStorageItemsOrigin(storageItems, queue)
-        };
+        return new QueueSession(next ?? queue[0], queue, origin: ResolveStorageItemsOrigin(storageItems, queue));
     }
 
     public async Task<QueueSession> ParseQueueAsync(MediaViewModel media, CancellationToken cancellationToken = default)
@@ -114,19 +117,16 @@ public sealed class QueueService : IQueueService
             {
                 var vms = items.Select(_mediaFactory.Create).ToList();
                 string title = Path.GetFileNameWithoutExtension(media.Name);
-                return new QueueSession(0, vms)
-                {
-                    Origin = QueueOrigin.ForMediaCollection(
-                        string.IsNullOrWhiteSpace(title) ? media.Name : title,
-                        media.Location)
-                };
+                string? token = (media.Source as IFileMediaSource)?.Token;
+                var origin = QueueOrigin.ForMediaCollection(
+                    string.IsNullOrWhiteSpace(title) ? media.Name : title,
+                    media.Location,
+                    token);
+                return new QueueSession(0, vms, origin: origin);
             }
         }
 
-        return new QueueSession(media)
-        {
-            Origin = QueueOrigin.ForSingleMedia(media)
-        };
+        return new QueueSession(media);
     }
 
     public async Task<QueueSession> ParseQueueAsync(StorageFile file, CancellationToken cancellationToken = default)
@@ -147,13 +147,17 @@ public sealed class QueueService : IQueueService
         CancellationToken cancellationToken)
     {
         var session = await ParseQueueAsync(file, cancellationToken);
-        if (session.Items.Count == 1 && session.Origin?.Kind == RecentItemKind.SingleMedia)
+        if (session.Items.Count == 1 && session.CurrentItem?.Origin is null)
         {
             neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
         }
-        else if (session.Origin?.Kind == RecentItemKind.MediaCollection)
+        else if (session.CurrentItem?.Origin is { Kind: RecentItemKind.MediaCollection } origin)
         {
-            TrackInRecentIfEnabled(file);
+            string? fileToken = TrackInRecentIfEnabled(file);
+            if (!string.IsNullOrEmpty(fileToken))
+            {
+                session.SetOrigin(origin with { Token = fileToken });
+            }
         }
 
         session.NeighboringFilesQuery = neighboringFilesQuery;
@@ -194,7 +198,7 @@ public sealed class QueueService : IQueueService
 
     [DynamicWindowsRuntimeCast(typeof(StorageFolder))]
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private static QueueOrigin ResolveStorageItemsOrigin(
+    private static QueueOrigin? ResolveStorageItemsOrigin(
         IReadOnlyList<IStorageItem> storageItems,
         IReadOnlyList<MediaViewModel> queue)
     {
@@ -214,9 +218,8 @@ public sealed class QueueService : IQueueService
                 singleFile.Path);
         }
 
-        return queue.Count > 1
-            ? QueueOrigin.ForMediaCollection(queue[0].Name)
-            : QueueOrigin.ForSingleMedia(queue[0]);
+        // Loose multi-file drops/selections track whichever item plays individually.
+        return queue.Count == 1 ? QueueOrigin.ForSingleMedia(queue[0]) : null;
     }
 
     #endregion
@@ -239,60 +242,18 @@ public sealed class QueueService : IQueueService
             return session;
         }
 
-        var folderOrigin = ResolveNeighboringFolderOrigin(neighboringFilesQuery, session.CurrentItem?.Media, result.Items[0].Media);
-        return MergeCurrentItemIntoNeighboringQueue(session, result.Items, folderOrigin);
-    }
-
-    private QueueOrigin ResolveNeighboringFolderOrigin(
-        StorageFileQueryResult neighboringFilesQuery,
-        MediaViewModel? currentItem,
-        MediaViewModel fallbackItem)
-    {
-        string folderName = string.Empty;
-        string? folderPath = null;
-        try
-        {
-            if (neighboringFilesQuery.Folder is { } parentFolder)
-            {
-                folderName = !string.IsNullOrWhiteSpace(parentFolder.DisplayName)
-                    ? parentFolder.DisplayName
-                    : parentFolder.Name;
-                folderPath = parentFolder.Path;
-                TrackInRecentIfEnabled(parentFolder);
-            }
-        }
-        catch
-        {
-            // Best-effort folder inspection
-        }
-
-        if (string.IsNullOrWhiteSpace(folderName) && currentItem is not null)
-        {
-            folderPath ??= Path.GetDirectoryName(currentItem.Location);
-            folderName = !string.IsNullOrWhiteSpace(folderPath)
-                ? Path.GetFileName(folderPath)
-                : currentItem.Name;
-        }
-
-        if (string.IsNullOrWhiteSpace(folderName))
-        {
-            folderName = fallbackItem.Name;
-        }
-
-        return QueueOrigin.ForMediaCollection(folderName, folderPath);
+        // Neighboring files auto-enqueued around a single opened file remain individually tracked
+        // (Origin = null); only explicitly opened/dropped folders create a MediaCollection origin.
+        return MergeCurrentItemIntoNeighboringQueue(session, result.Items);
     }
 
     private static QueueSession MergeCurrentItemIntoNeighboringQueue(
         QueueSession session,
-        List<QueueItemViewModel> neighboringItems,
-        QueueOrigin folderOrigin)
+        List<QueueItemViewModel> neighboringItems)
     {
         if (session.CurrentItem is not { } currentItem)
         {
-            return new QueueSession(neighboringItems, session)
-            {
-                Origin = folderOrigin
-            };
+            return new QueueSession(neighboringItems, session);
         }
 
         // Replace the matching item (by location) with the existing CurrentItem to preserve
@@ -306,10 +267,7 @@ public sealed class QueueService : IQueueService
         if (matchIndex >= 0)
         {
             neighboringItems[matchIndex] = currentItem;
-            return new QueueSession(currentItem, neighboringItems, session)
-            {
-                Origin = folderOrigin
-            };
+            return new QueueSession(currentItem, neighboringItems, session);
         }
 
         // Current item not found in neighboring files (edge case).
@@ -480,13 +438,15 @@ public sealed class QueueService : IQueueService
 
     #endregion
 
-    private void TrackInRecentIfEnabled(IStorageItem item)
+    private string? TrackInRecentIfEnabled(IStorageItem item)
     {
         // Register the storage item (e.g. playlist file or folder) with the Windows Most Recently Used (MRU)
         // list so the app retains persistent file-access permission to reload it across future sessions.
         if (_generalSettings?.ShowRecent != false)
         {
-            _filesService.AddToRecent(item);
+            return _filesService.AddToRecent(item);
         }
+
+        return null;
     }
 }

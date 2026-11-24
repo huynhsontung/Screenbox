@@ -204,7 +204,51 @@ public class ContainerPlaybackStateTests
 
             await Assert.That(toggleSent).IsFalse();
             await Assert.That(queuedMessage).IsNotNull();
-            await Assert.That(queuedMessage!.Value.Origin?.Matches(RecentItemKind.Album, album.AlbumKey) ?? false).IsTrue();
+            await Assert.That(queuedMessage!.Value.CurrentItem?.Origin?.Matches(RecentItemKind.Album, album.AlbumKey) ?? false).IsTrue();
+        }
+        finally
+        {
+            messenger.UnregisterAll(this);
+        }
+    }
+
+    [Test]
+    public async Task SendPlayNext_And_SendAddToQueue_PreserveExistingOriginsAndStampInsertedItems()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var album = new AlbumViewModel("Abbey Road", "The Beatles", messenger);
+        var albumOrigin = QueueOrigin.ForAlbum(album);
+        var song1 = CreateDummyMedia("Come Together");
+        var song2 = CreateDummyMedia("Something");
+        var extraSong = CreateDummyMedia("Extra");
+
+        var activeQueue = new QueueSession(0, new[] { song1, song2 }, origin: albumOrigin);
+
+        messenger.Register<ContainerPlaybackStateTests, QueueRequestMessage>(
+            this,
+            (_, m) => m.Reply(new QueueSession(activeQueue)));
+
+        SetQueueMessage? lastSent = null;
+        messenger.Register<ContainerPlaybackStateTests, SetQueueMessage>(
+            this,
+            (_, m) => lastSent = m);
+
+        try
+        {
+            messenger.SendPlayNext(extraSong);
+            await Assert.That(lastSent).IsNotNull();
+            await Assert.That(lastSent!.Value.Items.Count).IsEqualTo(3);
+            await Assert.That(lastSent.Value.Items[0].Origin).IsEqualTo(albumOrigin);
+            await Assert.That(lastSent.Value.Items[1].Origin).IsNull();
+            await Assert.That(lastSent.Value.Items[2].Origin).IsEqualTo(albumOrigin);
+
+            lastSent = null;
+            var otherAlbum = new AlbumViewModel("Let It Be", "The Beatles", messenger);
+            var otherOrigin = QueueOrigin.ForAlbum(otherAlbum);
+            messenger.SendAddToQueue(new[] { extraSong }, otherOrigin);
+            await Assert.That(lastSent).IsNotNull();
+            await Assert.That(lastSent!.Value.Items[0].Origin).IsEqualTo(albumOrigin);
+            await Assert.That(lastSent.Value.Items[2].Origin).IsEqualTo(otherOrigin);
         }
         finally
         {

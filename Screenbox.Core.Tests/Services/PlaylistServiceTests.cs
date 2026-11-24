@@ -20,6 +20,10 @@ public class PlaylistServiceTests
         public Task SaveVideoCacheAsync(IReadOnlyList<string> folderPaths, IReadOnlyList<VideoCacheRecordDto> records) => throw new NotImplementedException();
         public Task ReplacePlaybackProgressAsync(IReadOnlyList<MediaPlaybackProgress> snapshot) => throw new NotImplementedException();
         public Task<List<MediaPlaybackProgress>> LoadPlaybackProgressAsync() => throw new NotImplementedException();
+        public Task<List<RecentEntryDto>> LoadRecentEntriesAsync(int maxEntries = 100) => throw new NotImplementedException();
+        public Task UpsertRecentEntryAsync(RecentEntryDto entry, string? replaceEntryId = null, int maxEntries = 100) => throw new NotImplementedException();
+        public Task DeleteRecentEntryAsync(string id) => throw new NotImplementedException();
+        public Task ClearRecentEntriesAsync() => throw new NotImplementedException();
 
         public Task SavePlaylistAsync(PlaylistRecordDto playlist)
         {

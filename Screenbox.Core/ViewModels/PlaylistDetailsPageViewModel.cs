@@ -106,10 +106,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         int startIndex = Source.Items.IndexOf(item);
         if (startIndex < 0) startIndex = 0;
 
-        var queue = new QueueSession(startIndex, Source.Items.Select(i => i.Media).ToList())
-        {
-            Origin = QueueOrigin.ForPlaylist(Source)
-        };
+        var queue = new QueueSession(startIndex, Source.Items.Select(i => i.Media).ToList(), origin: QueueOrigin.ForPlaylist(Source));
         Messenger.Send(new SetQueueMessage(queue, true));
     }
 

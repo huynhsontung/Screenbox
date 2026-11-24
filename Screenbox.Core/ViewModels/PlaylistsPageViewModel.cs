@@ -109,16 +109,16 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
     private void PlaySelected()
     {
         var selectedPlaylists = Selection.GetSelectedItems<PlaylistViewModel>();
-        var items = selectedPlaylists
-            .SelectMany(p => p.Items)
-            .Select(item => item.Media)
-            .ToArray();
-        if (items.Length > 0)
+        var queueItems = selectedPlaylists
+            .SelectMany(playlist =>
+            {
+                QueueOrigin origin = QueueOrigin.ForPlaylist(playlist);
+                return playlist.Items.Select(item => new QueueItemViewModel(item.Media, origin));
+            })
+            .ToList();
+        if (queueItems.Count > 0)
         {
-            var origin = selectedPlaylists.Count == 1
-                ? QueueOrigin.ForPlaylist(selectedPlaylists[0])
-                : QueueOrigin.ForMediaCollection(items[0].Name);
-            Messenger.SendQueueAndPlay(items[0], items, origin: origin);
+            Messenger.Send(new SetQueueMessage(new QueueSession(0, queueItems), true));
         }
         Selection.DisableSelectionMode();
     }
@@ -133,7 +133,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         selectedItems.Reverse();
         foreach (var item in selectedItems)
         {
-            Messenger.SendPlayNext(item.Items.Select(i => i.Media).ToList());
+            Messenger.SendPlayNext(item.Items.Select(i => i.Media).ToList(), QueueOrigin.ForPlaylist(item));
         }
 
         Selection.DisableSelectionMode();
@@ -145,7 +145,7 @@ public partial class PlaylistsPageViewModel : ObservableRecipient
         var selectedItems = Selection.GetSelectedItems<PlaylistViewModel>();
         foreach (var item in selectedItems)
         {
-            Messenger.SendAddToQueue(item.Items.Select(i => i.Media).ToList());
+            Messenger.SendAddToQueue(item.Items.Select(i => i.Media).ToList(), QueueOrigin.ForPlaylist(item));
         }
 
         Selection.DisableSelectionMode();

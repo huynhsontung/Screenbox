@@ -219,7 +219,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             // "Iron.Man.2008" -> "Iron*Man*2008*"
             string strictPattern = string.Join("*", tokens) + "*";
 
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats.ToArray())
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
             {
                 ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
             };
@@ -289,7 +289,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         try
         {
             if (ItemSubtitleTrackList == null) return;
-            StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
+            StorageFile? file = await _filesService.PickFileAsync([.. FilesHelpers.SupportedSubtitleFormats, "*"]);
             if (file == null) return;
 
             ItemSubtitleTrackList.AddExternalSubtitle(file, true);

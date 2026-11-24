@@ -26,7 +26,7 @@ public sealed class DatabaseServiceTests
         using var connection = new SqliteConnection($"Data Source={dbPath}");
         connection.Open();
 
-        string[] requiredTables = ["library_folders", "media_records", "playback_progress", "playlists", "playlist_items"];
+        string[] requiredTables = ["library_folders", "media_records", "playback_progress", "recent_entries", "playlists", "playlist_items"];
         foreach (string tableName in requiredTables)
         {
             using var cmd = connection.CreateCommand();
@@ -276,5 +276,122 @@ public sealed class DatabaseServiceTests
         await Assert.That(loadedList).HasSingleItem();
         await Assert.That(loadedList[0].Location).IsEqualTo(location);
         await Assert.That(loadedList[0].Position.Ticks).IsEqualTo(expectedPosition.Ticks);
+    }
+
+    [Test]
+    public async Task RecentEntryOperations_UpsertLoadDeduplicateUpgradeAndPrune_BehavesCorrectly()
+    {
+        using var fixture = new TestDirectoryFixture();
+        var dbService = new DatabaseService(NullLogger<DatabaseService>.Instance)
+        {
+            DbFolderPath = fixture.DirectoryPath,
+        };
+        await dbService.InitializeAsync();
+
+        string singleId = QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, @"C:\Music\track1.mp3");
+        var singleEntry = new RecentEntryDto
+        {
+            Id = singleId,
+            Kind = RecentItemKind.SingleMedia,
+            SourceId = @"C:\Music\track1.mp3",
+            Title = "Track 1",
+            Token = "token_abc",
+            LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-10),
+        };
+
+        await dbService.UpsertRecentEntryAsync(singleEntry);
+
+        var loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded).HasSingleItem();
+        await Assert.That(loaded[0].Id).IsEqualTo(singleId);
+        await Assert.That(loaded[0].SourceId).IsEqualTo(@"C:\Music\track1.mp3");
+        await Assert.That(loaded[0].Token).IsEqualTo("token_abc");
+        await Assert.That(loaded[0].MediaRecord).IsNull();
+
+        await dbService.SaveMusicCacheAsync(
+            (string[])[@"C:\Music"],
+            (MusicCacheRecordDto[])[
+                new MusicCacheRecordDto
+                {
+                    Path = @"C:\Music\track1.mp3",
+                    Title = "Cached Track 1",
+                    Artist = "Artist Alpha",
+                    Album = "Album One",
+                    Duration = TimeSpan.FromMinutes(3),
+                    Year = 2024,
+                }
+            ]);
+
+        loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded).HasSingleItem();
+        await Assert.That(loaded[0].MediaRecord).IsNotNull();
+        await Assert.That(loaded[0].MediaRecord!.Title).IsEqualTo("Cached Track 1");
+        await Assert.That(loaded[0].MediaRecord!.Artist).IsEqualTo("Artist Alpha");
+        await Assert.That(loaded[0].MediaRecord!.Album).IsEqualTo("Album One");
+        await Assert.That(loaded[0].MediaRecord!.Duration).IsEqualTo(TimeSpan.FromMinutes(3));
+
+        string folderId = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"C:\Music");
+        var upgradedFolderEntry = new RecentEntryDto
+        {
+            Id = folderId,
+            Kind = RecentItemKind.MediaCollection,
+            SourceId = @"C:\Music",
+            Title = "Music",
+            Token = "folder_token_123",
+            LastPlayed = DateTimeOffset.UtcNow.AddMinutes(-5),
+        };
+
+        await dbService.UpsertRecentEntryAsync(upgradedFolderEntry, replaceEntryId: singleId);
+
+        loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded).HasSingleItem();
+        await Assert.That(loaded[0].Id).IsEqualTo(folderId);
+        await Assert.That(loaded[0].Kind).IsEqualTo(RecentItemKind.MediaCollection);
+        await Assert.That(loaded[0].Token).IsEqualTo("folder_token_123");
+        await Assert.That(loaded[0].MediaRecord).IsNull();
+
+        var duplicateFolderEntry = new RecentEntryDto
+        {
+            Id = QueueOrigin.GetEntryId(RecentItemKind.MediaCollection, @"c:\music"),
+            Kind = RecentItemKind.MediaCollection,
+            SourceId = @"C:\Music",
+            Title = "Music",
+            Token = "folder_token_456",
+            LastPlayed = DateTimeOffset.UtcNow,
+        };
+
+        await dbService.UpsertRecentEntryAsync(duplicateFolderEntry);
+        loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded).HasSingleItem();
+        await Assert.That(loaded[0].Id).IsEqualTo(folderId);
+        await Assert.That(loaded[0].Token).IsEqualTo("folder_token_456");
+
+        for (int i = 0; i < 4; i++)
+        {
+            string path = $@"C:\Videos\vid{i}.mp4";
+            await dbService.UpsertRecentEntryAsync(
+                new RecentEntryDto
+                {
+                    Id = QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, path),
+                    Kind = RecentItemKind.SingleMedia,
+                    SourceId = path,
+                    Title = $"Video {i}",
+                    LastPlayed = DateTimeOffset.UtcNow.AddSeconds(i + 1),
+                },
+                maxEntries: 2);
+        }
+
+        loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded.Count).IsEqualTo(2);
+        await Assert.That(loaded[0].Id).IsEqualTo(QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, @"C:\Videos\vid3.mp4"));
+        await Assert.That(loaded[1].Id).IsEqualTo(QueueOrigin.GetEntryId(RecentItemKind.SingleMedia, @"C:\Videos\vid2.mp4"));
+
+        await dbService.DeleteRecentEntryAsync(loaded[0].Id);
+        loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded).HasSingleItem();
+
+        await dbService.ClearRecentEntriesAsync();
+        loaded = await dbService.LoadRecentEntriesAsync();
+        await Assert.That(loaded).IsEmpty();
     }
 }

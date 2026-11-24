@@ -151,12 +151,7 @@ public partial class FolderViewPageViewModel : ObservableRecipient,
         }
         else
         {
-            var origin = _playableItems.Count > 1
-                ? QueueOrigin.ForMediaCollection(
-                    !string.IsNullOrEmpty(TitleText) ? TitleText : item.Media.Name,
-                    BreadcrumbLocations.LastOrDefault()?.Path)
-                : QueueOrigin.ForSingleMedia(item.Media);
-            Messenger.SendQueueAndPlay(item.Media, _playableItems, true, origin);
+            Messenger.SendQueueAndPlay(item.Media, _playableItems, true);
         }
     }
 

@@ -1,91 +1,115 @@
-using Screenbox.Core.MediaSources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-
-using Microsoft.Extensions.Logging;
-using CommunityToolkit.WinUI;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Contexts;
+using Screenbox.Core.Coordinators;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class HomePageViewModel : ObservableRecipient,
-    IRecipient<QueueCurrentItemChangedMessage>
+    IRecipient<PropertyChangedMessage<IReadOnlyList<IRecentItem>>>
 {
-    public ObservableCollection<MediaViewModel> Recent => _recentContext.Recent;
+    public ObservableCollection<IRecentItem> Recent { get; } = [];
 
     public SelectionViewModel Selection { get; }
 
     [ObservableProperty]
-    public partial MediaViewModel? ContextMedia { get; set; }
+    [NotifyPropertyChangedFor(nameof(ContextAlbum))]
+    [NotifyPropertyChangedFor(nameof(ContextArtist))]
+    [NotifyPropertyChangedFor(nameof(ContextPlaylist))]
+    public partial IRecentItem? ContextMedia { get; set; }
+
+    public AlbumViewModel? ContextAlbum => ContextMedia switch
+    {
+        AlbumViewModel { HasSongs: true } album => album,
+        RecentMediaItemViewModel mediaItem => mediaItem.Media.Album,
+        _ => null
+    };
+
+    public ArtistViewModel? ContextArtist => ContextMedia switch
+    {
+        ArtistViewModel { HasSongs: true } artist => artist,
+        AlbumViewModel album => album.RelatedSongs.FirstOrDefault()?.MainArtist,
+        RecentMediaItemViewModel mediaItem => mediaItem.Media.MainArtist,
+        _ => null
+    };
+
+    public PlaylistViewModel? ContextPlaylist => ContextMedia is PlaylistViewModel { HasItems: true } playlist
+        ? playlist
+        : null;
 
     private readonly RecentContext _recentContext;
+    private readonly IRecentMediaCoordinator _recentMediaCoordinator;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly IFilesService _filesService;
-    private readonly ISourceMetadataService _sourceMetadataService;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IQueueService _queueService;
     private readonly DispatcherQueue _dispatcherQueue;
-    private readonly DispatcherQueueTimer _changeDebounceTimer;
-    private readonly ILogger<HomePageViewModel> _logger;
 
     public HomePageViewModel(
         RecentContext recentContext,
+        IRecentMediaCoordinator recentMediaCoordinator,
         SelectionViewModel selection,
         MediaViewModelFactory mediaFactory,
         IFilesService filesService,
-        ISourceMetadataService sourceMetadataService,
         GeneralSettingsContext generalSettings,
         IQueueService queueService,
-        ILogger<HomePageViewModel> logger)
+        IMessenger? messenger = null)
+        : base(messenger ?? WeakReferenceMessenger.Default)
     {
         Selection = selection;
         _recentContext = recentContext;
+        _recentMediaCoordinator = recentMediaCoordinator;
         _mediaFactory = mediaFactory;
         _filesService = filesService;
-        _sourceMetadataService = sourceMetadataService;
         _generalSettings = generalSettings;
         _queueService = queueService;
-        _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        _changeDebounceTimer = _dispatcherQueue.CreateTimer();
 
         Selection.SetItemsSource(Recent);
         Selection.PropertyChanged += Selection_OnPropertyChanged;
-
-        Messenger.Register<QueueCurrentItemChangedMessage>(this);
-    }
-
-    public void Receive(QueueCurrentItemChangedMessage message)
-    {
         if (_generalSettings.ShowRecent)
         {
-            _changeDebounceTimer.Debounce(DebouncedAction, TimeSpan.FromMilliseconds(100));
+            Recent.SyncItems(_recentContext.Recent);
+        }
 
-            async void DebouncedAction()
-            {
-                await UpdateRecentMediaAsync(false).ConfigureAwait(false);
-            }
+        Messenger.Register<PropertyChangedMessage<IReadOnlyList<IRecentItem>>>(this);
+    }
+
+    public void Receive(PropertyChangedMessage<IReadOnlyList<IRecentItem>> message)
+    {
+        if (ReferenceEquals(message.Sender, _recentContext) && _generalSettings.ShowRecent)
+        {
+            _dispatcherQueue.TryExecuteOrEnqueue(() => Recent.SyncItems(message.NewValue));
         }
     }
 
     public async void OnLoaded()
     {
-        await UpdateContentAsync();
+        if (_generalSettings.ShowRecent)
+        {
+            Recent.SyncItems(_recentContext.Recent);
+            await _recentMediaCoordinator.LoadAsync();
+            await _recentMediaCoordinator.LoadDetailsAsync();
+        }
+        else
+        {
+            Recent.Clear();
+        }
     }
 
     private void Selection_OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -106,198 +130,69 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
         Messenger.Send(new PlayMediaMessage(_mediaFactory.Create(url)));
     }
 
-    private async Task UpdateContentAsync()
+    [RelayCommand(CanExecute = nameof(CanPlayItem))]
+    private async Task PlayAsync(IRecentItem? item)
     {
-        // Update recent media
-        if (_generalSettings.ShowRecent)
+        if (!CanPlayItem(item)) return;
+
+        switch (item)
         {
-            await UpdateRecentMediaAsync(true);
-        }
-        else
-        {
-            lock (Recent)
-            {
-                Recent.Clear();
-                _recentContext.PathToMruMappings.Clear();
-                _recentContext.TokenToMediaMappings.Clear();
-                _recentContext.IsLoaded = true;
-            }
-        }
-    }
-
-    [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    private async Task UpdateRecentMediaAsync(bool loadMediaDetails)
-    {
-        // Assume UI Thread
-        string[] tokens = StorageApplicationPermissions.MostRecentlyUsedList.Entries
-            .OrderByDescending(x => x.Metadata)
-            .Select(x => x.Token)
-            .Where(t => !string.IsNullOrEmpty(t))
-            .ToArray();
-
-        if (tokens.Length == 0)
-        {
-            lock (Recent)
-            {
-                Recent.Clear();
-                _recentContext.PathToMruMappings.Clear();
-                _recentContext.TokenToMediaMappings.Clear();
-                _recentContext.IsLoaded = true;
-            }
-            return;
-        }
-
-        // Fast path: for tokens already known and cached in _recentContext, reuse existing MediaViewModel and StorageFile
-        var fetchTasks = tokens.Select(async token =>
-        {
-            if (_recentContext.TokenToMediaMappings.TryGetValue(token, out var cachedMedia) &&
-                cachedMedia.Source is IFileMediaSource { StorageFile: { } cachedFile })
-            {
-                return (Token: token, File: (StorageFile?)cachedFile, ShouldRemove: false, Media: (MediaViewModel?)cachedMedia);
-            }
-
-            var (file, shouldRemove) = await ConvertMruTokenToStorageFileAsync(token).ConfigureAwait(false);
-            return (Token: token, File: file, ShouldRemove: shouldRemove, Media: (MediaViewModel?)null);
-        });
-
-        var results = await Task.WhenAll(fetchTasks).ConfigureAwait(true);
-
-        var validPairs = new List<(string Token, StorageFile File, MediaViewModel Media)>();
-        var tokensToRemove = new List<string>();
-
-        foreach (var (token, file, shouldRemove, cachedMedia) in results)
-        {
-            if (file == null)
-            {
-                if (shouldRemove)
+            case RecentMediaItemViewModel mediaItem:
+                if (mediaItem.IsMediaActive)
                 {
-                    tokensToRemove.Add(token);
+                    Messenger.Send(new TogglePlayPauseMessage(false));
                 }
-                continue;
-            }
+                else
+                {
+                    Messenger.Send(new PlayMediaMessage(mediaItem.Media, false));
+                }
+                break;
 
-            // TODO: Add support for playing playlist file from home page
-            if (file.IsSupportedPlaylist())
-            {
-                continue;
-            }
+            case AlbumViewModel album:
+                album.PlayAlbumCommand.Execute(null);
+                break;
 
-            MediaViewModel media = cachedMedia ?? _mediaFactory.GetOrCreate(file);
-            validPairs.Add((token, file, media));
-        }
+            case ArtistViewModel artist:
+                artist.PlayArtistCommand.Execute(null);
+                break;
 
-        var targetList = validPairs.Select(p => p.Media).ToList();
+            case PlaylistViewModel playlist:
+                playlist.PlayCommand.Execute(null);
+                break;
 
-        lock (Recent)
-        {
-            // Update mappings for all valid pairs
-            _recentContext.PathToMruMappings.Clear();
-            _recentContext.TokenToMediaMappings.Clear();
-            foreach (var (token, _, media) in validPairs)
-            {
-                _recentContext.PathToMruMappings[media.Location] = token;
-                _recentContext.TokenToMediaMappings[token] = media;
-            }
-
-            // Sync the observable collection in-place
-            Recent.SyncItems(targetList);
-            _recentContext.IsLoaded = true;
-        }
-
-        // Remove stale/inaccessible MRU tokens
-        foreach (string token in tokensToRemove)
-        {
-            try
-            {
-                StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Failed to remove stale MRU token '{Token}'.", token);
-            }
-        }
-
-        // Load media details & thumbnails for any items that need them
-        if (!loadMediaDetails) return;
-        var loadingTasks = new List<Task>();
-        foreach (MediaViewModel media in Recent)
-        {
-            if (!media.DetailsLoaded)
-            {
-                loadingTasks.Add(SafeLoadDetailsAsync(media));
-            }
-
-            if (media.Thumbnail == null)
-            {
-                loadingTasks.Add(SafeLoadThumbnailAsync(media));
-            }
-        }
-
-        if (loadingTasks.Count > 0)
-        {
-            await Task.WhenAll(loadingTasks);
+            case MediaCollectionViewModel collection:
+                await collection.PlayAsync();
+                break;
         }
     }
 
-    private async Task SafeLoadDetailsAsync(MediaViewModel media)
+    [RelayCommand(CanExecute = nameof(CanPlayItem))]
+    private async Task PlayNextAsync(IRecentItem? item)
     {
-        try
+        if (item is null) return;
+        var items = await ResolveQueueItemsAsync(item);
+        if (items.Count > 0)
         {
-            await media.LoadDetailsAsync(_sourceMetadataService);
-        }
-        catch (ArgumentException)
-        {
-            // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
-            // throw ArgumentException. Ignore silently — this is a known bad state.
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to load recent media details for file type '{FileType}'.", Path.GetExtension(media.Location));
+            Messenger.SendPlayNext(items);
         }
     }
 
-    private async Task SafeLoadThumbnailAsync(MediaViewModel media)
+    [RelayCommand(CanExecute = nameof(CanPlayItem))]
+    private async Task AddToQueueAsync(IRecentItem? item)
     {
-        try
+        if (item is null) return;
+        var items = await ResolveQueueItemsAsync(item);
+        if (items.Count > 0)
         {
-            await media.LoadThumbnailAsync();
-        }
-        catch (ArgumentException)
-        {
-            // Expected: the underlying StorageFile (e.g. from MRU) may be stale and
-            // throw ArgumentException. Ignore silently — this is a known bad state.
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to load a thumbnail for file type '{FileType}'.", Path.GetExtension(media.Location));
+            Messenger.SendAddToQueue(items);
         }
     }
 
     [RelayCommand]
-    private void Play(MediaViewModel media)
+    private async Task RemoveAsync(IRecentItem? item)
     {
-        if (media.IsMediaActive)
-        {
-            Messenger.Send(new TogglePlayPauseMessage(false));
-        }
-        else
-        {
-            Messenger.Send(new PlayMediaMessage(media, false));
-        }
-    }
-
-    [RelayCommand]
-    private void Remove(MediaViewModel media)
-    {
-        lock (Recent)
-        {
-            Recent.Remove(media);
-            if (_recentContext.PathToMruMappings.Remove(media.Location, out var token))
-            {
-                _recentContext.TokenToMediaMappings.Remove(token);
-                StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
-            }
-        }
+        if (item is null) return;
+        await _recentMediaCoordinator.RemoveAsync(item);
     }
 
     [RelayCommand]
@@ -305,84 +200,113 @@ public sealed partial class HomePageViewModel : ObservableRecipient,
     {
         StorageFolder? folder = await _filesService.PickFolderAsync();
         if (folder == null) return;
-        IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
-        IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
-        if (files.Length == 0) return;
-        await Messenger.PlayFilesAsync(files, _queueService, _generalSettings.EnqueueAllFilesInFolder);
+        await Messenger.PlayFilesAsync(new IStorageItem[] { folder }, _queueService, _generalSettings.EnqueueAllFilesInFolder);
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelected()
+    private async Task PlaySelectedAsync()
     {
-        var items = Selection.GetSelectedItems<MediaViewModel>().ToArray();
+        var selected = Selection.GetSelectedItems<IRecentItem>();
+        Selection.DisableSelectionMode();
+
+        if (selected.Count == 1)
+        {
+            await PlayAsync(selected[0]);
+        }
+        else if (selected.Count > 1)
+        {
+            var items = await ResolveSelectedQueueItemsAsync(selected);
+            if (items.Length > 0)
+            {
+                Messenger.Send(new SetQueueMessage(new QueueSession(0, items), shouldPlay: true));
+            }
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private async Task PlaySelectedNextAsync()
+    {
+        var selected = Selection.GetSelectedItems<IRecentItem>();
+        Selection.DisableSelectionMode();
+
+        var items = await ResolveSelectedQueueItemsAsync(selected);
         if (items.Length > 0)
         {
-            Messenger.SendQueueAndPlay(items[0], items, pauseIfExists: false);
+            Messenger.SendPlayNext(items);
         }
-
-        Selection.DisableSelectionMode();
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void PlaySelectedNext()
+    private async Task AddSelectedToQueueAsync()
     {
-        var items = Selection.GetSelectedItems<MediaViewModel>();
-        items.Reverse();
-        Messenger.SendPlayNext(items.ToArray());
+        var selected = Selection.GetSelectedItems<IRecentItem>();
         Selection.DisableSelectionMode();
+
+        var items = await ResolveSelectedQueueItemsAsync(selected);
+        if (items.Length > 0)
+        {
+            Messenger.SendAddToQueue(items);
+        }
     }
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void AddSelectedToQueue()
+    private async Task RemoveSelectedAsync()
     {
-        var items = Selection.GetSelectedItems<MediaViewModel>().ToArray();
-        Messenger.SendAddToQueue(items);
-        Selection.DisableSelectionMode();
-    }
-
-    [RelayCommand(CanExecute = nameof(HasSelection))]
-    private void RemoveSelected()
-    {
-        var copy = Selection.GetSelectedItems<MediaViewModel>().ToArray();
+        var copy = Selection.GetSelectedItems<IRecentItem>().ToArray();
         foreach (var item in copy)
         {
-            Remove(item);
+            await _recentMediaCoordinator.RemoveAsync(item);
         }
 
         Selection.DisableSelectionMode();
     }
 
-    private async Task<(StorageFile? File, bool ShouldRemove)> ConvertMruTokenToStorageFileAsync(string token)
+    private static async Task<QueueItemViewModel[]> ResolveSelectedQueueItemsAsync(IReadOnlyList<IRecentItem> selected)
     {
-        try
+        var resolvedLists = await Task.WhenAll(selected.Select(ResolveQueueItemsAsync));
+        return resolvedLists.SelectMany(list => list).ToArray();
+    }
+
+    private static async Task<IReadOnlyList<QueueItemViewModel>> ResolveQueueItemsAsync(IRecentItem item)
+    {
+        switch (item)
         {
-            var file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
-                AccessCacheOptions.SuppressAccessTimeUpdate);
-            return (file, false);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return (null, true);
-        }
-        catch (System.IO.FileNotFoundException)
-        {
-            return (null, true);
-        }
-        catch (ArgumentException)
-        {
-            // Token may refer to a StorageFolder rather than a StorageFile; preserve it in MRU.
-            return (null, false);
-        }
-        catch (InvalidOperationException)
-        {
-            return (null, false);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to resolve MRU token '{Token}' to a file.", token);
-            return (null, false);
+            case RecentMediaItemViewModel mediaItem:
+                return new[] { new QueueItemViewModel(mediaItem.Media) };
+            case AlbumViewModel album:
+            {
+                QueueOrigin origin = QueueOrigin.ForAlbum(album);
+                return album.OrderedSongs.Select(song => new QueueItemViewModel(song, origin)).ToArray();
+            }
+            case ArtistViewModel artist:
+            {
+                QueueOrigin origin = QueueOrigin.ForArtist(artist);
+                return artist.OrderedSongs.Select(song => new QueueItemViewModel(song, origin)).ToArray();
+            }
+            case PlaylistViewModel playlist:
+            {
+                QueueOrigin origin = QueueOrigin.ForPlaylist(playlist);
+                return playlist.Items.Select(entry => new QueueItemViewModel(entry.Media, origin)).ToArray();
+            }
+            case MediaCollectionViewModel collection:
+            {
+                QueueOrigin origin = QueueOrigin.ForMediaCollection(collection.Name, collection.SourcePath, collection.Token);
+                var playable = await collection.GetPlayableItemsAsync();
+                return playable.Select(media => new QueueItemViewModel(media, origin)).ToArray();
+            }
+            default:
+                return Array.Empty<QueueItemViewModel>();
         }
     }
+
+    private static bool CanPlayItem(IRecentItem? item) => item switch
+    {
+        AlbumViewModel album => album.HasSongs,
+        ArtistViewModel artist => artist.HasSongs,
+        PlaylistViewModel playlist => playlist.HasItems,
+        not null => true,
+        _ => false
+    };
 
     private bool HasSelection() => Selection.SelectedRanges.Count > 0;
 }

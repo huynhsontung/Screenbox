@@ -44,10 +44,7 @@ public static class MessengerExtensions
             }
         }
 
-        var session = new QueueSession(media, queue)
-        {
-            Origin = origin
-        };
+        var session = new QueueSession(media, queue, origin: origin);
         messenger.Send(new SetQueueMessage(session, true));
     }
 
@@ -58,7 +55,7 @@ public static class MessengerExtensions
     {
         if (items.Count == 0) return;
 
-        var originalItems = items.Select(item => new QueueItemViewModel(item)).ToList();
+        var originalItems = items.Select(item => new QueueItemViewModel(item, origin)).ToList();
         var shuffledItems = new List<QueueItemViewModel>(originalItems);
         var random = new Random();
         for (int n = shuffledItems.Count - 1; n > 0; n--)
@@ -70,8 +67,7 @@ public static class MessengerExtensions
         var session = new QueueSession(0, shuffledItems)
         {
             ShuffleMode = true,
-            ShuffleBackup = new ShuffleBackup(originalItems),
-            Origin = origin ?? QueueOrigin.ForLibraryQueue(shuffledItems[0].Media)
+            ShuffleBackup = new ShuffleBackup(originalItems)
         };
         messenger.Send(new SetQueueMessage(session, true));
     }
@@ -92,7 +88,13 @@ public static class MessengerExtensions
         }
     }
 
-    public static void SendPlayNext(this IMessenger messenger, IReadOnlyList<MediaViewModel> items)
+    public static void SendPlayNext(this IMessenger messenger, IReadOnlyList<MediaViewModel> items, QueueOrigin? origin = null)
+    {
+        if (items.Count == 0) return;
+        messenger.SendPlayNext(items.Select(item => new QueueItemViewModel(item, origin)).ToList());
+    }
+
+    public static void SendPlayNext(this IMessenger messenger, IReadOnlyList<QueueItemViewModel> items)
     {
         if (items.Count == 0) return;
 
@@ -100,12 +102,7 @@ public static class MessengerExtensions
         if (queue.IsEmpty)
         {
             // Queue all items and play the first one
-            var updatedQueue = new QueueSession(0, items)
-            {
-                Origin = items.Count > 1
-                    ? QueueOrigin.ForMediaCollection(items[0].Name)
-                    : QueueOrigin.ForSingleMedia(items[0])
-            };
+            var updatedQueue = new QueueSession(0, items);
             messenger.Send(new SetQueueMessage(updatedQueue, true));
         }
         else
@@ -115,7 +112,7 @@ public static class MessengerExtensions
             // Insert items in order at the insertion point
             for (int i = 0; i < items.Count; i++)
             {
-                queue.Items.Insert(insertIndex + i, new QueueItemViewModel(items[i]));
+                queue.Items.Insert(insertIndex + i, items[i]);
             }
 
             queue.ShuffleBackup = null;
@@ -139,7 +136,13 @@ public static class MessengerExtensions
         }
     }
 
-    public static void SendAddToQueue(this IMessenger messenger, IReadOnlyList<MediaViewModel> items)
+    public static void SendAddToQueue(this IMessenger messenger, IReadOnlyList<MediaViewModel> items, QueueOrigin? origin = null)
+    {
+        if (items.Count == 0) return;
+        messenger.SendAddToQueue(items.Select(item => new QueueItemViewModel(item, origin)).ToList());
+    }
+
+    public static void SendAddToQueue(this IMessenger messenger, IReadOnlyList<QueueItemViewModel> items)
     {
         if (items.Count == 0) return;
 
@@ -147,20 +150,15 @@ public static class MessengerExtensions
         if (queue.IsEmpty)
         {
             // Queue all items and play the first one
-            var updatedQueue = new QueueSession(0, items)
-            {
-                Origin = items.Count > 1
-                    ? QueueOrigin.ForMediaCollection(items[0].Name)
-                    : QueueOrigin.ForSingleMedia(items[0])
-            };
+            var updatedQueue = new QueueSession(0, items);
             messenger.Send(new SetQueueMessage(updatedQueue, true));
         }
         else
         {
             // Add all items to the end of the queue
-            foreach (MediaViewModel item in items)
+            foreach (QueueItemViewModel item in items)
             {
-                queue.Items.Add(new QueueItemViewModel(item));
+                queue.Items.Add(item);
             }
 
             queue.ShuffleBackup = null;
