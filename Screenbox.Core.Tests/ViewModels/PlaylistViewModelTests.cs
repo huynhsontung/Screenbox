@@ -1,21 +1,54 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Core.Tests.ViewModels;
 
 public class PlaylistViewModelTests
 {
+    private sealed class FakePlaylistThumbnailService : IPlaylistThumbnailService
+    {
+        public Func<string, CancellationToken, Task<byte[]?>>? OnRead { get; set; }
+        public Func<string, IReadOnlyList<MediaViewModel>, CancellationToken, Task<byte[]?>>? OnBuild { get; set; }
+        public int ReadCallCount { get; private set; }
+        public int BuildCallCount { get; private set; }
+        public List<string> DeletedIds { get; } = new();
+
+        public Task<byte[]?> ReadThumbnailAsync(string playlistId, CancellationToken cancellationToken = default)
+        {
+            ReadCallCount++;
+            return OnRead is not null ? OnRead(playlistId, cancellationToken) : Task.FromResult<byte[]?>(null);
+        }
+
+        public Task<byte[]?> BuildAndCacheThumbnailAsync(
+            string playlistId,
+            IReadOnlyList<MediaViewModel> items,
+            CancellationToken cancellationToken = default)
+        {
+            BuildCallCount++;
+            return OnBuild is not null ? OnBuild(playlistId, items, cancellationToken) : Task.FromResult<byte[]?>(null);
+        }
+
+        public Task DeleteThumbnailAsync(string playlistId)
+        {
+            DeletedIds.Add(playlistId);
+            return Task.CompletedTask;
+        }
+    }
+
     private static MediaViewModel CreateDummyMedia(string name) =>
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };
 
-    private static PlaylistViewModel CreatePlaylist() =>
-        new(null!, null!, NullLogger<PlaylistViewModel>.Instance, new WeakReferenceMessenger())
+    private static PlaylistViewModel CreatePlaylist(IPlaylistThumbnailService? thumbnailService = null) =>
+        new(null!, null!, NullLogger<PlaylistViewModel>.Instance, new WeakReferenceMessenger(), thumbnailService)
         {
             Name = "Favorites"
         };
@@ -116,5 +149,95 @@ public class PlaylistViewModelTests
         await Assert.That(sentMessage.Value.Items.Count).IsEqualTo(3);
         await Assert.That(sentMessage.Value.CurrentItem?.Origin?.Kind).IsEqualTo(RecentItemKind.Playlist);
         await Assert.That(sentMessage.Value.CurrentItem?.Origin?.SourceId).IsEqualTo(playlist.Id);
+    }
+
+    [Test]
+    public async Task LoadThumbnailAsync_PlaceholderPlaylist_ReadsCacheWithoutGeneratingCollage()
+    {
+        var thumbnails = new FakePlaylistThumbnailService();
+        var playlist = CreatePlaylist(thumbnails);
+        string placeholderId = Guid.NewGuid().ToString();
+        playlist.LoadPlaceholder(placeholderId, "Recent Playlist");
+
+        await playlist.LoadThumbnailAsync();
+
+        await Assert.That(thumbnails.ReadCallCount).IsEqualTo(1);
+        await Assert.That(thumbnails.BuildCallCount).IsEqualTo(0);
+    }
+
+    [Test]
+    public async Task LoadThumbnailAsync_ConcurrentCalls_DeduplicatesInFlightRead()
+    {
+        var readGate = new TaskCompletionSource<byte[]?>();
+        var thumbnails = new FakePlaylistThumbnailService
+        {
+            OnRead = (_, _) => readGate.Task
+        };
+        var playlist = CreatePlaylist(thumbnails);
+        playlist.LoadPlaceholder(Guid.NewGuid().ToString(), "Recent Playlist");
+
+        Task first = playlist.LoadThumbnailAsync();
+        Task second = playlist.LoadThumbnailAsync();
+        readGate.SetResult(null);
+
+        await Task.WhenAll(first, second);
+
+        await Assert.That(thumbnails.ReadCallCount).IsEqualTo(1);
+    }
+
+    [Test]
+    public async Task UpdateThumbnailCollageAsync_EmptyPlaylist_DeletesCachedThumbnail()
+    {
+        var thumbnails = new FakePlaylistThumbnailService();
+        var playlist = CreatePlaylist(thumbnails);
+
+        await playlist.UpdateThumbnailCollageAsync();
+
+        await Assert.That(playlist.Thumbnail).IsNull();
+        await Assert.That(thumbnails.DeletedIds.Count).IsEqualTo(1);
+        await Assert.That(thumbnails.DeletedIds[0]).IsEqualTo(playlist.Id);
+    }
+
+    [Test]
+    public async Task UpdateThumbnailCollageAsync_SupersededUpdate_CancelsPreviousOperation()
+    {
+        var firstStarted = new TaskCompletionSource();
+        var firstCanceled = new TaskCompletionSource<bool>();
+        int callIndex = 0;
+
+        var thumbnails = new FakePlaylistThumbnailService
+        {
+            OnBuild = async (_, _, ct) =>
+            {
+                int current = Interlocked.Increment(ref callIndex);
+                if (current == 1)
+                {
+                    firstStarted.TrySetResult();
+                    try
+                    {
+                        await Task.Delay(Timeout.Infinite, ct);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        firstCanceled.TrySetResult(true);
+                        throw;
+                    }
+                }
+
+                return null;
+            }
+        };
+
+        var playlist = CreatePlaylist(thumbnails);
+        playlist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia("song1")));
+
+        Task firstUpdate = playlist.UpdateThumbnailCollageAsync();
+        await firstStarted.Task;
+
+        Task secondUpdate = playlist.UpdateThumbnailCollageAsync();
+        await Task.WhenAll(firstUpdate, secondUpdate);
+
+        await Assert.That(await firstCanceled.Task).IsTrue();
+        await Assert.That(thumbnails.BuildCallCount).IsEqualTo(2);
     }
 }

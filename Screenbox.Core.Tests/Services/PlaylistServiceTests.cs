@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
@@ -10,6 +11,23 @@ namespace Screenbox.Core.Tests.Services;
 
 public class PlaylistServiceTests
 {
+    private sealed class FakeThumbnailService : IPlaylistThumbnailService
+    {
+        public readonly List<string> DeletedIds = new();
+
+        public Task<byte[]?> ReadThumbnailAsync(string playlistId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<byte[]?>(null);
+
+        public Task<byte[]?> BuildAndCacheThumbnailAsync(string playlistId, IReadOnlyList<MediaViewModel> items, CancellationToken cancellationToken = default) =>
+            Task.FromResult<byte[]?>(null);
+
+        public Task DeleteThumbnailAsync(string playlistId)
+        {
+            DeletedIds.Add(playlistId);
+            return Task.CompletedTask;
+        }
+    }
+
     private sealed class FakeDatabaseService : IDatabaseService
     {
         public readonly Dictionary<string, PlaylistRecordDto> Playlists = new();
@@ -88,9 +106,10 @@ public class PlaylistServiceTests
     }
 
     [Test]
-    public async Task DeletePlaylistAsync_RemovesFromDatabase()
+    public async Task DeletePlaylistAsync_RemovesFromDatabaseAndDeletesThumbnail()
     {
         var db = new FakeDatabaseService();
+        var thumbnails = new FakeThumbnailService();
         var playlist = new PlaylistRecordDto
         {
             Id = "p1",
@@ -100,10 +119,12 @@ public class PlaylistServiceTests
         };
         await db.SavePlaylistAsync(playlist);
 
-        var service = new PlaylistService(db, null!);
+        var service = new PlaylistService(db, null!, thumbnails);
         await service.DeletePlaylistAsync("p1");
 
         var loaded = await service.LoadPlaylistAsync("p1");
         await Assert.That(loaded).IsNull();
+        await Assert.That(thumbnails.DeletedIds.Count).IsEqualTo(1);
+        await Assert.That(thumbnails.DeletedIds[0]).IsEqualTo("p1");
     }
 }
