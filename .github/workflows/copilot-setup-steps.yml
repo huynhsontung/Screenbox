@@ -17,18 +17,28 @@ jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
   copilot-setup-steps:
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
     - name: Checkout
       uses: actions/checkout@v7
 
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '11.0.x'
+        skip-lts-prepass: true
+
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v3
+      with:
+          msbuild-architecture: x64
 
     - name: Cache NuGet packages
       uses: actions/cache@v6
       with:
         path: ~\.nuget\packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
 
