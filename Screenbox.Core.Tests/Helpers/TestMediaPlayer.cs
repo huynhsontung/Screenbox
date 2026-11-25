@@ -47,6 +47,12 @@ public partial class TestMediaPlayer : IMediaPlayer
     public double PlaybackRate { get; set; } = 1.0;
     public double AudioDelay { get; set; }
     public double SubtitleDelay { get; set; }
+    public int SubtitleTextScale { get; set; } = 100;
+    public int SubtitleMargin { get; set; }
+    public int SubtitleColor { get; set; } = 0x00FFFFFF;
+    public int SubtitleOutlineThickness { get; set; } = 4;
+    public int SubtitleBackgroundOpacity { get; set; }
+    public int SubtitleBackgroundColor { get; set; }
     public Rect NormalizedSourceRect { get; set; }
     public double Volume { get; set; } = 1.0;
     public IPlaybackItem? PlaybackItem { get; set; }

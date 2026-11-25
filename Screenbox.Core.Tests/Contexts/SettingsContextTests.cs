@@ -157,4 +157,39 @@ public partial class SettingsContextTests
         await Assert.That(context.Scale).IsEqualTo(1.5);
         await Assert.That(storage.GetValue("Dummy/Scale", 0.0)).IsEqualTo(1.5);
     }
+
+    [Test]
+    public async Task PlaybackSettingsContext_SubtitleAppearanceSettings_HaveExpectedDefaultsAndPersist()
+    {
+        var storage = new MemorySettingsStorage();
+        var context = new PlaybackSettingsContext(storage);
+
+        await Assert.That(context.SubtitleTextScale).IsEqualTo(100);
+        await Assert.That(context.SubtitleMargin).IsEqualTo(0);
+        await Assert.That(context.SubtitleColor).IsEqualTo(0x00FFFFFF);
+        await Assert.That(context.SubtitleOutlineThickness).IsEqualTo(4);
+        await Assert.That(context.SubtitleBackgroundOpacity).IsEqualTo(0);
+        await Assert.That(context.SubtitleBackgroundColor).IsEqualTo(0x000000);
+
+        context.SubtitleTextScale = 150;
+        context.SubtitleMargin = 30;
+        context.SubtitleColor = 0x00FFFF00;
+        context.SubtitleOutlineThickness = 6;
+        context.SubtitleBackgroundOpacity = 128;
+        context.SubtitleBackgroundColor = 0x0000FF;
+
+        await Assert.That(context.SubtitleTextScale).IsEqualTo(150);
+        await Assert.That(context.SubtitleMargin).IsEqualTo(30);
+        await Assert.That(context.SubtitleColor).IsEqualTo(0x00FFFF00);
+        await Assert.That(context.SubtitleOutlineThickness).IsEqualTo(6);
+        await Assert.That(context.SubtitleBackgroundOpacity).IsEqualTo(128);
+        await Assert.That(context.SubtitleBackgroundColor).IsEqualTo(0x0000FF);
+
+        await Assert.That(storage.GetValue("Subtitle/TextScale", 0)).IsEqualTo(150);
+        await Assert.That(storage.GetValue("Subtitle/Margin", -1)).IsEqualTo(30);
+        await Assert.That(storage.GetValue("Subtitle/Color", 0)).IsEqualTo(0x00FFFF00);
+        await Assert.That(storage.GetValue("Subtitle/OutlineThickness", 0)).IsEqualTo(6);
+        await Assert.That(storage.GetValue("Subtitle/BackgroundOpacity", 0)).IsEqualTo(128);
+        await Assert.That(storage.GetValue("Subtitle/BackgroundColor", -1)).IsEqualTo(0x0000FF);
+    }
 }

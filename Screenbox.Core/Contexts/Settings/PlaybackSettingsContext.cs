@@ -15,6 +15,12 @@ public sealed partial class PlaybackSettingsContext : SettingsContextBase<Playba
     private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
     private const string PersistPlaybackPositionKey = "Privacy/PersistPlaybackPosition";
     private const string RestorePlaybackPositionKey = "General/RestorePlaybackPosition";
+    private const string SubtitleTextScaleKey = "Subtitle/TextScale";
+    private const string SubtitleMarginKey = "Subtitle/Margin";
+    private const string SubtitleColorKey = "Subtitle/Color";
+    private const string SubtitleOutlineThicknessKey = "Subtitle/OutlineThickness";
+    private const string SubtitleBackgroundOpacityKey = "Subtitle/BackgroundOpacity";
+    private const string SubtitleBackgroundColorKey = "Subtitle/BackgroundColor";
 
     public int Volume
     {
@@ -50,6 +56,42 @@ public sealed partial class PlaybackSettingsContext : SettingsContextBase<Playba
     {
         get => Get(RestorePlaybackPositionKey, false);
         set => Set(RestorePlaybackPositionKey, value);
+    }
+
+    public int SubtitleTextScale
+    {
+        get => Get(SubtitleTextScaleKey, 100);
+        set => Set(SubtitleTextScaleKey, value);
+    }
+
+    public int SubtitleMargin
+    {
+        get => Get(SubtitleMarginKey, 0);
+        set => Set(SubtitleMarginKey, value);
+    }
+
+    public int SubtitleColor
+    {
+        get => Get(SubtitleColorKey, 0x00FFFFFF);
+        set => Set(SubtitleColorKey, value);
+    }
+
+    public int SubtitleOutlineThickness
+    {
+        get => Get(SubtitleOutlineThicknessKey, 4);
+        set => Set(SubtitleOutlineThicknessKey, value);
+    }
+
+    public int SubtitleBackgroundOpacity
+    {
+        get => Get(SubtitleBackgroundOpacityKey, 0);
+        set => Set(SubtitleBackgroundOpacityKey, value);
+    }
+
+    public int SubtitleBackgroundColor
+    {
+        get => Get(SubtitleBackgroundColorKey, 0x000000);
+        set => Set(SubtitleBackgroundColorKey, value);
     }
 
     public PlaybackSettingsContext(ISettingsStorage storage) : base(storage)

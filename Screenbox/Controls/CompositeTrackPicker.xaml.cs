@@ -7,10 +7,12 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,6 +23,22 @@ public sealed partial class CompositeTrackPicker : UserControl
     public const double TimingOffsetMax = 3000d;
     public const double TimingOffsetMin = -3000d;
     public const double TimingOffsetStep = 50d;
+
+    public const double TextScaleMin = 25d;
+    public const double TextScaleMax = 300d;
+    public const double TextScaleStep = 5d;
+
+    public const double MarginMin = -100d;
+    public const double MarginMax = 300d;
+    public const double MarginStep = 5d;
+
+    public const double OutlineThicknessMin = 0d;
+    public const double OutlineThicknessMax = 20d;
+    public const double OutlineThicknessStep = 2d;
+
+    public const double BackgroundOpacityMin = 0d;
+    public const double BackgroundOpacityMax = 255d;
+    public const double BackgroundOpacityStep = 5d;
 
     /// <summary>
     /// View-level subtitle track list that prepends a localized "Disable" entry to
@@ -167,4 +185,16 @@ public sealed partial class CompositeTrackPicker : UserControl
     {
         return current == target;
     }
+
+    public static SolidColorBrush IntToColorBrush(int rgb)
+    {
+        Color color = Color.FromArgb(
+            255,
+            (byte)((rgb >> 16) & 0xFF),
+            (byte)((rgb >> 8) & 0xFF),
+            (byte)(rgb & 0xFF));
+        return new SolidColorBrush(color);
+    }
+
+    public static string FormatColorHex(int rgb) => $"#{rgb:X6}";
 }

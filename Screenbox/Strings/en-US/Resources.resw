@@ -1200,5 +1200,23 @@
   <data name="Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <data name="SubtitleTextScale" xml:space="preserve">
+    <value>Text scale</value>
+  </data>
+  <data name="SubtitleMargin" xml:space="preserve">
+    <value>Vertical margin</value>
+  </data>
+  <data name="SubtitleColor" xml:space="preserve">
+    <value>Text color</value>
+  </data>
+  <data name="SubtitleOutlineThickness" xml:space="preserve">
+    <value>Outline thickness</value>
+  </data>
+  <data name="SubtitleBackgroundOpacity" xml:space="preserve">
+    <value>Background opacity</value>
+  </data>
+  <data name="SubtitleBackgroundColor" xml:space="preserve">
+    <value>Background color</value>
+  </data>
 </root>
 
