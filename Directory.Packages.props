@@ -25,7 +25,7 @@
     <PackageVersion Include="ReswPlus" Version="0.6.1" />
 
     <!-- Media playback (LibVLC, LibVLCSharp) -->
-    <PackageVersion Include="LibVLC.UWP" Version="3.0.23-2608082208" />
+    <PackageVersion Include="LibVLC.UWP" Version="3.0.23-2611240812" />
     <PackageVersion Include="LibVLCSharp.UWP" Version="3.10.2" />
 
     <!-- Direct3D 11 interop -->
