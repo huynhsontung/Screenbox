@@ -34,16 +34,33 @@ public partial class VideoView : SwapChainPanel
     private bool _isRecreating;
     private static readonly Guid SWAPCHAIN_WIDTH = new("f1b59347-1643-411a-ad6b-c780177a06b6");
     private static readonly Guid SWAPCHAIN_HEIGHT = new("6ea976a0-9d60-4bb7-a5a9-7dd1187fc9bd");
+    private static readonly Guid SWAPCHAIN_TRANSFORM = new("8b4c9e21-7f3a-4d62-9c1e-54a83b90e271");
 
     public event EventHandler<VideoViewInitializedEventArgs>? Initialized;
 
     public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(
         nameof(MediaPlayer), typeof(MediaPlayer), typeof(VideoView), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Identifies the <see cref="VideoTransform"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty VideoTransformProperty = DependencyProperty.Register(
+        nameof(VideoTransform), typeof(uint), typeof(VideoView), new PropertyMetadata(0u, OnVideoTransformChanged));
+
     public MediaPlayer? MediaPlayer
     {
         get => (MediaPlayer?)GetValue(MediaPlayerProperty);
         set => SetValue(MediaPlayerProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the video orientation transform value passed to LibVLC's Direct3D11
+    /// swapchain via <c>GUID_SWAPCHAIN_TRANSFORM</c> (matching VLC's <c>video_orientation_t</c>, 0-7).
+    /// </summary>
+    public uint VideoTransform
+    {
+        get => (uint)GetValue(VideoTransformProperty);
+        set => SetValue(VideoTransformProperty, value);
     }
 
     public VideoView()
@@ -176,6 +193,7 @@ public partial class VideoView : SwapChainPanel
             _loaded = true;
             UpdateScale();
             UpdateSize();
+            UpdateTransform();
 
             string[] options =
             [
@@ -213,6 +231,25 @@ public partial class VideoView : SwapChainPanel
 
         _swapChain.SetPrivateData(SWAPCHAIN_WIDTH, sizeof(int), new IntPtr(&w));
         _swapChain.SetPrivateData(SWAPCHAIN_HEIGHT, sizeof(int), new IntPtr(&h));
+    }
+
+    private unsafe void UpdateTransform()
+    {
+        if (!_loaded || _swapChain is null)
+        {
+            return;
+        }
+
+        uint transform = VideoTransform;
+        _swapChain.SetPrivateData(SWAPCHAIN_TRANSFORM, sizeof(uint), new IntPtr(&transform));
+    }
+
+    private static void OnVideoTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is VideoView { _loaded: true } videoView)
+        {
+            videoView.TryExecuteUpdate(videoView.UpdateTransform);
+        }
     }
 
     private void UpdateScale()

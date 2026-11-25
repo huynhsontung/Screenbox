@@ -1200,5 +1200,32 @@
   <data name="Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <data name="VideoTransform" xml:space="preserve">
+    <value>Rotate &amp; flip</value>
+  </data>
+  <data name="FlipHorizontal" xml:space="preserve">
+    <value>Flip horizontally</value>
+  </data>
+  <data name="FlipVertical" xml:space="preserve">
+    <value>Flip vertically</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="VideoTransformNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="VideoTransformDegrees" xml:space="preserve">
+    <value>{0}°</value>
+    <comment>#Format[Int degrees]</comment>
+  </data>
+  <data name="VideoTransformRotatedAndFlipped" xml:space="preserve">
+    <value>{0}°, Flip horizontally</value>
+    <comment>#Format[Int degrees]</comment>
+  </data>
+  <data name="VideoTransformStatusMessage" xml:space="preserve">
+    <value>Rotate &amp; flip: {0}</value>
+    <comment>#Format[String transform]</comment>
+  </data>
 </root>
 

@@ -156,4 +156,9 @@ public sealed partial class PlayerControls : UserControl
 
         return true;
     }
+
+    private bool IsRotationSelected(int currentRotation, int targetRotation)
+    {
+        return currentRotation == targetRotation;
+    }
 }

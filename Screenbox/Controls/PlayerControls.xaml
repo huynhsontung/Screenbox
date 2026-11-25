@@ -1,4 +1,4 @@
-<UserControl
+﻿<UserControl
     x:Class="Screenbox.Controls.PlayerControls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -17,6 +17,7 @@
     xmlns:sbui="using:Screenbox.UI"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:vm="using:Screenbox.Core.ViewModels"
     d:DesignHeight="128"
     d:DesignWidth="1200"
     mc:Ignorable="d">
@@ -257,6 +258,48 @@
                         Click="CustomAspectRatioMenuItem_OnClick"
                         GroupName="AspectRatioGroup"
                         Text="{x:Bind strings:Resources.Custom}" />
+                </MenuFlyoutSubItem>
+                <MenuFlyoutSubItem
+                    x:Name="VideoTransformSubMenu"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemVideoTransformKey}"
+                    Icon="{ui:FontIcon Glyph=&#xE7AD;}"
+                    IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.VideoTransform}">
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind PlaybackSession.SetVideoRotationCommand}"
+                        CommandParameter="{x:Bind vm:PlaybackSessionViewModel.Rotation0}"
+                        GroupName="VideoRotationGroup"
+                        IsChecked="{x:Bind IsRotationSelected(PlaybackSession.VideoRotation, vm:PlaybackSessionViewModel.Rotation0), Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.VideoTransformDegrees(vm:PlaybackSessionViewModel.Rotation0)}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind PlaybackSession.SetVideoRotationCommand}"
+                        CommandParameter="{x:Bind vm:PlaybackSessionViewModel.Rotation90}"
+                        GroupName="VideoRotationGroup"
+                        IsChecked="{x:Bind IsRotationSelected(PlaybackSession.VideoRotation, vm:PlaybackSessionViewModel.Rotation90), Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.VideoTransformDegrees(vm:PlaybackSessionViewModel.Rotation90)}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind PlaybackSession.SetVideoRotationCommand}"
+                        CommandParameter="{x:Bind vm:PlaybackSessionViewModel.Rotation180}"
+                        GroupName="VideoRotationGroup"
+                        IsChecked="{x:Bind IsRotationSelected(PlaybackSession.VideoRotation, vm:PlaybackSessionViewModel.Rotation180), Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.VideoTransformDegrees(vm:PlaybackSessionViewModel.Rotation180)}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind PlaybackSession.SetVideoRotationCommand}"
+                        CommandParameter="{x:Bind vm:PlaybackSessionViewModel.Rotation270}"
+                        GroupName="VideoRotationGroup"
+                        IsChecked="{x:Bind IsRotationSelected(PlaybackSession.VideoRotation, vm:PlaybackSessionViewModel.Rotation270), Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.VideoTransformDegrees(vm:PlaybackSessionViewModel.Rotation270)}" />
+                    <MenuFlyoutSeparator />
+                    <ToggleMenuFlyoutItem
+                        Command="{x:Bind PlaybackSession.ToggleFlipVideoHorizontalCommand}"
+                        IsChecked="{x:Bind PlaybackSession.IsVideoFlippedHorizontally, Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.FlipHorizontal}" />
+                    <ToggleMenuFlyoutItem
+                        Command="{x:Bind PlaybackSession.ToggleFlipVideoVerticalCommand}"
+                        IsChecked="{x:Bind PlaybackSession.IsVideoFlippedVertically, Mode=OneWay}"
+                        Text="{x:Bind strings:Resources.FlipVertical}" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Command="{x:Bind PlaybackSession.ResetVideoTransformCommand}" Text="{x:Bind strings:Resources.Reset}" />
                 </MenuFlyoutSubItem>
                 <!--<MenuFlyoutSubItem
                     Icon="{ui:FontIcon Glyph=&#xE714;}"

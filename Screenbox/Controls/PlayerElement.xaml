@@ -44,6 +44,7 @@
             IsHitTestVisible="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-            SizeChanged="VlcVideoView_OnSizeChanged" />
+            SizeChanged="VlcVideoView_OnSizeChanged"
+            VideoTransform="{x:Bind ViewModel.SwapChainTransform, Mode=OneWay}" />
     </Grid>
 </UserControl>

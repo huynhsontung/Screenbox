@@ -26,7 +26,8 @@ using Windows.UI.Input;
 namespace Screenbox.Core.ViewModels;
 
 public sealed partial class PlayerElementViewModel : ObservableRecipient,
-    IRecipient<ChangeAspectRatioMessage>
+    IRecipient<ChangeAspectRatioMessage>,
+    IRecipient<ChangeVideoTransformMessage>
 {
     private const double GestureStepAmount = 5.0;
 
@@ -48,6 +49,15 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
     }
 
     public bool IsHolding { get; private set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SwapChainTransform))]
+    public partial VideoTransform VideoTransform { get; set; }
+
+    /// <summary>
+    /// Gets the raw <c>video_orientation_t</c> value (0-7) passed to the D3D11 swapchain.
+    /// </summary>
+    public uint SwapChainTransform => (uint)VideoTransform;
 
     private readonly PlayerContext _playerContext;
     private readonly IPlayerService _playerService;
@@ -87,12 +97,18 @@ public sealed partial class PlayerElementViewModel : ObservableRecipient,
         transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
 
         Messenger.Register<ChangeAspectRatioMessage>(this);
+        Messenger.Register<ChangeVideoTransformMessage>(this);
     }
 
     public void Receive(ChangeAspectRatioMessage message)
     {
         _aspectRatio = message.Value;
         SetCropGeometry(message.Value);
+    }
+
+    public void Receive(ChangeVideoTransformMessage message)
+    {
+        VideoTransform = message.Value;
     }
 
     public void Initialize(string[] swapChainOptions)

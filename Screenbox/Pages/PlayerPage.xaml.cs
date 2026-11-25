@@ -563,9 +563,28 @@ public sealed partial class PlayerPage : Page
             PlaybackCommandKind.Scale when value is double scale => Strings.Resources.ScaleStatus($"{scale * 100:0.##}%"),
             PlaybackCommandKind.Subtitle when value is string label => Strings.Resources.SubtitleStatus(label),
             PlaybackCommandKind.SubtitleOff => Strings.Resources.SubtitleStatus(Strings.Resources.None),
+            PlaybackCommandKind.VideoTransform when value is VideoTransform transform => GetVideoTransformStatusMessage(transform),
             _ when value is string str => str,
             _ => string.Empty,
         };
+    }
+
+    private static string GetVideoTransformStatusMessage(VideoTransform transform)
+    {
+        string value = transform switch
+        {
+            VideoTransform.Normal => Strings.Resources.VideoTransformNormal,
+            VideoTransform.FlipHorizontal => Strings.Resources.FlipHorizontal,
+            VideoTransform.FlipVertical => Strings.Resources.FlipVertical,
+            VideoTransform.Rotate90 => Strings.Resources.VideoTransformDegrees(90),
+            VideoTransform.Rotate180 => Strings.Resources.VideoTransformDegrees(180),
+            VideoTransform.Rotate270 => Strings.Resources.VideoTransformDegrees(270),
+            VideoTransform.Transpose => Strings.Resources.VideoTransformRotatedAndFlipped(90),
+            VideoTransform.AntiTranspose => Strings.Resources.VideoTransformRotatedAndFlipped(270),
+            _ => Strings.Resources.VideoTransformNormal,
+        };
+
+        return Strings.Resources.VideoTransformStatusMessage(value);
     }
 
     private HorizontalAlignment GetBadgeHorizontalAlignment(PlaybackCommandKind kind)
