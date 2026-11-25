@@ -20,4 +20,8 @@
     <PackageReference Include="Microsoft.Data.Sqlite" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Screenbox.Interop.LibVLC\Screenbox.Interop.LibVLC.csproj" />
+  </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
+using Screenbox.Interop.LibVLC;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
@@ -182,7 +183,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         set
         {
             _subtitleTextScale = value;
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "sub-text-scale", value);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "sub-text-scale", value);
         }
     }
 
@@ -192,7 +193,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         set
         {
             _subtitleMargin = value;
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "sub-margin", value, propagateToChildren: true);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "sub-margin", value, propagateToChildren: true);
         }
     }
 
@@ -202,7 +203,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         set
         {
             _subtitleColor = value;
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-color", value);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-color", value);
         }
     }
 
@@ -212,7 +213,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         set
         {
             _subtitleOutlineThickness = value;
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-outline-thickness", value);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-outline-thickness", value);
         }
     }
 
@@ -222,7 +223,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         set
         {
             _subtitleBackgroundOpacity = value;
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-background-opacity", value);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-background-opacity", value);
         }
     }
 
@@ -232,7 +233,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         set
         {
             _subtitleBackgroundColor = value;
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-background-color", value);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "freetype-background-color", value);
         }
     }
 
@@ -457,7 +458,7 @@ public sealed class VlcMediaPlayer : IMediaPlayer
         PlaybackState = MediaPlaybackState.Playing;
         if (_subtitleMargin != 0)
         {
-            LibVlcCoreInterop.SetIntegerVariable(VlcPlayer.NativeReference, "sub-margin", _subtitleMargin, propagateToChildren: true);
+            LibVlcObjectVariables.SetIntegerVariable(VlcPlayer.NativeReference, "sub-margin", _subtitleMargin, propagateToChildren: true);
         }
 
         if (!_updateMediaProperties) return;
