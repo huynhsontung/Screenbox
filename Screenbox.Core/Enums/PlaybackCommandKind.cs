@@ -27,4 +27,5 @@ public enum PlaybackCommandKind
     Scale,
     Subtitle,
     SubtitleOff,
+    VideoTransform,
 }

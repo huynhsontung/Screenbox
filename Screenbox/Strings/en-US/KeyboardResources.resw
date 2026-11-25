@@ -553,4 +553,8 @@
     <value>U</value>
     <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting fullscreen. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
+  <data name="MenuItemVideoTransformKey" xml:space="preserve">
+    <value>T</value>
+    <comment>{Range="A-Z"}{Limit=1}Access key for video rotation and flip options. Must be unique with respect to every other MenuItem key in this file.</comment>
+  </data>
 </root>
