@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
@@ -22,14 +23,14 @@ namespace Screenbox.Core.Services;
 /// </summary>
 public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
 {
-    internal const int ThumbnailCollageSize = 400;
-    internal const int MaxArtworkCount = 4;
-    internal const int DefaultMaxScanCount = 32;
+    private const int ThumbnailCollageSize = 400;
+    private const int MaxArtworkCount = 4;
+    internal const int MaxScanCount = 32;
     private const int BytesPerPixel = 4;
     private const float JpegQuality = 0.85f;
     private const string CacheFolderName = "PlaylistThumbnails";
 
-    internal readonly record struct CollageSlot(int X, int Y, int Width, int Height);
+    private readonly record struct CollageSlot(int X, int Y, int Width, int Height);
 
     /// <summary>
     /// Gets or sets the directory used to store cached playlist thumbnails.
@@ -38,14 +39,29 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     public string CacheFolderPath { get; set; } = string.Empty;
 
     private readonly ILogger<PlaylistThumbnailService> _logger;
+    private readonly Func<MediaViewModel, uint, CancellationToken, Task<IRandomAccessStream?>> _thumbnailSourceProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaylistThumbnailService"/> class.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
+    [ActivatorUtilitiesConstructor]
     public PlaylistThumbnailService(ILogger<PlaylistThumbnailService> logger)
+        : this(logger, static (item, requestedSize, _) => item.GetThumbnailSourceAsync(requestedSize))
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaylistThumbnailService"/> class with a custom thumbnail stream provider.
+    /// </summary>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="thumbnailSourceProvider">Delegate that opens a thumbnail stream for a media item.</param>
+    public PlaylistThumbnailService(
+        ILogger<PlaylistThumbnailService> logger,
+        Func<MediaViewModel, uint, CancellationToken, Task<IRandomAccessStream?>> thumbnailSourceProvider)
     {
         _logger = logger;
+        _thumbnailSourceProvider = thumbnailSourceProvider;
     }
 
     /// <inheritdoc/>
@@ -95,7 +111,7 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
                     sources,
                     TryOpenDecoderAsync,
                     MaxArtworkCount,
-                    DefaultMaxScanCount,
+                    MaxScanCount,
                     cancellationToken).ConfigureAwait(false);
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -215,12 +231,12 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     /// readable artworks into <paramref name="destination"/>, deduplicating albums and media locations only after
     /// an item supplies usable artwork so unreadable early tracks do not block later tracks on the same album.
     /// </summary>
-    internal static async Task CollectDistinctArtworksAsync<TArtwork>(
+    private static async Task CollectDistinctArtworksAsync<TArtwork>(
         IReadOnlyList<MediaViewModel> items,
         List<TArtwork> destination,
         Func<MediaViewModel, CancellationToken, Task<TArtwork?>> tryOpenArtworkAsync,
         int maxArtworkCount = MaxArtworkCount,
-        int maxScanCount = DefaultMaxScanCount,
+        int maxScanCount = MaxScanCount,
         CancellationToken cancellationToken = default)
         where TArtwork : struct
     {
@@ -267,7 +283,7 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     /// 1 = full bleed, 2 = side-by-side vertical halves, 3 = 1+2 split (tall left half + two right squares),
     /// 4 = 2x2 quadrants.
     /// </summary>
-    internal static CollageSlot[] GetCollageLayout(int artworkCount, int canvasSize = ThumbnailCollageSize)
+    private static CollageSlot[] GetCollageLayout(int artworkCount, int canvasSize = ThumbnailCollageSize)
     {
         if (artworkCount <= 0 || canvasSize <= 0)
             return [];
@@ -302,7 +318,7 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     /// <summary>
     /// Composites decoded BGRA8 cell pixel buffers into a single square BGRA8 canvas buffer.
     /// </summary>
-    internal static byte[] CompositeCollagePixels(
+    private static byte[] CompositeCollagePixels(
         int canvasSize,
         IReadOnlyList<(CollageSlot Slot, byte[] Pixels)> cells)
     {
@@ -323,7 +339,7 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
         return collage;
     }
 
-    internal async Task WriteThumbnailAtomicallyAsync(
+    private async Task WriteThumbnailAtomicallyAsync(
         string playlistId,
         byte[] encodedBytes,
         CancellationToken cancellationToken)
@@ -387,14 +403,14 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
         return !string.IsNullOrWhiteSpace(item.Location) ? "loc:" + item.Location : null;
     }
 
-    private static async Task<(IRandomAccessStream Stream, BitmapDecoder Decoder)?> TryOpenDecoderAsync(
+    private async Task<(IRandomAccessStream Stream, BitmapDecoder Decoder)?> TryOpenDecoderAsync(
         MediaViewModel item,
         CancellationToken cancellationToken)
     {
         IRandomAccessStream? stream = null;
         try
         {
-            stream = await item.GetThumbnailSourceAsync(requestedSize: ThumbnailCollageSize).ConfigureAwait(false);
+            stream = await _thumbnailSourceProvider(item, ThumbnailCollageSize, cancellationToken).ConfigureAwait(false);
             if (stream is null)
                 return null;
 

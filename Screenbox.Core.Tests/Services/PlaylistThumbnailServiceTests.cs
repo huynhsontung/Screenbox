@@ -9,7 +9,10 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
 
 namespace Screenbox.Core.Tests.Services;
 
@@ -21,13 +24,11 @@ public class PlaylistThumbnailServiceTests
         info.MusicProperties.Album = album;
         info.MusicProperties.AlbumArtist = albumArtist;
 
-        var media = new MediaViewModel(new UriMediaSource(new Uri(location)))
+        return new MediaViewModel(new UriMediaSource(new Uri(location)))
         {
             Name = Path.GetFileNameWithoutExtension(location),
             MediaInfo = info
         };
-
-        return media;
     }
 
     private static MediaViewModel CreateVideoMedia(string location) =>
@@ -37,246 +38,266 @@ public class PlaylistThumbnailServiceTests
             MediaInfo = new MediaInfo(MediaPlaybackType.Video)
         };
 
-    private static byte[] CreateSolidPixels(int width, int height, byte b, byte g, byte r, byte a = 255)
+    private static async Task<IRandomAccessStream> CreateSolidPngStreamAsync(
+        uint width,
+        uint height,
+        (byte R, byte G, byte B) color)
     {
-        byte[] buffer = new byte[width * height * 4];
-        for (int i = 0; i < buffer.Length; i += 4)
+        byte[] pixels = new byte[width * height * 4];
+        for (int i = 0; i < pixels.Length; i += 4)
         {
-            buffer[i] = b;
-            buffer[i + 1] = g;
-            buffer[i + 2] = r;
-            buffer[i + 3] = a;
+            pixels[i] = color.B;
+            pixels[i + 1] = color.G;
+            pixels[i + 2] = color.R;
+            pixels[i + 3] = 255;
         }
 
-        return buffer;
+        InMemoryRandomAccessStream stream = new();
+        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+        encoder.SetPixelData(
+            BitmapPixelFormat.Bgra8,
+            BitmapAlphaMode.Ignore,
+            width,
+            height,
+            dpiX: 96.0,
+            dpiY: 96.0,
+            pixels);
+        await encoder.FlushAsync();
+        stream.Seek(0);
+
+        return stream;
     }
 
-    private static (byte B, byte G, byte R, byte A) GetPixel(byte[] canvas, int canvasSize, int x, int y)
+    private static async Task<(uint Width, uint Height, byte[] Pixels)> DecodeBgraPixelsAsync(byte[] encodedBytes)
     {
-        int offset = (y * canvasSize + x) * 4;
-        return (canvas[offset], canvas[offset + 1], canvas[offset + 2], canvas[offset + 3]);
+        using MemoryStream memoryStream = new(encodedBytes);
+        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(memoryStream.AsRandomAccessStream());
+        PixelDataProvider provider = await decoder.GetPixelDataAsync(
+            BitmapPixelFormat.Bgra8,
+            BitmapAlphaMode.Ignore,
+            new BitmapTransform(),
+            ExifOrientationMode.RespectExifOrientation,
+            ColorManagementMode.DoNotColorManage);
+
+        return (decoder.PixelWidth, decoder.PixelHeight, provider.DetachPixelData());
+    }
+
+    private static (byte R, byte G, byte B) GetRgbPixel(byte[] pixels, uint width, int x, int y)
+    {
+        int offset = (y * (int)width + x) * 4;
+        return (pixels[offset + 2], pixels[offset + 1], pixels[offset]);
+    }
+
+    private static async Task AssertColorNearAsync(
+        (byte R, byte G, byte B) actual,
+        (byte R, byte G, byte B) expected,
+        int tolerance = 15)
+    {
+        await Assert.That(Math.Abs(actual.R - expected.R)).IsLessThanOrEqualTo(tolerance);
+        await Assert.That(Math.Abs(actual.G - expected.G)).IsLessThanOrEqualTo(tolerance);
+        await Assert.That(Math.Abs(actual.B - expected.B)).IsLessThanOrEqualTo(tolerance);
     }
 
     [Test]
-    public async Task GetCollageLayout_CoversFullCanvasForOneToFourArtworks()
+    public async Task BuildAndCacheThumbnailAsync_OneToFourArtworks_ProducesExpectedFullBleedJpegLayouts()
     {
-        const int canvasSize = 400;
+        using var fixture = new TestDirectoryFixture();
+        (byte R, byte G, byte B) red = (220, 40, 40);
+        (byte R, byte G, byte B) green = (40, 200, 60);
+        (byte R, byte G, byte B) blue = (40, 80, 220);
+        (byte R, byte G, byte B) yellow = (230, 210, 40);
 
-        var layout0 = PlaylistThumbnailService.GetCollageLayout(0, canvasSize);
-        await Assert.That(layout0.Length).IsEqualTo(0);
+        var v1 = CreateVideoMedia("https://example.com/v1.mp4");
+        var v2 = CreateVideoMedia("https://example.com/v2.mp4");
+        var v3 = CreateVideoMedia("https://example.com/v3.mp4");
+        var v4 = CreateVideoMedia("https://example.com/v4.mp4");
 
-        var layout1 = PlaylistThumbnailService.GetCollageLayout(1, canvasSize);
-        await Assert.That(layout1.Length).IsEqualTo(1);
-        await Assert.That(layout1[0]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(0, 0, 400, 400));
-
-        var layout2 = PlaylistThumbnailService.GetCollageLayout(2, canvasSize);
-        await Assert.That(layout2.Length).IsEqualTo(2);
-        await Assert.That(layout2[0]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(0, 0, 200, 400));
-        await Assert.That(layout2[1]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(200, 0, 200, 400));
-
-        var layout3 = PlaylistThumbnailService.GetCollageLayout(3, canvasSize);
-        await Assert.That(layout3.Length).IsEqualTo(3);
-        await Assert.That(layout3[0]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(0, 0, 200, 400));
-        await Assert.That(layout3[1]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(200, 0, 200, 200));
-        await Assert.That(layout3[2]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(200, 200, 200, 200));
-
-        var layout4 = PlaylistThumbnailService.GetCollageLayout(4, canvasSize);
-        await Assert.That(layout4.Length).IsEqualTo(4);
-        await Assert.That(layout4[0]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(0, 0, 200, 200));
-        await Assert.That(layout4[1]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(200, 0, 200, 200));
-        await Assert.That(layout4[2]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(0, 200, 200, 200));
-        await Assert.That(layout4[3]).IsEqualTo(new PlaylistThumbnailService.CollageSlot(200, 200, 200, 200));
-    }
-
-    [Test]
-    public async Task CompositeCollagePixels_ThreeArtworkSplit_FillsLeftHalfAndTwoRightSquares()
-    {
-        const int canvasSize = 8;
-        var layout = PlaylistThumbnailService.GetCollageLayout(3, canvasSize);
-        var cells = new List<(PlaylistThumbnailService.CollageSlot, byte[])>
+        var colorsByLocation = new Dictionary<string, (uint W, uint H, (byte R, byte G, byte B) Color)>
         {
-            (layout[0], CreateSolidPixels(layout[0].Width, layout[0].Height, b: 10, g: 20, r: 30)),
-            (layout[1], CreateSolidPixels(layout[1].Width, layout[1].Height, b: 40, g: 50, r: 60)),
-            (layout[2], CreateSolidPixels(layout[2].Width, layout[2].Height, b: 70, g: 80, r: 90))
+            [v1.Location] = (600, 200, red),
+            [v2.Location] = (200, 200, green),
+            [v3.Location] = (200, 200, blue),
+            [v4.Location] = (200, 200, yellow)
         };
 
-        byte[] canvas = PlaylistThumbnailService.CompositeCollagePixels(canvasSize, cells);
-
-        for (int y = 0; y < canvasSize; y++)
-        {
-            for (int x = 0; x < canvasSize; x++)
+        var service = new PlaylistThumbnailService(
+            NullLogger<PlaylistThumbnailService>.Instance,
+            async (item, _, _) =>
             {
-                var pixel = GetPixel(canvas, canvasSize, x, y);
-                if (x < 4)
-                {
-                    await Assert.That(pixel).IsEqualTo(((byte)10, (byte)20, (byte)30, (byte)255));
-                }
-                else if (y < 4)
-                {
-                    await Assert.That(pixel).IsEqualTo(((byte)40, (byte)50, (byte)60, (byte)255));
-                }
-                else
-                {
-                    await Assert.That(pixel).IsEqualTo(((byte)70, (byte)80, (byte)90, (byte)255));
-                }
-            }
-        }
-    }
-
-    [Test]
-    public async Task CompositeCollagePixels_TwoAndFourArtworkLayouts_FillExpectedRegions()
-    {
-        const int canvasSize = 8;
-
-        var layout2 = PlaylistThumbnailService.GetCollageLayout(2, canvasSize);
-        byte[] canvas2 = PlaylistThumbnailService.CompositeCollagePixels(canvasSize, new (PlaylistThumbnailService.CollageSlot, byte[])[]
+                var spec = colorsByLocation[item.Location];
+                return await CreateSolidPngStreamAsync(spec.W, spec.H, spec.Color);
+            })
         {
-            (layout2[0], CreateSolidPixels(4, 8, b: 1, g: 2, r: 3)),
-            (layout2[1], CreateSolidPixels(4, 8, b: 4, g: 5, r: 6))
-        });
+            CacheFolderPath = fixture.DirectoryPath
+        };
 
-        await Assert.That(GetPixel(canvas2, canvasSize, 0, 0)).IsEqualTo(((byte)1, (byte)2, (byte)3, (byte)255));
-        await Assert.That(GetPixel(canvas2, canvasSize, 3, 7)).IsEqualTo(((byte)1, (byte)2, (byte)3, (byte)255));
-        await Assert.That(GetPixel(canvas2, canvasSize, 4, 0)).IsEqualTo(((byte)4, (byte)5, (byte)6, (byte)255));
-        await Assert.That(GetPixel(canvas2, canvasSize, 7, 7)).IsEqualTo(((byte)4, (byte)5, (byte)6, (byte)255));
+        byte[]? bytes1 = await service.BuildAndCacheThumbnailAsync(Guid.NewGuid().ToString(), new[] { v1 });
+        await Assert.That(bytes1).IsNotNull();
+        var decoded1 = await DecodeBgraPixelsAsync(bytes1!);
+        await Assert.That(decoded1.Width).IsEqualTo(400u);
+        await Assert.That(decoded1.Height).IsEqualTo(400u);
+        await AssertColorNearAsync(GetRgbPixel(decoded1.Pixels, decoded1.Width, 100, 100), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded1.Pixels, decoded1.Width, 300, 100), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded1.Pixels, decoded1.Width, 100, 300), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded1.Pixels, decoded1.Width, 300, 300), red);
 
-        var layout4 = PlaylistThumbnailService.GetCollageLayout(4, canvasSize);
-        byte[] canvas4 = PlaylistThumbnailService.CompositeCollagePixels(canvasSize, new (PlaylistThumbnailService.CollageSlot, byte[])[]
-        {
-            (layout4[0], CreateSolidPixels(4, 4, b: 11, g: 12, r: 13)),
-            (layout4[1], CreateSolidPixels(4, 4, b: 21, g: 22, r: 23)),
-            (layout4[2], CreateSolidPixels(4, 4, b: 31, g: 32, r: 33)),
-            (layout4[3], CreateSolidPixels(4, 4, b: 41, g: 42, r: 43))
-        });
+        byte[]? bytes2 = await service.BuildAndCacheThumbnailAsync(Guid.NewGuid().ToString(), new[] { v1, v2 });
+        await Assert.That(bytes2).IsNotNull();
+        var decoded2 = await DecodeBgraPixelsAsync(bytes2!);
+        await Assert.That(decoded2.Width).IsEqualTo(400u);
+        await Assert.That(decoded2.Height).IsEqualTo(400u);
+        await AssertColorNearAsync(GetRgbPixel(decoded2.Pixels, decoded2.Width, 100, 200), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded2.Pixels, decoded2.Width, 300, 200), green);
 
-        await Assert.That(GetPixel(canvas4, canvasSize, 0, 0)).IsEqualTo(((byte)11, (byte)12, (byte)13, (byte)255));
-        await Assert.That(GetPixel(canvas4, canvasSize, 4, 0)).IsEqualTo(((byte)21, (byte)22, (byte)23, (byte)255));
-        await Assert.That(GetPixel(canvas4, canvasSize, 0, 4)).IsEqualTo(((byte)31, (byte)32, (byte)33, (byte)255));
-        await Assert.That(GetPixel(canvas4, canvasSize, 7, 7)).IsEqualTo(((byte)41, (byte)42, (byte)43, (byte)255));
-    }
+        byte[]? bytes3 = await service.BuildAndCacheThumbnailAsync(Guid.NewGuid().ToString(), new[] { v1, v2, v3 });
+        await Assert.That(bytes3).IsNotNull();
+        var decoded3 = await DecodeBgraPixelsAsync(bytes3!);
+        await Assert.That(decoded3.Width).IsEqualTo(400u);
+        await Assert.That(decoded3.Height).IsEqualTo(400u);
+        await AssertColorNearAsync(GetRgbPixel(decoded3.Pixels, decoded3.Width, 100, 100), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded3.Pixels, decoded3.Width, 100, 300), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded3.Pixels, decoded3.Width, 300, 100), green);
+        await AssertColorNearAsync(GetRgbPixel(decoded3.Pixels, decoded3.Width, 300, 300), blue);
 
-    private readonly record struct TestArtwork(MediaViewModel Item);
-
-    [Test]
-    public async Task CollectDistinctArtworksAsync_DeduplicatesSameAlbumAndDuplicateLocations()
-    {
-        var track1 = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
-        var track2 = CreateMusicMedia("https://example.com/a2.mp3", "Album A", "Artist 1");
-        var track3 = CreateMusicMedia("https://example.com/b1.mp3", "Album B", "Artist 2");
-        var video1 = CreateVideoMedia("https://example.com/v1.mp4");
-        var video1Duplicate = CreateVideoMedia("https://example.com/v1.mp4");
-        var video2 = CreateVideoMedia("https://example.com/v2.mp4");
-
-        var collected = new List<TestArtwork>();
-        await PlaylistThumbnailService.CollectDistinctArtworksAsync<TestArtwork>(
-            new[] { track1, track2, track3, video1, video1Duplicate, video2 },
-            collected,
-            (item, _) => Task.FromResult<TestArtwork?>(new TestArtwork(item)));
-
-        await Assert.That(collected.Count).IsEqualTo(4);
-        await Assert.That(collected[0].Item).IsSameReferenceAs(track1);
-        await Assert.That(collected[1].Item).IsSameReferenceAs(track3);
-        await Assert.That(collected[2].Item).IsSameReferenceAs(video1);
-        await Assert.That(collected[3].Item).IsSameReferenceAs(video2);
+        byte[]? bytes4 = await service.BuildAndCacheThumbnailAsync(Guid.NewGuid().ToString(), new[] { v1, v2, v3, v4 });
+        await Assert.That(bytes4).IsNotNull();
+        var decoded4 = await DecodeBgraPixelsAsync(bytes4!);
+        await Assert.That(decoded4.Width).IsEqualTo(400u);
+        await Assert.That(decoded4.Height).IsEqualTo(400u);
+        await AssertColorNearAsync(GetRgbPixel(decoded4.Pixels, decoded4.Width, 100, 100), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded4.Pixels, decoded4.Width, 300, 100), green);
+        await AssertColorNearAsync(GetRgbPixel(decoded4.Pixels, decoded4.Width, 100, 300), blue);
+        await AssertColorNearAsync(GetRgbPixel(decoded4.Pixels, decoded4.Width, 300, 300), yellow);
     }
 
     [Test]
-    public async Task CollectDistinctArtworksAsync_RespectsMaxScanCount()
+    public async Task BuildAndCacheThumbnailAsync_UnreadableFirstAlbumTrack_FallsBackToLaterTrackAndDeduplicatesAlbumsAndLocations()
     {
-        var items = Enumerable.Range(0, 10)
-            .Select(i => CreateVideoMedia($"https://example.com/v{i}.mp4"))
-            .ToArray();
+        using var fixture = new TestDirectoryFixture();
+        (byte R, byte G, byte B) red = (220, 40, 40);
+        (byte R, byte G, byte B) green = (40, 200, 60);
+        (byte R, byte G, byte B) blue = (40, 80, 220);
 
-        var collected = new List<TestArtwork>();
-        await PlaylistThumbnailService.CollectDistinctArtworksAsync<TestArtwork>(
-            items,
-            collected,
-            (item, _) => Task.FromResult<TestArtwork?>(new TestArtwork(item)),
-            maxArtworkCount: 10,
-            maxScanCount: 5);
-
-        await Assert.That(collected.Count).IsEqualTo(5);
-    }
-
-    [Test]
-    public async Task CollectDistinctArtworksAsync_UnreadableFirstAlbumTrack_FallsBackToReadableLaterTrackAndSkipsFailedDuplicateLocation()
-    {
         var albumATrack1 = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
         var albumATrack1Dup = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
         var albumATrack2 = CreateMusicMedia("https://example.com/a2.mp3", "Album A", "Artist 1");
         var albumATrack3 = CreateMusicMedia("https://example.com/a3.mp3", "Album A", "Artist 1");
-        var albumBTrack1 = CreateMusicMedia("https://example.com/b1.mp3", "Album B", "Artist 2");
+        var video1 = CreateVideoMedia("https://example.com/v1.mp4");
+        var video1Dup = CreateVideoMedia("https://example.com/v1.mp4");
 
         var probedItems = new List<MediaViewModel>();
-        var collected = new List<TestArtwork>();
-
-        await PlaylistThumbnailService.CollectDistinctArtworksAsync<TestArtwork>(
-            new[] { albumATrack1, albumATrack1Dup, albumATrack2, albumATrack3, albumBTrack1 },
-            collected,
-            (item, _) =>
+        var service = new PlaylistThumbnailService(
+            NullLogger<PlaylistThumbnailService>.Instance,
+            async (item, _, _) =>
             {
                 probedItems.Add(item);
                 if (ReferenceEquals(item, albumATrack1) || ReferenceEquals(item, albumATrack1Dup))
-                {
-                    return Task.FromResult<TestArtwork?>(null);
-                }
+                    return null;
+                if (ReferenceEquals(item, albumATrack2))
+                    return await CreateSolidPngStreamAsync(200, 200, red);
+                if (ReferenceEquals(item, albumATrack3))
+                    return await CreateSolidPngStreamAsync(200, 200, green);
+                if (ReferenceEquals(item, video1) || ReferenceEquals(item, video1Dup))
+                    return await CreateSolidPngStreamAsync(200, 200, blue);
 
-                return Task.FromResult<TestArtwork?>(new TestArtwork(item));
-            });
+                return null;
+            })
+        {
+            CacheFolderPath = fixture.DirectoryPath
+        };
 
-        await Assert.That(collected.Count).IsEqualTo(2);
-        await Assert.That(collected[0].Item).IsSameReferenceAs(albumATrack2);
-        await Assert.That(collected[1].Item).IsSameReferenceAs(albumBTrack1);
+        byte[]? result = await service.BuildAndCacheThumbnailAsync(
+            Guid.NewGuid().ToString(),
+            new[] { albumATrack1, albumATrack1Dup, albumATrack2, albumATrack3, video1, video1Dup });
+
+        await Assert.That(result).IsNotNull();
         await Assert.That(probedItems.Count).IsEqualTo(3);
         await Assert.That(probedItems[0]).IsSameReferenceAs(albumATrack1);
         await Assert.That(probedItems[1]).IsSameReferenceAs(albumATrack2);
-        await Assert.That(probedItems[2]).IsSameReferenceAs(albumBTrack1);
+        await Assert.That(probedItems[2]).IsSameReferenceAs(video1);
+
+        var decoded = await DecodeBgraPixelsAsync(result!);
+        await AssertColorNearAsync(GetRgbPixel(decoded.Pixels, decoded.Width, 100, 200), red);
+        await AssertColorNearAsync(GetRgbPixel(decoded.Pixels, decoded.Width, 300, 200), blue);
     }
 
     [Test]
-    public async Task CacheOperations_WriteReadOverwriteAndDelete_WorkAtomicallyWithoutTempLeak()
+    public async Task BuildAndCacheThumbnailAsync_RespectsMaxScanCount()
     {
-        string tempDir = Path.Combine(Path.GetTempPath(), "ScreenboxThumbnailTests_" + Guid.NewGuid().ToString("N"));
-        try
-        {
-            var service = new PlaylistThumbnailService(NullLogger<PlaylistThumbnailService>.Instance)
+        using var fixture = new TestDirectoryFixture();
+        var items = Enumerable.Range(0, 35)
+            .Select(i => CreateVideoMedia($"https://example.com/v{i}.mp4"))
+            .ToArray();
+
+        int probeCount = 0;
+        var service = new PlaylistThumbnailService(
+            NullLogger<PlaylistThumbnailService>.Instance,
+            async (item, _, _) =>
             {
-                CacheFolderPath = tempDir
-            };
+                probeCount++;
+                if (ReferenceEquals(item, items[32]))
+                    return await CreateSolidPngStreamAsync(200, 200, (220, 40, 40));
 
-            string playlistId = Guid.NewGuid().ToString();
-
-            byte[]? initial = await service.ReadThumbnailAsync(playlistId);
-            await Assert.That(initial).IsNull();
-
-            byte[] firstBytes = [1, 2, 3, 4, 5];
-            await service.WriteThumbnailAtomicallyAsync(playlistId, firstBytes, CancellationToken.None);
-
-            byte[]? readFirst = await service.ReadThumbnailAsync(playlistId);
-            await Assert.That(readFirst).IsNotNull();
-            await Assert.That(readFirst!.SequenceEqual(firstBytes)).IsTrue();
-            await Assert.That(Directory.GetFiles(tempDir, "*.tmp").Length).IsEqualTo(0);
-
-            byte[] updatedBytes = [9, 8, 7];
-            await service.WriteThumbnailAtomicallyAsync(playlistId, updatedBytes, CancellationToken.None);
-
-            byte[]? readUpdated = await service.ReadThumbnailAsync(playlistId);
-            await Assert.That(readUpdated).IsNotNull();
-            await Assert.That(readUpdated!.SequenceEqual(updatedBytes)).IsTrue();
-            await Assert.That(Directory.GetFiles(tempDir, "*.tmp").Length).IsEqualTo(0);
-
-            byte[]? emptyResult = await service.BuildAndCacheThumbnailAsync(playlistId, Array.Empty<MediaViewModel>());
-            await Assert.That(emptyResult).IsNull();
-            await Assert.That(await service.ReadThumbnailAsync(playlistId)).IsNull();
-
-            await service.DeleteThumbnailAsync(playlistId);
-        }
-        finally
+                return null;
+            })
         {
-            if (Directory.Exists(tempDir))
-            {
-                Directory.Delete(tempDir, recursive: true);
-            }
-        }
+            CacheFolderPath = fixture.DirectoryPath
+        };
+
+        string playlistId = Guid.NewGuid().ToString();
+        byte[]? result = await service.BuildAndCacheThumbnailAsync(playlistId, items);
+
+        await Assert.That(result).IsNull();
+        await Assert.That(probeCount).IsEqualTo(32);
+        await Assert.That(await service.ReadThumbnailAsync(playlistId)).IsNull();
+    }
+
+    [Test]
+    public async Task CacheOperations_WriteReadOverwriteEmptyAndDelete_WorkAtomicallyWithoutTempLeak()
+    {
+        using var fixture = new TestDirectoryFixture();
+        (byte R, byte G, byte B) red = (220, 40, 40);
+        (byte R, byte G, byte B) blue = (40, 80, 220);
+
+        var redVideo = CreateVideoMedia("https://example.com/red.mp4");
+        var blueVideo = CreateVideoMedia("https://example.com/blue.mp4");
+
+        var service = new PlaylistThumbnailService(
+            NullLogger<PlaylistThumbnailService>.Instance,
+            async (item, _, _) => ReferenceEquals(item, redVideo)
+                ? await CreateSolidPngStreamAsync(200, 200, red)
+                : await CreateSolidPngStreamAsync(200, 200, blue))
+        {
+            CacheFolderPath = fixture.DirectoryPath
+        };
+
+        string playlistId = Guid.NewGuid().ToString();
+
+        await Assert.That(await service.ReadThumbnailAsync(playlistId)).IsNull();
+
+        byte[]? firstBytes = await service.BuildAndCacheThumbnailAsync(playlistId, new[] { redVideo });
+        await Assert.That(firstBytes).IsNotNull();
+        await Assert.That(Directory.GetFiles(fixture.DirectoryPath, "*.tmp").Length).IsEqualTo(0);
+
+        byte[]? readFirst = await service.ReadThumbnailAsync(playlistId);
+        await Assert.That(readFirst).IsNotNull();
+        await Assert.That(readFirst!.SequenceEqual(firstBytes!)).IsTrue();
+
+        byte[]? updatedBytes = await service.BuildAndCacheThumbnailAsync(playlistId, new[] { blueVideo });
+        await Assert.That(updatedBytes).IsNotNull();
+        await Assert.That(Directory.GetFiles(fixture.DirectoryPath, "*.tmp").Length).IsEqualTo(0);
+
+        byte[]? readUpdated = await service.ReadThumbnailAsync(playlistId);
+        await Assert.That(readUpdated).IsNotNull();
+        await Assert.That(readUpdated!.SequenceEqual(updatedBytes!)).IsTrue();
+
+        var decodedUpdated = await DecodeBgraPixelsAsync(readUpdated!);
+        await AssertColorNearAsync(GetRgbPixel(decodedUpdated.Pixels, decodedUpdated.Width, 200, 200), blue);
+
+        byte[]? emptyResult = await service.BuildAndCacheThumbnailAsync(playlistId, Array.Empty<MediaViewModel>());
+        await Assert.That(emptyResult).IsNull();
+        await Assert.That(await service.ReadThumbnailAsync(playlistId)).IsNull();
+
+        await service.DeleteThumbnailAsync(playlistId);
     }
 }

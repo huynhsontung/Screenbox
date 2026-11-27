@@ -116,12 +116,12 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         {
             _collageTimer.Debounce(async () =>
             {
-                await UpdateThumbnailCollageAsync();
+                await RefreshThumbnailAsync();
             }, TimeSpan.FromMilliseconds(50));
         }
     }
 
-    internal bool ShouldRefreshThumbnail(NotifyCollectionChangedEventArgs e)
+    private bool ShouldRefreshThumbnail(NotifyCollectionChangedEventArgs e)
     {
         if (Items.Count == 0)
             return true;
@@ -129,7 +129,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         if (Thumbnail is null && e.Action == NotifyCollectionChangedAction.Add)
             return true;
 
-        const int scanCount = PlaylistThumbnailService.DefaultMaxScanCount;
+        const int scanCount = PlaylistThumbnailService.MaxScanCount;
         return e.Action switch
         {
             NotifyCollectionChangedAction.Add => e.NewStartingIndex < scanCount,
@@ -333,7 +333,12 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
     }
 
-    internal async Task UpdateThumbnailCollageAsync()
+    /// <summary>
+    /// Rebuilds and caches the playlist thumbnail collage from the current <see cref="Items"/>,
+    /// or deletes the cached thumbnail when the playlist has no items or readable artwork.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous refresh operation.</returns>
+    public async Task RefreshThumbnailAsync()
     {
         (int version, CancellationToken ct) = BeginThumbnailOperation();
 

@@ -20,8 +20,4 @@
     <PackageReference Include="Microsoft.Data.Sqlite" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" />
   </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Screenbox.Core.Tests" />
-  </ItemGroup>
 </Project>

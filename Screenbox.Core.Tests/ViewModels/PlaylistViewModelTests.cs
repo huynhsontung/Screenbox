@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Windows.System;
 
 namespace Screenbox.Core.Tests.ViewModels;
 
@@ -187,12 +191,12 @@ public class PlaylistViewModelTests
     }
 
     [Test]
-    public async Task UpdateThumbnailCollageAsync_EmptyPlaylist_DeletesCachedThumbnail()
+    public async Task RefreshThumbnailAsync_EmptyPlaylist_DeletesCachedThumbnail()
     {
         var thumbnails = new FakePlaylistThumbnailService();
         var playlist = CreatePlaylist(thumbnails);
 
-        await playlist.UpdateThumbnailCollageAsync();
+        await playlist.RefreshThumbnailAsync();
 
         await Assert.That(playlist.Thumbnail).IsNull();
         await Assert.That(thumbnails.DeletedIds.Count).IsEqualTo(1);
@@ -200,7 +204,7 @@ public class PlaylistViewModelTests
     }
 
     [Test]
-    public async Task UpdateThumbnailCollageAsync_SupersededUpdate_CancelsPreviousOperation()
+    public async Task RefreshThumbnailAsync_SupersededUpdate_CancelsPreviousOperation()
     {
         var firstStarted = new TaskCompletionSource();
         var firstCanceled = new TaskCompletionSource<bool>();
@@ -232,10 +236,10 @@ public class PlaylistViewModelTests
         var playlist = CreatePlaylist(thumbnails);
         playlist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia("song1")));
 
-        Task firstUpdate = playlist.UpdateThumbnailCollageAsync();
+        Task firstUpdate = playlist.RefreshThumbnailAsync();
         await firstStarted.Task;
 
-        Task secondUpdate = playlist.UpdateThumbnailCollageAsync();
+        Task secondUpdate = playlist.RefreshThumbnailAsync();
         await Task.WhenAll(firstUpdate, secondUpdate);
 
         await Assert.That(await firstCanceled.Task).IsTrue();
@@ -243,32 +247,68 @@ public class PlaylistViewModelTests
     }
 
     [Test]
-    public async Task ShouldRefreshThumbnail_ChecksFullScanWindow()
+    public async Task ItemsCollectionChanged_RefreshesWithinScanWindowAndIgnoresEditsBeyondScanWindow()
     {
-        var playlist = CreatePlaylist();
-        for (int i = 0; i < 35; i++)
+        TaskCompletionSource? nextBuild = null;
+        var thumbnails = new FakePlaylistThumbnailService
         {
-            playlist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia($"song{i}")));
+            OnBuild = (_, _, _) =>
+            {
+                nextBuild?.TrySetResult();
+                return Task.FromResult<byte[]?>(null);
+            }
+        };
+
+        var dto = new PlaylistRecordDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            DisplayName = "Large Playlist",
+            LastUpdated = DateTimeOffset.UtcNow,
+            Items = Enumerable.Range(0, 35)
+                .Select(i => new RawMediaRecordDto
+                {
+                    Path = $"https://example.com/song{i}.mp3",
+                    Title = $"Song {i}"
+                })
+                .ToList()
+        };
+
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), new LibraryContext());
+        DispatcherQueueController controller = DispatcherQueueController.CreateOnDedicatedThread();
+        try
+        {
+            PlaylistViewModel playlist = null!;
+            await RunOnDispatcherAsync(controller.DispatcherQueue, () =>
+            {
+                playlist = new PlaylistViewModel(
+                    null!,
+                    thumbnails,
+                    mediaFactory,
+                    NullLogger<PlaylistViewModel>.Instance,
+                    new WeakReferenceMessenger());
+                playlist.Load(dto);
+                playlist.Items.Move(32, 33);
+                playlist.Items[32] = new PlaylistItemViewModel(CreateDummyMedia("replaced"));
+                playlist.Items.RemoveAt(32);
+            });
+
+            await Task.Delay(150);
+            await Assert.That(thumbnails.BuildCallCount).IsEqualTo(0);
+
+            nextBuild = new TaskCompletionSource();
+            await RunOnDispatcherAsync(controller.DispatcherQueue, () => playlist.Items.RemoveAt(4));
+            await nextBuild.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            await Assert.That(thumbnails.BuildCallCount).IsEqualTo(1);
+
+            nextBuild = new TaskCompletionSource();
+            await RunOnDispatcherAsync(controller.DispatcherQueue, () => playlist.Items.RemoveAt(31));
+            await nextBuild.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            await Assert.That(thumbnails.BuildCallCount).IsEqualTo(2);
         }
-
-        var item = playlist.Items[0];
-
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index: 4))).IsTrue();
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index: 31))).IsTrue();
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index: 32))).IsFalse();
-
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, index: 31))).IsTrue();
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, index: 32))).IsFalse();
-
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, index: 32, oldIndex: 31))).IsTrue();
-        await Assert.That(playlist.ShouldRefreshThumbnail(
-            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, index: 33, oldIndex: 32))).IsFalse();
+        finally
+        {
+            await controller.ShutdownQueueAsync();
+        }
     }
 
     [Test]
@@ -291,11 +331,33 @@ public class PlaylistViewModelTests
         Task loadTask = playlist.LoadThumbnailAsync();
         await readStarted.Task;
 
-        Task updateTask = playlist.UpdateThumbnailCollageAsync();
+        Task updateTask = playlist.RefreshThumbnailAsync();
         readGate.SetResult(new byte[] { 1, 2, 3 });
 
         await Task.WhenAll(loadTask, updateTask);
 
         await Assert.That(thumbnails.DeletedIds.Count).IsEqualTo(0);
+    }
+
+    private static Task RunOnDispatcherAsync(DispatcherQueue queue, Action action)
+    {
+        var tcs = new TaskCompletionSource();
+        if (!queue.TryEnqueue(() =>
+            {
+                try
+                {
+                    action();
+                    tcs.SetResult();
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }))
+        {
+            tcs.SetException(new InvalidOperationException("Failed to enqueue onto DispatcherQueue."));
+        }
+
+        return tcs.Task;
     }
 }

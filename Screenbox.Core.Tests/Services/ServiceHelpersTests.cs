@@ -61,4 +61,18 @@ public class ServiceHelpersTests
         PropertyViewModel propertyVm = provider.GetRequiredService<PropertyViewModel>();
         await Assert.That(propertyVm).IsNotNull();
     }
+
+    [Test]
+    public async Task PopulateCoreServices_ResolvesPlaylistThumbnailService()
+    {
+        ServiceCollection services = new();
+        ServiceHelpers.PopulateCoreServices(services);
+        services.AddLogging();
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        IPlaylistThumbnailService thumbnailService = provider.GetRequiredService<IPlaylistThumbnailService>();
+        await Assert.That(thumbnailService).IsNotNull();
+        await Assert.That(thumbnailService).IsTypeOf<PlaylistThumbnailService>();
+    }
 }
