@@ -121,7 +121,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
     }
 
-    private bool ShouldRefreshThumbnail(NotifyCollectionChangedEventArgs e)
+    internal bool ShouldRefreshThumbnail(NotifyCollectionChangedEventArgs e)
     {
         if (Items.Count == 0)
             return true;
@@ -129,13 +129,13 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         if (Thumbnail is null && e.Action == NotifyCollectionChangedAction.Add)
             return true;
 
-        const int cellCount = PlaylistThumbnailService.MaxArtworkCount;
+        const int scanCount = PlaylistThumbnailService.DefaultMaxScanCount;
         return e.Action switch
         {
-            NotifyCollectionChangedAction.Add => e.NewStartingIndex < cellCount,
-            NotifyCollectionChangedAction.Remove => e.OldStartingIndex < cellCount,
+            NotifyCollectionChangedAction.Add => e.NewStartingIndex < scanCount,
+            NotifyCollectionChangedAction.Remove => e.OldStartingIndex < scanCount,
             NotifyCollectionChangedAction.Replace or NotifyCollectionChangedAction.Move =>
-                e.NewStartingIndex < cellCount || e.OldStartingIndex < cellCount,
+                e.NewStartingIndex < scanCount || e.OldStartingIndex < scanCount,
             NotifyCollectionChangedAction.Reset => true,
             _ => false
         };
@@ -211,7 +211,11 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
             if (cachedBytes is not null)
             {
-                if (await TryApplyThumbnailBytesAsync(cachedBytes, version, ct))
+                ApplyThumbnailResult applyResult = await TryApplyThumbnailBytesAsync(cachedBytes, version, ct);
+                if (applyResult is ApplyThumbnailResult.Applied or ApplyThumbnailResult.Superseded)
+                    return;
+
+                if (version != _thumbnailVersion || ct.IsCancellationRequested)
                     return;
 
                 // Cached file is corrupt or unreadable; remove it and fall through to regeneration.
@@ -382,8 +386,21 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         await TryApplyThumbnailBytesAsync(encodedBytes, version, cancellationToken);
     }
 
-    private async Task<bool> TryApplyThumbnailBytesAsync(byte[] imageBytes, int version, CancellationToken cancellationToken)
+    private enum ApplyThumbnailResult
     {
+        Applied,
+        Superseded,
+        Failed
+    }
+
+    private async Task<ApplyThumbnailResult> TryApplyThumbnailBytesAsync(
+        byte[] imageBytes,
+        int version,
+        CancellationToken cancellationToken)
+    {
+        if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
+            return ApplyThumbnailResult.Superseded;
+
         try
         {
             BitmapImage bitmapImage = new()
@@ -396,15 +413,18 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             await bitmapImage.SetSourceAsync(memoryStream.AsRandomAccessStream());
 
             if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
-                return false;
+                return ApplyThumbnailResult.Superseded;
 
             Thumbnail = bitmapImage;
-            return true;
+            return ApplyThumbnailResult.Applied;
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
+            if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
+                return ApplyThumbnailResult.Superseded;
+
             _logger.LogWarning(ex, "Failed to decode cached thumbnail for playlist {PlaylistId}.", Id);
-            return false;
+            return ApplyThumbnailResult.Failed;
         }
     }
 

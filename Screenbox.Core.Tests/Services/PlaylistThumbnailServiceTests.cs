@@ -155,8 +155,10 @@ public class PlaylistThumbnailServiceTests
         await Assert.That(GetPixel(canvas4, canvasSize, 7, 7)).IsEqualTo(((byte)41, (byte)42, (byte)43, (byte)255));
     }
 
+    private readonly record struct TestArtwork(MediaViewModel Item);
+
     [Test]
-    public async Task SelectArtworkCandidates_DeduplicatesSameAlbumAndDuplicateLocations()
+    public async Task CollectDistinctArtworksAsync_DeduplicatesSameAlbumAndDuplicateLocations()
     {
         var track1 = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
         var track2 = CreateMusicMedia("https://example.com/a2.mp3", "Album A", "Artist 1");
@@ -165,26 +167,70 @@ public class PlaylistThumbnailServiceTests
         var video1Duplicate = CreateVideoMedia("https://example.com/v1.mp4");
         var video2 = CreateVideoMedia("https://example.com/v2.mp4");
 
-        var candidates = PlaylistThumbnailService.SelectArtworkCandidates(
-            new[] { track1, track2, track3, video1, video1Duplicate, video2 });
+        var collected = new List<TestArtwork>();
+        await PlaylistThumbnailService.CollectDistinctArtworksAsync<TestArtwork>(
+            new[] { track1, track2, track3, video1, video1Duplicate, video2 },
+            collected,
+            (item, _) => Task.FromResult<TestArtwork?>(new TestArtwork(item)));
 
-        await Assert.That(candidates.Count).IsEqualTo(4);
-        await Assert.That(candidates[0]).IsSameReferenceAs(track1);
-        await Assert.That(candidates[1]).IsSameReferenceAs(track3);
-        await Assert.That(candidates[2]).IsSameReferenceAs(video1);
-        await Assert.That(candidates[3]).IsSameReferenceAs(video2);
+        await Assert.That(collected.Count).IsEqualTo(4);
+        await Assert.That(collected[0].Item).IsSameReferenceAs(track1);
+        await Assert.That(collected[1].Item).IsSameReferenceAs(track3);
+        await Assert.That(collected[2].Item).IsSameReferenceAs(video1);
+        await Assert.That(collected[3].Item).IsSameReferenceAs(video2);
     }
 
     [Test]
-    public async Task SelectArtworkCandidates_RespectsMaxScanCount()
+    public async Task CollectDistinctArtworksAsync_RespectsMaxScanCount()
     {
         var items = Enumerable.Range(0, 10)
             .Select(i => CreateVideoMedia($"https://example.com/v{i}.mp4"))
             .ToArray();
 
-        var candidates = PlaylistThumbnailService.SelectArtworkCandidates(items, maxScanCount: 5);
+        var collected = new List<TestArtwork>();
+        await PlaylistThumbnailService.CollectDistinctArtworksAsync<TestArtwork>(
+            items,
+            collected,
+            (item, _) => Task.FromResult<TestArtwork?>(new TestArtwork(item)),
+            maxArtworkCount: 10,
+            maxScanCount: 5);
 
-        await Assert.That(candidates.Count).IsEqualTo(5);
+        await Assert.That(collected.Count).IsEqualTo(5);
+    }
+
+    [Test]
+    public async Task CollectDistinctArtworksAsync_UnreadableFirstAlbumTrack_FallsBackToReadableLaterTrackAndSkipsFailedDuplicateLocation()
+    {
+        var albumATrack1 = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
+        var albumATrack1Dup = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
+        var albumATrack2 = CreateMusicMedia("https://example.com/a2.mp3", "Album A", "Artist 1");
+        var albumATrack3 = CreateMusicMedia("https://example.com/a3.mp3", "Album A", "Artist 1");
+        var albumBTrack1 = CreateMusicMedia("https://example.com/b1.mp3", "Album B", "Artist 2");
+
+        var probedItems = new List<MediaViewModel>();
+        var collected = new List<TestArtwork>();
+
+        await PlaylistThumbnailService.CollectDistinctArtworksAsync<TestArtwork>(
+            new[] { albumATrack1, albumATrack1Dup, albumATrack2, albumATrack3, albumBTrack1 },
+            collected,
+            (item, _) =>
+            {
+                probedItems.Add(item);
+                if (ReferenceEquals(item, albumATrack1) || ReferenceEquals(item, albumATrack1Dup))
+                {
+                    return Task.FromResult<TestArtwork?>(null);
+                }
+
+                return Task.FromResult<TestArtwork?>(new TestArtwork(item));
+            });
+
+        await Assert.That(collected.Count).IsEqualTo(2);
+        await Assert.That(collected[0].Item).IsSameReferenceAs(albumATrack2);
+        await Assert.That(collected[1].Item).IsSameReferenceAs(albumBTrack1);
+        await Assert.That(probedItems.Count).IsEqualTo(3);
+        await Assert.That(probedItems[0]).IsSameReferenceAs(albumATrack1);
+        await Assert.That(probedItems[1]).IsSameReferenceAs(albumATrack2);
+        await Assert.That(probedItems[2]).IsSameReferenceAs(albumBTrack1);
     }
 
     [Test]

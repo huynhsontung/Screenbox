@@ -86,24 +86,17 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
         // Run thumbnail fetching, WIC decoding/encoding, pixel blitting, and file I/O off the UI thread.
         return await Task.Run(async () =>
         {
-            IReadOnlyList<MediaViewModel> candidates = SelectArtworkCandidates(items, DefaultMaxScanCount);
             List<(IRandomAccessStream Stream, BitmapDecoder Decoder)> sources = new(MaxArtworkCount);
 
             try
             {
-                foreach (MediaViewModel item in candidates)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    (IRandomAccessStream Stream, BitmapDecoder Decoder)? opened =
-                        await TryOpenDecoderAsync(item, cancellationToken).ConfigureAwait(false);
-                    if (opened is null)
-                        continue;
-
-                    sources.Add(opened.Value);
-                    if (sources.Count == MaxArtworkCount)
-                        break;
-                }
+                await CollectDistinctArtworksAsync(
+                    items,
+                    sources,
+                    TryOpenDecoderAsync,
+                    MaxArtworkCount,
+                    DefaultMaxScanCount,
+                    cancellationToken).ConfigureAwait(false);
 
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -218,28 +211,55 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     }
 
     /// <summary>
-    /// Selects candidate items for collage artwork, deduplicating tracks from the same album
-    /// and duplicate media locations so collages showcase distinct artwork.
+    /// Scans up to <paramref name="maxScanCount"/> items and collects up to <paramref name="maxArtworkCount"/>
+    /// readable artworks into <paramref name="destination"/>, deduplicating albums and media locations only after
+    /// an item supplies usable artwork so unreadable early tracks do not block later tracks on the same album.
     /// </summary>
-    internal static IReadOnlyList<MediaViewModel> SelectArtworkCandidates(
+    internal static async Task CollectDistinctArtworksAsync<TArtwork>(
         IReadOnlyList<MediaViewModel> items,
-        int maxScanCount = DefaultMaxScanCount)
+        List<TArtwork> destination,
+        Func<MediaViewModel, CancellationToken, Task<TArtwork?>> tryOpenArtworkAsync,
+        int maxArtworkCount = MaxArtworkCount,
+        int maxScanCount = DefaultMaxScanCount,
+        CancellationToken cancellationToken = default)
+        where TArtwork : struct
     {
         int scanLimit = Math.Min(items.Count, maxScanCount);
-        List<MediaViewModel> candidates = new(Math.Min(scanLimit, MaxArtworkCount * 2));
-        HashSet<string> seenKeys = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> selectedKeys = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> failedLocations = new(StringComparer.OrdinalIgnoreCase);
 
         for (int i = 0; i < scanLimit; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             MediaViewModel item = items[i];
             string? dedupeKey = GetArtworkDeduplicationKey(item);
-            if (dedupeKey is not null && !seenKeys.Add(dedupeKey))
+            if (dedupeKey is not null && selectedKeys.Contains(dedupeKey))
                 continue;
 
-            candidates.Add(item);
-        }
+            if (!string.IsNullOrWhiteSpace(item.Location) && failedLocations.Contains(item.Location))
+                continue;
 
-        return candidates;
+            TArtwork? opened = await tryOpenArtworkAsync(item, cancellationToken).ConfigureAwait(false);
+            if (opened is null)
+            {
+                if (!string.IsNullOrWhiteSpace(item.Location))
+                {
+                    failedLocations.Add(item.Location);
+                }
+
+                continue;
+            }
+
+            if (dedupeKey is not null)
+            {
+                selectedKeys.Add(dedupeKey);
+            }
+
+            destination.Add(opened.Value);
+            if (destination.Count == maxArtworkCount)
+                break;
+        }
     }
 
     /// <summary>

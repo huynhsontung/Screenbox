@@ -11,7 +11,10 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid Padding="4" RowSpacing="4">
+    <Grid
+        Padding="4"
+        Background="Transparent"
+        RowSpacing="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -23,7 +26,8 @@
             BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
             BorderThickness="1"
             CornerRadius="{x:Bind CornerRadius}"
-            FlowDirection="LeftToRight">
+            FlowDirection="LeftToRight"
+            IsHitTestVisible="False">
             <Grid.Background>
                 <ImageBrush
                     x:Name="ThumbnailImage"

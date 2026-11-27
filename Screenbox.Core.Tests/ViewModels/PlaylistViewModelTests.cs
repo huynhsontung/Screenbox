@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
@@ -239,5 +240,62 @@ public class PlaylistViewModelTests
 
         await Assert.That(await firstCanceled.Task).IsTrue();
         await Assert.That(thumbnails.BuildCallCount).IsEqualTo(2);
+    }
+
+    [Test]
+    public async Task ShouldRefreshThumbnail_ChecksFullScanWindow()
+    {
+        var playlist = CreatePlaylist();
+        for (int i = 0; i < 35; i++)
+        {
+            playlist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia($"song{i}")));
+        }
+
+        var item = playlist.Items[0];
+
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index: 4))).IsTrue();
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index: 31))).IsTrue();
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index: 32))).IsFalse();
+
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, index: 31))).IsTrue();
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, index: 32))).IsFalse();
+
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, index: 32, oldIndex: 31))).IsTrue();
+        await Assert.That(playlist.ShouldRefreshThumbnail(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, index: 33, oldIndex: 32))).IsFalse();
+    }
+
+    [Test]
+    public async Task LoadThumbnailAsync_SupersededWhileReadingCache_DoesNotDeleteCachedThumbnail()
+    {
+        var readStarted = new TaskCompletionSource();
+        var readGate = new TaskCompletionSource<byte[]?>();
+        var thumbnails = new FakePlaylistThumbnailService
+        {
+            OnRead = (_, _) =>
+            {
+                readStarted.TrySetResult();
+                return readGate.Task;
+            }
+        };
+
+        var playlist = CreatePlaylist(thumbnails);
+        playlist.Items.Add(new PlaylistItemViewModel(CreateDummyMedia("song1")));
+
+        Task loadTask = playlist.LoadThumbnailAsync();
+        await readStarted.Task;
+
+        Task updateTask = playlist.UpdateThumbnailCollageAsync();
+        readGate.SetResult(new byte[] { 1, 2, 3 });
+
+        await Task.WhenAll(loadTask, updateTask);
+
+        await Assert.That(thumbnails.DeletedIds.Count).IsEqualTo(0);
     }
 }
