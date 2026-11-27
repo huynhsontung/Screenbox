@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +13,7 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
@@ -92,12 +94,13 @@ public sealed partial class AlbumViewModel : ObservableRecipient,
     /// <summary>
     /// Loads the album's UI cover thumbnail from only its first track so large albums do not decode thumbnails for all songs.
     /// </summary>
-    public async Task LoadAlbumArtAsync()
+    public async Task LoadAlbumArtAsync(IMediaThumbnailService thumbnailService, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(thumbnailService);
         if (RelatedSongs.Count > 0)
         {
             // An album card only displays a single cover image, so only the first track's thumbnail is needed.
-            await RelatedSongs[0].LoadThumbnailAsync();
+            await RelatedSongs[0].LoadThumbnailAsync(thumbnailService, cancellationToken);
             UpdateProperties();
         }
     }

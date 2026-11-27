@@ -26,12 +26,16 @@ public class ServiceHelpersTests
 
         ISourceMetadataService sourceService = provider.GetRequiredService<ISourceMetadataService>();
         IPlaybackMetadataService playbackService = provider.GetRequiredService<IPlaybackMetadataService>();
+        IMediaThumbnailService thumbnailService = provider.GetRequiredService<IMediaThumbnailService>();
 
         await Assert.That(sourceService).IsNotNull();
         await Assert.That(sourceService).IsTypeOf<StorageMetadataService>();
 
         await Assert.That(playbackService).IsNotNull();
         await Assert.That(playbackService).IsTypeOf<VlcMetadataService>();
+
+        await Assert.That(thumbnailService).IsNotNull();
+        await Assert.That(thumbnailService).IsTypeOf<MediaThumbnailService>();
     }
 
     [Test]

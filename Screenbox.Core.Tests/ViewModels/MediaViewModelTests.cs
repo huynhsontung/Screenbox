@@ -11,6 +11,7 @@ using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.Media.Core;
+using Windows.Storage.Streams;
 using AudioTrack = Screenbox.Core.Playback.AudioTrack;
 using IMediaSource = Screenbox.Core.MediaSources.IMediaSource;
 using VideoTrack = Screenbox.Core.Playback.VideoTrack;
@@ -212,5 +213,44 @@ public partial class MediaViewModelTests
         await Assert.That(vm.MediaInfo.VideoProperties.Width).IsEqualTo(1920U);
         await Assert.That(vm.MediaInfo.VideoProperties.Height).IsEqualTo(1080U);
         await Assert.That(vm.MediaInfo.MusicProperties.Bitrate).IsEqualTo(192_000U);
+    }
+
+    private sealed class FakeThumbnailService : IMediaThumbnailService
+    {
+        public int CallCount { get; private set; }
+        public IMediaSource? LastSource { get; private set; }
+
+        public Task<IRandomAccessStream?> GetThumbnailStreamAsync(
+            IMediaSource source,
+            uint requestedSize = 1280,
+            CancellationToken cancellationToken = default)
+        {
+            CallCount++;
+            LastSource = source;
+            return Task.FromResult<IRandomAccessStream?>(null);
+        }
+    }
+
+    [Test]
+    public async Task LoadThumbnailAsync_NullService_ThrowsArgumentNullException()
+    {
+        var source = new UriMediaSource(new Uri("https://example.com/song.mp3"));
+        var vm = new MediaViewModel(source);
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() => vm.LoadThumbnailAsync(null!));
+    }
+
+    [Test]
+    public async Task LoadThumbnailAsync_DelegatesToThumbnailServiceWithMediaSource()
+    {
+        var source = new FileMediaSource(@"C:\music\track.mp3");
+        var vm = new MediaViewModel(source);
+        var thumbnailService = new FakeThumbnailService();
+
+        await vm.LoadThumbnailAsync(thumbnailService);
+
+        await Assert.That(thumbnailService.CallCount).IsEqualTo(1);
+        await Assert.That(thumbnailService.LastSource).IsSameReferenceAs(source);
+        await Assert.That(vm.Thumbnail).IsNull();
     }
 }

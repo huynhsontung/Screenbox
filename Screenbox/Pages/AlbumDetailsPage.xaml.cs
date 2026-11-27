@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Core;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Storage.Streams;
 using Windows.UI;
@@ -41,6 +42,7 @@ public sealed partial class AlbumDetailsPage : Page
 
     private float BackgroundVisualHeight => (float)(Header.ActualHeight * 2.5);
 
+    private readonly IMediaThumbnailService _thumbnailService;
     private CompositionPropertySet? _props;
     private CompositionPropertySet? _scrollerPropertySet;
     private Compositor? _compositor;
@@ -52,6 +54,7 @@ public sealed partial class AlbumDetailsPage : Page
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<AlbumDetailsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+        _thumbnailService = Ioc.Default.GetRequiredService<IMediaThumbnailService>();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -88,7 +91,7 @@ public sealed partial class AlbumDetailsPage : Page
         MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
         if (firstSong.Thumbnail != null)
         {
-            using var thumbnailSource = await firstSong.GetThumbnailSourceAsync();
+            using var thumbnailSource = await _thumbnailService.GetThumbnailStreamAsync(firstSong.Source);
             if (thumbnailSource == null) return;
             CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, thumbnailSource);
         }
@@ -105,7 +108,7 @@ public sealed partial class AlbumDetailsPage : Page
         if (e.PropertyName == nameof(MediaViewModel.Thumbnail) && media.Thumbnail != null)
         {
             media.PropertyChanged -= OnPropertyChanged;
-            using var thumbnailSource = await media.GetThumbnailSourceAsync();
+            using var thumbnailSource = await _thumbnailService.GetThumbnailStreamAsync(media.Source);
             if (thumbnailSource == null) return;
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
             CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, thumbnailSource);

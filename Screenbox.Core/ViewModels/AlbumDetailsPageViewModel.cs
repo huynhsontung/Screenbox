@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -30,10 +31,12 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
 
     public ObservableCollection<MediaViewModel> SortedItems { get; }
 
+    private readonly IMediaThumbnailService _thumbnailService;
     private List<MediaViewModel>? _itemList;
 
-    public AlbumDetailsPageViewModel()
+    public AlbumDetailsPageViewModel(IMediaThumbnailService thumbnailService)
     {
+        _thumbnailService = thumbnailService;
         SortedItems = new ObservableCollection<MediaViewModel>();
     }
 
@@ -72,7 +75,7 @@ public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
 
         if (value.AlbumArt == null)
         {
-            await value.LoadAlbumArtAsync();
+            await value.LoadAlbumArtAsync(_thumbnailService);
         }
     }
 
