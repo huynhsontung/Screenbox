@@ -423,7 +423,7 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         if (MediaPlayer?.PlaybackState is not (MediaPlaybackState.Paused or MediaPlaybackState.Playing)) return;
         try
         {
-            StorageFile file = await SaveSnapshotInternalAsync(MediaPlayer);
+            StorageFile file = await _filesService.SaveSnapshotAsync(MediaPlayer, _playerSettings.FrameCaptureFolderToken);
             Messenger.Send(new NotificationMessage(
                 NotificationLevel.Success,
                 NotificationKind.FrameSaved,
@@ -437,28 +437,6 @@ public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         catch (Exception e)
         {
             Messenger.Send(new NotificationMessage(NotificationLevel.Error, NotificationKind.FrameSaveFailed, message: e.Message));
-        }
-    }
-
-    private async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
-    {
-        StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
-            $"snapshot_{DateTimeOffset.Now.Ticks}",
-            CreationCollisionOption.FailIfExists);
-
-        try
-        {
-            if (!mediaPlayer.TryTakeSnapshot(tempFolder.Path))
-                throw new Exception("Media player failed to save snapshot");
-
-            StorageFile file = (await tempFolder.GetFilesAsync())[0];
-            StorageFolder destFolder = await _filesService.GetFrameCaptureFolderAsync(_playerSettings.FrameCaptureFolderToken);
-            return await file.CopyAsync(destFolder, $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
-                NameCollisionOption.GenerateUniqueName);
-        }
-        finally
-        {
-            await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }
 }

@@ -271,7 +271,10 @@ public partial class PropertyViewModelTests
         public IAsyncOperation<StorageFolder> PickFolderAsync() => throw new NotImplementedException();
         public Task OpenFileLocationAsync(string path) => Task.CompletedTask;
         public Task OpenFileLocationAsync(StorageFile file) => Task.CompletedTask;
+        public Task OpenFolderAsync(StorageFolder folder) => Task.CompletedTask;
         public string? AddToRecent(IStorageItem item) => null;
         public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token) => throw new NotImplementedException();
+        public string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null) => throw new NotImplementedException();
+        public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken) => throw new NotImplementedException();
     }
 }

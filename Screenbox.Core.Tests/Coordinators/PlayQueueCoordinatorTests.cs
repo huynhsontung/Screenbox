@@ -39,8 +39,11 @@ public sealed partial class PlayQueueCoordinatorTests
         public Windows.Foundation.IAsyncOperation<StorageFolder> PickFolderAsync() => throw new NotSupportedException();
         public Task OpenFileLocationAsync(string path) => Task.CompletedTask;
         public Task OpenFileLocationAsync(StorageFile file) => Task.CompletedTask;
+        public Task OpenFolderAsync(StorageFolder folder) => Task.CompletedTask;
         public string? AddToRecent(IStorageItem item) => null;
         public Windows.Foundation.IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token) => throw new NotSupportedException();
+        public string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null) => throw new NotSupportedException();
+        public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken) => throw new NotSupportedException();
     }
 
     private sealed partial class StubSmtcService : ISystemMediaTransportControlsService, IDisposable

@@ -15,7 +15,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.System;
 using Windows.UI.Xaml;
 
@@ -226,15 +225,8 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         StorageFolder? folder = await _filesService.PickFolderAsync();
         if (folder is null) return;
 
-        // Release the previous entry so the FutureAccessList (capped at 1000 items) doesn't accumulate stale folders.
-        string oldToken = PlayerSettings.FrameCaptureFolderToken;
-        if (!string.IsNullOrEmpty(oldToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(oldToken))
-        {
-            StorageApplicationPermissions.FutureAccessList.Remove(oldToken);
-        }
-
-        string newToken = StorageApplicationPermissions.FutureAccessList.Add(folder, "frame-capture");
-        PlayerSettings.FrameCaptureFolderToken = newToken;
+        PlayerSettings.FrameCaptureFolderToken =
+            _filesService.SetFrameCaptureFolder(folder, PlayerSettings.FrameCaptureFolderToken);
         FrameCaptureFolder = folder;
     }
 
@@ -244,7 +236,10 @@ public sealed partial class SettingsPageViewModel : ObservableRecipient
         try
         {
             await LoadFrameCaptureFolderAsync();
-            await Launcher.LaunchFolderAsync(FrameCaptureFolder);
+            if (FrameCaptureFolder is not null)
+            {
+                await _filesService.OpenFolderAsync(FrameCaptureFolder);
+            }
         }
         catch (Exception e)
         {

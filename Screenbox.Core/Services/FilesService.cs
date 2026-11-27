@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Playback;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -144,6 +145,12 @@ public sealed class FilesService : IFilesService
         }
     }
 
+    public async Task OpenFolderAsync(StorageFolder folder)
+    {
+        ArgumentNullException.ThrowIfNull(folder);
+        await Launcher.LaunchFolderAsync(folder);
+    }
+
     public string? AddToRecent(IStorageItem item)
     {
         string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
@@ -162,6 +169,47 @@ public sealed class FilesService : IFilesService
     public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token)
     {
         return GetFrameCaptureFolderFromTokenAsync(token).AsAsyncOperation();
+    }
+
+    public string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null)
+    {
+        ArgumentNullException.ThrowIfNull(folder);
+
+        // Release the previous entry so the FutureAccessList (capped at 1000 items) doesn't accumulate stale folders.
+        if (!string.IsNullOrEmpty(previousToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(previousToken))
+        {
+            StorageApplicationPermissions.FutureAccessList.Remove(previousToken);
+        }
+
+        return StorageApplicationPermissions.FutureAccessList.Add(folder, "frame-capture");
+    }
+
+    public async Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken)
+    {
+        ArgumentNullException.ThrowIfNull(mediaPlayer);
+
+        StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
+            $"snapshot_{DateTimeOffset.Now.Ticks}",
+            CreationCollisionOption.FailIfExists);
+
+        try
+        {
+            if (!mediaPlayer.TryTakeSnapshot(tempFolder.Path))
+            {
+                throw new Exception("Media player failed to save snapshot");
+            }
+
+            StorageFile file = (await tempFolder.GetFilesAsync())[0];
+            StorageFolder destFolder = await GetFrameCaptureFolderAsync(frameCaptureFolderToken);
+            return await file.CopyAsync(
+                destFolder,
+                $"Screenbox_{DateTimeOffset.Now:yyyyMMdd_HHmmss}{file.FileType}",
+                NameCollisionOption.GenerateUniqueName);
+        }
+        finally
+        {
+            await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+        }
     }
 
     private static async Task<StorageFolder> GetFrameCaptureFolderFromTokenAsync(string token)
