@@ -141,6 +141,77 @@ public sealed class QueueService : IQueueService
         return await ParseQueueAsync(media, cancellationToken);
     }
 
+    public async Task<QueueSession?> TryResolveCollectionQueueAsync(
+        string sourcePath,
+        string? token = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(sourcePath))
+        {
+            return null;
+        }
+
+        try
+        {
+            if (IsPlaylistOriginPath(sourcePath))
+            {
+                StorageFile? file = await FilesHelpers.TryGetFileFromTokenAsync(token)
+                    ?? await FilesHelpers.TryGetFileFromPathAsync(sourcePath);
+                if (file is not null)
+                {
+                    return await ParseQueueAsync(file, cancellationToken);
+                }
+
+                if (Uri.TryCreate(sourcePath, UriKind.Absolute, out Uri? uri) && !uri.IsFile)
+                {
+                    return await ParseQueueAsync(uri, cancellationToken);
+                }
+
+                return null;
+            }
+
+            StorageFolder? folder = await FilesHelpers.TryGetFolderFromTokenAsync(token)
+                ?? await FilesHelpers.TryGetFolderFromPathAsync(sourcePath);
+            return folder is not null
+                ? await TryCreateQueueAsync(new IStorageItem[] { folder }, cancellationToken: cancellationToken)
+                : null;
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Determines whether <paramref name="sourcePath"/> refers to a playlist file or remote URI
+    /// rather than a local folder.
+    /// </summary>
+    public static bool IsPlaylistOriginPath(string sourcePath)
+    {
+        if (string.IsNullOrEmpty(sourcePath))
+        {
+            return false;
+        }
+
+        if (Uri.TryCreate(sourcePath, UriKind.Absolute, out Uri? uri) && !uri.IsFile)
+        {
+            return true;
+        }
+
+        try
+        {
+            return FilesHelpers.IsSupportedPlaylist(Path.GetExtension(sourcePath));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private async Task<QueueSession> CreateSingleFileQueueAsync(
         StorageFile file,
         StorageFileQueryResult? neighboringFilesQuery,

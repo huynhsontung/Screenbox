@@ -43,8 +43,21 @@ public sealed class MediaCollectionViewModelTests
         public Task<QueueSession> ParseQueueAsync(StorageFile file, CancellationToken cancellationToken = default) =>
             Task.FromResult(_session ?? new QueueSession());
 
+        public string? LastResolvedPath { get; private set; }
+        public string? LastResolvedToken { get; private set; }
+
         public Task<QueueSession> ParseQueueAsync(Uri uri, CancellationToken cancellationToken = default) =>
             Task.FromResult(_session ?? new QueueSession());
+
+        public Task<QueueSession?> TryResolveCollectionQueueAsync(
+            string sourcePath,
+            string? token = null,
+            CancellationToken cancellationToken = default)
+        {
+            LastResolvedPath = sourcePath;
+            LastResolvedToken = token;
+            return Task.FromResult(_session);
+        }
 
         public Task<QueueSession> AddNeighboringFilesAsync(QueueSession session, CancellationToken cancellationToken = default) =>
             Task.FromResult(session);
@@ -131,5 +144,28 @@ public sealed class MediaCollectionViewModelTests
 
         await collection.PlayAsync();
         await Assert.That(toggledPlayPause).IsTrue();
+    }
+
+    [Test]
+    public async Task GetPlayableItemsAsync_DelegatesResolutionToQueueService()
+    {
+        var messenger = new StrongReferenceMessenger();
+        var track1 = CreateDummyMedia("track1");
+        var liveSession = new QueueSession(0, new[] { track1 });
+        var queueService = new StubQueueService(liveSession);
+
+        var collection = new MediaCollectionViewModel(
+            "Rock",
+            @"C:\Music\Rock",
+            queueService,
+            token: "tok-rock",
+            messenger: messenger);
+
+        IReadOnlyList<MediaViewModel> items = await collection.GetPlayableItemsAsync();
+
+        await Assert.That(items.Count).IsEqualTo(1);
+        await Assert.That(items[0]).IsSameReferenceAs(track1);
+        await Assert.That(queueService.LastResolvedPath).IsEqualTo(@"C:\Music\Rock");
+        await Assert.That(queueService.LastResolvedToken).IsEqualTo("tok-rock");
     }
 }
