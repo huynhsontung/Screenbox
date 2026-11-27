@@ -72,4 +72,19 @@ public partial class StorageMetadataServiceTests
             }
         }
     }
+
+    [Test]
+    public async Task GetSummaryPropertiesAsync_WithNullOrNonFileSource_ShouldValidateOrReturnEmpty()
+    {
+        var service = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+
+        await Assert.That(async () => await service.GetSummaryPropertiesAsync((IMediaSource)null!)).Throws<ArgumentNullException>();
+        await Assert.That(async () => await service.GetSummaryPropertiesAsync((StorageFile)null!)).Throws<ArgumentNullException>();
+
+        var uriSource = new UriMediaSource(new Uri("https://example.com/song.mp3"));
+        (string? artist, TimeSpan duration) = await service.GetSummaryPropertiesAsync(uriSource);
+
+        await Assert.That(artist).IsNull();
+        await Assert.That(duration).IsEqualTo(TimeSpan.Zero);
+    }
 }

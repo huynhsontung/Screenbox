@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -29,15 +28,19 @@ public sealed partial class StorageItemViewModel : ObservableObject
     [ObservableProperty] public partial uint ItemCount { get; set; }
 
     private readonly IFilesService _filesService;
+    private readonly ISourceMetadataService _sourceMetadataService;
     private readonly ILogger<StorageItemViewModel> _logger;
 
     [DynamicWindowsRuntimeCast(typeof(StorageFile))]
-    public StorageItemViewModel(IFilesService filesService,
+    public StorageItemViewModel(
+        IFilesService filesService,
+        ISourceMetadataService sourceMetadataService,
         MediaViewModelFactory mediaFactory,
         ILogger<StorageItemViewModel> logger,
         IStorageItem storageItem)
     {
         _filesService = filesService;
+        _sourceMetadataService = sourceMetadataService;
         _logger = logger;
         StorageItem = storageItem;
         CaptionText = string.Empty;
@@ -68,29 +71,22 @@ public sealed partial class StorageItemViewModel : ObservableObject
                 case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
                     ItemCount = await _filesService.GetSupportedItemCountAsync(folder);
                     break;
-                case StorageFile file:
-                    if (!string.IsNullOrEmpty(Media?.Caption))
+                case StorageFile when Media is not null:
+                    if (!string.IsNullOrEmpty(Media.Caption))
                     {
-                        CaptionText = Media?.Caption ?? string.Empty;
+                        CaptionText = Media.Caption;
                     }
                     else
                     {
-                        string[] additionalPropertyKeys =
-                        {
-                            SystemProperties.Music.Artist,
-                            SystemProperties.Media.Duration
-                        };
+                        (string? artist, TimeSpan duration) =
+                            await _sourceMetadataService.GetSummaryPropertiesAsync(Media.Source);
 
-                        IDictionary<string, object> additionalProperties =
-                            await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
-
-                        if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
+                        if (!string.IsNullOrEmpty(artist))
                         {
-                            CaptionText = string.Join(", ", contributingArtists);
+                            CaptionText = artist;
                         }
-                        else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                        else if (duration > TimeSpan.Zero)
                         {
-                            TimeSpan duration = TimeSpan.FromTicks((long)ticks);
                             CaptionText = Humanizer.ToDuration(duration);
                         }
                     }

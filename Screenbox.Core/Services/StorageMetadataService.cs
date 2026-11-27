@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,12 @@ namespace Screenbox.Core.Services;
 /// </summary>
 public sealed class StorageMetadataService : ISourceMetadataService
 {
+    private static readonly string[] SummaryPropertyKeys =
+    [
+        SystemProperties.Music.Artist,
+        SystemProperties.Media.Duration
+    ];
+
     private readonly ILogger<StorageMetadataService> _logger;
 
     public StorageMetadataService(ILogger<StorageMetadataService> logger)
@@ -113,6 +120,81 @@ public sealed class StorageMetadataService : ISourceMetadataService
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Retrieves lightweight display summary properties (artist and duration) from <paramref name="file"/>.
+    /// </summary>
+    /// <param name="file">The storage file to inspect.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>The extracted artist name (if any) and duration.</returns>
+    public async Task<(string? Artist, TimeSpan Duration)> GetSummaryPropertiesAsync(
+        StorageFile file,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        if (cancellationToken.IsCancellationRequested || !file.IsAvailable)
+        {
+            return (null, TimeSpan.Zero);
+        }
+
+        try
+        {
+            IDictionary<string, object> additionalProperties =
+                await file.Properties.RetrievePropertiesAsync(SummaryPropertyKeys);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return (null, TimeSpan.Zero);
+            }
+
+            string? artist = additionalProperties.TryGetValue(SystemProperties.Music.Artist, out object? artistObj) &&
+                             artistObj is string[] { Length: > 0 } contributingArtists
+                ? string.Join(", ", contributingArtists)
+                : null;
+
+            TimeSpan duration = additionalProperties.TryGetValue(SystemProperties.Media.Duration, out object? durationObj) &&
+                                durationObj is ulong ticks and > 0
+                ? TimeSpan.FromTicks((long)ticks)
+                : TimeSpan.Zero;
+
+            return (artist, duration);
+        }
+        catch (OperationCanceledException)
+        {
+            return (null, TimeSpan.Zero);
+        }
+        catch (Exception e) when (IsExpectedStoragePropertiesHResult(e.HResult))
+        {
+            // Expected transient WinRT failures while querying StorageFile properties.
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to load summary properties for file type '{FileType}'.", file.FileType);
+        }
+
+        return (null, TimeSpan.Zero);
+    }
+
+    /// <inheritdoc/>
+    public async Task<(string? Artist, TimeSpan Duration)> GetSummaryPropertiesAsync(
+        IMediaSource source,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        if (cancellationToken.IsCancellationRequested || source is not IFileMediaSource fileSource)
+        {
+            return (null, TimeSpan.Zero);
+        }
+
+        StorageFile? file = fileSource.StorageFile ?? await fileSource.GetStorageFileAsync();
+        if (file is null)
+        {
+            return (null, TimeSpan.Zero);
+        }
+
+        return await GetSummaryPropertiesAsync(file, cancellationToken);
     }
 
     private static bool IsExpectedStoragePropertiesHResult(int hresult)
