@@ -36,6 +36,10 @@ public class ServiceHelpersTests
 
         await Assert.That(thumbnailService).IsNotNull();
         await Assert.That(thumbnailService).IsTypeOf<MediaThumbnailService>();
+
+        ISubtitleService subtitleService = provider.GetRequiredService<ISubtitleService>();
+        await Assert.That(subtitleService).IsNotNull();
+        await Assert.That(subtitleService).IsTypeOf<SubtitleService>();
     }
 
     [Test]

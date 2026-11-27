@@ -1,24 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.Logging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using Screenbox.Core.MediaSources;
-using Windows.Storage.Search;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -71,20 +67,22 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
     public partial TrackPickerDisplayMode DisplayMode { get; set; } = TrackPickerDisplayMode.Composite;
 
     private readonly IFilesService _filesService;
+    private readonly ISubtitleService _subtitleService;
     private readonly PlaybackSettingsContext _playbackSettings;
     private readonly PlayerContext _playerContext;
-    private readonly ILogger<CompositeTrackPickerViewModel> _logger;
     private bool _flyoutOpened;
     private CancellationTokenSource? _cts;
 
-    public CompositeTrackPickerViewModel(PlayerContext playerContext, IFilesService filesService,
-        PlaybackSettingsContext playbackSettings,
-        ILogger<CompositeTrackPickerViewModel> logger)
+    public CompositeTrackPickerViewModel(
+        PlayerContext playerContext,
+        IFilesService filesService,
+        ISubtitleService subtitleService,
+        PlaybackSettingsContext playbackSettings)
     {
         _filesService = filesService;
+        _subtitleService = subtitleService;
         _playbackSettings = playbackSettings;
         _playerContext = playerContext;
-        _logger = logger;
         SubtitleTracks = new ObservableCollection<string>();
         AudioTracks = new ObservableCollection<string>();
         VideoTracks = new ObservableCollection<string>();
@@ -112,7 +110,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
 
         if (!subtitleInitialized)
         {
-            IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file, message.NeighboringFilesQuery);
+            IReadOnlyList<StorageFile> subtitles = await _subtitleService.FindSubtitlesForFileAsync(file, message.NeighboringFilesQuery);
             foreach (StorageFile subtitleFile in subtitles)
             {
                 // Preload subtitle but don't select it
@@ -138,110 +136,11 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
             }
         }
 
-        TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _playbackSettings.SubtitleLanguage);
-    }
-
-    private static void TrySetSubtitleFromLanguage(ISubtitleTrackList subtitleTrackList, string persistentLanguage)
-    {
-        // Check persistent subtitle value to try and select a subtitle
-        if (!string.IsNullOrEmpty(persistentLanguage))
+        int preferredIndex = _subtitleService.FindPreferredSubtitleIndex(playbackSubtitleTrackList, _playbackSettings.SubtitleLanguage);
+        if (preferredIndex >= 0)
         {
-            // If there is only one subtitle then select it
-            if (subtitleTrackList.Count == 1)
-            {
-                subtitleTrackList.SelectedIndex = 0;
-                return;
-            }
-
-            // Try to select the subtitle with the same language as the persistent value
-            var langPreferences = persistentLanguage.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            foreach (string language in langPreferences)
-            {
-                for (int i = 0; i < subtitleTrackList.Count; i++)
-                {
-                    var subtitleTrack = subtitleTrackList[i];
-                    // Try to match language tag first, then language name
-                    if (language == subtitleTrack.LanguageTag || language.Equals(subtitleTrack.Language, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        subtitleTrackList.SelectedIndex = i;
-                        break;
-                    }
-                }
-            }
+            playbackSubtitleTrackList.SelectedIndex = preferredIndex;
         }
-    }
-
-    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile, StorageFileQueryResult? neighboringFilesQuery = null)
-    {
-        IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
-        string rawName = Path.GetFileNameWithoutExtension(sourceFile.Name);
-
-        // 1. Define your separators
-        char[] separators = [' ', '.', '_', '-', '[', ']', '(', ')', '{', '}', ',', ';', '"', '\''];
-
-        // 2. Break the name into tokens, removing empty entries to avoid double wildcards (**)
-        string[] tokens = rawName.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-        if (tokens.Length == 0) return subtitles;
-
-        // If we have a neighboring files query from the playlist, use it and filter for subtitles
-        if (neighboringFilesQuery != null)
-        {
-            try
-            {
-                var escapedTokens = tokens.Select(token => Regex.Escape(token)).ToList();
-
-                // STRATEGY A: Strict "Skeleton" Match
-                var strictRegexPattern = "^" + string.Join(".*", escapedTokens) + ".*$";
-                IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(0, 50);
-                subtitles = files.Where(f =>
-                       f.IsSupportedSubtitle() && Regex.IsMatch(f.Name, strictRegexPattern, RegexOptions.IgnoreCase))
-                    .ToArray();
-                if (subtitles.Count == 0 && tokens.Length > 1)
-                {
-                    // STRATEGY B: Fallback (Partial Tokens Match)
-                    var fallbackPattern = "^" + string.Join(".*", escapedTokens.Take(Math.Min(escapedTokens.Count - 1, 3))) + ".*$";
-                    subtitles = files.Where(f =>
-                            f.IsSupportedSubtitle() && Regex.IsMatch(f.Name, fallbackPattern, RegexOptions.IgnoreCase))
-                        .ToArray();
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Failed to enumerate matching subtitle files for file type '{FileType}'.", sourceFile.FileType);
-            }
-        }
-        else
-        {
-            // Fallback to creating a new query with subtitle filter
-
-            // STRATEGY A: Strict "Skeleton" Match
-            // "Iron.Man.2008" -> "Iron*Man*2008*"
-            string strictPattern = string.Join("*", tokens) + "*";
-
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-            {
-                ApplicationSearchFilter = $"System.FileName:~\"{strictPattern}\""
-            };
-
-            var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
-            if (query != null)
-            {
-                subtitles = await query.GetFilesAsync(0, 50);
-
-                // STRATEGY B: Fallback (Partial Tokens Match)
-                // If "Iron*Man*2008*" fails, try "Iron*Man*"
-                if (subtitles.Count == 0 && tokens.Length > 1)
-                {
-                    string fallbackPattern = string.Join("*", tokens.Take(Math.Min(tokens.Length - 1, 3))) + "*";
-                    options.ApplicationSearchFilter = $"System.FileName:~\"{fallbackPattern}\"";
-                    query.ApplyNewQueryOptions(options);
-                    subtitles = await query.GetFilesAsync(0, 50);
-                }
-            }
-        }
-
-        return subtitles;
     }
 
     partial void OnSubtitleTrackIndexChanged(int value)
