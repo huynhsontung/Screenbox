@@ -149,11 +149,11 @@
     <value>المدة الإجمالية</value>
   </data>
   <data name="ChapterPluralized_One" xml:space="preserve">
-    <value>Chapter</value>
+    <value>الفصل</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterPluralized_Other" xml:space="preserve">
-    <value>Chapters</value>
+    <value>الفصول</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ChapterName" xml:space="preserve">
@@ -319,7 +319,7 @@
     <value>نوع غير معروف</value>
   </data>
   <data name="AllGenres" xml:space="preserve">
-    <value>All genres</value>
+    <value>كل الأنواع</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>إضافة مجلد</value>
@@ -367,7 +367,7 @@
     <value>فتح موقع الملف</value>
   </data>
   <data name="OpenInFileExplorer" xml:space="preserve">
-    <value>Open in File Explorer</value>
+    <value>فتح في مستكشف الملفات</value>
   </data>
   <data name="OpenWith" xml:space="preserve">
     <value>افتح ب‍استخدام</value>
@@ -560,6 +560,10 @@
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
     <value>نتائج الفيديو لـ "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>نتائج البحث في قائمة التشغيل عن "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -876,7 +880,7 @@
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="FilterByGenreAutomationName" xml:space="preserve">
-    <value>Filter by {0} genre selected</value>
+    <value>تصفية حسب نوع {0} المحدد</value>
     <comment>#Format[String genre]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -951,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>إضافة جميع الملفات في المجلد إلى قائمة الانتظار</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>استخدام إعدادات النظام</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>داكن</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>فاتح</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>تغيير نظام الألوان العام للتطبيق</value>
   </data>
@@ -988,7 +983,7 @@
     <value>نقطة</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value/>
+    <value>الدقة الفائقة</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>عرض اسم الفصل عندما يكون متاحًا</value>
@@ -1063,16 +1058,16 @@
     <value>زيادة السرعة</value>
   </data>
   <data name="NextTrack" xml:space="preserve">
-    <value>Next track</value>
+    <value>المقطع التالي</value>
   </data>
   <data name="PreviousTrack" xml:space="preserve">
-    <value>Previous track</value>
+    <value>المقطع السابق</value>
   </data>
   <data name="NextChapter" xml:space="preserve">
-    <value>Next chapter</value>
+    <value>الفصل التالي</value>
   </data>
   <data name="PreviousChapter" xml:space="preserve">
-    <value>Previous chapter</value>
+    <value>الفصل السابق</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
     <value>إضافة إلى قائمة التشغيل</value>
@@ -1133,11 +1128,11 @@
     <comment>#Format[String playlistName]</comment>
   </data>
   <data name="PlaylistsSelected_One" xml:space="preserve">
-    <value>{0} playlist selected</value>
+    <value>تم تحديد قائمة تشغيل {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="PlaylistsSelected_Other" xml:space="preserve">
-    <value>{0} playlists selected</value>
+    <value>تم تحديد قوائم تشغيل متعددة {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
@@ -1164,37 +1159,46 @@
     <value>قم بإنشاء قائمة التشغيل الأولى الخاصة بك لتنظيم الفيديوهات والموسيقى المفضلة لديك.</value>
   </data>
   <data name="NoPlaylistItems" xml:space="preserve">
-    <value>There are no items in this playlist.</value>
+    <value>لا توجد أي عناصر في قائمة التشغيل هذه.</value>
   </data>
   <data name="SettingsFrameCaptureLocationHeader" xml:space="preserve">
-    <value>Frame captures will save to</value>
+    <value>سيتم حفظ الإطارات الملتقطة إلى</value>
   </data>
   <data name="SettingsFrameCaptureLocationDescription" xml:space="preserve">
-    <value>Frame captures location</value>
+    <value>مسار الإطارات الملتقطة</value>
   </data>
   <data name="ChangeFolder" xml:space="preserve">
-    <value>Change folder</value>
+    <value>تغيير المجلد</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>تغييـر</value>
   </data>
   <data name="AspectRatioStatusMessage" xml:space="preserve">
-    <value>Aspect ratio: {0}</value>
+    <value>نسبة العرض إلى الارتفاع: {0}</value>
     <comment>#Format[String ratio]</comment>
   </data>
   <data name="AudioOptions" xml:space="preserve">
-    <value>Audio options</value>
+    <value>خيارات الصوت</value>
   </data>
   <data name="SubtitleOptions" xml:space="preserve">
-    <value>Subtitle options</value>
+    <value>خيارات الترجمة</value>
   </data>
   <data name="DecreaseValue" xml:space="preserve">
-    <value>Decrease {0}</value>
+    <value>تقليل {0}</value>
     <comment>#Format[String value]</comment>
   </data>
   <data name="IncreaseValue" xml:space="preserve">
-    <value>Increase {0}</value>
+    <value>رفع {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>استخدام إعدادات النظام</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>داكن</value>
   </data>
 </root>
 

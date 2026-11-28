@@ -120,6 +120,10 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>Screenbox</value>
   </data>
+  <data name="FriendlyAppDisplayName" xml:space="preserve">
+    <value>Screenbox Media Player</value>
+    <comment>Do not translate "Screenbox". Only translate the "Media Player" portion.</comment>
+  </data>
   <data name="AppShortName" xml:space="preserve">
     <value>Screenbox</value>
   </data>
@@ -219,7 +223,7 @@
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value/>
+    <value>NIST SPHERE Ljud</value>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">

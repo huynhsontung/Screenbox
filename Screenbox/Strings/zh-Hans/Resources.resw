@@ -562,6 +562,10 @@
     <value>关于 "{0}" 的视频搜索结果</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SearchResultPlaylistHeader" xml:space="preserve">
+    <value>{0}的播放列表搜索结果</value>
+    <comment>#Format[String query]</comment>
+  </data>
   <data name="AlbumsCount_None" xml:space="preserve">
     <value>无专辑</value>
     <comment>#Format[Plural Int]</comment>
@@ -951,15 +955,6 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>将文件夹中的所有文件添加到队列</value>
   </data>
-  <data name="ThemeAuto" xml:space="preserve">
-    <value>使用系统设置</value>
-  </data>
-  <data name="ThemeDark" xml:space="preserve">
-    <value>深色</value>
-  </data>
-  <data name="ThemeLight" xml:space="preserve">
-    <value>浅色</value>
-  </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>更改应用程序的整体配色方案</value>
   </data>
@@ -1195,6 +1190,15 @@
   <data name="IncreaseValue" xml:space="preserve">
     <value>增加 {0}</value>
     <comment>#Format[String value]</comment>
+  </data>
+  <data name="ElementThemeDefault" xml:space="preserve">
+    <value>跟随系统</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>深色</value>
   </data>
 </root>
 

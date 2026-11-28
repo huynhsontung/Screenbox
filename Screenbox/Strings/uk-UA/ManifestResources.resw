@@ -120,6 +120,10 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>Screenbox</value>
   </data>
+  <data name="FriendlyAppDisplayName" xml:space="preserve">
+    <value>Медіапрогравач Screenbox</value>
+    <comment>Do not translate "Screenbox". Only translate the "Media Player" portion.</comment>
+  </data>
   <data name="AppShortName" xml:space="preserve">
     <value>Screenbox</value>
   </data>
