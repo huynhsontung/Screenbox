@@ -18,7 +18,7 @@ public class PlaylistServiceTests
         public Task<byte[]?> ReadThumbnailAsync(string playlistId, CancellationToken cancellationToken = default) =>
             Task.FromResult<byte[]?>(null);
 
-        public Task<byte[]?> BuildAndCacheThumbnailAsync(string playlistId, IReadOnlyList<MediaViewModel> items, CancellationToken cancellationToken = default) =>
+        public Task<byte[]?> BuildAndCacheThumbnailAsync(string playlistId, IReadOnlyList<PlaylistThumbnailItem> items, CancellationToken cancellationToken = default) =>
             Task.FromResult<byte[]?>(null);
 
         public Task DeleteThumbnailAsync(string playlistId)

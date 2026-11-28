@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Screenbox.Core.ViewModels;
+using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Services;
 
@@ -26,12 +26,12 @@ public interface IPlaylistThumbnailService
     /// if no artwork is available.
     /// </summary>
     /// <param name="playlistId">The ID of the playlist.</param>
-    /// <param name="items">Snapshot of media items in the playlist.</param>
+    /// <param name="items">Snapshot of media source candidates in the playlist.</param>
     /// <param name="cancellationToken">A token to cancel generation and caching.</param>
     /// <returns>The encoded thumbnail bytes, or <see langword="null"/> if no artwork could be generated.</returns>
     Task<byte[]?> BuildAndCacheThumbnailAsync(
         string playlistId,
-        IReadOnlyList<MediaViewModel> items,
+        IReadOnlyList<PlaylistThumbnailItem> items,
         CancellationToken cancellationToken = default);
 
     /// <summary>

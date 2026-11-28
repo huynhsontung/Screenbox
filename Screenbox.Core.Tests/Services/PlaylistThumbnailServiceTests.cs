@@ -5,12 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Screenbox.Core.Enums;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
-using Screenbox.Core.ViewModels;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
@@ -18,25 +16,24 @@ namespace Screenbox.Core.Tests.Services;
 
 public class PlaylistThumbnailServiceTests
 {
-    private static MediaViewModel CreateMusicMedia(string location, string album, string albumArtist = "Artist")
+    private sealed class FakeMediaThumbnailService : IMediaThumbnailService
     {
-        var info = new MediaInfo(MediaPlaybackType.Music);
-        info.MusicProperties.Album = album;
-        info.MusicProperties.AlbumArtist = albumArtist;
+        private readonly Func<IMediaSource, uint, CancellationToken, Task<IRandomAccessStream?>> _handler;
 
-        return new MediaViewModel(new UriMediaSource(new Uri(location)))
+        public FakeMediaThumbnailService(Func<IMediaSource, uint, CancellationToken, Task<IRandomAccessStream?>> handler)
         {
-            Name = Path.GetFileNameWithoutExtension(location),
-            MediaInfo = info
-        };
+            _handler = handler;
+        }
+
+        public Task<IRandomAccessStream?> GetThumbnailStreamAsync(
+            IMediaSource source,
+            uint requestedSize = 1280,
+            CancellationToken cancellationToken = default) =>
+            _handler(source, requestedSize, cancellationToken);
     }
 
-    private static MediaViewModel CreateVideoMedia(string location) =>
-        new(new UriMediaSource(new Uri(location)))
-        {
-            Name = Path.GetFileNameWithoutExtension(location),
-            MediaInfo = new MediaInfo(MediaPlaybackType.Video)
-        };
+    private static PlaylistThumbnailItem CreateItem(string location, string? groupKey = null) =>
+        new(new UriMediaSource(new Uri(location)), groupKey);
 
     private static async Task<IRandomAccessStream> CreateSolidPngStreamAsync(
         uint width,
@@ -107,26 +104,26 @@ public class PlaylistThumbnailServiceTests
         (byte R, byte G, byte B) blue = (40, 80, 220);
         (byte R, byte G, byte B) yellow = (230, 210, 40);
 
-        var v1 = CreateVideoMedia("https://example.com/v1.mp4");
-        var v2 = CreateVideoMedia("https://example.com/v2.mp4");
-        var v3 = CreateVideoMedia("https://example.com/v3.mp4");
-        var v4 = CreateVideoMedia("https://example.com/v4.mp4");
+        var v1 = CreateItem("https://example.com/v1.mp4");
+        var v2 = CreateItem("https://example.com/v2.mp4");
+        var v3 = CreateItem("https://example.com/v3.mp4");
+        var v4 = CreateItem("https://example.com/v4.mp4");
 
         var colorsByLocation = new Dictionary<string, (uint W, uint H, (byte R, byte G, byte B) Color)>
         {
-            [v1.Location] = (600, 200, red),
-            [v2.Location] = (200, 200, green),
-            [v3.Location] = (200, 200, blue),
-            [v4.Location] = (200, 200, yellow)
+            [v1.Source.Location] = (600, 200, red),
+            [v2.Source.Location] = (200, 200, green),
+            [v3.Source.Location] = (200, 200, blue),
+            [v4.Source.Location] = (200, 200, yellow)
         };
 
-        var service = new PlaylistThumbnailService(
-            NullLogger<PlaylistThumbnailService>.Instance,
-            async (item, _, _) =>
-            {
-                var spec = colorsByLocation[item.Location];
-                return await CreateSolidPngStreamAsync(spec.W, spec.H, spec.Color);
-            })
+        var mediaThumbnails = new FakeMediaThumbnailService(async (source, _, _) =>
+        {
+            var spec = colorsByLocation[source.Location];
+            return await CreateSolidPngStreamAsync(spec.W, spec.H, spec.Color);
+        });
+
+        var service = new PlaylistThumbnailService(mediaThumbnails, NullLogger<PlaylistThumbnailService>.Instance)
         {
             CacheFolderPath = fixture.DirectoryPath
         };
@@ -171,37 +168,37 @@ public class PlaylistThumbnailServiceTests
     }
 
     [Test]
-    public async Task BuildAndCacheThumbnailAsync_UnreadableFirstAlbumTrack_FallsBackToLaterTrackAndDeduplicatesAlbumsAndLocations()
+    public async Task BuildAndCacheThumbnailAsync_UnreadableFirstGroupItem_FallsBackToLaterItemAndDeduplicatesGroupsAndLocations()
     {
         using var fixture = new TestDirectoryFixture();
         (byte R, byte G, byte B) red = (220, 40, 40);
         (byte R, byte G, byte B) green = (40, 200, 60);
         (byte R, byte G, byte B) blue = (40, 80, 220);
 
-        var albumATrack1 = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
-        var albumATrack1Dup = CreateMusicMedia("https://example.com/a1.mp3", "Album A", "Artist 1");
-        var albumATrack2 = CreateMusicMedia("https://example.com/a2.mp3", "Album A", "Artist 1");
-        var albumATrack3 = CreateMusicMedia("https://example.com/a3.mp3", "Album A", "Artist 1");
-        var video1 = CreateVideoMedia("https://example.com/v1.mp4");
-        var video1Dup = CreateVideoMedia("https://example.com/v1.mp4");
+        var albumATrack1 = CreateItem("https://example.com/a1.mp3", groupKey: "album:a");
+        var albumATrack1Dup = CreateItem("https://example.com/a1.mp3", groupKey: "album:a");
+        var albumATrack2 = CreateItem("https://example.com/a2.mp3", groupKey: "album:a");
+        var albumATrack3 = CreateItem("https://example.com/a3.mp3", groupKey: "album:a");
+        var video1 = CreateItem("https://example.com/v1.mp4");
+        var video1Dup = CreateItem("https://example.com/v1.mp4");
 
-        var probedItems = new List<MediaViewModel>();
-        var service = new PlaylistThumbnailService(
-            NullLogger<PlaylistThumbnailService>.Instance,
-            async (item, _, _) =>
-            {
-                probedItems.Add(item);
-                if (ReferenceEquals(item, albumATrack1) || ReferenceEquals(item, albumATrack1Dup))
-                    return null;
-                if (ReferenceEquals(item, albumATrack2))
-                    return await CreateSolidPngStreamAsync(200, 200, red);
-                if (ReferenceEquals(item, albumATrack3))
-                    return await CreateSolidPngStreamAsync(200, 200, green);
-                if (ReferenceEquals(item, video1) || ReferenceEquals(item, video1Dup))
-                    return await CreateSolidPngStreamAsync(200, 200, blue);
-
+        var probedSources = new List<IMediaSource>();
+        var mediaThumbnails = new FakeMediaThumbnailService(async (source, _, _) =>
+        {
+            probedSources.Add(source);
+            if (ReferenceEquals(source, albumATrack1.Source) || ReferenceEquals(source, albumATrack1Dup.Source))
                 return null;
-            })
+            if (ReferenceEquals(source, albumATrack2.Source))
+                return await CreateSolidPngStreamAsync(200, 200, red);
+            if (ReferenceEquals(source, albumATrack3.Source))
+                return await CreateSolidPngStreamAsync(200, 200, green);
+            if (ReferenceEquals(source, video1.Source) || ReferenceEquals(source, video1Dup.Source))
+                return await CreateSolidPngStreamAsync(200, 200, blue);
+
+            return null;
+        });
+
+        var service = new PlaylistThumbnailService(mediaThumbnails, NullLogger<PlaylistThumbnailService>.Instance)
         {
             CacheFolderPath = fixture.DirectoryPath
         };
@@ -211,10 +208,10 @@ public class PlaylistThumbnailServiceTests
             new[] { albumATrack1, albumATrack1Dup, albumATrack2, albumATrack3, video1, video1Dup });
 
         await Assert.That(result).IsNotNull();
-        await Assert.That(probedItems.Count).IsEqualTo(3);
-        await Assert.That(probedItems[0]).IsSameReferenceAs(albumATrack1);
-        await Assert.That(probedItems[1]).IsSameReferenceAs(albumATrack2);
-        await Assert.That(probedItems[2]).IsSameReferenceAs(video1);
+        await Assert.That(probedSources.Count).IsEqualTo(3);
+        await Assert.That(probedSources[0]).IsSameReferenceAs(albumATrack1.Source);
+        await Assert.That(probedSources[1]).IsSameReferenceAs(albumATrack2.Source);
+        await Assert.That(probedSources[2]).IsSameReferenceAs(video1.Source);
 
         var decoded = await DecodeBgraPixelsAsync(result!);
         await AssertColorNearAsync(GetRgbPixel(decoded.Pixels, decoded.Width, 100, 200), red);
@@ -226,20 +223,20 @@ public class PlaylistThumbnailServiceTests
     {
         using var fixture = new TestDirectoryFixture();
         var items = Enumerable.Range(0, 35)
-            .Select(i => CreateVideoMedia($"https://example.com/v{i}.mp4"))
+            .Select(i => CreateItem($"https://example.com/v{i}.mp4"))
             .ToArray();
 
         int probeCount = 0;
-        var service = new PlaylistThumbnailService(
-            NullLogger<PlaylistThumbnailService>.Instance,
-            async (item, _, _) =>
-            {
-                probeCount++;
-                if (ReferenceEquals(item, items[32]))
-                    return await CreateSolidPngStreamAsync(200, 200, (220, 40, 40));
+        var mediaThumbnails = new FakeMediaThumbnailService(async (source, _, _) =>
+        {
+            probeCount++;
+            if (ReferenceEquals(source, items[32].Source))
+                return await CreateSolidPngStreamAsync(200, 200, (220, 40, 40));
 
-                return null;
-            })
+            return null;
+        });
+
+        var service = new PlaylistThumbnailService(mediaThumbnails, NullLogger<PlaylistThumbnailService>.Instance)
         {
             CacheFolderPath = fixture.DirectoryPath
         };
@@ -259,14 +256,15 @@ public class PlaylistThumbnailServiceTests
         (byte R, byte G, byte B) red = (220, 40, 40);
         (byte R, byte G, byte B) blue = (40, 80, 220);
 
-        var redVideo = CreateVideoMedia("https://example.com/red.mp4");
-        var blueVideo = CreateVideoMedia("https://example.com/blue.mp4");
+        var redVideo = CreateItem("https://example.com/red.mp4");
+        var blueVideo = CreateItem("https://example.com/blue.mp4");
 
-        var service = new PlaylistThumbnailService(
-            NullLogger<PlaylistThumbnailService>.Instance,
-            async (item, _, _) => ReferenceEquals(item, redVideo)
+        var mediaThumbnails = new FakeMediaThumbnailService(async (source, _, _) =>
+            ReferenceEquals(source, redVideo.Source)
                 ? await CreateSolidPngStreamAsync(200, 200, red)
-                : await CreateSolidPngStreamAsync(200, 200, blue))
+                : await CreateSolidPngStreamAsync(200, 200, blue));
+
+        var service = new PlaylistThumbnailService(mediaThumbnails, NullLogger<PlaylistThumbnailService>.Instance)
         {
             CacheFolderPath = fixture.DirectoryPath
         };
@@ -294,7 +292,7 @@ public class PlaylistThumbnailServiceTests
         var decodedUpdated = await DecodeBgraPixelsAsync(readUpdated!);
         await AssertColorNearAsync(GetRgbPixel(decodedUpdated.Pixels, decodedUpdated.Width, 200, 200), blue);
 
-        byte[]? emptyResult = await service.BuildAndCacheThumbnailAsync(playlistId, Array.Empty<MediaViewModel>());
+        byte[]? emptyResult = await service.BuildAndCacheThumbnailAsync(playlistId, Array.Empty<PlaylistThumbnailItem>());
         await Assert.That(emptyResult).IsNull();
         await Assert.That(await service.ReadThumbnailAsync(playlistId)).IsNull();
 

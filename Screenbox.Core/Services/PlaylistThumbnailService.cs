@@ -6,11 +6,8 @@ using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Factories;
-using Screenbox.Core.ViewModels;
+using Screenbox.Core.Models;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -38,30 +35,20 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     /// </summary>
     public string CacheFolderPath { get; set; } = string.Empty;
 
+    private readonly IMediaThumbnailService _mediaThumbnailService;
     private readonly ILogger<PlaylistThumbnailService> _logger;
-    private readonly Func<MediaViewModel, uint, CancellationToken, Task<IRandomAccessStream?>> _thumbnailSourceProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaylistThumbnailService"/> class.
     /// </summary>
+    /// <param name="mediaThumbnailService">The service used to extract thumbnail streams from media sources.</param>
     /// <param name="logger">The logger instance.</param>
-    [ActivatorUtilitiesConstructor]
-    public PlaylistThumbnailService(ILogger<PlaylistThumbnailService> logger)
-        : this(logger, static (item, requestedSize, _) => item.GetThumbnailSourceAsync(requestedSize))
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PlaylistThumbnailService"/> class with a custom thumbnail stream provider.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="thumbnailSourceProvider">Delegate that opens a thumbnail stream for a media item.</param>
     public PlaylistThumbnailService(
-        ILogger<PlaylistThumbnailService> logger,
-        Func<MediaViewModel, uint, CancellationToken, Task<IRandomAccessStream?>> thumbnailSourceProvider)
+        IMediaThumbnailService mediaThumbnailService,
+        ILogger<PlaylistThumbnailService> logger)
     {
+        _mediaThumbnailService = mediaThumbnailService;
         _logger = logger;
-        _thumbnailSourceProvider = thumbnailSourceProvider;
     }
 
     /// <inheritdoc/>
@@ -87,7 +74,7 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     /// <inheritdoc/>
     public async Task<byte[]?> BuildAndCacheThumbnailAsync(
         string playlistId,
-        IReadOnlyList<MediaViewModel> items,
+        IReadOnlyList<PlaylistThumbnailItem> items,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(playlistId))
@@ -232,9 +219,9 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
     /// an item supplies usable artwork so unreadable early tracks do not block later tracks on the same album.
     /// </summary>
     private static async Task CollectDistinctArtworksAsync<TArtwork>(
-        IReadOnlyList<MediaViewModel> items,
+        IReadOnlyList<PlaylistThumbnailItem> items,
         List<TArtwork> destination,
-        Func<MediaViewModel, CancellationToken, Task<TArtwork?>> tryOpenArtworkAsync,
+        Func<PlaylistThumbnailItem, CancellationToken, Task<TArtwork?>> tryOpenArtworkAsync,
         int maxArtworkCount = MaxArtworkCount,
         int maxScanCount = MaxScanCount,
         CancellationToken cancellationToken = default)
@@ -248,20 +235,21 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            MediaViewModel item = items[i];
+            PlaylistThumbnailItem item = items[i];
             string? dedupeKey = GetArtworkDeduplicationKey(item);
             if (dedupeKey is not null && selectedKeys.Contains(dedupeKey))
                 continue;
 
-            if (!string.IsNullOrWhiteSpace(item.Location) && failedLocations.Contains(item.Location))
+            string location = item.Source.Location;
+            if (!string.IsNullOrWhiteSpace(location) && failedLocations.Contains(location))
                 continue;
 
             TArtwork? opened = await tryOpenArtworkAsync(item, cancellationToken).ConfigureAwait(false);
             if (opened is null)
             {
-                if (!string.IsNullOrWhiteSpace(item.Location))
+                if (!string.IsNullOrWhiteSpace(location))
                 {
-                    failedLocations.Add(item.Location);
+                    failedLocations.Add(location);
                 }
 
                 continue;
@@ -383,34 +371,25 @@ public sealed class PlaylistThumbnailService : IPlaylistThumbnailService
         return defaultPath;
     }
 
-    private static string? GetArtworkDeduplicationKey(MediaViewModel item)
+    private static string? GetArtworkDeduplicationKey(PlaylistThumbnailItem item)
     {
-        if (item.MediaType == MediaPlaybackType.Music)
-        {
-            if (item.Album is not null && !string.IsNullOrWhiteSpace(item.Album.Name))
-            {
-                return "album:" + item.Album.AlbumKey;
-            }
+        if (!string.IsNullOrWhiteSpace(item.GroupKey))
+            return item.GroupKey;
 
-            string albumName = item.MediaInfo.MusicProperties.Album;
-            if (!string.IsNullOrWhiteSpace(albumName))
-            {
-                string albumArtist = item.MediaInfo.MusicProperties.AlbumArtist;
-                return "album:" + AlbumViewModelFactory.GetAlbumKey(albumName, albumArtist);
-            }
-        }
-
-        return !string.IsNullOrWhiteSpace(item.Location) ? "loc:" + item.Location : null;
+        return !string.IsNullOrWhiteSpace(item.Source.Location) ? "loc:" + item.Source.Location : null;
     }
 
     private async Task<(IRandomAccessStream Stream, BitmapDecoder Decoder)?> TryOpenDecoderAsync(
-        MediaViewModel item,
+        PlaylistThumbnailItem item,
         CancellationToken cancellationToken)
     {
         IRandomAccessStream? stream = null;
         try
         {
-            stream = await _thumbnailSourceProvider(item, ThumbnailCollageSize, cancellationToken).ConfigureAwait(false);
+            stream = await _mediaThumbnailService.GetThumbnailStreamAsync(
+                item.Source,
+                ThumbnailCollageSize,
+                cancellationToken).ConfigureAwait(false);
             if (stream is null)
                 return null;
 

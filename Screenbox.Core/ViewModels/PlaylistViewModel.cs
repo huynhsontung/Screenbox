@@ -377,7 +377,10 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     private async Task GenerateThumbnailCoreAsync(int version, CancellationToken cancellationToken)
     {
-        MediaViewModel[] itemsSnapshot = Items.Select(item => item.Media).ToArray();
+        PlaylistThumbnailItem[] itemsSnapshot = Items
+            .Take(PlaylistThumbnailService.MaxScanCount)
+            .Select(item => ToThumbnailItem(item.Media))
+            .ToArray();
         byte[]? encodedBytes = await _thumbnailService.BuildAndCacheThumbnailAsync(Id, itemsSnapshot, cancellationToken);
         if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
             return;
@@ -389,6 +392,26 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
 
         await TryApplyThumbnailBytesAsync(encodedBytes, version, cancellationToken);
+    }
+
+    private static PlaylistThumbnailItem ToThumbnailItem(MediaViewModel media)
+    {
+        string? groupKey = null;
+        if (media.MediaType == MediaPlaybackType.Music)
+        {
+            if (media.Album is not null && !string.IsNullOrWhiteSpace(media.Album.Name))
+            {
+                groupKey = "album:" + media.Album.AlbumKey;
+            }
+            else if (!string.IsNullOrWhiteSpace(media.MediaInfo.MusicProperties.Album))
+            {
+                groupKey = "album:" + AlbumViewModelFactory.GetAlbumKey(
+                    media.MediaInfo.MusicProperties.Album,
+                    media.MediaInfo.MusicProperties.AlbumArtist);
+            }
+        }
+
+        return new PlaylistThumbnailItem(media.Source, groupKey);
     }
 
     private enum ApplyThumbnailResult

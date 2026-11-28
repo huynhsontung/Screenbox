@@ -22,7 +22,7 @@ public class PlaylistViewModelTests
     private sealed class FakePlaylistThumbnailService : IPlaylistThumbnailService
     {
         public Func<string, CancellationToken, Task<byte[]?>>? OnRead { get; set; }
-        public Func<string, IReadOnlyList<MediaViewModel>, CancellationToken, Task<byte[]?>>? OnBuild { get; set; }
+        public Func<string, IReadOnlyList<PlaylistThumbnailItem>, CancellationToken, Task<byte[]?>>? OnBuild { get; set; }
         public int ReadCallCount { get; private set; }
         public int BuildCallCount { get; private set; }
         public List<string> DeletedIds { get; } = new();
@@ -35,7 +35,7 @@ public class PlaylistViewModelTests
 
         public Task<byte[]?> BuildAndCacheThumbnailAsync(
             string playlistId,
-            IReadOnlyList<MediaViewModel> items,
+            IReadOnlyList<PlaylistThumbnailItem> items,
             CancellationToken cancellationToken = default)
         {
             BuildCallCount++;
@@ -273,7 +273,9 @@ public class PlaylistViewModelTests
                 .ToList()
         };
 
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), new LibraryContext());
+        var mediaFactory = new MediaViewModelFactory(
+            new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)),
+            new LibraryContext());
         DispatcherQueueController controller = DispatcherQueueController.CreateOnDedicatedThread();
         try
         {
