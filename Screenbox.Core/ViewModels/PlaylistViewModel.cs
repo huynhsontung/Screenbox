@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +17,6 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -29,11 +26,7 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     IRecentItem,
     IRecipient<QueuePlaybackStateChangedMessage>
 {
-    private const int ThumbnailGridColumns = 2;
-    private const int ThumbnailCellCount = ThumbnailGridColumns * ThumbnailGridColumns;
-    private const int ThumbnailCollageSize = 600;
-    private const int ThumbnailCellSize = ThumbnailCollageSize / ThumbnailGridColumns;
-    private const int BytesPerPixel = 4;
+    private const int ThumbnailDecodePixelHeight = 300;
 
     public ObservableCollection<PlaylistItemViewModel> Items { get; } = new();
 
@@ -52,9 +45,12 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     private Guid _id = Guid.NewGuid();
 
     private bool _isLoading;
-    private CancellationTokenSource? _collageCts;
+    private int _thumbnailVersion;
+    private CancellationTokenSource? _thumbnailCts;
+    private Task? _thumbnailLoadTask;
 
     private readonly IPlaylistService _playlistService;
+    private readonly IPlaylistThumbnailService _thumbnailService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _playlistSaveTimer;
@@ -63,20 +59,23 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
 
     public PlaylistViewModel(
         IPlaylistService playlistService,
+        IPlaylistThumbnailService thumbnailService,
         MediaViewModelFactory mediaFactory,
         ILogger<PlaylistViewModel> logger)
-        : this(playlistService, mediaFactory, logger, WeakReferenceMessenger.Default)
+        : this(playlistService, thumbnailService, mediaFactory, logger, WeakReferenceMessenger.Default)
     {
     }
 
     public PlaylistViewModel(
         IPlaylistService playlistService,
+        IPlaylistThumbnailService thumbnailService,
         MediaViewModelFactory mediaFactory,
         ILogger<PlaylistViewModel> logger,
         IMessenger messenger)
         : base(messenger)
     {
         _playlistService = playlistService;
+        _thumbnailService = thumbnailService;
         _mediaFactory = mediaFactory;
         _logger = logger;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -113,20 +112,33 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
             }
         }, TimeSpan.FromMilliseconds(50));
 
-        // The thumbnail collage only shows the first few items, so ignore changes that can't affect it.
-        switch (e.Action)
+        if (ShouldRefreshThumbnail(e))
         {
-            case NotifyCollectionChangedAction.Add when e.NewStartingIndex < ThumbnailCellCount:
-            case NotifyCollectionChangedAction.Remove when e.OldStartingIndex < ThumbnailCellCount:
-            case NotifyCollectionChangedAction.Replace or NotifyCollectionChangedAction.Move
-                when e.NewStartingIndex < ThumbnailCellCount || e.OldStartingIndex < ThumbnailCellCount:
-            case NotifyCollectionChangedAction.Reset:
-                _collageTimer.Debounce(async () =>
-                {
-                    await UpdateThumbnailCollageAsync();
-                }, TimeSpan.FromMilliseconds(50));
-                break;
+            _collageTimer.Debounce(async () =>
+            {
+                await RefreshThumbnailAsync();
+            }, TimeSpan.FromMilliseconds(50));
         }
+    }
+
+    private bool ShouldRefreshThumbnail(NotifyCollectionChangedEventArgs e)
+    {
+        if (Items.Count == 0)
+            return true;
+
+        if (Thumbnail is null && e.Action == NotifyCollectionChangedAction.Add)
+            return true;
+
+        const int scanCount = PlaylistThumbnailService.MaxScanCount;
+        return e.Action switch
+        {
+            NotifyCollectionChangedAction.Add => e.NewStartingIndex < scanCount,
+            NotifyCollectionChangedAction.Remove => e.OldStartingIndex < scanCount,
+            NotifyCollectionChangedAction.Replace or NotifyCollectionChangedAction.Move =>
+                e.NewStartingIndex < scanCount || e.OldStartingIndex < scanCount,
+            NotifyCollectionChangedAction.Reset => true,
+            _ => false
+        };
     }
 
     public QueueSession ToQueueSession()
@@ -170,25 +182,54 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
     }
 
     /// <summary>
-    /// Loads the playlist thumbnail, generating a collage if no saved thumbnail exists.
+    /// Loads the playlist thumbnail from cache, generating and caching a collage if no saved thumbnail exists.
     /// </summary>
     /// <returns>A task that represents the asynchronous load operation.</returns>
-    public async Task LoadThumbnailAsync()
+    public Task LoadThumbnailAsync()
     {
-        if (Items.Count == 0 || Thumbnail is not null)
-            return;
+        if (Thumbnail is not null)
+            return Task.CompletedTask;
 
+        if (_thumbnailLoadTask is { IsCompleted: false } existingTask)
+            return existingTask;
+
+        Task loadTask = LoadThumbnailCoreAsync();
+        _thumbnailLoadTask = loadTask;
+
+        return loadTask;
+    }
+
+    private async Task LoadThumbnailCoreAsync()
+    {
+        (int version, CancellationToken ct) = BeginThumbnailOperation();
         try
         {
-            StorageFile? file = await _playlistService.GetThumbnailFileAsync(Id);
-            if (file is null)
-            {
-                await UpdateThumbnailCollageAsync();
+            // Check cache even when Items is empty so recent-playlist placeholders on HomePage display cached art.
+            byte[]? cachedBytes = await _thumbnailService.ReadThumbnailAsync(Id, ct);
+            if (version != _thumbnailVersion || ct.IsCancellationRequested)
                 return;
+
+            if (cachedBytes is not null)
+            {
+                ApplyThumbnailResult applyResult = await TryApplyThumbnailBytesAsync(cachedBytes, version, ct);
+                if (applyResult is ApplyThumbnailResult.Applied or ApplyThumbnailResult.Superseded)
+                    return;
+
+                if (version != _thumbnailVersion || ct.IsCancellationRequested)
+                    return;
+
+                // Cached file is corrupt or unreadable; remove it and fall through to regeneration.
+                await _thumbnailService.DeleteThumbnailAsync(Id);
             }
 
-            using IRandomAccessStream stream = await file.OpenReadAsync();
-            await SetThumbnailSourceAsync(stream);
+            if (Items.Count == 0 || version != _thumbnailVersion || ct.IsCancellationRequested)
+                return;
+
+            await GenerateThumbnailCoreAsync(version, ct);
+        }
+        catch (OperationCanceledException)
+        {
+            // Superseded by a newer update.
         }
         catch (Exception ex)
         {
@@ -292,36 +333,25 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         Messenger.Send(new NotificationMessage(NotificationLevel.Success, NotificationKind.PlaylistItemsAdded, title: Name, numericValue: items.Count));
     }
 
-    private async Task UpdateThumbnailCollageAsync()
+    /// <summary>
+    /// Rebuilds and caches the playlist thumbnail collage from the current <see cref="Items"/>,
+    /// or deletes the cached thumbnail when the playlist has no items or readable artwork.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous refresh operation.</returns>
+    public async Task RefreshThumbnailAsync()
     {
-        _collageCts?.Cancel();
-        _collageCts?.Dispose();
-
-        CancellationTokenSource cts = new();
-        _collageCts = cts;
+        (int version, CancellationToken ct) = BeginThumbnailOperation();
 
         if (Items.Count == 0)
         {
             Thumbnail = null;
-            await _playlistService.DeleteThumbnailAsync(Id);
+            await _thumbnailService.DeleteThumbnailAsync(Id);
             return;
         }
 
         try
         {
-            byte[]? collagePixels = await BuildThumbnailCollageAsync(cts.Token);
-            if (collagePixels is null)
-            {
-                Thumbnail = null;
-                await _playlistService.DeleteThumbnailAsync(Id);
-                return;
-            }
-
-            using InMemoryRandomAccessStream stream = await EncodeThumbnailAsync(collagePixels, cts.Token);
-
-            await _playlistService.SaveThumbnailAsync(Id, stream);
-            stream.Seek(0);
-            await SetThumbnailSourceAsync(stream);
+            await GenerateThumbnailCoreAsync(version, ct);
         }
         catch (OperationCanceledException)
         {
@@ -333,63 +363,97 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
     }
 
-    private async Task<byte[]?> BuildThumbnailCollageAsync(CancellationToken cancellationToken)
+    private (int Version, CancellationToken Token) BeginThumbnailOperation()
     {
-        MediaViewModel[] sources = Items.Take(ThumbnailCellCount).ToArray();
+        _thumbnailCts?.Cancel();
+        _thumbnailCts?.Dispose();
 
-        byte[]?[] cells = await Task.WhenAll(
-            sources.Select(item => DecodeThumbnailCellAsync(item, ThumbnailCellSize, cancellationToken)));
+        CancellationTokenSource cts = new();
+        _thumbnailCts = cts;
+        int version = ++_thumbnailVersion;
 
-        cancellationToken.ThrowIfCancellationRequested();
-
-        byte[] collage = new byte[ThumbnailCollageSize * ThumbnailCollageSize * BytesPerPixel];
-        bool hasContent = false;
-
-        for (int i = 0; i < cells.Length; i++)
-        {
-            if (cells[i] is not byte[] cell)
-                continue;
-
-            CopyCellIntoThumbnailCollage(collage, cell, i);
-            hasContent = true;
-        }
-
-        return hasContent ? collage : null;
+        return (version, cts.Token);
     }
 
-    private static async Task<InMemoryRandomAccessStream> EncodeThumbnailAsync(
-        byte[] pixels,
+    private async Task GenerateThumbnailCoreAsync(int version, CancellationToken cancellationToken)
+    {
+        PlaylistThumbnailItem[] itemsSnapshot = Items
+            .Take(PlaylistThumbnailService.MaxScanCount)
+            .Select(item => ToThumbnailItem(item.Media))
+            .ToArray();
+        byte[]? encodedBytes = await _thumbnailService.BuildAndCacheThumbnailAsync(Id, itemsSnapshot, cancellationToken);
+        if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
+            return;
+
+        if (encodedBytes is null)
+        {
+            Thumbnail = null;
+            return;
+        }
+
+        await TryApplyThumbnailBytesAsync(encodedBytes, version, cancellationToken);
+    }
+
+    private static PlaylistThumbnailItem ToThumbnailItem(MediaViewModel media)
+    {
+        string? groupKey = null;
+        if (media.MediaType == MediaPlaybackType.Music)
+        {
+            if (media.Album is not null && !string.IsNullOrWhiteSpace(media.Album.Name))
+            {
+                groupKey = "album:" + media.Album.AlbumKey;
+            }
+            else if (!string.IsNullOrWhiteSpace(media.MediaInfo.MusicProperties.Album))
+            {
+                groupKey = "album:" + AlbumViewModelFactory.GetAlbumKey(
+                    media.MediaInfo.MusicProperties.Album,
+                    media.MediaInfo.MusicProperties.AlbumArtist);
+            }
+        }
+
+        return new PlaylistThumbnailItem(media.Source, groupKey);
+    }
+
+    private enum ApplyThumbnailResult
+    {
+        Applied,
+        Superseded,
+        Failed
+    }
+
+    private async Task<ApplyThumbnailResult> TryApplyThumbnailBytesAsync(
+        byte[] imageBytes,
+        int version,
         CancellationToken cancellationToken)
     {
-        InMemoryRandomAccessStream stream = new();
+        if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
+            return ApplyThumbnailResult.Superseded;
+
         try
         {
-            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-            encoder.SetPixelData(
-                BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Straight,
-                width: ThumbnailCollageSize,
-                height: ThumbnailCollageSize,
-                dpiX: 96.0,
-                dpiY: 96.0,
-                pixels);
-            await encoder.FlushAsync();
-            cancellationToken.ThrowIfCancellationRequested();
+            BitmapImage bitmapImage = new()
+            {
+                DecodePixelType = DecodePixelType.Logical,
+                DecodePixelHeight = ThumbnailDecodePixelHeight
+            };
 
-            return stream;
+            using MemoryStream memoryStream = new(imageBytes);
+            await bitmapImage.SetSourceAsync(memoryStream.AsRandomAccessStream());
+
+            if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
+                return ApplyThumbnailResult.Superseded;
+
+            Thumbnail = bitmapImage;
+            return ApplyThumbnailResult.Applied;
         }
-        catch
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            stream.Dispose();
-            throw;
-        }
-    }
+            if (version != _thumbnailVersion || cancellationToken.IsCancellationRequested)
+                return ApplyThumbnailResult.Superseded;
 
-    private async Task SetThumbnailSourceAsync(IRandomAccessStream stream)
-    {
-        var bitmapImage = new BitmapImage();
-        await bitmapImage.SetSourceAsync(stream);
-        Thumbnail = bitmapImage;
+            _logger.LogWarning(ex, "Failed to decode cached thumbnail for playlist {PlaylistId}.", Id);
+            return ApplyThumbnailResult.Failed;
+        }
     }
 
     private PlaylistRecordDto ToPersistentPlaylist()
@@ -450,71 +514,5 @@ public sealed partial class PlaylistViewModel : ObservableRecipient,
         }
 
         return media;
-    }
-
-    private static async Task<byte[]?> DecodeThumbnailCellAsync(MediaViewModel item, int size, CancellationToken cancellationToken)
-    {
-        try
-        {
-            using IRandomAccessStream? stream = await item.GetThumbnailSourceAsync();
-            if (stream is null)
-                return null;
-
-            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (decoder.PixelWidth == 0 || decoder.PixelHeight == 0)
-                return null;
-
-            // Scale so the shorter side fills the cell, then crop the overflow from the center.
-            uint cellSize = (uint)size;
-            double scale = Math.Max((double)cellSize / decoder.PixelWidth, (double)cellSize / decoder.PixelHeight);
-            uint scaledWidth = Math.Max(cellSize, (uint)Math.Round(decoder.PixelWidth * scale));
-            uint scaledHeight = Math.Max(cellSize, (uint)Math.Round(decoder.PixelHeight * scale));
-
-            BitmapTransform transform = new()
-            {
-                ScaledWidth = scaledWidth,
-                ScaledHeight = scaledHeight,
-                Bounds = new BitmapBounds
-                {
-                    X = (scaledWidth - cellSize) / 2,
-                    Y = (scaledHeight - cellSize) / 2,
-                    Width = cellSize,
-                    Height = cellSize,
-                },
-                InterpolationMode = BitmapInterpolationMode.Fant,
-            };
-
-            PixelDataProvider pixelProvider = await decoder.GetPixelDataAsync(
-                BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Straight,
-                transform,
-                ExifOrientationMode.IgnoreExifOrientation,
-                ColorManagementMode.DoNotColorManage);
-
-            return pixelProvider.DetachPixelData();
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            return null;
-        }
-    }
-
-    private static void CopyCellIntoThumbnailCollage(byte[] collage, byte[] cell, int index)
-    {
-        int bytesPerRow = ThumbnailCellSize * BytesPerPixel;
-        int column = index % ThumbnailGridColumns;
-        int row = index / ThumbnailGridColumns;
-        int x = column * ThumbnailCellSize;
-        int y = row * ThumbnailCellSize;
-
-        for (int cellRow = 0; cellRow < ThumbnailCellSize; cellRow++)
-        {
-            int destinationOffset = ((y + cellRow) * ThumbnailCollageSize + x) * BytesPerPixel;
-            cell.AsSpan(cellRow * bytesPerRow, bytesPerRow)
-                .CopyTo(collage.AsSpan(destinationOffset, bytesPerRow));
-        }
     }
 }

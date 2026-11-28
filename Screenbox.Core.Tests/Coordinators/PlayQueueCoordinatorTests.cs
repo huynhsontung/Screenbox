@@ -138,7 +138,7 @@ public sealed partial class PlayQueueCoordinatorTests
         var playlistTrack = CreateDummyMedia("playlistTrack");
         var album = new AlbumViewModel("AlbumA", "ArtistA", messenger);
         var albumOrigin = QueueOrigin.ForAlbum(album);
-        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger) { Name = "Roadtrip" };
+        var playlist = new PlaylistViewModel(null!, null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger) { Name = "Roadtrip" };
         var playlistOrigin = QueueOrigin.ForPlaylist(playlist);
 
         var session = new QueueSession(0, new[] { track1, track2 }, origin: albumOrigin);
@@ -288,7 +288,7 @@ public sealed partial class PlayQueueCoordinatorTests
         };
 
         // 1. Expandable track inside a saved Playlist preserves the Playlist origin
-        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger)
+        var playlist = new PlaylistViewModel(null!, null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger)
         {
             Name = "Radio Mix"
         };

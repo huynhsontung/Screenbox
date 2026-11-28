@@ -93,7 +93,7 @@ public class ContainerPlaybackStateTests
     public async Task PlaylistViewModel_QueuePlaybackStateChanged_UpdatesActiveAndPlayingWhenOriginMatches()
     {
         var messenger = new StrongReferenceMessenger();
-        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger);
+        var playlist = new PlaylistViewModel(null!, null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger);
         var song = CreateDummyMedia("Track 1");
         var sessionId = Guid.NewGuid();
 
@@ -114,7 +114,7 @@ public class ContainerPlaybackStateTests
     public async Task PlaylistViewModel_QueuePlaybackStateChanged_RemainsInactiveWhenOriginDoesNotMatch()
     {
         var messenger = new StrongReferenceMessenger();
-        var playlist = new PlaylistViewModel(null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger);
+        var playlist = new PlaylistViewModel(null!, null!, null!, NullLogger<PlaylistViewModel>.Instance, messenger);
         var song = CreateDummyMedia("Track 1");
         var sessionId = Guid.NewGuid();
 
