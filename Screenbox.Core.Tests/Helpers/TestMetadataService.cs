@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.MediaSources;
@@ -34,5 +35,22 @@ public sealed class TestMetadataService : ISourceMetadataService, IPlaybackMetad
         CallCount++;
         LastItem = item;
         return Task.FromResult(_result);
+    }
+
+    public Task<(string? Artist, TimeSpan Duration)> GetSummaryPropertiesAsync(
+        IMediaSource source,
+        CancellationToken cancellationToken = default)
+    {
+        CallCount++;
+        LastSource = source;
+        string? artist = string.IsNullOrEmpty(_result?.MusicProperties.Artist)
+            ? null
+            : _result.MusicProperties.Artist;
+        TimeSpan duration = _result is null
+            ? TimeSpan.Zero
+            : _result.MusicProperties.Duration > TimeSpan.Zero
+                ? _result.MusicProperties.Duration
+                : _result.VideoProperties.Duration;
+        return Task.FromResult((artist, duration));
     }
 }

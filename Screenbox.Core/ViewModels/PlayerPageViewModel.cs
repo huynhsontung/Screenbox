@@ -115,6 +115,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private readonly IQueueService _queueService;
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IPlaybackMetadataService _playbackMetadataService;
+    private readonly IMediaThumbnailService _thumbnailService;
     private readonly PlayerContext _playerContext;
     private readonly MediaViewModelFactory _mediaFactory;
     private bool _visibilityOverride;
@@ -127,6 +128,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         IQueueService queueService,
         ISourceMetadataService sourceMetadataService,
         IPlaybackMetadataService playbackMetadataService,
+        IMediaThumbnailService thumbnailService,
         PlayerContext playerContext,
         INavigationService navigationService, MediaViewModelFactory mediaFactory)
     {
@@ -136,6 +138,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         _queueService = queueService;
         _sourceMetadataService = sourceMetadataService;
         _playbackMetadataService = playbackMetadataService;
+        _thumbnailService = thumbnailService;
         _playerContext = playerContext;
         _mediaFactory = mediaFactory;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -296,7 +299,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
             {
                 await current.LoadDetailsAsync(_playbackMetadataService, playbackItem);
             }
-            await current.LoadThumbnailAsync();
+            await current.LoadThumbnailAsync(_thumbnailService);
 
             // Process again in case media type changed after loading details
             _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));

@@ -16,7 +16,7 @@ public partial class StorageMetadataServiceTests
     [Test]
     public async Task GetMediaInfoAsync_WithNullArguments_ShouldThrowArgumentNullException()
     {
-        var service = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+        var service = new StorageMetadataService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<StorageMetadataService>.Instance);
 
         await Assert.That(async () => await service.GetMediaInfoAsync((StorageFile)null!)).Throws<ArgumentNullException>();
         await Assert.That(async () => await service.GetMediaInfoAsync((IFileMediaSource)null!)).Throws<ArgumentNullException>();
@@ -26,7 +26,7 @@ public partial class StorageMetadataServiceTests
     [Test]
     public async Task GetMediaInfoAsync_WithNonFileUriMediaSource_ShouldReturnNull()
     {
-        var service = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+        var service = new StorageMetadataService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<StorageMetadataService>.Instance);
         var uriSource = new UriMediaSource(new Uri("https://example.com/stream.m3u8"));
 
         var result = await service.GetMediaInfoAsync(uriSource);
@@ -37,7 +37,7 @@ public partial class StorageMetadataServiceTests
     [Test]
     public async Task GetMediaInfoAsync_WithNonExistentFileMediaSource_ShouldReturnNull()
     {
-        var service = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+        var service = new StorageMetadataService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<StorageMetadataService>.Instance);
         var fileSource = new FileMediaSource(@"C:\nonexistent_folder_abc123\video.mp4");
 
         var result = await service.GetMediaInfoAsync(fileSource);
@@ -55,7 +55,7 @@ public partial class StorageMetadataServiceTests
         try
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(tempPath);
-            var service = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+            var service = new StorageMetadataService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<StorageMetadataService>.Instance);
 
             MediaInfo? info = await service.GetMediaInfoAsync(file);
 
@@ -71,5 +71,17 @@ public partial class StorageMetadataServiceTests
                 File.Delete(tempPath);
             }
         }
+    }
+
+    [Test]
+    public async Task GetSummaryPropertiesAsync_WithNonFileSource_ShouldReturnEmpty()
+    {
+        var service = new StorageMetadataService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<StorageMetadataService>.Instance);
+
+        var uriSource = new UriMediaSource(new Uri("https://example.com/song.mp3"));
+        (string? artist, TimeSpan duration) = await service.GetSummaryPropertiesAsync(uriSource);
+
+        await Assert.That(artist).IsNull();
+        await Assert.That(duration).IsEqualTo(TimeSpan.Zero);
     }
 }

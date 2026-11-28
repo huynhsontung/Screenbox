@@ -55,12 +55,17 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     private readonly ILivelyWallpaperService _livelyService;
     private readonly PlayerSettingsContext _playerSettings;
+    private readonly IMediaThumbnailService _thumbnailService;
     private readonly DispatcherQueueTimer _timer;
 
-    public LivelyWallpaperPlayerViewModel(ILivelyWallpaperService livelyService, PlayerSettingsContext playerSettings)
+    public LivelyWallpaperPlayerViewModel(
+        ILivelyWallpaperService livelyService,
+        PlayerSettingsContext playerSettings,
+        IMediaThumbnailService thumbnailService)
     {
         _livelyService = livelyService;
         _playerSettings = playerSettings;
+        _thumbnailService = thumbnailService;
         _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
         Messenger.Register<PropertyChangedMessage<LivelyWallpaperModel?>>(this);
@@ -235,7 +240,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
         if (Media.Thumbnail != null)
         {
-            using var thumbnailSource = await Media.GetThumbnailSourceAsync();
+            using var thumbnailSource = await _thumbnailService.GetThumbnailStreamAsync(Media.Source);
             var base64 = thumbnailSource != null ? await ReadToBase64Async(thumbnailSource) : string.Empty;
             model.Thumbnail = base64;
         }

@@ -90,5 +90,7 @@ public static class ServiceHelpers
         services.AddSingleton<IPlaylistService, PlaylistService>();
         services.AddSingleton<ISourceMetadataService, StorageMetadataService>();
         services.AddSingleton<IPlaybackMetadataService, VlcMetadataService>();
+        services.AddSingleton<IMediaThumbnailService, MediaThumbnailService>();
+        services.AddSingleton<ISubtitleService, SubtitleService>();
     }
 }

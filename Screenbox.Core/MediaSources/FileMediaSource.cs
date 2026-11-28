@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Windows.Storage;
@@ -39,22 +36,6 @@ public class FileMediaSource : IFileMediaSource
         Name = System.IO.Path.GetFileName(path);
         MediaType = FilesHelpers.GetMediaTypeForExtension(FileType);
         Token = token;
-    }
-
-    public async Task<StorageFile?> GetStorageFileAsync()
-    {
-        if (StorageFile != null)
-        {
-            return StorageFile;
-        }
-
-        StorageFile = await FilesHelpers.TryGetFileFromTokenAsync(Token);
-        if (StorageFile == null && !string.IsNullOrEmpty(Path))
-        {
-            StorageFile = await FilesHelpers.TryGetFileFromPathAsync(Path);
-        }
-
-        return StorageFile;
     }
 
     public void UpdateStorageFile(StorageFile file)

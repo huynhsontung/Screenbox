@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -37,12 +38,14 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     public int SongsCount => Source?.RelatedSongs.Count ?? 0;
 
     private readonly LibraryContext _libraryContext;
+    private readonly IMediaThumbnailService _thumbnailService;
 
     private List<MediaViewModel>? _itemList;
 
-    public ArtistDetailsPageViewModel(LibraryContext libraryContext)
+    public ArtistDetailsPageViewModel(LibraryContext libraryContext, IMediaThumbnailService thumbnailService)
     {
         _libraryContext = libraryContext;
+        _thumbnailService = thumbnailService;
     }
 
     public void OnNavigatedTo(object? parameter)
@@ -76,7 +79,7 @@ public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
 
         IEnumerable<Task> loadingTasks = albumGroups
             .Where(g => g.Key is { AlbumArt: null })
-            .Select(g => g.Key?.LoadAlbumArtAsync())
+            .Select(g => g.Key?.LoadAlbumArtAsync(_thumbnailService))
             .OfType<Task>();
         await Task.WhenAll(loadingTasks);
     }

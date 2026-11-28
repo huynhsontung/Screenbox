@@ -9,6 +9,7 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using Screenbox.Core.Tests.Helpers;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Data;
@@ -36,7 +37,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var settingsStorage = new MemorySettingsStorage();
         var generalSettings = new GeneralSettingsContext(settingsStorage);
 
@@ -93,7 +94,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var settingsStorage = new MemorySettingsStorage();
         var generalSettings = new GeneralSettingsContext(settingsStorage);
 
@@ -133,7 +134,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var settingsStorage = new MemorySettingsStorage();
         var generalSettings = new GeneralSettingsContext(settingsStorage);
 
@@ -187,7 +188,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var settingsStorage = new MemorySettingsStorage();
         var generalSettings = new GeneralSettingsContext(settingsStorage);
 
@@ -235,7 +236,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
 
         var track1 = new RecentMediaItemViewModel(CreateDummyMedia("Track 1"), messenger);
@@ -279,7 +280,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
 
         var vm = new HomePageViewModel(
@@ -314,7 +315,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
 
         var vm = new HomePageViewModel(
@@ -363,7 +364,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = false };
 
         var track1 = new RecentMediaItemViewModel(CreateDummyMedia("Track 1"), messenger);
@@ -399,7 +400,7 @@ public sealed class HomePageViewModelTests
         var coordinator = new DummyCoordinator();
         var selection = new SelectionViewModel();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), libraryContext);
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage());
 
         var vm = new HomePageViewModel(

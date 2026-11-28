@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Foundation.Collections;
@@ -26,12 +27,24 @@ public class ServiceHelpersTests
 
         ISourceMetadataService sourceService = provider.GetRequiredService<ISourceMetadataService>();
         IPlaybackMetadataService playbackService = provider.GetRequiredService<IPlaybackMetadataService>();
+        IMediaThumbnailService thumbnailService = provider.GetRequiredService<IMediaThumbnailService>();
 
         await Assert.That(sourceService).IsNotNull();
         await Assert.That(sourceService).IsTypeOf<StorageMetadataService>();
 
         await Assert.That(playbackService).IsNotNull();
         await Assert.That(playbackService).IsTypeOf<VlcMetadataService>();
+
+        await Assert.That(thumbnailService).IsNotNull();
+        await Assert.That(thumbnailService).IsTypeOf<MediaThumbnailService>();
+
+        ISubtitleService subtitleService = provider.GetRequiredService<ISubtitleService>();
+        await Assert.That(subtitleService).IsNotNull();
+        await Assert.That(subtitleService).IsTypeOf<SubtitleService>();
+
+        IMediaSourceFactory mediaSourceFactory = provider.GetRequiredService<IMediaSourceFactory>();
+        await Assert.That(mediaSourceFactory).IsNotNull();
+        await Assert.That(mediaSourceFactory).IsTypeOf<MediaSourceFactory>();
     }
 
     [Test]

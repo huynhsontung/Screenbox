@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Screenbox.Core.MediaSources;
+using Screenbox.Core.Playback;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -22,6 +24,7 @@ public interface IFilesService
     public IAsyncOperation<StorageFolder> PickFolderAsync();
     public Task OpenFileLocationAsync(string path);
     public Task OpenFileLocationAsync(StorageFile file);
+    public Task OpenFolderAsync(StorageFolder folder);
     public string? AddToRecent(IStorageItem item);
 
     /// <summary>
@@ -33,4 +36,52 @@ public interface IFilesService
     /// that is associated with the specified token.
     /// </returns>
     IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token);
+
+    /// <summary>
+    /// Persists <paramref name="folder"/> in the application's future-access list for frame captures
+    /// and removes <paramref name="previousToken"/> if present.
+    /// </summary>
+    /// <param name="folder">The selected frame capture folder.</param>
+    /// <param name="previousToken">An optional previous access token to release.</param>
+    /// <returns>The newly registered future-access list token.</returns>
+    string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null);
+
+    /// <summary>
+    /// Captures a snapshot of the current video frame from <paramref name="mediaPlayer"/> and saves it
+    /// to the frame capture folder associated with <paramref name="frameCaptureFolderToken"/>.
+    /// </summary>
+    /// <param name="mediaPlayer">The active media player to capture a frame from.</param>
+    /// <param name="frameCaptureFolderToken">The configured frame capture folder token.</param>
+    /// <returns>The saved snapshot <see cref="StorageFile"/>.</returns>
+    Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFile"/> from a file-system path.
+    /// Returns <see langword="null"/> when the file is inaccessible or does not exist.
+    /// </summary>
+    Task<StorageFile?> TryGetFileFromPathAsync(string path);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFolder"/> from a file-system path.
+    /// Returns <see langword="null"/> when the folder is inaccessible or does not exist.
+    /// </summary>
+    Task<StorageFolder?> TryGetFolderFromPathAsync(string path);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFile"/> from the application's access cache
+    /// (MRU or FutureAccessList) using the specified token.
+    /// </summary>
+    Task<StorageFile?> TryGetFileFromTokenAsync(string? token);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFolder"/> from the application's access cache
+    /// (MRU or FutureAccessList) using the specified token.
+    /// </summary>
+    Task<StorageFolder?> TryGetFolderFromTokenAsync(string? token);
+
+    /// <summary>
+    /// Returns the cached <see cref="StorageFile"/> on <paramref name="fileSource"/>, or resolves
+    /// and caches it via its access token or file-system path.
+    /// </summary>
+    Task<StorageFile?> ResolveFileAsync(IFileMediaSource fileSource);
 }

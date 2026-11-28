@@ -37,13 +37,18 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
 
     private readonly LibraryContext _libraryContext;
     private readonly LibrarySettingsContext _librarySettings;
+    private readonly IMediaThumbnailService _thumbnailService;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _refreshTimer;
 
-    public AlbumsPageViewModel(LibraryContext libraryContext, LibrarySettingsContext librarySettings)
+    public AlbumsPageViewModel(
+        LibraryContext libraryContext,
+        LibrarySettingsContext librarySettings,
+        IMediaThumbnailService thumbnailService)
     {
         _libraryContext = libraryContext;
         _librarySettings = librarySettings;
+        _thumbnailService = thumbnailService;
         SortBy = _librarySettings.AlbumsSortOrder;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _refreshTimer = _dispatcherQueue.CreateTimer();
@@ -212,7 +217,7 @@ public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel,
         if (args.Phase != 0) return;
         if (args.Item is AlbumViewModel album)
         {
-            await album.LoadAlbumArtAsync();
+            await album.LoadAlbumArtAsync(_thumbnailService);
         }
     }
 

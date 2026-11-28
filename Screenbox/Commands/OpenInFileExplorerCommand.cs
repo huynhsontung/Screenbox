@@ -71,7 +71,7 @@ internal sealed partial class OpenInFileExplorerCommand : IRelayCommand<MediaVie
 
         if (parameter.Source is IFileMediaSource fileSource)
         {
-            var file = await fileSource.GetStorageFileAsync();
+            var file = await filesService.ResolveFileAsync(fileSource);
             if (file != null)
             {
                 await filesService.OpenFileLocationAsync(file);

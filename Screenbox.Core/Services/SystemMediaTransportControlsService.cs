@@ -14,10 +14,12 @@ public sealed class SystemMediaTransportControlsService : ISystemMediaTransportC
 {
     public SystemMediaTransportControls TransportControls { get; }
 
+    private readonly IFilesService _filesService;
     private DateTime _lastUpdated;
 
-    public SystemMediaTransportControlsService()
+    public SystemMediaTransportControlsService(IFilesService filesService)
     {
+        _filesService = filesService;
         TransportControls = SystemMediaTransportControls.GetForCurrentView();
         TransportControls.IsEnabled = true;
         TransportControls.IsPlayEnabled = true;
@@ -42,7 +44,7 @@ public sealed class SystemMediaTransportControlsService : ISystemMediaTransportC
 
         try
         {
-            if (item.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+            if (item.Source is IFileMediaSource fileSource && await _filesService.ResolveFileAsync(fileSource) is { } file)
             {
                 if (file.IsSupportedAudio())
                 {

@@ -1,17 +1,25 @@
 using System;
 using System.IO;
+using Screenbox.Core.Services;
 using Windows.Storage;
 
 namespace Screenbox.Core.MediaSources;
 
 public class MediaSourceFactory : IMediaSourceFactory
 {
+    private readonly IFilesService _filesService;
+
+    public MediaSourceFactory(IFilesService filesService)
+    {
+        _filesService = filesService;
+    }
+
     public IMediaSource Create(StorageFile file)
     {
         ArgumentNullException.ThrowIfNull(file);
         if (IsM3u(file.FileType))
         {
-            return new M3uPlaylistMediaSource(file, this);
+            return new M3uPlaylistMediaSource(file, this, _filesService);
         }
 
         return new FileMediaSource(file);
@@ -41,7 +49,7 @@ public class MediaSourceFactory : IMediaSourceFactory
         string extension = Path.GetExtension(path);
         if (IsM3u(extension))
         {
-            return new M3uPlaylistMediaSource(path, this);
+            return new M3uPlaylistMediaSource(path, this, _filesService);
         }
 
         return new FileMediaSource(path);

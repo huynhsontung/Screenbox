@@ -49,6 +49,14 @@ public interface IQueueService
     Task<QueueSession> ParseQueueAsync(Uri uri, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Resolves a saved folder or playlist origin path (and optional access-cache token) into a live <see cref="QueueSession"/>.
+    /// </summary>
+    Task<QueueSession?> TryResolveCollectionQueueAsync(
+        string sourcePath,
+        string? token = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Adds neighboring files to an existing queue session using the session's attached neighboring files query.
     /// </summary>
     Task<QueueSession> AddNeighboringFilesAsync(QueueSession session, CancellationToken cancellationToken = default);

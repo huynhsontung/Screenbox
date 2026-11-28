@@ -39,8 +39,16 @@ public sealed partial class PlayQueueCoordinatorTests
         public Windows.Foundation.IAsyncOperation<StorageFolder> PickFolderAsync() => throw new NotSupportedException();
         public Task OpenFileLocationAsync(string path) => Task.CompletedTask;
         public Task OpenFileLocationAsync(StorageFile file) => Task.CompletedTask;
+        public Task OpenFolderAsync(StorageFolder folder) => Task.CompletedTask;
         public string? AddToRecent(IStorageItem item) => null;
         public Windows.Foundation.IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token) => throw new NotSupportedException();
+        public string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null) => throw new NotSupportedException();
+        public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken) => throw new NotSupportedException();
+        public Task<StorageFile?> TryGetFileFromPathAsync(string path) => Task.FromResult<StorageFile?>(null);
+        public Task<StorageFolder?> TryGetFolderFromPathAsync(string path) => Task.FromResult<StorageFolder?>(null);
+        public Task<StorageFile?> TryGetFileFromTokenAsync(string? token) => Task.FromResult<StorageFile?>(null);
+        public Task<StorageFolder?> TryGetFolderFromTokenAsync(string? token) => Task.FromResult<StorageFolder?>(null);
+        public Task<StorageFile?> ResolveFileAsync(IFileMediaSource fileSource) => Task.FromResult<StorageFile?>(fileSource.StorageFile);
     }
 
     private sealed partial class StubSmtcService : ISystemMediaTransportControlsService, IDisposable
@@ -88,8 +96,8 @@ public sealed partial class PlayQueueCoordinatorTests
         var messenger = new StrongReferenceMessenger();
         var context = new PlayQueueContext();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
         var filesService = new StubFilesService();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(filesService), libraryContext);
         var settingsStorage = new MemorySettingsStorage();
         var generalSettings = new GeneralSettingsContext(settingsStorage) { ShowRecent = true };
         var playbackSettings = new PlaybackSettingsContext(settingsStorage);

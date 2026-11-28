@@ -111,7 +111,8 @@ public sealed class RecentMediaCoordinatorTests
         var libraryContext = new LibraryContext();
         var playlistsContext = new PlaylistsContext();
         var generalSettings = new GeneralSettingsContext(new MemorySettingsStorage()) { ShowRecent = true };
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
+        var filesService = new FilesService(NullLogger<FilesService>.Instance);
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(filesService), libraryContext);
 
         var coordinator = new RecentMediaCoordinator(
             recentContext,
@@ -119,6 +120,7 @@ public sealed class RecentMediaCoordinatorTests
             playlistsContext,
             generalSettings,
             dbService,
+            filesService,
             mediaFactory,
             new TestMetadataService(),
             null!,

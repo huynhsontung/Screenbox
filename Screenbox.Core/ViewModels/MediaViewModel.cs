@@ -12,8 +12,6 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels;
@@ -180,31 +178,37 @@ public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlayback
         MediaInfo = MediaInfo.MergeSelective(parsedInfo);
     }
 
-    public async Task LoadThumbnailAsync()
+    /// <summary>
+    /// Loads the UI thumbnail for this media item using <paramref name="thumbnailService"/>.
+    /// </summary>
+    /// <param name="thumbnailService">The thumbnail service used to extract thumbnail streams.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    public async Task LoadThumbnailAsync(IMediaThumbnailService thumbnailService, CancellationToken cancellationToken = default)
     {
         if (Thumbnail is not null) return;
 
-        if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+        if (await thumbnailService.GetThumbnailStreamAsync(Source, cancellationToken: cancellationToken) is { } source)
         {
-            using var source = await GetThumbnailSourceAsync(file);
-            if (source is null) return;
-            BitmapImage image = new()
+            using (source)
             {
-                DecodePixelType = DecodePixelType.Logical,
-                DecodePixelHeight = 300
-            };
+                BitmapImage image = new()
+                {
+                    DecodePixelType = DecodePixelType.Logical,
+                    DecodePixelHeight = 300
+                };
 
-            try
-            {
-                await image.SetSourceAsync(source);
-            }
-            catch (Exception)
-            {
-                // WinRT component not found exception???
-                return;
-            }
+                try
+                {
+                    await image.SetSourceAsync(source);
+                }
+                catch (Exception)
+                {
+                    // WinRT component not found exception???
+                    return;
+                }
 
-            Thumbnail = image;
+                Thumbnail = image;
+            }
         }
         else if (MediaInfo.ArtworkUri is { } artworkUri)
         {
@@ -214,51 +218,6 @@ public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlayback
                 DecodePixelHeight = 300
             };
         }
-    }
-
-    public Task<IRandomAccessStream?> GetThumbnailSourceAsync()
-    {
-        return Source is IFileMediaSource fileSource && fileSource.StorageFile is { } file
-            ? GetThumbnailSourceAsync(file)
-            : GetThumbnailSourceLazyAsync();
-    }
-
-    private async Task<IRandomAccessStream?> GetThumbnailSourceLazyAsync()
-    {
-        if (Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
-        {
-            return await GetThumbnailSourceAsync(file);
-        }
-
-        return null;
-    }
-
-    private static async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
-    {
-        if (!file.IsAvailable)
-            return null;
-
-        try
-        {
-            // Use SingleItem mode to retrieve embedded album art with original aspect ratio.
-            // https://learn.microsoft.com/windows/apps/develop/files/thumbnails
-            StorageItemThumbnail? source =
-                await file.GetThumbnailAsync(ThumbnailMode.SingleItem, requestedSize: 1280, ThumbnailOptions.UseCurrentScale);
-            if (source is { Type: ThumbnailType.Image })
-            {
-                return source;
-            }
-        }
-        catch (Exception)
-        {
-            //// System.Exception: The data necessary to complete this operation is not yet available.
-            //if (e.HResult != unchecked((int)0x8000000A) &&
-            //    // System.Exception: The RPC server is unavailable.
-            //    e.HResult != unchecked((int)0x800706BA))
-            //    _logger.LogError(e, "Failed to load the image thumbnail.");
-        }
-
-        return null;
     }
 
     private void UpdateCaptions()

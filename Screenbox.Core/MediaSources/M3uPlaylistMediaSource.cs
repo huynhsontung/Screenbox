@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Screenbox.Core.Services;
 using Windows.Storage;
 
 namespace Screenbox.Core.MediaSources;
@@ -11,17 +12,20 @@ namespace Screenbox.Core.MediaSources;
 public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
 {
     private readonly IMediaSourceFactory _sourceFactory;
+    private readonly IFilesService _filesService;
 
-    public M3uPlaylistMediaSource(StorageFile file, IMediaSourceFactory sourceFactory)
+    public M3uPlaylistMediaSource(StorageFile file, IMediaSourceFactory sourceFactory, IFilesService filesService)
         : base(file)
     {
         _sourceFactory = sourceFactory;
+        _filesService = filesService;
     }
 
-    public M3uPlaylistMediaSource(string path, IMediaSourceFactory sourceFactory)
+    public M3uPlaylistMediaSource(string path, IMediaSourceFactory sourceFactory, IFilesService filesService)
         : base(path)
     {
         _sourceFactory = sourceFactory;
+        _filesService = filesService;
     }
 
     public async Task<IReadOnlyList<ExpandedMediaItem>> ExpandAsync(CancellationToken cancellationToken = default)
@@ -29,7 +33,7 @@ public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
         string content;
         try
         {
-            var storageFile = await GetStorageFileAsync();
+            StorageFile? storageFile = StorageFile ?? await _filesService.ResolveFileAsync(this);
             var isM3u8 = (!string.IsNullOrEmpty(Path) && Path.EndsWith(".m3u8", StringComparison.OrdinalIgnoreCase)) ||
                          (storageFile != null && storageFile.FileType.Equals(".m3u8", StringComparison.OrdinalIgnoreCase));
             var encoding = isM3u8 ? System.Text.Encoding.UTF8 : System.Text.Encoding.Default;
