@@ -10,10 +10,13 @@ namespace Screenbox.Core.Tests.Services;
 
 public class MediaThumbnailServiceTests
 {
+    private static MediaThumbnailService CreateService() =>
+        new(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance);
+
     [Test]
     public async Task GetThumbnailStreamAsync_NullSource_ThrowsArgumentNullException()
     {
-        MediaThumbnailService service = new(NullLogger<MediaThumbnailService>.Instance);
+        MediaThumbnailService service = CreateService();
 
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
             service.GetThumbnailStreamAsync((IMediaSource)null!));
@@ -22,7 +25,7 @@ public class MediaThumbnailServiceTests
     [Test]
     public async Task GetThumbnailStreamAsync_UriMediaSource_ReturnsNull()
     {
-        MediaThumbnailService service = new(NullLogger<MediaThumbnailService>.Instance);
+        MediaThumbnailService service = CreateService();
         UriMediaSource source = new(new Uri("https://example.com/song.mp3"));
 
         IRandomAccessStream? stream = await service.GetThumbnailStreamAsync(source);
@@ -33,7 +36,7 @@ public class MediaThumbnailServiceTests
     [Test]
     public async Task GetThumbnailStreamAsync_CanceledToken_ReturnsNull()
     {
-        MediaThumbnailService service = new(NullLogger<MediaThumbnailService>.Instance);
+        MediaThumbnailService service = CreateService();
         FileMediaSource source = new(@"C:\nonexistent\song.mp3");
         using CancellationTokenSource cts = new();
         cts.Cancel();
@@ -46,7 +49,7 @@ public class MediaThumbnailServiceTests
     [Test]
     public async Task GetThumbnailStreamAsync_MissingFileSource_ReturnsNull()
     {
-        MediaThumbnailService service = new(NullLogger<MediaThumbnailService>.Instance);
+        MediaThumbnailService service = CreateService();
         FileMediaSource source = new(@"C:\nonexistent\missing_file_for_thumbnail_test.mp3");
 
         IRandomAccessStream? stream = await service.GetThumbnailStreamAsync(source);

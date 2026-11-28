@@ -74,7 +74,8 @@ internal sealed partial class OpenWithCommand : IRelayCommand<MediaViewModel>
         StorageFile? file = null;
         if (parameter.Source is IFileMediaSource fileSource)
         {
-            file = await fileSource.GetStorageFileAsync();
+            var filesService = Ioc.Default.GetRequiredService<IFilesService>();
+            file = await filesService.ResolveFileAsync(fileSource);
         }
 
         if (file == null)

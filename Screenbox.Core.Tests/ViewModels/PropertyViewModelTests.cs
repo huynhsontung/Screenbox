@@ -29,7 +29,7 @@ namespace Screenbox.Core.Tests.ViewModels;
 public partial class PropertyViewModelTests
 {
     private static StorageMetadataService CreateStorageMetadataService() =>
-        new(NullLogger<StorageMetadataService>.Instance);
+        new(new DummyFilesService(), NullLogger<StorageMetadataService>.Instance);
 
     private static PlayerContext CreatePlayerContextWithPlayer() =>
         new() { MediaPlayer = new TestMediaPlayer() };
@@ -276,5 +276,10 @@ public partial class PropertyViewModelTests
         public IAsyncOperation<StorageFolder> GetFrameCaptureFolderAsync(string token) => throw new NotImplementedException();
         public string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null) => throw new NotImplementedException();
         public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken) => throw new NotImplementedException();
+        public Task<StorageFile?> TryGetFileFromPathAsync(string path) => Task.FromResult<StorageFile?>(null);
+        public Task<StorageFolder?> TryGetFolderFromPathAsync(string path) => Task.FromResult<StorageFolder?>(null);
+        public Task<StorageFile?> TryGetFileFromTokenAsync(string? token) => Task.FromResult<StorageFile?>(null);
+        public Task<StorageFolder?> TryGetFolderFromTokenAsync(string? token) => Task.FromResult<StorageFolder?>(null);
+        public Task<StorageFile?> ResolveFileAsync(IFileMediaSource fileSource) => Task.FromResult<StorageFile?>(fileSource.StorageFile);
     }
 }

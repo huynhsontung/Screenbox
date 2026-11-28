@@ -24,10 +24,12 @@ public sealed class StorageMetadataService : ISourceMetadataService
         SystemProperties.Media.Duration
     ];
 
+    private readonly IFilesService _filesService;
     private readonly ILogger<StorageMetadataService> _logger;
 
-    public StorageMetadataService(ILogger<StorageMetadataService> logger)
+    public StorageMetadataService(IFilesService filesService, ILogger<StorageMetadataService> logger)
     {
+        _filesService = filesService;
         _logger = logger;
     }
 
@@ -99,7 +101,7 @@ public sealed class StorageMetadataService : ISourceMetadataService
     {
         ArgumentNullException.ThrowIfNull(fileSource);
 
-        if (await fileSource.GetStorageFileAsync() is not { } file)
+        if (await _filesService.ResolveFileAsync(fileSource) is not { } file)
         {
             return null;
         }
@@ -188,7 +190,7 @@ public sealed class StorageMetadataService : ISourceMetadataService
             return (null, TimeSpan.Zero);
         }
 
-        StorageFile? file = fileSource.StorageFile ?? await fileSource.GetStorageFileAsync();
+        StorageFile? file = await _filesService.ResolveFileAsync(fileSource);
         if (file is null)
         {
             return (null, TimeSpan.Zero);

@@ -89,7 +89,9 @@ public partial class MediaViewModelTests
         await Assert.That(vm.DetailsLoaded).IsFalse();
         await Assert.That(vm.MediaInfo.VideoProperties.Width).IsEqualTo(1920u);
 
-        var storageMetadataService = new StorageMetadataService(NullLogger<StorageMetadataService>.Instance);
+        var storageMetadataService = new StorageMetadataService(
+            new FilesService(NullLogger<FilesService>.Instance),
+            NullLogger<StorageMetadataService>.Instance);
         await vm.LoadDetailsAsync(storageMetadataService);
 
         await Assert.That(vm.DetailsLoaded).IsTrue();

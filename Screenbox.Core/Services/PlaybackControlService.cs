@@ -82,7 +82,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
     private async Task<PlaybackNavigationResult?> GetNeighboringNextAsync(QueueSession session, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
-        if (session.Items.Count == 1 && session.CurrentItem?.Media.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+        if (session.Items.Count == 1 && session.CurrentItem?.Media.Source is IFileMediaSource fileSource && await _filesService.ResolveFileAsync(fileSource) is { } file)
         {
             var nextFile = await _filesService.GetNextFileAsync(file, neighboringFilesQuery);
             if (nextFile is not null)
@@ -127,7 +127,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
     private async Task<PlaybackNavigationResult?> GetNeighboringPreviousAsync(QueueSession session, StorageFileQueryResult neighboringFilesQuery)
     {
         // Single file with neighboring files
-        if (session.Items.Count == 1 && session.CurrentItem?.Media.Source is IFileMediaSource fileSource && await fileSource.GetStorageFileAsync() is { } file)
+        if (session.Items.Count == 1 && session.CurrentItem?.Media.Source is IFileMediaSource fileSource && await _filesService.ResolveFileAsync(fileSource) is { } file)
         {
             var previousFile = await _filesService.GetPreviousFileAsync(file, neighboringFilesQuery);
             if (previousFile is not null)

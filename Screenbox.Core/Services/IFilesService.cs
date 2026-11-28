@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Playback;
 using Windows.Foundation;
 using Windows.Storage;
@@ -53,4 +54,34 @@ public interface IFilesService
     /// <param name="frameCaptureFolderToken">The configured frame capture folder token.</param>
     /// <returns>The saved snapshot <see cref="StorageFile"/>.</returns>
     Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFile"/> from a file-system path.
+    /// Returns <see langword="null"/> when the file is inaccessible or does not exist.
+    /// </summary>
+    Task<StorageFile?> TryGetFileFromPathAsync(string path);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFolder"/> from a file-system path.
+    /// Returns <see langword="null"/> when the folder is inaccessible or does not exist.
+    /// </summary>
+    Task<StorageFolder?> TryGetFolderFromPathAsync(string path);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFile"/> from the application's access cache
+    /// (MRU or FutureAccessList) using the specified token.
+    /// </summary>
+    Task<StorageFile?> TryGetFileFromTokenAsync(string? token);
+
+    /// <summary>
+    /// Attempts to retrieve a <see cref="StorageFolder"/> from the application's access cache
+    /// (MRU or FutureAccessList) using the specified token.
+    /// </summary>
+    Task<StorageFolder?> TryGetFolderFromTokenAsync(string? token);
+
+    /// <summary>
+    /// Returns the cached <see cref="StorageFile"/> on <paramref name="fileSource"/>, or resolves
+    /// and caches it via its access token or file-system path.
+    /// </summary>
+    Task<StorageFile?> ResolveFileAsync(IFileMediaSource fileSource);
 }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Screenbox.Core.MediaSources;
@@ -28,11 +27,6 @@ public interface IFileMediaSource : IMediaSource
     /// Gets the cached <see cref="Windows.Storage.StorageFile"/> if already resolved or provided upfront; otherwise <see langword="null"/>.
     /// </summary>
     StorageFile? StorageFile { get; }
-
-    /// <summary>
-    /// Returns the cached <see cref="Windows.Storage.StorageFile"/>, or asynchronously resolves and caches it from <see cref="Path"/>.
-    /// </summary>
-    Task<StorageFile?> GetStorageFileAsync();
 
     /// <summary>
     /// Updates the cached <see cref="Windows.Storage.StorageFile"/> instance.

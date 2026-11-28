@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.Foundation.Collections;
@@ -40,6 +41,10 @@ public class ServiceHelpersTests
         ISubtitleService subtitleService = provider.GetRequiredService<ISubtitleService>();
         await Assert.That(subtitleService).IsNotNull();
         await Assert.That(subtitleService).IsTypeOf<SubtitleService>();
+
+        IMediaSourceFactory mediaSourceFactory = provider.GetRequiredService<IMediaSourceFactory>();
+        await Assert.That(mediaSourceFactory).IsNotNull();
+        await Assert.That(mediaSourceFactory).IsTypeOf<MediaSourceFactory>();
     }
 
     [Test]

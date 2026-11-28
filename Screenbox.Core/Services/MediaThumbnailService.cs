@@ -14,10 +14,12 @@ namespace Screenbox.Core.Services;
 /// </summary>
 public sealed class MediaThumbnailService : IMediaThumbnailService
 {
+    private readonly IFilesService _filesService;
     private readonly ILogger<MediaThumbnailService> _logger;
 
-    public MediaThumbnailService(ILogger<MediaThumbnailService> logger)
+    public MediaThumbnailService(IFilesService filesService, ILogger<MediaThumbnailService> logger)
     {
+        _filesService = filesService;
         _logger = logger;
     }
 
@@ -105,7 +107,7 @@ public sealed class MediaThumbnailService : IMediaThumbnailService
             return null;
         }
 
-        StorageFile? file = fileSource.StorageFile ?? await fileSource.GetStorageFileAsync();
+        StorageFile? file = await _filesService.ResolveFileAsync(fileSource);
         if (file is null)
         {
             return null;

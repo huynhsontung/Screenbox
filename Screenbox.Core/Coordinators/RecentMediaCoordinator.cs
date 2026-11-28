@@ -37,6 +37,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
     private readonly PlaylistsContext _playlistsContext;
     private readonly GeneralSettingsContext _generalSettings;
     private readonly IDatabaseService _databaseService;
+    private readonly IFilesService _filesService;
     private readonly MediaViewModelFactory _mediaFactory;
     private readonly ISourceMetadataService _sourceMetadataService;
     private readonly IQueueService _queueService;
@@ -57,6 +58,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         PlaylistsContext playlistsContext,
         GeneralSettingsContext generalSettings,
         IDatabaseService databaseService,
+        IFilesService filesService,
         MediaViewModelFactory mediaFactory,
         ISourceMetadataService sourceMetadataService,
         IQueueService queueService,
@@ -70,6 +72,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         _playlistsContext = playlistsContext;
         _generalSettings = generalSettings;
         _databaseService = databaseService;
+        _filesService = filesService;
         _mediaFactory = mediaFactory;
         _sourceMetadataService = sourceMetadataService;
         _queueService = queueService;
@@ -599,7 +602,7 @@ public sealed partial class RecentMediaCoordinator : ObservableRecipient, IRecen
         if (string.IsNullOrEmpty(entry.SourceId))
             return null;
 
-        StorageFile? file = await FilesHelpers.TryGetFileFromTokenAsync(entry.Token);
+        StorageFile? file = await _filesService.TryGetFileFromTokenAsync(entry.Token);
 
         MediaViewModel media;
         bool existing;

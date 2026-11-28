@@ -19,7 +19,7 @@ public class AlbumsPageViewModelTests
     {
         var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Year };
         var libraryContext = new LibraryContext();
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance));
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance));
 
         await Assert.That(vm.SortBy).IsEqualTo(AlbumSortOrder.Year);
         await Assert.That(vm.SelectedGenre).IsNull();
@@ -30,7 +30,7 @@ public class AlbumsPageViewModelTests
     {
         var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance));
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance));
 
         vm.SortBy = AlbumSortOrder.Artist;
 
@@ -42,7 +42,7 @@ public class AlbumsPageViewModelTests
     {
         var settings = new LibrarySettingsContext(new MemorySettingsStorage()) { AlbumsSortOrder = AlbumSortOrder.Title };
         var libraryContext = new LibraryContext();
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance));
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance));
 
         vm.SetSortByCommand.Execute(AlbumSortOrder.DateAdded);
 
@@ -55,7 +55,7 @@ public class AlbumsPageViewModelTests
     {
         var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext();
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance));
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance));
 
         vm.SetGenreCommand.Execute("Jazz");
         await Assert.That(vm.SelectedGenre).IsEqualTo("Jazz");
@@ -100,7 +100,7 @@ public class AlbumsPageViewModelTests
 
         var libraryContext = new LibraryContext { Music = musicLibrary };
         var settings = new LibrarySettingsContext(new MemorySettingsStorage());
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance));
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance));
 
         vm.FetchAlbums();
         await Assert.That(vm.Songs.Count).IsEqualTo(3);
@@ -133,7 +133,7 @@ public class AlbumsPageViewModelTests
     {
         var settings = new LibrarySettingsContext(new MemorySettingsStorage());
         var libraryContext = new LibraryContext();
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance));
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance));
 
         await Assert.That(vm.GroupedAlbums).IsEmpty();
 
@@ -170,7 +170,7 @@ public class AlbumsPageViewModelTests
                 new ArtistViewModel())
         };
 
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance))
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance))
         {
             SelectedGenre = "Jazz"
         };
@@ -197,7 +197,7 @@ public class AlbumsPageViewModelTests
                 new ArtistViewModel())
         };
 
-        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(NullLogger<MediaThumbnailService>.Instance))
+        var vm = new AlbumsPageViewModel(libraryContext, settings, new MediaThumbnailService(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance))
         {
             SelectedGenre = "Jazz"
         };

@@ -119,6 +119,7 @@ public sealed class RecentMediaCoordinatorTests
             playlistsContext,
             generalSettings,
             dbService,
+            new FilesService(NullLogger<FilesService>.Instance),
             mediaFactory,
             new TestMetadataService(),
             null!,

@@ -155,8 +155,8 @@ public sealed class QueueService : IQueueService
         {
             if (IsPlaylistOriginPath(sourcePath))
             {
-                StorageFile? file = await FilesHelpers.TryGetFileFromTokenAsync(token)
-                    ?? await FilesHelpers.TryGetFileFromPathAsync(sourcePath);
+                StorageFile? file = await _filesService.TryGetFileFromTokenAsync(token)
+                    ?? await _filesService.TryGetFileFromPathAsync(sourcePath);
                 if (file is not null)
                 {
                     return await ParseQueueAsync(file, cancellationToken);
@@ -170,8 +170,8 @@ public sealed class QueueService : IQueueService
                 return null;
             }
 
-            StorageFolder? folder = await FilesHelpers.TryGetFolderFromTokenAsync(token)
-                ?? await FilesHelpers.TryGetFolderFromPathAsync(sourcePath);
+            StorageFolder? folder = await _filesService.TryGetFolderFromTokenAsync(token)
+                ?? await _filesService.TryGetFolderFromPathAsync(sourcePath);
             return folder is not null
                 ? await TryCreateQueueAsync(new IStorageItem[] { folder }, cancellationToken: cancellationToken)
                 : null;

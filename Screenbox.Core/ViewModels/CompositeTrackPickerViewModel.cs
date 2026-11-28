@@ -100,7 +100,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         if (MediaPlayer is null) return;
         if (message.Value is not { MediaType: MediaPlaybackType.Video } media ||
             media.Source is not IFileMediaSource fileSource ||
-            await fileSource.GetStorageFileAsync() is not { } file)
+            await _filesService.ResolveFileAsync(fileSource) is not { } file)
             return;
 
         bool subtitleInitialized = false;

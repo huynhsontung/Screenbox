@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.MediaSources;
 using Screenbox.Core.Playback;
 using Windows.Foundation;
 using Windows.Storage;
@@ -210,6 +211,109 @@ public sealed class FilesService : IFilesService
         {
             await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
+    }
+
+    public async Task<StorageFile?> TryGetFileFromPathAsync(string path)
+    {
+        try
+        {
+            return await StorageFile.GetFileFromPathAsync(path);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public async Task<StorageFolder?> TryGetFolderFromPathAsync(string path)
+    {
+        try
+        {
+            return await StorageFolder.GetFolderFromPathAsync(path);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public async Task<StorageFile?> TryGetFileFromTokenAsync(string? token)
+    {
+        if (string.IsNullOrEmpty(token)) return null;
+
+        try
+        {
+            if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+
+            if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.FutureAccessList.GetFileAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+        }
+        catch (Exception)
+        {
+            // Access cache lookup failed or unavailable.
+        }
+
+        return null;
+    }
+
+    public async Task<StorageFolder?> TryGetFolderFromTokenAsync(string? token)
+    {
+        if (string.IsNullOrEmpty(token)) return null;
+
+        try
+        {
+            if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.MostRecentlyUsedList.GetFolderAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+
+            if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            {
+                return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(
+                    token,
+                    AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+        }
+        catch (Exception)
+        {
+            // Access cache lookup failed or unavailable.
+        }
+
+        return null;
+    }
+
+    public async Task<StorageFile?> ResolveFileAsync(IFileMediaSource fileSource)
+    {
+        ArgumentNullException.ThrowIfNull(fileSource);
+
+        if (fileSource.StorageFile is not null)
+        {
+            return fileSource.StorageFile;
+        }
+
+        StorageFile? file = await TryGetFileFromTokenAsync(fileSource.Token);
+        if (file is null && !string.IsNullOrEmpty(fileSource.Path))
+        {
+            file = await TryGetFileFromPathAsync(fileSource.Path);
+        }
+
+        if (file is not null)
+        {
+            fileSource.UpdateStorageFile(file);
+        }
+
+        return file;
     }
 
     private static async Task<StorageFolder> GetFrameCaptureFolderFromTokenAsync(string token)
