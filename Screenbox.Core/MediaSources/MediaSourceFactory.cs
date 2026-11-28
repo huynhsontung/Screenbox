@@ -11,7 +11,6 @@ public class MediaSourceFactory : IMediaSourceFactory
 
     public MediaSourceFactory(IFilesService filesService)
     {
-        ArgumentNullException.ThrowIfNull(filesService);
         _filesService = filesService;
     }
 

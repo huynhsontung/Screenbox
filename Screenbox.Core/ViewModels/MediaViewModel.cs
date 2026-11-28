@@ -185,7 +185,6 @@ public sealed partial class MediaViewModel : ObservableRecipient, IMediaPlayback
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     public async Task LoadThumbnailAsync(IMediaThumbnailService thumbnailService, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(thumbnailService);
         if (Thumbnail is not null) return;
 
         if (await thumbnailService.GetThumbnailStreamAsync(Source, cancellationToken: cancellationToken) is { } source)

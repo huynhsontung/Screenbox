@@ -38,8 +38,6 @@ public sealed class MediaThumbnailService : IMediaThumbnailService
         uint requestedSize = 1280,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(file);
-
         if (cancellationToken.IsCancellationRequested || !file.IsAvailable)
         {
             return null;
@@ -100,8 +98,6 @@ public sealed class MediaThumbnailService : IMediaThumbnailService
         uint requestedSize = 1280,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(fileSource);
-
         if (cancellationToken.IsCancellationRequested)
         {
             return null;
@@ -122,8 +118,6 @@ public sealed class MediaThumbnailService : IMediaThumbnailService
         uint requestedSize = 1280,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(source);
-
         if (source is IFileMediaSource fileSource)
         {
             return await GetThumbnailStreamAsync(fileSource, requestedSize, cancellationToken);

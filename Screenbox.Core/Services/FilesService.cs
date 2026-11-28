@@ -148,7 +148,6 @@ public sealed class FilesService : IFilesService
 
     public async Task OpenFolderAsync(StorageFolder folder)
     {
-        ArgumentNullException.ThrowIfNull(folder);
         await Launcher.LaunchFolderAsync(folder);
     }
 
@@ -174,8 +173,6 @@ public sealed class FilesService : IFilesService
 
     public string SetFrameCaptureFolder(StorageFolder folder, string? previousToken = null)
     {
-        ArgumentNullException.ThrowIfNull(folder);
-
         // Release the previous entry so the FutureAccessList (capped at 1000 items) doesn't accumulate stale folders.
         if (!string.IsNullOrEmpty(previousToken) && StorageApplicationPermissions.FutureAccessList.ContainsItem(previousToken))
         {
@@ -187,8 +184,6 @@ public sealed class FilesService : IFilesService
 
     public async Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer, string frameCaptureFolderToken)
     {
-        ArgumentNullException.ThrowIfNull(mediaPlayer);
-
         StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
             $"snapshot_{DateTimeOffset.Now.Ticks}",
             CreationCollisionOption.FailIfExists);
@@ -295,8 +290,6 @@ public sealed class FilesService : IFilesService
 
     public async Task<StorageFile?> ResolveFileAsync(IFileMediaSource fileSource)
     {
-        ArgumentNullException.ThrowIfNull(fileSource);
-
         if (fileSource.StorageFile is not null)
         {
             return fileSource.StorageFile;

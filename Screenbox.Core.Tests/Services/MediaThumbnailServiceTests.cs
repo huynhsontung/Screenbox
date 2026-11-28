@@ -14,15 +14,6 @@ public class MediaThumbnailServiceTests
         new(new FilesService(NullLogger<FilesService>.Instance), NullLogger<MediaThumbnailService>.Instance);
 
     [Test]
-    public async Task GetThumbnailStreamAsync_NullSource_ThrowsArgumentNullException()
-    {
-        MediaThumbnailService service = CreateService();
-
-        await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            service.GetThumbnailStreamAsync((IMediaSource)null!));
-    }
-
-    [Test]
     public async Task GetThumbnailStreamAsync_UriMediaSource_ReturnsNull()
     {
         MediaThumbnailService service = CreateService();

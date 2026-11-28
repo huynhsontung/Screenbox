@@ -234,15 +234,6 @@ public partial class MediaViewModelTests
     }
 
     [Test]
-    public async Task LoadThumbnailAsync_NullService_ThrowsArgumentNullException()
-    {
-        var source = new UriMediaSource(new Uri("https://example.com/song.mp3"));
-        var vm = new MediaViewModel(source);
-
-        await Assert.ThrowsAsync<ArgumentNullException>(() => vm.LoadThumbnailAsync(null!));
-    }
-
-    [Test]
     public async Task LoadThumbnailAsync_DelegatesToThumbnailServiceWithMediaSource()
     {
         var source = new FileMediaSource(@"C:\music\track.mp3");

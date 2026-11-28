@@ -11,14 +11,6 @@ namespace Screenbox.Core.Tests.Services;
 public class FilesServiceTests
 {
     [Test]
-    public async Task ResolveFileAsync_NullFileSource_ThrowsArgumentNullException()
-    {
-        var service = new FilesService(NullLogger<FilesService>.Instance);
-
-        await Assert.ThrowsAsync<ArgumentNullException>(() => service.ResolveFileAsync(null!));
-    }
-
-    [Test]
     public async Task ResolveFileAsync_NonExistentFileSource_ReturnsNull()
     {
         var service = new FilesService(NullLogger<FilesService>.Instance);

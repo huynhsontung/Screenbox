@@ -134,8 +134,6 @@ public sealed class StorageMetadataService : ISourceMetadataService
         StorageFile file,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(file);
-
         if (cancellationToken.IsCancellationRequested || !file.IsAvailable)
         {
             return (null, TimeSpan.Zero);
@@ -183,8 +181,6 @@ public sealed class StorageMetadataService : ISourceMetadataService
         IMediaSource source,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(source);
-
         if (cancellationToken.IsCancellationRequested || source is not IFileMediaSource fileSource)
         {
             return (null, TimeSpan.Zero);

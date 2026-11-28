@@ -36,8 +36,6 @@ public sealed class SubtitleService : ISubtitleService
         StorageFileQueryResult? neighboringFilesQuery = null,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(sourceFile);
-
         if (cancellationToken.IsCancellationRequested)
         {
             return Array.Empty<StorageFile>();
@@ -101,8 +99,6 @@ public sealed class SubtitleService : ISubtitleService
     /// <inheritdoc/>
     public int FindPreferredSubtitleIndex(IReadOnlyList<SubtitleTrack> subtitleTracks, string preferredLanguages)
     {
-        ArgumentNullException.ThrowIfNull(subtitleTracks);
-
         if (subtitleTracks.Count == 0 || string.IsNullOrEmpty(preferredLanguages))
         {
             return -1;
@@ -143,8 +139,6 @@ public sealed class SubtitleService : ISubtitleService
         string sourceFileName,
         IReadOnlyList<string> candidateFileNames)
     {
-        ArgumentNullException.ThrowIfNull(candidateFileNames);
-
         return MatchSubtitleCandidates(
             sourceFileName,
             candidateFileNames,

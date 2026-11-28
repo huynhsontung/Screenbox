@@ -17,8 +17,6 @@ public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
     public M3uPlaylistMediaSource(StorageFile file, IMediaSourceFactory sourceFactory, IFilesService filesService)
         : base(file)
     {
-        ArgumentNullException.ThrowIfNull(sourceFactory);
-        ArgumentNullException.ThrowIfNull(filesService);
         _sourceFactory = sourceFactory;
         _filesService = filesService;
     }
@@ -26,8 +24,6 @@ public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
     public M3uPlaylistMediaSource(string path, IMediaSourceFactory sourceFactory, IFilesService filesService)
         : base(path)
     {
-        ArgumentNullException.ThrowIfNull(sourceFactory);
-        ArgumentNullException.ThrowIfNull(filesService);
         _sourceFactory = sourceFactory;
         _filesService = filesService;
     }
