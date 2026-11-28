@@ -96,8 +96,8 @@ public sealed partial class PlayQueueCoordinatorTests
         var messenger = new StrongReferenceMessenger();
         var context = new PlayQueueContext();
         var libraryContext = new LibraryContext();
-        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(), libraryContext);
         var filesService = new StubFilesService();
+        var mediaFactory = new MediaViewModelFactory(new MediaSourceFactory(filesService), libraryContext);
         var settingsStorage = new MemorySettingsStorage();
         var generalSettings = new GeneralSettingsContext(settingsStorage) { ShowRecent = true };
         var playbackSettings = new PlaybackSettingsContext(settingsStorage);

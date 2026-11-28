@@ -12,18 +12,22 @@ namespace Screenbox.Core.MediaSources;
 public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
 {
     private readonly IMediaSourceFactory _sourceFactory;
-    private readonly IFilesService? _filesService;
+    private readonly IFilesService _filesService;
 
-    public M3uPlaylistMediaSource(StorageFile file, IMediaSourceFactory sourceFactory, IFilesService? filesService = null)
+    public M3uPlaylistMediaSource(StorageFile file, IMediaSourceFactory sourceFactory, IFilesService filesService)
         : base(file)
     {
+        ArgumentNullException.ThrowIfNull(sourceFactory);
+        ArgumentNullException.ThrowIfNull(filesService);
         _sourceFactory = sourceFactory;
         _filesService = filesService;
     }
 
-    public M3uPlaylistMediaSource(string path, IMediaSourceFactory sourceFactory, IFilesService? filesService = null)
+    public M3uPlaylistMediaSource(string path, IMediaSourceFactory sourceFactory, IFilesService filesService)
         : base(path)
     {
+        ArgumentNullException.ThrowIfNull(sourceFactory);
+        ArgumentNullException.ThrowIfNull(filesService);
         _sourceFactory = sourceFactory;
         _filesService = filesService;
     }
@@ -33,7 +37,7 @@ public class M3uPlaylistMediaSource : FileMediaSource, IExpandableMediaSource
         string content;
         try
         {
-            StorageFile? storageFile = StorageFile ?? (_filesService is not null ? await _filesService.ResolveFileAsync(this) : null);
+            StorageFile? storageFile = StorageFile ?? await _filesService.ResolveFileAsync(this);
             var isM3u8 = (!string.IsNullOrEmpty(Path) && Path.EndsWith(".m3u8", StringComparison.OrdinalIgnoreCase)) ||
                          (storageFile != null && storageFile.FileType.Equals(".m3u8", StringComparison.OrdinalIgnoreCase));
             var encoding = isM3u8 ? System.Text.Encoding.UTF8 : System.Text.Encoding.Default;

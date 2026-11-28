@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Contexts;
 using Screenbox.Core.Factories;
 using Screenbox.Core.MediaSources;
@@ -34,7 +35,9 @@ public class QueueServiceTests
             Task.FromResult(_items);
     }
 
-    private readonly QueueService _service = new(new MediaViewModelFactory(new MediaSourceFactory(), new LibraryContext()), null!);
+    private readonly QueueService _service = new(
+        new MediaViewModelFactory(new MediaSourceFactory(new FilesService(NullLogger<FilesService>.Instance)), new LibraryContext()),
+        null!);
 
     private static MediaViewModel CreateMedia(string name) =>
         new(new UriMediaSource(new Uri($"https://example.com/{name}.mp3"))) { Name = name };

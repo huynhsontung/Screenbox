@@ -1,15 +1,17 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.MediaSources;
+using Screenbox.Core.Services;
 
 namespace Screenbox.Core.Tests.MediaSources;
 
 public class MediaSourceTests
 {
-    private readonly MediaSourceFactory _factory = new();
+    private readonly MediaSourceFactory _factory = new(new FilesService(NullLogger<FilesService>.Instance));
 
     [Test]
     public async Task FileMediaSource_FromPath_PopulatesProperties()

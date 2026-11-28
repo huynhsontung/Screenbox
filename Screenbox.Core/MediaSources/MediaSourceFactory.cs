@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
@@ -8,15 +7,11 @@ namespace Screenbox.Core.MediaSources;
 
 public class MediaSourceFactory : IMediaSourceFactory
 {
-    private readonly IFilesService? _filesService;
+    private readonly IFilesService _filesService;
 
-    public MediaSourceFactory()
-    {
-    }
-
-    [ActivatorUtilitiesConstructor]
     public MediaSourceFactory(IFilesService filesService)
     {
+        ArgumentNullException.ThrowIfNull(filesService);
         _filesService = filesService;
     }
 
