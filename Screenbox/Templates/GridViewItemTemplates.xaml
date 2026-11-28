@@ -85,7 +85,8 @@
             IsPlaying="{x:Bind IsPlaying, Mode=OneWay}"
             PlayCommand="{x:Bind PlayCommand}"
             PlayCommandParameter="{x:Bind}"
-            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+            ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
                 <FontIconSource
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
